@@ -146,6 +146,7 @@ import java.lang.ref.WeakReference
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.math.atan
+import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.sinh
 import kotlin.math.tan
@@ -334,8 +335,8 @@ public class MapFragment
         mRuler = view.findViewById(R.id.action_ruler)
         mRuler?.setOnClickListener(this)
 
-//        val addGeometryByWalk = view.findViewById<View>(R.id.add_geometry_by_walk)
-//        addGeometryByWalk.setOnClickListener(this)
+        val addGeometryByWalk = view.findViewById<View>(R.id.add_geometry_by_walk)
+        addGeometryByWalk.setOnClickListener(this)
 
         mivZoomIn = view.findViewById(R.id.action_zoom_in)
         mivZoomIn?.setOnClickListener(this)
@@ -417,8 +418,27 @@ public class MapFragment
     }
 
     override fun loadLayersLite(){
+        val mapDrawable = mMapRef.get()?.map ?: return
+        val mapLibreMap = mapDrawable.maplibreMap ?: return
+        if (mapLibreMap.style == null) {
+            return
+        }
         val allLayers = mMapRef.get()!!.getAllLayers()
-        mMapRef.get()!!.map!!.loadLayersToMaplibreMapLite(allLayers, false)
+        mapDrawable.loadLayersToMaplibreMapLite(allLayers, false)
+    }
+
+    override fun reloadMapStyleAndLayersAfterLayerFillBatch() {
+        val mapRef = mMapRef.get() ?: return
+        val mapDrawable = mapRef.map ?: return
+        if (mapDrawable.getMaplibreMap() == null) {
+            return
+        }
+        val styleJson = loadJsonFromAssets(requireContext(), "ngwstyle.json") ?: return
+        val vectorLayers = mapRef.getVectorLayersByType(GeoConstants.GTAnyCheck)
+        val layersTrack = mapRef.getLayersByType(Constants.LAYERTYPE_TRACKS)
+        vectorLayers.addAll(layersTrack)
+        val allLayers = mapRef.getAllLayers()
+        mapDrawable.loadLayersToMaplibreMap(styleJson, allLayers, true, true)
     }
 
     override fun getLongLongClickProcesses(): Boolean {
@@ -501,17 +521,11 @@ public class MapFragment
                 return result
             }
 
-//            com.nextgis.maplibui.R.id.menu_edit_by_walk -> {
-//                setMode(MODE_EDIT_BY_WALK)
-//
-//                result = editLayerOverlay!!.onOptionsItemSelected(id)
-//                if (result)
-//                    undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
-//
-//
-//                (mApp!!.map as MapDrawable).updateHistoryByWalkEnd()
-//                return result
-//            }
+            com.nextgis.maplibui.R.id.menu_edit_by_walk -> {
+                setNewMode(MODE_EDIT_BY_WALK)
+                result = editLayerOverlay!!.onOptionsItemSelected(id)
+                return result
+            }
 
             com.nextgis.maplibui.R.id.menu_edit_delete_point  ->{
                 val result = mMapRef.get()!!.map!!.deleteCurrentPoint();
@@ -591,8 +605,16 @@ public class MapFragment
             editLayerOverlay!!.stopGeometryByWalk()
             setNewMode(MODE_EDIT)
 
-            (mApp!!.map as MapDrawable).updateHistoryByWalkEnd()
-//            undoRedoOverlay!!.clearHistory()
+            val mapDrawable = mApp!!.map as MapDrawable
+            if (mapDrawable.editingObject != null) {
+                mapDrawable.updateHistoryByWalkEnd()
+            } else {
+                Toast.makeText(
+                    context,
+                    com.nextgis.maplibui.R.string.not_enough_points,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             undoRedoOverlay!!.defineUndoRedo()
 
             return true
@@ -1380,6 +1402,9 @@ public class MapFragment
                 if (geometry != null) editLayerOverlay!!.setGeometryFromWalkEdit(geometry)
 
                 mode = MODE_EDIT_BY_WALK
+                if (featureId <= Constants.NOT_FOUND && geometry != null) {
+                    attachMaplibreToCurrentWalkOverlayGeometry()
+                }
             }
         }
 
@@ -1845,40 +1870,212 @@ public class MapFragment
         return layerList
     }
 
-//
-//    protected fun addGeometryByWalk() {
-//        //show select layer dialog if several layers, else start default or custom form
-//        val layers = removeHideLayers (mMapRef.get()!!.getVectorLayersByType(
-//            (GeoConstants.GTLineStringCheck or GeoConstants.GTPolygonCheck
-//                    or GeoConstants.GTMultiLineStringCheck or GeoConstants.GTMultiPolygonCheck)))
-//
-//        if (layers.isEmpty()) {
-//            Toast.makeText(mActivity, getString(R.string.warning_no_edit_layers), Toast.LENGTH_LONG)
-//                .show()
-//        } else if (layers.size == 1) {
-//            //open form
-//            val layer = layers[0] as VectorLayer
-//            mSelectedLayer = layer
-//            editLayerOverlay!!.setSelectedLayer(layer)
-//            editLayerOverlay!!.newGeometryByWalk()
-//            setMode(MODE_EDIT_BY_WALK)
-//
-//            Toast.makeText(
-//                mActivity,
-//                String.format(getString(R.string.edit_layer), layer.name),
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        } else {
-//            if (isDialogShown) return
-//            //open choose edit layer dialog
-//            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog())
-//            mChooseLayerDialogRef.get()!!.setLayerList(layers)
-//                .setCode(ADD_GEOMETRY_BY_WALK)
-//                .setTitle(getString(com.nextgis.maplibui.R.string.choose_layers))
-//                .setTheme(mActivity!!.themeId)
-//                .show(mActivity!!.supportFragmentManager, ChooseLayerDialog.TAG)
-//        }
-//    }
+    protected fun addGeometryByWalk() {
+        val layers = removeHideLayers(
+            mMapRef.get()!!.getVectorLayersByType(
+                GeoConstants.GTLineStringCheck or GeoConstants.GTPolygonCheck
+                    or GeoConstants.GTMultiLineStringCheck or GeoConstants.GTMultiPolygonCheck
+            )
+        )
+
+        if (layers.isEmpty()) {
+            Toast.makeText(mActivity, getString(R.string.warning_no_edit_layers), Toast.LENGTH_LONG)
+                .show()
+        } else if (layers.size == 1) {
+            val layer = layers[0] as VectorLayer
+            mSelectedLayer = layer
+            editLayerOverlay!!.setSelectedLayer(layer)
+            editLayerOverlay!!.newGeometryByWalk()
+            applyInitialWalkGeometryAtStartLocation()
+            prepareMaplibreSessionForNewWalkGeometry()
+            setNewMode(MODE_EDIT_BY_WALK)
+
+            Toast.makeText(
+                mActivity,
+                String.format(getString(R.string.edit_layer), layer.name),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            if (isDialogShown) return
+            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog())
+            mChooseLayerDialogRef.get()!!.setLayerList(layers)
+                .setCode(ADD_GEOMETRY_BY_WALK)
+                .setTitle(getString(com.nextgis.maplibui.R.string.choose_layers))
+                .setTheme(mActivity!!.themeId)
+                .show(mActivity!!.supportFragmentManager, ChooseLayerDialog.TAG)
+        }
+    }
+
+    /**
+     * MapLibre edit session must exist before walk recording.
+     * Start geometry must match [editLayerOverlay] (GPS/camera anchor), not the default camera-centre stub.
+     */
+    private fun prepareMaplibreSessionForNewWalkGeometry() {
+        val map = mMapRef.get()?.map ?: return
+        val layer = mSelectedLayer ?: return
+        val startGeom = editLayerOverlay!!.selectedFeature?.geometry ?: return
+        map.startFeatureSelectionForEdit(
+            layer,
+            layer.geometryType,
+            editLayerOverlay!!.selectedFeature,
+            true,
+            layer.defaultStyleNoExcept
+        )
+        val editObj = map.editingObject ?: return
+        try {
+            map.replaceGeometryFromHistoryChanges(startGeom)
+        } catch (ex: Exception) {
+            Log.w("MapFragment", "replaceGeometryFromHistoryChanges walk start", ex)
+        }
+        updateGeometryFromMaplibre(
+            editObj.editingFeature,
+            map.originalSelectedFeature,
+            editObj
+        )
+    }
+
+    /** Web Mercator anchor: prefer last GPS fix, else map camera centre. */
+    private fun walkStartAnchorWebMercator(): GeoPoint? {
+        mGpsEventSource?.lastKnownLocation?.let { loc ->
+            val p = GeoPoint(loc.longitude, loc.latitude)
+            p.crs = GeoConstants.CRS_WGS84
+            if (p.project(GeoConstants.CRS_WEB_MERCATOR)) return p
+        }
+        if (mCurrentCenter != null && mCurrentCenter!!.crs == GeoConstants.CRS_WEB_MERCATOR) {
+            val c = GeoPoint(mCurrentCenter!!.x, mCurrentCenter!!.y)
+            c.crs = GeoConstants.CRS_WEB_MERCATOR
+            return c
+        }
+        val target = mMapRef.get()?.map?.maplibreMap?.cameraPosition?.target ?: return null
+        val p = GeoPoint(target.longitude, target.latitude)
+        p.crs = GeoConstants.CRS_WGS84
+        if (!p.project(GeoConstants.CRS_WEB_MERCATOR)) return null
+        return p
+    }
+
+    private fun geoPointWebMercatorCopy(x: Double, y: Double): GeoPoint {
+        val p = GeoPoint(x, y)
+        p.crs = GeoConstants.CRS_WEB_MERCATOR
+        return p
+    }
+
+    /** ~metre offsets in Web Mercator space from a WGS84 lat (good enough for a tiny start shape). */
+    private fun offsetWebMercatorMeters(anchorWm: GeoPoint, eastM: Double, northM: Double): GeoPoint {
+        val wgs = GeoPoint(anchorWm.x, anchorWm.y)
+        wgs.crs = GeoConstants.CRS_WEB_MERCATOR
+        wgs.project(GeoConstants.CRS_WGS84)
+        val lat = wgs.y
+        val lon = wgs.x
+        val dLat = northM / 111320.0
+        val dLon = eastM / (111320.0 * cos(Math.toRadians(lat)))
+        val p = GeoPoint(lon + dLon, lat + dLat)
+        p.crs = GeoConstants.CRS_WGS84
+        p.project(GeoConstants.CRS_WEB_MERCATOR)
+        return p
+    }
+
+    /**
+     * Initial geometry at walk start: line = degenerate 2-vertex segment at anchor (valid for MapLibre);
+     * polygon = small ~0.3m triangle at anchor so the ring is valid; walk then appends GPS vertices.
+     */
+    private fun buildInitialWalkGeometry(geometryType: Int, anchorWm: GeoPoint): GeoGeometry {
+        val a = geoPointWebMercatorCopy(anchorWm.x, anchorWm.y)
+        when (geometryType) {
+            GeoConstants.GTLineString -> {
+                val line = GeoLineString()
+                line.crs = GeoConstants.CRS_WEB_MERCATOR
+                line.add(geoPointWebMercatorCopy(a.x, a.y))
+                line.add(geoPointWebMercatorCopy(a.x, a.y))
+                return line
+            }
+            GeoConstants.GTMultiLineString -> {
+                val line = GeoLineString()
+                line.crs = GeoConstants.CRS_WEB_MERCATOR
+                line.add(geoPointWebMercatorCopy(a.x, a.y))
+                line.add(geoPointWebMercatorCopy(a.x, a.y))
+                val ml = GeoMultiLineString()
+                ml.crs = GeoConstants.CRS_WEB_MERCATOR
+                ml.add(line)
+                return ml
+            }
+            GeoConstants.GTPolygon -> {
+                val p1 = geoPointWebMercatorCopy(a.x, a.y)
+                val p2 = offsetWebMercatorMeters(anchorWm, 0.35, 0.0)
+                val p3 = offsetWebMercatorMeters(anchorWm, 0.0, 0.35)
+                val ring = GeoLinearRing()
+                ring.crs = GeoConstants.CRS_WEB_MERCATOR
+                ring.add(p1)
+                ring.add(geoPointWebMercatorCopy(p2.x, p2.y))
+                ring.add(geoPointWebMercatorCopy(p3.x, p3.y))
+                ring.add(p1)
+                val poly = GeoPolygon()
+                poly.crs = GeoConstants.CRS_WEB_MERCATOR
+                poly.setOuterRing(ring)
+                return poly
+            }
+            GeoConstants.GTMultiPolygon -> {
+                val p1 = geoPointWebMercatorCopy(a.x, a.y)
+                val p2 = offsetWebMercatorMeters(anchorWm, 0.35, 0.0)
+                val p3 = offsetWebMercatorMeters(anchorWm, 0.0, 0.35)
+                val ring = GeoLinearRing()
+                ring.crs = GeoConstants.CRS_WEB_MERCATOR
+                ring.add(p1)
+                ring.add(geoPointWebMercatorCopy(p2.x, p2.y))
+                ring.add(geoPointWebMercatorCopy(p3.x, p3.y))
+                ring.add(p1)
+                val poly = GeoPolygon()
+                poly.crs = GeoConstants.CRS_WEB_MERCATOR
+                poly.setOuterRing(ring)
+                val mp = GeoMultiPolygon()
+                mp.crs = GeoConstants.CRS_WEB_MERCATOR
+                mp.add(poly)
+                return mp
+            }
+            else -> {
+                val line = GeoLineString()
+                line.crs = GeoConstants.CRS_WEB_MERCATOR
+                line.add(geoPointWebMercatorCopy(a.x, a.y))
+                line.add(geoPointWebMercatorCopy(a.x, a.y))
+                return line
+            }
+        }
+    }
+
+    private fun applyInitialWalkGeometryAtStartLocation() {
+        val layer = mSelectedLayer ?: return
+        val anchor = walkStartAnchorWebMercator()
+        if (anchor == null) {
+            Toast.makeText(
+                context,
+                com.nextgis.maplibui.R.string.error_no_location,
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val geom = buildInitialWalkGeometry(layer.geometryType, anchor)
+        val feat = editLayerOverlay!!.selectedFeature
+        feat.geometry = geom
+        editLayerOverlay!!.fillDrawItems(geom)
+    }
+
+    /** After overlay geometry is authoritative (e.g. process restore), attach MapLibre editing to it. */
+    private fun attachMaplibreToCurrentWalkOverlayGeometry() {
+        val map = mMapRef.get()?.map ?: return
+        val layer = mSelectedLayer ?: return
+        val feat = editLayerOverlay!!.selectedFeature ?: return
+        val geom = feat.geometry ?: return
+        map.startFeatureSelectionForEdit(
+            layer,
+            layer.geometryType,
+            feat,
+            true,
+            layer.defaultStyleNoExcept
+        )
+        if (map.editingObject != null) {
+            map.replaceGeometryFromHistoryChanges(geom)
+        }
+        editLayerOverlay!!.fillDrawItems(geom)
+    }
 
 
     fun onFinishChooseLayerDialog(
@@ -1903,6 +2100,8 @@ public class MapFragment
             setNewMode(MODE_SELECT_ACTION)
         } else if (code == ADD_GEOMETRY_BY_WALK) {
             editLayerOverlay!!.newGeometryByWalk()
+            applyInitialWalkGeometryAtStartLocation()
+            prepareMaplibreSessionForNewWalkGeometry()
             setNewMode(MODE_EDIT_BY_WALK)
         } else if (code == ADD_POINT_BY_TAP) {
             createPointFromOverlay()
@@ -2710,9 +2909,8 @@ public class MapFragment
 
 //            Log.e("TTRR", "end olLocChange update---------------" )
 
-            if (mode == MODE_EDIT_BY_WALK){
-                if (location != null)
-                    mMapRef.get()!!.map!!.addPointByWalk(LatLng(location.latitude, location.longitude));
+            if (mode == MODE_EDIT_BY_WALK && !WalkEditService.isServiceRunning(context)) {
+                mMapRef.get()!!.map!!.addPointByWalk(LatLng(location.latitude, location.longitude))
             }
         }
 
@@ -2996,10 +3194,10 @@ public class MapFragment
                 if (v.isEnabled) addNewGeometry()
                 mMainButton!!.collapse()
             }
-//            R.id.add_geometry_by_walk -> {
-//                if (v.isEnabled) addGeometryByWalk()
-//                mMainButton!!.collapse()
-//            }
+            R.id.add_geometry_by_walk -> {
+                if (v.isEnabled) addGeometryByWalk()
+                mMainButton!!.collapse()
+            }
 
             R.id.action_zoom_in -> {
                 //if (v.isEnabled) mMapRef.get()!!.zoomIn() // old

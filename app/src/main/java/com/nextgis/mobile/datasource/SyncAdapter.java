@@ -39,6 +39,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.hypertrack.hyperlog.HyperLog;
+import com.nextgis.maplib.api.IGISApplication;
 import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.SettingsConstants;
@@ -82,6 +83,12 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
 
         if (!super.isSomeToSync( account))
             return;
+
+        IGISApplication gisApp = (IGISApplication) getContext().getApplicationContext();
+        if (gisApp.isLayerFillServiceBusy()) {
+            HyperLog.v(Constants.TAG, "onPerformSync skipped (layer fill in progress) for " + account.name);
+            return;
+        }
 
         sendNotification(getContext(), SYNC_START, null);
 

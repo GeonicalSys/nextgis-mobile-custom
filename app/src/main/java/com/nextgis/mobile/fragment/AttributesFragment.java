@@ -250,7 +250,7 @@ public class AttributesFragment
         if (mLayer == null)
             return;
 
-        mFeatureIDs = mLayer.query(null); // get all feature IDs
+        mFeatureIDs = mLayer.queryAllFeatureIdsFromDb(); // all row ids from SQLite
 
         for (int i = 0; i < mFeatureIDs.size(); i++) {
             if (mFeatureIDs.get(i) == mItemId) {
