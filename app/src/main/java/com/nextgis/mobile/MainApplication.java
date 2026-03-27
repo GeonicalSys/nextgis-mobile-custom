@@ -124,6 +124,7 @@ public class MainApplication extends GISApplication
         GoogleAnalytics.getInstance(this).setDryRun(DEBUG_MODE);
         getTracker();
         setExceptionHandler();
+        installHyperLogCrashHandler();
 
         super.onCreate();
         updateFromOldVersion();
@@ -136,6 +137,24 @@ public class MainApplication extends GISApplication
         MapLibre.getInstance(this, BuildConfig.MAPBOX_KEY, WellKnownTileServer.MapTiler);
         //TileLoadingMeasurementUtils.setUpTileLoadingMeasurement();
         MapStrictMode.setStrictModeEnabled(true);
+    }
+
+    /**
+     * Install HyperLog crash handler LAST so it wraps GA handler and any others.
+     * Ensures every crash is written to HyperLog file before the process dies.
+     */
+    private void installHyperLogCrashHandler() {
+        try {
+            if (!HyperLog.hasPendingDeviceLogsInDatabase()) {
+                HyperLog.initialize(this);
+                HyperLog.setLogLevel(Log.VERBOSE);
+            }
+        } catch (Exception ignored) {
+            // HyperLog may already be initialized
+        }
+        Thread.setDefaultUncaughtExceptionHandler(
+                new com.nextgis.maplibui.util.HyperLogCrashHandler()
+        );
     }
 
     private void setExceptionHandler() {

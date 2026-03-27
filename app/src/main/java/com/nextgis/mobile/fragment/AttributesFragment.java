@@ -145,8 +145,14 @@ public class AttributesFragment
             ViewGroup container,
             Bundle savedInstanceState) {
         if (mLayer == null) {
-            getActivity().getSupportFragmentManager().popBackStack();
-            Toast.makeText(getContext(), com.nextgis.maplibui.R.string.error_layer_not_inited, Toast.LENGTH_SHORT).show();
+            FragmentActivity activity = getActivity();
+            if (activity != null) {
+                activity.getSupportFragmentManager().popBackStack();
+            }
+            Context context = getContext();
+            if (context != null) {
+                Toast.makeText(context, com.nextgis.maplibui.R.string.error_layer_not_inited, Toast.LENGTH_SHORT).show();
+            }
             return null;
         }
 
@@ -162,15 +168,21 @@ public class AttributesFragment
                 }
         };
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getContext().registerReceiver(messageReceiver, getReceiverIntent(), Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            getContext().registerReceiver(messageReceiver, getReceiverIntent());
+        Context ctx = getContext();
+        if (ctx != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ctx.registerReceiver(messageReceiver, getReceiverIntent(), Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                ctx.registerReceiver(messageReceiver, getReceiverIntent());
+            }
         }
 
         readOnly = getArguments().getBoolean(KEY_READ_ONLY,  true);
 
-        getActivity().setTitle(mLayer.getName());
+        FragmentActivity activity = getActivity();
+        if (activity == null) return null;
+
+        activity.setTitle(mLayer.getName());
         setHasOptionsMenu(!isTablet());
 
         int resId = isTablet() ? R.layout.fragment_attributes_tab : R.layout.fragment_attributes;
@@ -178,13 +190,13 @@ public class AttributesFragment
 
         if (isTablet()) {
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(view.getLayoutParams());
-            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            Display display = activity.getWindowManager().getDefaultDisplay();
             DisplayMetrics metrics = new DisplayMetrics();
             display.getMetrics(metrics);
             lp.width = metrics.widthPixels / 2;
 
             int[] attrs = {android.R.attr.actionBarSize};
-            TypedArray ta = getActivity().obtainStyledAttributes(attrs);
+            TypedArray ta = activity.obtainStyledAttributes(attrs);
             lp.bottomMargin = ta.getDimensionPixelSize(0, 0);
             ta.recycle();
 
@@ -199,13 +211,18 @@ public class AttributesFragment
     public void onResume() {
         super.onResume();
         setAttributes();
-        ((MainActivity) getActivity()).setActionBarState(isTablet());
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).setActionBarState(isTablet());
+        }
     }
 
     @Override
     public void onPause() {
         if (messageReceiver != null) {
-            getContext().unregisterReceiver(messageReceiver);
+            Context context = getContext();
+            if (context != null) {
+                context.unregisterReceiver(messageReceiver);
+            }
             messageReceiver = null;
         }
         super.onPause();
@@ -228,7 +245,9 @@ public class AttributesFragment
     @Override
     public void onDestroyView()
     {
-        ((MainActivity) getActivity()).restoreBottomBar(readOnly ? MapFragment.MODE_SELECT_FOR_VIEW : MapFragment.MODE_SELECT_ACTION);
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).restoreBottomBar(readOnly ? MapFragment.MODE_SELECT_FOR_VIEW : MapFragment.MODE_SELECT_ACTION);
+        }
         super.onDestroyView();
     }
 
@@ -299,7 +318,7 @@ public class AttributesFragment
             }
         });
 
-        IGISApplication app = (GISApplication) getActivity().getApplication();
+        IGISApplication app = (GISApplication) activity.getApplication();
 
         final List<AttachInfo> mAttaches = new ArrayList<>();
         PhotoGallery.getOfflineAttaches(app, mLayer, mItemId, mAttaches, false, null);

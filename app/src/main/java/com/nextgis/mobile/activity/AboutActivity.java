@@ -140,6 +140,7 @@ public class AboutActivity extends NGActivity implements ViewPager.OnPageChangeL
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            if (getActivity() == null) return null;
             final NGActivity activity = (NGActivity) getActivity();
             View v = View.inflate(activity, R.layout.fragment_about, null);
 
@@ -192,6 +193,7 @@ public class AboutActivity extends NGActivity implements ViewPager.OnPageChangeL
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             final Context context = getContext();
+            if (context == null) return null;
             final View v = View.inflate(context, R.layout.fragment_contacts, null);
 
             TextView telegram = (TextView) v.findViewById(R.id.telegram);

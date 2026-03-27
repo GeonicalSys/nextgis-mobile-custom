@@ -138,6 +138,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     protected var mTrackItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        HyperLog.v(Constants.TAG, "MainActivity.onCreate")
         super.onCreate(savedInstanceState)
         // initialize the default settings
         PreferenceManager.setDefaultValues(this, R.xml.preferences_general, false)
@@ -237,11 +238,13 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                         NetworkUtil.setUserNGUID(id)
                     }
                 } catch (exception: Exception) {
+                    HyperLog.w(Constants.TAG, "MainActivity.onCreate: " + exception.message, exception)
                 }
 
                 try {
                     FileUtil.writeToFile(support, response.responseBody)
                 } catch (ignored: IOException) {
+                    HyperLog.w(Constants.TAG, "MainActivity.onCreate: " + ignored.message, ignored)
                 }
 
                 NetworkUtil.setIsPro(AccountUtil.isProUser(baseContext))
@@ -369,6 +372,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 try {
                     item = mToolbar!!.menu.findItem(R.id.menu_track)
                 } catch (ex: Exception) {
+                    HyperLog.w(Constants.TAG, "MainActivity.onRequestPermissionsResult: " + ex.message, ex)
                 }
                 askBackgroundPerm(item)
             }
@@ -614,12 +618,14 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                     zos.closeEntry()
                     fis.close()
                 } catch (ignored: Exception) {
+                    HyperLog.w(Constants.TAG, "MainActivity.zipLogs: " + ignored.message, ignored)
                 }
             }
 
             zos.close()
             fos.close()
         } catch (ignored: IOException) {
+            HyperLog.w(Constants.TAG, "MainActivity.zipLogs: " + ignored.message, ignored)
             temp = null
         }
         for (file in outdated) {
@@ -1242,6 +1248,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             }
 
         } catch (ignored: Exception) {
+            HyperLog.w(Constants.TAG, "MainActivity.onPause: " + ignored.message, ignored)
         }
 
         super.onPause()
@@ -1338,6 +1345,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     override fun onDestroy() {
+        HyperLog.v(Constants.TAG, "MainActivity.onDestroy")
         mMessageReceiver = null
         mTrackReceiver = null
         super.onDestroy()

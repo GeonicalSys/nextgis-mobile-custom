@@ -91,6 +91,7 @@ import com.nextgis.maplib.map.MPLFeaturesUtils.id_name
 import com.nextgis.maplib.map.MapDrawable
 import com.nextgis.maplib.map.MaplibreMapInteraction
 import com.nextgis.maplib.map.VectorLayer
+import com.hypertrack.hyperlog.HyperLog
 import com.nextgis.maplib.util.Constants
 import com.nextgis.maplib.util.Constants.FIELD_ALPHA
 import com.nextgis.maplib.util.Constants.FIELD_BRIGHTNESS_MAX
@@ -230,6 +231,9 @@ public class MapFragment
 
     var longClickProcessed = false
 
+    private val mapViewOrNull get() = mMapRef.get()
+    private val mapDrawableOrNull get() = mapViewOrNull?.map
+
     interface onModeChange {
         fun onModeChangeListener()
     }
@@ -239,6 +243,7 @@ public class MapFragment
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        HyperLog.v(Constants.TAG, "MapFragment.onCreate")
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         mActivity = activity as MainActivity?
@@ -262,6 +267,7 @@ public class MapFragment
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle? ): View? {
+        HyperLog.v(Constants.TAG, "MapFragment.onCreateView")
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
         mCurrentLocationOverlay = CurrentLocationOverlay(mActivity, mMapRef.get())
@@ -1081,12 +1087,12 @@ public class MapFragment
 
 
     override fun onDestroyView() {
-        if (mMapRef.get() != null) {
-            mMapRef.get()!!.removeListener(this)
-            mMapRef.get()!!.map.clearMapListeners()
-            if (mMapRelativeLayout != null) {
-                mMapRelativeLayout!!.removeView(mMapRef.get())
-            }
+        HyperLog.v(Constants.TAG, "MapFragment.onDestroyView")
+        val mapView = mapViewOrNull
+        if (mapView != null) {
+            mapView.removeListener(this)
+            mapView.map.clearMapListeners()
+            mMapRelativeLayout?.removeView(mapView)
         }
 
         editLayerOverlay?.mBottomToolbar?.setOnClickListener(null)
@@ -1097,6 +1103,8 @@ public class MapFragment
 
 
     protected fun drawScaleRuler() {
+        val act = activity ?: return
+        val scaleRuler = mScaleRuler ?: return
         val px =
             TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 10f, resources.displayMetrics)
                 .toInt()
@@ -1106,14 +1114,14 @@ public class MapFragment
         val ruler = Bitmap.createBitmap(px, px, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(ruler)
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint.color = ContextCompat.getColor(activity!!, com.nextgis.maplibui.R.color.primary_dark)
+        paint.color = ContextCompat.getColor(act, com.nextgis.maplibui.R.color.primary_dark)
         paint.strokeWidth = 4f
         paint.style = Paint.Style.STROKE
         canvas.drawLine(0f, px.toFloat(), px.toFloat(), px.toFloat(), paint)
         canvas.drawLine(0f, px.toFloat(), 0f, 0f, paint)
         canvas.drawLine(0f, 0f, notch.toFloat(), 0f, paint)
         canvas.drawLine(px.toFloat(), px.toFloat(), px.toFloat(), (px - notch).toFloat(), paint)
-        mScaleRuler!!.setImageBitmap(ruler)
+        scaleRuler.setImageBitmap(ruler)
     }
 
 
@@ -1383,8 +1391,9 @@ public class MapFragment
             editLayerOverlay!!.selectedFeature = feature
         }
 
-        if (WalkEditService.isServiceRunning(context)) {
-            val preferences = context!!.getSharedPreferences(
+        val ctx = context
+        if (WalkEditService.isServiceRunning(ctx)) {
+            val preferences = (ctx ?: return).getSharedPreferences(
                 WalkEditService.TEMP_PREFERENCES,
                 Context.MODE_MULTI_PROCESS
             )
@@ -1423,6 +1432,7 @@ public class MapFragment
 
 
     override fun onPause() {
+        HyperLog.v(Constants.TAG, "MapFragment.onPause")
         if (null != mCurrentLocationOverlay) {
             mCurrentLocationOverlay!!.stopShowingCurrentLocation()
         }
@@ -1469,6 +1479,7 @@ public class MapFragment
 
 
     override fun onResume() {
+        HyperLog.v(Constants.TAG, "MapFragment.onResume")
         super.onResume()
 
         var showControls =
@@ -1591,11 +1602,9 @@ public class MapFragment
         if (GISApplication.needUpdateBackground){
             try {
                 GISApplication.needUpdateBackground = false
-                if (mMapRef.get() != null) {
-                    mMapRef.get()!!.map.updateMapBackground()
-                }
+                mapViewOrNull?.map?.updateMapBackground()
             } catch (exception : Exception) {
-
+                HyperLog.w(Constants.TAG, "MapFragment.onResume: " + exception.message, exception)
             }
 
         }
@@ -1610,46 +1619,50 @@ public class MapFragment
             mActivity?.registerReceiver(mMessageStyling, intentFilter)
         }
 
-        val progressStyling = (getContext()!!.getApplicationContext() as IGISApplication).getingStyleInProgress
+        val ctx = context ?: return
+        val progressStyling = (ctx.applicationContext as IGISApplication).getingStyleInProgress
         changeProgress(progressStyling)
 
     }
 
 
     protected fun setMarginsToPanel() {
-        val toolbar = mActivity!!.bottomToolbar
+        val act = mActivity ?: return
+        val statusPanel = mStatusPanel ?: return
+        val toolbar = act.bottomToolbar
 
         toolbar.post {
             val isToolbarVisible = toolbar.visibility == View.VISIBLE
-            val isPanelVisible = mStatusPanel!!.visibility == View.VISIBLE
+            val isPanelVisible = statusPanel.visibility == View.VISIBLE
             val toolbarHeight = toolbar.measuredHeight
 
-            val lp = mStatusPanel!!.layoutParams as RelativeLayout.LayoutParams
+            val lp = statusPanel.layoutParams as RelativeLayout.LayoutParams
             var bottom = if (isToolbarVisible && isPanelVisible) toolbarHeight
             else 0
 
             lp.setMargins(lp.leftMargin, lp.topMargin, lp.rightMargin, bottom)
-            mStatusPanel!!.layoutParams = lp
+            statusPanel.layoutParams = lp
 
             bottom = if (isToolbarVisible && !isPanelVisible) toolbarHeight
             else 0
 
-            mStatusPanel!!.minimumHeight = bottom
-            mStatusPanel!!.requestLayout()
+            statusPanel.minimumHeight = bottom
+            statusPanel.requestLayout()
         }
     }
 
 
     protected fun checkCompass(showCompass: Boolean) {
+        val mapLayout = mMapRelativeLayout ?: return
         val compassContainer = R.id.fl_compass
-        val compass = mMapRelativeLayout!!.findViewById<FrameLayout>(compassContainer)
+        val compass = mapLayout.findViewById<FrameLayout>(compassContainer)
 
         if (!showCompass) {
             compass.visibility = View.GONE
             return
         }
 
-        val fragmentManager = mActivity!!.supportFragmentManager
+        val fragmentManager = (mActivity ?: return).supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         //get or create fragment
         var compassFragment =
@@ -1675,7 +1688,7 @@ public class MapFragment
         compass.setOnClickListener(this)
         compass.setOnLongClickListener {
             mIsCompassDragging = true
-            mVibrator!!.vibrate(5)
+            mVibrator?.vibrate(5)
             true
         }
         // Thanks to http://javatechig.com/android/how-to-drag-a-view-in-android
@@ -2420,7 +2433,8 @@ public class MapFragment
         editMode : Boolean) {
 
         val items = featureNames.toTypedArray<String>()
-        val builder = AlertDialog.Builder(            context!!        )
+        val ctx = context ?: return
+        val builder = AlertDialog.Builder(ctx)
         builder.setTitle(R.string.choose_object)
         builder.setItems(items) { dialog, which -> //String selectedItem = items[which];
             // remove after some time
@@ -2613,8 +2627,9 @@ public class MapFragment
     }
 
     fun getClickEnelope(clickPoint: PointF, maplibreMap:MapLibreMap): GeoEnvelope {
+        val ctx = context ?: return GeoEnvelope()
         val TOLERANCE_DP = 20
-        val mTolerancePX = getContext()!!.getResources().getDisplayMetrics().density * TOLERANCE_DP
+        val mTolerancePX = ctx.resources.displayMetrics.density * TOLERANCE_DP
 
         val minP = PointF(clickPoint.x - mTolerancePX, clickPoint.y - mTolerancePX)
         val maxP = PointF(clickPoint.x + mTolerancePX, clickPoint.y + mTolerancePX)

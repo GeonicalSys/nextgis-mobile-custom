@@ -310,7 +310,10 @@ public class LayersFragment
 
 
         final WeakReference<MapFragment> mapFragmentRef = new WeakReference<>(activityRef.get().getMapFragment());
-        mListAdapter = new LayersListAdapter(activityRef.get(), mapFragmentRef.get().getMMapRef().get());
+        MapFragment mapFragmentForInit = mapFragmentRef.get();
+        if (mapFragmentForInit == null || mapFragmentForInit.getMMapRef() == null || mapFragmentForInit.getMMapRef().get() == null)
+            return;
+        mListAdapter = new LayersListAdapter(activityRef.get(), mapFragmentForInit.getMMapRef().get());
         mListAdapter.setDrawer(drawerLayout);
         mListAdapter.setOnPencilClickListener(new View.OnClickListener() {
             @Override

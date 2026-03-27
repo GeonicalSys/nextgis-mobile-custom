@@ -16,7 +16,9 @@ import android.util.Log;
 import com.nextgis.maplib.api.IGISApplication;
 import com.nextgis.maplib.api.INGWLayer;
 
+import com.hypertrack.hyperlog.HyperLog;
 import com.nextgis.maplib.map.MapContentProviderHelper;
+import com.nextgis.maplib.util.Constants;
 import com.nextgis.mobile.datasource.SyncAdapter;
 
 import java.util.ArrayList;
@@ -71,43 +73,46 @@ public class OfflineSyncIntentService extends IntentService {
     }
 
     private void handleActionFoo(String lpath) {
-        Log.d("SSYNC", "OfflineSyncIntentService  handleActionFoo" + lpath);
-        List<Account>         mAccounts = new ArrayList<>();
-        final AccountManager accountManager = AccountManager.get(getApplicationContext());
-        final IGISApplication application = (IGISApplication) getApplication();
-        List<INGWLayer> layers = new ArrayList<>();
+        try {
+            Log.d("SSYNC", "OfflineSyncIntentService  handleActionFoo" + lpath);
+            List<Account> mAccounts = new ArrayList<>();
+            final AccountManager accountManager = AccountManager.get(getApplicationContext());
+            final IGISApplication application = (IGISApplication) getApplication();
+            List<INGWLayer> layers = new ArrayList<>();
 
-        for (Account account : accountManager.getAccountsByType(application.getAccountsType())) {
-
-            List<PeriodicSync> periodicSyncsList = ContentResolver.getPeriodicSyncs(account, ((IGISApplication) getApplication()).getAuthority());
-            Log.d("SSYNC", "Number of sync for: " + account.name);
-            Log.d("SSYNC", "Number of sync: " + periodicSyncsList.size());
-            for (PeriodicSync p : periodicSyncsList) {
-                Log.d("SSYNC", "period: " + p.period + " sec, Extras: " + p.extras);
-
-                for (String key : p.extras.keySet()) {
-                    Object value = p.extras.get(key);
-                    Log.d("SSYNC", "Key: " + key + ", Value: " + value + " (" + (value != null ? value.getClass().getSimpleName() : "null") + ")");
+            for (Account account : accountManager.getAccountsByType(application.getAccountsType())) {
+                List<PeriodicSync> periodicSyncsList = ContentResolver.getPeriodicSyncs(account, ((IGISApplication) getApplication()).getAuthority());
+                Log.d("SSYNC", "Number of sync for: " + account.name);
+                Log.d("SSYNC", "Number of sync: " + periodicSyncsList.size());
+                for (PeriodicSync p : periodicSyncsList) {
+                    Log.d("SSYNC", "period: " + p.period + " sec, Extras: " + p.extras);
+                    for (String key : p.extras.keySet()) {
+                        Object value = p.extras.get(key);
+                        Log.d("SSYNC", "Key: " + key + ", Value: " + value + " (" + (value != null ? value.getClass().getSimpleName() : "null") + ")");
+                    }
                 }
+
+                layers.clear();
+                MapContentProviderHelper.getLayersByAccount(application.getMap(), account.name, layers);
+
+                if (layers.size() > 0)
+                    mAccounts.add(account);
             }
+            SyncResult syncResult = new SyncResult();
+            SyncAdapter syncAdapter = new SyncAdapter(getApplicationContext(), true);
 
-            layers.clear();
-            MapContentProviderHelper.getLayersByAccount(application.getMap(), account.name, layers);
-
-            if (layers.size() > 0 )
-                mAccounts.add(account);
-        }
-        SyncResult syncResult = new SyncResult();
-        SyncAdapter syncAdapter = new SyncAdapter(getApplicationContext(), true);
-
-        Bundle bundle = new Bundle();
-        if (lpath != null)
-            bundle.putString(ACTION_LPATH, lpath);
-        for (Account account : mAccounts){
-            syncAdapter.onPerformSync(account,
-                    bundle,
-                    com.nextgis.mobile.util.AppSettingsConstants.AUTHORITY,
-                    null, syncResult);
+            Bundle bundle = new Bundle();
+            if (lpath != null)
+                bundle.putString(ACTION_LPATH, lpath);
+            for (Account account : mAccounts) {
+                syncAdapter.onPerformSync(account,
+                        bundle,
+                        com.nextgis.mobile.util.AppSettingsConstants.AUTHORITY,
+                        null, syncResult);
+            }
+        } catch (Exception e) {
+            Log.e("SSYNC", "handleActionFoo failed: " + e.getMessage(), e);
+            HyperLog.e(Constants.TAG, "OfflineSyncIntentService.handleActionFoo crash: " + e.getMessage(), e);
         }
     }
 

@@ -435,8 +435,11 @@ public class SettingsFragment
                     Preference preference,
                     Object newValue)
             {
-                preference.setSummary(listPreference.getEntries()[listPreference.findIndexOfValue(
-                        (String) newValue)]);
+                int id = listPreference.findIndexOfValue((String) newValue);
+                CharSequence[] entries = listPreference.getEntries();
+                if (id >= 0 && id < entries.length) {
+                    preference.setSummary(entries[id]);
+                }
 
                 return true;
             }
@@ -474,9 +477,10 @@ public class SettingsFragment
                                 Object newValue)
                         {
                             int value = Integer.parseInt(newValue.toString());
-                            CharSequence summary =
-                                    ((ListPreference) preference).getEntries()[value];
-                            preference.setSummary(summary);
+                            CharSequence[] entries = ((ListPreference) preference).getEntries();
+                            if (value >= 0 && value < entries.length) {
+                                preference.setSummary(entries[value]);
+                            }
                             return true;
                         }
                     });
@@ -545,8 +549,11 @@ public class SettingsFragment
                     Preference preference,
                     Object newValue)
             {
-                preference.setSummary(listPreference.getEntries()[listPreference.findIndexOfValue(
-                        (String) newValue)]);
+                int id = listPreference.findIndexOfValue((String) newValue);
+                CharSequence[] entries = listPreference.getEntries();
+                if (id >= 0 && id < entries.length) {
+                    preference.setSummary(entries[id]);
+                }
 
                 return true;
             }
@@ -565,8 +572,11 @@ public class SettingsFragment
                     Preference preference,
                     Object newValue)
             {
-                preference.setSummary(
-                        mapBG.getEntries()[mapBG.findIndexOfValue((String) newValue)]);
+                int id = mapBG.findIndexOfValue((String) newValue);
+                CharSequence[] entries = mapBG.getEntries();
+                if (id >= 0 && id < entries.length) {
+                    preference.setSummary(entries[id]);
+                }
                 GISApplication.needUpdateBackground = true;
                 return true;
             }
@@ -599,8 +609,11 @@ public class SettingsFragment
                         Object newValue)
                 {
                     int value = Integer.parseInt(newValue.toString());
-                    CharSequence summary = ((ListPreference) preference).getEntries()[value - 1];
-                    preference.setSummary(summary);
+                    int idx = value - 1;
+                    CharSequence[] entries = ((ListPreference) preference).getEntries();
+                    if (idx >= 0 && idx < entries.length) {
+                        preference.setSummary(entries[idx]);
+                    }
 
 
                     new Handler().postDelayed(new Runnable() {
@@ -695,9 +708,11 @@ public class SettingsFragment
                     Object newValue)
             {
                 int id = ((ListPreference) preference).findIndexOfValue((String) newValue);
-                preference.setSummary(
-                        getMinSummary(context, ((ListPreference) preference).getEntries()[id],
-                                (String) newValue));
+                CharSequence[] entries = ((ListPreference) preference).getEntries();
+                if (id >= 0 && id < entries.length) {
+                    preference.setSummary(
+                            getMinSummary(context, entries[id], (String) newValue));
+                }
 
                 String preferenceKey = isTracks
                                        ? SettingsConstants.KEY_PREF_TRACKS_MIN_TIME
@@ -721,9 +736,11 @@ public class SettingsFragment
                     Object newValue)
             {
                 int id = ((ListPreference) preference).findIndexOfValue((String) newValue);
-                preference.setSummary(
-                        getMinSummary(context, ((ListPreference) preference).getEntries()[id],
-                                (String) newValue));
+                CharSequence[] entries = ((ListPreference) preference).getEntries();
+                if (id >= 0 && id < entries.length) {
+                    preference.setSummary(
+                            getMinSummary(context, entries[id], (String) newValue));
+                }
 
                 String preferenceKey = isTracks
                                        ? SettingsConstants.KEY_PREF_TRACKS_MIN_DISTANCE

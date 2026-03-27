@@ -43,6 +43,7 @@ public class FullCompassFragment extends CompassFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        if (getActivity() == null) return null;
         mActivity = (MainActivity) getActivity();
         mActivity.hideBottomBar();
 
@@ -88,8 +89,10 @@ public class FullCompassFragment extends CompassFragment {
     @Override
     public void onDestroyView()
     {
-        mActivity.restoreBottomBar(-1);
-        mActivity.setTitle(mActivity.getAppName());
+        if (mActivity != null) {
+            mActivity.restoreBottomBar(-1);
+            mActivity.setTitle(mActivity.getAppName());
+        }
         super.onDestroyView();
     }
 
