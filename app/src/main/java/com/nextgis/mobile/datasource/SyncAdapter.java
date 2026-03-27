@@ -80,15 +80,19 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
             msg.putExtra(MESSAGE_TITLE_EXTRA, alertTitle);
             msg.setPackage(getContext().getPackageName());
             getContext().sendBroadcast(msg);
+            sendSyncFinishBroadcast();
             return;
         }
 
-        if (!super.isSomeToSync( account))
+        if (!super.isSomeToSync( account)) {
+            sendSyncFinishBroadcast();
             return;
+        }
 
         IGISApplication gisApp = (IGISApplication) getContext().getApplicationContext();
         if (gisApp.isLayerFillServiceBusy()) {
             HyperLog.v(Constants.TAG, "onPerformSync skipped (layer fill in progress) for " + account.name);
+            sendSyncFinishBroadcast();
             return;
         }
 
@@ -104,6 +108,12 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
             sendNotification(getContext(), SYNC_FINISH, null);
 
 //        Log.e("RRFRSH", "SyncAdapter datasource - onPerformSync end");
+    }
+
+    private void sendSyncFinishBroadcast() {
+        Intent finish = new Intent(SYNC_FINISH);
+        finish.setPackage(getContext().getPackageName());
+        getContext().sendBroadcast(finish);
     }
 
     public void sendNotification(

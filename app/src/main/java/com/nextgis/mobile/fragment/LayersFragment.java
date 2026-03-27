@@ -531,6 +531,7 @@ public class LayersFragment
         }
 
         refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
+        updateInfo();
 
     }
 
