@@ -8,5 +8,5 @@
 	branch = master
 [submodule "easypicker"]
 	path = easypicker
-	url = git@github.com:nextgis/easypicker.git
+	url = https://github.com/GeonicalSystem/easypicker.git
 	branch = master
