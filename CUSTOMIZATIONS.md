@@ -18,7 +18,12 @@ Base commit: `7dde21c` (upstream `maplibre` branch, "3.0.0 release").
 5. [NGW Resource Selection UI](#5-ngw-resource-selection-ui)
 6. [Miscellaneous App Fixes](#6-miscellaneous-app-fixes)
 7. [Localization](#7-localization)
-8. [Git Workflow Reference](#8-git-workflow-reference)
+8. [SQLite Schema Validation and Auto-Rebuild](#8-sqlite-schema-validation-and-auto-rebuild)
+9. [Config Sync from NGW Description](#9-config-sync-from-ngw-description)
+10. [Stability Hardening](#10-stability-hardening)
+11. [Sync UI Fixes](#11-sync-ui-fixes)
+12. [Upstream Merge History](#12-upstream-merge-history)
+13. [Git Workflow Reference](#13-git-workflow-reference)
 
 ---
 
@@ -215,7 +220,224 @@ New Russian and English strings added:
 
 ---
 
-## 8. Git Workflow Reference
+## 8. SQLite Schema Validation and Auto-Rebuild
+
+**Purpose:** prevent silent sync failures when the local SQLite table schema
+doesn't match the server (e.g. interrupted initial download, field added on
+server after fill).
+
+### What it does
+
+- After `createFromNGW()` completes, validates that every field in `mFields`
+  has a corresponding column in the SQLite table via `PRAGMA table_info`.
+  Throws `NGException` if columns are missing, so `LayerFillService` marks the
+  task as failed immediately instead of leaving a broken layer.
+- During sync in `getChangesFromServer()`, when the per-feature INSERT fails
+  with `SQLiteException` containing "has no column", stops the loop immediately
+  (instead of repeating the error for every feature) and calls
+  `scheduleNgwLayerRebuildAfterSchemaMismatch()` to delete and re-download
+  the layer automatically.
+
+### Files changed
+
+| File | Changes |
+|------|---------|
+| `VectorLayer.java` | New method `validateSqliteSchemaAgainstFields()` — compares `mFields` against actual SQLite columns |
+| `NGWVectorLayer.java` | Post-fill validation in `createFromNGW()`; schema-mismatch detection in inner per-feature catch and outer `SQLiteException` catch of `getChangesFromServer()` |
+
+---
+
+## 9. Config Sync from NGW Description
+
+**Purpose:** during sync, compare the layer config JSON from the NGW resource
+`description` field with the local layer state. Apply changes (style, visibility,
+zoom, sync settings, new fields) without re-downloading data.
+
+### Architecture
+
+- Config is stored as JSON text in the `description` field of the NGW resource.
+- On initial layer fill, `LayerFillService` applies it via `fromJSON()`.
+- On each sync, `getChangesFromServer()` fetches the same resource meta (already
+  needed for schema check), extracts description, compares MD5 hash with the
+  last applied hash to avoid false positives.
+- If hash differs, parses the config and classifies changes as SOFT (can update
+  in-place) or HARD (requires full rebuild).
+
+### Soft vs Hard changes
+
+| Change | Type | Action |
+|--------|------|--------|
+| Renderer/style | Soft | Apply new renderer |
+| Visibility, zoom, name | Soft | Update and save |
+| sync_type, sync_direction, tracked | Soft | Update and save |
+| New field | Soft | `ALTER TABLE ADD COLUMN` + update `mFields` |
+| Field alias changed | Soft | Update `Field.alias` |
+| Field type changed | Hard | `scheduleNgwLayerRebuildAfterSchemaMismatch()` |
+| Geometry type changed | Hard | Same |
+
+### New files
+
+| File | Purpose |
+|------|---------|
+| `maplib/.../util/LayerConfigUtil.java` | Config parsing extracted from `LayerFillService`: `extractNgwResourceDescriptionJson()`, `parseLayerConfigObject()`, `unwrapLayerConfigJsonText()`, HTML stripping, balanced JSON extraction, `md5()` |
+| `maplib/.../util/LayerConfigDiff.java` | Compares server config vs local layer, classifies changes as `MATCH` / `SOFT` / `HARD`, tracks added fields, alias changes, renderer/visibility/zoom/name/sync changes |
+
+### Modified files
+
+| File | Changes |
+|------|---------|
+| `VectorLayer.java` | New method `applySoftConfigUpdate(LayerConfigDiff)` — applies soft changes: `ALTER TABLE ADD COLUMN`, alias updates, renderer, visibility, zoom, name |
+| `NGWVectorLayer.java` | Override `applySoftConfigUpdate()` for sync_type/direction/tracked/serverWhere; config check block in `getChangesFromServer()` with MD5 hash comparison |
+| `SettingsConstants.java` | New key `KEY_PREF_LAST_CONFIG_HASH` |
+| `LayerFillService.java` | Delegates config parsing to `LayerConfigUtil`; stores config hash after initial fill |
+
+### How to reproduce
+
+1. Create `LayerConfigUtil` and `LayerConfigDiff` in maplib.
+2. Add `applySoftConfigUpdate()` to `VectorLayer` and override in `NGWVectorLayer`.
+3. In `getChangesFromServer()`, after schema check, add config check block.
+4. In `LayerFillService`, save MD5 hash after applying config on initial fill.
+5. Replace private parsing methods in `LayerFillService` with delegation to `LayerConfigUtil`.
+
+---
+
+## 10. Stability Hardening
+
+**Purpose:** fix 80+ potential crash points identified by code audit across
+all three modules.
+
+### 10.1 Global crash handling
+
+| File | Changes |
+|------|---------|
+| `MainApplication.java` | `HyperLogCrashHandler` installed as last UncaughtExceptionHandler — every crash written to HyperLog file before process death |
+| `OfflineSyncIntentService.java` | Top-level `try-catch` with HyperLog around `handleActionFoo()` |
+| `WalkEditService.java` | `UnsupportedOperationException` for unknown geometry type replaced with log + return |
+
+### 10.2 Cursor leak fixes (6 fixes in maplib)
+
+| File | Method | Fix |
+|------|--------|-----|
+| `DatabaseContext.java` | `getDbForLayer` | Close 5 PRAGMA query cursors |
+| `TrackLayer.java` | `loadTrack` | `try/finally` with cursor.close() |
+| `TrackLayer.java` | `getColor` | Close cursor when moveToFirst fails |
+| `MapDrawable.java` | `createFeatureListFromCurrentTrack` | Close mCursor on all paths |
+| `VectorLayer.java` | `getLagreGeometryFromQuery` | Close cursor before return null |
+| `VectorLayer.java` | `rebuildCache` | Close cursor in finally block |
+
+### 10.3 ConcurrentModificationException fixes (3 fixes)
+
+| File | Fix |
+|------|-----|
+| `LayerGroup.java` `removeLayer` | `Iterator.remove()` instead of `map.remove()` in loop |
+| `MapEventSource.java` `mListeners` | Changed to `CopyOnWriteArrayList` |
+| `LayerGroup.java` `runDraw` | Snapshot `mLayers.values()` under synchronized block |
+
+### 10.4 LayerFillProgressDialogFragment (4 fixes)
+
+- Null check for `mLayerFillReceiver` in `onAttach`
+- `isFinishing()` guard before dialog/toast operations
+- Added `break` in `STATUS_STOP` to prevent fall-through
+- Null check for `mProgressDialog`
+
+### 10.5 MapFragment.kt null safety
+
+- Added helper properties `mapViewOrNull`, `mapDrawableOrNull`
+- Replaced `getContext()!!`, `context!!`, `activity!!` with safe-call patterns
+  in lifecycle-dependent methods (drawScaleRuler, onDestroyView, onResume, etc.)
+
+### 10.6 Overlay null safety
+
+| File | Fix |
+|------|-----|
+| `EditLayerOverlay.java` | Bounds check for `mDrawItems.get(0)`, null guards for `mSelectedItem`, `mContext`, `mBottomToolbar` |
+| `UndoRedoOverlay.java` | Null guard for `mTopToolbar` |
+
+### 10.7 Fragment lifecycle guards
+
+| File | Fix |
+|------|-----|
+| `AttributesFragment.java` | 6 null guards for `getActivity()`/`getContext()` |
+| `LayersFragment.java` | Null-safe chain for `mapFragmentRef` access |
+| `FullCompassFragment.java` | Null check before `getActivity()` cast |
+| `AboutActivity.java` | Null checks in inner fragment classes |
+
+### 10.8 MapDrawable + WalkEditService
+
+| File | Fix |
+|------|-----|
+| `MapDrawable.java` | Null guards for weak refs in `clearMapLibreMap`, `changeFeatureId`, `zoomToLatLng` |
+| `WalkEditService.java` | Removed redundant `stopSelf()` from `onDestroy()`, removed duplicate `removeNotification()` |
+
+### 10.9 SettingsFragment ArrayIndexOutOfBounds
+
+7 fixes for `findIndexOfValue` / `parseInt` results used as array index without
+bounds checking.
+
+### 10.10 Logging
+
+- 10+ empty catch blocks replaced with `HyperLog.w` logging
+- Lifecycle breadcrumbs added to MapFragment, MainActivity, LayerFillService, WalkEditService
+
+---
+
+## 11. Sync UI Fixes
+
+**Purpose:** fix two UI bugs in synchronization status display.
+
+### Problem 1: Sync spinner never stops
+
+`SyncAdapter.onPerformSync()` had 3 early `return` paths (no user, nothing to
+sync, LayerFillService busy) that did not send `SYNC_FINISH` broadcast. If
+`LayersFragment` started the animation via `isSyncStarted()`, it never received
+the stop signal.
+
+**Fix:** added `sendSyncFinishBroadcast()` call in all early return paths.
+
+### Problem 2: Last sync time not updating
+
+`LayersFragment.onResume()` registered the `SyncReceiver` and checked animation
+state, but did not call `updateInfo()`. If sync finished while the fragment was
+paused, the timestamp was written to SharedPreferences but the UI never read it.
+
+**Fix:** added `updateInfo()` call in `onResume()`.
+
+### Files changed
+
+| File | Changes |
+|------|---------|
+| `SyncAdapter.java` (app) | New `sendSyncFinishBroadcast()` method; called in all early return paths |
+| `LayersFragment.java` | Added `updateInfo()` in `onResume()` |
+
+---
+
+## 12. Upstream Merge History
+
+### Merge 1: upstream/master commit `9158b52` (2026-03-27)
+
+Merged upstream changes:
+- NGW auth changed to JSON format
+- Demo NGW project support (`demo_project` resource type)
+- Feature value updates in `AttributesActivity`
+- `ChooseLayerDialog`: added `useCreatePointFromOverlay` parameter
+- `addCurrentLocation`: improved point creation from overlay
+- Cancel edits on click in `MODE_EDIT`
+- `reloadFeatureToMaplibre()` + `updateSelectedMarker()` after feature create
+- `LayersFragment`: sync button state fixes
+- `OfflineSyncIntentService`: periodic sync logging
+- Version bump to 3.0.2 (build 171)
+
+Conflicts resolved (our customizations preserved):
+- Walk-by-geometry feature kept active
+- Sync guard (`isLayerFillServiceBusy`) kept
+- `queryAllFeatureIdsFromDb` in `AttributesFragment` kept
+- Batch import with transactions in `NGWVectorLayer`/`GeoJSONUtil` kept
+- AGP 9.x build system kept
+- Conditional signing config kept
+
+---
+
+## 13. Git Workflow Reference
 
 ### Repository structure
 
