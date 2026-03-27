@@ -688,6 +688,9 @@ public class MapFragment
                         selectedLayer!! )
                     }
                 }
+            } else if (mode == MODE_EDIT){
+                cancelEdits()
+                setNewMode(MODE_NORMAL)
             }
             return
         }
@@ -705,6 +708,8 @@ public class MapFragment
                 mMapRef.get()!!.map!!.finishCreateNewFeature(
                     id,
                     selectedLayer!! )
+                mMapRef.get()!!.map!!.reloadFeatureToMaplibre(id, selectedLayer)
+                mMapRef.get()!!.map!!.updateSelectedMarker()
             }
         } else if (editLayerOverlay!!.selectedFeatureGeometry != null) editLayerOverlay!!.setHasEdits(
             true
@@ -1195,7 +1200,6 @@ public class MapFragment
 
         val mapLibreMap = mMapRef.get()!!.map.maplibreMap
         if (mapLibreMap != null) {
-//            Log.e("ZZOM", "zoom " + mapLibreMap.zoom)
             //return "${mapLibreMap.zoom.toInt()}z"
             return "%.1fz".format(Locale.US, mapLibreMap.zoom)
         }
@@ -1748,7 +1752,7 @@ public class MapFragment
         } else {
             if (isDialogShown) return
             //open choose edit layer dialog
-            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog())
+            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog(false))
             mChooseLayerDialogRef.get()!!.setLayerList(layers)
                 .setCode(EDIT_LAYER)
                 .setTitle(getString(com.nextgis.maplibui.R.string.choose_layers))
@@ -1786,7 +1790,7 @@ public class MapFragment
         } else {
             if (isDialogShown) return
             //open choose edit layer dialog
-            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog())
+            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog(false))
             mChooseLayerDialogRef.get()!!.setLayerList(layers)
                 .setCode(ADD_POINT_BY_TAP)
                 .setTitle(getString(com.nextgis.maplibui.R.string.choose_layers))
@@ -1797,7 +1801,11 @@ public class MapFragment
 
     protected fun createPointFromOverlay() {
         editLayerOverlay!!.selectedFeature = Feature()
-        editLayerOverlay!!.selectedFeature.geometry = GeoPoint()
+
+        if (mCurrentCenter != null)
+            editLayerOverlay!!.selectedFeature.geometry = GeoPoint(mCurrentCenter!!.x, mCurrentCenter!!.y)
+        else
+            editLayerOverlay!!.selectedFeature.geometry = GeoPoint()
         setNewMode(MODE_EDIT)
         undoRedoOverlay!!.clearHistory()
         val mapLibreMap = mMapRef.get()!!.map!!.maplibreMap
@@ -1811,7 +1819,8 @@ public class MapFragment
 
     }
 
-    protected fun addCurrentLocation() {
+    // useCreatePouintFromOverlay - need to call if create by click R.id.add_current_location button
+    protected fun addCurrentLocation(useCreatePouintFromOverlay: Boolean) {
         //show select layer dialog if several layers, else start default or custom form
         val layers = removeHideLayers (mMapRef.get()!!.getVectorLayersByType(
             GeoConstants.GTMultiPointCheck or GeoConstants.GTPointCheck))
@@ -1828,6 +1837,10 @@ public class MapFragment
             if (vectorLayer is ILayerUI) {
                 mSelectedLayer = vectorLayer as VectorLayer
                 editLayerOverlay!!.setSelectedLayer(mSelectedLayer)
+
+                if (useCreatePouintFromOverlay)
+                    createPointFromOverlay()
+
                 val vectorLayerUI = vectorLayer as IVectorLayerUI
                 vectorLayerUI.showEditForm(mActivity, Constants.NOT_FOUND.toLong(), null, -1)
 
@@ -1845,7 +1858,7 @@ public class MapFragment
         } else {
             if (isDialogShown) return
             //open choose dialog
-            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog())
+            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog(true))
             mChooseLayerDialogRef.get()!!.setLayerList(layers)
                 .setCode(ADD_CURRENT_LOC)
                 .setTitle(getString(com.nextgis.maplibui.R.string.choose_layers))
@@ -2080,7 +2093,8 @@ public class MapFragment
 
     fun onFinishChooseLayerDialog(
         code: Int,
-        layer: ILayer?
+        layer: ILayer?,
+        useCreatePointFromOverlay: Boolean
     ) {
         val vectorLayer = layer as VectorLayer?
         if (layer == null) return  // TODO toast?
@@ -2091,6 +2105,10 @@ public class MapFragment
         mSelectedLayer = vectorLayer
         editLayerOverlay!!.setSelectedLayer(vectorLayer)
 
+
+        if (useCreatePointFromOverlay)
+            createPointFromOverlay()
+
         if (code == ADD_CURRENT_LOC) {
             if (layer is ILayerUI) {
                 val layerUI = layer as IVectorLayerUI
@@ -2098,6 +2116,9 @@ public class MapFragment
             }
         } else if (code == EDIT_LAYER) {
             setNewMode(MODE_SELECT_ACTION)
+            //if (editLayerOverlay.selectedFeature == )
+            if (useCreatePointFromOverlay)
+                createPointFromOverlay()
         } else if (code == ADD_GEOMETRY_BY_WALK) {
             editLayerOverlay!!.newGeometryByWalk()
             applyInitialWalkGeometryAtStartLocation()
@@ -3187,7 +3208,7 @@ public class MapFragment
         when (v.id) {
             R.id.fl_compass -> showFullCompass()
             R.id.add_current_location -> {
-                if (v.isEnabled) addCurrentLocation()
+                if (v.isEnabled) addCurrentLocation(true)
                 mMainButton!!.collapse()
             }
             R.id.add_new_geometry -> {
