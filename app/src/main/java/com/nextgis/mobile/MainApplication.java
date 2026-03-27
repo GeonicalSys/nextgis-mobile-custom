@@ -35,6 +35,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.hypertrack.hyperlog.HyperLog;
 import com.google.android.gms.analytics.ExceptionReporter;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -145,12 +146,10 @@ public class MainApplication extends GISApplication
      */
     private void installHyperLogCrashHandler() {
         try {
-            if (!HyperLog.hasPendingDeviceLogsInDatabase()) {
-                HyperLog.initialize(this);
-                HyperLog.setLogLevel(Log.VERBOSE);
-            }
+            HyperLog.initialize(this);
+            HyperLog.setLogLevel(Log.VERBOSE);
         } catch (Exception ignored) {
-            // HyperLog may already be initialized
+            // HyperLog may already be initialized by Logger
         }
         Thread.setDefaultUncaughtExceptionHandler(
                 new com.nextgis.maplibui.util.HyperLogCrashHandler()
