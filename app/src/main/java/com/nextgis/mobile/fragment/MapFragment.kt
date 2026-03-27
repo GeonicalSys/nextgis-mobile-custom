@@ -1910,7 +1910,7 @@ public class MapFragment
             ).show()
         } else {
             if (isDialogShown) return
-            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog())
+            mChooseLayerDialogRef = WeakReference(ChooseLayerDialog(false))
             mChooseLayerDialogRef.get()!!.setLayerList(layers)
                 .setCode(ADD_GEOMETRY_BY_WALK)
                 .setTitle(getString(com.nextgis.maplibui.R.string.choose_layers))
