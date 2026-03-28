@@ -94,9 +94,6 @@ import io.sentry.Sentry;
 public class MainApplication extends GISApplication
 {
     public static final String LAYER_OSM = "osm";
-    public static final String LAYER_A = "vector_a";
-    public static final String LAYER_B = "vector_b";
-    public static final String LAYER_C = "vector_c";
     public static final String LAYER_TRACKS = "tracks";
 
     private Tracker mTracker;
@@ -117,11 +114,11 @@ public class MainApplication extends GISApplication
         }
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (mSharedPreferences.getBoolean("save_log", false)) {
+        if (mSharedPreferences.getBoolean("save_log", true)) {
             Logger.initialize(this);
         }
 
-        GoogleAnalytics.getInstance(this).setAppOptOut(!mSharedPreferences.getBoolean(KEY_PREF_GA, true));
+        GoogleAnalytics.getInstance(this).setAppOptOut(!mSharedPreferences.getBoolean(KEY_PREF_GA, false));
         GoogleAnalytics.getInstance(this).setDryRun(DEBUG_MODE);
         getTracker();
         setExceptionHandler();
@@ -397,18 +394,6 @@ public class MainApplication extends GISApplication
                 }
             });
         }
-
-        // create empty layers for first experimental editing
-        List<Field> fields = new ArrayList<>(2);
-        fields.add(new Field(GeoConstants.FTInteger, "FID", "FID"));
-        fields.add(new Field(GeoConstants.FTString, "TEXT", "TEXT"));
-
-        if (mMap.getLayerByPathName(LAYER_A) == null)
-            mMap.addLayer(createEmptyVectorLayer(getString(R.string.points_for_edit), LAYER_A, GeoConstants.GTPoint, fields));
-        if (mMap.getLayerByPathName(LAYER_B) == null)
-            mMap.addLayer(createEmptyVectorLayer(getString(R.string.lines_for_edit), LAYER_B, GeoConstants.GTLineString, fields));
-        if (mMap.getLayerByPathName(LAYER_C) == null)
-            mMap.addLayer(createEmptyVectorLayer(getString(R.string.polygons_for_edit), LAYER_C, GeoConstants.GTPolygon, fields));
 
         mMap.save();
     }

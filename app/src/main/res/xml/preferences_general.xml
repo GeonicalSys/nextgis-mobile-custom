@@ -61,14 +61,14 @@
             />
         <CheckBoxPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="ga_enabled"
             android:singleLineTitle="false"
             android:summary="@string/pref_ga_sum"
             android:title="@string/pref_ga"/>
         <CheckBoxPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="save_log"
             android:singleLineTitle="false"
             android:title="@string/extended_logs"
@@ -85,7 +85,7 @@
             android:title="@string/compass_true_north"/>
         <CheckBoxPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="compass_show_magnetic"
             android:singleLineTitle="false"
             android:title="@string/compass_magnetic"/>

@@ -1229,7 +1229,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         if (mapFragment!!.isEditMode) showEditToolbar()
 
         val log = menu.findItem(R.id.menu_share_log)
-        log?.setVisible(mPreferences.getBoolean("save_log", false))
+        log?.setVisible(mPreferences.getBoolean("save_log", true))
 
         return super.onPrepareOptionsMenu(menu)
     }

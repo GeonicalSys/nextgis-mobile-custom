@@ -80,21 +80,21 @@
 
     <CheckBoxPreference
         app:iconSpaceReserved="false"
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="show_scale_ruler"
         android:singleLineTitle="false"
         android:title="@string/show_scale_ruler"/>
 
     <CheckBoxPreference
         app:iconSpaceReserved="false"
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="show_zoom_level"
         android:singleLineTitle="false"
         android:title="@string/show_zoom_level"/>
 
     <CheckBoxPreference
         app:iconSpaceReserved="false"
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="show_ruler_measuring"
         android:singleLineTitle="false"
         android:title="@string/show_ruler_measuring"/>
@@ -121,7 +121,7 @@
 
     <ListPreference
         app:iconSpaceReserved="false"
-        android:defaultValue="neutral"
+        android:defaultValue="light"
         android:entries="@array/map_bg_entry"
         android:entryValues="@array/map_bg_val"
         android:key="map_bg"

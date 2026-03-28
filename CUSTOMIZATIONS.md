@@ -24,7 +24,8 @@ Base commit: `7dde21c` (upstream `maplibre` branch, "3.0.0 release").
 11. [Sync UI Fixes](#11-sync-ui-fixes)
 12. [Upstream Merge History](#12-upstream-merge-history)
 13. [Collector Import Verification, Layer Ordering, and Sync Timestamp](#13-collector-import-verification-layer-ordering-and-sync-timestamp)
-14. [Git Workflow Reference](#14-git-workflow-reference)
+14. [Default Preferences, Base Layers, Tracks Display, and NGRc Zoom](#14-default-preferences-base-layers-tracks-display-and-ngrc-zoom)
+15. [Git Workflow Reference](#15-git-workflow-reference)
 
 ---
 
@@ -503,7 +504,55 @@ fill queue drains with a safe flush on `MapFragment` resume.
 
 ---
 
-## 14. Git Workflow Reference
+## 14. Default Preferences, Base Layers, Tracks Display, and NGRc Zoom
+
+**Purpose:** align factory defaults with GeonicalSystem product expectations; drop
+legacy “demo” vector layers; show tracks as polylines only; widen `.ngrc` raster
+visibility slightly beyond packaged tile zoom range.
+
+### Default preferences (app `res/xml` + matching `get*` fallbacks)
+
+| Area | Keys / behavior |
+|------|-----------------|
+| **General** (`preferences_general.xml`) | Sync notification off; analytics (`ga_enabled`) off; extended logs on; compass magnetic needle on (`compass_show_magnetic`). |
+| **Map** (`preferences_map.xml`) | Scale ruler off; zoom level on; measuring ruler on; map background `light`. |
+| **Location** (`preferences_location.xml`) | Source **3** (GPS + other networks); min time **2** s; min distance **5** m. |
+| **Tracks** (`preferences_tracks.xml`) | Min time **5** s; min distance **5** m. |
+
+**Code fallbacks** (when a preference key is absent): `MainApplication`,
+`MainActivity`, `SettingsActivity` (`save_log`, `KEY_PREF_GA`); `MapFragment.kt`
+(map overlays); `GISApplication.getMapBackground()` and `MapDrawable.updateMapBackground()`
+(`map_bg` → light); `GpsEventSource`, `WalkEditService` (location distance **5**);
+`TrackerService` (track interval defaults **5** / **5**); `LocationUtil` (location
+source default **3** for non-track queries).
+
+**Compass:** `CompassFragment.onResume()` reads true north / magnetic / vibrate
+from `SharedPreferences` so the map mini-compass matches settings (maplibui).
+
+### No default editable vector layers
+
+`MainApplication.initBaseLayers()` adds **only** the OSM base raster when missing;
+removed creation of empty `vector_a` / `vector_b` / `vector_c` (“points/lines/polygons
+for edit”). `SettingsFragment.deleteLayers()` on reset no longer preserves those
+paths—only OSM and the tracks layer stay.
+
+### Tracks: no start/end flag icons
+
+- **MapLibre:** removed `track-flag-source`, `track-flags-layer`, and flag bitmap
+  registration from `MapDrawable`; `createFeatureListFlagsFromTrackLayer()` in
+  `MPLFeaturesUtils` returns an empty feature list (API kept).
+- **Canvas / legacy renderer:** `TrackRenderer` no longer draws green/red flags;
+  `setEndingMarker` removed; `TrackLayerUI` does not install a flag bitmap.
+
+### `.ngrc` local raster zoom range
+
+`TMSLayer.fillFromNgrc()`: after `load()`, expands layer visibility by **±2**
+zoom levels vs values from the archive config, clamped to
+`GeoConstants.DEFAULT_MIN_ZOOM` / `DEFAULT_MAX_ZOOM`, then `save()`.
+
+---
+
+## 15. Git Workflow Reference
 
 ### Repository structure
 

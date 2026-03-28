@@ -1499,11 +1499,11 @@ public class MapFragment
         )
 
         showControls =
-            mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER, true)
+            mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER, false)
         if (showControls) mScaleRulerLayout!!.visibility = View.VISIBLE
         else mScaleRulerLayout!!.visibility = View.GONE
 
-        showControls = mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_ZOOM, false)
+        showControls = mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_ZOOM, true)
         if (showControls) {
 //            mZoomLevel.setVisibility(View.VISIBLE);
             if (mZoom != null) mZoom!!.visibility = View.VISIBLE
@@ -1513,7 +1513,7 @@ public class MapFragment
         }
 
         showControls =
-            mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_MEASURING, false)
+            mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_MEASURING, true)
         if (showControls) mRuler!!.visibility = View.VISIBLE
         else mRuler!!.visibility = View.GONE
 
@@ -2384,7 +2384,7 @@ public class MapFragment
     fun showRulerButton() {
         if (mPreferences!!.getBoolean(
                 AppSettingsConstants.KEY_PREF_SHOW_MEASURING,
-                false
+                true
             )
         ) mRuler!!.visibility =
             View.VISIBLE
@@ -3112,7 +3112,7 @@ public class MapFragment
         mZoom = panel.findViewById(R.id.tv_zoom)
         if (mZoom != null) mZoom!!.visibility = if (mPreferences!!.getBoolean(
                 AppSettingsConstants.KEY_PREF_SHOW_ZOOM,
-                false
+                true
             )
         ) View.VISIBLE else View.GONE
     }

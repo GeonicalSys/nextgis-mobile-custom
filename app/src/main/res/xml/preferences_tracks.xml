@@ -39,7 +39,7 @@
     <ListPreference
         app:iconSpaceReserved="false"
 
-        android:defaultValue="10"
+        android:defaultValue="5"
         android:entries="@array/tracker_min_time_between_updates"
         android:entryValues="@array/tracker_min_time_between_updates_val"
         android:key="tracks_min_time"
@@ -50,7 +50,7 @@
     <ListPreference
         app:iconSpaceReserved="false"
 
-        android:defaultValue="10"
+        android:defaultValue="5"
         android:entries="@array/tracker_min_dist_update"
         android:entryValues="@array/tracker_min_dist_update_val"
         android:key="tracks_min_distance"

@@ -869,12 +869,6 @@ public class SettingsFragment
 
                 if (!layer.getPath().getName().equals(MainApplication.LAYER_OSM) && !layer.getPath()
                         .getName()
-                        .equals(MainApplication.LAYER_A) && !layer.getPath()
-                        .getName()
-                        .equals(MainApplication.LAYER_B) && !layer.getPath()
-                        .getName()
-                        .equals(MainApplication.LAYER_C) && !layer.getPath()
-                        .getName()
                         .equals(MainApplication.LAYER_TRACKS)) {
                     layer.delete(false);
                 }
