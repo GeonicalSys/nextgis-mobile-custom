@@ -128,6 +128,14 @@ public class MainApplication extends GISApplication
         installHyperLogCrashHandler();
 
         super.onCreate();
+
+        // MAP_STARTUP_OPTIMIZATIONS: quiet HyperLog when no remote — flip Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED
+        if (Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED) {
+            try {
+                HyperLog.setURL("https://127.0.0.1/nextgis-hyperlog-no-remote/");
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
         updateFromOldVersion();
         NGWUtil.NGUA = "ng_mobile";
         NGWUtil.UUID = TrackerService.getUid(this);

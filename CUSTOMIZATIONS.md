@@ -23,7 +23,8 @@ Base commit: `7dde21c` (upstream `maplibre` branch, "3.0.0 release").
 10. [Stability Hardening](#10-stability-hardening)
 11. [Sync UI Fixes](#11-sync-ui-fixes)
 12. [Upstream Merge History](#12-upstream-merge-history)
-13. [Git Workflow Reference](#13-git-workflow-reference)
+13. [Collector Import Verification, Layer Ordering, and Sync Timestamp](#13-collector-import-verification-layer-ordering-and-sync-timestamp)
+14. [Git Workflow Reference](#14-git-workflow-reference)
 
 ---
 
@@ -409,6 +410,20 @@ paused, the timestamp was written to SharedPreferences but the UI never read it.
 | `SyncAdapter.java` (app) | New `sendSyncFinishBroadcast()` method; called in all early return paths |
 | `LayersFragment.java` | Added `updateInfo()` in `onResume()` |
 
+### Problem 3: Last sync time updates after a failed sync
+
+`SyncAdapter` (maplib) wrote `KEY_PREF_LAST_SYNC_TIMESTAMP` immediately after
+`sync()` returned, before inspecting `syncResult.stats` / `mError`, so a failed
+sync still refreshed the “last synced” label.
+
+**Fix:** persist the timestamp only when `mapContentProviderHelper != null`,
+`mError` is empty, and `!syncResult.hasError()` (same notion as the app
+`SyncAdapter` notification path).
+
+| File | Changes |
+|------|---------|
+| `SyncAdapter.java` (maplib) | Moved timestamp `putLong` to after error aggregation; gated on success |
+
 ---
 
 ## 12. Upstream Merge History
@@ -437,7 +452,58 @@ Conflicts resolved (our customizations preserved):
 
 ---
 
-## 13. Git Workflow Reference
+## 13. Collector Import Verification, Layer Ordering, and Sync Timestamp
+
+**Purpose:** make Collector project import resilient to network changes; keep
+vector layer order aligned with the collector project in the drawer (including
+after repair and when adding a single missing “middle” layer); place unpacked
+`.ngrc` raster tiles at the **bottom** of the layer list; show the layer name in
+the fill progress dialog during form unzip; defer heavy map reload until the
+fill queue drains with a safe flush on `MapFragment` resume.
+
+### Collector batch (maplib + maplibui)
+
+- **Register** expected vector layers plus **full** collector project remote-id
+  order (`collector.getLayers()`) so insert position is correct even when only a
+  subset is downloaded.
+- **`LayerFillService`** notifies per-layer success/failure; **`UnzipForm`**
+  failures notify using `KEY_REMOTE_ID`; **`NGWVectorLayerFillTask`** uses
+  `KEY_COLLECTOR_TRACKING_REMOTE_ID` when form metadata overrides resource id.
+- **`finalizeCollectorImportVerifyAndRepairIfNeeded()`** (main thread): compare
+  map vs expected set; remove broken/missing; re-queue fill (up to **3** repair
+  waves); `HyperLog` + toasts `collector_import_repair_queued` /
+  `collector_import_repair_gave_up`.
+- **`LayerGroup.computeCollectorOrderedInsertIndex`**: ranks use `L - 1 -
+  projectIndex` so order matches the drawer (adapter uses reversed index:
+  internal slot 0 = list bottom).
+- **`LayerGroup.findNgwVectorLayerByRemoteIdRecursive`**: locate layer for
+  verify/repair.
+
+### Layer fill UI and rasters
+
+| File | Changes |
+|------|---------|
+| `LayerFillService.java` | Collector extras on intents; `insertLayer` for collector NGW; **`LocalTMSFillTask` + `mIsNgrc`** → `insertLayer(0, …)` so `.ngrc` rasters go to list bottom; `getDescription()` falls back to `mLayerName` when `mLayer` is null (`UnzipForm`) |
+| `LayerFillProgressDialogFragment.java` | Refresh title on `STATUS_START` for multi-layer batches |
+| `SelectNGWResourceActivity.java` / `SelectNGWResourceDialog.java` | Full-project `long[]`, `registerCollectorImportBatch(…, fullOrder)`, forward enqueue with `KEY_COLLECTOR_ORDER_INDEX` + `KEY_COLLECTOR_PROJECT_REMOTE_IDS` |
+| `GISApplication.java` | Batch state, repair passes, verify/repair intents with full project order |
+| `IGISApplication.java` | Extended `registerCollectorImportBatch`, `notifyCollectorLayerFillResult`, `finalize…`, `clear…` |
+
+### Deferred map reload (batch fill)
+
+| File | Changes |
+|------|---------|
+| `GISApplication.java` | `requestMapReloadAfterLayerFillBatch()` posts to main; `flushPendingMapReloadAfterLayerFillIfNeeded()` |
+| `MapFragment.kt` | Calls flush on `onResume()`; optional startup progress caption when `MAP_STARTUP_OPTIMIZATIONS_ENABLED` |
+| `MainApplication.java` | Optional HyperLog “no remote” URL when startup optimizations flag is on |
+
+### Strings (maplibui)
+
+- `collector_import_repair_queued`, `collector_import_repair_gave_up` (en + ru)
+
+---
+
+## 14. Git Workflow Reference
 
 ### Repository structure
 

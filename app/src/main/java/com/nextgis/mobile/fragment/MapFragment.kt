@@ -366,9 +366,14 @@ public class MapFragment
     }
 
     override fun changeProgress(show: Boolean) {
-        if (show)
+        if (show) {
             stylingProgrerss?.visibility = View.VISIBLE
-        else {
+            // MAP_STARTUP_OPTIMIZATIONS: default caption — see Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED
+            textStylingProgrerss?.text =
+                if (com.nextgis.maplib.util.Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED) {
+                    context?.getString(com.nextgis.maplib.R.string.map_loading_preparing) ?: ""
+                } else ""
+        } else {
             stylingProgrerss?.visibility = View.GONE
             textStylingProgrerss?.text = ""
         }
@@ -1481,6 +1486,8 @@ public class MapFragment
     override fun onResume() {
         HyperLog.v(Constants.TAG, "MapFragment.onResume")
         super.onResume()
+
+        mApp?.let { (it as IGISApplication).flushPendingMapReloadAfterLayerFillIfNeeded(this) }
 
         var showControls =
             mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_ZOOM_CONTROLS, true)
