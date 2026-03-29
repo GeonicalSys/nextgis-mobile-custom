@@ -457,9 +457,8 @@ Conflicts resolved (our customizations preserved):
 
 **Purpose:** make Collector project import resilient to network changes; keep
 vector layer order aligned with the collector project in the drawer (including
-after repair and when adding a single missing “middle” layer); place unpacked
-`.ngrc` raster tiles at the **bottom** of the layer list; show the layer name in
-the fill progress dialog during form unzip; defer heavy map reload until the
+after repair and when adding a single missing “middle” layer); show the layer
+name in the fill progress dialog during form unzip; defer heavy map reload until the
 fill queue drains with a safe flush on `MapFragment` resume.
 
 ### Collector batch (maplib + maplibui)
@@ -484,7 +483,7 @@ fill queue drains with a safe flush on `MapFragment` resume.
 
 | File | Changes |
 |------|---------|
-| `LayerFillService.java` | Collector extras on intents; `insertLayer` for collector NGW; **`LocalTMSFillTask` + `mIsNgrc`** → `insertLayer(0, …)` so `.ngrc` rasters go to list bottom; `getDescription()` falls back to `mLayerName` when `mLayer` is null (`UnzipForm`) |
+| `LayerFillService.java` | Collector extras on intents; `insertLayer` for collector NGW; **`LocalTMSFillTask` + `mIsNgrc`** → insert **above** the `osm` layer (`getChildLayerIndex(osm)+1`), or index 0 if OSM missing; `getDescription()` falls back to `mLayerName` when `mLayer` is null (`UnzipForm`) |
 | `LayerFillProgressDialogFragment.java` | Refresh title on `STATUS_START` for multi-layer batches |
 | `SelectNGWResourceActivity.java` / `SelectNGWResourceDialog.java` | Full-project `long[]`, `registerCollectorImportBatch(…, fullOrder)`, forward enqueue with `KEY_COLLECTOR_ORDER_INDEX` + `KEY_COLLECTOR_PROJECT_REMOTE_IDS` |
 | `GISApplication.java` | Batch state, repair passes, verify/repair intents with full project order |
@@ -531,10 +530,17 @@ from `SharedPreferences` so the map mini-compass matches settings (maplibui).
 
 ### No default editable vector layers
 
-`MainApplication.initBaseLayers()` adds **only** the OSM base raster when missing;
-removed creation of empty `vector_a` / `vector_b` / `vector_c` (“points/lines/polygons
-for edit”). `SettingsFragment.deleteLayers()` on reset no longer preserves those
-paths—only OSM and the tracks layer stay.
+`MainApplication.initBaseLayers()` adds **only** the OSM base raster when missing,
+with **`setVisible(false)`**; if OSM already exists (e.g. after settings reset), it is
+forced **off** via **`((ILayerView) existingOsm).setVisible(false)`** (`ILayer` has no
+`setVisible`). Removed creation of empty `vector_a` / `vector_b` / `vector_c`
+(“points/lines/polygons for edit”). `SettingsFragment.deleteLayers()` on reset no
+longer preserves those paths—only OSM and the tracks layer stay.
+
+**`.ngrc` insert order:** `LayerGroup.getChildLayerIndex` + `insertLayer(osmIndex + 1, …)`
+so local rasters sit **above** OSM in the stack (drawn on top of OSM).
+
+**maplib:** `LayerGroup.getChildLayerIndex(ILayer)` wraps the existing static index helper.
 
 ### Tracks: no start/end flag icons
 
@@ -549,6 +555,14 @@ paths—only OSM and the tracks layer stay.
 `TMSLayer.fillFromNgrc()`: after `load()`, expands layer visibility by **±2**
 zoom levels vs values from the archive config, clamped to
 `GeoConstants.DEFAULT_MIN_ZOOM` / `DEFAULT_MAX_ZOOM`, then `save()`.
+
+### Product display name (NextGIS ЛИСА)
+
+| File | Changes |
+|------|---------|
+| `app/build.gradle` | `resValue` **`APP_NAME`** = **NextGIS ЛИСА** for **debug** and **release** (launcher / `AndroidManifest` `android:label`). |
+| `app/.../values/strings.xml` | **`app_name`** = **NextGIS ЛИСА** for layouts using `@string/app_name`. |
+| `NGActivity.java` (maplibui) | **`getAppName()`** returns **`ApplicationInfo.loadLabel(PackageManager)`** so About, compass title, etc. match the installed label. |
 
 ---
 

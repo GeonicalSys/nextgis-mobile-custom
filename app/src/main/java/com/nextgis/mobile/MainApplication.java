@@ -42,6 +42,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 import com.nextgis.maplib.api.ILayer;
+import com.nextgis.maplib.api.ILayerView;
 import com.nextgis.maplib.datasource.Field;
 import com.nextgis.maplib.map.LayerGroup;
 import com.nextgis.maplib.map.MapBase;
@@ -376,7 +377,7 @@ public class MainApplication extends GISApplication
             layer.setName(layerName);
             layer.setURL(layerURL);
             layer.setTMSType(TMSTYPE_OSM);
-            layer.setVisible(true);
+            layer.setVisible(false);
             layer.setMinZoom(GeoConstants.DEFAULT_MIN_ZOOM);
             layer.setMaxZoom(19);
 
@@ -393,6 +394,11 @@ public class MainApplication extends GISApplication
                     }
                 }
             });
+        } else {
+            ILayer existingOsm = mMap.getLayerByPathName(LAYER_OSM);
+            if (existingOsm instanceof ILayerView) {
+                ((ILayerView) existingOsm).setVisible(false);
+            }
         }
 
         mMap.save();
