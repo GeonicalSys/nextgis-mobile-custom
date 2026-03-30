@@ -1179,6 +1179,15 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onResume() {
         super.onResume()
+        val gisApp = application as IGISApplication
+        if (gisApp.isLayerFillServiceBusy) {
+            /* Defer: avoids re-entrancy with MapFragment/map resume and window token races after screen on. */
+            Handler(Looper.getMainLooper()).post {
+                if (!isFinishing) {
+                    LayerFillProgressDialogFragment.onMainMapActivityResume(this@MainActivity)
+                }
+            }
+        }
         mToolbar!!.background.alpha = 128
         val intentFilter = IntentFilter()
         intentFilter.addAction(ConstantsUI.MESSAGE_INTENT)

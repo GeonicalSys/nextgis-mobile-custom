@@ -177,6 +177,69 @@ service for large datasets, and prevent sync during active layer fill.
 5. Update `LayerFillProgressDialogFragment` for new progress tracking.
 6. Apply `CollectorResource` and `NGWVectorLayer` improvements.
 
+### Layer fill: large vector datasets (SQLite, ANR, screen off)
+
+**Purpose:** keep bulk NGW / GeoJSON import usable on tens of thousands of features
+without “Application not responding”, silent stop after screen-off, or losing the
+progress UI when returning to the map.
+
+**maplib — SQLite write transactions**
+
+- `NGWVectorLayer.createFromNGW()`: `beginBulkImport()` + explicit
+  `SQLiteDatabase` transaction; **commit/restart every N features**
+  (`NGW_FILL_SQL_TX_BATCH`, currently **250**) so the DB write lock does not block
+  the UI thread for minutes (aligns with upstream, which did not hold one giant
+  transaction over the whole import).
+- Throttled `IProgressor` updates: every `NGW_FILL_PROGRESS_FEATURE_STEP` features
+  or after `NGW_FILL_PROGRESS_MIN_INTERVAL_MS`.
+- `GeoJSONUtil.fillLayerFromGeoJSONStream()` / `createLayerFromGeoJSONStream()`:
+  same pattern with `GEOJSON_FILL_SQL_TX_BATCH` and matching progress throttling.
+
+**maplibui — service and dialog**
+
+- `LayerFillService`: `PARTIAL_WAKE_LOCK` while the worker drains the queue;
+  throttled `sendBroadcast(ACTION_UPDATE)`; minimal foreground service notification
+  where required; `HyperLog` on unexpected task failure.
+- `AndroidManifest.xml`: `WAKE_LOCK` permission for the above.
+- `LayerFillProgressDialogFragment`: broadcast receiver registered on **application**
+  context; `onMainMapActivityResume()` re-attaches progress after activity recreate;
+  `STATUS_STOP` handling fixed so `KEY_TOTAL == 0` does not close the dialog before
+  toast / follow-up sync; dialog not cancelable by back as during critical fill.
+- `GISApplication`: `requestMapReloadAfterLayerFillBatch()` posts work to the main
+  thread; `flushPendingMapReloadAfterLayerFillIfNeeded()` when the map fragment is
+  ready; batch defer flags for heavy map reload until the fill queue is empty.
+
+**maplib — `IGISApplication`**
+
+- Extended with batch defer + pending map reload hooks used by `LayerFillService`
+  / `GISApplication` (`isLayerFillBatchDeferringHeavyMapReload`,
+  `setLayerFillBatchDeferringHeavyMapReload`, `requestMapReloadAfterLayerFillBatch`,
+  `flushPendingMapReloadAfterLayerFillIfNeeded`).
+
+**app**
+
+- `MainActivity.kt`: on resume, if `isLayerFillServiceBusy`, posts
+  `LayerFillProgressDialogFragment.onMainMapActivityResume()` so the progress UI
+  restores reliably.
+
+**Other**
+
+- `LayerGeneralSettingsFragment.java`: null-safe `onDestroyView()` when
+  `onCreateView` returned early (`mLayer == null`) — avoids NPE on
+  `mEditText` / `mRangeBar`.
+
+**Upstream comparison artifacts (repo root)**
+
+| File | Purpose |
+|------|---------|
+| `UPSTREAM_LAYER_FILL_DIFF.txt` | Short summary + `git` commands to reproduce diffs |
+| `UPSTREAM_DIFF_maplib_NGW_GeoJSON.patch.txt` | Full diff vs nextgis `android_maplib` @ `b8e4997` for `NGWVectorLayer` + `GeoJSONUtil` |
+| `UPSTREAM_DIFF_maplibui_LayerFill.patch.txt` | Full diff vs nextgis `android_maplibui` `master` for `LayerFill*.java` |
+
+**Why NGRc / local TMS unpack feels fine:** those paths mostly stream files or do
+short disk work and do not hold a single SQLite write transaction over tens of
+thousands of inserts while the map keeps querying the same DB.
+
 ---
 
 ## 5. NGW Resource Selection UI

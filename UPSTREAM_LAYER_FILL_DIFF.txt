@@ -1,0 +1,33 @@
+Upstream сверка (план: заполнение слоя vs таймауты)
+=====================================================
+
+Команды (уже выполнены в этом репозитории):
+
+  cd maplib
+  git fetch https://github.com/nextgis/android_maplib.git b8e4997151e8de88ae9593ab73e237d9f9607715
+  git diff FETCH_HEAD HEAD -- src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java \
+      src/main/java/com/nextgis/maplib/util/GeoJSONUtil.java
+
+  cd maplibui
+  git fetch https://github.com/nextgis/android_maplibui.git master
+  git diff FETCH_HEAD HEAD -- "**/LayerFill*.java"
+
+Полные патчи (локально):
+
+  UPSTREAM_DIFF_maplib_NGW_GeoJSON.patch.txt   — NGWVectorLayer.java + GeoJSONUtil.java vs nextgis maplib b8e4997
+  UPSTREAM_DIFF_maplibui_LayerFill.patch.txt   — LayerFill*.java vs nextgis maplibui master
+
+Ключевые отличия (кратко):
+
+1) createFromNGW / GeoJSON fill (maplib)
+   - Upstream: цикл createFeatureBatch без beginTransaction на весь импорт, без beginBulkImport в этом месте.
+   - Форк: MapContentProviderHelper.getDatabase(false), beginBulkImport, beginTransaction; прогресс с шагом/интервалом;
+     пакетные commit SQLite каждые N фич (см. NGW_FILL_SQL_TX_BATCH / GEOJSON_FILL_SQL_TX_BATCH).
+
+2) Таймауты HTTP
+   - Отдельно от локального fill; в diff maplib есть иные изменения (NGException вместо return, проверка числа фич и т.д.).
+
+3) LayerFill* (maplibui)
+   - См. UPSTREAM_DIFF_maplibui_LayerFill.patch.txt — сервис/диалог заливки слоя и связанная логика есть/отличаются от upstream.
+
+Ручная проверка после смены размера батча: тяжёлый слой (~28k объектов), экран включён — нет ANR на этапе заполнения.
