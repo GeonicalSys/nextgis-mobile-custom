@@ -699,3 +699,4 @@ git commit -m "Update submodules after upstream merge"
 - Remote **`upstream`**: `https://github.com/nextgis/nextgis_mobile_android.git` (ранее репозиторий назывался `android_gisapp`).
 - Полный отчёт о последней синхронизации: **[`UPSTREAM_SYNC_REPORT.md`](UPSTREAM_SYNC_REPORT.md)** (ref `upstream/master`, инвентаризация, merge maplib / maplibui / корня, классификация A/B/C).
 - После крупного merge: `git fetch upstream --prune`, при необходимости merge в сабмодулях первыми, затем обновить указатели в корне и проверить сборку обоих flavors.
+- **Проверено в работе:** после интеграции upstream (3.0.2 / `versionCode` 173, merge maplib + maplibui + корень) сборка и сценарии в приложении проходят; в **Build Variants** flavors **lisa** / **belka** по-прежнему выбираются в строке модуля **`app`** (у библиотек только debug/release).
