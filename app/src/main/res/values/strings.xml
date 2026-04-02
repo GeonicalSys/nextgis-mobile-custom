@@ -24,7 +24,7 @@
 
 <resources>
 
-    <string name="app_name" translatable="false">NextGIS ЛИСА</string>
+    <!-- app_name and APP_NAME are set per product flavor in app/build.gradle (lisa / belka). -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>

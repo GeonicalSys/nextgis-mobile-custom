@@ -51,8 +51,8 @@ android {
         minSdkVersion 26
         compileSdk 36
         targetSdkVersion 36
-        versionCode 171
-        versionName '3.0.2'
+        versionCode 172
+        versionName '3.0.2.1'
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
 
         def props = new Properties()
@@ -62,12 +62,18 @@ android {
         buildConfigField "String", "MAPBOX_KEY", "\"${props.getProperty("mapboxkey")}\""
     }
 
-    // AGP 8+: archivesBaseName was removed from defaultConfig; use base.archivesName instead.
-    base {
-        archivesName = "ngmobile-${defaultConfig.versionName}"
-    }
-
+    flavorDimensions "brand"
     productFlavors {
+        lisa {
+            dimension "brand"
+            resValue 'string', 'APP_NAME', 'NextGIS ЛИСА'
+            resValue 'string', 'app_name', 'NextGIS ЛИСА'
+        }
+        belka {
+            dimension "brand"
+            resValue 'string', 'APP_NAME', 'NextGIS Белка'
+            resValue 'string', 'app_name', 'NextGIS Белка'
+        }
     }
 
     // Debug: встроенная отладочная подпись Android (debug.keystore), без keystore_google.
@@ -89,7 +95,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            resValue 'string', 'APP_NAME', 'NextGIS ЛИСА'
             resValue 'string', 'SENTRY_DSN', sentryDsn
             resValue 'string', 'provider_auth', 'com.nextgis.mobile.provider'
             resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.account'
@@ -107,8 +112,6 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationIdSuffix '.debug'
-            versionNameSuffix '-DEBUG'
-            resValue 'string', 'APP_NAME', 'NextGIS ЛИСА'
             resValue 'string', 'SENTRY_DSN', sentryDsn
             resValue 'string', 'provider_auth', 'com.nextgis.mobile.provider.debug'
             resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.account.debug'
@@ -124,6 +127,10 @@ android {
         targetCompatibility JavaVersion.VERSION_21
     }
 
+    // APKs: outputs/apk/<flavor>/<buildType>/ (e.g. lisa/release vs belka/release) — same basename is OK.
+    base {
+        archivesName = "ngmobile-${defaultConfig.versionName}"
+    }
 
 }
 
@@ -160,4 +167,39 @@ dependencies {
 //    debugImplementation "com.squareup.leakcanary:leakcanary-android-core:2.14"
 
     implementation project(path: ':wizardpager')
+}
+
+/*
+ * With multiple product flavors, Gradle task name abbreviation matches several candidates
+ * (e.g. assembleDebugUnitTest → assembleLisaDebugUnitTest vs assembleBelkaDebugUnitTest).
+ * Exact aliases defaulting to flavor "lisa" restore IDE / "Run tests" / short Gradle invocations.
+ */
+afterEvaluate {
+    String defaultFlavor = 'lisa'
+    String f = defaultFlavor.capitalize()
+    [
+            'assembleDebug'            : "assemble${f}Debug",
+            'assembleRelease'          : "assemble${f}Release",
+            'assembleDebugUnitTest'    : "assemble${f}DebugUnitTest",
+            'assembleReleaseUnitTest'  : "assemble${f}ReleaseUnitTest",
+            'testDebugUnitTest'        : "test${f}DebugUnitTest",
+            'testReleaseUnitTest'      : "test${f}ReleaseUnitTest",
+            'installDebug'             : "install${f}Debug",
+            'installRelease'           : "install${f}Release",
+            'uninstallDebug'           : "uninstall${f}Debug",
+            'uninstallRelease'         : "uninstall${f}Release",
+            'bundleDebug'              : "bundle${f}Debug",
+            'bundleRelease'            : "bundle${f}Release",
+    ].each { String alias, String targetName ->
+        if (tasks.findByName(alias) == null) {
+            def targetTask = tasks.findByName(targetName)
+            if (targetTask != null) {
+                tasks.register(alias) {
+                    dependsOn(targetTask)
+                    group = 'build'
+                    description = "Alias for :${project.path} ${targetName} (default flavor ${defaultFlavor})"
+                }
+            }
+        }
+    }
 }

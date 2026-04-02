@@ -151,7 +151,7 @@ public class AboutActivity extends NGActivity implements ViewPager.OnPageChangeL
                 v.findViewById(R.id.app_status).setVisibility(View.VISIBLE);
 
             TextView txtVersion = (TextView) v.findViewById(R.id.app_version);
-            txtVersion.setText("v. " + BuildConfig.VERSION_NAME + " (rev. " + BuildConfig.VERSION_CODE + ")");
+            txtVersion.setText("v " + BuildConfig.VERSION_NAME);
 
             v.findViewById(R.id.creditsInto).setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -619,13 +619,20 @@ so local rasters sit **above** OSM in the stack (drawn on top of OSM).
 zoom levels vs values from the archive config, clamped to
 `GeoConstants.DEFAULT_MIN_ZOOM` / `DEFAULT_MAX_ZOOM`, then `save()`.
 
-### Product display name (NextGIS ЛИСА)
+### Product display names: flavors **lisa** / **belka** (один `applicationId`)
 
-| File | Changes |
-|------|---------|
-| `app/build.gradle` | `resValue` **`APP_NAME`** = **NextGIS ЛИСА** for **debug** and **release** (launcher / `AndroidManifest` `android:label`). |
-| `app/.../values/strings.xml` | **`app_name`** = **NextGIS ЛИСА** for layouts using `@string/app_name`. |
-| `NGActivity.java` (maplibui) | **`getAppName()`** returns **`ApplicationInfo.loadLabel(PackageManager)`** so About, compass title, etc. match the installed label. |
+Два варианта сборки модуля **`app`** с разным названием в лаунчере, **без** смены пакета: и **NextGIS ЛИСА**, и **NextGIS Белка** используют `applicationId` **`com.nextgis.mobile`** (в debug — **`.debug`**). Установка APK «Белки» **обновляет** уже установленную «ЛИСУ», а не ставится вторым приложением.
+
+| File | Notes |
+|------|--------|
+| `app/build.gradle` | `flavorDimensions "brand"`; flavors **`lisa`** / **`belka`** с `resValue` для **`APP_NAME`** и **`app_name`**. Имена из `buildTypes` убраны — только Sentry, провайдеры, `buildConfigField`. |
+| `app/src/main/res/values/strings.xml` | Жёсткий **`app_name`** убран; строки задаются flavor’ами. |
+| `maplibui/src/main/res/values/strings.xml` | Fallback **`app_name`** для сборки библиотеки; в итоговом APK подменяется значением из **`app`**. |
+| `NGActivity.java` (maplibui) | **`getAppName()`** по-прежнему через **`ApplicationInfo.loadLabel(PackageManager)`** — совпадает с лейблом установленного варианта. |
+
+**Сборка:** `./gradlew :app:assembleRelease` собирает **оба** release (`lisaRelease`, `belkaRelease`). В Android Studio откройте **Build Variants** и выберите строку модуля **`app`**: там варианты вида **`lisaDebug`**, **`belkaRelease`** и т.д. У модулей-библиотек (`maplibui`, `maplib`, …) flavors нет — у них по-прежнему только **debug** / **release**; это нормально. APK лежат в `app/build/outputs/apk/lisa/<buildType>/` и `app/build/outputs/apk/belka/<buildType>/` (базовое имя архива — `ngmobile-<versionName>` из `base.archivesName`).
+
+**Неоднозначные Gradle-задачи:** без flavor в имени (`assembleDebugUnitTest`, `testDebugUnitTest`, `assembleDebug` и т.п.) Gradle находит несколько кандидатов. В конце `app/build.gradle` добавлены **alias-задачи**, по умолчанию указывающие на вариант **`lisa`**. Для **Белки** вызывайте явно, например `:app:assembleBelkaDebugUnitTest`.
 
 ---
 

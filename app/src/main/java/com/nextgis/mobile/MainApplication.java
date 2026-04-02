@@ -127,6 +127,11 @@ public class MainApplication extends GISApplication
 
         super.onCreate();
 
+        final String appVersionLog = "NextGIS Mobile versionName=" + BuildConfig.VERSION_NAME
+                + " versionCode=" + BuildConfig.VERSION_CODE;
+        Log.i(TAG, appVersionLog);
+        HyperLog.d(TAG, appVersionLog);
+
         // MAP_STARTUP_OPTIMIZATIONS: quiet HyperLog when no remote — flip Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED
         if (Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED) {
             try {
