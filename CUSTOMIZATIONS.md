@@ -693,3 +693,9 @@ git commit -m "Update submodules after upstream merge"
 - `maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java`
 - `maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java`
 - `app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt`
+
+### Upstream sync (официальный `nextgis_mobile_android`)
+
+- Remote **`upstream`**: `https://github.com/nextgis/nextgis_mobile_android.git` (ранее репозиторий назывался `android_gisapp`).
+- Полный отчёт о последней синхронизации: **[`UPSTREAM_SYNC_REPORT.md`](UPSTREAM_SYNC_REPORT.md)** (ref `upstream/master`, инвентаризация, merge maplib / maplibui / корня, классификация A/B/C).
+- После крупного merge: `git fetch upstream --prune`, при необходимости merge в сабмодулях первыми, затем обновить указатели в корне и проверить сборку обоих flavors.
