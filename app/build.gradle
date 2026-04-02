@@ -51,15 +51,13 @@ android {
         minSdkVersion 26
         compileSdk 36
         targetSdkVersion 36
-        versionCode 172
+        versionCode 173
         versionName '3.0.2.1'
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
 
         def props = new Properties()
         file("../local.properties").withInputStream { props.load(it) }
 
-
-        buildConfigField "String", "MAPBOX_KEY", "\"${props.getProperty("mapboxkey")}\""
     }
 
     flavorDimensions "brand"

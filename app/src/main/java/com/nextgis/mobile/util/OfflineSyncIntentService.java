@@ -105,6 +105,7 @@ public class OfflineSyncIntentService extends IntentService {
             if (lpath != null)
                 bundle.putString(ACTION_LPATH, lpath);
             for (Account account : mAccounts) {
+                Log.d("SSYNC", "onPerformSync call for: " + account.name);
                 syncAdapter.onPerformSync(account,
                         bundle,
                         com.nextgis.mobile.util.AppSettingsConstants.AUTHORITY,
