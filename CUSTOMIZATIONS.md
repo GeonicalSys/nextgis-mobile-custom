@@ -1,11 +1,9 @@
 # GeonicalSystem Fork — Customizations Catalog
 
 This document describes all modifications made to the official NextGIS Mobile
-application (https://github.com/nextgis/android_gisapp, branch `maplibre`) in
-the GeonicalSystem fork. It serves as a reference for reproducing changes on
-future upstream versions.
+application ([nextgis/nextgis_mobile_android](https://github.com/nextgis/nextgis_mobile_android); the GitHub project was formerly **`android_gisapp`**, and the fork’s original base used upstream branch **`maplibre`**) in the GeonicalSystem fork. It serves as a reference for reproducing changes on future upstream versions.
 
-Base commit: `7dde21c` (upstream `maplibre` branch, "3.0.0 release").
+Base commit: `7dde21c` (at the time: upstream **`maplibre`**, “3.0.0 release”). The official repo now ships from **`master`** only (`maplibre` is not present on the current remote).
 
 ---
 
@@ -26,6 +24,7 @@ Base commit: `7dde21c` (upstream `maplibre` branch, "3.0.0 release").
 13. [Collector Import Verification, Layer Ordering, and Sync Timestamp](#13-collector-import-verification-layer-ordering-and-sync-timestamp)
 14. [Default Preferences, Base Layers, Tracks Display, and NGRc Zoom](#14-default-preferences-base-layers-tracks-display-and-ngrc-zoom)
 15. [Git Workflow Reference](#15-git-workflow-reference)
+16. [Fork patch releases (GeonicalSystem)](#16-fork-patch-releases-geonicalsystem)
 
 ---
 
@@ -641,27 +640,27 @@ zoom levels vs values from the archive config, clamped to
 ### Repository structure
 
 ```
-upstream (read-only)                    origin (read-write)
-─────────────────────                   ────────────────────
-nextgis/android_gisapp          →       GeonicalSystem/nextgis-mobile-custom
-nextgis/android_maplib          →       GeonicalSystem/android_maplib
-nextgis/android_maplibui        →       GeonicalSystem/android_maplibui
-nextgis/easypicker              →       GeonicalSystem/easypicker
+upstream (read-only)                         origin (read-write)
+────────────────────────────                 ────────────────────
+nextgis/nextgis_mobile_android      →        GeonicalSystem/nextgis-mobile-custom
+nextgis/android_maplib              →        GeonicalSystem/android_maplib
+nextgis/android_maplibui            →        GeonicalSystem/android_maplibui
+nextgis/easypicker                  →        GeonicalSystem/easypicker
 ```
 
 ### Branches
 
 - `my-maplibre` — custom development branch (in all repos)
-- `maplibre` — tracks upstream `maplibre` branch (main repo only)
-- `master` — tracks upstream `master` branch (submodules)
+- **Parent app:** merge **`upstream/master`** from `nextgis/nextgis_mobile_android` into your working branch (that upstream remote exposes only **`master`** today; the historical **`maplibre`** branch is gone there)
+- **Submodules** (`maplib`, `maplibui`, `easypicker`): each has its own **`upstream`** (`nextgis/android_maplib`, …); merge **`upstream/master`** inside each, then commit updated submodule pointers in the parent
 
 ### Pulling upstream updates
 
 ```bash
-# Main repo
+# Main repo (app + submodule pointers)
 cd android_gisapp
 git fetch upstream
-git merge upstream/maplibre
+git merge upstream/master
 
 # Each submodule
 cd maplib
@@ -696,7 +695,18 @@ git commit -m "Update submodules after upstream merge"
 
 ### Upstream sync (официальный `nextgis_mobile_android`)
 
-- Remote **`upstream`**: `https://github.com/nextgis/nextgis_mobile_android.git` (ранее репозиторий назывался `android_gisapp`).
+- Remote **`upstream`** родительского репозитория: `https://github.com/nextgis/nextgis_mobile_android.git` (на GitHub раньше тот же проект фигурировал как **`android_gisapp`**).
 - Полный отчёт о последней синхронизации: **[`UPSTREAM_SYNC_REPORT.md`](UPSTREAM_SYNC_REPORT.md)** (ref `upstream/master`, инвентаризация, merge maplib / maplibui / корня, классификация A/B/C).
 - После крупного merge: `git fetch upstream --prune`, при необходимости merge в сабмодулях первыми, затем обновить указатели в корне и проверить сборку обоих flavors.
 - **Проверено в работе:** после интеграции upstream (3.0.2 / `versionCode` 173, merge maplib + maplibui + корень) сборка и сценарии в приложении проходят; в **Build Variants** flavors **lisa** / **belka** по-прежнему выбираются в строке модуля **`app`** (у библиотек только debug/release).
+
+---
+
+## 16. Fork patch releases (GeonicalSystem)
+
+Трекинг версий форка относительно апстрима (`versionName` / `versionCode` в [`app/build.gradle`](app/build.gradle); у модуля **`maplib`** выравнивается `versionName` в [`maplib/build.gradle`](maplib/build.gradle) для `BuildConfig`).
+
+### 3.0.2.2 (`versionCode` 174)
+
+- **Стабильность (редактирование / UI):** в мультиполигоне исправлен краш при удалении вершины при несогласованных индексах выделения (`MultiPolygonEditClass`, `MapDrawable.canDeleteCurrentPointSafe`, `EditLayerOverlay`, `MapFragment`). В **`LayersFragment`** устранён NPE при `onDestroyView`: отложенный runnable больше не вызывает `setDrawerListener`/`addDrawerListener` на уже обнулённом `DrawerLayout` (`removeCallbacks`, `removeDrawerListener`, регистрация слушателя один раз).
+- **Синхронизация NGW:** в `NGWVectorLayer.cursorToJson` для геометрии используется `getColumnIndexOrThrow(FIELD_GEOM)` вместо `getColumnIndex`, чтобы индекс колонки для `getBlob` был валиден (lint `Range` / отсутствие колонки — явное исключение).

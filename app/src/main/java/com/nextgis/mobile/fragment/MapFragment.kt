@@ -539,8 +539,11 @@ public class MapFragment
             }
 
             com.nextgis.maplibui.R.id.menu_edit_delete_point  ->{
-                val result = mMapRef.get()!!.map!!.deleteCurrentPoint();
-                return result
+                val map = mMapRef.get()?.map ?: return false
+                if (!map.canDeleteCurrentPointSafe()) {
+                    return true
+                }
+                return map.deleteCurrentPoint()
             }
 
             com.nextgis.maplibui.R.id.menu_edit_delete_line  ->{

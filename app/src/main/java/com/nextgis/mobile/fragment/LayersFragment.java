@@ -122,7 +122,26 @@ public class LayersFragment
 
     ObjectAnimator rotation;
 
+    /** Posted from {@link #syncState()}; cleared in {@link #onDestroyView()} to avoid NPE after layout is nulled. */
+    private final Runnable mSyncDrawerStateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mDrawerLayout == null || !LayersFragment.this.isAdded()) {
+                return;
+            }
+            if (mDrawerToggle == null) {
+                return;
+            }
+            mDrawerToggle.syncState();
+            if (!mDrawerToggleRegistered) {
+                mDrawerLayout.addDrawerListener(mDrawerToggle);
+                mDrawerToggleRegistered = true;
+            }
+        }
+    };
 
+    /** {@link DrawerLayout#addDrawerListener} is registered once per view; removed in {@link #onDestroyView()}. */
+    private boolean mDrawerToggleRegistered;
 
 
     private static class LayerEditListener
@@ -424,18 +443,17 @@ public class LayersFragment
             }
         };
 
+        mDrawerToggleRegistered = false;
         // Defer code dependent on restoration of previous instance state.
         syncState();
     }
 
     public void syncState() {
-        mDrawerLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mDrawerToggle.syncState();
-                        mDrawerLayout.setDrawerListener(mDrawerToggle);
-                    }
-                });
+        if (mDrawerLayout == null) {
+            return;
+        }
+        mDrawerLayout.removeCallbacks(mSyncDrawerStateRunnable);
+        mDrawerLayout.post(mSyncDrawerStateRunnable);
     }
 
     public void toggle() {
@@ -773,6 +791,13 @@ public class LayersFragment
 
         mListAdapter = null;
         mLayersListView = null;
+        if (mDrawerLayout != null) {
+            mDrawerLayout.removeCallbacks(mSyncDrawerStateRunnable);
+            if (mDrawerToggle != null && mDrawerToggleRegistered) {
+                mDrawerLayout.removeDrawerListener(mDrawerToggle);
+                mDrawerToggleRegistered = false;
+            }
+        }
         mDrawerLayout = null;
 
         final WeakReference<MainActivity> activityRef = new WeakReference<MainActivity>((MainActivity)getActivity());
