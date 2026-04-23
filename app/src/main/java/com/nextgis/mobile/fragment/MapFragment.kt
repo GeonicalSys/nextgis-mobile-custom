@@ -231,6 +231,11 @@ public class MapFragment
 
     var longClickProcessed = false
 
+    /** Bounded delayed retries when MapLibre is not ready at end of layer-fill batch. */
+    private var mapReloadAfterFillRetryCount = 0
+    private val mapReloadAfterFillMaxRetries = 35
+    private var mapReloadAfterFillRetryRunnable: Runnable? = null
+
     private val mapViewOrNull get() = mMapRef.get()
     private val mapDrawableOrNull get() = mapViewOrNull?.map
 
@@ -387,8 +392,9 @@ public class MapFragment
 
         mMapRef.get()!!.map!!.maplibreMapView = mapViewMaplibre
 
-
-
+        // So GISApplication.mMap.mapFragment.get() is non-null as soon as the fragment view exists
+        // (e.g. after resetMap() + new MapDrawable) — before getMapAsync/onMapReady.
+        mMapRef.get()!!.map!!.setMapFragment(this)
 
         mapViewMaplibre.onCreate(savedInstanceState)
 
@@ -438,18 +444,84 @@ public class MapFragment
         mapDrawable.loadLayersToMaplibreMapLite(allLayers, false)
     }
 
-    override fun reloadMapStyleAndLayersAfterLayerFillBatch() {
-        val mapRef = mMapRef.get() ?: return
-        val mapDrawable = mapRef.map ?: return
+    override fun reloadMapStyleAndLayersAfterLayerFillBatch(): Boolean {
+        val mapRef = mMapRef.get() ?: return false
+        val mapDrawable = mapRef.map ?: return false
         if (mapDrawable.getMaplibreMap() == null) {
-            return
+            scheduleMapReloadAfterLayerFillRetry()
+            return false
         }
-        val styleJson = loadJsonFromAssets(requireContext(), "ngwstyle.json") ?: return
+        mapReloadAfterFillRetryCount = 0
+        return doReloadMapStyleAndLayersAfterLayerFillBatch()
+    }
+
+    private fun doReloadMapStyleAndLayersAfterLayerFillBatch(): Boolean {
+        val mapRef = mMapRef.get() ?: return false
+        val mapDrawable = mapRef.map ?: return false
+        if (mapDrawable.getMaplibreMap() == null) {
+            return false
+        }
+        val ctx = context ?: return false
+        val styleJson = loadJsonFromAssets(ctx, "ngwstyle.json") ?: return false
         val vectorLayers = mapRef.getVectorLayersByType(GeoConstants.GTAnyCheck)
         val layersTrack = mapRef.getLayersByType(Constants.LAYERTYPE_TRACKS)
         vectorLayers.addAll(layersTrack)
         val allLayers = mapRef.getAllLayers()
         mapDrawable.loadLayersToMaplibreMap(styleJson, allLayers, true, true)
+        return true
+    }
+
+    /**
+     * [MapViewOverlays] keeps a final [MapDrawable] from [onCreate]. [GISApplication.resetMap]
+     * replaces the app map with a new instance while the view can still reference the old drawable,
+     * so imports attach to the new map and the UI stays empty. If we detect that, recreate
+     * [MainActivity] to rebuild the map view. When instances match, refresh the weak
+     * [MapDrawable.mapFragment] link (also set early in [onViewCreated] before [onMapReady]).
+     */
+    private fun ensureMapViewBoundToApplicationMap() {
+        val appMap = try {
+            (mApp as MainApplication).map as MapDrawable
+        } catch (e: ClassCastException) {
+            return
+        }
+        val viewMap = mMapRef.get()?.map as? MapDrawable ?: return
+        if (viewMap !== appMap) {
+            HyperLog.w(
+                Constants.TAG,
+                "MapFragment: MapView MapDrawable != application map; recreating activity to rebind"
+            )
+            mActivity?.recreate()
+            return
+        }
+        viewMap.setMapFragment(this)
+    }
+
+    private fun scheduleMapReloadAfterLayerFillRetry() {
+        val v = view
+        if (v == null) {
+            return
+        }
+        if (mapReloadAfterFillRetryCount >= mapReloadAfterFillMaxRetries) {
+            HyperLog.w(
+                Constants.TAG,
+                "reloadMapStyleAfterLayerFill: MapLibre map not ready after $mapReloadAfterFillMaxRetries delayed attempts"
+            )
+            return
+        }
+        mapReloadAfterFillRetryCount++
+        mapReloadAfterFillRetryRunnable?.let { v.removeCallbacks(it) }
+        val r = Runnable {
+            mapReloadAfterFillRetryRunnable = null
+            if (doReloadMapStyleAndLayersAfterLayerFillBatch()) {
+                mapReloadAfterFillRetryCount = 0
+                (mApp as? IGISApplication)?.clearMapReloadAfterLayerFillPending()
+            } else if (mMapRef.get()?.map?.getMaplibreMap() == null
+                && mapReloadAfterFillRetryCount < mapReloadAfterFillMaxRetries) {
+                scheduleMapReloadAfterLayerFillRetry()
+            }
+        }
+        mapReloadAfterFillRetryRunnable = r
+        v.postDelayed(r, 100)
     }
 
     override fun getLongLongClickProcesses(): Boolean {
@@ -1096,6 +1168,11 @@ public class MapFragment
 
     override fun onDestroyView() {
         HyperLog.v(Constants.TAG, "MapFragment.onDestroyView")
+        mapReloadAfterFillRetryRunnable?.let { r ->
+            view?.removeCallbacks(r)
+        }
+        mapReloadAfterFillRetryRunnable = null
+        mapReloadAfterFillRetryCount = 0
         val mapView = mapViewOrNull
         if (mapView != null) {
             mapView.removeListener(this)
@@ -1490,6 +1567,7 @@ public class MapFragment
         HyperLog.v(Constants.TAG, "MapFragment.onResume")
         super.onResume()
 
+        ensureMapViewBoundToApplicationMap()
         mApp?.let { (it as IGISApplication).flushPendingMapReloadAfterLayerFillIfNeeded(this) }
 
         var showControls =

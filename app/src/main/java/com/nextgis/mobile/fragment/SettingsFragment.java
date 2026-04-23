@@ -77,7 +77,6 @@ import com.nextgis.mobile.util.AppConstants;
 import com.nextgis.mobile.util.AppSettingsConstants;
 import com.nextgis.mobile.util.CustomPreference;
 import com.nextgis.mobile.util.IntEditTextPreference;
-import com.nextgis.mobile.util.SDCardUtils;
 import com.nextgis.mobile.util.SelectMapPathPreference;
 
 import org.json.JSONArray;
@@ -332,26 +331,22 @@ public class SettingsFragment
                                                 int which)
                                         {
 
-                                            if (SDCardUtils.isSDCardUsedAndExtracted(preference.getContext())){
-                                                resetSettings(activity);
+                                            resetSettings(activity);
 
-                                                ((GISApplication)MapBase.getInstance().getContext().getApplicationContext())
-                                                        .resetMap();
-                                                ((MainApplication) activity.getApplication()).initBaseLayers();
-                                                try {
-                                                    deleteLayers(activity);
-                                                } catch ( Exception ex) {
-                                                    //Log.e("f", "g");
-                                                }
-                                                ((MainApplication) activity.getApplication()).initBaseLayers();
-                                                activity.setResult(RESULT_OK);
-                                            } else {
-                                                resetSettings(activity);
+                                            ((GISApplication) MapBase.getInstance().getContext().getApplicationContext())
+                                                    .resetMap();
+                                            ((MainApplication) activity.getApplication()).initBaseLayers();
+                                            try {
                                                 deleteLayers(activity);
-                                                ((MainApplication) activity.getApplication()).initBaseLayers();
-                                                activity.setResult(Activity.RESULT_CANCELED);
-
+                                            } catch (Exception ex) {
+                                                //Log.e("f", "g");
                                             }
+                                            ((MainApplication) activity.getApplication()).initBaseLayers();
+                                            // RESULT_OK restarts MainActivity so MapFragment binds to the new MapDrawable
+                                            // from resetMap(). RESULT_CANCELED left the old MapView on a stale drawable
+                                            // while the app used a new instance — layers from import did not show until
+                                            // process restart.
+                                            activity.setResult(RESULT_OK);
                                         }
                                     })
                             .show();

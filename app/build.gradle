@@ -51,8 +51,8 @@ android {
         minSdkVersion 26
         compileSdk 36
         targetSdkVersion 36
-        versionCode 174
-        versionName '3.0.2.2'
+        versionCode 175
+        versionName '3.0.2.3'
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
 
         def props = new Properties()

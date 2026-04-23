@@ -363,6 +363,33 @@ zoom, sync settings, new fields) without re-downloading data.
 4. In `LayerFillService`, save MD5 hash after applying config on initial fill.
 5. Replace private parsing methods in `LayerFillService` with delegation to `LayerConfigUtil`.
 
+### NGW config when data sync is off (`SYNC_NONE`) — 3.0.2.3
+
+**Problem:** server-side changes to the NGW resource `description` (style/config) were only
+reconciled for layers that took part in **data** sync. Layers with `getSyncType() == SYNC_NONE`
+were excluded from `SyncAdapter`’s layer list, and `NGWVectorLayer.sync()` returned before
+`getChangesFromServer()`, so the config block never ran.
+
+**Changes (fork, GeonicalSystem):**
+
+- Extract `tryRefreshServerResourceMetaAndConfig()` + `ConfigRefreshOutcome`; the start of
+  `getChangesFromServer()` delegates to it (same behavior for network, missing table, schema
+  mismatch, hash, soft/hard config as before).
+- `NGWVectorLayer.sync()`: if `SYNC_NONE` and the layer is inited (`mFields != null`), run the
+  same config refresh, then return (no feature download). Covers **single-layer** sync
+  (`ACTION_LPATH` bundle).
+- `SyncAdapter.onPerformSync`: after the main `sync()` pass, if **not** `ACTION_LPATH` and
+  not canceled, recursively walk the map `LayerGroup` and call
+  `NGWVectorLayer.syncNgwResourceConfigOnly()` for each account’s `SYNC_NONE` vector layer.
+- `isSomeToSync()`: new `hasNgwVectorLayerForAccount(LayerGroup, …)` — if **any** `NGWVectorLayer`
+  exists for the account, return true so `onPerformSync` is not skipped when *only* data sync
+  is off (app layer previously bailed on `!super.isSomeToSync`).
+
+| File | Notes |
+|------|--------|
+| `maplib/.../NGWVectorLayer.java` | Config extraction; public `syncNgwResourceConfigOnly(authority, syncResult)` |
+| `maplib/.../SyncAdapter.java` | Second pass, `isSomeToSync` helper, `NGWVectorLayer` import |
+
 ---
 
 ## 10. Stability Hardening
@@ -710,3 +737,9 @@ git commit -m "Update submodules after upstream merge"
 
 - **Стабильность (редактирование / UI):** в мультиполигоне исправлен краш при удалении вершины при несогласованных индексах выделения (`MultiPolygonEditClass`, `MapDrawable.canDeleteCurrentPointSafe`, `EditLayerOverlay`, `MapFragment`). В **`LayersFragment`** устранён NPE при `onDestroyView`: отложенный runnable больше не вызывает `setDrawerListener`/`addDrawerListener` на уже обнулённом `DrawerLayout` (`removeCallbacks`, `removeDrawerListener`, регистрация слушателя один раз).
 - **Синхронизация NGW:** в `NGWVectorLayer.cursorToJson` для геометрии используется `getColumnIndexOrThrow(FIELD_GEOM)` вместо `getColumnIndex`, чтобы индекс колонки для `getBlob` был валиден (lint `Range` / отсутствие колонки — явное исключение).
+
+### 3.0.2.3 (`versionCode` 175)
+
+- **NGW `description` / config при `SYNC_NONE`:** сверка `resourceMeta` и JSON описания с сервера для **всех** векторных NGW-слоёв учётки при полной синхронизации; рекурсивный второй проход для слоёв с отключённой синхронизацией данных; `isSomeToSync` учитывает наличие `NGWVectorLayer` для аккаунта; `sync()` по одному слою (`ACTION_LPATH`) обновляет конфиг при `SYNC_NONE`. Подробно: [§9 — Config Sync from NGW Description](#9-config-sync-from-ngw-description) (подзаголовок *NGW config when data sync is off*).
+- **Карта после пакетного fill:** `MaplibreMapInteraction.reloadMapStyleAndLayersAfterLayerFillBatch()` возвращает `boolean`; в `IGISApplication` — `clearMapReloadAfterLayerFillPending()`; реализации в `GISApplication` и `MapFragment` сбрасывают внутренний «pending map reload» после успешного reload / bounded retry.
+- **Сброс настроек (импорт/карта):** в `SettingsFragment` при подтверждённом сбросе всегда `RESULT_OK`, `resetMap()` + единый путь `deleteLayers` / `initBaseLayers`, без ветвления `SDCardUtils` — чтобы после сброса `MainActivity` пересоздавалась и `MapFragment` не оставался на устаревшем `MapDrawable` (слои с импорта отображаются без перезапуска процесса).
