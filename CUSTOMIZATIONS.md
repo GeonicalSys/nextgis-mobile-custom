@@ -724,8 +724,26 @@ git commit -m "Update submodules after upstream merge"
 
 - Remote **`upstream`** родительского репозитория: `https://github.com/nextgis/nextgis_mobile_android.git` (на GitHub раньше тот же проект фигурировал как **`android_gisapp`**).
 - Полный отчёт о последней синхронизации: **[`UPSTREAM_SYNC_REPORT.md`](UPSTREAM_SYNC_REPORT.md)** (ref `upstream/master`, инвентаризация, merge maplib / maplibui / корня, классификация A/B/C).
+- Пользовательский changelog (что заметит пользователь) — **[`WHATS_NEW.md`](WHATS_NEW.md)**.
+- **Скрипт-помощник:** **[`tools/upstream-sync.ps1`](tools/upstream-sync.ps1)** —
+  PowerShell-скрипт с режимами `Inventory` / `BackupTags` / `MergeSubmodules` / `MergeRoot`.
+  Скрипт делает только безопасные операции (fetch / tag / merge --no-commit), без
+  push / reset --hard / --force / --amend.
+  ```powershell
+  pwsh tools/upstream-sync.ps1 -Mode Inventory             # fetch + draft report
+  pwsh tools/upstream-sync.ps1 -Mode BackupTags            # pre-upstream-sync-<date>-<repo>
+  pwsh tools/upstream-sync.ps1 -Mode MergeSubmodules       # maplib + maplibui + easypicker
+  pwsh tools/upstream-sync.ps1 -Mode MergeRoot             # parent + submodule pointer bump
+  ```
+- **Backup-теги:** перед каждым merge стоит ставить `pre-upstream-sync-<date>-<repo>` теги
+  на `my-maplibre` — это даёт быстрый откат через `git reset --hard <tag>`.
 - После крупного merge: `git fetch upstream --prune`, при необходимости merge в сабмодулях первыми, затем обновить указатели в корне и проверить сборку обоих flavors.
-- **Проверено в работе:** после интеграции upstream (3.0.2 / `versionCode` 173, merge maplib + maplibui + корень) сборка и сценарии в приложении проходят; в **Build Variants** flavors **lisa** / **belka** по-прежнему выбираются в строке модуля **`app`** (у библиотек только debug/release).
+- **Проверено в работе:**
+  - **2026-03 / upstream 3.0.2 / `versionCode` 173** (см. отчёт в `UPSTREAM_SYNC_REPORT.md`,
+    раздел в самом начале).
+  - **2026-05 / upstream 3.0.3 / `versionCode` 178** → форк `3.0.3.1` / 179 (раздел
+    «Цикл 2026-05-15» в `UPSTREAM_SYNC_REPORT.md`). Walk-by-geometry разобран per-аспект в
+    [§17 Walk reconciliation](#17-walk-reconciliation).
 
 ---
 
@@ -743,3 +761,58 @@ git commit -m "Update submodules after upstream merge"
 - **NGW `description` / config при `SYNC_NONE`:** сверка `resourceMeta` и JSON описания с сервера для **всех** векторных NGW-слоёв учётки при полной синхронизации; рекурсивный второй проход для слоёв с отключённой синхронизацией данных; `isSomeToSync` учитывает наличие `NGWVectorLayer` для аккаунта; `sync()` по одному слою (`ACTION_LPATH`) обновляет конфиг при `SYNC_NONE`. Подробно: [§9 — Config Sync from NGW Description](#9-config-sync-from-ngw-description) (подзаголовок *NGW config when data sync is off*).
 - **Карта после пакетного fill:** `MaplibreMapInteraction.reloadMapStyleAndLayersAfterLayerFillBatch()` возвращает `boolean`; в `IGISApplication` — `clearMapReloadAfterLayerFillPending()`; реализации в `GISApplication` и `MapFragment` сбрасывают внутренний «pending map reload» после успешного reload / bounded retry.
 - **Сброс настроек (импорт/карта):** в `SettingsFragment` при подтверждённом сбросе всегда `RESULT_OK`, `resetMap()` + единый путь `deleteLayers` / `initBaseLayers`, без ветвления `SDCardUtils` — чтобы после сброса `MainActivity` пересоздавалась и `MapFragment` не оставался на устаревшем `MapDrawable` (слои с импорта отображаются без перезапуска процесса).
+
+### 3.0.3.1 (`versionCode` 179)
+
+- **Поднят base upstream до 3.0.3.** Закрыт цикл синка от 2026-05-15 — см.
+  [`UPSTREAM_SYNC_REPORT.md`](UPSTREAM_SYNC_REPORT.md), раздел «Цикл 2026-05-15».
+- **Растровые слои (`.ngrc`) после импорта:** добавлен `loadLayersLite()` вызов в
+  `MapDrawable.addLayerByID` сразу после `createFillLayerForLayer` для GT_RASTER_WA —
+  совпадает с эффектом тапа по списку слоёв, новый растр сразу встаёт под пользовательский
+  стек без перезапуска. `MPLFeaturesUtils.resolveRasterSiblingAnchorOrNull` ищет OSM
+  как якорь (`addLayerAbove(raster, osm)`) или предпочитает sibling выше при наличии.
+- **Walk-by-geometry:** проведена per-аспектная сверка нашей реализации с upstream'овской
+  (см. [§17 Walk reconciliation](#17-walk-reconciliation)). Сохранён наш pipeline
+  (`applyInitialWalkGeometryAtStartLocation` + `prepareMaplibreSessionForNewWalkGeometry`),
+  взяты upstream'овские `ChooseLayerDialog(useCreatePoint, startFillByWalk)`, `saveToHistory`
+  + `updateHistoryByWalkEnd`, поля `layerForWalkRestore/featureToRestore` для process-kill
+  restore, signature `startFeatureSelectionForEdit` с `isFillByWalking`.
+
+---
+
+## 17. Walk reconciliation
+
+Контекст: upstream `3.0.3` восстановил «Add geometry ByWalk» (root коммиты `f95c07e` +
+`b9dd9d6`, maplib `147262e`, maplibui `584acce5`). Наш форк уже имел свою реализацию (см.
+[§2 Walk-by-Geometry Feature Restoration](#2-walk-by-geometry-feature-restoration)). Цикл
+2026-05-15 — первая сверка по аспектам.
+
+| Аспект | Наш форк | Upstream | Решение | Обоснование |
+|--------|----------|----------|---------|-------------|
+| Стартовая геометрия (single-layer вход) | `applyInitialWalkGeometryAtStartLocation` строит degenerate-line / micro-polygon в Web-Mercator от GPS (или камеры) | `createPointFromOverlay(true)` + повторный `newGeometryByWalk` | **ours** | Наш anchor явный и устойчивый (Web-Mercator с offset метрами), дублирующий вызов upstream выглядит ad-hoc. |
+| MapLibre edit-session старт | `prepareMaplibreSessionForNewWalkGeometry` → `MapDrawable.startFeatureSelectionForEdit(layer, type, feature, true, style, true)` + `replaceGeometryFromHistoryChanges(startGeom)` | пустой блок в `addGeometryByWalk` (полагается на `EditLayerOverlay.newGeometryByWalk`) | **ours** | Без явного MapLibre session restore последняя точка не «цепляется» к редактируемому фиче после rotate/process kill. |
+| Process-kill / rotate restore | `attachMaplibreToCurrentWalkOverlayGeometry` пере-подключает MapLibre к текущей overlay-геометрии | поля `layerForWalkRestore` + `featureToRestore` в `MapDrawable`, восстановление в `loadLayersToMaplibreMap` after-style-loaded | **hybrid** | Используем `attach…` из форка для UI-возврата + upstream'овские поля и блок restore в `MapDrawable` (вложены в наш listener в `loadLayersToMaplibreMap`). |
+| History (Undo/Redo) при walk-end | вызывался только наш `editLayerOverlay.onOptionsItemSelected` | `undoRedoOverlay.saveToHistory(...)` + `(mApp.map as MapDrawable).updateHistoryByWalkEnd()` | **upstream** | Полноценный undo в режиме walk, у нас он отсутствовал. |
+| ChooseLayerDialog signature | `ChooseLayerDialog(boolean useCreatePoint)` | `ChooseLayerDialog(boolean useCreatePoint, boolean startFillByWalk)` | **upstream** | Новый параметр нужен и используется в `onFinishChooseLayerDialog` для разветвления walk vs обычного «edit». |
+| `MaplibreMapInteraction.setMapLayersLoaded` / `checkCreateIfNeed` | отсутствовали | новые методы интерфейса | **upstream** | Реализация в `MapFragment.kt` — пустые `override` (fork использует свой deferred reload, см. §13). |
+| `startFeatureSelectionForEdit(...)` signature | 5 параметров | 6 (добавлен `isFillByWalking`) | **upstream** | Наш walk-вход всегда передаёт `true`, обычный edit — параметр не нужен на верхнем уровне. |
+| Track start/end flags после walk | отсутствуют | upstream восстановил `track-flag-source`/`track-flags-layer` + bitmaps | **ours** (skip) | §14 — флаги намеренно отключены; pollute стиля MapLibre лишними source/layer. `checkLayerVisibility(track.id)` сохранён. |
+| Дубликат `R.id.add_geometry_by_walk` в when-handler MapFragment | дубликат был | upstream удалил | **upstream** | Это был баг форка (двойная регистрация click handler). |
+| Имя поля `MapDrawable.mapFragment` | `mapFragment` | upstream переименовал в `mapContext` (плюс `setMapContext`) | **upstream** | Все ссылки форка обновлены (9 мест в `MapDrawable`, 3 в `MapFragment`, 1 в `GISApplication`). |
+
+### Что НЕ применено (и почему)
+
+- Upstream'овский `addGeometryByWalk` single-layer pipeline (двойной `newGeometryByWalk`) —
+  заменён нашим (см. таблицу выше).
+- Track-flag иконки — оставлены отключёнными (§14).
+
+### Следующий цикл — на что смотреть
+
+- Если upstream объединит свой walk-restore (`layerForWalkRestore/featureToRestore`) с
+  нашим `attachMaplibreToCurrentWalkOverlayGeometry`, можно будет уменьшить hybrid и
+  перейти на чисто upstream-вариант.
+- `WalkEditService.isServiceRunning(Context)` сейчас — наш статический helper; upstream
+  его не использует. Если upstream добавит свой эквивалент — сравнить семантику.
+- `Multi*EditClass.addNewFlowPoint(LatLng, boolean)` — новый upstream-метод; наш форк сейчас
+  им не пользуется напрямую, но если потребуется «начать walk без anchor» — это естественная
+  точка интеграции.
