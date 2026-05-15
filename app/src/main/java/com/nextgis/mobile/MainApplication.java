@@ -70,7 +70,9 @@ import com.nextgis.mobile.util.OfflineSyncIntentService;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static com.nextgis.maplib.util.Constants.DEBUG_MODE;
 import static com.nextgis.maplib.util.Constants.MAP_EXT;
@@ -98,6 +100,8 @@ public class MainApplication extends GISApplication
     public static final String LAYER_TRACKS = "tracks";
 
     private Tracker mTracker;
+
+
 
     @Override
     public void onCreate() {
@@ -142,14 +146,9 @@ public class MainApplication extends GISApplication
         updateFromOldVersion();
         NGWUtil.NGUA = "ng_mobile";
         NGWUtil.UUID = TrackerService.getUid(this);
-        initializeMapbox();
     }
 
-    private void initializeMapbox() {
-        MapLibre.getInstance(this, "sjdkfhjkdshfkjhsdkjf", WellKnownTileServer.MapTiler);
-        //TileLoadingMeasurementUtils.setUpTileLoadingMeasurement();
-        MapStrictMode.setStrictModeEnabled(true);
-    }
+
 
     /**
      * Install HyperLog crash handler LAST so it wraps GA handler and any others.
@@ -213,6 +212,7 @@ public class MainApplication extends GISApplication
     public void startCreateNGWLayerSync(String lpath) {
         OfflineSyncIntentService.startActionFoo(this, lpath);
     }
+
 
     @Override
     public void sendEvent(String category, String action, String label) {
@@ -287,36 +287,7 @@ public class MainApplication extends GISApplication
         } catch (PackageManager.NameNotFoundException ignored) { }
     }
 
-    @Override
-    public MapBase getMap()
-    {
-        if (null != mMap) {
-            return mMap;
-        }
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        File defaultPath = getExternalFilesDir(SettingsConstants.KEY_PREF_MAP);
-        if (defaultPath == null) {
-            defaultPath = new File(getFilesDir(), SettingsConstants.KEY_PREF_MAP);
-        }
-
-        String mapPath = mSharedPreferences.getString(SettingsConstants.KEY_PREF_MAP_PATH, defaultPath.getPath());
-        String mapName = mSharedPreferences.getString(SettingsConstantsUI.KEY_PREF_MAP_NAME, "default");
-
-        File mapFullPath = new File(mapPath, mapName + MAP_EXT);
-
-        final Bitmap bkBitmap = getMapBackground();
-        mMap = new MapDrawable(bkBitmap, this, mapFullPath, new LayerFactoryUI());
-        mMap.setName(mapName);
-        mMap.load();
-
-        checkTracksLayerExist();
-
-        return mMap;
-    }
-
-
-    protected void checkTracksLayerExist()
+    public void checkTracksLayerExist()
     {
         List<ILayer> tracks = new ArrayList<>();
         LayerGroup.getLayersByType(mMap, Constants.LAYERTYPE_TRACKS, tracks);
