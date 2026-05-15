@@ -723,6 +723,7 @@ git commit -m "Update submodules after upstream merge"
 ### Upstream sync (официальный `nextgis_mobile_android`)
 
 - Remote **`upstream`** родительского репозитория: `https://github.com/nextgis/nextgis_mobile_android.git` (на GitHub раньше тот же проект фигурировал как **`android_gisapp`**).
+- **Краткий handoff для новых чатов с ИИ:** **[`CONTEXT_INSTRUCTION.md`](CONTEXT_INSTRUCTION.md)** — структура репо, порядок чтения доков, инварианты форка, карта «горячих» файлов.
 - Полный отчёт о последней синхронизации: **[`UPSTREAM_SYNC_REPORT.md`](UPSTREAM_SYNC_REPORT.md)** (ref `upstream/master`, инвентаризация, merge maplib / maplibui / корня, классификация A/B/C).
 - Пользовательский changelog (что заметит пользователь) — **[`WHATS_NEW.md`](WHATS_NEW.md)**.
 - **Скрипт-помощник:** **[`tools/upstream-sync.ps1`](tools/upstream-sync.ps1)** —
@@ -744,6 +745,7 @@ git commit -m "Update submodules after upstream merge"
   - **2026-05 / upstream 3.0.3 / `versionCode` 178** → форк `3.0.3.1` / 179 (раздел
     «Цикл 2026-05-15» в `UPSTREAM_SYNC_REPORT.md`). Walk-by-geometry разобран per-аспект в
     [§17 Walk reconciliation](#17-walk-reconciliation).
+  - **Патч `3.0.3.2` / `versionCode` 180** — см. [§16 — 3.0.3.2](#3032-versioncode-180).
 
 ---
 
@@ -777,6 +779,31 @@ git commit -m "Update submodules after upstream merge"
   взяты upstream'овские `ChooseLayerDialog(useCreatePoint, startFillByWalk)`, `saveToHistory`
   + `updateHistoryByWalkEnd`, поля `layerForWalkRestore/featureToRestore` для process-kill
   restore, signature `startFeatureSelectionForEdit` с `isFillByWalking`.
+
+### 3.0.3.2 (`versionCode` 180)
+
+- **NGW / схема полей:** `NGWLayerSchemaCompat.localSchemaMatchesServerMeta` — сравнение
+  **в обе стороны** (локальное поле, удалённое на Web GIS, больше не игнорируется).
+- **Пересборка слоя при mismatch схемы:** `GISApplication.scheduleNgwLayerRebuildAfterSchemaMismatch` —
+  перед удалением слоя попытка `sendLocalChanges`; сохранение индекса слоя в группе и
+  `LayerFillService.KEY_LAYER_RESTORE_INSERT_INDEX` для вставки на прежнее место; после старта
+  fill — `LayerFillProgressDialogFragment.startBatchFillProgress` (как при batch fill). В intent
+  не передаётся устаревший `KEY_LAYER_CONFIG_JSON` (свежее описание подтягивается в сервисе).
+- **`LayerFillService`:** при успешном fill — `insertLayer` по сохранённому индексу, если extra задан.
+- **Карта / краш:** `MapDrawable.checkLayerVisibility` — ранний выход, если слой уже удалён
+  (NPE `Layer.isVisible()` при гонке с пересборкой по mismatch). `MapDrawable.syncUserLocationSourceFromStyle`
+  после lite-перезагрузки стиля и из `updateLocation`, чтобы GeoJson user-location не «отваливался».
+- **`MapFragment`:** исправлен refresh слоёв в `onResume` — `getVectorLayersById(..., layerId)` вместо
+  `id` фрагмента; убран `tmpFirstLocation`; общий `applyLocationFixToMap` + `onBestLocationChanged`
+  (GpsEventSource шлёт только «лучший» фикс туда); `updateLastLocation` с fallback на `mCurrentCenter`;
+  вызовы после `setMapLayersLoaded` / `loadLayersLite` / «локации» для актуального puck без обязательного
+  сворачивания приложения.
+- **Логи (прод):** `ProdLogUtil` (обрезка, scrub URL, сводка `SyncResult`); `NGWVectorLayer.reportSyncHttpFailure`
+  и доработки `log`/`getFeatures`; итог sync в `SyncAdapter`; `HyperLogCrashHandler` — короткий headline
+  + `throwable`, fallback в `Log.e`; `Logger` / `GISApplication` / `MainApplication` — не ставить второй
+  `HyperLogCrashHandler`, если он уже default; `LayerFillService` — строка в лог перед Toast ошибки fill.
+- **Документация:** в §15 ссылка на [`CONTEXT_INSTRUCTION.md`](CONTEXT_INSTRUCTION.md); в корне репозитория
+  добавлен этот файл (короткий handoff для новых чатов с ИИ).
 
 ---
 

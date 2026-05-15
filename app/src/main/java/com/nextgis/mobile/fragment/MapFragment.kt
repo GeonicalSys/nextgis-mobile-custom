@@ -231,8 +231,6 @@ public class MapFragment
     protected val ADD_POINT_BY_TAP: Int = 4
     private var mNeedSave = false
 
-    var tmpFirstLocation: Location? = null
-
     var longClickProcessed = false
 
     /** Bounded delayed retries when MapLibre is not ready at end of layer-fill batch. */
@@ -445,9 +443,8 @@ public class MapFragment
     }
 
     override fun setMapLayersLoaded() {
-        // Upstream hook called from MapDrawable.loadLayersToMaplibreMap onDidFinishLoadingStyle
-        // after layers are applied. Fork has its own deferred reload tracking
-        // (mapReloadAfterFillRetryCount, requestMapReloadAfterLayerFillBatch) — no-op here for now.
+        /* Full style just applied — user-location-source exists; onResume may have run too early. */
+        updateLastLocation()
     }
 
     override fun loadLayersLite(){
@@ -458,6 +455,7 @@ public class MapFragment
         }
         val allLayers = mMapRef.get()!!.getAllLayers()
         mapDrawable.loadLayersToMaplibreMapLite(allLayers, false)
+        updateLastLocation()
     }
 
     override fun reloadMapStyleAndLayersAfterLayerFillBatch(): Boolean {
@@ -1709,7 +1707,6 @@ public class MapFragment
             }
 
             setMarginsToPanel()
-            updateLastLocation()
         }
 
         val showCompass =
@@ -1732,6 +1729,9 @@ public class MapFragment
         else
             mCurrentCenter = null
 
+        /* Puck: not tied to status panel; after mCurrentCenter sync. Style may still load — second pass in setMapLayersLoaded. */
+        updateLastLocation()
+
         if (GISApplication.needUpdateBackground){
             try {
                 GISApplication.needUpdateBackground = false
@@ -1741,7 +1741,6 @@ public class MapFragment
             }
 
         }
-        //updateLastLocation()
         val intentFilter = IntentFilter()
         intentFilter.addAction( MESSAGE_INTENT_STYLING)
 
@@ -1775,7 +1774,7 @@ public class MapFragment
         if (listOfLayers!= null)
             for (layerId in listOfLayers){
                 if (mMapRef.get()!= null && mMapRef.get()!!.map!= null && layerId != -1){
-                    val targetlayer = LayerGroup.getVectorLayersById(mMapRef.get()?.map, id)
+                    val targetlayer = LayerGroup.getVectorLayersById(mMapRef.get()?.map, layerId)
                     if (targetlayer != null) {
                         val isVisible = (targetlayer as Layer).isVisible()
                         if (isVisible) {
@@ -3084,51 +3083,54 @@ public class MapFragment
     }
 
 
-    override fun onLocationChanged(location: Location?) {
-        if (location != null) {
+    /**
+     * Applies a GPS/network fix to [mCurrentCenter], MapLibre user-location source, track overlay,
+     * and walk-by-geometry. Used from both [onLocationChanged] and [onBestLocationChanged] because
+     * [com.nextgis.maplib.location.GpsEventSource] only dispatches the "better fix" path to the latter.
+     */
+    private fun applyLocationFixToMap(location: Location) {
+        val mapDrawable = mapDrawableOrNull ?: return
 
-            if (tmpFirstLocation != null && tmpFirstLocation!!.latitude == location.latitude &&
-                tmpFirstLocation!!.longitude == location.longitude )
-                return
-            else
-                tmpFirstLocation = location
-
-
-            if (mCurrentCenter == null) {
-                mCurrentCenter = GeoPoint()
-            }
-
-            mCurrentCenter!!.setCoordinates(location.longitude, location.latitude)
-            mCurrentCenter!!.crs = GeoConstants.CRS_WGS84
-
-            if (!mCurrentCenter!!.project(GeoConstants.CRS_WEB_MERCATOR)) {
-                mCurrentCenter = null
-            }
-
-            val isStanding =
-                location == null || !location.hasBearing() || !location.hasSpeed() || location.getSpeed() == 0f
-
-            mMapRef.get()!!.map!!.updateLocation(
-                Point.fromLngLat(location.longitude, location.latitude),
-                isStanding,
-                location.bearing)
-
-//            Log.e("TTRR", "location at" + ": " + location.longitude + " : " + location.latitude)
-
-
-            if (TrackerService.hasUnfinishedTracks(context))
-                mMapRef.get()!!.map!!.reloadCurrentTrackToMap()
-
-//            Log.e("TTRR", "end olLocChange update---------------" )
-
-            if (mode == MODE_EDIT_BY_WALK && !WalkEditService.isServiceRunning(context)) {
-                mMapRef.get()!!.map!!.addPointByWalk(LatLng(location.latitude, location.longitude))
-            }
+        if (mCurrentCenter == null) {
+            mCurrentCenter = GeoPoint()
         }
 
+        mCurrentCenter!!.setCoordinates(location.longitude, location.latitude)
+        mCurrentCenter!!.crs = GeoConstants.CRS_WGS84
+
+        if (!mCurrentCenter!!.project(GeoConstants.CRS_WEB_MERCATOR)) {
+            mCurrentCenter = null
+        }
+
+        val isStanding =
+            !location.hasBearing() || !location.hasSpeed() || location.speed == 0f
+
+        mapDrawable.updateLocation(
+            Point.fromLngLat(location.longitude, location.latitude),
+            isStanding,
+            if (location.hasBearing()) location.bearing else 0f
+        )
+
+        if (TrackerService.hasUnfinishedTracks(context)) {
+            mapDrawable.reloadCurrentTrackToMap()
+        }
+
+        if (mode == MODE_EDIT_BY_WALK && !WalkEditService.isServiceRunning(context)) {
+            mapDrawable.addPointByWalk(LatLng(location.latitude, location.longitude))
+        }
+    }
+
+    override fun onLocationChanged(location: Location?) {
+        if (location != null) {
+            applyLocationFixToMap(location)
+        }
         fillStatusPanel(location)
     }
 
+    override fun onBestLocationChanged(location: Location) {
+        applyLocationFixToMap(location)
+        fillStatusPanel(location)
+    }
 
     public fun reloadTracks(){
 
@@ -3140,22 +3142,32 @@ public class MapFragment
 
     }
 
-    fun updateLastLocation(){
-
-        if (mGpsEventSource == null)
+    fun updateLastLocation() {
+        if (mGpsEventSource == null) {
             return
+        }
+        val mapDrawable = mapDrawableOrNull ?: return
+
         val loc = mGpsEventSource!!.lastKnownLocation
-        if (loc ==  null)
+        if (loc != null) {
+            val isStanding = !loc.hasBearing() || !loc.hasSpeed() || loc.speed == 0f
+            mapDrawable.updateLocation(
+                Point.fromLngLat(loc.longitude, loc.latitude),
+                isStanding,
+                if (loc.hasBearing()) loc.bearing else 0f
+            )
             return
-        val isStanding = loc == null || !loc.hasBearing() || !loc.hasSpeed() || loc.getSpeed() == 0f
+        }
 
-        mMapRef.get()!!.map!!.updateLocation(Point.fromLngLat(loc.longitude, loc.latitude),
-            isStanding,
-            loc.bearing
-        )
-    }
-
-    override fun onBestLocationChanged(location: Location) {
+        val center = mCurrentCenter
+        if (center != null) {
+            val lonLat = convert3857To4326(center.x, center.y)
+            mapDrawable.updateLocation(
+                Point.fromLngLat(lonLat[0], lonLat[1]),
+                true,
+                0f
+            )
+        }
     }
 
     private fun fillStatusPanel(location: Location?) {
@@ -3334,21 +3346,25 @@ public class MapFragment
     }
 
     fun locateCurrentPosition() {
-        if (mCurrentCenter != null && mMapRef.get()!!.map.maplibreMap!=null) {
-            mMapRef.get()!!.panTo(mCurrentCenter)
+        val mapDrawable = mapDrawableOrNull
+        if (mCurrentCenter != null && mapDrawable?.maplibreMap != null) {
+            mapViewOrNull!!.panTo(mCurrentCenter)
 
-            val lonLat = convert3857To4326(mCurrentCenter!!.x, mCurrentCenter!!.y);
+            val lonLat = convert3857To4326(mCurrentCenter!!.x, mCurrentCenter!!.y)
 
             val targetPosition = CameraPosition.Builder()
                 .target(LatLng(lonLat[1], lonLat[0]))
-                .zoom(mMapRef.get()!!.map.maplibreMap.cameraPosition.zoom)
+                .zoom(mapDrawable.maplibreMap.cameraPosition.zoom)
                 .bearing(0.0)
                 .tilt(0.0)
                 .build()
 
-                mMapRef.get()!!.map.maplibreMap.animateCamera(
+            mapDrawable.maplibreMap.animateCamera(
                 CameraUpdateFactory.newCameraPosition(targetPosition),
                 2000)
+            /* Menu «локация» only moves the camera; MapLibre puck is updated from GPS callbacks.
+               Push the current fix onto user-location-source so the marker appears without resume. */
+            updateLastLocation()
         } else {
             Toast.makeText(
                 mActivity,

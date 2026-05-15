@@ -161,9 +161,11 @@ public class MainApplication extends GISApplication
         } catch (Exception ignored) {
             // HyperLog may already be initialized by Logger
         }
-        Thread.setDefaultUncaughtExceptionHandler(
-                new com.nextgis.maplibui.util.HyperLogCrashHandler()
-        );
+        if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof com.nextgis.maplibui.util.HyperLogCrashHandler)) {
+            Thread.setDefaultUncaughtExceptionHandler(
+                    new com.nextgis.maplibui.util.HyperLogCrashHandler()
+            );
+        }
     }
 
     private void setExceptionHandler() {

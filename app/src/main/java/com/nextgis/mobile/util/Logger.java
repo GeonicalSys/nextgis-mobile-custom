@@ -33,10 +33,10 @@ public final class Logger {
         HyperLog.setLogLevel(Log.VERBOSE);
         HyperLog.setLogFormat(new CustomLogMessageFormat(context));
 
-        Thread.setDefaultUncaughtExceptionHandler(
-                new HyperLogCrashHandler()
-        );
-
-
+        if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof HyperLogCrashHandler)) {
+            Thread.setDefaultUncaughtExceptionHandler(
+                    new HyperLogCrashHandler()
+            );
+        }
     }
 }
