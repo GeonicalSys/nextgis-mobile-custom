@@ -29,7 +29,7 @@
 
     <ListPreference
         app:iconSpaceReserved="false"
-        android:defaultValue="1"
+        android:defaultValue="3"
         android:entryValues="@array/location_accuracy_val"
         android:key="tracks_location_source"
         android:title="@string/pref_location_accuracy"

@@ -91,6 +91,7 @@ import com.nextgis.maplibui.service.TrackerService.BackgroundPermissionCallback
 import com.nextgis.maplibui.util.ConstantsUI
 import com.nextgis.maplibui.util.ConstantsUI.KEY_BATTERY
 import com.nextgis.maplibui.util.ConstantsUI.KEY_TRACK_ACTION
+import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_POINT
 import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_START
 import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_STOP
 import com.nextgis.maplibui.util.ControlHelper
@@ -1148,10 +1149,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             if (intent.action == ConstantsUI.MESSAGE_INTENT_TRACK) {
                 val tAction =  intent.getStringExtra(KEY_TRACK_ACTION)
                 if (tAction.equals(VALUE_TRACK_START)){
-
+                    mapFragment?.reloadTracks()
                 }
-                if (tAction.equals(VALUE_TRACK_STOP)){
-                    mapFragment!!.reloadTracks()
+                if (tAction.equals(VALUE_TRACK_STOP) || tAction.equals(VALUE_TRACK_POINT)){
+                    mapFragment?.reloadTracks()
                 }
 
                 val batteryOK =  intent.getBooleanExtra(KEY_BATTERY, true)

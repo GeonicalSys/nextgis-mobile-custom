@@ -745,6 +745,7 @@ git commit -m "Update submodules after upstream merge"
   - **2026-05 / upstream 3.0.3 / `versionCode` 178** → форк `3.0.3.1` / 179 (раздел
     «Цикл 2026-05-15» в `UPSTREAM_SYNC_REPORT.md`). Walk-by-geometry разобран per-аспект в
     [§17 Walk reconciliation](#17-walk-reconciliation).
+  - **Патч `3.0.3.3` / `versionCode` 181** — см. [§16 — 3.0.3.3](#3033-versioncode-181).
   - **Патч `3.0.3.2` / `versionCode` 180** — см. [§16 — 3.0.3.2](#3032-versioncode-180).
 
 ---
@@ -779,6 +780,23 @@ git commit -m "Update submodules after upstream merge"
   взяты upstream'овские `ChooseLayerDialog(useCreatePoint, startFillByWalk)`, `saveToHistory`
   + `updateHistoryByWalkEnd`, поля `layerForWalkRestore/featureToRestore` для process-kill
   restore, signature `startFeatureSelectionForEdit` с `isFillByWalking`.
+
+### 3.0.3.3 (`versionCode` 181)
+
+- **Запись трека (`TrackerService`):** HyperLog lifecycle start/stop/restore/insert и сводка
+  счётчиков при stop; идемпотентный `stopTrack(reason)` (без двойного закрытия при
+  `ACTION_STOP` + `onDestroy`); `ContextCompat.startForegroundService` и ранний
+  `startForeground`; provider gate как у walk (трековые **или** общие настройки location);
+  `flushRemaining()` + closing snap последней raw-точки; broadcast `trackpoint` через
+  `MESSAGE_INTENT_TRACK` / `VALUE_TRACK_POINT`.
+- **Отображение текущего трека:** `MapDrawable.reloadCurrentTrackToMap(leadLocation)` —
+  GPS lead-preview до текущей позиции только на карте (`track-inprogress-source`), без
+  записи в БД; `MapFragment` / `MainActivity.TrackStartStopReceiver` обновляют трек по
+  GPS-fix, `trackpoint`, start и stop.
+- **Фильтр GPS:** `LocationTrackFilter` пишет причины drop в HyperLog (не только при
+  `DEBUG_MODE`).
+- **Настройки трека:** дефолт `tracks_location_source` = `3` (GPS + other networks), fallback
+  в `LocationUtil` — `3`.
 
 ### 3.0.3.2 (`versionCode` 180)
 

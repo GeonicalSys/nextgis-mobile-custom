@@ -58,8 +58,8 @@ android {
         compileSdk 36
         targetSdkVersion 36
         // Fork versioning per CUSTOMIZATIONS §16: versionName = <upstream>.<patchN>
-        versionCode 180
-        versionName '3.0.3.2'
+        versionCode 181
+        versionName '3.0.3.3'
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
 
         def props = new Properties()

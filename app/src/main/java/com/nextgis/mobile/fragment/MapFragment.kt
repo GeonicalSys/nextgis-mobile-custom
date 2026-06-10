@@ -3112,7 +3112,7 @@ public class MapFragment
         )
 
         if (TrackerService.hasUnfinishedTracks(context)) {
-            mapDrawable.reloadCurrentTrackToMap()
+            mapDrawable.reloadCurrentTrackToMap(location)
         }
 
         if (mode == MODE_EDIT_BY_WALK && !WalkEditService.isServiceRunning(context)) {
@@ -3136,7 +3136,7 @@ public class MapFragment
 
         if (mMapRef.get()!!.map!!.maplibreMap==null)
             return
-        mMapRef.get()!!.map!!.reloadCurrentTrackToMap()
+        mMapRef.get()!!.map!!.reloadCurrentTrackToMap(mGpsEventSource?.lastKnownLocation)
         mMapRef.get()!!.map!!.reloadTrackListToMap()
 
 
