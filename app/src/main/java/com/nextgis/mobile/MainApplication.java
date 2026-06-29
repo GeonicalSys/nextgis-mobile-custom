@@ -136,8 +136,8 @@ public class MainApplication extends GISApplication
         Log.i(TAG, appVersionLog);
         HyperLog.d(TAG, appVersionLog);
 
-        // MAP_STARTUP_OPTIMIZATIONS: quiet HyperLog when no remote — flip Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED
-        if (Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED) {
+        // MAP_STARTUP_UX_EXTRAS: quiet HyperLog when no remote
+        if (Constants.MAP_STARTUP_UX_EXTRAS_ENABLED) {
             try {
                 HyperLog.setURL("https://127.0.0.1/nextgis-hyperlog-no-remote/");
             } catch (IllegalArgumentException ignored) {
@@ -156,7 +156,11 @@ public class MainApplication extends GISApplication
      */
     private void installHyperLogCrashHandler() {
         try {
-            HyperLog.initialize(this);
+            // Initialize with the versioned CustomLogMessageFormat (not HyperLog's plain default
+            // LogFormat) so crash rows keep the app-version format in the exported log. When save_log
+            // is enabled Logger.initialize already applied it; re-applying the same custom format here
+            // is idempotent and prevents the previous default-format clobber.
+            HyperLog.initialize(this, new com.nextgis.mobile.util.CustomLogMessageFormat(this));
             HyperLog.setLogLevel(Log.VERBOSE);
         } catch (Exception ignored) {
             // HyperLog may already be initialized by Logger

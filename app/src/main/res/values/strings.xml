@@ -92,6 +92,7 @@
     <string name="show_status_panel">Show status info panel</string>
     <string name="show_current_location">Show current location</string>
     <string name="edit_layer">Edit \'%s\' layer</string>
+    <string name="action_start_layer_edit">Edit layer</string>
     <string name="features_count_attributes">%1$d of %2$d</string>
     <string name="coordinates">Coordinates</string>
     <string name="length">Length</string>

@@ -25,6 +25,8 @@ Base commit: `7dde21c` (at the time: upstream **`maplibre`**, “3.0.0 release�
 14. [Default Preferences, Base Layers, Tracks Display, and NGRc Zoom](#14-default-preferences-base-layers-tracks-display-and-ngrc-zoom)
 15. [Git Workflow Reference](#15-git-workflow-reference)
 16. [Fork patch releases (GeonicalSystem)](#16-fork-patch-releases-geonicalsystem)
+17. [Walk reconciliation](#17-walk-reconciliation)
+18. [PostGIS district filter (collector project)](#18-postgis-district-filter-collector-project)
 
 ---
 
@@ -110,27 +112,141 @@ MapLibre map engine.
 
 ## 3. MapLibre Rendering and Layer Loading
 
-**Purpose:** fix and extend MapLibre map rendering, GeoJSON conversion, and
-editing session management.
+**Purpose:** MapLibre vector rendering, GeoJSON conversion, disk cache, hot-reload,
+NGW style sync, and editing session management.
+
+### Architecture (fork, GeonicalSystem)
+
+| Component | Role |
+|-----------|------|
+| `MplFeatureStyleProps` | Canonical GeoJSON property names; `apply()` / `clear()` per geometry type |
+| `maplib/.../map/mpl/*LayerFactory` | Point / Line / Polygon MapLibre layer builders (`MplLayerBuildContext`) |
+| `MPLFeaturesUtils` | GeoJSON feature build, rule-style props, `createSourceForLayer`, hot-reload helpers |
+| `VectorLayerRenderCache` | Disk cache schema 3: geom file + in-memory style; optional native URI file |
+| `NgwLayerConfigAdapter` | Normalizes NGW/collector `renderer_properties` before `setRenderer()` |
+| `MapDrawable` | `loadLayersToMaplibreMap`, style-only reload, native GeoJSON URI wiring |
+
+### VectorLayerRenderCache (F1 / F4) — cold start
+
+**Flags** ([`Constants.java`](maplib/src/main/java/com/nextgis/maplib/util/Constants.java)):
+
+| Flag | Default | Role |
+|------|---------|------|
+| `VECTOR_RENDER_DISK_CACHE_ENABLED` | `false` | Disk cache read/write/invalidation (`VectorLayerRenderCache`); **disabled 2026-06** after `Expression.toArray()` NPE during collector import (`LineLayerFactory.lineDasharray(null)`); re-enable only after on-device regression (see matrix below) |
+| `MAP_STARTUP_PARALLEL_VECTOR_PREP` | `false` | Parallel vector prep in thread pool — enable only after cache regression |
+| `MAP_STARTUP_UX_EXTRAS_ENABLED` | derived | Progress caption, timing logs, HyperLog placeholder URL |
+| `USE_MAPLIBRE_NATIVE_GEOJSON_URI` | `false` | Native file URI for **read-only** layers with cache HIT only |
+
+- **Schema 3** (`features-geom.geojson`): geometry + stable ids only; style applied in memory via `MPLFeaturesUtils.refreshMaplibreStyleOnFeatures()`.
+- **Schema 3 styled file** (`features-styled.geojson`): full features with style props for native MapLibre parse (F4).
+- **Data change** → `invalidateOnDataChange` (bumps `geom_cache_generation`, deletes cache).
+- **Style change** → `invalidateOnStyleChange` (keeps geom cache; deletes styled file).
+- **Legacy schema 2** is purged on load; next MISS rewrites schema 3.
+- **`hasValidCache(layer)`** — meta-only check (no GeoJSON parse) for diagnostics.
+- **`USE_MAPLIBRE_NATIVE_GEOJSON_URI`**: when `true`, layers with `!isEditingAllowed()` (collector display-only) with valid styled cache use file URI; falls back to `setGeoJson` on failure. Requires `VECTOR_RENDER_DISK_CACHE_ENABLED`.
+
+#### On-device regression matrix (before enabling parallel prep or native URI)
+
+Test layer: 20k+ features, `is_editable: false`, rare sync. Logcat tag: `VectorLayerRenderCache`.
+
+| # | Scenario | Expected |
+|---|----------|----------|
+| 1 | 1st cold start after clearing app cache | MISS, `DB build`, `cache WRITE geom`, features visible |
+| 2 | 2nd cold start | HIT `geom+style`, no `DB build`, correct style |
+| 3 | Rule-style + labels after HIT | Category colors and labels correct |
+| 4 | Simple style color change | Hot-reload, no full SQLite scan |
+| 5 | Rule-style change | Props updated, geom cache retained |
+| 6 | Visibility off/on | No SQLite scan |
+| 7 | Data sync | `invalidateOnDataChange`, one rebuild |
+| 8 | Editable layer edit/walk | No regression |
+
+### Hot-reload (F2)
+
+`MapDrawable.reloadFillLayerStyleToMaplibre` / `reloadVectorLayerStylePropsToMaplibre`:
+
+| Situation | Behaviour |
+|-----------|-----------|
+| Simple style, paint-only change | Update MapLibre layer paint only (no SQLite scan) |
+| Rule-style or labels | Refresh props in memory → `setGeoJson` on source |
+| No features in memory | Load geom cache + apply style; else full data reload |
+
+Data edits still use `reloadVectorLayerDataToMaplibre` (full SQLite scan + cache write).
+
+### Iteration changelog (2026-06 — MapLibre max + stability)
+
+Phased work in one development cycle; details for crash/sync/FGS fixes are in
+[§10.11](#1011-reliability-hardening-pass-crash-diagnosability-maplibre-nulls-fgs-sync).
+
+| Phase | Theme | Key changes |
+|-------|-------|-------------|
+| **0** | Cache + reload bugs | Real signature text on edit (not placeholder); `VectorLayerRenderCache` treats `styleFp` mismatch as MISS; `invalidateOnStyleChange()` on renderer change; `MapDrawable.canReloadVectorLayerStyleOnMap()` (style reload no longer blocked outside `MODE_NORMAL`); `VectorLayer.applySoftConfigUpdate` calls `notifyLayerChanged()` only when renderer/zoom/visibility actually changed |
+| **1** | Labels | `LabelAttributes` (halo, zoom scale, collisions, `${field}` template); `text-size` interpolate **wraps** size (not buried inside `coalesce`); simple renderer drops stale per-feature `textsize` via `removeTextStyleProps()` so SymbolLayer owns size; line/polygon text props parity in `applyGeometrySpecificStyle` |
+| **2** | Symbology | `MplStyleMapper` (opacity, line cap/join, dash presets, blur scale); fill/stroke opacity via `coalesce(get(prop), default)` — **not** `toNumber(get)` (missing prop became 0); markers via SymbolLayer + SDF; polygon fill patterns; line type 4 «dash with edging» |
+| **H1** | Factory split | `MplFeatureStyleProps`, `MplLayerBuildContext`, `PointLayerFactory` / `LineLayerFactory` / `PolygonLayerFactory` extracted from `MPLFeaturesUtils` |
+| **F1** | Geom/style cache split | Schema 3 geom file + in-memory style refresh (`toGeometryShells`, `refreshMaplibreStyleOnFeatures`, `needsSourceStyleRefresh`) — see [VectorLayerRenderCache](#vectorlayerrendercache-f1--f4--cold-start) |
+| **F2** | Hot-reload paths | Paint-only vs props refresh vs full SQLite reload — see [Hot-reload (F2)](#hot-reload-f2) |
+| **F4** | Native URI (flagged off) | Styled GeoJSON file + `USE_MAPLIBRE_NATIVE_GEOJSON_URI`; requires disk cache enabled |
+| **G1** | NGW renderer JSON | `NgwLayerConfigAdapter` — see [NGW renderer mapping (G1)](#ngw-renderer-mapping-g1) |
+
+**MapLibre `Expression.toArray()` NPE family** (collector import + settings exit): do not pass `null` into
+`setFilter`, `lineDasharray`, or `fillPattern`; use `Expression.coalesce` for optional pattern props.
+Documented file-by-file in [§10.11](#1011-reliability-hardening-pass-crash-diagnosability-maplibre-nulls-fgs-sync).
+
+### MapLibre style features (iterations 1–3)
+
+- Layer opacity (`layer_opacity`), text opacity, line miter limit
+- Rule-style: `key_ignore_case`, explicit `other_style` category
+- `circle-blur`, `line-blur` (line blur ×4 in `MplStyleMapper` for thin lines)
+- Polygon fill patterns 4–6 (brick, forest, marsh) via `PolygonPatternRegistry`
+- Markers: SymbolLayer + SDF sprites; rule-style dual FillLayer (solid / pattern)
+
+### NGW renderer mapping (G1)
+
+`NgwLayerConfigAdapter` runs on `VectorLayer.fromJSON`, `setRenderer`, and `applySoftConfigUpdate`:
+
+- Hoists nested `label_attributes` (halo, template, zoom, collisions)
+- Maps legacy aliases: `label` → `display_name`, `label_field` → `value`, `halo_*` → `text_halo_*`, `template` → `label_template`
+- Converts web rule map `rules: { "key": style }` → mobile JSONArray format
+- Normalizes fractional opacity (0–1) to 0–255
+- Renderer name aliases: `RuleRenderer` → `RuleFeatureRenderer`
+
+See also [§9 — Config Sync from NGW Description](#9-config-sync-from-ngw-description).
 
 ### Files changed — `maplib/`
 
 | File | Changes |
 |------|---------|
-| `MapDrawable.java` | ~356 lines: extended MapLibre map interaction — `startFeatureSelectionForEdit()`, `replaceGeometryFromHistoryChanges()`, `updateHistoryByWalkEnd()`, `addPointByWalk()`, `deleteCurrentPoint()`, style loading with `loadLayersToMaplibreMap()` / `loadLayersToMaplibreMapLite()`, editing object management |
-| `MPLFeaturesUtils.java` | ~231 lines: reworked GeoJSON feature conversion for MapLibre rendering — batch feature processing, memory-efficient large dataset handling |
-| `MaplibreMapInteraction.java` | New interface methods: `reloadMapStyleAndLayersAfterLayerFillBatch()`, `loadLayersLite()` |
-| `GeoJSONUtil.java` | ~172 lines: reworked GeoJSON serialization — streaming for large datasets, coordinate precision control |
-| `VectorLayer.java` | Added `queryAllFeatureIdsFromDb()` for direct SQLite ID retrieval; `defaultStyleNoExcept` getter |
-| `VectorLayerRenderCache.java` | New file: render cache for vector layer styles |
-| `NGWLayerSchemaCompat.java` | New file: NGW layer schema compatibility utilities |
+| `MapDrawable.java` | MapLibre interaction, walk/edit, `loadLayersToMaplibreMap`, hot-reload, `sourceNativeUriMap` |
+| `MPLFeaturesUtils.java` | GeoJSON props, rule-style, layer factories orchestration, native URI fallback |
+| `MplFeatureStyleProps.java` | Props matrix (H1) |
+| `map/mpl/PointLayerFactory.java` | Circle / Symbol layers |
+| `map/mpl/LineLayerFactory.java` | Line + dash sublayers |
+| `map/mpl/PolygonLayerFactory.java` | Fill + outline + pattern layers |
+| `VectorLayerRenderCache.java` | Geom/style split cache, styled file for native URI |
+| `NgwLayerConfigAdapter.java` | NGW renderer JSON normalization (G1) |
+| `NgwLayerSchemaCompat.java` | NGW schema compatibility check |
+| `LabelAttributes.java` | Halo, template, zoom, collisions |
+| `PolygonPatternRegistry.java` | Fill patterns + custom PNG API |
+| `MplStyleMapper.java` | MapLibre paint expressions (blur scale, dash, etc.) |
+| `FieldStyleRule.java` | Rule keys, `other_style`, `key_ignore_case` |
+| `VectorLayer.java` | `applySoftConfigUpdate`, cache invalidation hooks |
+| `MaplibreMapInteraction.java` | `reloadMapStyleAndLayersAfterLayerFillBatch`, `loadLayersLite()` |
+| `GeoJSONUtil.java` | Streaming GeoJSON, hole validation (B5) |
+
+### Regression checklist
+
+- Walk-by-geometry: live geometry + restore after process kill
+- Edit session: selection overlay, history, style reload
+- Rule-style: solid + patterned fill on same layer
+- Large layer: cold start cache hit; style-only change without `DB build` in logcat
+- NGW sync: change style in Web GIS description → soft update on next sync
 
 ### How to reproduce
 
-These changes are deeply integrated with MapDrawable internals. On upstream
-update, carefully merge `MapDrawable.java` and `MPLFeaturesUtils.java` — these
-are the most likely conflict points. The interface changes in
-`MaplibreMapInteraction.java` must be kept in sync.
+On upstream merge, carefully merge `MapDrawable.java`, `MPLFeaturesUtils.java`, and
+`VectorLayerRenderCache.java` — highest conflict risk. Keep `MaplibreMapInteraction`
+interface in sync. Enable native URI only after device testing:
+`VectorLayerRenderCache.USE_MAPLIBRE_NATIVE_GEOJSON_URI = true`.
 
 ---
 
@@ -345,6 +461,7 @@ zoom, sync settings, new fields) without re-downloading data.
 |------|---------|
 | `maplib/.../util/LayerConfigUtil.java` | Config parsing extracted from `LayerFillService`: `extractNgwResourceDescriptionJson()`, `parseLayerConfigObject()`, `unwrapLayerConfigJsonText()`, HTML stripping, balanced JSON extraction, `md5()` |
 | `maplib/.../util/LayerConfigDiff.java` | Compares server config vs local layer, classifies changes as `MATCH` / `SOFT` / `HARD`, tracks added fields, alias changes, renderer/visibility/zoom/name/sync changes |
+| `maplib/.../util/NgwLayerConfigAdapter.java` | Normalizes server `renderer_properties` (label halo/template, rule map format, opacity aliases) before `setRenderer()` |
 
 ### Modified files
 
@@ -470,6 +587,44 @@ bounds checking.
 - 10+ empty catch blocks replaced with `HyperLog.w` logging
 - Lifecycle breadcrumbs added to MapFragment, MainActivity, LayerFillService, WalkEditService
 
+### 10.11 Reliability hardening pass (crash diagnosability, MapLibre nulls, FGS, sync)
+
+**Purpose:** make crashes diagnosable from the exported log (what + why), eliminate the
+remaining MapLibre main-thread `Expression.toArray()` NPE family, harden first load and the
+collector foreground-service stop, and close silent-failure gaps in data/config sync. Disk render
+cache, parallel vector prep, native GeoJSON URI and cold-start flags are out of scope (untouched).
+MapLibre rendering phases 0–2 / F1–F4 / G1 from the same cycle: [§3 iteration changelog](#iteration-changelog-2026-06--maplibre-max--stability).
+`SYNC_FINISH` in maplib `SyncAdapter` here complements [§11](#11-sync-ui-fixes) (app `SyncAdapter` early returns).
+
+| Area | File(s) | Change |
+|------|---------|--------|
+| Crash log content | `ProdLogUtil.java`, `HyperLogCrashHandler.java` | Persist the full stack trace + cause chain embedded in the HyperLog message (HyperLog stores message text only, not the throwable), capped by `MAX_CRASH_MESSAGE_CHARS`; bounded wait so the async DB write flushes before process death; phase breadcrumb (`setPhase`/`getPhase`) appended to crash headline |
+| Log format clobber | `MainApplication.java` | `installHyperLogCrashHandler` re-applies `CustomLogMessageFormat` instead of HyperLog's default `LogFormat` |
+| Hot-path logging | `MapDrawable.java` | `logErr(...)` → logcat + HyperLog with full stack; replaced `Log.e(..., ex.getMessage())` catches in map load/edit paths; `ProdLogUtil.setPhase` breadcrumb in `loadLayersToMaplibreMap` |
+| MapLibre null guards (sources) | `MPLFeaturesUtils.java` | Raster URL null; `(RasterSource)` / `(GeoJsonSource)` casts guarded with `instanceof` (native URI fallback still logs via `Log.w` + message only — not HyperLog) |
+| MapLibre NPE — filter | `PolygonLayerFactory.java` | `fillLayer.setFilter(null)` → always-true `Expression.all()`; rule→simple settings-exit crash |
+| MapLibre NPE — line dash | `LineLayerFactory.java` | Solid lines: omit `lineDasharray` property entirely (was `lineDasharray(null)` → NPE during collector layer add) |
+| MapLibre NPE — fill pattern | `PolygonLayerFactory.java` | Clearing pattern uses `clearFillPattern()` (`fillPattern("")`) instead of passing null/invalid pattern to MapLibre |
+| MapLibre NPE — pattern match | `PolygonPatternRegistry.java` | `patternImageMatchExpression` uses `Expression.coalesce` so missing `fillpattern` prop does not feed null into `toNumber` |
+| Simple polygon style reload | `MapDrawable.java` | On style-only reload, re-apply `applyTextAndStyle` for simple polygon features (labels after rule→simple switch) |
+| Disk cache off (stability) | `Constants.java` | `VECTOR_RENDER_DISK_CACHE_ENABLED = false` until device regression; tied to collector-import NPE investigation — see [§3 flags](#vectorlayerrendercache-f1--f4--cold-start) |
+| Wrong-layer-type reuse | `PolygonLayerFactory.java`, `LineLayerFactory.java` | Drop a wrong-kind reused layer before cast (mirror `PointLayerFactory`); guards `(FillLayer)`/`(LineLayer)` ClassCastException |
+| MapLibre null guards (map) | `MapDrawable.java` | `getStyle()` in `updateMapBackground`; `getLayerById(...).getPath()` in `loadLayersToMaplibreMapLite` |
+| Main-thread guard | `MapDrawable.java` | `postMainGuarded`/`runGuarded` wrap style-mutation posts (`addLayerByID`, `recreateNGWWebMapSourceById`, `reloadVectorLayer*`, `loadLayersToMaplibreMapLite`, `reloadVectorLayerStyleToMaplibre`) so one bad layer cannot crash the app or abort the rest |
+| First load | `MapFragment.kt`, `GISApplication.java` | `onMapReady` safe-calls map ref and null-checks `styleJson` (no `setStyle(fromJson(null))`); `getMap()` logs a corrupt/missing `.ngm` (existing file that fails to parse) instead of silently empty map |
+| Collector FGS lifecycle | `LayerFillService.java`, `SelectNGWResourceActivity.java`, `SelectNGWResourceDialog.java` | New `ACTION_ADD_BATCH` + `startFillBatch(...)`: the whole import batch is one `startForegroundService` (single `stopSelf` at drain end) instead of 1 + N−1 `startService` — fixes `ForegroundServiceDidNotStopInTimeException`; explicit `FOREGROUND_SERVICE_TYPE_DATA_SYNC` on `startForeground` (Q+); `mLayerGroup` null/cast guard in `enqueueOneTaskFromExtras` |
+| Collector batch integrity | `IGISApplication.java`, `GISApplication.java`, callers | `registerCollectorImportBatch` returns `boolean`; callers abort the collector import (log + toast) instead of importing with no verify/repair; `finalizeCollectorImportVerifyAndRepairIfNeeded` clears the orphaned batch on `map == null` / group-not-found |
+| Sync pull semantics | `NgwPullDecision.java` (+ test), `NGWVectorLayer.java` | A failed pull (`ExistFeatureResult.result == false`) no longer treated as success — `getChangesFromServer` aborts (caller skips push, keeps local edits, no tracked-timestamp advance). Pure decision extracted for unit test (`NgwPullDecisionTest`) |
+| Config-hash gating | `VectorLayer.java`, `NGWVectorLayer.java` | `applySoftConfigUpdate` tracks ALTER failure (`wasLastSoftConfigUpdateIncomplete`); `KEY_PREF_LAST_CONFIG_HASH` not advanced when a soft schema change failed, so it retries; ALTER failure logged via HyperLog |
+| Sync spinner / uncaught | `SyncAdapter.java` (maplib) | Top-level `try/catch(Throwable)/finally` in `onPerformSync` always broadcasts `SYNC_FINISH` (early return / exception); uncaught logged + marked as I/O error; `isSomeToSync` map-null guard |
+| Old-settings compat | `VectorLayer.java` | `fromJSON`: a malformed/foreign renderer/style falls back to `setDefaultRenderer()` (layer stays on the map) instead of failing `load()` and silently dropping the layer; logs which layer |
+
+**Deliberate non-change (flagged for review):** the "buggy data" branches in
+`NGWVectorLayer.addFeatureOnServer` / `changeFeatureOnServer` still drop a pending change when the
+local feature row is missing, but now log it at WARN with full context (`logBuggyChangeDrop`).
+Changing the return value here risks perpetual sync-error retry storms, so the behavior is kept and
+documented for further review rather than altered in this pass.
+
 ---
 
 ## 11. Sync UI Fixes
@@ -568,13 +723,30 @@ fill queue drains with a safe flush on `MapFragment` resume.
 - **`LayerGroup.findNgwVectorLayerByRemoteIdRecursive`**: locate layer for
   verify/repair.
 
+### Collector layer «Редактируемый» (display-only policy)
+
+Separate from mobile **`is_editable`** in layer description (edit-mode toggle in the app).
+
+| Concept | JSON / key | Meaning |
+|---------|------------|---------|
+| Mobile edit toggle | `is_editable` in layer description | User on/off for edit session (unchanged) |
+| Collector policy | `collector_editable` in local layer config | From NGW collector item «Редактируемый» at import |
+
+**Import:** [`CollectorResource`](maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java) parses collector item keys `editable`, `layer_editable`, `is_editable` (item level only). Logcat/HyperLog: `CollectorResource item editable parse…`. Passed via `KEY_COLLECTOR_LAYER_EDITABLE` → `VectorLayer.setCollectorEditable()`.
+
+**When `collector_editable: false`:** no create-object layer list entry; no layer-panel edit menu; no «edit layer» on feature toolbar; view/identify/attributes still work.
+
+**Repair:** `registerCollectorImportBatch(…, boolean[] collectorEditables, …)` preserves flags for re-queue.
+
+**Not synced** from NGW description on soft config update (v1). Re-import collector to refresh.
+
 ### Layer fill UI and rasters
 
 | File | Changes |
 |------|---------|
 | `LayerFillService.java` | Collector extras on intents; `insertLayer` for collector NGW; **`LocalTMSFillTask` + `mIsNgrc`** → insert **above** the `osm` layer (`getChildLayerIndex(osm)+1`), or index 0 if OSM missing; `getDescription()` falls back to `mLayerName` when `mLayer` is null (`UnzipForm`) |
 | `LayerFillProgressDialogFragment.java` | Refresh title on `STATUS_START` for multi-layer batches |
-| `SelectNGWResourceActivity.java` / `SelectNGWResourceDialog.java` | Full-project `long[]`, `registerCollectorImportBatch(…, fullOrder)`, forward enqueue with `KEY_COLLECTOR_ORDER_INDEX` + `KEY_COLLECTOR_PROJECT_REMOTE_IDS` |
+| `SelectNGWResourceActivity.java` / `SelectNGWResourceDialog.java` | Full-project `long[]`, `registerCollectorImportBatch(…, collectorEditables, fullOrder)`, `KEY_COLLECTOR_LAYER_EDITABLE` on fill intents |
 | `GISApplication.java` | Batch state, repair passes, verify/repair intents with full project order |
 | `IGISApplication.java` | Extended `registerCollectorImportBatch`, `notifyCollectorLayerFillResult`, `finalize…`, `clear…` |
 
@@ -583,7 +755,7 @@ fill queue drains with a safe flush on `MapFragment` resume.
 | File | Changes |
 |------|---------|
 | `GISApplication.java` | `requestMapReloadAfterLayerFillBatch()` posts to main; `flushPendingMapReloadAfterLayerFillIfNeeded()` |
-| `MapFragment.kt` | Calls flush on `onResume()`; optional startup progress caption when `MAP_STARTUP_OPTIMIZATIONS_ENABLED` |
+| `MapFragment.kt` | Calls flush on `onResume()`; optional startup progress caption when `MAP_STARTUP_UX_EXTRAS_ENABLED` |
 | `MainApplication.java` | Optional HyperLog “no remote” URL when startup optimizations flag is on |
 
 ### Strings (maplibui)
@@ -747,12 +919,57 @@ git commit -m "Update submodules after upstream merge"
     [§17 Walk reconciliation](#17-walk-reconciliation).
   - **Патч `3.0.3.3` / `versionCode` 181** — см. [§16 — 3.0.3.3](#3033-versioncode-181).
   - **Патч `3.0.3.2` / `versionCode` 180** — см. [§16 — 3.0.3.2](#3032-versioncode-180).
+  - **Патч `3.0.3.4` / `versionCode` 182** — MapLibre max + reliability hardening: [§16 — 3.0.3.4](#3034-versioncode-182).
 
 ---
 
 ## 16. Fork patch releases (GeonicalSystem)
 
 Трекинг версий форка относительно апстрима (`versionName` / `versionCode` в [`app/build.gradle`](app/build.gradle); у модуля **`maplib`** выравнивается `versionName` в [`maplib/build.gradle`](maplib/build.gradle) для `BuildConfig`).
+
+### 3.0.3.4 (`versionCode` 182)
+
+Крупный цикл MapLibre-рендеринга + усиление стабильности. Технические таблицы:
+[§3 — iteration changelog](#iteration-changelog-2026-06--maplibre-max--stability),
+[§10.11](#1011-reliability-hardening-pass-crash-diagnosability-maplibre-nulls-fgs-sync),
+[§18 — district filter](#18-postgis-district-filter-collector-project).
+
+#### Что заметит пользователь
+
+- **Стиль слоя на карте:** подписи с ореолом, масштабирование по зуму, коллизии; прозрачность
+  заливки/обводки; типы линий (сплошная, пунктир, с обводкой, пунктир с обводкой); cap/join;
+  маркеры-иконки (SymbolLayer); штриховки полигонов; rule-style ближе к Web GIS
+  (`NgwLayerConfigAdapter`).
+- **Настройки слоя (UI):** расширенный `StyleFragment` — подписи, opacity, line cap/join, dash,
+  шаблон `${поле}`, rule-style parity; общие настройки слоя — opacity слоя
+  (`LayerGeneralSettingsFragment`).
+- **Смена стиля без полной перезагрузки:** hot-reload (paint-only / props refresh) — см. [§3 F2](#hot-reload-f2).
+- **Коллектор, display-only слои:** кнопки «Редактировать слой/объект» скрыты, если при импорте
+  слой помечен нередактируемым (`collector_editable: false`); просмотр атрибутов и идентификация
+  работают — см. [§13](#13-collector-import-verification-layer-ordering-and-sync-timestamp).
+  `MapFragment`: отдельное меню `select_action_view.xml`; `LayersFragment` — toast при попытке
+  редактирования нередактируемого слоя.
+- **Импорт коллектора:** стабильнее — один foreground-service на весь batch (без
+  `ForegroundServiceDidNotStopInTimeException`); при ошибке регистрации batch импорт не
+  продолжается «вслепую».
+- **Синхронизация:** сбой pull с сервера не считается успехом (локальные правки не затираются);
+  спиннер синка не зависает при исключении в maplib `SyncAdapter`; битый renderer в старых
+  настройках слоя → fallback на дефолтный стиль вместо пропажи слоя.
+- **Крэши / диагностика:** меньше NPE при загрузке слоёв MapLibre; экспорт HyperLog содержит
+  полный stack trace; phase breadcrumb перед крэшем.
+
+#### Технические детали (кратко)
+
+| Блок | Суть |
+|------|------|
+| MapLibre рендеринг | Фазы 0–2, рефакторинг `*LayerFactory`, schema 3 geom/style cache, `MplStyleMapper`, `LabelAttributes` |
+| MapLibre NPE family | `setFilter`, `lineDasharray`, `fillPattern`, pattern `coalesce`; `postMainGuarded`/`runGuarded` |
+| Disk cache | `VECTOR_RENDER_DISK_CACHE_ENABLED = false` до on-device регрессии (см. [§3 flags](#vectorlayerrendercache-f1--f4--cold-start)) |
+| FGS / batch | `ACTION_ADD_BATCH`, `startFillBatch`, `FOREGROUND_SERVICE_TYPE_DATA_SYNC` |
+| Sync | `NgwPullDecision` + test; config hash gating; `fromJSON` renderer fallback |
+| District filter | PostGIS subset по `resmeta.items.district` — [§18](#18-postgis-district-filter-collector-project) |
+| First load | `MapFragment.onMapReady` null-safe; битый `.ngm` логируется в `GISApplication.getMap()` |
+| Tests | `maplib/src/test/java/` — `NgwPullDecisionTest`, district/NGW URL helpers |
 
 ### 3.0.2.2 (`versionCode` 174)
 
@@ -858,6 +1075,48 @@ git commit -m "Update submodules after upstream merge"
   перейти на чисто upstream-вариант.
 - `WalkEditService.isServiceRunning(Context)` сейчас — наш статический helper; upstream
   его не использует. Если upstream добавит свой эквивалент — сравнить семантику.
-- `Multi*EditClass.addNewFlowPoint(LatLng, boolean)` — новый upstream-метод; наш форк сейчас
+  - `Multi*EditClass.addNewFlowPoint(LatLng, boolean)` — новый upstream-метод; наш форк сейчас
   им не пользуется напрямую, но если потребуется «начать walk без anchor» — это естественная
   точка интеграции.
+
+---
+
+## 18. PostGIS district filter (collector project)
+
+**Purpose:** optional per-district data subset for PostGIS layers in collector projects.
+District value comes from NGW `resmeta.items.district` (Latin, e.g. `vologda`), stored on the
+**LayerGroup** as `collector_district` at collector import — not in per-layer JSON/description.
+
+### Opt-in rule
+
+Filter applies only when **all** are true:
+
+1. parent `LayerGroup` has non-empty `collector_district`;
+2. layer type is PostGIS (`NGWResourceTypePostgisLayer`);
+3. layer schema contains field `district`.
+
+Otherwise behaviour is unchanged (full feature pull, legacy count-check, no `fld_*` in URL).
+
+### Files
+
+| File | Changes |
+|------|---------|
+| `NgwResmetaUtil.java` | Read `resmeta.items.{key}` from NGW resource envelope |
+| `DistrictFilterUtil.java` | Build `fld_district=...`, resolve opt-in decision |
+| `NGWUtil.java` | `getFeaturesUrl(server, id, where)` appends `where` when non-empty |
+| `CollectorResource.java` | `getProjectDistrict()` from `resmeta.items.district` |
+| `LayerGroup.java` | `collector_district` persist + `findCollectorDistrict(ILayer)` |
+| `NGWVectorLayer.java` | `applyDistrictFilterFromProjectGroup()` before fill/pull; skip count-check when active; omit runtime `server_where` from `toJSON` |
+| `SelectNGWResourceActivity.java`, `SelectNGWResourceDialog.java` | Set group district on collector import when resmeta present |
+
+### Tests
+
+- JVM unit tests: `maplib/src/test/java/com/nextgis/maplib/util/` (`NgwResmetaUtilTest`,
+  `DistrictFilterUtilTest`, `NGWUtilFeaturesUrlTest`).
+
+### Manual regression
+
+- Legacy projects without `collector_district` in group JSON.
+- Collector import without `resmeta.items.district`.
+- Single-layer NGW import outside collector.
+- Reference PostGIS layer without `district` field inside district-enabled project (full load).

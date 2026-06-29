@@ -376,9 +376,9 @@ public class MapFragment
     override fun changeProgress(show: Boolean) {
         if (show) {
             stylingProgrerss?.visibility = View.VISIBLE
-            // MAP_STARTUP_OPTIMIZATIONS: default caption — see Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED
+            // MAP_STARTUP_UX_EXTRAS: default caption — see Constants.MAP_STARTUP_UX_EXTRAS_ENABLED
             textStylingProgrerss?.text =
-                if (com.nextgis.maplib.util.Constants.MAP_STARTUP_OPTIMIZATIONS_ENABLED) {
+                if (com.nextgis.maplib.util.Constants.MAP_STARTUP_UX_EXTRAS_ENABLED) {
                     context?.getString(com.nextgis.maplib.R.string.map_loading_preparing) ?: ""
                 } else ""
         } else {
@@ -405,7 +405,13 @@ public class MapFragment
     }
 
     override fun onMapReady(mapboxMap: MapLibreMap) {
-        mMapRef.get()!!.map!!.setMapContext(this)
+        val mapRef = mMapRef.get()
+        val mapDrawable = mapRef?.map
+        if (mapRef == null || mapDrawable == null) {
+            HyperLog.e(Constants.TAG, "onMapReady: app map/drawable is null, cannot load layers")
+            return
+        }
+        mapDrawable.setMapContext(this)
 
         val  interceptor = (mApp as IGISApplication).getAuthInterceptor();
 
@@ -419,22 +425,27 @@ public class MapFragment
         // set global http client for raster auth
         HttpRequestImpl.setOkHttpClient(client)
 
-        val mapboxMaplibre = mapboxMap
-        mMapRef.get()!!.map!!.maplibreMap = mapboxMaplibre
+        mapDrawable.maplibreMap = mapboxMap
 
-        mapboxMaplibre.uiSettings.isRotateGesturesEnabled = false
-        mapboxMaplibre.uiSettings.isCompassEnabled = false
+        mapboxMap.uiSettings.isRotateGesturesEnabled = false
+        mapboxMap.uiSettings.isCompassEnabled = false
 
-        mapboxMaplibre.addOnCameraIdleListener(this)
+        mapboxMap.addOnCameraIdleListener(this)
 
+        // ngwstyle.json missing/unreadable would make setStyle(fromJson(null)) crash; abort with a
+        // logged, user-visible error instead so the rest of the app stays usable.
         val styleJson = loadJsonFromAssets(requireContext(), "ngwstyle.json")
-        val vectorLayers = mMapRef.get()!!.getVectorLayersByType(GeoConstants.GTAnyCheck)
-        val layersTrack =  mMapRef.get()!!.getLayersByType(Constants.LAYERTYPE_TRACKS)
-        vectorLayers.addAll(layersTrack);
+        if (styleJson == null) {
+            HyperLog.e(Constants.TAG, "onMapReady: failed to load ngwstyle.json; map style not applied")
+            context?.let {
+                Toast.makeText(it, it.getString(com.nextgis.maplib.R.string.error), Toast.LENGTH_LONG).show()
+            }
+            return
+        }
 
-        val allLayers = mMapRef.get()!!.getAllLayers()
+        val allLayers = mapRef.getAllLayers()
 
-        mMapRef.get()!!.map!!.loadLayersToMaplibreMap(styleJson, allLayers, true, true)
+        mapDrawable.loadLayersToMaplibreMap(styleJson, allLayers, true, true)
     }
 
     override fun checkCreateIfNeed() {
@@ -467,6 +478,10 @@ public class MapFragment
         }
         mapReloadAfterFillRetryCount = 0
         return doReloadMapStyleAndLayersAfterLayerFillBatch()
+    }
+
+    override fun reloadLayerStyle(layerId: Int) {
+        mMapRef.get()?.map?.reloadVectorLayerStyleToMaplibre(layerId)
     }
 
     private fun doReloadMapStyleAndLayersAfterLayerFillBatch(): Boolean {
@@ -782,18 +797,16 @@ public class MapFragment
 
         if (mode == MODE_INFO || resultCode != Activity.RESULT_OK) {
             editLayerOverlay!!.setHasEdits(true)
-            if (resultCode == Activity.RESULT_OK){
-                /// need reload to maplibre feature
+            if (resultCode == Activity.RESULT_OK) {
                 if (requestCode == IVectorLayerUI.MODIFY_REQUEST && data != null) {
                     val id = data.getLongExtra(ConstantsUI.KEY_FEATURE_ID, Constants.NOT_FOUND.toLong())
-
-                    if (id != Constants.NOT_FOUND.toLong()) {
-                        mMapRef.get()!!.map!!.reloadFeatureToMaplibre(
-                        id,
-                        selectedLayer!! )
+                    val layer = mSelectedLayer
+                    if (id != Constants.NOT_FOUND.toLong() && layer != null) {
+                        mMapRef.get()?.map?.reloadFeatureToMaplibre(id, layer)
+                        defineMenuItems()
                     }
                 }
-            } else if (mode == MODE_EDIT){
+            } else if (mode == MODE_EDIT) {
                 cancelEdits()
                 setNewMode(MODE_NORMAL)
             }
@@ -1004,26 +1017,7 @@ public class MapFragment
 
                             }
 
-                            R.id.menu_feature_edit -> {
-
-                                if (mMapRef.get()!!.map!!.getLayerFeatures(mSelectedLayer!!) == null){
-                                    Toast.makeText(context,
-                                        com.nextgis.maplibui.R.string.edit_invisible,
-                                        Toast.LENGTH_LONG
-                                    ).show()
-
-                                } else {
-
-
-                                    setNewMode(MODE_EDIT)
-                                    undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
-                                    editLayerOverlay!!.setHasEdits(false)
-                                    if(mSelectedLayer!= null)
-                                        mMapRef.get()!!.map!!.startFeatureSelectionForEdit(mSelectedLayer, mSelectedLayer!!.geometryType,
-                                            editLayerOverlay!!.selectedFeature, false, mSelectedLayer!!.defaultStyleNoExcept,
-                                            false)
-                                }
-                            }
+                            R.id.menu_feature_edit -> startFeatureGeometryEdit()
 
                             R.id.menu_feature_delete -> deleteFeature()
                             R.id.menu_feature_attributes -> setNewMode(MODE_INFO)
@@ -1041,11 +1035,11 @@ public class MapFragment
                     return
                 }
 
-                //mSelectedLayer.setLocked(true);
                 toolbar.title = null
                 toolbar.menu.clear()
-                toolbar.inflateMenu(R.menu.select_action)
-                toolbar.menu.findItem(R.id.menu_feature_edit).setEnabled(false)
+                toolbar.inflateMenu(R.menu.select_action_view)
+                toolbar.menu.findItem(R.id.menu_feature_edit)?.isVisible =
+                    mSelectedLayer!!.isEditingAllowed
                 toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
 
                 mFinishListener = View.OnClickListener { setNewMode(MODE_NORMAL) }
@@ -1059,6 +1053,7 @@ public class MapFragment
                                 MODE_INFO,
                                 true
                             )
+                            R.id.menu_feature_edit -> startLayerEditMode()
                         }
                         true
                     })
@@ -1176,26 +1171,32 @@ public class MapFragment
         mActivity!!.title = featureName
         mActivity!!.setSubtitle(mSelectedLayer!!.name)
 
-        val hasSelectedFeature = editLayerOverlay!!.selectedFeature != null && !noFeature
+        val hasSelectedFeature = editLayerOverlay!!.selectedFeatureId != Constants.NOT_FOUND.toLong()
+                && editLayerOverlay!!.selectedFeature != null
         val toolbar = mActivity!!.bottomToolbar
+        val isViewOnlySelection = mode == MODE_SELECT_FOR_VIEW
+        val editingAllowed = mSelectedLayer == null || mSelectedLayer!!.isEditingAllowed
+
         for (i in 0..<toolbar.menu.size()) {
             var item = toolbar.menu.findItem(R.id.menu_feature_delete)
             if (item != null) ControlHelper.setEnabled(
                 item,
-                hasSelectedFeature && mode != MODE_SELECT_FOR_VIEW
+                hasSelectedFeature && !isViewOnlySelection && editingAllowed
             )
 
             item = toolbar.menu.findItem(R.id.menu_feature_edit)
-            if (item != null) ControlHelper.setEnabled(
-                item,
-                hasSelectedFeature && mode != MODE_SELECT_FOR_VIEW
-            )
+            if (item != null) {
+                item.isVisible = editingAllowed
+                ControlHelper.setEnabled(item, hasSelectedFeature && editingAllowed)
+            }
 
             item = toolbar.menu.findItem(R.id.menu_feature_attributes)
             if (item != null) ControlHelper.setEnabled(item, hasSelectedFeature)
 
             item = toolbar.menu.findItem(R.id.menu_feature_add)
-            if (mode == MODE_SELECT_FOR_VIEW) ControlHelper.setEnabled(item, false)
+            if (item != null) {
+                ControlHelper.setEnabled(item, !isViewOnlySelection && editingAllowed)
+            }
         }
     }
 
@@ -1908,7 +1909,7 @@ public class MapFragment
         mApp!!.sendEvent(ConstantsUI.GA_LAYER, ConstantsUI.GA_EDIT, ConstantsUI.GA_FAB)
 
         //show select layer dialog if several layers, else start default or custom form
-        val layers = removeHideLayers( mMapRef.get()!!.getVectorLayersByType(
+        val layers = filterLayersForCreation( mMapRef.get()!!.getVectorLayersByType(
             GeoConstants.GTPointCheck or GeoConstants.GTMultiPointCheck or
                     GeoConstants.GTLineStringCheck or GeoConstants.GTMultiLineStringCheck or
                     GeoConstants.GTPolygonCheck or GeoConstants.GTMultiPolygonCheck))
@@ -1946,7 +1947,7 @@ public class MapFragment
         if (mSelectedLayer != null) mSelectedLayer!!.isLocked = false
 
         //show select layer dialog if several layers, else start default or custom form
-        val layers = removeHideLayers(mMapRef.get()!!.getVectorLayersByType(GeoConstants.GTPointCheck
+        val layers = filterLayersForCreation(mMapRef.get()!!.getVectorLayersByType(GeoConstants.GTPointCheck
                 or GeoConstants.GTMultiPointCheck))
 
         if (layers.isEmpty()) {
@@ -2002,7 +2003,7 @@ public class MapFragment
     // useCreatePouintFromOverlay - need to call if create by click R.id.add_current_location button
     protected fun addCurrentLocation(useCreatePointFromOverlay: Boolean) {
         //show select layer dialog if several layers, else start default or custom form
-        val layers = removeHideLayers (mMapRef.get()!!.getVectorLayersByType(
+        val layers = filterLayersForCreation (mMapRef.get()!!.getVectorLayersByType(
             GeoConstants.GTMultiPointCheck or GeoConstants.GTPointCheck))
 
 
@@ -2063,8 +2064,30 @@ public class MapFragment
         return layerList
     }
 
+    /** Visible vector layers allowed for object creation (collector «Редактируемый» policy). */
+    protected fun filterLayersForCreation(layerList: MutableList<ILayer>): MutableList<ILayer> {
+        var i = 0
+        while (i < layerList.size) {
+            val layer = layerList[i]
+            if (layer is VectorLayer && !layer.isEditingAllowed) {
+                layerList.removeAt(i)
+                continue
+            }
+            i++
+        }
+        return removeHideLayers(layerList)
+    }
+
+    private fun showLayerNotEditableInCollectorToast() {
+        Toast.makeText(
+            mActivity,
+            com.nextgis.maplibui.R.string.layer_not_editable_in_collector,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
     protected fun addGeometryByWalk() {
-        val layers = removeHideLayers(
+        val layers = filterLayersForCreation(
             mMapRef.get()!!.getVectorLayersByType(
                 GeoConstants.GTLineStringCheck or GeoConstants.GTPolygonCheck
                     or GeoConstants.GTMultiLineStringCheck or GeoConstants.GTMultiPolygonCheck
@@ -3056,7 +3079,7 @@ public class MapFragment
                                              Feature originalSelectedFeature, boolean createNew,
                                              com.nextgis.maplib.display.Style ngstyle*/
 
-        if (featureId != -1L && mSelectedLayer != null) {
+        if (selectedSingleFeatureId != -1L && mSelectedLayer != null) {
             if (mode == MODE_SELECT_ACTION)
                 editLayerOverlay!!.setSelectedFeature(selectedSingleFeatureId)
 
@@ -3503,6 +3526,47 @@ public class MapFragment
         protected const val BUNDLE_KEY_SAVED_FEATURE: String = "feature_blob"
         protected const val BUNDLE_KEY_IS_MEASURING: String = "is_measuring"
         const val EDIT_LAYER: Int = 2
+    }
+
+    private fun startLayerEditMode() {
+        val layer = mSelectedLayer ?: return
+        if (!layer.isEditingAllowed) {
+            showLayerNotEditableInCollectorToast()
+            return
+        }
+        val featureId = editLayerOverlay!!.selectedFeatureId
+        editLayerOverlay!!.setSelectedLayer(layer)
+        if (featureId != Constants.NOT_FOUND.toLong()) {
+            editLayerOverlay!!.setSelectedFeature(featureId)
+        }
+        setNewMode(MODE_SELECT_ACTION)
+    }
+
+    private fun startFeatureGeometryEdit() {
+        val layer = mSelectedLayer ?: return
+        if (!layer.isEditingAllowed) {
+            showLayerNotEditableInCollectorToast()
+            return
+        }
+        if (mMapRef.get()?.map?.getLayerFeatures(layer) == null) {
+            Toast.makeText(
+                context,
+                com.nextgis.maplibui.R.string.edit_invisible,
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+        setNewMode(MODE_EDIT)
+        undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
+        editLayerOverlay!!.setHasEdits(false)
+        mMapRef.get()?.map?.startFeatureSelectionForEdit(
+            layer,
+            layer.geometryType,
+            editLayerOverlay!!.selectedFeature,
+            false,
+            layer.defaultStyleNoExcept,
+            false
+        )
     }
 
     fun deleteFeature() {

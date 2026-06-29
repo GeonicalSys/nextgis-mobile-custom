@@ -46,18 +46,21 @@ public class OfflineSyncIntentService extends IntentService {
     }
 
     public static void startActionFoo(Context context) {
-        Intent intent = new Intent(context, OfflineSyncIntentService.class);
-        intent.setAction(ACTION_OFFSYNC);
-        context.startService(intent);
+        startActionFoo(context, null);
     }
 
     public static void startActionFoo(Context context, String lpath) {
         Intent intent = new Intent(context, OfflineSyncIntentService.class);
         intent.setAction(ACTION_OFFSYNC);
-        intent.putExtra(ACTION_LPATH, lpath);
-//        intent.putExtra(ACTION_ACCOUNT_NAME, accName);
+        if (lpath != null) {
+            intent.putExtra(ACTION_LPATH, lpath);
+        }
+        intent.putExtra(EXTRA_MANUAL_SYNC, true);
         context.startService(intent);
     }
+
+    /** When {@code true}, sync errors are shown to the user (button / toast). */
+    public static final String EXTRA_MANUAL_SYNC = "com.nextgis.mobile.extra.MANUAL_SYNC";
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -65,14 +68,16 @@ public class OfflineSyncIntentService extends IntentService {
             final String action = intent.getAction();
             if (ACTION_OFFSYNC.equals(action)) {
                 String lpath = null;
-                if (intent.hasExtra(ACTION_LPATH))
+                if (intent.hasExtra(ACTION_LPATH)) {
                     lpath = intent.getStringExtra(ACTION_LPATH);
-                handleActionFoo(lpath);
+                }
+                boolean manual = intent.getBooleanExtra(EXTRA_MANUAL_SYNC, true);
+                handleActionFoo(lpath, manual);
             }
         }
     }
 
-    private void handleActionFoo(String lpath) {
+    private void handleActionFoo(String lpath, boolean manualSync) {
         try {
             Log.d("SSYNC", "OfflineSyncIntentService  handleActionFoo" + lpath);
             List<Account> mAccounts = new ArrayList<>();
@@ -102,8 +107,10 @@ public class OfflineSyncIntentService extends IntentService {
             SyncAdapter syncAdapter = new SyncAdapter(getApplicationContext(), true);
 
             Bundle bundle = new Bundle();
-            if (lpath != null)
+            if (lpath != null) {
                 bundle.putString(ACTION_LPATH, lpath);
+            }
+            bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, manualSync);
             for (Account account : mAccounts) {
                 Log.d("SSYNC", "onPerformSync call for: " + account.name);
                 syncAdapter.onPerformSync(account,

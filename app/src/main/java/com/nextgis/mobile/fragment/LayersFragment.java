@@ -170,6 +170,13 @@ public class LayersFragment
                 return;
 
             if (layer instanceof VectorLayer) {
+                if (!((VectorLayer) layer).isEditingAllowed()) {
+                    Toast.makeText(
+                            activity,
+                            com.nextgis.maplibui.R.string.layer_not_editable_in_collector,
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 try {
                     if (mapFragment.getLayerFeaturesML((VectorLayer) layer) == null) {

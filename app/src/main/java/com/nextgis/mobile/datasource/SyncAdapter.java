@@ -34,6 +34,7 @@ import android.content.SyncResult;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -104,7 +105,7 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
 
         if (isCanceled())
             sendNotification(getContext(), SYNC_CANCELED, null);
-        else if (syncResult.hasError())
+        else if (syncResult.hasError() && !TextUtils.isEmpty(mError))
             sendNotification(getContext(), SYNC_CHANGES, mError);
         else
             sendNotification(getContext(), SYNC_FINISH, null);
