@@ -28,6 +28,7 @@ Base commit: `7dde21c` (at the time: upstream **`maplibre`**, â€œ3.0.0 releaseâ€
 17. [Walk reconciliation](#17-walk-reconciliation)
 18. [PostGIS district filter (collector project)](#18-postgis-district-filter-collector-project)
 19. [Photo attachment coordinate overlay](#19-photo-attachment-coordinate-overlay)
+20. [Collector project architecture foundation](#20-collector-project-architecture-foundation)
 
 ---
 
@@ -1158,3 +1159,49 @@ Coordinate **display format** reuses existing map settings `coordinates_format` 
 | `LocationUtil.java` | `locationFromLatLon`, `writeDateTimeToExif`, `setExifOrientationNormal`; uses existing `writeLocationToExif` |
 | `PhotoOverlayData.java`, `PhotoOverlayUtil.java` | Bitmap overlay + EXIF pipeline |
 | `ModifyAttributesActivity.java` | Integration, async save with progress |
+
+---
+
+## 20. Collector project architecture foundation
+
+**Purpose:** persist enough Collector project and layer-origin metadata during new imports so future
+composition sync, form sync, backup-safe rebuilds, multi-project switching, and local vector tile
+rendering can be added without re-importing already downloaded heavy vector data.
+
+### Metadata
+
+| JSON block | Stored on | Role |
+|------------|-----------|------|
+| `collector_project` | `LayerGroup` | Stable identity of imported Collector project: `project_uid`, account, remote id, name, district, composition sync flag |
+| `layer_origin` | `NGWVectorLayer` | Marks layer as `collector_project` managed or `manual_ngw`; stores project uid, collector order, form id, render mode |
+
+These fields are intentionally written before the final sync managers exist. Comments in code mark them
+as Collector architecture foundation so they are not removed as apparently unused plumbing.
+
+### Behaviour
+
+- New Collector imports store `collector_project` on the target group.
+- Each Collector layer fill receives `KEY_COLLECTOR_PROJECT_UID` and persists `layer_origin.managed_by_project=true`.
+- Manual NGW layer imports persist `layer_origin.type=manual_ngw` and `managed_by_project=false`.
+- `VECTOR_LAYER_WITH_FORM` carries the same origin metadata through the `UnzipForm -> NGW_LAYER` subtask.
+- Collector verify/repair and schema-mismatch rebuild preserve layer origin metadata.
+- Current projects without these fields are not migrated; future architecture applies to projects imported after this change.
+
+### Planning docs
+
+| File | Purpose |
+|------|---------|
+| `COLLECTOR_PROJECT_SETUP_GUIDE.md` | Short NGW project setup checklist: Collector project, resource description config, resmeta district, form ids, manual layers |
+| `COLLECTOR_ARCHITECTURE_ROADMAP.md` | Roadmap for composition dry-run, backup gateway, form sync, config cleanup, multi-project UI, local vector tiles |
+
+### Files
+
+| File | Changes |
+|------|---------|
+| `CollectorProjectMetadata.java` | New persistent project identity model |
+| `LayerOriginMetadata.java` | New persistent layer ownership/render-mode model |
+| `LayerGroup.java` | Serialize/deserialize `collector_project` |
+| `NGWVectorLayer.java` | Serialize/deserialize `layer_origin` |
+| `IGISApplication.java`, `GISApplication.java` | Keep `collectorProjectUid` through Collector verify/repair and schema rebuild |
+| `LayerFillService.java` | Origin extras and persistence after NGW fill, including form subtask path |
+| `SelectNGWResourceActivity.java`, `SelectNGWResourceDialog.java` | Write project/layer origin metadata during new Collector/manual NGW imports |
