@@ -515,6 +515,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 return true
             }
 
+            R.id.menu_clear_log -> {
+                clearLog()
+                return true
+            }
+
             else -> return super.onOptionsItemSelected(item)
         }
     }
@@ -607,6 +612,23 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         val files = zipLogs(dir)
         val type = "text/plain"
         UiUtil.share(files, type, this, true)
+    }
+
+    private fun clearLog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.clear_log)
+            .setMessage(R.string.clear_log_message)
+            .setPositiveButton(R.string.clear_log) { _, _ ->
+                HyperLog.deleteLogs()
+                val dir = File(getExternalFilesDir(null), "LogFiles")
+                dir.listFiles()?.forEach { file ->
+                    file.deleteRecursively()
+                }
+                Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .show()
     }
 
     private fun zipLogs(dir: File): File? {

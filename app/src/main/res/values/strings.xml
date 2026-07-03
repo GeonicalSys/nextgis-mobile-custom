@@ -71,6 +71,11 @@
     <string name="coordinates_fraction_digits">Decimal places</string>
     <string name="select_coordinates_format">Select coordinates format</string>
     <string name="coordinates_format_summary">Coordinate text format</string>
+    <string name="photo_attachments_category">Photo attachments</string>
+    <string name="photo_overlay_enabled">Stamp coordinates on photos</string>
+    <string name="photo_overlay_enabled_summary">Burns WGS84 coordinates onto new photo attachments. Coordinate display format uses the settings above. GPS coordinates are also written to EXIF.</string>
+    <string name="photo_overlay_use_object_coords">Use object coordinates</string>
+    <string name="photo_overlay_show_time">Show capture time on photo</string>
     <string name="map_bg">Map background</string>
     <string name="map_bg_light">Light</string>
     <string name="map_bg_neutral">Neutral</string>
@@ -176,6 +181,9 @@
     <string name="other">Other</string>
     <string name="extended_logs">Extended logs</string>
     <string name="share_log">Share log</string>
+    <string name="clear_log">Clear log</string>
+    <string name="clear_log_message">Delete saved logs so the next exported log only contains new events?</string>
+    <string name="log_cleared">Log cleared</string>
 
     <string name="choose_object">Choose object:</string>
 

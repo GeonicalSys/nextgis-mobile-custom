@@ -27,6 +27,7 @@ Base commit: `7dde21c` (at the time: upstream **`maplibre`**, â€œ3.0.0 releaseâ€
 16. [Fork patch releases (GeonicalSystem)](#16-fork-patch-releases-geonicalsystem)
 17. [Walk reconciliation](#17-walk-reconciliation)
 18. [PostGIS district filter (collector project)](#18-postgis-district-filter-collector-project)
+19. [Photo attachment coordinate overlay](#19-photo-attachment-coordinate-overlay)
 
 ---
 
@@ -1120,3 +1121,40 @@ Otherwise behaviour is unchanged (full feature pull, legacy count-check, no `fld
 - Collector import without `resmeta.items.district`.
 - Single-layer NGW import outside collector.
 - Reference PostGIS layer without `district` field inside district-enabled project (full load).
+
+---
+
+## 19. Photo attachment coordinate overlay
+
+**Purpose:** stamp WGS84 coordinates (and optional capture time) onto new photo attachments
+when saving a feature; write GPS and `DateTimeOriginal` into EXIF on the saved JPEG.
+
+### Settings (Map preferences)
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `photo_overlay_enabled` | `false` | Master switch |
+| `photo_overlay_use_object_coords` | `false` | Use feature geometry (centroid for lines/polygons) instead of GPS |
+| `photo_overlay_show_time` | `false` | Show timestamp on photo and in EXIF |
+
+Coordinate **display format** reuses existing map settings `coordinates_format` and
+`coordinates_fraction_digits`.
+
+### Behaviour
+
+- Processing runs in `ModifyAttributesActivity.putAttaches()` for **new** attachments only.
+- GPS mode: `GpsEventSource.getLastKnownLocation()` at save time; no coordinates if no fix.
+- Object mode: `GeoGeometryUtil.getWgs84RepresentativePoint()` on feature geometry.
+- On failure, falls back to raw file copy (attachment not lost).
+- Background thread + progress dialog when overlay processing is needed.
+
+### Files
+
+| File | Changes |
+|------|---------|
+| `preferences_map.xml`, `SettingsConstantsUI.java`, `strings.xml` (en/ru) | Settings UI |
+| `GeoGeometryUtil.java` | WGS84 representative point / centroid |
+| `GeoGeometryUtilTest.java` | Unit tests |
+| `LocationUtil.java` | `locationFromLatLon`, `writeDateTimeToExif`, `setExifOrientationNormal`; uses existing `writeLocationToExif` |
+| `PhotoOverlayData.java`, `PhotoOverlayUtil.java` | Bitmap overlay + EXIF pipeline |
+| `ModifyAttributesActivity.java` | Integration, async save with progress |

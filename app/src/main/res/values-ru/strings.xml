@@ -70,6 +70,11 @@
     <string name="coordinates_fraction_digits">Разрядов после запятой</string>
     <string name="select_coordinates_format">Выберите формат координат</string>
     <string name="coordinates_format_summary">Выберите текст для координат</string>
+    <string name="photo_attachments_category">Фото-вложения</string>
+    <string name="photo_overlay_enabled">Наносить координаты на фото</string>
+    <string name="photo_overlay_enabled_summary">Записывает координаты WGS84 на новые фото-вложения. Формат отображения — из настроек выше. GPS также записывается в EXIF.</string>
+    <string name="photo_overlay_use_object_coords">Использовать координату объекта</string>
+    <string name="photo_overlay_show_time">Показывать время съёмки на фото</string>
     <string name="map_bg">Фон карты</string>
     <string name="map_bg_light">Светлый</string>
     <string name="map_bg_neutral">Нейтральный</string>
@@ -174,6 +179,9 @@
     <string name="other">Другое</string>
     <string name="extended_logs">Логирование</string>
     <string name="share_log">Отправить лог</string>
+    <string name="clear_log">Очистить лог</string>
+    <string name="clear_log_message">Удалить сохраненные логи, чтобы следующий экспорт содержал только новые события?</string>
+    <string name="log_cleared">Лог очищен</string>
 
     <string name="choose_object">Выберите объект:</string>
     <string name="push_perm_title">Уведомления</string>

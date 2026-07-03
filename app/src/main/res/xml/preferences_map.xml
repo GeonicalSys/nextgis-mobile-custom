@@ -119,6 +119,36 @@
         android:title="@string/coordinates_fraction_digits"
         android:singleLineTitle="false"/>
 
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        android:title="@string/photo_attachments_category"
+        android:key="photo_attachments_category">
+
+        <CheckBoxPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="photo_overlay_enabled"
+            android:summary="@string/photo_overlay_enabled_summary"
+            android:singleLineTitle="false"
+            android:title="@string/photo_overlay_enabled"/>
+
+        <CheckBoxPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:dependency="photo_overlay_enabled"
+            android:key="photo_overlay_use_object_coords"
+            android:singleLineTitle="false"
+            android:title="@string/photo_overlay_use_object_coords"/>
+
+        <CheckBoxPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:dependency="photo_overlay_enabled"
+            android:key="photo_overlay_show_time"
+            android:singleLineTitle="false"
+            android:title="@string/photo_overlay_show_time"/>
+    </PreferenceCategory>
+
     <ListPreference
         app:iconSpaceReserved="false"
         android:defaultValue="light"

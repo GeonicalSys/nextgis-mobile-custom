@@ -335,13 +335,17 @@ public class SettingsFragment
 
                                             ((GISApplication) MapBase.getInstance().getContext().getApplicationContext())
                                                     .resetMap();
-                                            ((MainApplication) activity.getApplication()).initBaseLayers();
+                                            MainApplication application =
+                                                    (MainApplication) activity.getApplication();
+                                            resetCollectorDistrict(application);
+                                            application.initBaseLayers();
                                             try {
                                                 deleteLayers(activity);
                                             } catch (Exception ex) {
                                                 //Log.e("f", "g");
                                             }
-                                            ((MainApplication) activity.getApplication()).initBaseLayers();
+                                            resetCollectorDistrict(application);
+                                            application.initBaseLayers();
                                             // RESULT_OK restarts MainActivity so MapFragment binds to the new MapDrawable
                                             // from resetMap(). RESULT_CANCELED left the old MapView on a stale drawable
                                             // while the app used a new instance — layers from import did not show until
@@ -353,6 +357,18 @@ public class SettingsFragment
                     return false;
                 }
             });
+        }
+    }
+
+
+    protected static void resetCollectorDistrict(MainApplication application)
+    {
+        if (application == null) {
+            return;
+        }
+        MapBase map = application.getMap();
+        if (map.clearCollectorDistrictRecursive()) {
+            map.save();
         }
     }
 
