@@ -78,6 +78,7 @@ import com.nextgis.maplib.util.GeoConstants
 import com.nextgis.maplib.util.MapUtil
 import com.nextgis.maplib.util.NGWUtil
 import com.nextgis.maplib.util.NetworkUtil
+import com.nextgis.maplib.util.SettingsConstants
 import com.nextgis.maplibui.GISApplication
 import com.nextgis.maplibui.activity.NGActivity
 import com.nextgis.maplibui.api.IChooseLayerResult
@@ -95,6 +96,8 @@ import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_POINT
 import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_START
 import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_STOP
 import com.nextgis.maplibui.util.ControlHelper
+import com.nextgis.maplibui.util.CollectorProjectRegistry
+import com.nextgis.maplibui.util.LayerBackupManager
 import com.nextgis.maplibui.util.NGIDUtils
 import com.nextgis.maplibui.util.SettingsConstantsUI
 import com.nextgis.maplibui.util.UiUtil
@@ -200,6 +203,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             fm.beginTransaction().add(progressFragment, TAG_FRAGMENT_PROGRESS).commit()
         }
 
+        maybeShowCollectorProjectSelectorOnStartup()
 
         if (!hasLocationPermissions()) {
             Handler().postDelayed({ processAllPermisions(PERMISSIONS_REQUEST_ZERO) }, 1500)
@@ -520,6 +524,21 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 return true
             }
 
+            R.id.menu_share_layer_backups -> {
+                shareLayerBackups()
+                return true
+            }
+
+            R.id.menu_clear_layer_backups -> {
+                clearLayerBackups()
+                return true
+            }
+
+            R.id.menu_collector_projects -> {
+                showCollectorProjectsDialog()
+                return true
+            }
+
             else -> return super.onOptionsItemSelected(item)
         }
     }
@@ -629,6 +648,135 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             .setNegativeButton(android.R.string.cancel, null)
             .create()
             .show()
+    }
+
+    private fun shareLayerBackups() {
+        try {
+            val file = LayerBackupManager.zipBackupsForShare(this)
+            if (file == null) {
+                Toast.makeText(this, com.nextgis.maplib.R.string.error_empty_dataset, Toast.LENGTH_LONG)
+                    .show()
+                return
+            }
+            UiUtil.share(file, "application/zip", this, true)
+        } catch (ignored: IOException) {
+            HyperLog.w(Constants.TAG, "MainActivity.shareLayerBackups: " + ignored.message, ignored)
+            Toast.makeText(this, R.string.layer_backups_share_error, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun clearLayerBackups() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.clear_layer_backups)
+            .setMessage(R.string.clear_layer_backups_message)
+            .setPositiveButton(R.string.clear_layer_backups) { _, _ ->
+                if (LayerBackupManager.clearBackups(this)) {
+                    Toast.makeText(this, R.string.layer_backups_cleared, Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, R.string.layer_backups_clear_error, Toast.LENGTH_LONG).show()
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .show()
+    }
+
+    private fun maybeShowCollectorProjectSelectorOnStartup() {
+        val activeUid = mPreferences.getString(
+            SettingsConstants.KEY_PREF_ACTIVE_COLLECTOR_PROJECT_UID,
+            ""
+        )
+        if (!activeUid.isNullOrBlank()) {
+            return
+        }
+        if (CollectorProjectRegistry.listProjects(this).isEmpty()) {
+            return
+        }
+        Handler(Looper.getMainLooper()).post {
+            if (!isFinishing && !isDestroyed) {
+                showCollectorProjectsDialog()
+            }
+        }
+    }
+
+    private fun showCollectorProjectsDialog() {
+        val projects = CollectorProjectRegistry.listProjects(this)
+        if (projects.isEmpty()) {
+            Toast.makeText(this, R.string.collector_projects_empty, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val labels = projects.map { collectorProjectListLabel(it) }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.collector_project_switch)
+            .setItems(labels) { _, which ->
+                switchCollectorProject(projects[which])
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .show()
+    }
+
+    private fun collectorProjectTitle(project: CollectorProjectRegistry.ProjectInfo): String {
+        return if (project.name.isNullOrBlank()) project.projectUid else project.name
+    }
+
+    private fun collectorProjectListLabel(project: CollectorProjectRegistry.ProjectInfo): String {
+        val title = if (project.isActive(this)) {
+            getString(R.string.collector_project_active_name, collectorProjectTitle(project))
+        } else {
+            collectorProjectTitle(project)
+        }
+        val districtText = if (project.district.isNullOrBlank()) {
+            getString(R.string.collector_project_no_district)
+        } else {
+            project.district
+        }
+        return getString(
+            R.string.collector_project_workspace_list_item,
+            title,
+            project.accountName,
+            project.projectRemoteId,
+            districtText
+        )
+    }
+
+    private fun switchCollectorProject(project: CollectorProjectRegistry.ProjectInfo) {
+        val gisApp = application as IGISApplication
+        if (gisApp.isLayerFillServiceBusy) {
+            Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
+            return
+        }
+        if (mapFragment?.isEditMode == true) {
+            Toast.makeText(this, R.string.collector_project_switch_edit_mode, Toast.LENGTH_LONG).show()
+            return
+        }
+        if (project.isActive(this)) {
+            Toast.makeText(this, R.string.collector_project_already_active, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            gisApp.getMap()?.save()
+        } catch (exception: RuntimeException) {
+            HyperLog.w(
+                Constants.TAG,
+                "Collector project switch: current map save failed: " + exception.message,
+                exception
+            )
+        }
+
+        if (!CollectorProjectRegistry.activateProject(this, project.projectUid)) {
+            Toast.makeText(this, R.string.collector_project_not_found, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        (application as? GISApplication)?.closeMapObj()
+        HyperLog.v(
+            Constants.TAG,
+            "Collector project switch: activated projectUid=${project.projectUid}"
+        )
+        recreate()
     }
 
     private fun zipLogs(dir: File): File? {

@@ -190,6 +190,7 @@ public class MapFragment
 
     //, mZoomLevel;
     protected var mScaleRuler: ImageView? = null
+    protected var mCenterCross: ImageView? = null
 
     var stylingProgrerss: View? = null;
     var textStylingProgrerss: TextView? = null;
@@ -230,6 +231,7 @@ public class MapFragment
     protected val ADD_GEOMETRY_BY_WALK: Int = 3
     protected val ADD_POINT_BY_TAP: Int = 4
     private var mNeedSave = false
+    private var mEditAttributesFormFromEditMode = false
 
     var longClickProcessed = false
 
@@ -359,6 +361,7 @@ public class MapFragment
         mivZoomOut?.setOnClickListener(this)
 
         mStatusPanel = view.findViewById(R.id.fl_status_panel)
+        mCenterCross = view.findViewById(R.id.iv_center_cross)
         mScaleRuler = view.findViewById(R.id.iv_ruler)
         mScaleRulerText = view.findViewById(R.id.tv_ruler)
         mScaleRulerText?.setText(rulerText)
@@ -704,6 +707,7 @@ public class MapFragment
                 return false;
             }
 
+            com.nextgis.maplibui.R.id.menu_edit_attributes -> return showSelectedFeatureAttributesFormFromEditMode()
 
             else -> {
                 result = editLayerOverlay!!.onOptionsItemSelected(id)
@@ -794,6 +798,19 @@ public class MapFragment
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == IVectorLayerUI.MODIFY_REQUEST && mEditAttributesFormFromEditMode) {
+            mEditAttributesFormFromEditMode = false
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                val id = data.getLongExtra(ConstantsUI.KEY_FEATURE_ID, Constants.NOT_FOUND.toLong())
+                val layer = mSelectedLayer
+                if (id != Constants.NOT_FOUND.toLong() && layer != null) {
+                    mMapRef.get()?.map?.reloadFeatureToMaplibre(id, layer)
+                    defineMenuItems()
+                }
+            }
+            return
+        }
 
         if (mode == MODE_INFO || resultCode != Activity.RESULT_OK) {
             editLayerOverlay!!.setHasEdits(true)
@@ -1019,6 +1036,7 @@ public class MapFragment
 
                             R.id.menu_feature_edit -> startFeatureGeometryEdit()
 
+                            R.id.menu_feature_edit_attributes -> showSelectedFeatureAttributesFormFromEditMode()
                             R.id.menu_feature_delete -> deleteFeature()
                             R.id.menu_feature_attributes -> setNewMode(MODE_INFO)
                         }
@@ -1123,6 +1141,7 @@ public class MapFragment
 
         if (mModeListener != null) mModeListener!!.onModeChangeListener()
 
+        updateCenterCrossVisibility()
         setMarginsToPanel()
         defineMenuItems()
 
@@ -1139,6 +1158,31 @@ public class MapFragment
         if (null == attributesFragment) attributesFragment = AttributesFragment()
 
         return attributesFragment
+    }
+
+    private fun showSelectedFeatureAttributesFormFromEditMode(): Boolean {
+        val activity = mActivity ?: return false
+        val layer = mSelectedLayer ?: return false
+        val layerUI = layer as? IVectorLayerUI ?: return false
+        val featureId = editLayerOverlay?.selectedFeatureId ?: Constants.NOT_FOUND.toLong()
+        if (featureId == Constants.NOT_FOUND.toLong()) return false
+
+        if (!layer.isFieldsInitialized) {
+            layerUI.showEditForm(activity, featureId, null, -1)
+            return true
+        }
+
+        mEditAttributesFormFromEditMode = true
+        layerUI.showEditForm(activity, featureId, null, -1)
+        return true
+    }
+
+    private fun updateCenterCrossVisibility() {
+        mCenterCross?.visibility = if (mode == MODE_EDIT && mSelectedLayer != null) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     protected fun defineMenuItems() {
@@ -1193,11 +1237,17 @@ public class MapFragment
             item = toolbar.menu.findItem(R.id.menu_feature_attributes)
             if (item != null) ControlHelper.setEnabled(item, hasSelectedFeature)
 
+            item = toolbar.menu.findItem(R.id.menu_feature_edit_attributes)
+            if (item != null) ControlHelper.setEnabled(item, hasSelectedFeature && editingAllowed)
+
             item = toolbar.menu.findItem(R.id.menu_feature_add)
             if (item != null) {
                 ControlHelper.setEnabled(item, !isViewOnlySelection && editingAllowed)
             }
         }
+
+        val editAttributesItem = toolbar.menu.findItem(com.nextgis.maplibui.R.id.menu_edit_attributes)
+        if (editAttributesItem != null) ControlHelper.setEnabled(editAttributesItem, hasSelectedFeature)
     }
 
 

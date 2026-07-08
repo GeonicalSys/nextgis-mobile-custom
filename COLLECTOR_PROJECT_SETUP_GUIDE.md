@@ -7,6 +7,17 @@
 
 ## Collector project
 
+Workspace rule:
+
+- One imported Collector project must map to one isolated app workspace.
+- The device registry is `map/collector_projects/collector_projects_registry.json`.
+- Project data lives under `map/collector_projects/collector_<remote_id>_<hash>/map.ngm`.
+- The workspace root `MapBase` stores `collector_project`; imported project layers store `layer_origin`.
+- Manual NGW layers added while a project is active stay in that workspace, but must keep
+  `layer_origin.type = manual_ngw` and `managed_by_project = false`.
+- Do not implement multi-project support by loading all project layers into one map and toggling
+  visibility; switching must change `map_path` / `map_name`.
+
 - Основная рабочая схема загрузки слоев: импорт ресурса `collector_project`.
 - Один Collector project должен импортироваться в отдельную группу слоев в приложении.
 - На ресурсе Collector project желательно хранить `resmeta.items.district`, если проект должен
@@ -35,13 +46,26 @@
 
 ## Layer config
 
+Current local-vector-tiles opt-in key:
+
+```json
+{
+  "mobile_render_mode": "local_vector_tiles"
+}
+```
+
+The app persists this as `layer_origin.render_mode`. Polygon and multipolygon read-only layers with
+this mode render through the local vector tile path. Unsupported geometry types or provider errors
+fall back to the classic path.
+
 Для каждого векторного или PostGIS-слоя, который входит в Collector project:
 
 - мобильный `config.json` должен храниться в `resource.description` слоя NGW;
 - config должен содержать поля, renderer/style, видимость, zoom, sync settings;
 - если слой read-only или только для отображения, sync можно отключить через config;
-- если слой в будущем должен рисоваться локальными vector tiles, добавить в config/metadata
-  режим `render_mode = local_vector_tiles` после реализации соответствующего render path.
+- если слой должен рисоваться локальными vector tiles, добавить в config/metadata
+  режим `mobile_render_mode = local_vector_tiles`; на текущем этапе использовать это только для
+  тяжелых read-only polygon/multipolygon слоев.
 
 ## Layer origin
 

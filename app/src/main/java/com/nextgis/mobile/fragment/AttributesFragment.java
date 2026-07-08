@@ -360,8 +360,12 @@ public class AttributesFragment
     private String parseAttributes(String data) throws RuntimeException {
         String selection = Constants.FIELD_ID + " = ?";
         Cursor attributes = mLayer.query(null, selection, new String[]{mItemId + ""}, null, null);
-        if (null == attributes || attributes.getCount() == 0)
+        if (null == attributes)
             return data;
+        if (attributes.getCount() == 0) {
+            attributes.close();
+            return data;
+        }
 
         if (attributes.moveToFirst()) {
             StringBuilder dataBuilder = new StringBuilder(data);
@@ -431,6 +435,9 @@ public class AttributesFragment
 
                 Field field = mLayer.getFieldByName(column);
                 int fieldType = field != null ? field.getType() : Constants.NOT_FOUND;
+                if (shouldHideEmptyAttribute(attributes, i, column, fieldType))
+                    continue;
+
                 switch (fieldType) {
                     case GeoConstants.FTInteger:
                         text = attributes.getInt(i) + "";
@@ -478,6 +485,31 @@ public class AttributesFragment
 
         attributes.close();
         return data;
+    }
+
+    private boolean shouldHideEmptyAttribute(Cursor attributes, int columnIndex, String column, int fieldType) {
+        if (column.equals(Constants.FIELD_ID))
+            return false;
+
+        if (attributes.isNull(columnIndex))
+            return true;
+
+        switch (fieldType) {
+            case GeoConstants.FTInteger:
+                return attributes.getInt(columnIndex) == 0;
+            case GeoConstants.FTLong:
+                return attributes.getLong(columnIndex) == 0L;
+            case GeoConstants.FTReal:
+                double realValue = attributes.getDouble(columnIndex);
+                return Double.isNaN(realValue) || realValue == 0.0d;
+            case GeoConstants.FTDate:
+            case GeoConstants.FTTime:
+            case GeoConstants.FTDateTime:
+                return attributes.getLong(columnIndex) <= 0L;
+            default:
+                String text = toString(attributes.getString(columnIndex)).trim();
+                return text.length() == 0 || "0".equals(text);
+        }
     }
 
 

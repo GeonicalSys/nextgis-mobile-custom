@@ -26,9 +26,12 @@ Base commit: `7dde21c` (at the time: upstream **`maplibre`**, “3.0.0 release�
 15. [Git Workflow Reference](#15-git-workflow-reference)
 16. [Fork patch releases (GeonicalSystem)](#16-fork-patch-releases-geonicalsystem)
 17. [Walk reconciliation](#17-walk-reconciliation)
-18. [PostGIS district filter (collector project)](#18-postgis-district-filter-collector-project)
+18. [NGW district filter (collector project)](#18-ngw-district-filter-collector-project)
 19. [Photo attachment coordinate overlay](#19-photo-attachment-coordinate-overlay)
 20. [Collector project architecture foundation](#20-collector-project-architecture-foundation)
+21. [Layer data backups before automatic reload/removal](#21-layer-data-backups-before-automatic-reloadremoval)
+22. [Collector composition apply sync](#22-collector-composition-apply-sync)
+23. [Collector multi-project UX](#23-collector-multi-project-ux)
 
 ---
 
@@ -293,6 +296,20 @@ service for large datasets, and prevent sync during active layer fill.
 4. Apply the `LayerFillService` rework (the largest single change).
 5. Update `LayerFillProgressDialogFragment` for new progress tracking.
 6. Apply `CollectorResource` and `NGWVectorLayer` improvements.
+
+### Post-push feature refresh
+
+After a successful NGW feature create/update, `NGWVectorLayer.sendLocalChanges()` immediately
+requests that single feature back from NGW and applies server data to the local row. This keeps
+server-owned values filled by PostgreSQL triggers/defaults (for example `district`, `created_at`,
+`updated_at`) visible without waiting for the next sync cycle.
+
+- Refresh is data-only: it uses the single-feature endpoint without attachment extensions and does
+  not reconcile attachment tables.
+- Refresh runs after processed change records are removed, then re-checks pending local data changes
+  before applying the server row, so edits made during the sync are not overwritten.
+- Refresh failures are logged but do not make the already successful push fail; a later pull can
+  still converge the row.
 
 ### Layer fill: large vector datasets (SQLite, ANR, screen off)
 
@@ -934,7 +951,7 @@ git commit -m "Update submodules after upstream merge"
 Крупный цикл MapLibre-рендеринга + усиление стабильности. Технические таблицы:
 [§3 — iteration changelog](#iteration-changelog-2026-06--maplibre-max--stability),
 [§10.11](#1011-reliability-hardening-pass-crash-diagnosability-maplibre-nulls-fgs-sync),
-[§18 — district filter](#18-postgis-district-filter-collector-project).
+[§18 — district filter](#18-ngw-district-filter-collector-project).
 
 #### Что заметит пользователь
 
@@ -969,7 +986,7 @@ git commit -m "Update submodules after upstream merge"
 | Disk cache | `VECTOR_RENDER_DISK_CACHE_ENABLED = false` до on-device регрессии (см. [§3 flags](#vectorlayerrendercache-f1--f4--cold-start)) |
 | FGS / batch | `ACTION_ADD_BATCH`, `startFillBatch`, `FOREGROUND_SERVICE_TYPE_DATA_SYNC` |
 | Sync | `NgwPullDecision` + test; config hash gating; `fromJSON` renderer fallback |
-| District filter | PostGIS subset по `resmeta.items.district` — [§18](#18-postgis-district-filter-collector-project) |
+| District filter | NGW vector/PostGIS subset по `resmeta.items.district` — [§18](#18-ngw-district-filter-collector-project) |
 | First load | `MapFragment.onMapReady` null-safe; битый `.ngm` логируется в `GISApplication.getMap()` |
 | Tests | `maplib/src/test/java/` — `NgwPullDecisionTest`, district/NGW URL helpers |
 
@@ -1083,9 +1100,9 @@ git commit -m "Update submodules after upstream merge"
 
 ---
 
-## 18. PostGIS district filter (collector project)
+## 18. NGW district filter (collector project)
 
-**Purpose:** optional per-district data subset for PostGIS layers in collector projects.
+**Purpose:** optional per-district data subset for NGW vector/PostGIS layers in collector projects.
 District value comes from NGW `resmeta.items.district` (Latin, e.g. `vologda`), stored on the
 **LayerGroup** as `collector_district` at collector import — not in per-layer JSON/description.
 
@@ -1094,7 +1111,7 @@ District value comes from NGW `resmeta.items.district` (Latin, e.g. `vologda`), 
 Filter applies only when **all** are true:
 
 1. parent `LayerGroup` has non-empty `collector_district`;
-2. layer type is PostGIS (`NGWResourceTypePostgisLayer`);
+2. layer type is NGW vector or PostGIS (`NGWResourceTypeVectorLayer` / `NGWResourceTypePostgisLayer`);
 3. layer schema contains field `district`.
 
 Otherwise behaviour is unchanged (full feature pull, legacy count-check, no `fld_*` in URL).
@@ -1172,7 +1189,7 @@ rendering can be added without re-importing already downloaded heavy vector data
 
 | JSON block | Stored on | Role |
 |------------|-----------|------|
-| `collector_project` | `LayerGroup` | Stable identity of imported Collector project: `project_uid`, account, remote id, name, district, composition sync flag |
+| `collector_project` | `LayerGroup` | Stable identity of imported Collector project: `project_uid`, account, remote id, name, district, composition sync flag, last composition diagnostics |
 | `layer_origin` | `NGWVectorLayer` | Marks layer as `collector_project` managed or `manual_ngw`; stores project uid, collector order, form id, render mode |
 
 These fields are intentionally written before the final sync managers exist. Comments in code mark them
@@ -1205,3 +1222,163 @@ as Collector architecture foundation so they are not removed as apparently unuse
 | `IGISApplication.java`, `GISApplication.java` | Keep `collectorProjectUid` through Collector verify/repair and schema rebuild |
 | `LayerFillService.java` | Origin extras and persistence after NGW fill, including form subtask path |
 | `SelectNGWResourceActivity.java`, `SelectNGWResourceDialog.java` | Write project/layer origin metadata during new Collector/manual NGW imports |
+
+---
+
+## 21. Layer data backups before automatic reload/removal
+
+**Purpose:** protect locally collected editable layer data when sync detects that a layer must be
+automatically reloaded, or when future Collector composition sync removes a layer from a project.
+
+### Behaviour
+
+- Schema mismatch sync first tries `sendLocalChanges()`.
+- If local changes were sent successfully, the layer can be reloaded quietly.
+- If unsent local changes remain, the app creates a data-only backup ZIP and then reloads the layer.
+- If backup creation fails, destructive reload/removal is skipped.
+- Future Collector composition sync must remove project-managed layers through
+  `scheduleCollectorLayerRemovalWithBackup()` so a backup is mandatory even when there are no local
+  changes.
+- Main overflow menu now has `Share backups` / `Clear backups` next to log sharing actions.
+
+### Backup contents
+
+- `manifest.json` with layer/account/remote id/reason/origin metadata.
+- Raw JSON dumps of feature, change, and attachment tables.
+- Attachment files from per-feature numeric directories.
+- Layer config and ngfp forms are intentionally excluded.
+
+### Files
+
+| File | Changes |
+|------|---------|
+| `LayerBackupManager.java` | Data-only ZIP creation, sharing bundle, backup cleanup |
+| `GISApplication.java` | Backup-aware schema rebuild and Collector-removal foundation hook |
+| `IGISApplication.java` | Explicit Collector layer removal hook for future composition sync |
+| `MainActivity.kt`, `main.xml`, `strings.xml` | Share/clear backup menu actions |
+
+---
+
+## 22. Collector composition apply sync
+
+**Purpose:** keep locally imported Collector project groups aligned with the live Collector project
+composition in NGW during sync while protecting local unsent data.
+
+### Behaviour
+
+- Runs after normal NGW data/config sync for the current account.
+- Finds local `LayerGroup` entries with valid `collector_project` metadata and
+  `composition_sync=true`.
+- Downloads the current NGW Collector project resource and walks nested project items.
+- Persists last composition check diagnostics on the project group (`last_composition_check_at`,
+  diff summary, incomplete/error flags) for future multi-project UI and easier log correlation.
+- Builds a remote snapshot with layer remote id, order, name, Collector editable flag, first form id,
+  form payload hash, raw mobile config JSON, and mobile config hash from NGW resource description.
+- Compares only local `NGWVectorLayer` entries whose `layer_origin.managed_by_project=true` and
+  `layer_origin.project_uid` matches the project.
+- Manual NGW layers and layers without `layer_origin` are ignored by composition diff.
+- Logs diff counts and entries to HyperLog: `add`, `remove`, `reorder`, `update_form`,
+  `update_config`, `update_editable`.
+- Applies `add` by enqueueing the normal Collector NGW fill path with origin/order/form/config
+  metadata.
+- Applies `remove` only through `scheduleCollectorLayerRemovalWithBackup()`, so data-only backup is
+  mandatory before deleting a project-managed layer.
+- Applies `update_form` by downloading the NGFP payload and replacing only local form sidecars
+  (`*_form.json`, `*_ngfp_meta.json`); vector data tables are not rebuilt for form-only changes.
+- Applies `reorder` and `update_editable` without deleting data.
+- Applies remaining `update_config` diffs from the already downloaded Collector snapshot if the
+  normal NGW config pass did not converge the layer before composition check.
+- Soft config changes are applied in place (renderer, aliases, visibility, zoom, sync/edit flags,
+  additive fields); hard schema/config changes route through the backup-aware Collector refill
+  gateway.
+- Config hash is advanced only after a match or completed soft update; parse failures and incomplete
+  field additions keep the old hash so the next sync retries.
+- Stores `last_form_hash` when NGFP forms are unpacked so future sync can detect form-content
+  changes even when the form resource id did not change.
+- Normalizes NGFP `meta.json` before hash comparison by ignoring transient `ngw_connection`
+  details, preventing repeated false `update_form` diffs after a successful form sync.
+- Form-only sync also fills missing lookup-table layers referenced by the new form, reusing the
+  existing form import lookup handling.
+- Preserves unpacked NGFP sidecar files across transient NGW feature-download retries. Without
+  this, a first-attempt `HTTP 503` during `NGWVectorLayerFillTask` could recreate the layer storage
+  and silently drop `*_form.json` / `*_ngfp_meta.json`.
+
+### Files
+
+| File | Changes |
+|------|---------|
+| `CollectorProjectCompositionSync.java` | Remote snapshot fetch, local managed-layer snapshot, diff logging, diagnostics persistence, apply orchestration, fallback config apply |
+| `CollectorProjectMetadata.java` | Optional last-composition diagnostics stored on `collector_project` |
+| `IGISApplication.java`, `GISApplication.java` | App hooks for Collector additions, form-only updates, refills, removals, reorder/editable updates |
+| `LayerFormHashUtil.java`, `LayerFillService.java` | Stable normalized NGFP hash calculation, `last_form_hash` persistence, form preservation across transient fill retries |
+| `SelectNGWResourceDialog.java` | Passes default form ids during Collector/manual NGW imports |
+| `SyncAdapter.java` | Invokes composition apply after normal sync/config pass |
+
+---
+
+## 23. Collector isolated multi-project workspaces
+
+**Purpose:** support multiple imported Collector projects on one device without mixing all project
+layers into a single map tree.
+
+### Behaviour
+
+- Each imported Collector project is registered in `collector_projects_registry.json`.
+- Each Collector project gets an isolated map workspace under
+  `map/collector_projects/collector_<remote_id>_<hash>/map.ngm`.
+- During Collector import, the app activates that project's workspace before scheduling
+  `LayerFillService` tasks. The project metadata is stored on the workspace root `MapBase`.
+- Manual NGW layers imported while that project is active stay inside the same workspace and remain
+  `manual_ngw`, so Collector composition sync still ignores them.
+- The main overflow menu has `Switch project`; selecting a project saves the current map, writes
+  `map_path`, `map_name`, and `active_collector_project_uid`, closes the current `MapDrawable`, and
+  recreates `MainActivity`.
+- Sync runs only against the currently loaded project workspace, because `SyncAdapter` works from
+  the active `MapBase`.
+- If a registry exists but no active project preference is set, startup shows the project selector.
+
+### Files
+
+| File | Changes |
+|------|---------|
+| `CollectorProjectRegistry.java` | Registry, workspace path management, activation, Collector import workspace preparation |
+| `SelectNGWResourceActivity.java`, `SelectNGWResourceDialog.java` | Switch Collector imports into the isolated project workspace before fill tasks are queued |
+| `MainActivity.kt` | Project switcher dialog, startup selector fallback, map save/close/recreate switching |
+| `main.xml`, `strings.xml`, `values-ru/strings.xml` | `Switch project` menu item and labels |
+| `SettingsConstants.java` | `active_collector_project_uid` preference key |
+
+---
+
+## 24. Local vector tiles render-mode
+
+**Purpose:** make heavy read-only NGW/Collector polygon layers opt in to local MVT rendering
+without changing the classic GeoJSON render path for existing layers.
+
+### Behaviour
+
+- Mobile layer config may declare `mobile_render_mode = local_vector_tiles`.
+- `LayerFillService` preserves that value when it writes `layer_origin` for Collector and manual
+  NGW imports.
+- Config sync treats `render_mode` as a soft config property and stores it in `layer_origin`.
+- Unknown/empty render modes normalize to `classic`.
+- `Constants.LOCAL_VECTOR_TILES_ENABLED` is currently `true`.
+- `LocalVectorTileServer` exposes local `.pbf` tiles on `127.0.0.1` and MapLibre reads them as a
+  `VectorSource`.
+- `LocalVectorTileProvider` builds MVT tiles lazily from the existing local SQLite layer store using
+  the layer spatial query path.
+- The first implementation intentionally supports polygon/multipolygon layers only. Other geometry
+  types, provider failures, or disabled feature flag are logged and fall back to the classic
+  `GeoJsonSource` path.
+- Current styling scope is basic fill, outline, opacity, order, and optional text label. Full style
+  parity, clipping/simplification, and tile cache are follow-up tasks.
+
+### Files
+
+| File | Changes |
+|------|---------|
+| `LayerOriginMetadata.java` | Render-mode normalization and factory overloads |
+| `LayerConfigUtil.java`, `LayerConfigDiff.java` | Read `mobile_render_mode` / `render_mode` and compare as soft config |
+| `VectorLayer.java`, `LayerFillService.java` | Persist render-mode changes without dropping origin metadata |
+| `LocalVectorTileRenderMode.java`, `MapDrawable.java`, `Constants.java` | Feature flag, routing, and safe classic fallback hook |
+| `LocalVectorTileServer.java`, `LocalVectorTileProvider.java`, `LocalVectorTileEncoder.java` | Loopback HTTP tile endpoint and minimal MVT encoder |
+| `MPLFeaturesUtils.java` | MapLibre `VectorSource` and local-vector-tile fill/outline/label style path |

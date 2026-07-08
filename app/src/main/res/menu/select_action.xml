@@ -36,6 +36,11 @@
         android:title="@string/action_edit"
         app:showAsAction="always"/>
     <item
+        android:id="@+id/menu_feature_edit_attributes"
+        android:icon="@drawable/ic_action_attributes"
+        android:title="@string/edit_attributes"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/menu_feature_delete"
         android:icon="@drawable/ic_action_delete_alpha"
         android:title="@string/action_delete"
