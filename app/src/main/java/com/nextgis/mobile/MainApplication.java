@@ -25,6 +25,7 @@ package com.nextgis.mobile;
 
 import android.accounts.Account;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -308,6 +309,11 @@ public class MainApplication extends GISApplication
         }
     }
 
+
+    @Override
+    public Context getSelfContext() {
+        return getApplicationContext();
+    }
 
     @Override
     public String getAuthority()
