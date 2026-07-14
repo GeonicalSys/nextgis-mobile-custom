@@ -79,7 +79,8 @@ public class OfflineSyncIntentService extends IntentService {
 
     private void handleActionFoo(String lpath, boolean manualSync) {
         try {
-            Log.d("SSYNC", "OfflineSyncIntentService  handleActionFoo" + lpath);
+            Log.d("SSYNC", "OfflineSyncIntentService handleActionFoo lpath=" + lpath
+                    + " manual=" + manualSync);
             List<Account> mAccounts = new ArrayList<>();
             final AccountManager accountManager = AccountManager.get(getApplicationContext());
             final IGISApplication application = (IGISApplication) getApplication();
@@ -99,10 +100,14 @@ public class OfflineSyncIntentService extends IntentService {
 
                 layers.clear();
                 MapContentProviderHelper.getLayersByAccount(application.getMap(), account.name, layers);
+                Log.d("SSYNC", "OfflineSyncIntentService account=" + account.name
+                        + " ngwLayerCount=" + layers.size());
 
                 if (layers.size() > 0)
                     mAccounts.add(account);
             }
+            Log.d("SSYNC", "OfflineSyncIntentService accounts queued=" + mAccounts.size()
+                    + " manual=" + manualSync + " lpath=" + lpath);
             SyncResult syncResult = new SyncResult();
             SyncAdapter syncAdapter = new SyncAdapter(getApplicationContext(), true);
 
@@ -117,6 +122,9 @@ public class OfflineSyncIntentService extends IntentService {
                         bundle,
                         com.nextgis.mobile.util.AppSettingsConstants.AUTHORITY,
                         null, syncResult);
+                Log.d("SSYNC", "onPerformSync finished for: " + account.name
+                        + " hasError=" + syncResult.hasError()
+                        + " stats=" + syncResult.stats);
             }
         } catch (Exception e) {
             Log.e("SSYNC", "handleActionFoo failed: " + e.getMessage(), e);

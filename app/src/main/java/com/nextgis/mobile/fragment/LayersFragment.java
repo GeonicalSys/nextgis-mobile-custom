@@ -75,7 +75,9 @@ import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.fragment.LayersListAdapter;
+import com.nextgis.maplibui.fragment.NGWSettingsFragment;
 import com.nextgis.maplibui.fragment.ReorderedLayerView;
+import com.nextgis.maplibui.mapui.SyncAccountWorker;
 import com.nextgis.maplibui.util.ControlHelper;
 import com.nextgis.maplibui.util.HyperLogCrashHandler;
 import com.nextgis.maplibui.util.NGIDUtils;
@@ -565,18 +567,24 @@ public class LayersFragment
     }
 
     private void checkAccountForSync(final Context context, final Account account){
-        boolean isYourAccountSyncEnabled = ContentResolver.getSyncAutomatically(account,
-                context.getString(R.string.provider_auth
-                //"com.nextgis.mobile.provider"
-                ));
+        final String authority = context.getString(R.string.provider_auth);
+        boolean isYourAccountSyncEnabled = NGWSettingsFragment.isAccountSyncEnabled(account, authority);
         if (!isYourAccountSyncEnabled){
             DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    ContentResolver.setSyncAutomatically(account,
-                            //"com.nextgis.mobile.provider",
-                            context.getString(R.string.provider_auth),
-                            true);
+                    NGWSettingsFragment.setAccountSyncEnabled(account, authority, true);
+                    long period = Constants.DEFAULT_SYNC_PERIOD;
+                    if (context.getApplicationContext() instanceof GISApplication) {
+                        period = GISApplication.getAccountSyncTime(
+                                account, (GISApplication) context.getApplicationContext());
+                    }
+                    AccountUtil.saveSyncPeriodForAccount(context, account.name, period);
+                    SyncAccountWorker.scheduleSoon(context, account.name, period);
+                    HyperLog.v(Constants.TAG, "LayersFragment: sync enabled from prompt account="
+                            + account.name + " period=" + period);
+                    Log.d("SSYNC", "checkAccountForSync enabled account=" + account.name
+                            + " authority=" + authority + " period=" + period);
 
                 }
             };
@@ -700,6 +708,11 @@ public class LayersFragment
                                 ContentResolver.SYNC_EXTRAS_MANUAL, true);
                         settingsBundle.putBoolean(
                                 ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                        ContentResolver.setIsSyncable(account, AUTHORITY, 1);
+                        Log.d("SSYNC", "LayersFragment requestSync account=" + account.name
+                                + " authority=" + AUTHORITY + " isSyncable="
+                                + ContentResolver.getIsSyncable(account, AUTHORITY)
+                                + " auto=" + ContentResolver.getSyncAutomatically(account, AUTHORITY));
                         ContentResolver.requestSync(account, AUTHORITY, settingsBundle);
                     }
                 }

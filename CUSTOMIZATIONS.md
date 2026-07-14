@@ -636,6 +636,8 @@ MapLibre rendering phases 0–2 / F1–F4 / G1 from the same cycle: [§3 iterati
 | Sync pull semantics | `NgwPullDecision.java` (+ test), `NGWVectorLayer.java` | A failed pull (`ExistFeatureResult.result == false`) no longer treated as success — `getChangesFromServer` aborts (caller skips push, keeps local edits, no tracked-timestamp advance). Pure decision extracted for unit test (`NgwPullDecisionTest`) |
 | Config-hash gating | `VectorLayer.java`, `NGWVectorLayer.java` | `applySoftConfigUpdate` tracks ALTER failure (`wasLastSoftConfigUpdateIncomplete`); `KEY_PREF_LAST_CONFIG_HASH` not advanced when a soft schema change failed, so it retries; ALTER failure logged via HyperLog |
 | Sync spinner / uncaught | `SyncAdapter.java` (maplib) | Top-level `try/catch(Throwable)/finally` in `onPerformSync` always broadcasts `SYNC_FINISH` (early return / exception); uncaught logged + marked as I/O error; `isSomeToSync` map-null guard |
+| Track restart FGS race | `TrackerService.java` | Restarting when unfinished tracks exist closes stale open tracks directly and starts one new foreground service, instead of `ACTION_STOP` + immediate `startForegroundService`; avoids Android's "did not then call startForeground" crash |
+| WorkManager in service processes | `GISApplication.java` | Periodic sync setup and delayed `resetSyncTime()` run only in the default app process; service processes such as `:tracks` no longer call `WorkManager.getInstance()` during tracker startup |
 | Old-settings compat | `VectorLayer.java` | `fromJSON`: a malformed/foreign renderer/style falls back to `setDefaultRenderer()` (layer stays on the map) instead of failing `load()` and silently dropping the layer; logs which layer |
 
 **Deliberate non-change (flagged for review):** the "buggy data" branches in
@@ -687,6 +689,27 @@ sync still refreshed the “last synced” label.
 | File | Changes |
 |------|---------|
 | `SyncAdapter.java` (maplib) | Moved timestamp `putLong` to after error aggregation; gated on success |
+
+### Problem 4: Android periodic sync can become non-runnable after account state drift
+
+The fork keeps Android `PeriodicSync` metadata for compatibility, but account-level
+auto sync can silently stop running when `isSyncable <= 0`, and UI toggles
+previously only changed `setSyncAutomatically`.
+
+**Fix:** add `SyncAccountWorker` as the app-controlled periodic scheduler. Account
+creation, sync toggles, and reset paths explicitly repair `isSyncable`, save the
+per-account interval, and schedule/cancel unique WorkManager jobs. Manual sync
+also repairs `isSyncable` before `requestSync`. The platform sync adapter is now
+hidden from Android's public sync UI and is not marked "always syncable"; the app
+owns the scheduling policy.
+
+| File | Changes |
+|------|---------|
+| `SyncAccountWorker.java` (maplibui) | Unique per-account WorkManager job; requests sync and reschedules itself after success |
+| `GISApplication.java` (maplibui) | `getAccountSyncTime`, `isSyncable` repair, WorkManager schedule/cancel from `setSyncPeriod`, default-process guard |
+| `NGWSettingsFragment.java`, `VectorLayerSettingsActivity.java`, `LayersFragment.java` | Sync toggles use the shared helper, repair `isSyncable`, and schedule/cancel worker jobs |
+| `syncadapter.xml` (app) | Platform sync adapter hidden from system sync UI; upload/always-syncable flags disabled |
+| `OfflineSyncIntentService.java` (app) | Extra diagnostics for account/layer selection and sync result |
 
 ---
 
@@ -939,12 +962,21 @@ git commit -m "Update submodules after upstream merge"
   - **Патч `3.0.3.3` / `versionCode` 181** — см. [§16 — 3.0.3.3](#3033-versioncode-181).
   - **Патч `3.0.3.2` / `versionCode` 180** — см. [§16 — 3.0.3.2](#3032-versioncode-180).
   - **Патч `3.0.3.4` / `versionCode` 182** — MapLibre max + reliability hardening: [§16 — 3.0.3.4](#3034-versioncode-182).
+  - **Патч `3.0.3.5` / `versionCode` 183** — стабильность записи трека и WorkManager-синхронизации:
+    [§16 — 3.0.3.5](#3035-versioncode-183).
 
 ---
 
 ## 16. Fork patch releases (GeonicalSystem)
 
 Трекинг версий форка относительно апстрима (`versionName` / `versionCode` в [`app/build.gradle`](app/build.gradle); у модуля **`maplib`** выравнивается `versionName` в [`maplib/build.gradle`](maplib/build.gradle) для `BuildConfig`).
+
+### 3.0.3.5 (`versionCode` 183)
+
+- **Запись трека:** перезапуск записи после crash/stale незавершённого трека теперь закрывает открытые строки треков напрямую и запускает ровно один foreground `TrackerService`, без гонки `ACTION_STOP` + `startForegroundService`.
+- **Процесс трекера:** `GISApplication` не планирует WorkManager-синхронизацию и отложенный `resetSyncTime()` в служебных процессах (`:tracks` и похожих), поэтому старт записи трека не падает через две секунды из-за `WorkManager is not initialized properly`.
+- **Синхронизация NGW:** добавлен `SyncAccountWorker` — уникальный WorkManager-job на учётку, который вызывает `requestSync` и сам перепланируется; UI-переключатели и создание аккаунта явно чинят `isSyncable`.
+- **Диагностика:** sync-пути логируют выбор аккаунтов/слоёв, состояние `requestSync` и результат синка через `SSYNC` / HyperLog.
 
 ### 3.0.3.4 (`versionCode` 182)
 

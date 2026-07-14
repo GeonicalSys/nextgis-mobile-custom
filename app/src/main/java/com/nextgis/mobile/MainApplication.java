@@ -272,20 +272,8 @@ public class MainApplication extends GISApplication
             }
 
             if (savedVersionCode < 44) {
-                if (!AccountUtil.isProUser(this)) {
-                    if (isAccountManagerValid())
-                        for (final Account account : mAccountManager.getAccountsByType(getAccountsType()))
-                            setAccountSyncEnabled(account, getAuthority(), false);
-
-                    for (int i = 0; i < mMap.getLayerCount(); i++) {
-                        ILayer layer = mMap.getLayer(i);
-                        if (layer instanceof NGWVectorLayer) {
-                            NGWVectorLayer ngwLayer = (NGWVectorLayer) layer;
-                            ngwLayer.setSyncType(Constants.SYNC_NONE);
-                            ngwLayer.save();
-                        }
-                    }
-                }
+                Log.d(TAG, "Skip legacy non-pro sync disabling migration for savedVersionCode="
+                        + savedVersionCode);
             }
 
             if(savedVersionCode < currentVersionCode) {
