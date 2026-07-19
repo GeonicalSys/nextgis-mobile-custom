@@ -28,8 +28,7 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 2. `docs/registry/*.yaml` — стабильные IDs, зависимости, инварианты и проверки.
 3. Architecture/runbooks/reference — объяснения для людей.
 4. Локальный module pack — навигация внутри одного компонента.
-5. Старые root-документы — мигрируемые источники и история; при конфликте
-   перепроверять по коду и registry.
+5. `docs/history` — контекст завершённых циклов, но не действующий контракт.
 
 ## Маршрутизация задачи
 
@@ -52,10 +51,11 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 5. Измени код, выполни автоматические и ручные проверки.
 6. Обнови docs по Definition of Done и запусти validator.
 
-## Важные существующие документы
+## Основные карты знаний
 
-- [`../CUSTOMIZATIONS.md`](../CUSTOMIZATIONS.md) — полный legacy-каталог кастомизаций; мигрируется постепенно.
-- [`../UPSTREAM_SYNC_REPORT.md`](../UPSTREAM_SYNC_REPORT.md) — исторические циклы синхронизации.
+- [`reference/fork-customizations.md`](reference/fork-customizations.md) — каталог отличий форка.
+- [`history/upstream/README.md`](history/upstream/README.md) — завершённые upstream cycles.
 - [`../WHATS_NEW.md`](../WHATS_NEW.md) — пользовательские release notes.
-- [`../COLLECTOR_PROJECT_SETUP_GUIDE.md`](../COLLECTOR_PROJECT_SETUP_GUIDE.md) — legacy-инструкция Collector.
-- [`../MAP_STARTUP_PERFORMANCE_NOTES.md`](../MAP_STARTUP_PERFORMANCE_NOTES.md) — исследование производительности.
+- [`runbooks/collector-project-setup.md`](runbooks/collector-project-setup.md) — настройка Collector.
+- [`architecture/map-performance.md`](architecture/map-performance.md) — состояние и план производительности.
+- [`roadmap/collector.md`](roadmap/collector.md) — только ещё не завершённые Collector-задачи.

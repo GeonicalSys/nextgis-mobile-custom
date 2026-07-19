@@ -66,5 +66,5 @@ Configuration sync и feature-data sync — разные контракты. `SY
 - district filter и form/render configuration;
 - запуск/возврат после screen off во время большого layer fill.
 
-Legacy-планы: [`../../COLLECTOR_ARCHITECTURE_ROADMAP.md`](../../COLLECTOR_ARCHITECTURE_ROADMAP.md)
-и [`../../COLLECTOR_PROJECT_SETUP_GUIDE.md`](../../COLLECTOR_PROJECT_SETUP_GUIDE.md).
+Практическая настройка: [collector-project-setup.md](../runbooks/collector-project-setup.md).
+Незавершённые задачи: [collector.md](../roadmap/collector.md).

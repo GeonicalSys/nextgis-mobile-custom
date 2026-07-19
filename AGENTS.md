@@ -20,8 +20,9 @@ git-сабмодули `maplib`, `maplibui`, `easypicker`. Основной яз
    [`docs/registry/upstream-overlaps.yaml`](docs/registry/upstream-overlaps.yaml).
 
 Для обзорной read-only задачи достаточно `START-HERE.md` и относящихся к теме
-registry/docs. Не загружай весь `CUSTOMIZATIONS.md`, если маршрут указывает на
-более узкий документ.
+registry/docs. Общую карту отличий открывай в
+[`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md),
+а затем переходи в более узкий документ.
 
 ## Репозитории и git
 

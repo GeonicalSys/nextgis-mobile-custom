@@ -52,8 +52,7 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`.
 
 ## Производительность
 
-Исторический анализ находится в
-[`../../MAP_STARTUP_PERFORMANCE_NOTES.md`](../../MAP_STARTUP_PERFORMANCE_NOTES.md).
-Он является исследованием, а не разрешением включать parallel preparation,
-native URI или viewport loading без отдельного профилирования и regression
-matrix.
+Текущий анализ, уже реализованные механизмы и следующие гипотезы находятся в
+[map-performance.md](map-performance.md). Документ не является разрешением
+включать native URI, progressive preparation или viewport loading без отдельного
+профилирования и regression matrix.

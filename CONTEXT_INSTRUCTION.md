@@ -14,6 +14,9 @@
 5. [`docs/registry/upstream-overlaps.yaml`](docs/registry/upstream-overlaps.yaml)
    для синхронизации с NextGIS.
 
+Каталог долговременных отличий форка:
+[`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md).
+
 Человеческий вход: [`docs/README.md`](docs/README.md).
 
 Проверка системы:

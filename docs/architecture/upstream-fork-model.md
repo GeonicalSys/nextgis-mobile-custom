@@ -5,7 +5,7 @@ last_verified: 2026-07-19
 related_code:
   - .gitmodules
   - tools/upstream-sync.ps1
-  - CUSTOMIZATIONS.md
+  - docs/reference/fork-customizations.md
 ---
 
 # Модель форка и взаимодействие с upstream

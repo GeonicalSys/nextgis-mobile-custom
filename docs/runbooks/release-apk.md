@@ -16,8 +16,9 @@ related_code:
 1. Определить upstream base и следующий fork patch.
 2. Увеличить `app` `versionCode` монотонно.
 3. Обновить `app` `versionName` и сопряжённый `maplib` `versionName`.
-4. Обновить `WHATS_NEW.md`, `CUSTOMIZATIONS.md` release section и docs, если
-   изменился контракт выпуска.
+4. Обновить `WHATS_NEW.md` и соответствующий architecture/reference/runbook.
+   Если появился новый долговременный класс отличий, дополнить
+   [`../reference/fork-customizations.md`](../reference/fork-customizations.md).
 
 ## Сборка
 

@@ -5,7 +5,7 @@ last_verified: 2026-07-19
 related_code:
   - tools/upstream-sync.ps1
   - .gitmodules
-  - UPSTREAM_SYNC_REPORT.md
+  - docs/history/upstream
 ---
 
 # Синхронизация с upstream NextGIS
@@ -14,7 +14,7 @@ related_code:
 
 1. Проверить status и ветку в root, `easypicker`, `maplib`, `maplibui`.
 2. Прочитать `registry/upstream-overlaps.yaml`, invariants и последний cycle в
-   `UPSTREAM_SYNC_REPORT.md`.
+   [`../history/upstream/README.md`](../history/upstream/README.md).
 3. Запустить:
 
    ```powershell

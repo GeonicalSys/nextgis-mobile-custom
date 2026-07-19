@@ -1,6 +1,6 @@
 <#
     upstream-sync.ps1 — helper for syncing GeonicalSystem fork with NextGIS upstream.
-    See CUSTOMIZATIONS.md §15 (Git Workflow Reference) for the manual recipe.
+    See docs/runbooks/upstream-sync.md for the manual recipe.
 
     Modes (parameter -Mode):
       Inventory      Fetches upstream in all 4 repos and prints, for each:

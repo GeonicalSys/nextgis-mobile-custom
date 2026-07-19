@@ -75,7 +75,7 @@ android {
         minSdkVersion 26
         compileSdk 36
         targetSdkVersion 36
-        // Fork versioning per CUSTOMIZATIONS §16: versionName = <upstream>.<patchN>
+        // Fork versioning: docs/reference/build-matrix.md and docs/runbooks/release-apk.md
         versionCode 187
         versionName '3.0.3.9'
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
