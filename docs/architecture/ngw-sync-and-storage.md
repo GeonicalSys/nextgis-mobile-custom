@@ -5,7 +5,10 @@ last_verified: 2026-07-19
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
+  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
   - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
 ---
 
@@ -19,6 +22,26 @@ related_code:
   пользовательские уведомления.
 - `app` регистрирует Android sync/service/provider компоненты и показывает
   продуктовый UI.
+
+## Импорт ресурса по URL
+
+`NGWResourceUrl` принимает HTTP(S)-адрес вида `<server-path>/resource/<id>`,
+отбрасывает credentials/fragment/лишний path и возвращает нормализованный server
+URL, account name и positive remote ID. Это поддерживает как `*.nextgis.com`, так
+и self-hosted NGW с портом или path prefix.
+
+`Connection.connect(guest, remoteId)` и `ResourceGroup.loadTargetResource()`
+получают только целевой ресурс. URL QGIS vector/raster style разрешается до
+родительского слоя. UI сначала использует существующий аккаунт с тем же server
+URL; guest account создаётся только после успешного ответа и проверки ресурса.
+
+`NGWResourceImportHelper` отправляет vector в существующий `LayerFillService`, а
+raster добавляет через `LayerGroup` и запрашивает стандартный map reload. Наличие
+`data.read` обязательно. При отсутствии `data.write` vector сохраняется как
+read-only и с направлением sync только server-to-device. Это правило действует и
+для обычного ручного выбора NGW-ресурса, если permission payload был загружен.
+
+ID контракта: `INV-NGW-URL-IMPORT`.
 
 ## Безопасная мутация данных
 

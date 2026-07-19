@@ -50,18 +50,23 @@ $repos = @(
 
 function Invoke-Git {
     param([string] $Path, [string[]] $GitArgs)
-    & git -C $Path @GitArgs
+    $safePath = $Path.Replace('\', '/')
+    $output = & git -c "safe.directory=$safePath" -C $Path @GitArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw "git failed in '$Path': git $($GitArgs -join ' ') (exit $LASTEXITCODE)"
+    }
+    return $output
 }
 
 function Get-UpstreamTip {
     param([string] $Path)
-    $sha = (& git -C $Path rev-parse 'upstream/master' 2>$null)
+    $sha = Invoke-Git -Path $Path -GitArgs @('rev-parse', 'upstream/master')
     return $sha.Trim()
 }
 
 function Get-MergeBase {
     param([string] $Path)
-    $sha = (& git -C $Path merge-base 'my-maplibre' 'upstream/master' 2>$null)
+    $sha = Invoke-Git -Path $Path -GitArgs @('merge-base', 'my-maplibre', 'upstream/master')
     return $sha.Trim()
 }
 

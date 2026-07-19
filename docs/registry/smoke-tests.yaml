@@ -85,3 +85,8 @@ tests:
     scope: [app]
     steps: [Check a valid update manifest for each flavor, Test mismatched flavor or checksum, Download and start install for a valid artifact]
     expected: Valid same-flavor update proceeds and invalid identity or integrity is rejected.
+  SMOKE-NGW-URL-IMPORT:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps: [Add a public vector resource URL without a pre-existing account, Add a raster resource URL from an existing account, Add a QGIS style URL, Open a vector resource without data.write permission]
+    expected: Guest account is created only for the validated public server, vector and raster appear through the normal reload flow, style resolves to its parent layer, and the no-write vector is read-only and pull-only.

@@ -16,6 +16,7 @@ UI и Map host, управляет брендами, preferences, release и sel
 - запуск приложения и открытие карты;
 - управление слоями, edit/walk/track через библиотеки;
 - выбор и переключение Collector projects;
+- добавление vector/raster NGW-слоя по прямому URL, включая проверенный guest fallback;
 - настройки приложения и Android permissions/services;
 - проверка и установка Lisa/Belka updates;
 - экспорт/очистка сохранённых layer backups.
@@ -28,6 +29,8 @@ UI и Map host, управляет брендами, preferences, release и sel
 - Self-hosted update принимается только для того же flavor/application/signing
   identity и с увеличенным versionCode.
 - Реальные DSN, client secrets и signing credentials не входят в docs.
+- Sentry оставляет crash screenshots, но не собирает interaction breadcrumbs и
+  view hierarchy; traces/profiling в production семплируются с долей `0.05`.
 
 ## Диагностика
 
@@ -38,6 +41,9 @@ UI и Map host, управляет брендами, preferences, release и sel
   отключать проверку для обхода ошибки.
 - Collector переключается неверно: `CollectorProjectRegistry` и project UID/map
   path, а не только UI dialog.
+- URL не импортируется: проверить parser, совпадение server URL с аккаунтом,
+  response code, тип ресурса и `data.read`; отсутствие `data.write` — read-only,
+  а не ошибка импорта.
 
 ## Проверки
 

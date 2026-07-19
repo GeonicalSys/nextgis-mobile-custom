@@ -25,6 +25,26 @@ manifest_metadata:
     owner: app
     source: app/src/main/AndroidManifest.xml
     purpose: Bind installed and downloaded APK to lisa or belka update channel
+  io.sentry.traces.user-interaction.enable:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Disable automatic UI interaction breadcrumbs
+  io.sentry.attach-screenshot:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Attach a screenshot to crash diagnostics
+  io.sentry.attach-view-hierarchy:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Disable collection of the full Android view hierarchy
+  io.sentry.traces.sample-rate:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Sample production performance traces at 0.05
+  io.sentry.traces.profiling.sample-rate:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Sample production profiles at 0.05
 build_inputs:
   sentry.properties:
     owner: app

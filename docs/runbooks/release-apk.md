@@ -32,6 +32,8 @@ related_code:
 - embedded `UPDATE_FLAVOR` совпадает с flavor;
 - versionCode/versionName;
 - подпись ожидаемым release certificate;
+- Sentry manifest policy: interaction breadcrumbs и view hierarchy выключены,
+  crash screenshot включён, trace/profile sample rate равен `0.05`;
 - запуск поверх существующего профиля.
 
 ## Self-hosted update manifest

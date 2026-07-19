@@ -10,6 +10,11 @@ related_code:
 
 ## 2026-07-19
 
+- Документирован selective upstream 3.1.2 cycle: прямой импорт NGW-ресурса по URL,
+  permission/read-only contract, критические crash/form fixes и production Sentry policy.
+- Матрицы, module contracts и release notes обновлены до версии форка 3.1.2.1 / 192.
+- `upstream-sync.ps1` теперь использует command-scoped `safe.directory` и не
+  маскирует ненулевые exit codes Git.
 - Удалены невоспроизводимые upstream diff snapshots; полезные команды, выводы и результаты
   перенесены в `docs/history/upstream/`.
 - `CUSTOMIZATIONS.md` сокращён до compatibility-указателя, а актуальный тематический индекс

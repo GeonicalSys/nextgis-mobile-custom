@@ -23,6 +23,7 @@
 package com.nextgis.mobile.activity
 
 import android.Manifest
+import android.accounts.AccountManager
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
@@ -52,6 +53,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -68,6 +70,10 @@ import com.nextgis.maplib.api.IGISApplication
 import com.nextgis.maplib.api.ILayer
 import com.nextgis.maplib.datasource.GeoMultiPoint
 import com.nextgis.maplib.datasource.GeoPoint
+import com.nextgis.maplib.datasource.ngw.Connection
+import com.nextgis.maplib.datasource.ngw.Resource
+import com.nextgis.maplib.datasource.ngw.ResourceGroup
+import com.nextgis.maplib.map.LayerGroup
 import com.nextgis.maplib.map.MapDrawable
 import com.nextgis.maplib.map.NGWVectorLayer
 import com.nextgis.maplib.map.VectorLayer
@@ -77,6 +83,7 @@ import com.nextgis.maplib.util.FileUtil
 import com.nextgis.maplib.util.GeoConstants
 import com.nextgis.maplib.util.MapUtil
 import com.nextgis.maplib.util.NGWUtil
+import com.nextgis.maplib.util.NGWResourceUrl
 import com.nextgis.maplib.util.NetworkUtil
 import com.nextgis.maplib.util.SettingsConstants
 import com.nextgis.maplibui.GISApplication
@@ -99,6 +106,7 @@ import com.nextgis.maplibui.util.ControlHelper
 import com.nextgis.maplibui.util.CollectorProjectRegistry
 import com.nextgis.maplibui.util.LayerBackupManager
 import com.nextgis.maplibui.util.NGIDUtils
+import com.nextgis.maplibui.util.NGWResourceImportHelper
 import com.nextgis.maplibui.util.SettingsConstantsUI
 import com.nextgis.maplibui.util.UiUtil
 import com.nextgis.mobile.MainApplication
@@ -117,6 +125,7 @@ import java.io.IOException
 import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
+import java.util.concurrent.Executors
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -140,6 +149,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     protected var mBackPressed: Long = 0
     protected var mTrackItem: MenuItem? = null
+    private val ngwUrlExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "NGWResourceUrl").apply { isDaemon = true }
+    }
+    private var ngwUrlImportInProgress = false
     private val startupUpdateCheckHandler = Handler(Looper.getMainLooper())
     private var startupUpdateCheckPending = false
     private val startupUpdateCheckRunnable = Runnable {
@@ -1432,6 +1445,142 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     }
 
+    fun addNGWLayerByUrl() {
+        val input = EditText(this).apply {
+            hint = getString(R.string.ngw_resource_url_hint)
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or
+                android.text.InputType.TYPE_TEXT_VARIATION_URI
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.action_add_by_url)
+            .setView(input)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                importNGWResourceByUrl(input.text?.toString().orEmpty())
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun importNGWResourceByUrl(rawUrl: String) {
+        if (ngwUrlImportInProgress) {
+            Toast.makeText(this, R.string.ngw_url_import_in_progress, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val parsed = try {
+            NGWResourceUrl.parse(rawUrl)
+        } catch (_: IllegalArgumentException) {
+            Toast.makeText(this, R.string.ngw_resource_url_invalid, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        ngwUrlImportInProgress = true
+        mapFragment?.changeProgress(true)
+        ngwUrlExecutor.execute {
+            val resolved = resolveNGWResource(parsed)
+            runOnUiThread {
+                ngwUrlImportInProgress = false
+                mapFragment?.changeProgress(false)
+                if (isFinishing || isDestroyed) {
+                    return@runOnUiThread
+                }
+                handleResolvedNGWResource(resolved)
+            }
+        }
+    }
+
+    private fun resolveNGWResource(parsed: NGWResourceUrl): NGWUrlResolution {
+        val connections = NetworkUtil.fillConnections(this, AccountManager.get(this))
+        var connection: Connection? = null
+        for (index in 0 until connections.childrenCount) {
+            val candidate = connections.getChild(index)
+            if (candidate is Connection && parsed.matchesServerUrl(candidate.url)) {
+                connection = candidate
+                break
+            }
+        }
+
+        val needsGuestAccount = connection == null
+        val targetConnection = connection ?: Connection(
+            parsed.accountName,
+            Constants.NGW_ACCOUNT_GUEST,
+            "",
+            parsed.serverUrl
+        )
+        val guest = Constants.NGW_ACCOUNT_GUEST == targetConnection.login
+        if (!targetConnection.connect(guest, parsed.resourceId)) {
+            return NGWUrlResolution(parsed, null, 401, needsGuestAccount)
+        }
+
+        val loaded = targetConnection.rootResource.loadTargetResource()
+        return NGWUrlResolution(
+            parsed,
+            loaded.resource,
+            loaded.responseCode,
+            needsGuestAccount
+        )
+    }
+
+    private fun handleResolvedNGWResource(resolved: NGWUrlResolution) {
+        val resource = resolved.resource
+        if (resource == null) {
+            val message = when (resolved.responseCode) {
+                401, 403 -> R.string.ngw_resource_permission_denied
+                404 -> R.string.ngw_resource_not_found
+                in 200..299 -> R.string.ngw_resource_type_unsupported
+                else -> R.string.ngw_resource_load_failed
+            }
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if (!NGWResourceImportHelper.supports(resource)) {
+            Toast.makeText(this, R.string.ngw_resource_type_unsupported, Toast.LENGTH_LONG).show()
+            return
+        }
+        if (!resource.hasDataReadPermission()) {
+            Toast.makeText(this, R.string.ngw_resource_permission_denied, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if (resolved.needsGuestAccount) {
+            val app = application as IGISApplication
+            val accountAdded = app.addAccount(
+                resolved.parsed.accountName,
+                resolved.parsed.serverUrl,
+                Constants.NGW_ACCOUNT_GUEST,
+                "",
+                Constants.NGW_ACCOUNT_GUEST
+            )
+            if (!accountAdded) {
+                Toast.makeText(this, R.string.ngw_guest_account_failed, Toast.LENGTH_LONG).show()
+                return
+            }
+        }
+
+        val group = (application as IGISApplication).map as? LayerGroup
+        val result = NGWResourceImportHelper.importResource(this, group, resource)
+        val message = when (result) {
+            NGWResourceImportHelper.Result.VECTOR_QUEUED -> R.string.ngw_resource_import_started
+            NGWResourceImportHelper.Result.RASTER_ADDED -> R.string.ngw_resource_added
+            NGWResourceImportHelper.Result.READ_PERMISSION_DENIED ->
+                R.string.ngw_resource_permission_denied
+            NGWResourceImportHelper.Result.UNSUPPORTED -> R.string.ngw_resource_type_unsupported
+            NGWResourceImportHelper.Result.FAILED -> R.string.ngw_resource_load_failed
+        }
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        if (result == NGWResourceImportHelper.Result.RASTER_ADDED) {
+            mLayersFragment?.onResume()
+        }
+    }
+
+    private data class NGWUrlResolution(
+        val parsed: NGWResourceUrl,
+        val resource: Resource?,
+        val responseCode: Int,
+        val needsGuestAccount: Boolean
+    )
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus && startupUpdateCheckPending) {
@@ -1576,6 +1725,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     override fun onDestroy() {
         HyperLog.v(Constants.TAG, "MainActivity.onDestroy")
         startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
+        ngwUrlExecutor.shutdownNow()
         mMessageReceiver = null
         mTrackReceiver = null
         super.onDestroy()

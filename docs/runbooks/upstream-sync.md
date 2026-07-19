@@ -18,8 +18,18 @@ related_code:
 3. Запустить:
 
    ```powershell
-   pwsh tools/upstream-sync.ps1 -Mode Inventory
-   ```
+pwsh tools/upstream-sync.ps1 -Mode Inventory
+```
+
+Если PowerShell 7 (`pwsh`) не установлен, используйте штатный Windows PowerShell
+с абсолютным путём к скрипту:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "<root>\tools\upstream-sync.ps1" -Mode Inventory -Root "<root>"
+```
+
+Helper передаёт `safe.directory` только текущей git-команде и завершает работу при
+любом ненулевом exit code; глобальный `git config` он не изменяет.
 
 4. Для каждого репозитория записать текущий HEAD, upstream tip, ahead/behind и
    dirty state. Не начинать merge поверх неразобранных изменений.

@@ -12,7 +12,7 @@ related_code:
 
 | Связка | Статус |
 |---|---|
-| app `3.0.3.9` ↔ maplib `3.0.3.9` | Требуемая версия текущего workspace |
+| app `3.1.2.1` ↔ maplib `3.1.2.1` | Требуемая версия текущего workspace |
 | app ↔ maplibui pointer из root | Проверять совместной сборкой |
 | maplibui ↔ maplib pointer из root | Публичный API проверять compile + smoke |
 | Android API 26–36 | Gradle declaration; device coverage зависит от выполненной матрицы |

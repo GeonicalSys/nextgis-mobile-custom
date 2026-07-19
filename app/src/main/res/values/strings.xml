@@ -238,6 +238,18 @@
 
     <string name="copied">Text copied to clipboard</string>
 
+    <string name="action_add_by_url">Add NGW layer by URL</string>
+    <string name="ngw_resource_url_hint">https://example.nextgis.com/resource/123</string>
+    <string name="ngw_resource_url_invalid">Enter a valid HTTP or HTTPS NGW resource URL ending in /resource/&lt;id&gt;.</string>
+    <string name="ngw_url_import_in_progress">Another layer URL is already being checked.</string>
+    <string name="ngw_resource_not_found">The NGW resource was not found.</string>
+    <string name="ngw_resource_permission_denied">This account does not have permission to read the resource.</string>
+    <string name="ngw_resource_type_unsupported">This NGW resource type cannot be added as a map layer.</string>
+    <string name="ngw_resource_load_failed">Could not load the NGW resource.</string>
+    <string name="ngw_guest_account_failed">Could not create a guest account for this NGW server.</string>
+    <string name="ngw_resource_import_started">Layer download started.</string>
+    <string name="ngw_resource_added">Layer added.</string>
+
 
 
 </resources>

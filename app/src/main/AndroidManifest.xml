@@ -74,24 +74,28 @@
             android:foregroundServiceType="dataSync"
             android:exported="false"/>
 
-                <meta-data
+        <meta-data
             android:name="io.sentry.dsn"
-            android:value="@string/SENTRY_DSN" /> <!-- enable automatic breadcrumbs for user interactions (clicks, swipes, scrolls) -->
+            android:value="@string/SENTRY_DSN" />
+        <!-- Disable automatic breadcrumbs for user interactions (clicks, swipes, scrolls). -->
         <meta-data
             android:name="io.sentry.traces.user-interaction.enable"
-            android:value="true" /> <!-- enable screenshot for crashes -->
+            android:value="false" />
+        <!-- Keep screenshots for crash diagnostics. -->
         <meta-data
             android:name="io.sentry.attach-screenshot"
-            android:value="true" /> <!-- enable view hierarchy for crashes -->
+            android:value="true" />
+        <!-- Avoid collecting the full view hierarchy. -->
         <meta-data
             android:name="io.sentry.attach-view-hierarchy"
-            android:value="true" /> <!-- enable the performance API by setting a sample-rate, adjust in production env -->
+            android:value="false" />
+        <!-- Sample performance traces and profiling in production. -->
         <meta-data
             android:name="io.sentry.traces.sample-rate"
-            android:value="1.0" /> <!-- enable profiling when starting transactions, adjust in production env -->
+            android:value="0.05" />
         <meta-data
             android:name="io.sentry.traces.profiling.sample-rate"
-            android:value="1.0" />
+            android:value="0.05" />
         <meta-data
             android:name="com.nextgis.mobile.UPDATE_FLAVOR"
             android:value="${updateFlavor}" />

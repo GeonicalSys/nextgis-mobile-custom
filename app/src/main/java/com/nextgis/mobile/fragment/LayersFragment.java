@@ -750,6 +750,10 @@ public class LayersFragment
                 application.sendEvent(GA_LAYER, GA_CREATE, GA_IMPORT);
                 ((MainActivity) getActivity()).addLocalLayer();
                 return true;
+            case R.id.menu_add_by_url:
+                application.sendEvent(GA_LAYER, GA_CREATE, GA_NGW);
+                ((MainActivity) getActivity()).addNGWLayerByUrl();
+                return true;
             case R.id.menu_add_remote:
                 application.sendEvent(GA_LAYER, GA_CREATE, GA_GEOSERVICE);
                 ((MainActivity) getActivity()).addRemoteLayer();

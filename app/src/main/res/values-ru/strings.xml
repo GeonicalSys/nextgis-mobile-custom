@@ -229,6 +229,18 @@
 
     <string name="copied">Текст скопирован в буфер обмена</string>
 
+    <string name="action_add_by_url">Добавить слой NGW по URL</string>
+    <string name="ngw_resource_url_hint">https://example.nextgis.com/resource/123</string>
+    <string name="ngw_resource_url_invalid">Введите корректный HTTP- или HTTPS-адрес ресурса NGW, заканчивающийся на /resource/&lt;id&gt;.</string>
+    <string name="ngw_url_import_in_progress">Другой адрес слоя уже проверяется.</string>
+    <string name="ngw_resource_not_found">Ресурс NGW не найден.</string>
+    <string name="ngw_resource_permission_denied">У аккаунта нет прав на чтение этого ресурса.</string>
+    <string name="ngw_resource_type_unsupported">Этот тип ресурса NGW нельзя добавить как слой карты.</string>
+    <string name="ngw_resource_load_failed">Не удалось загрузить ресурс NGW.</string>
+    <string name="ngw_guest_account_failed">Не удалось создать гостевой аккаунт для этого сервера NGW.</string>
+    <string name="ngw_resource_import_started">Загрузка слоя началась.</string>
+    <string name="ngw_resource_added">Слой добавлен.</string>
+
     <string name="web_src">https://nextgis.ru/nextgis-mobile</string>
     <string name="copyright" translatable="false"><![CDATA[© <a href=\"https://nextgis.ru\">NextGIS</a>, 2012–%s]]></string>
     <string name="support">Поддержка</string>

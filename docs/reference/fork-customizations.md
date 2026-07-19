@@ -24,6 +24,7 @@ related_code:
 | Производительность карты и локальные vector tiles | [map-performance.md](../architecture/map-performance.md) | `VectorLayer`, `LocalVectorTileProvider`, `LocalVectorTileServer` |
 | NGW sync, layer fill и schema rebuild | [collector-projects.md](../architecture/collector-projects.md), [change-impact.yaml](../registry/change-impact.yaml) | `NGWVectorLayer`, `SyncAdapter`, `LayerFillService`, `GISApplication` |
 | NGW resource UI и batch import | [collector-project-setup.md](../runbooks/collector-project-setup.md) | `SelectNGWResourceActivity`, `NGWResourcesListAdapter`, `LayerFillProgressDialogFragment` |
+| Прямой импорт NGW vector/raster по URL и read-only permissions | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md) | `NGWResourceUrl`, `ResourceGroup`, `NGWResourceImportHelper`, `MainActivity` |
 | Config из NGW description и `SYNC_NONE` | [settings-and-config.md](settings-and-config.md), [collector-projects.md](../architecture/collector-projects.md) | `NgwLayerConfigAdapter`, sync classes |
 | Collector metadata, district filter и composition apply | [collector-projects.md](../architecture/collector-projects.md) | `CollectorProjectMetadata`, `CollectorProjectCompositionSync` |
 | Backup перед удалением/перезаливкой | [collector-projects.md](../architecture/collector-projects.md) | `LayerBackupManager`, `GISApplication` |

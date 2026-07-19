@@ -4,6 +4,19 @@
 в [`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md), история merge —
 в [`docs/history/upstream/`](docs/history/upstream/README.md).
 
+## 3.1.2.1 — 2026-07-19
+
+- Добавлено создание NGW vector/raster слоя по прямому URL ресурса; ссылки на
+  QGIS-стиль автоматически открывают родительский слой.
+- Для публичного сервера без настроенного аккаунта безопасно создаётся guest
+  account — только после проверки адреса, ресурса и прав чтения.
+- Слои без права записи открываются read-only и синхронизируются только с сервера.
+- Исправлены ложные предупреждения об изменении числовых полей формы, падения в
+  Walk/edit flow и сериализация незаполненного bbox.
+- Перенос точки теперь сразу обновляет вершины, marker и подписи измерения.
+- Снижена доля Sentry performance sampling; отключён сбор interaction breadcrumbs
+  и view hierarchy при сохранении crash screenshot.
+
 ## 3.0.3.9 — 2026-07-19
 
 - Удалены унаследованные Google Analytics, tracking ID и автоматическая отправка crash-статистики.

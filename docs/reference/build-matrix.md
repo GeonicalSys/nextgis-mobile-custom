@@ -20,9 +20,9 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode | `187` |
-| App versionName | `3.0.3.9` |
-| maplib VERSION_NAME | `3.0.3.9` |
+| App versionCode | `192` |
+| App versionName | `3.1.2.1` |
+| maplib VERSION_NAME | `3.1.2.1` |
 | MapLibre Android SDK | `13.0.2` |
 | OkHttp | `5.3.2` |
 

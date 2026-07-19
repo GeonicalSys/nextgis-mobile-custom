@@ -101,3 +101,17 @@ invariants:
     must_update_docs:
       - docs/runbooks/release-apk.md
       - docs/reference/flavors-and-versioning.md
+  INV-NGW-URL-IMPORT:
+    title: Direct NGW URL import preserves account, permission and layer contracts
+    owners: [maplib, maplibui, app]
+    statement: Parse only unambiguous HTTP(S) resource URLs, resolve style links to a supported parent layer, create guest accounts only after validation, and keep resources without data.write read-only and pull-only.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    verify_smoke: [SMOKE-NGW-URL-IMPORT]
+    must_update_docs:
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/registry/dependencies.yaml
