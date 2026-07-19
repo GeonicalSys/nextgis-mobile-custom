@@ -53,19 +53,17 @@
         android:iconSpaceReserved="false"
         >
         <Preference
+            android:key="check_updates"
+            android:title="@string/update_check"
+            android:singleLineTitle="false"
+            app:iconSpaceReserved="false" />
+        <Preference
             app:iconSpaceReserved="false"
             android:key="reset_settings"
             android:title="@string/reset_settings"
             android:iconSpaceReserved="false"
             android:singleLineTitle="false"
             />
-        <CheckBoxPreference
-            app:iconSpaceReserved="false"
-            android:defaultValue="false"
-            android:key="ga_enabled"
-            android:singleLineTitle="false"
-            android:summary="@string/pref_ga_sum"
-            android:title="@string/pref_ga"/>
         <CheckBoxPreference
             app:iconSpaceReserved="false"
             android:defaultValue="true"

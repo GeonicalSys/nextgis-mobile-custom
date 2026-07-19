@@ -1,0 +1,14 @@
+---
+description: Безопасная синхронизация форка с upstream NextGIS
+alwaysApply: true
+---
+
+# Upstream sync
+
+Для merge/rebase/upstream analysis сначала прочитай
+`docs/runbooks/upstream-sync.md` и `docs/registry/upstream-overlaps.yaml`.
+
+Не делай blind merge. Проверь root и каждый сабмодуль, создай backup tags только
+по разрешённому workflow, классифицируй пересечения `upstream/ours/hybrid`,
+обнови cycle report и central registries. Обычный порядок интеграции:
+`easypicker -> maplib -> maplibui -> root`.

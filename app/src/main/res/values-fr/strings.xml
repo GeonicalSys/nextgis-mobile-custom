@@ -129,8 +129,6 @@
     <string name="not_installed">Application non-installée</string>
     <string name="action_help">Aide</string>
     <string name="location_distance_to">Distance vers (m)</string>
-    <string name="pref_ga">Collecte de données</string>
-    <string name="pref_ga_sum">Envoyer des données anonyme vers Google Analytics pour améliorer la qualité et la stabilité de l\'application.</string>
     <string name="update_new">La version %1$s est disponible. Voulez vous l\'installer?</string>
     <string name="update_title">Mettre à jour?</string>
     <string name="update_check">Vérifier les mise à jour</string>

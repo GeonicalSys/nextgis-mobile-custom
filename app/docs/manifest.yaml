@@ -1,0 +1,33 @@
+schema_version: 1
+module_id: app
+repository_id: root
+maturity: maintained
+last_verified: 2026-07-19
+entrypoints:
+  - app/src/main/java/com/nextgis/mobile/MainApplication.java
+  - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+  - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+  - app/src/main/AndroidManifest.xml
+key_components:
+  - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
+    responsibility: Process initialization, logging and GISApplication configuration.
+  - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    responsibility: Main navigation, Collector project switch and backup sharing UI.
+  - path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    responsibility: Map screen and MaplibreMapInteraction implementation.
+  - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+    responsibility: Self-hosted update manifest, integrity, identity and install flow.
+public_contracts:
+  - id: map-host
+    symbol: MapFragment implements MaplibreMapInteraction
+    path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    consumers: [maplib, maplibui]
+settings_refs: [map_show_loc, map_show_compass, check_updates, sw_track_service, com.nextgis.mobile.UPDATE_FLAVOR]
+storage_contracts: []
+invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-HOT-ADD-CONSISTENCY, INV-COLLECTOR-ISOLATION, INV-UPDATER-IDENTITY]
+global_docs:
+  - docs/architecture/overview.md
+  - docs/architecture/map-rendering.md
+  - docs/runbooks/release-apk.md
+smoke_tests: [AUTO-APP-RELEASES, SMOKE-HOT-RASTER, SMOKE-COLLECTOR-SWITCH, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE]
+upstream_hotspots: [MAP-HOST, APP-FLAVORS]

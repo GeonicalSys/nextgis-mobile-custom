@@ -36,12 +36,12 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_gravity="center"
             android:layout_margin="16dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/ngm_logo"
+            android:src="@drawable/app_launcher_icon"
             tools:ignore="ContentDescription"/>
 
         <TextView

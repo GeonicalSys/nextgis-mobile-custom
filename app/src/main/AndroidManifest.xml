@@ -27,6 +27,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <!--         <uses-permission android:name="android.permission.CAMERA"/> -->
     <uses-feature
@@ -59,7 +60,7 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/app_launcher_icon"
         android:label="@string/APP_NAME"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
@@ -91,6 +92,9 @@
         <meta-data
             android:name="io.sentry.traces.profiling.sample-rate"
             android:value="1.0" />
+        <meta-data
+            android:name="com.nextgis.mobile.UPDATE_FLAVOR"
+            android:value="${updateFlavor}" />
 
         <activity
             android:name=".activity.MainActivity"
@@ -128,7 +132,7 @@
             android:name="com.nextgis.maplibui.account.NGWAuthenticatorService"
             android:enabled="true"
             android:exported="true"
-            android:permission="com.nextgis.mobile.service.ACCESS"
+            android:permission="${applicationId}.service.ACCESS"
             android:foregroundServiceType="dataSync"
             >
             <intent-filter>
@@ -142,7 +146,7 @@
         <service
             android:name=".datasource.SyncService"
             android:exported="true"
-            android:permission="com.nextgis.mobile.service.ACCESS"
+            android:permission="${applicationId}.service.ACCESS"
             android:foregroundServiceType="dataSync"
             >
             <intent-filter>

@@ -1,0 +1,87 @@
+schema_version: 1
+tests:
+  AUTO-DOCS-VALIDATE:
+    type: automatic
+    scope: docs
+    command: powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\docs-check.ps1
+    expected: All documentation and registry checks pass.
+  AUTO-MAPLIB-UNIT:
+    type: automatic
+    scope: maplib
+    command: .\gradlew.bat :maplib:testDebugUnitTest
+    expected: Maplib unit tests pass.
+  AUTO-MAPLIBUI-ASSEMBLE:
+    type: automatic
+    scope: maplibui
+    command: .\gradlew.bat :maplibui:assembleDebug
+    expected: Maplibui debug library assembles.
+  AUTO-APP-RELEASES:
+    type: automatic
+    scope: app
+    command: .\gradlew.bat :app:assembleLisaRelease :app:assembleBelkaRelease
+    expected: Both product release variants assemble.
+  SMOKE-MAP-COLD-START:
+    type: device
+    scope: [app, maplib]
+    steps: [Open an existing multi-layer map from a cold process start, Compare visible layers and order with the saved layer list]
+    expected: Map renders once with the saved visibility and order and without a crash.
+  SMOKE-NGRC-ORDER:
+    type: device
+    scope: [maplib, maplibui]
+    steps: [Open a map with OSM and user layers, Import an NGRc/local raster, Inspect list and map order]
+    expected: Raster is above OSM when OSM exists and is not above the entire user stack.
+  SMOKE-HOT-RASTER:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps: [Hot-add a raster to an open map, Do not restart the application, Compare map style with the layer list]
+    expected: The raster appears at the intended position without restart.
+  SMOKE-LAYER-REORDER:
+    type: device
+    scope: [maplib, maplibui]
+    steps: [Reorder mixed vector and raster layers, Finish the gesture, Compare list and map]
+    expected: Map and list converge to the same bottom-to-top order.
+  SMOKE-COLLECTOR-IMPORT:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps: [Select an NGW Collector resource, Import its composition, Reopen the project]
+    expected: Project metadata and isolated workspace are created and layers remain available.
+  SMOKE-COLLECTOR-SWITCH:
+    type: device
+    scope: [app, maplibui]
+    steps: [Create or import two Collector projects, Switch between them, Restart and reopen each]
+    expected: Map paths, metadata and layers do not leak between projects.
+  SMOKE-BACKUP-GATE:
+    type: device
+    scope: [maplibui]
+    steps: [Prepare unsent local layer data, Trigger schema rebuild or Collector removal, Simulate backup failure]
+    expected: Destructive mutation is cancelled and local layer data remains.
+  SMOKE-SYNC-OFF-CONFIG:
+    type: device
+    scope: [maplib, maplibui]
+    steps: [Set an NGW layer to SYNC_NONE, Change supported server configuration, Run the relevant refresh flow]
+    expected: Feature data is not synced while supported configuration behavior remains correct.
+  SMOKE-WALK:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps: [Start geometry-by-walk editing, Pause and resume the app, Finish geometry]
+    expected: Geometry and editing state survive lifecycle transitions without duplicate reload.
+  SMOKE-TRACK-NO-FLAGS:
+    type: device
+    scope: [maplib, maplibui]
+    steps: [Start and stop a track, Inspect map style and rendered track]
+    expected: Track renders without start/end flag sources or layers.
+  SMOKE-LISA-RELEASE:
+    type: device
+    scope: [app]
+    steps: [Install Lisa release APK, Open About and main screen, Verify package brand and version]
+    expected: Lisa identity, resources and version are correct.
+  SMOKE-BELKA-RELEASE:
+    type: device
+    scope: [app]
+    steps: [Install Belka release APK, Open About and main screen, Verify package brand and version]
+    expected: Belka identity, resources and version are correct.
+  SMOKE-SELF-UPDATE:
+    type: device
+    scope: [app]
+    steps: [Check a valid update manifest for each flavor, Test mismatched flavor or checksum, Download and start install for a valid artifact]
+    expected: Valid same-flavor update proceeds and invalid identity or integrity is rejected.

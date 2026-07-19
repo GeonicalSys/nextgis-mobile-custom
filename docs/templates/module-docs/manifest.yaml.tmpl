@@ -1,0 +1,19 @@
+schema_version: 1
+module_id: ${module_id}
+repository_id: ${repository_id}
+maturity: draft
+last_verified: ${today}
+entrypoints:
+${entrypoints_yaml}
+key_components:
+  - path: ${first_entrypoint}
+    responsibility: "TODO: уточнить ответственность по коду"
+public_contracts: []
+settings_refs: []
+storage_contracts: []
+invariant_refs: []
+global_docs:
+  - docs/architecture/overview.md
+  - docs/registry/change-impact.yaml
+smoke_tests: []
+upstream_hotspots: []

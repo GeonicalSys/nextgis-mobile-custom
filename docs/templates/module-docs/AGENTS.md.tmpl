@@ -1,0 +1,11 @@
+# ${module_id} — инструкции для ИИ-агентов
+
+Перед изменением кода прочитай `docs/README.md`, `docs/manifest.yaml` и, если
+доступен parent workspace, `${central_ref}/START-HERE.md` вместе с
+`${central_ref}/registry/change-impact.yaml`.
+
+Если central docs отсутствуют в standalone checkout, используй local pack и
+сообщи, что cross-repository documentation нельзя обновить атомарно.
+
+После изменения выполни проверки из manifest, обнови локальные docs при смене
+поведения/контрактов и central registry при межмодульном изменении.

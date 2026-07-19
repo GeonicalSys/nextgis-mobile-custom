@@ -8,6 +8,8 @@ captures/
 *.iws
 *.ipr
 *.apk
+*.jks
+*.keystore
 
 # Temp files
 *~
@@ -17,3 +19,7 @@ captures/
 
 # Sentry settings
 sentry.properties
+
+# Python documentation tooling
+__pycache__/
+*.py[cod]

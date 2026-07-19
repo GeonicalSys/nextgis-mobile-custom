@@ -1,0 +1,103 @@
+schema_version: 1
+invariants:
+  INV-FLAVORS:
+    title: Lisa and Belka remain separate product flavors
+    owners: [app]
+    statement: Preserve lisa and belka product flavors, their brand resources, display names and update flavor identity.
+    related_code:
+      - app/build.gradle
+      - app/src/main/AndroidManifest.xml
+      - app/src/lisa
+      - app/src/belka
+    verify_smoke: [SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE]
+    must_update_docs:
+      - docs/reference/flavors-and-versioning.md
+      - docs/runbooks/release-apk.md
+  INV-VERSION-COUPLING:
+    title: Fork version and maplib diagnostic version stay compatible
+    owners: [app, maplib]
+    statement: Use <upstream-base>.<fork-patch>, monotonically increase app versionCode, and keep maplib BuildConfig version aligned when the contract uses it.
+    related_code:
+      - app/build.gradle
+      - maplib/build.gradle
+    verify_smoke: [SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
+    must_update_docs:
+      - docs/reference/build-matrix.md
+      - docs/reference/flavors-and-versioning.md
+  INV-LAYER-ORDER:
+    title: LayerGroup index zero is the bottom of the stack
+    owners: [maplib, maplibui]
+    statement: NGRc/local raster imports must respect bottom-to-top LayerGroup order and must not appear above the entire user stack.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    verify_smoke: [SMOKE-NGRC-ORDER, SMOKE-LAYER-REORDER]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+  INV-HOT-ADD-CONSISTENCY:
+    title: Hot-added raster order matches the layer list without restart
+    owners: [app, maplib, maplibui]
+    statement: After hot-add or reorder, MapLibre style and LayerGroup/UI order converge without requiring application restart.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplibui/src/main/java/com/nextgis/maplibui/fragment/ReorderedLayerView.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [SMOKE-HOT-RASTER, SMOKE-LAYER-REORDER]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/registry/dependencies.yaml
+  INV-NO-TRACK-FLAGS:
+    title: Track start and end flag layers stay disabled
+    owners: [maplib, maplibui]
+    statement: Do not reintroduce upstream-style start/end track flag sources or layers without an explicit product decision.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+    verify_smoke: [SMOKE-TRACK-NO-FLAGS]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+  INV-COLLECTOR-RESOURCE:
+    title: Collector resources remain selectable and importable
+    owners: [maplib, maplibui]
+    statement: NGWResourceTypeCollector must remain available in NGW resource selection and create project metadata/workspace.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/Connection.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
+      - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
+    verify_smoke: [SMOKE-COLLECTOR-IMPORT]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+  INV-COLLECTOR-ISOLATION:
+    title: Collector projects use isolated local workspaces
+    owners: [app, maplib, maplibui]
+    statement: Project identity, map path and layers must not leak between Collector projects during import or switch.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    verify_smoke: [SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-SWITCH]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+  INV-BACKUP-BEFORE-DESTRUCTION:
+    title: Required backup gates destructive layer mutation
+    owners: [maplibui]
+    statement: If backup fails, schema rebuild or Collector layer removal must leave the local layer unchanged.
+    related_code:
+      - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+    verify_smoke: [SMOKE-BACKUP-GATE]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/runbooks/incident-and-rollback.md
+  INV-UPDATER-IDENTITY:
+    title: Self-hosted updater validates product and artifact identity
+    owners: [app]
+    statement: Reject update artifacts with mismatched flavor, application ID, version, size, APK hash or signing certificate.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/AndroidManifest.xml
+    verify_smoke: [SMOKE-SELF-UPDATE]
+    must_update_docs:
+      - docs/runbooks/release-apk.md
+      - docs/reference/flavors-and-versioning.md

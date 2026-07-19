@@ -1,0 +1,18 @@
+---
+description: Обязательное сопровождение документации Android-форка
+alwaysApply: true
+---
+
+# Documentation Definition of Done
+
+Изменение не завершено, пока выполнены относящиеся к нему правила из
+`docs/registry/change-impact.yaml`.
+
+- Поведение одного модуля: обновить `<module>/docs/README.md` и/или manifest.
+- Межмодульный API, настройка, storage/release/upstream контракт или инвариант:
+  обновить central `docs/` и registry в той же задаче.
+- Внутренний refactor без смены поведения или контракта docs не требует; это
+  нужно явно отметить в финальном ответе.
+- Central docs change: обновить frontmatter `last_verified` и
+  `docs/changelog.md`.
+- После правок запустить `py -3 docs/scripts/validate_docs.py --workspace-root .`.

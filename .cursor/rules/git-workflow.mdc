@@ -1,0 +1,14 @@
+---
+description: Git-ограничения для Android workspace
+alwaysApply: true
+---
+
+# Git workflow
+
+- Commit/push только по явной команде пользователя.
+- Не менять git config.
+- Не использовать destructive reset/checkout/clean без явного запроса.
+- Проверять status отдельно в root, `maplib`, `maplibui`, `easypicker`.
+- Сохранять несвязанные пользовательские изменения.
+- Root commit с изменением сабмодуля должен фиксировать проверенный pointer и
+  относящиеся central docs.

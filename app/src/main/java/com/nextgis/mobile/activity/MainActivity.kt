@@ -105,6 +105,7 @@ import com.nextgis.mobile.MainApplication
 import com.nextgis.mobile.R
 import com.nextgis.mobile.fragment.LayersFragment
 import com.nextgis.mobile.fragment.MapFragment
+import com.nextgis.mobile.util.AppUpdateManager
 import com.nextgis.mobile.util.AppSettingsConstants
 import com.nextgis.mobile.util.SDCardUtils
 import org.json.JSONObject
@@ -139,6 +140,15 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     protected var mBackPressed: Long = 0
     protected var mTrackItem: MenuItem? = null
+    private val startupUpdateCheckHandler = Handler(Looper.getMainLooper())
+    private var startupUpdateCheckPending = false
+    private val startupUpdateCheckRunnable = Runnable {
+        if (!startupUpdateCheckPending || isFinishing || isDestroyed || !hasWindowFocus()) {
+            return@Runnable
+        }
+        startupUpdateCheckPending = false
+        AppUpdateManager.checkForUpdateAutomatically(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         HyperLog.v(Constants.TAG, "MainActivity.onCreate")
@@ -154,6 +164,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             finish()
             return
         }
+
+        startupUpdateCheckPending = savedInstanceState == null
 
         setContentView(R.layout.activity_main)
         mMessageReceiver = MessageReceiver()
@@ -1420,6 +1432,17 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && startupUpdateCheckPending) {
+            startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
+            startupUpdateCheckHandler.postDelayed(
+                startupUpdateCheckRunnable,
+                STARTUP_UPDATE_CHECK_DELAY_MS
+            )
+        }
+    }
+
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         if (null != mLayersFragment && !mLayersFragment!!.isDrawerOpen) {
@@ -1544,6 +1567,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         protected const val PERMISSIONS_REQUEST_LOC_SILENT: Int = 6
         const val LOCATION_BACKGROUND_REQUEST: Int = 5
         protected const val TAG_FRAGMENT_PROGRESS: String = "layer_fill_dialog_fragment"
+        private const val STARTUP_UPDATE_CHECK_DELAY_MS: Long = 2500
 
         protected const val FILE_SELECT_CODE: Int = 555
         protected const val RELOAD_ACTIVITY_DATA: Int = 777
@@ -1551,6 +1575,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onDestroy() {
         HyperLog.v(Constants.TAG, "MainActivity.onDestroy")
+        startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
         mMessageReceiver = null
         mTrackReceiver = null
         super.onDestroy()

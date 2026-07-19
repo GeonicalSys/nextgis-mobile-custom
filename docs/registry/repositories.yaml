@@ -1,0 +1,38 @@
+schema_version: 1
+repositories:
+  root:
+    title: GeonicalSystem NextGIS Mobile
+    path: .
+    kind: root
+    expected_branch: my-maplibre
+    origin: https://github.com/GeonicalSystem/nextgis-mobile-custom.git
+    upstream: https://github.com/nextgis/nextgis_mobile_android.git
+    docs_policy: required
+    module_ids: [app, wizardpager]
+  maplib:
+    title: GeonicalSystem Android Maplib
+    path: maplib
+    kind: submodule
+    expected_branch: my-maplibre
+    origin: https://github.com/GeonicalSystem/android_maplib.git
+    upstream: https://github.com/nextgis/android_maplib.git
+    docs_policy: required
+    module_ids: [maplib]
+  maplibui:
+    title: GeonicalSystem Android Maplib UI
+    path: maplibui
+    kind: submodule
+    expected_branch: my-maplibre
+    origin: https://github.com/GeonicalSystem/android_maplibui.git
+    upstream: https://github.com/nextgis/android_maplibui.git
+    docs_policy: required
+    module_ids: [maplibui]
+  easypicker:
+    title: GeonicalSystem EasyPicker fork
+    path: easypicker
+    kind: submodule
+    expected_branch: my-maplibre
+    origin: https://github.com/GeonicalSystem/easypicker.git
+    upstream: https://github.com/nextgis/easypicker.git
+    docs_policy: required
+    module_ids: [easypicker-module]

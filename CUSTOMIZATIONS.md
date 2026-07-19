@@ -32,6 +32,8 @@ Base commit: `7dde21c` (at the time: upstream **`maplibre`**, “3.0.0 release�
 21. [Layer data backups before automatic reload/removal](#21-layer-data-backups-before-automatic-reloadremoval)
 22. [Collector composition apply sync](#22-collector-composition-apply-sync)
 23. [Collector multi-project UX](#23-collector-multi-project-ux)
+24. [Local vector tiles render-mode](#24-local-vector-tiles-render-mode)
+25. [Self-hosted APK updates](#25-self-hosted-apk-updates)
 
 ---
 
@@ -859,20 +861,35 @@ so local rasters sit **above** OSM in the stack (drawn on top of OSM).
 zoom levels vs values from the archive config, clamped to
 `GeoConstants.DEFAULT_MIN_ZOOM` / `DEFAULT_MAX_ZOOM`, then `save()`.
 
-### Product display names: flavors **lisa** / **belka** (один `applicationId`)
+### Product display names and application IDs
 
-Два варианта сборки модуля **`app`** с разным названием в лаунчере, **без** смены пакета: и **NextGIS ЛИСА**, и **NextGIS Белка** используют `applicationId` **`com.nextgis.mobile`** (в debug — **`.debug`**). Установка APK «Белки» **обновляет** уже установленную «ЛИСУ», а не ставится вторым приложением.
+Production flavors **NextGIS ЛИСА** and **NextGIS БЕЛКА** share `applicationId`
+**`com.nextgis.mobile.geonical`**. Installing one over the other replaces the brand; they are
+not intended to coexist. The official **`com.nextgis.mobile`** application remains independent.
+
+There is one internal variant, **`lisaDebug`**, displayed as **ЛИСА тест** with the preserved
+`applicationId` **`com.nextgis.mobile.debug`**. `belkaDebug` is disabled by the Android Components
+variant filter.
 
 | File | Notes |
 |------|--------|
-| `app/build.gradle` | `flavorDimensions "brand"`; flavors **`lisa`** / **`belka`** с `resValue` для **`APP_NAME`** и **`app_name`**. Имена из `buildTypes` убраны — только Sentry, провайдеры, `buildConfigField`. |
+| `app/build.gradle` | Production `.geonical` suffix, internal `.debug` suffix, brand names, isolated authorities/account types, and `belkaDebug` filtering. |
+| `app/src/lisa/res`, `app/src/belka/res` | Lisa density-specific branded launcher icon; Belka keeps the upstream icon until its asset is supplied. |
 | `app/src/main/res/values/strings.xml` | Жёсткий **`app_name`** убран; строки задаются flavor’ами. |
 | `maplibui/src/main/res/values/strings.xml` | Fallback **`app_name`** для сборки библиотеки; в итоговом APK подменяется значением из **`app`**. |
 | `NGActivity.java` (maplibui) | **`getAppName()`** по-прежнему через **`ApplicationInfo.loadLabel(PackageManager)`** — совпадает с лейблом установленного варианта. |
 
-**Сборка:** `./gradlew :app:assembleRelease` собирает **оба** release (`lisaRelease`, `belkaRelease`). В Android Studio откройте **Build Variants** и выберите строку модуля **`app`**: там варианты вида **`lisaDebug`**, **`belkaRelease`** и т.д. У модулей-библиотек (`maplibui`, `maplib`, …) flavors нет — у них по-прежнему только **debug** / **release**; это нормально. APK лежат в `app/build/outputs/apk/lisa/<buildType>/` и `app/build/outputs/apk/belka/<buildType>/` (базовое имя архива — `ngmobile-<versionName>` из `base.archivesName`).
+**Сборка:** `./gradlew :app:assembleRelease` собирает оба production APK. Для внутренней
+сборки используется `./gradlew :app:assembleLisaDebug`; alias `assembleDebug` указывает на неё.
+Разрешены только `lisaDebug`, `lisaRelease`, `belkaRelease`.
 
-**Неоднозначные Gradle-задачи:** без flavor в имени (`assembleDebugUnitTest`, `testDebugUnitTest`, `assembleDebug` и т.п.) Gradle находит несколько кандидатов. В конце `app/build.gradle` добавлены **alias-задачи**, по умолчанию указывающие на вариант **`lisa`**. Для **Белки** вызывайте явно, например `:app:assembleBelkaDebugUnitTest`.
+The Lisa flavor contains density-specific `ic_launcher_lisa.png` resources generated from the
+approved branding ICO. Belka intentionally keeps the upstream launcher icon for now.
+
+Production APKs are signed by the permanent Geonical keystore stored outside the repository.
+The user-level `~/.gradle/gradle.properties` supplies `GEONICAL_STORE_FILE`,
+`GEONICAL_STORE_PASSWORD`, `GEONICAL_KEY_ALIAS`, and `GEONICAL_KEY_PASSWORD`. A partial
+configuration fails early; with no Geonical properties, local release builds remain unsigned.
 
 ---
 
@@ -964,12 +981,56 @@ git commit -m "Update submodules after upstream merge"
   - **Патч `3.0.3.4` / `versionCode` 182** — MapLibre max + reliability hardening: [§16 — 3.0.3.4](#3034-versioncode-182).
   - **Патч `3.0.3.5` / `versionCode` 183** — стабильность записи трека и WorkManager-синхронизации:
     [§16 — 3.0.3.5](#3035-versioncode-183).
+  - **Патч `3.0.3.6` / `versionCode` 184** — отдельные Geonical/debug application IDs,
+    self-hosted APK updater и flavor-защита: [§16 — 3.0.3.6](#3036-versioncode-184).
+  - **Патч `3.0.3.7` / `versionCode` 185** — тихая автоматическая проверка обновлений
+    при запуске и увеличенные сетевые тайм-ауты: [§16 — 3.0.3.7](#3037-versioncode-185).
+  - **Патч `3.0.3.8` / `versionCode` 186** — приглушённая оранжевая палитра production-сборок:
+    [§16 — 3.0.3.8](#3038-versioncode-186).
+  - **Патч `3.0.3.9` / `versionCode` 187** — удаление унаследованного Google Analytics и его
+    обработчика падений: [§16 — 3.0.3.9](#3039-versioncode-187).
 
 ---
 
 ## 16. Fork patch releases (GeonicalSystem)
 
 Трекинг версий форка относительно апстрима (`versionName` / `versionCode` в [`app/build.gradle`](app/build.gradle); у модуля **`maplib`** выравнивается `versionName` в [`maplib/build.gradle`](maplib/build.gradle) для `BuildConfig`).
+
+### 3.0.3.9 (`versionCode` 187)
+
+- **Приватность:** из debug и production удалены SDK Google Analytics, унаследованный tracking ID,
+  автоматический GA-обработчик падений и настройка отправки статистики.
+- **Логи:** HyperLog продолжает сохранять диагностические логи локально; Sentry остаётся отдельным
+  каналом и будет подключён только к контролируемому Geonical endpoint.
+
+### 3.0.3.8 (`versionCode` 186)
+
+- **Production-тема:** `lisaRelease` и `belkaRelease` используют приглушённую оранжевую палитру
+  (`primary #B65F2E`, `primary_dark #7A3518`, `accent #C97B45`).
+- **Debug-тема:** `lisaDebug` сохраняет зелёную палитру и не затрагивается production-настройкой.
+
+### 3.0.3.7 (`versionCode` 185)
+
+- **Автопроверка:** один тихий запрос манифеста при каждом свежем запуске главного экрана,
+  только при подтверждённом Android интернет-соединении. Ошибки и отсутствие обновления не
+  мешают запуску; найденное обновление показывается в отменяемом диалоге.
+- **Жизненный цикл:** проверка ждёт фокуса окна и не повторяется при пересоздании Activity,
+  возврате из настроек или установщика.
+- **Сеть:** подключение к репозиторию ждёт до 30 секунд, а скачивание допускает до пяти минут
+  без поступления очередных данных и не ограничено по общей продолжительности.
+
+### 3.0.3.6 (`versionCode` 184)
+
+- **Идентичность:** production ЛИСА/БЕЛКА используют `com.nextgis.mobile.geonical`,
+  официальный `com.nextgis.mobile` не затрагивается; внутренний `com.nextgis.mobile.debug`
+  сохранён для обновления уже установленных тестовых сборок.
+- **Варианты:** разрешены `lisaDebug`, `lisaRelease`, `belkaRelease`; debug называется
+  «ЛИСА тест», а `belkaDebug` отключён.
+- **Обновления:** ручная HTTPS-проверка, загрузка, SHA-256/package/version/certificate
+  валидация и запуск системного установщика.
+- **Flavor-защита:** APK содержит подписанную метку `debug`/`lisa`/`belka`; публикатор и
+  клиент отклоняют cross-flavor обновления.
+- **Брендинг:** отдельные flavor-ресурсы `app_launcher_icon` для будущих иконок ЛИСЫ и БЕЛКИ.
 
 ### 3.0.3.5 (`versionCode` 183)
 
@@ -1414,3 +1475,42 @@ without changing the classic GeoJSON render path for existing layers.
 | `LocalVectorTileRenderMode.java`, `MapDrawable.java`, `Constants.java` | Feature flag, routing, and safe classic fallback hook |
 | `LocalVectorTileServer.java`, `LocalVectorTileProvider.java`, `LocalVectorTileEncoder.java` | Loopback HTTP tile endpoint and minimal MVT encoder |
 | `MPLFeaturesUtils.java` | MapLibre `VectorSource` and local-vector-tile fill/outline/label style path |
+
+---
+
+## 25. Self-hosted APK updates
+
+**Purpose:** let users automatically or manually check for and install production updates from the
+Geonical HTTPS APK repository without an app store.
+
+### Behaviour
+
+- The General settings screen exposes `Check updates` and shows the installed version.
+- Each fresh launch of `MainActivity` performs one silent background check when Android reports
+  validated internet access. No-update and network-error results stay silent; a newer version opens
+  the same cancellable update prompt as a manual check.
+- The startup check waits until the activity has window focus, so it does not compete with startup
+  permission or project-selection dialogs. Activity recreation does not trigger another check.
+- The app reads `https://wiki-geonical.ru/mobile/<flavor>/stable/manifest.json` and compares
+  its `versionCode` with the installed build.
+- Manifest connections allow 30 seconds. APK downloads allow a five-minute interval without
+  receiving data; their total duration is not capped, so slow downloads can take longer.
+- Production uses `lisa` / `belka` repositories; the sole internal build uses `debug`.
+- A newer APK is downloaded to the app cache with progress feedback and is reused if the
+  user must first enable installation from this source in Android settings.
+- Before opening the Android package installer, the app verifies APK size and SHA-256,
+  package name, version code, and signing-certificate SHA-256 against both the manifest
+  and the currently installed application.
+- The manifest must point back into the same trusted HTTPS repository.
+- Every APK embeds `com.nextgis.mobile.UPDATE_FLAVOR`; both the publisher and the client reject
+  a Lisa/Belka flavor mismatch before publication or installation.
+
+### Files
+
+| File | Changes |
+|------|---------|
+| `AppUpdateManager.java` | Silent/manual checks, connectivity and timeout policy, update prompt, download, integrity/signature checks, installer launch |
+| `MainActivity.kt` | One focus-safe automatic update check per fresh application launch |
+| `SettingsFragment.java`, `preferences_general.xml` | Manual update-check entry and current-version summary |
+| `AndroidManifest.xml`, `provider_paths.xml` | Package-install permission and cache APK sharing through `FileProvider` |
+| `AppSettingsConstants.java`, `strings.xml`, `values-ru/strings.xml` | Repository URL, preference key, and localized UI text |

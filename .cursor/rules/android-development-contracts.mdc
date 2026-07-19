@@ -1,0 +1,18 @@
+---
+description: Контракты разработки GeonicalSystem NextGIS Mobile
+alwaysApply: true
+---
+
+# Development contracts
+
+Перед code change прочитай root и ближайший `AGENTS.md`, локальный docs pack,
+`docs/guides/change-checklist.md`, `docs/registry/change-impact.yaml` и
+относящиеся invariant IDs.
+
+Особо опасные области: `MapDrawable`, `MPLFeaturesUtils`, `LayerFillService`,
+`ReorderedLayerView`, `GISApplication`, `CollectorProjectRegistry`,
+`MaplibreMapInteraction`, Gradle flavors/versioning и self-hosted updater.
+
+Не нарушай `lisa/belka`, layer order, hot-add consistency, Collector resource,
+backup-before-destruction и track flags contracts. Проверки выбирай из
+`docs/registry/smoke-tests.yaml`.

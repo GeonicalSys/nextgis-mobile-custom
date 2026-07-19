@@ -48,9 +48,7 @@ import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplibui.activity.NGActivity;
 import com.nextgis.maplibui.util.ControlHelper;
 import com.nextgis.mobile.BuildConfig;
-import com.nextgis.mobile.MainApplication;
 import com.nextgis.mobile.R;
-import com.nextgis.mobile.util.AppSettingsConstants;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -93,7 +91,6 @@ public class AboutActivity extends NGActivity implements ViewPager.OnPageChangeL
 
     @Override
     public void onPageSelected(int position) {
-        ((MainApplication) getApplication()).sendScreen(position == 1 ? AppSettingsConstants.GA_SCREEN_ABOUT : AppSettingsConstants.GA_SCREEN_SUPPORT);
     }
 
     @Override

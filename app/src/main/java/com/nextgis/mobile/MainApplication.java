@@ -37,11 +37,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.hypertrack.hyperlog.HyperLog;
-import com.google.android.gms.analytics.ExceptionReporter;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.StandardExceptionParser;
-import com.google.android.gms.analytics.Tracker;
 import com.nextgis.maplib.api.ILayer;
 import com.nextgis.maplib.api.ILayerView;
 import com.nextgis.maplib.datasource.Field;
@@ -75,21 +70,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static com.nextgis.maplib.util.Constants.DEBUG_MODE;
 import static com.nextgis.maplib.util.Constants.MAP_EXT;
 import static com.nextgis.maplib.util.Constants.TAG;
 import static com.nextgis.maplib.util.GeoConstants.TMSTYPE_OSM;
 import static com.nextgis.maplibui.fragment.NGWSettingsFragment.setAccountSyncEnabled;
 import static com.nextgis.mobile.util.AppSettingsConstants.AUTHORITY;
 import static com.nextgis.mobile.util.AppSettingsConstants.KEY_PREF_APP_VERSION;
-import static com.nextgis.mobile.util.AppSettingsConstants.KEY_PREF_GA;
 
 
 import org.maplibre.android.MapLibre;
 import org.maplibre.android.MapStrictMode;
 import org.maplibre.android.WellKnownTileServer;
-
-import io.sentry.Sentry;
 
 /**
  * Main application class
@@ -100,16 +91,8 @@ public class MainApplication extends GISApplication
     public static final String LAYER_OSM = "osm";
     public static final String LAYER_TRACKS = "tracks";
 
-    private Tracker mTracker;
-
-
-
     @Override
     public void onCreate() {
-//        if (!BuildConfig.DEBUG)
-//            Sentry.init(BuildConfig.SENTRY_DSN); // work if disable start
-        //Sentry.captureMessage("NGM2 Sentry is init.", Sentry.SentryEventLevel.DEBUG);
-
         // set userAgent info
         try {
             NetworkUtil.setUserAgentPrefix(this, "NextGIS-Mobile/" + BuildConfig.VERSION_NAME,
@@ -124,10 +107,6 @@ public class MainApplication extends GISApplication
             Logger.initialize(this);
         }
 
-        GoogleAnalytics.getInstance(this).setAppOptOut(!mSharedPreferences.getBoolean(KEY_PREF_GA, false));
-        GoogleAnalytics.getInstance(this).setDryRun(DEBUG_MODE);
-        getTracker();
-        setExceptionHandler();
         installHyperLogCrashHandler();
 
         super.onCreate();
@@ -152,7 +131,7 @@ public class MainApplication extends GISApplication
 
 
     /**
-     * Install HyperLog crash handler LAST so it wraps GA handler and any others.
+     * Install HyperLog crash handler so crashes are persisted locally before process death.
      * Ensures every crash is written to HyperLog file before the process dies.
      */
     private void installHyperLogCrashHandler() {
@@ -173,31 +152,9 @@ public class MainApplication extends GISApplication
         }
     }
 
-    private void setExceptionHandler() {
-        ExceptionReporter handler = new ExceptionReporter(getTracker(), Thread.getDefaultUncaughtExceptionHandler(), this);
-        StandardExceptionParser exceptionParser =
-                new StandardExceptionParser(getApplicationContext(), null) {
-                    @Override
-                    public String getDescription(String threadName, Throwable t) {
-                        return "{" + threadName + "} " + Log.getStackTraceString(t);
-                    }
-                };
-
-        handler.setExceptionParser(exceptionParser);
-        Thread.setDefaultUncaughtExceptionHandler(handler);
-    }
-
-    public synchronized Tracker getTracker() {
-        if (mTracker == null)
-            mTracker = GoogleAnalytics.getInstance(this).newTracker(R.xml.app_tracker);
-
-        return mTracker;
-    }
-
     @Override
     public void sendScreen(String name) {
-        mTracker.setScreenName(name);
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        // Legacy interface hook retained for maplibui compatibility; telemetry is disabled.
     }
 
     @Override
@@ -223,12 +180,7 @@ public class MainApplication extends GISApplication
 
     @Override
     public void sendEvent(String category, String action, String label) {
-        HitBuilders.EventBuilder event = new HitBuilders.EventBuilder()
-                .setCategory(category)
-                .setAction(action)
-                .setLabel(label);
-
-        getTracker().send(event.build());
+        // Legacy interface hook retained for maplibui compatibility; telemetry is disabled.
     }
 
     private void updateFromOldVersion() {

@@ -1,0 +1,61 @@
+schema_version: 1
+modules:
+  app:
+    title: NextGIS Mobile application
+    repository: root
+    path: app
+    pack_root: app
+    gradle_path: ":app"
+    namespace: com.nextgis.mobile
+    role: application
+    docs_policy: required
+    entrypoints:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+  maplib:
+    title: GIS model and MapLibre runtime
+    repository: maplib
+    path: maplib
+    pack_root: maplib
+    gradle_path: ":maplib"
+    namespace: com.nextgis.maplib
+    role: library
+    docs_policy: required
+    entrypoints:
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
+  maplibui:
+    title: GIS Android UI and orchestration
+    repository: maplibui
+    path: maplibui
+    pack_root: maplibui
+    gradle_path: ":maplibui"
+    namespace: com.nextgis.maplibui
+    role: library-ui
+    docs_policy: required
+    entrypoints:
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+  easypicker-module:
+    title: EasyPicker Android library
+    repository: easypicker
+    path: easypicker/easypicker
+    pack_root: easypicker
+    gradle_path: ":easypicker-module"
+    namespace: com.keenfin.easypicker
+    role: library-ui
+    docs_policy: required
+    entrypoints:
+      - easypicker/easypicker/src/main/AndroidManifest.xml
+  wizardpager:
+    title: Embedded WizardPager library
+    repository: root
+    path: wizardpager
+    pack_root: wizardpager
+    gradle_path: ":wizardpager"
+    namespace: com.tech.freak.wizardpager
+    role: third-party-library
+    docs_policy: upstream
+    entrypoints:
+      - wizardpager/src/main/AndroidManifest.xml

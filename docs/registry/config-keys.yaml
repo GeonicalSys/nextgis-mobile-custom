@@ -1,0 +1,73 @@
+schema_version: 1
+preferences:
+  map_show_loc:
+    owner: app
+    type: boolean
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    purpose: Show current location on the map
+  map_show_compass:
+    owner: app
+    type: boolean
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    purpose: Show compass UI
+  check_updates:
+    owner: app
+    type: boolean
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    purpose: Enable application update checks
+  sw_track_service:
+    owner: app
+    type: boolean
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    purpose: Tracking foreground-service preference
+manifest_metadata:
+  com.nextgis.mobile.UPDATE_FLAVOR:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Bind installed and downloaded APK to lisa or belka update channel
+build_inputs:
+  sentry.properties:
+    owner: app
+    source: sentry.properties
+    secret_values_forbidden: true
+    optional: true
+    purpose: Local Sentry Gradle configuration
+  local.properties:
+    owner: root
+    source: local.properties
+    secret_values_forbidden: true
+    optional: true
+    purpose: Local Android SDK and developer-specific configuration
+  maplibui-client-id:
+    owner: maplibui
+    source: local.properties
+    key: client.id
+    secret_values_forbidden: true
+    optional: true
+    purpose: NGID client identifier injected into BuildConfig
+storage:
+  collector-registry:
+    owner: maplibui
+    location_name: collector_projects_registry.json
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+  collector-workspaces:
+    owner: maplibui
+    location_name: collector_projects
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+  layer-backups:
+    owner: maplibui
+    location_name: LayerBackups
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
+layer_json:
+  mobile_render_mode:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
+  render_mode:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
+  layer_origin:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
+  mobile:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java

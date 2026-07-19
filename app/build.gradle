@@ -27,6 +27,24 @@ apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
+def geonicalSigningPropertyNames = [
+        'GEONICAL_STORE_FILE',
+        'GEONICAL_STORE_PASSWORD',
+        'GEONICAL_KEY_ALIAS',
+        'GEONICAL_KEY_PASSWORD'
+]
+def geonicalSigningPropertyCount = geonicalSigningPropertyNames.count {
+    project.hasProperty(it)
+}
+if (geonicalSigningPropertyCount > 0
+        && geonicalSigningPropertyCount < geonicalSigningPropertyNames.size()) {
+    throw new GradleException(
+            "Incomplete Geonical release signing configuration. Required properties: "
+                    + geonicalSigningPropertyNames.join(', '))
+}
+def geonicalSigningConfigured =
+        geonicalSigningPropertyCount == geonicalSigningPropertyNames.size()
+
 
 android {
     namespace "com.nextgis.mobile"
@@ -58,8 +76,8 @@ android {
         compileSdk 36
         targetSdkVersion 36
         // Fork versioning per CUSTOMIZATIONS §16: versionName = <upstream>.<patchN>
-        versionCode 183
-        versionName '3.0.3.5'
+        versionCode 187
+        versionName '3.0.3.9'
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
 
         def props = new Properties()
@@ -71,46 +89,54 @@ android {
     productFlavors {
         lisa {
             dimension "brand"
+            manifestPlaceholders = [updateFlavor: "lisa"]
             resValue 'string', 'APP_NAME', 'NextGIS ЛИСА'
             resValue 'string', 'app_name', 'NextGIS ЛИСА'
         }
         belka {
             dimension "brand"
+            manifestPlaceholders = [updateFlavor: "belka"]
             resValue 'string', 'APP_NAME', 'NextGIS Белка'
             resValue 'string', 'app_name', 'NextGIS Белка'
         }
     }
 
-    // Debug: встроенная отладочная подпись Android (debug.keystore), без keystore_google.
-    // Release: кастомный keystore только если в gradle.properties заданы ANDROID_STORE_PASSWORD, ANDROID_KEY, ANDROID_KEY_PASSWORD
+    // Debug uses Android's standard debug keystore. Production signing credentials live only
+    // in the user's ~/.gradle/gradle.properties and point to a keystore outside this repository.
     signingConfigs {
         release {
-            if (project.hasProperty('ANDROID_STORE_PASSWORD')
-                    && project.hasProperty('ANDROID_KEY')
-                    && project.hasProperty('ANDROID_KEY_PASSWORD')) {
-                storeFile file('../../keystore_google')
-                storePassword ANDROID_STORE_PASSWORD
-                keyAlias ANDROID_KEY
-                keyPassword ANDROID_KEY_PASSWORD
+            if (geonicalSigningConfigured) {
+                File configuredStoreFile = file(project.property('GEONICAL_STORE_FILE'))
+                if (!configuredStoreFile.isFile()) {
+                    throw new GradleException(
+                            "Geonical release keystore does not exist: " + configuredStoreFile)
+                }
+                storeFile configuredStoreFile
+                storePassword project.property('GEONICAL_STORE_PASSWORD')
+                keyAlias project.property('GEONICAL_KEY_ALIAS')
+                keyPassword project.property('GEONICAL_KEY_PASSWORD')
             }
         }
     }
 
     buildTypes {
         release {
+            applicationIdSuffix '.geonical'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Muted burnt-orange production palette. Debug keeps maplibui's green palette.
+            resValue 'color', 'primary', '#B65F2E'
+            resValue 'color', 'primary_dark', '#7A3518'
+            resValue 'color', 'accent', '#C97B45'
             // APP_NAME intentionally NOT set in release buildType — productFlavors lisa/belka
             // own that key (CUSTOMIZATIONS §14). Adding it here would override the flavor value.
             resValue 'string', 'SENTRY_DSN', sentryDsn
-            resValue 'string', 'provider_auth', 'com.nextgis.mobile.provider'
-            resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.account'
-            resValue 'string', 'nextgis_accounts_auth_type', 'com.nextgis.account'
-            buildConfigField "String", "providerAuth", '"com.nextgis.mobile.provider"'
-            buildConfigField "String", "nextgismobile_accounts_auth", '"com.nextgis.account"'
-            if (project.hasProperty('ANDROID_STORE_PASSWORD')
-                    && project.hasProperty('ANDROID_KEY')
-                    && project.hasProperty('ANDROID_KEY_PASSWORD')) {
+            resValue 'string', 'provider_auth', 'com.nextgis.mobile.geonical.provider'
+            resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.geonical.account'
+            resValue 'string', 'nextgis_accounts_auth_type', 'com.nextgis.account.geonical'
+            buildConfigField "String", "providerAuth", '"com.nextgis.mobile.geonical.provider"'
+            buildConfigField "String", "nextgismobile_accounts_auth", '"com.nextgis.account.geonical"'
+            if (geonicalSigningConfigured) {
                 signingConfig signingConfigs.release
             }
         }
@@ -119,6 +145,9 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationIdSuffix '.debug'
+            manifestPlaceholders = [updateFlavor: "debug"]
+            resValue 'string', 'APP_NAME', 'ЛИСА тест'
+            resValue 'string', 'app_name', 'ЛИСА тест'
             resValue 'string', 'SENTRY_DSN', sentryDsn
             resValue 'string', 'provider_auth', 'com.nextgis.mobile.provider.debug'
             resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.account.debug'
@@ -141,6 +170,15 @@ android {
 
 }
 
+// There is one internal build: lisaDebug. Belka is a production brand only.
+androidComponents {
+    beforeVariants(selector().withBuildType("debug")) { variantBuilder ->
+        if (variantBuilder.productFlavors.any { it.second == "belka" }) {
+            variantBuilder.enable = false
+        }
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':maplibui')
@@ -161,7 +199,6 @@ dependencies {
     }
     implementation('androidx.legacy:legacy-support-v4:1.0.0') {
     }
-    implementation 'com.google.android.gms:play-services-analytics:18.1.1'
 //    implementation 'com.github.TechFreak:WizardPager:1.0.3'
     //implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.github.barsrb:hyperlog-android:master-SNAPSHOT'

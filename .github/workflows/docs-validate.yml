@@ -1,0 +1,49 @@
+name: Validate documentation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install documentation dependencies
+        run: python -m pip install --disable-pip-version-check -r docs/requirements.txt
+
+      - name: Validate documentation and module packs
+        run: python docs/scripts/validate_docs.py --workspace-root .
+
+      - name: Report change-impact requirements
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        shell: bash
+        run: |
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
+            echo "No usable base SHA; skipping diff report"
+            exit 0
+          fi
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD --)
+          args=()
+          for path in "${changed[@]}"; do
+            args+=(--changed-file "$path")
+          done
+          if ((${#args[@]})); then
+            python docs/scripts/validate_docs.py --workspace-root . "${args[@]}"
+          fi
+
+      - name: Test documentation tooling
+        run: python -m unittest discover -s docs/tests -p "test_*.py" -v

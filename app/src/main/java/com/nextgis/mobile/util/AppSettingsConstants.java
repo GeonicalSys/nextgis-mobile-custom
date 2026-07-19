@@ -37,6 +37,7 @@ public interface AppSettingsConstants
     String KEY_PREF_SHOW_INFO     = "map_show_info";
     String KEY_PREF_APP_VERSION   = "app_version";
     String KEY_PREF_SHOW_SYNC     = "show_sync";
+    String KEY_PREF_UPDATE_CHECK  = "check_updates";
 
     /**
      * Preference keys - in UI
@@ -62,14 +63,10 @@ public interface AppSettingsConstants
     String KEY_PREF_SHOW_ZOOM_CONTROLS  = "show_zoom_controls";
     String KEY_PREF_SHOW_SCALE_RULER    = "show_scale_ruler";
     String KEY_PREF_SHOW_MEASURING      = "show_ruler_measuring";
-    String KEY_PREF_GA                  = "ga_enabled";
     String KEY_PREF_INTRO               = "app_intro";
     String KEY_PREF_SHOW_ZOOM           = "show_zoom_level";
 
     int FIRSTSTART_DOWNLOADZOOM = 5;
 
-    String GA_SCREEN_ABOUT = "About Screen";
-    String GA_SCREEN_SUPPORT = "Support Screen";
-
-    String APK_VERSION_UPDATE = "https://my.nextgis.com/downloads/software/mobile/version";
+    String APK_VERSION_UPDATE = "https://wiki-geonical.ru/mobile";
 }

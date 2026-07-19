@@ -70,11 +70,13 @@ import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.fragment.NGPreferenceSettingsFragment;
 import com.nextgis.maplibui.util.ControlHelper;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
+import com.nextgis.mobile.BuildConfig;
 import com.nextgis.mobile.MainApplication;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppConstants;
 import com.nextgis.mobile.util.AppSettingsConstants;
+import com.nextgis.mobile.util.AppUpdateManager;
 import com.nextgis.mobile.util.CustomPreference;
 import com.nextgis.mobile.util.IntEditTextPreference;
 import com.nextgis.mobile.util.SelectMapPathPreference;
@@ -97,7 +99,6 @@ import static com.nextgis.maplibui.service.TrackerService.HOST;
 import static com.nextgis.maplibui.service.TrackerService.URL;
 import static com.nextgis.maplibui.service.TrackerService.getUid;
 import static com.nextgis.maplibui.service.TrackerService.isTrackerServiceRunning;
-import static com.nextgis.mobile.util.AppSettingsConstants.KEY_PREF_GA;
 import static com.nextgis.mobile.util.AppSettingsConstants.KEY_PREF_SHOW_COMPASS;
 import static com.nextgis.mobile.util.AppSettingsConstants.KEY_PREF_SHOW_MEASURING;
 import static com.nextgis.mobile.util.AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER;
@@ -132,6 +133,19 @@ public class SettingsFragment
                 final Preference notify =
                         findPreference(SettingsConstantsUI.KEY_PREF_SHOW_SYNC);
                 initializeNotification(getActivity(), notify);
+                final Preference update =
+                        findPreference(AppSettingsConstants.KEY_PREF_UPDATE_CHECK);
+                if (update != null) {
+                    update.setSummary(
+                            getString(R.string.update_current_version, BuildConfig.VERSION_NAME));
+                    update.setOnPreferenceClickListener(preference -> {
+                        Activity activity = getActivity();
+                        if (activity != null) {
+                            AppUpdateManager.checkForUpdate(activity);
+                        }
+                        return true;
+                    });
+                }
 
                 break;
             case SettingsConstantsUI.ACTION_PREFS_MAP:
@@ -851,7 +865,6 @@ public class SettingsFragment
         editor.remove(KEY_PREF_SHOW_MEASURING);
         editor.remove(KEY_PREF_SHOW_SCALE_RULER);
         editor.remove(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
-        editor.remove(KEY_PREF_GA);
         editor.remove(KEY_PREF_SD_CARD_NAME);
 
         File defaultPath = activity.getExternalFilesDir(KEY_PREF_MAP);

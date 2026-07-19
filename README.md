@@ -105,6 +105,11 @@ It extends your GIS workflows beyond desktop, enabling teams to collect, edit, a
 
 📘 [User documentation](https://docs.nextgis.com/docs_ngmobile/source/index.html)
 
+For this GeonicalSystem fork, development, architecture, release and AI-agent
+documentation starts at [docs/START-HERE.md](docs/START-HERE.md). The docs are
+validated locally with
+`powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/docs-check.ps1 -RunTests`.
+
 ## Community and ecosystem
 
 💬 [Community forum](https://community.nextgis.com)  
