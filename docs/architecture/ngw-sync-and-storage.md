@@ -8,6 +8,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
   - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+  - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
 ---
@@ -53,6 +54,19 @@ Backup содержит данные слоя и manifest, но не замен�
 Пользователь может экспортировать или удалить сохранённые backups через app UI.
 
 ## Изменение sync
+
+Планировщик хранит период каждого account отдельно, восстанавливает удалённые
+Android `PeriodicSync` registrations при старте и поддерживает интервалы короче
+15 минут через самоперезапускаемую WorkManager-задачу. Включение sync из любого
+экрана одновременно включает account и ставит ближайший запуск; отключение
+отменяет его unique work.
+
+Ручная синхронизация нескольких account остаётся последовательной ради одной
+карты и SQLite, но активный Collector account выполняется первым. Для каждого
+account создаются отдельные adapter/result objects, поэтому ошибка одного не
+переходит в следующий. Полностью молчащее HTTP-чтение ограничено тремя минутами;
+это inactivity timeout и не обрывает большой ответ, пока данные продолжают
+поступать.
 
 Проверить отдельно:
 

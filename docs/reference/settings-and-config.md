@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-07-19
+last_verified: 2026-07-20
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/res/xml/preferences_general.xml
@@ -33,3 +33,8 @@ related_code:
 
 `local.properties`, real Sentry DSN, NGID client secrets и signing credentials
 не являются документационными данными.
+
+Базовый URL APK repository задан константой `APK_VERSION_UPDATE` и равен
+`https://apps-geonical.ru/lisa-mobile`. Он не является preference: изменение
+host/path требует новой подписанной сборки. Ветка выбирается из build variant и
+проверяется повторно по metadata загруженного APK.

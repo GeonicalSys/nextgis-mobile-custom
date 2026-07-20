@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-07-19
+last_verified: 2026-07-20
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -34,3 +34,9 @@ related_code:
 Flavor передаётся updater через manifest metadata
 `com.nextgis.mobile.UPDATE_FLAVOR` и сверяется с update manifest и APK archive.
 Нельзя разрешать установку APK другого бренда через автоматическое обновление.
+
+Repository branches: Lisa Release — `lisa`, Belka Release — `belka`, Lisa Debug
+— `debug`. Для production manifest содержит `channel=stable`, для Debug —
+`channel=debug`. URL manifest имеет вид
+`https://apps-geonical.ru/lisa-mobile/<branch>/manifest.json` без отдельного
+сегмента `stable`.

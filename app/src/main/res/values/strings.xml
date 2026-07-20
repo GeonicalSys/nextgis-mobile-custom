@@ -205,6 +205,7 @@
     <string name="collector_project_already_active">This Collector project is already active</string>
     <string name="collector_project_switch_busy">Wait for layer loading to finish before switching projects</string>
     <string name="collector_project_switch_edit_mode">Save or cancel editing before switching projects</string>
+    <string name="collector_project_switch_tracking">Stop the active track before switching projects</string>
     <string name="collector_project_visible">visible</string>
     <string name="collector_project_hidden">hidden</string>
     <string name="collector_project_show_only">Show only this</string>

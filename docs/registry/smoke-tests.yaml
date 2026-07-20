@@ -25,11 +25,26 @@ tests:
     scope: [app, maplib]
     steps: [Open an existing multi-layer map from a cold process start, Compare visible layers and order with the saved layer list]
     expected: Map renders once with the saved visibility and order and without a crash.
+  SMOKE-LOCATION-CURSOR-TOP:
+    type: device
+    scope: [app, maplib]
+    steps: [Open a map containing overlapping saved and active tracks plus vector layers, Move the current location onto the overlap, Perform a lite reload or hot layer update]
+    expected: The standing and moving location cursor remains fully visible above tracks and every other MapLibre object before and after reload.
   SMOKE-NGRC-ORDER:
     type: device
     scope: [maplib, maplibui]
     steps: [Open a map with OSM and user layers, Import an NGRc/local raster, Inspect list and map order]
     expected: Raster is above OSM when OSM exists and is not above the entire user stack.
+  SMOKE-NGRC-PRESERVE:
+    type: device
+    scope: [maplib, maplibui]
+    steps: [Import a large NGRc into a Collector workspace, Run project composition and data sync, Restart the application]
+    expected: Unpacked tiles remain, config records immutable_local provenance and SHA-256, and the underlay still renders.
+  SMOKE-UPDATE-DATA-PRESERVE:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps: [Record project database, form and NGRc files, Install a newer same-signature APK with adb install -r, Reopen and sync the project]
+    expected: Project workspaces, SQLite data, forms and unpacked NGRc tiles remain in place without manual reimport.
   SMOKE-HOT-RASTER:
     type: device
     scope: [app, maplib, maplibui]
@@ -43,13 +58,28 @@ tests:
   SMOKE-COLLECTOR-IMPORT:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Select an NGW Collector resource, Import its composition, Reopen the project]
-    expected: Project metadata and isolated workspace are created and layers remain available.
+    steps: [Select an NGW Collector resource, Import its composition, Reopen the project, Repeat import with two different layers sharing a display name]
+    expected: Project metadata and isolated workspace are created, layers are keyed by remote id, and all layers remain available.
+  SMOKE-COLLECTOR-RESUME:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps: [Start a multi-layer Collector import, Kill the application process during a layer fill, Reopen and wait for repair]
+    expected: Existing complete layers are retained and only missing or broken layers are queued again.
+  SMOKE-COLLECTOR-INCOMPLETE:
+    type: device
+    scope: [maplib, maplibui]
+    steps: [Fail one referenced-resource request while opening a Collector resource, Attempt import]
+    expected: Import is rejected before a new workspace is prepared and no partial project is reported as successful.
+  SMOKE-FORM-ROLLBACK:
+    type: device
+    scope: [maplib, maplibui]
+    steps: [Open a working Collector form, Interrupt or corrupt a form update between staged file replacements, Reopen the form]
+    expected: Hash mismatch is rejected and recovery yields the complete old or complete new form/meta pair, never a mixed pair.
   SMOKE-COLLECTOR-SWITCH:
     type: device
     scope: [app, maplibui]
-    steps: [Create or import two Collector projects, Switch between them, Restart and reopen each]
-    expected: Map paths, metadata and layers do not leak between projects.
+    steps: [Prepare project A with saved tracks and project B without tracks, Open the track list in A, Switch A to B to A without killing the process, Open the track list and inspect the map after each switch, Verify that switching is refused while a track is actively recording]
+    expected: Map paths, metadata, layers and track history always come from the active project; A restores its tracks, B remains empty, and an active recording cannot cross the project boundary.
   SMOKE-BACKUP-GATE:
     type: device
     scope: [maplibui]
@@ -60,6 +90,11 @@ tests:
     scope: [maplib, maplibui]
     steps: [Set an NGW layer to SYNC_NONE, Change supported server configuration, Run the relevant refresh flow]
     expected: Feature data is not synced while supported configuration behavior remains correct.
+  SMOKE-MULTI-ACCOUNT-SYNC:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps: [Open a Collector project whose account is not first in Android account order, Make another map account unavailable, Run manual sync, Restart and inspect enabled account schedules]
+    expected: The active Collector account sync runs first, another account error has a separate result, and enabled schedules are restored without duplicate work.
   SMOKE-WALK:
     type: device
     scope: [app, maplib, maplibui]
@@ -83,8 +118,8 @@ tests:
   SMOKE-SELF-UPDATE:
     type: device
     scope: [app]
-    steps: [Check a valid update manifest for each flavor, Test mismatched flavor or checksum, Download and start install for a valid artifact]
-    expected: Valid same-flavor update proceeds and invalid identity or integrity is rejected.
+    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Download and start install for a valid artifact]
+    expected: Valid same-branch same-signature update proceeds from its versioned URL and invalid schema, identity, version, URL or integrity is rejected.
   SMOKE-NGW-URL-IMPORT:
     type: device
     scope: [app, maplib, maplibui]

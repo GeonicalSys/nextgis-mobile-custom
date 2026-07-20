@@ -18,6 +18,8 @@ related_code:
 - Blast radius и DoD → `registry/change-impact.yaml`.
 - Операционная процедура → `runbooks/`.
 - История конкретного merge/release → `history/` или `WHATS_NEW.md`.
+- Текущее пользовательское отличие от official для передачи upstream →
+  `reference/official-differences.md`; история и уже устранённые отличия туда не попадают.
 
 ## Maturity
 
@@ -46,4 +48,6 @@ python docs/scripts/validate_docs.py --workspace-root . --module maplib --requir
 
 При central docs change добавить строку в `docs/changelog.md`. В changelog
 документации не записываются обычные module-local исправления, если central
-контракт не изменился.
+контракт не изменился. CI передаёт изменённые пути validator и включает
+`--enforce-diff`, поэтому strict change-impact trigger должен сопровождаться
+одним из указанных `must_update_docs`.

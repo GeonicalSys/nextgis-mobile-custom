@@ -253,4 +253,5 @@
     <string name="collector_project_already_active">Этот проект Collector уже активен</string>
     <string name="collector_project_switch_busy">Дождитесь окончания загрузки слоев перед сменой проекта</string>
     <string name="collector_project_switch_edit_mode">Сохраните или отмените редактирование перед сменой проекта</string>
+    <string name="collector_project_switch_tracking">Остановите запись активного трека перед сменой проекта</string>
 </resources>

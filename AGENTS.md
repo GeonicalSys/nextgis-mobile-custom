@@ -22,7 +22,9 @@ git-сабмодули `maplib`, `maplibui`, `easypicker`. Основной яз
 Для обзорной read-only задачи достаточно `START-HERE.md` и относящихся к теме
 registry/docs. Общую карту отличий открывай в
 [`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md),
-а затем переходи в более узкий документ.
+а затем переходи в более узкий документ. Для сравнения с текущим официальным
+приложением и материалов, передаваемых upstream, используй
+[`docs/reference/official-differences.md`](docs/reference/official-differences.md).
 
 ## Репозитории и git
 
@@ -66,13 +68,17 @@ registry/docs. Общую карту отличий открывай в
    инварианты, конфигурация, release/upstream процесс или blast radius.
 6. При изменении central docs добавить запись в `docs/changelog.md` и обновить
    `last_verified` затронутых документов.
-7. Запустить:
+7. При изменении пользовательского поведения или submodule pointer заново
+   проверить актуальный official upstream и обновить
+   `docs/reference/official-differences.md`. Уже принятые upstream или удалённые
+   из форка возможности из файла удаляются, а не переносятся в историю.
+8. Запустить:
 
    ```powershell
    powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\docs-check.ps1 -RunTests
    ```
 
-8. В финальном ответе явно перечислить обновлённые docs либо объяснить, почему
+9. В финальном ответе явно перечислить обновлённые docs либо объяснить, почему
    изменение не затронуло документируемое поведение.
 
 ## Сборка по области изменения

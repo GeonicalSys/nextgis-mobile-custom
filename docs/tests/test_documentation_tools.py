@@ -61,9 +61,35 @@ class DocumentationToolsTest(unittest.TestCase):
             "app/build.gradle",
             "--changed-file",
             "docs/reference/build-matrix.md",
+            "--changed-file",
+            "docs/reference/official-differences.md",
             "--enforce-diff",
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_product_change_requires_official_differences(self) -> None:
+        missing = self.run_tool(
+            VALIDATOR,
+            "--workspace-root",
+            str(WORKSPACE),
+            "--changed-file",
+            "maplib",
+            "--enforce-diff",
+        )
+        self.assertNotEqual(missing.returncode, 0)
+        self.assertIn("OFFICIAL-DIFFERENCES", missing.stdout)
+
+        included = self.run_tool(
+            VALIDATOR,
+            "--workspace-root",
+            str(WORKSPACE),
+            "--changed-file",
+            "maplib",
+            "--changed-file",
+            "docs/reference/official-differences.md",
+            "--enforce-diff",
+        )
+        self.assertEqual(included.returncode, 0, included.stdout + included.stderr)
 
     def test_scaffold_dry_run_and_exclusive_create(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

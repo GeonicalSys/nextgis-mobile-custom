@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-07-19
+last_verified: 2026-07-20
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -12,22 +12,22 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
     responsibility: Process initialization, logging and GISApplication configuration.
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    responsibility: Main navigation, direct NGW resource URL resolution, Collector project switch and backup sharing UI.
+    responsibility: Main navigation, direct NGW resource URL resolution, Collector project switch with active-track protection and backup sharing UI.
   - path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     responsibility: Map screen and MaplibreMapInteraction implementation.
   - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
-    responsibility: Self-hosted update manifest, integrity, identity and install flow.
+    responsibility: Branch-specific Lisa Mobile manifest, trusted versioned URL, integrity, identity and install flow.
 public_contracts:
   - id: map-host
     symbol: MapFragment implements MaplibreMapInteraction
     path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     consumers: [maplib, maplibui]
-settings_refs: [map_show_loc, map_show_compass, check_updates, sw_track_service, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
+settings_refs: [map_show_loc, map_show_compass, check_updates, sw_track_service, apk_version_update, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
 storage_contracts: []
-invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-HOT-ADD-CONSISTENCY, INV-COLLECTOR-ISOLATION, INV-UPDATER-IDENTITY]
+invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-HOT-ADD-CONSISTENCY, INV-LOCATION-CURSOR-TOP, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-RESUMABLE, INV-NGRC-PRESERVE, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY]
 global_docs:
   - docs/architecture/overview.md
   - docs/architecture/map-rendering.md
   - docs/runbooks/release-apk.md
-smoke_tests: [AUTO-APP-RELEASES, SMOKE-HOT-RASTER, SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-SWITCH, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE]
+smoke_tests: [AUTO-APP-RELEASES, SMOKE-HOT-RASTER, SMOKE-LOCATION-CURSOR-TOP, SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-SWITCH, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE]
 upstream_hotspots: [MAP-HOST, APP-FLAVORS]

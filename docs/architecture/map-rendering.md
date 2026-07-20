@@ -34,8 +34,17 @@ related_code:
 5. Полный reload нельзя без необходимости подменять lite reload: у них разные
    гарантии по пересозданию style и сохранению UI/edit state.
 6. Start/end flag sources/layers для треков намеренно не включаются.
+7. `.ngrc` распаковывается только внутри нового каталога слоя с защитой от
+   archive path traversal. После успешного импорта `config.json` хранит SHA-256
+   и политику `immutable_local`; Collector sync не управляет этой подложкой.
+8. `user-location-layer` — служебный overlay, а не элемент `LayerGroup`. После
+   cold load, lite reload и горячего обновления style он должен быть последним
+   MapLibre layer и поэтому отображаться выше треков, пользовательских векторов,
+   растров, подписей и edit overlays. `iconAllowOverlap` и
+   `iconIgnorePlacement` не позволяют collision detection скрывать курсор.
 
-IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`.
+IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
+`INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`.
 
 ## Изменение rendering pipeline
 
@@ -47,8 +56,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`.
 - существует ли style sibling в момент вставки;
 - не теряется ли deferred reload после batch layer fill.
 
-Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-NGRC-ORDER`,
-`SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`.
+Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
+`SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`.
 
 ## Производительность
 

@@ -29,6 +29,7 @@ import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -93,6 +94,7 @@ import com.nextgis.maplibui.api.IVectorLayerUI
 import com.nextgis.maplibui.fragment.BottomToolbar
 import com.nextgis.maplibui.fragment.LayerFillProgressDialogFragment
 import com.nextgis.maplibui.mapui.TrackLayerUI.CODE_TRACK_LIST
+import com.nextgis.maplibui.mapui.SyncAccountWorker
 import com.nextgis.maplibui.overlay.EditLayerOverlay
 import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.service.TrackerService.BackgroundPermissionCallback
@@ -768,6 +770,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     private fun switchCollectorProject(project: CollectorProjectRegistry.ProjectInfo) {
         val gisApp = application as IGISApplication
+        if (TrackerService.isTrackerServiceRunning(this)) {
+            Toast.makeText(this, R.string.collector_project_switch_tracking, Toast.LENGTH_LONG).show()
+            return
+        }
         if (gisApp.isLayerFillServiceBusy) {
             Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
             return
@@ -796,7 +802,18 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             return
         }
 
-        (application as? GISApplication)?.closeMapObj()
+        val account = gisApp.getAccount(project.accountName)
+        val app = application as? GISApplication
+        if (account != null && app != null
+            && ContentResolver.getSyncAutomatically(account, gisApp.authority)
+        ) {
+            val period = GISApplication.getAccountSyncTime(account, app)
+            SyncAccountWorker.scheduleSoon(this, account.name, period)
+            HyperLog.v(
+                Constants.TAG,
+                "Collector project switch: scheduled composition/data sync account=${account.name}"
+            )
+        }
         HyperLog.v(
             Constants.TAG,
             "Collector project switch: activated projectUid=${project.projectUid}"

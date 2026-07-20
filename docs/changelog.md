@@ -1,15 +1,44 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-07-19
+last_verified: 2026-07-20
 related_code:
   - docs
 ---
 
 # История документационной системы
 
+## 2026-07-20
+
+- Self-hosted updater переведён с `wiki-geonical.ru/mobile/<flavor>/stable` на
+  отдельные ветки `apps-geonical.ru/lisa-mobile/{lisa,belka,debug}`; release
+  contract теперь требует строгий channel/versioned URL и повторную сверку
+  versionName, size, hash и signing certificate загруженного APK.
+- Исправлена маршрутизация треков при переключении Collector-проектов без перезапуска процесса:
+  `LayerContentProvider` разрешает текущую карту для каждой операции, карта безопасно публикуется
+  между потоками, а активная запись трека блокирует смену workspace.
+- `INV-COLLECTOR-ISOLATION` и `SMOKE-COLLECTOR-SWITCH` теперь явно проверяют раздельные истории
+  треков, возврат в проект с сохранёнными треками и отсутствие записи в соседнюю базу.
+
 ## 2026-07-19
 
+- Курсор текущего местоположения закреплён последним MapLibre style layer после
+  cold/lite/hot reload и больше не перекрывается треками или пользовательскими слоями.
+- Зафиксирован rollout-контракт Collector: неполный remote snapshot не импортируется,
+  незавершённая партия переживает process death и продолжает verify/repair только для
+  отсутствующих слоёв, а schema rebuild сохраняет старый слой до успешной подготовки замены.
+- Реестр Collector workspace переведён на атомарную запись с backup/recovery scan;
+  формы — на hash-проверку и восстанавливаемую транзакцию пары form/meta.
+- Для `.ngrc` документирован и реализован `immutable_local` lifecycle с SHA-256,
+  безопасной распаковкой и сохранением подложки при APK/project update. Remote lifecycle
+  отложен до спецификации нового сервера.
+- Синхронизация account изолирует результаты, обслуживает активный Collector account первым,
+  ограничивает молчащее HTTP-чтение и восстанавливает фоновые расписания единым путём.
+- Добавлен поддерживаемый агентами handoff-документ
+  `reference/official-differences.md`: только актуальные пользовательские отличия от official,
+  без истории и отменённых решений. Для каждой возможности описаны назначение, пользовательский
+  сценарий и принцип работы. Новый strict change-impact trigger требует его пересмотра при изменении
+  app behavior или submodule pointers; CI теперь применяет strict-требования к diff.
 - Документирован selective upstream 3.1.2 cycle: прямой импорт NGW-ресурса по URL,
   permission/read-only contract, критические crash/form fixes и production Sentry policy.
 - Матрицы, module contracts и release notes обновлены до версии форка 3.1.2.1 / 192.

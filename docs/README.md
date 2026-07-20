@@ -27,6 +27,7 @@ related_code:
 | Release APK | [runbooks/release-apk.md](runbooks/release-apk.md) |
 | Настройки/build | [reference/build-matrix.md](reference/build-matrix.md) и [reference/settings-and-config.md](reference/settings-and-config.md) |
 | Отличия форка | [reference/fork-customizations.md](reference/fork-customizations.md) |
+| Передача отличий official-разработчикам | [reference/official-differences.md](reference/official-differences.md) |
 | Открытые Collector-задачи | [roadmap/collector.md](roadmap/collector.md) |
 | Blast radius | [registry/change-impact.yaml](registry/change-impact.yaml) |
 

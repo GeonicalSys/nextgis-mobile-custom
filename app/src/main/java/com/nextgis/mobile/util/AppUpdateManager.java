@@ -28,11 +28,15 @@ import com.nextgis.mobile.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
@@ -43,6 +47,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import okhttp3.CacheControl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -51,12 +56,14 @@ import okhttp3.ResponseBody;
 
 public final class AppUpdateManager
 {
-    private static final String UPDATE_CHANNEL = "stable";
     private static final String UPDATE_FLAVOR_METADATA =
             "com.nextgis.mobile.UPDATE_FLAVOR";
     private static final int BUFFER_SIZE = 128 * 1024;
+    private static final int MAX_MANIFEST_SIZE = 512 * 1024;
+    private static final long MAX_APK_SIZE = 1024L * 1024L * 1024L;
     private static final ExecutorService IO_EXECUTOR = Executors.newSingleThreadExecutor();
     private static final AtomicBoolean UPDATE_CHECK_IN_PROGRESS = new AtomicBoolean(false);
+    private static final AtomicBoolean UPDATE_DOWNLOAD_IN_PROGRESS = new AtomicBoolean(false);
     private static final OkHttpClient MANIFEST_HTTP_CLIENT = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -137,23 +144,28 @@ public final class AppUpdateManager
     private static UpdateManifest requestManifest(Activity activity)
             throws IOException, JSONException
     {
-        String flavor = updateRepositoryFlavor();
-        String manifestUrl = AppSettingsConstants.APK_VERSION_UPDATE + "/" + flavor + "/"
-                + UPDATE_CHANNEL + "/manifest.json";
+        String branch = updateRepositoryBranch();
+        String manifestUrl = AppSettingsConstants.APK_VERSION_UPDATE + "/" + branch
+                + "/manifest.json";
         Request request = new Request.Builder()
                 .url(manifestUrl)
                 .header("User-Agent", "NextGIS-Mobile-Updater/" + BuildConfig.VERSION_NAME)
+                .cacheControl(new CacheControl.Builder().noCache().noStore().build())
                 .build();
 
         try (Response response = MANIFEST_HTTP_CLIENT.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new IOException("HTTP " + response.code() + " for " + manifestUrl);
             }
+            if (!manifestUrl.equals(response.request().url().toString())) {
+                throw new IOException("Update manifest redirect is not allowed");
+            }
             ResponseBody body = response.body();
             if (body == null) {
                 throw new IOException("Empty update manifest response");
             }
-            UpdateManifest manifest = UpdateManifest.fromJson(new JSONObject(body.string()));
+            UpdateManifest manifest =
+                    UpdateManifest.fromJson(new JSONObject(readBodyLimited(body, MAX_MANIFEST_SIZE)));
             validateManifest(activity, manifest);
             return manifest;
         }
@@ -167,12 +179,27 @@ public final class AppUpdateManager
         if (!expectedApplicationId.equals(manifest.applicationId)) {
             throw new IOException("Unexpected application ID in update manifest");
         }
-        if (!updateRepositoryFlavor().equals(manifest.flavor)) {
+        String expectedBranch = updateRepositoryBranch();
+        if (!expectedBranch.equals(manifest.flavor)) {
             throw new IOException("Unexpected application flavor in update manifest");
         }
-        String expectedUrlPrefix = AppSettingsConstants.APK_VERSION_UPDATE + "/";
-        if (!manifest.apkUrl.startsWith(expectedUrlPrefix)) {
-            throw new IOException("Update APK points outside the trusted repository");
+        if (!expectedUpdateChannel(expectedBranch).equals(manifest.channel)) {
+            throw new IOException("Unexpected update channel in update manifest");
+        }
+        if (manifest.versionCode <= 0 || manifest.versionName.isEmpty()) {
+            throw new IOException("Invalid application version in update manifest");
+        }
+        if (manifest.apkSize <= 0 || manifest.apkSize > MAX_APK_SIZE) {
+            throw new IOException("Invalid APK size in update manifest");
+        }
+        if (manifest.minSdk <= 0 || manifest.targetSdk < manifest.minSdk) {
+            throw new IOException("Invalid SDK range in update manifest");
+        }
+        if (manifest.minSdk > Build.VERSION.SDK_INT) {
+            throw new IOException("Update requires a newer Android version");
+        }
+        if (manifest.publishedAt.isEmpty()) {
+            throw new IOException("Missing publication time in update manifest");
         }
         if (!manifest.apkSha256.matches("(?i)[0-9a-f]{64}")) {
             throw new IOException("Invalid APK SHA-256 in update manifest");
@@ -180,16 +207,85 @@ public final class AppUpdateManager
         if (!manifest.signingCertificateSha256.matches("(?i)[0-9a-f]{64}")) {
             throw new IOException("Invalid signing certificate in update manifest");
         }
+        validateApkUrl(manifest.apkUrl, expectedBranch, manifest.versionCode);
     }
 
 
-    private static String updateRepositoryFlavor()
+    private static String updateRepositoryBranch()
     {
         if (BuildConfig.DEBUG) {
             return "debug";
         }
         String flavor = BuildConfig.FLAVOR;
         return flavor == null || flavor.trim().isEmpty() ? "lisa" : flavor;
+    }
+
+
+    private static String expectedUpdateChannel(String branch)
+    {
+        return "debug".equals(branch) ? "debug" : "stable";
+    }
+
+
+    private static void validateApkUrl(String value, String branch, long versionCode)
+            throws IOException
+    {
+        try {
+            URI repositoryUri = new URI(AppSettingsConstants.APK_VERSION_UPDATE);
+            URI apkUri = new URI(value);
+            URI normalizedUri = apkUri.normalize();
+            int repositoryPort = repositoryUri.getPort() == -1 ? 443 : repositoryUri.getPort();
+            int apkPort = normalizedUri.getPort() == -1 ? 443 : normalizedUri.getPort();
+            String rawPath = apkUri.getRawPath();
+            String normalizedPath = normalizedUri.getRawPath();
+            String repositoryPath = repositoryUri.getRawPath();
+            if (repositoryPath.endsWith("/")) {
+                repositoryPath = repositoryPath.substring(0, repositoryPath.length() - 1);
+            }
+            String expectedPrefix = repositoryPath + "/" + branch + "/releases/"
+                    + versionCode + "/";
+            if (!"https".equalsIgnoreCase(normalizedUri.getScheme())
+                    || repositoryUri.getHost() == null
+                    || !repositoryUri.getHost().equalsIgnoreCase(normalizedUri.getHost())
+                    || repositoryPort != apkPort
+                    || normalizedUri.getUserInfo() != null
+                    || normalizedUri.getQuery() != null
+                    || normalizedUri.getFragment() != null
+                    || rawPath == null
+                    || !rawPath.equals(normalizedPath)
+                    || rawPath.toLowerCase(Locale.US).contains("%2e")
+                    || !normalizedPath.startsWith(expectedPrefix)
+                    || normalizedPath.length() <= expectedPrefix.length()
+                    || !normalizedPath.toLowerCase(Locale.US).endsWith(".apk")) {
+                throw new IOException("Update APK points outside the trusted branch");
+            }
+        } catch (URISyntaxException error) {
+            throw new IOException("Invalid update APK URL", error);
+        }
+    }
+
+
+    private static String readBodyLimited(ResponseBody body, int maximumBytes)
+            throws IOException
+    {
+        long declaredLength = body.contentLength();
+        if (declaredLength > maximumBytes) {
+            throw new IOException("Update manifest is too large");
+        }
+        try (InputStream input = body.byteStream();
+             ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[8192];
+            int total = 0;
+            int read;
+            while ((read = input.read(buffer)) != -1) {
+                total += read;
+                if (total > maximumBytes) {
+                    throw new IOException("Update manifest is too large");
+                }
+                output.write(buffer, 0, read);
+            }
+            return output.toString(StandardCharsets.UTF_8.name());
+        }
     }
 
 
@@ -222,6 +318,9 @@ public final class AppUpdateManager
 
     private static void downloadAndInstall(Activity activity, UpdateManifest manifest)
     {
+        if (!UPDATE_DOWNLOAD_IN_PROGRESS.compareAndSet(false, true)) {
+            return;
+        }
         ProgressDialog progressDialog = new ProgressDialog(activity);
         progressDialog.setTitle(R.string.update_title);
         progressDialog.setMessage(activity.getString(R.string.update_downloading));
@@ -242,6 +341,7 @@ public final class AppUpdateManager
                 }
 
                 if (apkFile.isFile()
+                        && apkFile.length() == manifest.apkSize
                         && manifest.apkSha256.equalsIgnoreCase(sha256File(apkFile))) {
                     validateDownloadedApk(activity, apkFile, manifest);
                 } else {
@@ -261,6 +361,8 @@ public final class AppUpdateManager
                     dismiss(progressDialog);
                     showError(activity, error);
                 });
+            } finally {
+                UPDATE_DOWNLOAD_IN_PROGRESS.set(false);
             }
         });
     }
@@ -288,11 +390,18 @@ public final class AppUpdateManager
             if (!response.isSuccessful()) {
                 throw new IOException("HTTP " + response.code() + " while downloading APK");
             }
+            validateApkUrl(
+                    response.request().url().toString(),
+                    updateRepositoryBranch(),
+                    manifest.versionCode);
             ResponseBody body = response.body();
             if (body == null) {
                 throw new IOException("Empty APK response");
             }
             long totalBytes = body.contentLength();
+            if (totalBytes > 0 && totalBytes != manifest.apkSize) {
+                throw new IOException("APK Content-Length does not match manifest");
+            }
             if (totalBytes <= 0) {
                 totalBytes = manifest.apkSize;
             }
@@ -308,6 +417,9 @@ public final class AppUpdateManager
                     output.write(buffer, 0, read);
                     digest.update(buffer, 0, read);
                     downloadedBytes += read;
+                    if (downloadedBytes > manifest.apkSize) {
+                        throw new IOException("Downloaded APK exceeds manifest size");
+                    }
                     if (expectedBytes > 0) {
                         int progress = (int) Math.min(
                                 100,
@@ -380,11 +492,13 @@ public final class AppUpdateManager
                 && archiveInfo.applicationInfo.metaData != null
                 ? archiveInfo.applicationInfo.metaData.getString(UPDATE_FLAVOR_METADATA)
                 : null;
-        if (!updateRepositoryFlavor().equals(archiveFlavor)) {
+        if (!updateRepositoryBranch().equals(archiveFlavor)) {
             throw new IOException(activity.getString(R.string.update_invalid));
         }
         if (getVersionCode(archiveInfo) != manifest.versionCode
-                || manifest.versionCode <= getVersionCode(installedInfo)) {
+                || manifest.versionCode <= getVersionCode(installedInfo)
+                || archiveInfo.versionName == null
+                || !manifest.versionName.equals(archiveInfo.versionName)) {
             throw new IOException(activity.getString(R.string.update_invalid));
         }
 
@@ -558,33 +672,45 @@ public final class AppUpdateManager
     {
         final String applicationId;
         final String flavor;
+        final String channel;
         final long versionCode;
         final String versionName;
+        final long minSdk;
+        final long targetSdk;
         final String apkUrl;
         final long apkSize;
         final String apkSha256;
         final String signingCertificateSha256;
+        final String publishedAt;
         final String releaseNotes;
 
         private UpdateManifest(
                 String applicationId,
                 String flavor,
+                String channel,
                 long versionCode,
                 String versionName,
+                long minSdk,
+                long targetSdk,
                 String apkUrl,
                 long apkSize,
                 String apkSha256,
                 String signingCertificateSha256,
+                String publishedAt,
                 String releaseNotes)
         {
             this.applicationId = applicationId;
             this.flavor = flavor;
+            this.channel = channel;
             this.versionCode = versionCode;
             this.versionName = versionName;
+            this.minSdk = minSdk;
+            this.targetSdk = targetSdk;
             this.apkUrl = apkUrl;
             this.apkSize = apkSize;
             this.apkSha256 = apkSha256;
             this.signingCertificateSha256 = signingCertificateSha256;
+            this.publishedAt = publishedAt;
             this.releaseNotes = releaseNotes;
         }
 
@@ -597,12 +723,16 @@ public final class AppUpdateManager
             return new UpdateManifest(
                     json.getString("applicationId"),
                     json.getString("flavor"),
+                    json.getString("channel"),
                     json.getLong("versionCode"),
-                    json.getString("versionName"),
+                    json.getString("versionName").trim(),
+                    json.getLong("minSdk"),
+                    json.getLong("targetSdk"),
                     json.getString("apkUrl"),
-                    json.optLong("apkSize", -1),
+                    json.getLong("apkSize"),
                     json.getString("apkSha256"),
                     json.getString("signingCertificateSha256"),
+                    json.getString("publishedAt").trim(),
                     json.optString("releaseNotes", "").trim());
         }
     }

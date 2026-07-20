@@ -68,5 +68,5 @@ public interface AppSettingsConstants
 
     int FIRSTSTART_DOWNLOADZOOM = 5;
 
-    String APK_VERSION_UPDATE = "https://wiki-geonical.ru/mobile";
+    String APK_VERSION_UPDATE = "https://apps-geonical.ru/lisa-mobile";
 }

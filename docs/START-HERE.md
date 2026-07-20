@@ -54,6 +54,8 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 ## Основные карты знаний
 
 - [`reference/fork-customizations.md`](reference/fork-customizations.md) — каталог отличий форка.
+- [`reference/official-differences.md`](reference/official-differences.md) — краткое актуальное
+  описание возможностей форка, которых ещё нет в official; предназначено для передачи upstream.
 - [`history/upstream/README.md`](history/upstream/README.md) — завершённые upstream cycles.
 - [`../WHATS_NEW.md`](../WHATS_NEW.md) — пользовательские release notes.
 - [`runbooks/collector-project-setup.md`](runbooks/collector-project-setup.md) — настройка Collector.

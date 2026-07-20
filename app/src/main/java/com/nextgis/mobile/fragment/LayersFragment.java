@@ -573,14 +573,12 @@ public class LayersFragment
             DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    NGWSettingsFragment.setAccountSyncEnabled(account, authority, true);
-                    long period = Constants.DEFAULT_SYNC_PERIOD;
-                    if (context.getApplicationContext() instanceof GISApplication) {
-                        period = GISApplication.getAccountSyncTime(
-                                account, (GISApplication) context.getApplicationContext());
-                    }
-                    AccountUtil.saveSyncPeriodForAccount(context, account.name, period);
-                    SyncAccountWorker.scheduleSoon(context, account.name, period);
+                    NGWSettingsFragment.setAccountSyncEnabled(
+                            context, account, authority, true);
+                    long period = context.getApplicationContext() instanceof GISApplication
+                            ? GISApplication.getAccountSyncTime(
+                                    account, (GISApplication) context.getApplicationContext())
+                            : Constants.DEFAULT_SYNC_PERIOD;
                     HyperLog.v(Constants.TAG, "LayersFragment: sync enabled from prompt account="
                             + account.name + " period=" + period);
                     Log.d("SSYNC", "checkAccountForSync enabled account=" + account.name

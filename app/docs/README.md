@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-07-19
+last_verified: 2026-07-20
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -28,6 +28,8 @@ UI и Map host, управляет брендами, preferences, release и sel
 - Не дублировать GIS model/storage из `maplib`.
 - Self-hosted update принимается только для того же flavor/application/signing
   identity и с увеличенным versionCode.
+- Update repository использует ветки `lisa`, `belka`, `debug` непосредственно
+  под `https://apps-geonical.ru/lisa-mobile`; сегмента `stable` в URL нет.
 - Реальные DSN, client secrets и signing credentials не входят в docs.
 - Sentry оставляет crash screenshots, но не собирает interaction breadcrumbs и
   view hierarchy; traces/profiling в production семплируются с долей `0.05`.
@@ -37,7 +39,8 @@ UI и Map host, управляет брендами, preferences, release и sel
 - Карта/слои: сначала проверить callbacks `MapFragment` и состояние
   `GISApplication`, затем rendering docs.
 - Неправильный бренд: `app/build.gradle`, flavor resources и manifest metadata.
-- Update отклонён: manifest identity, version, URL/size/hash/certificate; не
+- Update отклонён: проверить schema, branch/channel, identity, version,
+  versioned URL, size/hash/certificate и доступность branch manifest; не
   отключать проверку для обхода ошибки.
 - Collector переключается неверно: `CollectorProjectRegistry` и project UID/map
   path, а не только UI dialog.
