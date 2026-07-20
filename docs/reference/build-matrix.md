@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-07-19
+last_verified: 2026-07-20
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -20,11 +20,13 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode | `192` |
-| App versionName | `3.1.2.1` |
-| maplib VERSION_NAME | `3.1.2.1` |
+| App versionCode | `193` |
+| App versionName | `3.1.2.2` |
+| maplib VERSION_NAME | `3.1.2.2` |
 | MapLibre Android SDK | `13.0.2` |
 | OkHttp | `5.3.2` |
+| Release application/account | `com.nextgis.mobile.geonical` / `com.nextgis.account.geonical` |
+| Debug application/account | `com.nextgis.mobile.debug` / `com.nextgis.account.debug` |
 
 Значения фиксируют проверенное состояние на `last_verified`, но код остаётся
 источником истины. Изменение таблицы сборки требует обеих release-сборок.

@@ -95,6 +95,11 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Open a Collector project whose account is not first in Android account order, Make another map account unavailable, Run manual sync, Restart and inspect enabled account schedules]
     expected: The active Collector account sync runs first, another account error has a separate result, and enabled schedules are restored without duplicate work.
+  SMOKE-NGW-ACCOUNT-ADD:
+    type: device
+    scope: [app, maplibui]
+    steps: [Install a release APK beside official and debug variants, Add a Web GIS with valid credentials, Reopen the Web GIS selector, Inspect Android AccountManager and exported HyperLog]
+    expected: The login screen closes only after the variant-specific Android account is created and listed; authenticator, sync adapter and runtime account types match, and a local add failure keeps the form open with an error and diagnostic log.
   SMOKE-WALK:
     type: device
     scope: [app, maplib, maplibui]

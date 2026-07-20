@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-07-19
+last_verified: 2026-07-20
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
@@ -11,6 +11,9 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
+  - maplibui/src/main/res/xml/authenticator.xml
+  - app/build.gradle
+  - app/src/main/res/xml/syncadapter.xml
 ---
 
 # NGW sync, локальное хранение и восстановление
@@ -43,6 +46,30 @@ read-only и с направлением sync только server-to-device. Э�
 для обычного ручного выбора NGW-ресурса, если permission payload был загружен.
 
 ID контракта: `INV-NGW-URL-IMPORT`.
+
+## Идентичность Android account
+
+NGW account привязан не только к серверным credentials, но и к системной
+регистрации Android. Для каждого build variant три значения обязаны совпадать:
+
+| Consumer | Источник значения |
+|---|---|
+| `MainApplication.getAccountsType()` | `BuildConfig.nextgismobile_accounts_auth` |
+| `AccountAuthenticator` | `@string/nextgis_accounts_auth` |
+| `SyncAdapter` | `@string/nextgis_accounts_auth_type` |
+
+Release ЛИСА/Белка используют `com.nextgis.account.geonical`, debug —
+`com.nextgis.account.debug`. GIS provider аналогично должен совпадать между
+`BuildConfig.providerAuth`, manifest provider и `SyncAdapter.contentAuthority`.
+Library defaults нельзя считать достаточными: app variant обязан перекрывать оба
+account resource keys. Иначе HTTP-аутентификация проходит, но Android отклоняет
+`addAccountExplicitly()` как аккаунт незарегистрированного типа.
+
+Экран входа закрывается только после фактического создания и повторного чтения
+account. Отказ Android оставляет форму открытой, показывает отдельную ошибку и
+пишет в HyperLog имя сервера и account type без логина, пароля или token.
+
+ID контракта: `INV-NGW-ACCOUNT-IDENTITY`.
 
 ## Безопасная мутация данных
 

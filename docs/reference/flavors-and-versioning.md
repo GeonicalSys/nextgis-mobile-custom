@@ -21,6 +21,17 @@ related_code:
 перезаписывать их одним общим значением. Debug может иметь отдельное тестовое
 имя и application ID suffix.
 
+## Variant identity
+
+| Variants | Application ID | GIS provider authority | NGW account type |
+|---|---|---|---|
+| `lisaRelease`, `belkaRelease` | `com.nextgis.mobile.geonical` | `com.nextgis.mobile.geonical.provider` | `com.nextgis.account.geonical` |
+| `lisaDebug` | `com.nextgis.mobile.debug` | `com.nextgis.mobile.provider.debug` | `com.nextgis.account.debug` |
+
+Account type — единый контракт runtime/authenticator/sync adapter. При изменении
+`applicationIdSuffix` необходимо проверить также provider authority, FileProvider,
+service permission, updater identity и оба account resource keys в merged APK.
+
 ## Версия
 
 - `versionName = <upstream-base>.<fork-patch>`.

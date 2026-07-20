@@ -10,6 +10,13 @@ related_code:
 
 ## 2026-07-20
 
+- Версия выпуска поднята до `3.1.2.2` / `versionCode` 193 с синхронной
+  диагностической версией maplib; production-палитра переведена на более
+  насыщенные рыже-оранжевые оттенки.
+- Зафиксирован variant-specific NGW account contract: runtime, authenticator и
+  sync adapter обязаны использовать один account type; добавлены invariant,
+  smoke и диагностика отказа Android AccountManager. Package-name проверка
+  rebuild-cache UI заменена на application capability для `.geonical`/`.debug`.
 - Self-hosted updater переведён с `wiki-geonical.ru/mobile/<flavor>/stable` на
   отдельные ветки `apps-geonical.ru/lisa-mobile/{lisa,belka,debug}`; release
   contract теперь требует строгий channel/versioned URL и повторную сверку

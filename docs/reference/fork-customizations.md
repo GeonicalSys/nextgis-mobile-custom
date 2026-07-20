@@ -27,6 +27,7 @@ related_code:
 | MapLibre rendering, hot reload и порядок слоёв | [map-rendering.md](../architecture/map-rendering.md) | `MapDrawable`, `MPLFeaturesUtils`, `VectorLayerRenderCache` |
 | Производительность карты и локальные vector tiles | [map-performance.md](../architecture/map-performance.md) | `VectorLayer`, `LocalVectorTileProvider`, `LocalVectorTileServer` |
 | NGW sync, account scheduling, layer fill и staged schema rebuild | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md), [collector-projects.md](../architecture/collector-projects.md) | `SyncAdapter`, `SyncAccountWorker`, `LayerFillService`, `GISApplication` |
+| Variant-specific Android account/provider identity | [flavors-and-versioning.md](flavors-and-versioning.md), [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md) | `app/build.gradle`, `MainApplication`, authenticator/sync adapter XML |
 | NGW resource UI и batch import | [collector-project-setup.md](../runbooks/collector-project-setup.md) | `SelectNGWResourceActivity`, `NGWResourcesListAdapter`, `LayerFillProgressDialogFragment` |
 | Прямой импорт NGW vector/raster по URL и read-only permissions | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md) | `NGWResourceUrl`, `ResourceGroup`, `NGWResourceImportHelper`, `MainActivity` |
 | Config из NGW description и `SYNC_NONE` | [settings-and-config.md](settings-and-config.md), [collector-projects.md](../architecture/collector-projects.md) | `NgwLayerConfigAdapter`, sync classes |
@@ -59,6 +60,8 @@ related_code:
   `INV-COLLECTOR-FORM-ATOMIC`, `INV-NGRC-PRESERVE`.
 - Ошибка одного account не подавляет синхронизацию активного проекта:
   `INV-SYNC-ACCOUNT-ISOLATION`.
+- Runtime, authenticator и sync adapter используют один account type каждого variant:
+  `INV-NGW-ACCOUNT-IDENTITY`.
 - `versionName` приложения и `maplib` выравниваются, а `versionCode` форка остаётся уникальным.
 
 ## Как поддерживать каталог

@@ -76,8 +76,8 @@ android {
         compileSdk 36
         targetSdkVersion 36
         // Fork versioning: docs/reference/build-matrix.md and docs/runbooks/release-apk.md
-        versionCode 192
-        versionName '3.1.2.1'
+        versionCode 193
+        versionName '3.1.2.2'
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
 
         def props = new Properties()
@@ -124,15 +124,19 @@ android {
             applicationIdSuffix '.geonical'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            // Muted burnt-orange production palette. Debug keeps maplibui's green palette.
-            resValue 'color', 'primary', '#B65F2E'
-            resValue 'color', 'primary_dark', '#7A3518'
-            resValue 'color', 'accent', '#C97B45'
+            // Bright fox-orange production palette. Debug keeps maplibui's green palette.
+            resValue 'color', 'primary', '#D75A12'
+            resValue 'color', 'primary_dark', '#94320A'
+            resValue 'color', 'accent', '#C94F0C'
             // APP_NAME intentionally NOT set in release buildType — productFlavors lisa/belka
             // own that key (CUSTOMIZATIONS §14). Adding it here would override the flavor value.
             resValue 'string', 'SENTRY_DSN', sentryDsn
             resValue 'string', 'provider_auth', 'com.nextgis.mobile.geonical.provider'
             resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.geonical.account'
+            // authenticator.xml, syncadapter.xml and MainApplication must expose the same type.
+            // Without this app-level override maplibuiRelease falls back to com.nextgis.account,
+            // so AccountManager rejects the Geonical runtime type after valid NGW authentication.
+            resValue 'string', 'nextgis_accounts_auth', 'com.nextgis.account.geonical'
             resValue 'string', 'nextgis_accounts_auth_type', 'com.nextgis.account.geonical'
             buildConfigField "String", "providerAuth", '"com.nextgis.mobile.geonical.provider"'
             buildConfigField "String", "nextgismobile_accounts_auth", '"com.nextgis.account.geonical"'
@@ -151,6 +155,7 @@ android {
             resValue 'string', 'SENTRY_DSN', sentryDsn
             resValue 'string', 'provider_auth', 'com.nextgis.mobile.provider.debug'
             resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.account.debug'
+            resValue 'string', 'nextgis_accounts_auth', 'com.nextgis.account.debug'
             resValue 'string', 'nextgis_accounts_auth_type', 'com.nextgis.account.debug'
             buildConfigField "String", "providerAuth", '"com.nextgis.mobile.provider.debug"'
             buildConfigField "String", "nextgismobile_accounts_auth", '"com.nextgis.account.debug"'

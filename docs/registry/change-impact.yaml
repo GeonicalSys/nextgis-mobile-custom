@@ -18,12 +18,34 @@ triggers:
     read:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
-    invariants: [INV-FLAVORS, INV-VERSION-COUPLING]
+    invariants: [INV-FLAVORS, INV-VERSION-COUPLING, INV-NGW-ACCOUNT-IDENTITY]
     must_update_docs:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
       - app/docs/manifest.yaml
-    verify: [SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
+    verify: [SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-NGW-ACCOUNT-ADD]
+    strict_docs: true
+  - id: NGW-ACCOUNT-IDENTITY
+    paths:
+      - app/build.gradle
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/res/xml/syncadapter.xml
+      - maplibui/src/main/res/xml/authenticator.xml
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/NGWLoginActivity.java
+      - maplibui/src/main/java/com/nextgis/maplibui/fragment/NGWLoginFragment.java
+    owners: [app, maplibui]
+    read:
+      - docs/reference/flavors-and-versioning.md
+      - docs/architecture/ngw-sync-and-storage.md
+    invariants: [INV-NGW-ACCOUNT-IDENTITY]
+    must_update_docs:
+      - docs/reference/flavors-and-versioning.md
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/registry/config-keys.yaml
+      - app/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
+    verify: [AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-NGW-ACCOUNT-ADD]
     strict_docs: true
   - id: REPOSITORY-TOPOLOGY
     paths: [.gitmodules, settings.gradle, tools/upstream-sync.ps1]

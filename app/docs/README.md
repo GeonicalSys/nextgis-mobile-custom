@@ -30,6 +30,9 @@ UI и Map host, управляет брендами, preferences, release и sel
   identity и с увеличенным versionCode.
 - Update repository использует ветки `lisa`, `belka`, `debug` непосредственно
   под `https://apps-geonical.ru/lisa-mobile`; сегмента `stable` в URL нет.
+- Для каждого build variant один account type обязан одновременно использоваться
+  в runtime `MainApplication`, `AccountAuthenticator` и `SyncAdapter`; release
+  использует `com.nextgis.account.geonical`, debug — `com.nextgis.account.debug`.
 - Реальные DSN, client secrets и signing credentials не входят в docs.
 - Sentry оставляет crash screenshots, но не собирает interaction breadcrumbs и
   view hierarchy; traces/profiling в production семплируются с долей `0.05`.
@@ -47,6 +50,9 @@ UI и Map host, управляет брендами, preferences, release и sel
 - URL не импортируется: проверить parser, совпадение server URL с аккаунтом,
   response code, тип ресурса и `data.read`; отсутствие `data.write` — read-only,
   а не ошибка импорта.
+- Веб ГИС принимает логин, но не появляется: сверить merged-значения
+  `nextgis_accounts_auth`, `nextgis_accounts_auth_type` и runtime account type.
+  Локальный отказ `AccountManager` должен оставить форму открытой и попасть в HyperLog.
 
 ## Проверки
 

@@ -51,6 +51,19 @@ runtime_constants:
     type: https_url
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
     purpose: Base URL of the branch-oriented Lisa Mobile APK repository
+variant_resources:
+  provider_auth:
+    owner: app
+    source: app/build.gradle
+    purpose: Variant-specific GIS ContentProvider and SyncAdapter authority
+  nextgis_accounts_auth:
+    owner: app
+    source: app/build.gradle
+    purpose: Variant-specific AccountAuthenticator account type
+  nextgis_accounts_auth_type:
+    owner: app
+    source: app/build.gradle
+    purpose: Variant-specific SyncAdapter account type; must equal nextgis_accounts_auth and MainApplication runtime type
 build_inputs:
   sentry.properties:
     owner: app

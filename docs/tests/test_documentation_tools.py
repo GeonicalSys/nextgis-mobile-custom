@@ -62,6 +62,8 @@ class DocumentationToolsTest(unittest.TestCase):
             "--changed-file",
             "docs/reference/build-matrix.md",
             "--changed-file",
+            "docs/reference/flavors-and-versioning.md",
+            "--changed-file",
             "docs/reference/official-differences.md",
             "--enforce-diff",
         )

@@ -24,6 +24,23 @@ invariants:
     must_update_docs:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
+  INV-NGW-ACCOUNT-IDENTITY:
+    title: Every build variant exposes one consistent NGW account identity
+    owners: [app, maplibui]
+    statement: MainApplication runtime account type, AccountAuthenticator metadata and SyncAdapter metadata must resolve to the same variant-specific value; provider runtime and manifest authorities must also match.
+    related_code:
+      - app/build.gradle
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/res/xml/syncadapter.xml
+      - maplibui/src/main/res/xml/authenticator.xml
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/NGWLoginActivity.java
+    verify_smoke: [SMOKE-NGW-ACCOUNT-ADD, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
+    must_update_docs:
+      - docs/reference/flavors-and-versioning.md
+      - docs/architecture/ngw-sync-and-storage.md
+      - app/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
   INV-LAYER-ORDER:
     title: LayerGroup index zero is the bottom of the stack
     owners: [maplib, maplibui]
