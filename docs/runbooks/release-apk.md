@@ -1,10 +1,11 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-07-20
+last_verified: 2026-07-23
 related_code:
   - app/build.gradle
   - maplib/build.gradle
+  - tools/verify-apk-version-matrix.ps1
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/AndroidManifest.xml
@@ -14,20 +15,43 @@ related_code:
 
 ## Версия
 
-1. Определить upstream base и следующий fork patch.
-2. Увеличить `app` `versionCode` монотонно.
-3. Обновить `app` `versionName` и сопряжённый `maplib` `versionName`.
-4. Обновить `WHATS_NEW.md` и соответствующий architecture/reference/runbook.
-   Если появился новый долговременный класс отличий, дополнить
-   [`../reference/fork-customizations.md`](../reference/fork-customizations.md).
+1. Определить, меняется production release или только Lisa Debug. Нельзя
+   подменять debug-only задачу глобальным bump.
+2. Для production изменить `productionVersionCode` и
+   `productionVersionName` в `app/build.gradle`, production version в
+   `maplib/build.gradle`, затем согласованно обновить обе flavors.
+3. Для debug-only изменить `debugVersionCode`/`debugVersionName` приложения и
+   `debugVersionName` maplib. Production constants остаются прежними.
+4. AGP `9.1.0` не поддерживает application `versionCode`/`versionName` внутри
+   `buildTypes`. Debug app override находится в
+   `androidComponents.onVariants`; maplib debug переопределяет только
+   `BuildConfig.VERSION_NAME` через `buildConfigField`.
+5. Обновить ожидаемые package/version значения в
+   `tools/verify-apk-version-matrix.ps1`: это намеренно независимый regression
+   oracle, а не автоматическое чтение тех же Gradle constants.
+6. Обновить build/compatibility docs. Production `WHATS_NEW.md` меняется только
+   для production release; для debug-only публикации достаточно её release
+   notes, если пользователь не запросил иное.
 
-## Сборка
+## Обязательная сборка и проверка версии
 
 ```powershell
-.\gradlew.bat :app:assembleLisaRelease :app:assembleBelkaRelease
+Set-Location Q:\android_projects\android_gisapp
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version-matrix.ps1
 ```
 
-Проверить для каждого APK:
+Скрипт собирает `lisaDebug`, `lisaRelease`, `belkaRelease`, читает APK metadata
+через `aapt` и проверяет сопряжённые debug/release значения
+`maplib.BuildConfig.VERSION_NAME`. Version change нельзя передавать дальше,
+если этот скрипт не запускался или завершился ошибкой.
+
+`base.archivesName` использует production version, поэтому локальное имя debug
+APK может содержать production basename. Это не версия артефакта. Источники
+истины — `output-metadata.json` и результат `aapt dump badging`; publisher после
+проверки создаёт каноническое имя вида
+`ngmobile-<actual-version>-lisa-debug.apk`.
+
+Дополнительно проверить для каждого APK:
 
 - display name и applicationId;
 - embedded `UPDATE_FLAVOR` совпадает с flavor;
@@ -56,6 +80,14 @@ Updater должен отклонить неверные schema, flavor/channel,
 version, URL, размер, hash или certificate. После скачивания те же identity и
 integrity значения сверяются с реальным APK и установленным приложением.
 
+На Android 8+ при отсутствии разрешения «Установка неизвестных приложений»
+updater сохраняет проверенный manifest в app-private `app_update_state`, открывает
+экран специального доступа и при возврате в `MainActivity.onResume()` повторно
+проверяет разрешение, manifest и APK. После успешной выдачи разрешения установка
+продолжается автоматически; валидный APK из `cache/updates` не скачивается
+повторно. Pending-состояние одноразовое и очищается при отказе, ошибке проверки
+или перед возобновлением установки.
+
 Значения signing keys/cert private data в docs не публикуются. Допустим только
 публичный fingerprint в защищённой release-инфраструктуре.
 
@@ -73,8 +105,11 @@ Set-Location Q:\android_projects\upload_mobile
 ```
 
 После проверки повторить без `--dry-run`. Для других вариантов заменить branch
-на `belka` или `debug`. Publisher требует SSH deploy-ключ и проверенный host key,
-не принимает SSH-пароли и не устанавливает server scripts.
+на `belka` или `debug`. Для Lisa Debug передаётся APK из
+`app\build\outputs\apk\lisa\debug\`, даже если его локальный basename содержит
+production version: publisher читает реальную версию из APK и переименовывает
+артефакт. Publisher требует SSH deploy-ключ и проверенный host key, не принимает
+SSH-пароли и не устанавливает server scripts.
 
 Server scripts устанавливаются отдельно в `/usr/local/bin`, повторно проверяют
 APK через `aapt`/`apksigner`, сериализуют операции общей блокировкой ветки и

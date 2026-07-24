@@ -13,17 +13,20 @@ triggers:
     verify: [AUTO-DOCS-VALIDATE]
     strict_docs: true
   - id: BUILD-AND-FLAVORS
-    paths: [app/build.gradle, build.gradle, gradle/wrapper/gradle-wrapper.properties, app/src/lisa/**, app/src/belka/**]
-    owners: [app]
+    paths: [app/build.gradle, maplib/build.gradle, build.gradle, gradle/wrapper/gradle-wrapper.properties, app/src/lisa/**, app/src/belka/**, tools/verify-apk-version-matrix.ps1]
+    owners: [app, maplib]
     read:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
+      - docs/runbooks/release-apk.md
     invariants: [INV-FLAVORS, INV-VERSION-COUPLING, INV-NGW-ACCOUNT-IDENTITY]
     must_update_docs:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
+      - docs/runbooks/release-apk.md
       - app/docs/manifest.yaml
-    verify: [SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-NGW-ACCOUNT-ADD]
+      - maplib/docs/manifest.yaml
+    verify: [AUTO-APP-VERSION-MATRIX, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-NGW-ACCOUNT-ADD]
     strict_docs: true
   - id: NGW-ACCOUNT-IDENTITY
     paths:
@@ -76,6 +79,22 @@ triggers:
       - maplib/docs/manifest.yaml
     verify: [AUTO-MAPLIB-UNIT, SMOKE-MAP-COLD-START, SMOKE-LOCATION-CURSOR-TOP, SMOKE-HOT-RASTER]
     strict_docs: false
+  - id: MAP-BASE-LAYERS
+    paths:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    owners: [app, maplib, maplibui]
+    read:
+      - docs/architecture/map-rendering.md
+      - docs/architecture/collector-projects.md
+    invariants: [INV-LAYER-ORDER, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/architecture/collector-projects.md
+      - app/docs/README.md
+      - app/docs/manifest.yaml
+    verify: [AUTO-APP-RELEASES, SMOKE-MAP-COLD-START, SMOKE-COLLECTOR-IMPORT]
+    strict_docs: true
   - id: LAYER-FILL-AND-REORDER
     paths:
       - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
@@ -109,7 +128,9 @@ triggers:
   - id: COLLECTOR
     paths:
       - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java
       - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
       - maplib/src/main/java/com/nextgis/maplib/util/LayerFormHashUtil.java
@@ -121,15 +142,21 @@ triggers:
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     owners: [maplib, maplibui, app]
     read:
       - docs/architecture/collector-projects.md
-    invariants: [INV-COLLECTOR-RESOURCE, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-RESUMABLE, INV-COLLECTOR-FORM-ATOMIC, INV-BACKUP-BEFORE-DESTRUCTION]
+    invariants: [INV-COLLECTOR-RESOURCE, INV-COLLECTOR-RASTER-STYLES, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-COLLECTOR-FORM-ATOMIC, INV-BACKUP-BEFORE-DESTRUCTION]
     must_update_docs:
       - docs/architecture/collector-projects.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
       - docs/registry/config-keys.yaml
-    verify: [AUTO-MAPLIB-UNIT, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-RESUME, SMOKE-COLLECTOR-INCOMPLETE, SMOKE-FORM-ROLLBACK, SMOKE-COLLECTOR-SWITCH, SMOKE-BACKUP-GATE]
+      - maplib/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-RESUME, SMOKE-COLLECTOR-INCOMPLETE, SMOKE-FORM-ROLLBACK, SMOKE-COLLECTOR-SWITCH, SMOKE-BACKUP-GATE]
     strict_docs: false
   - id: NGRC-LOCAL-UNDERLAY
     paths:
@@ -185,12 +212,14 @@ triggers:
     paths:
       - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
       - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
       - app/src/main/AndroidManifest.xml
       - app/src/main/res/xml/provider_paths.xml
     owners: [app]
     read:
       - docs/runbooks/release-apk.md
-    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY]
+    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME]
     must_update_docs:
       - docs/runbooks/release-apk.md
       - docs/registry/config-keys.yaml
@@ -219,3 +248,22 @@ triggers:
       - app/docs/manifest.yaml
     verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-NGW-URL-IMPORT]
     strict_docs: true
+  - id: LISA-ECOSYSTEM-CONTRACT
+    paths:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/**
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    owners: [app, maplib, maplibui]
+    read:
+      - docs/architecture/lisa-ecosystem.md
+      - docs/registry/ecosystem.yaml
+    invariants: [INV-ECOSYSTEM-SERVER-BOUNDARY]
+    must_update_docs:
+      - docs/architecture/lisa-ecosystem.md
+      - docs/registry/ecosystem.yaml
+    verify: [AUTO-DOCS-VALIDATE, SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-IMPORT]
+    strict_docs: false

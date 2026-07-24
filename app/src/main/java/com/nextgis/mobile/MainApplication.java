@@ -32,13 +32,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.hypertrack.hyperlog.HyperLog;
 import com.nextgis.maplib.api.ILayer;
-import com.nextgis.maplib.api.ILayerView;
 import com.nextgis.maplib.datasource.Field;
 import com.nextgis.maplib.map.LayerGroup;
 import com.nextgis.maplib.map.MapBase;
@@ -236,15 +236,48 @@ public class MainApplication extends GISApplication
 
     public void checkTracksLayerExist()
     {
-        List<ILayer> tracks = new ArrayList<>();
-        LayerGroup.getLayersByType(mMap, Constants.LAYERTYPE_TRACKS, tracks);
-        if (tracks.isEmpty()) {
+        boolean mapChanged = ensureBaseOsmLayerAtBottom();
+        List<ILayer> allTracks = new ArrayList<>();
+        LayerGroup.getLayersByType(mMap, Constants.LAYERTYPE_TRACKS, allTracks);
+        if (allTracks.isEmpty()) {
             String trackLayerName = getString(com.nextgis.maplib.R.string.tracks);
             TrackLayerUI trackLayer =
                     new TrackLayerUI(getApplicationContext(), mMap.createLayerStorage(LAYER_TRACKS));
             trackLayer.setName(trackLayerName);
             trackLayer.setVisible(true);
             mMap.addLayer(trackLayer);
+            mapChanged = true;
+        }
+
+        List<ILayer> tracks = new ArrayList<>();
+        for (int i = 0; i < mMap.getLayerCount(); i++) {
+            ILayer layer = mMap.getLayer(i);
+            if (0 != (layer.getType() & Constants.LAYERTYPE_TRACKS)) {
+                tracks.add(layer);
+            }
+        }
+        if (tracks.isEmpty()) {
+            if (mapChanged) {
+                mMap.save();
+            }
+            return;
+        }
+
+        int firstTopTrackIndex = mMap.getLayerCount() - tracks.size();
+        boolean tracksAlreadyOnTop = true;
+        for (int i = 0; i < tracks.size(); i++) {
+            if (mMap.getLayer(firstTopTrackIndex + i) != tracks.get(i)) {
+                tracksAlreadyOnTop = false;
+                break;
+            }
+        }
+        if (!tracksAlreadyOnTop) {
+            for (ILayer track : tracks) {
+                mMap.moveLayer(mMap.getLayerCount() - 1, track);
+            }
+            mapChanged = true;
+        }
+        if (mapChanged) {
             mMap.save();
         }
     }
@@ -297,39 +330,47 @@ public class MainApplication extends GISApplication
 
 
     public void initBaseLayers() {
-        if (mMap.getLayerByPathName(LAYER_OSM) == null) {
-            //add OpenStreetMap layer
-            String layerName = getString(com.nextgis.maplibui.R.string.osm);
-            String layerURL = SettingsConstantsUI.OSM_URL;
-            final RemoteTMSLayerUI layer = new RemoteTMSLayerUI(getApplicationContext(), mMap.createLayerStorage(LAYER_OSM));
-            layer.setName(layerName);
-            layer.setURL(layerURL);
-            layer.setTMSType(TMSTYPE_OSM);
-            layer.setVisible(false);
-            layer.setMinZoom(GeoConstants.DEFAULT_MIN_ZOOM);
-            layer.setMaxZoom(19);
+        if (ensureBaseOsmLayerAtBottom()) {
+            mMap.save();
+        }
+    }
 
-            mMap.addLayer(layer);
-            mMap.moveLayer(0, layer);
 
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        layer.fillFromZip(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mapnik), null);
-                    } catch (IOException | NGException | RuntimeException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } else {
-            ILayer existingOsm = mMap.getLayerByPathName(LAYER_OSM);
-            if (existingOsm instanceof ILayerView) {
-                ((ILayerView) existingOsm).setVisible(false);
+    private boolean ensureBaseOsmLayerAtBottom() {
+        ILayer existingOsm = mMap.getLayerByPathName(LAYER_OSM);
+        if (existingOsm != null) {
+            if (mMap.getChildLayerIndex(existingOsm) != 0) {
+                mMap.moveLayer(0, existingOsm);
+                return true;
             }
+            return false;
         }
 
-        mMap.save();
+        String layerName = getString(com.nextgis.maplibui.R.string.osm);
+        final RemoteTMSLayerUI layer = new RemoteTMSLayerUI(
+                getApplicationContext(),
+                mMap.createLayerStorage(LAYER_OSM));
+        layer.setName(layerName);
+        layer.setURL(SettingsConstantsUI.OSM_URL);
+        layer.setTMSType(TMSTYPE_OSM);
+        layer.setVisible(false);
+        layer.setMinZoom(GeoConstants.DEFAULT_MIN_ZOOM);
+        layer.setMaxZoom(19);
+
+        mMap.addLayer(layer);
+        mMap.moveLayer(0, layer);
+
+        new Handler(Looper.getMainLooper()).post(() -> {
+            try {
+                layer.fillFromZip(
+                        Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mapnik),
+                        null);
+            } catch (IOException | NGException | RuntimeException e) {
+                HyperLog.w(Constants.TAG, "Cannot initialize default OSM layer: "
+                        + e.getMessage(), e);
+            }
+        });
+        return true;
     }
 
 

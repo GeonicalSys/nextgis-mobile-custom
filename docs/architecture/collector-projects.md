@@ -1,11 +1,16 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-07-20
+last_verified: 2026-07-24
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
+  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java
   - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
+  - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
+  - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
@@ -36,10 +41,32 @@ account и remote project id. Registry хранится в
 `collector_projects_registry.json`, workspaces — в `collector_projects/`.
 
 Импорт начинается только после полного чтения дерева Collector и всех ссылок на
-векторные ресурсы. HTTP/JSON-ошибка в середине snapshot отменяет импорт до
+поддерживаемые ресурсы. HTTP/JSON-ошибка в середине snapshot отменяет импорт до
 создания новой рабочей области: частичный проект не считается допустимым
 результатом. Повторный импорт различает слои по `account + remote_id`, поэтому
 одинаковые отображаемые имена не приводят к пропуску разных слоёв.
+
+## Поддерживаемые элементы проекта
+
+- `vector_layer` и `postgis_layer` загружаются в существующий локальный
+  vector/fill pipeline и могут быть редактируемыми согласно project policy.
+- Уже штатно известные `Connection` типы `qgis_vector_style` и
+  `qgis_raster_style` создаются как authenticated `NGWRasterLayer`: тайлы
+  запрашиваются через render endpoint по remote id самого стиля.
+- Для растрового представления remote id стиля остаётся identity слоя, а remote
+  id родительского vector/raster resource хранится отдельно и используется
+  только для extent. Поэтому исходный вектор и его стиль могут находиться в
+  проекте одновременно.
+- Style layer всегда read-only, не участвует в создании объектов и не
+  маскируется под векторный слой.
+- Другие современные style classes намеренно не добавляются в `Connection.java`
+  этим контрактом. Расширение поддерживаемых серверных типов требует отдельного
+  продуктового решения и тестовой матрицы.
+
+Activity и Dialog используют общий `CollectorProjectImportHelper`, а initial
+import и composition sync создают raster styles через один
+`CollectorRasterLayerHelper`. Это исключает разные правила импорта в двух UI
+точках.
 
 ## Изоляция
 
@@ -78,10 +105,12 @@ repair-проходах.
 
 ## Composition sync
 
-Composition sync сравнивает серверный состав проекта с локальным. Добавление,
-обновление и удаление имеют разные риски. Удаление локального слоя или schema
-rebuild являются разрушительными действиями и подчиняются
-`INV-BACKUP-BEFORE-DESTRUCTION`.
+Composition sync сравнивает серверный состав проекта с локальным для vectors и
+поддерживаемых raster styles. Добавление, обновление и удаление имеют разные
+риски. Удаление локального vector layer или schema rebuild являются
+разрушительными действиями и подчиняются `INV-BACKUP-BEFORE-DESTRUCTION`.
+Удаление raster-style слоя очищает только воспроизводимый tile cache и не
+требует data backup.
 
 Если обязательный backup не создан, локальные данные сохраняются и
 разрушительная операция отменяется. Backups создаёт `LayerBackupManager` в
@@ -98,6 +127,23 @@ Configuration sync и feature-data sync — разные контракты. `SY
 данных не должен автоматически запрещать безопасное чтение конфигурации,
 необходимое для отображения/форм, если конкретный flow это поддерживает.
 
+Для project-managed NGW-слоя возможность создания и изменения объектов задаёт
+галочка `editable` у элемента Collector-проекта вместе с разрешённым исходящим
+направлением синхронизации. Общий `is_editable` из mobile config не должен
+перекрывать эту проектную политику. Для вручную импортированных и остальных
+слоёв `is_editable` и серверное `data.write` по-прежнему остаются обязательным
+ограничением.
+
+Единый смешанный порядок vector и raster-style элементов Collector сохраняется
+с учётом того, что индекс `0` в
+`LayerGroup` — низ стека. Каждая проектная карта содержит дефолтный
+`OpenStreetMap Standard aka Mapnik` прямым дочерним слоем с индексом `0`;
+он не является managed-слоем Collector и не удаляется composition sync.
+Слой «Мои треки» резервирует последнюю внутреннюю позицию и поэтому остаётся
+первой строкой списка слоёв; project-managed слои вставляются между OSM и
+треком. При открытии старого workspace отсутствующий OSM создаётся, а неверные
+позиции OSM и слоя треков нормализуются без сброса сохранённой видимости.
+
 Ручная `.ngrc`-подложка не является managed-слоем Collector и не участвует в
 destructive composition apply. После импорта в её `config.json` сохраняются имя
 исходного архива, SHA-256, время импорта и политика `immutable_local`. До
@@ -113,6 +159,11 @@ destructive composition apply. После импорта в её `config.json` �
 - добавление/переупорядочивание состава;
 - backup и отказ от удаления при искусственной ошибке backup;
 - district filter и form/render configuration;
+- проект с vector, `qgis_vector_style` и `qgis_raster_style`: все элементы
+  появляются в исходном смешанном порядке, style tiles используют account
+  authentication, а стили не предлагаются для создания объектов;
+- editable включён только у полевых элементов Collector: создавать объекты можно
+  только в них, «Мои треки» остаётся наверху, а OSM — внизу списка после импорта;
 - запуск/возврат после screen off во время большого layer fill.
 - убийство процесса в середине партии и автоматическая докачка после запуска;
 - отказ от импорта неполного snapshot и сохранение существующего workspace;

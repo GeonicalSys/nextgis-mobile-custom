@@ -6,6 +6,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import yaml
+
 
 DOCS_ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = DOCS_ROOT.parent
@@ -28,6 +30,21 @@ class DocumentationToolsTest(unittest.TestCase):
         result = self.run_tool(VALIDATOR, "--workspace-root", str(WORKSPACE))
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("OK:", result.stdout)
+
+    def test_ecosystem_registry_declares_all_lisa_projects(self) -> None:
+        registry = yaml.safe_load(
+            (DOCS_ROOT / "registry" / "ecosystem.yaml").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            set(registry["systems"]),
+            {"mobile-app", "desktop-profiles", "qgis-plugins"},
+        )
+        contract_ids = {item["id"] for item in registry["contracts"]}
+        boundary_ids = {item["id"] for item in registry["boundaries"]}
+        self.assertIn("ECO-NGW-RESOURCE-EXCHANGE", contract_ids)
+        self.assertIn("ECO-OFFLINE-BASEMAP-HANDOFF", contract_ids)
+        self.assertIn("ECO-NO-DIRECT-FILESYSTEM", boundary_ids)
+        self.assertEqual(registry["systems"]["mobile-app"]["repository"], "root")
 
     def test_changed_file_reports_impact(self) -> None:
         result = self.run_tool(

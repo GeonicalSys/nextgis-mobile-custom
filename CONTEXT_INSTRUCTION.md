@@ -13,6 +13,9 @@
    продуктовые контракты;
 5. [`docs/registry/upstream-overlaps.yaml`](docs/registry/upstream-overlaps.yaml)
    для синхронизации с NextGIS.
+6. [`docs/architecture/lisa-ecosystem.md`](docs/architecture/lisa-ecosystem.md)
+   и [`docs/registry/ecosystem.yaml`](docs/registry/ecosystem.yaml) для задач,
+   связывающих Android с `standart_profiles` и QGIS Plugins.
 
 Каталог долговременных отличий форка:
 [`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md).

@@ -9,9 +9,21 @@ alwaysApply: true
 `docs/guides/change-checklist.md`, `docs/registry/change-impact.yaml` и
 относящиеся invariant IDs.
 
+Для NGW/Collector или другого desktop/mobile контракта дополнительно прочитай
+`docs/architecture/lisa-ecosystem.md` и `docs/registry/ecosystem.yaml`.
+Android не зависит от файлов `standart_profiles` и QGIS plugin workspace
+напрямую; общая runtime-граница проходит через NextGIS Web либо явный import
+поддерживаемого переносимого артефакта.
+
 Особо опасные области: `MapDrawable`, `MPLFeaturesUtils`, `LayerFillService`,
 `ReorderedLayerView`, `GISApplication`, `CollectorProjectRegistry`,
 `MaplibreMapInteraction`, Gradle flavors/versioning и self-hosted updater.
+
+При version change на AGP 9.x не используй `buildTypes.versionCode` или
+`buildTypes.versionName`: production остаётся в `defaultConfig`, debug app
+переопределяется через `androidComponents.onVariants`, а maplib debug — через
+`buildConfigField`. До handoff обязательно запусти из root
+`tools\verify-apk-version-matrix.ps1`; имя APK не заменяет проверку `aapt`.
 
 Не нарушай `lisa/belka`, layer order, hot-add consistency, Collector resource,
 backup-before-destruction и track flags contracts. Проверки выбирай из

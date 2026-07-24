@@ -27,6 +27,11 @@ apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
+def productionVersionCode = 195
+def productionVersionName = '3.1.2.4'
+def debugVersionCode = 195
+def debugVersionName = '3.1.2.4'
+
 def geonicalSigningPropertyNames = [
         'GEONICAL_STORE_FILE',
         'GEONICAL_STORE_PASSWORD',
@@ -76,8 +81,8 @@ android {
         compileSdk 36
         targetSdkVersion 36
         // Fork versioning: docs/reference/build-matrix.md and docs/runbooks/release-apk.md
-        versionCode 193
-        versionName '3.1.2.2'
+        versionCode productionVersionCode
+        versionName productionVersionName
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
 
         def props = new Properties()
@@ -168,9 +173,10 @@ android {
         targetCompatibility JavaVersion.VERSION_21
     }
 
-    // APKs: outputs/apk/<flavor>/<buildType>/ (e.g. lisa/release vs belka/release) — same basename is OK.
+    // The archive basename follows the production default. Variant identity/version must be read
+    // from APK metadata; the publisher assigns the canonical versioned filename after inspection.
     base {
-        archivesName = "ngmobile-${defaultConfig.versionName}"
+        archivesName = "ngmobile-${productionVersionName}"
     }
 
 }
@@ -180,6 +186,14 @@ androidComponents {
     beforeVariants(selector().withBuildType("debug")) { variantBuilder ->
         if (variantBuilder.productFlavors.any { it.second == "belka" }) {
             variantBuilder.enable = false
+        }
+    }
+    // AGP 9.x does not expose application versionCode/versionName on buildTypes.
+    // Override the single enabled debug output through the public Variant API instead.
+    onVariants(selector().withBuildType("debug")) { variant ->
+        variant.outputs.each { output ->
+            output.versionCode.set(debugVersionCode)
+            output.versionName.set(debugVersionName)
         }
     }
 }

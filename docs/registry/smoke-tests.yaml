@@ -20,6 +20,11 @@ tests:
     scope: app
     command: .\gradlew.bat :app:assembleLisaRelease :app:assembleBelkaRelease
     expected: Both product release variants assemble.
+  AUTO-APP-VERSION-MATRIX:
+    type: automatic
+    scope: [app, maplib]
+    command: powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version-matrix.ps1
+    expected: Lisa Debug, Lisa Release and Belka Release assemble; aapt reports the exact expected package and version for each APK; maplib diagnostic versions match their consuming variants.
   SMOKE-MAP-COLD-START:
     type: device
     scope: [app, maplib]
@@ -58,8 +63,8 @@ tests:
   SMOKE-COLLECTOR-IMPORT:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Select an NGW Collector resource, Import its composition, Reopen the project, Repeat import with two different layers sharing a display name]
-    expected: Project metadata and isolated workspace are created, layers are keyed by remote id, and all layers remain available.
+    steps: [Prepare a Collector project with editable enabled only for field vectors and add supported qgis_vector_style and qgis_raster_style items between vectors, Select the NGW Collector resource, Import its composition, Verify style tiles load with the project account and mixed order matches Collector, Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row, Start object creation and inspect offered layers, Reopen and run composition sync, Repeat import with two different layers sharing a display name]
+    expected: Project metadata and isolated workspace are created, layers are keyed by remote id, supported styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks stays on top, default OSM stays at internal index zero without visibility reset, and only Collector vectors with editable plus outbound sync are offered for object creation.
   SMOKE-COLLECTOR-RESUME:
     type: device
     scope: [app, maplib, maplibui]
@@ -123,8 +128,8 @@ tests:
   SMOKE-SELF-UPDATE:
     type: device
     scope: [app]
-    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Download and start install for a valid artifact]
-    expected: Valid same-branch same-signature update proceeds from its versioned URL and invalid schema, identity, version, URL or integrity is rejected.
+    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
+    expected: Valid same-branch same-signature update reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL or integrity is rejected.
   SMOKE-NGW-URL-IMPORT:
     type: device
     scope: [app, maplib, maplibui]

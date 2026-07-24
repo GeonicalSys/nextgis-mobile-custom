@@ -1,12 +1,16 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-07-19
+last_verified: 2026-07-24
 related_code:
+  - app/src/main/java/com/nextgis/mobile/MainApplication.java
+  - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
+  - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/fragment/ReorderedLayerView.java
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
 ---
@@ -24,7 +28,9 @@ related_code:
 
 ## Контракты
 
-1. В `LayerGroup` индекс `0` означает низ стека.
+1. В `LayerGroup` индекс `0` означает низ стека. Дефолтный OSM/Mapnik существует
+   в каждой карте, включая Collector workspace, и нормализуется в эту позицию
+   без сброса пользовательской видимости.
 2. Для NGRc/local TMS слой помещается над OSM, если OSM существует; иначе — в
    нижнюю позицию, а не поверх всего пользовательского стека.
 3. `signaturesRootLayer` и raster sibling anchor учитываются при вставке style
@@ -42,9 +48,19 @@ related_code:
    MapLibre layer и поэтому отображаться выше треков, пользовательских векторов,
    растров, подписей и edit overlays. `iconAllowOverlap` и
    `iconIgnorePlacement` не позволяют collision detection скрывать курсор.
+9. Пользовательский слой «Мои треки» остаётся последним элементом внутреннего
+   `LayerGroup` и первой строкой перевёрнутого UI-списка. Collector batch
+   вставляет project-managed слои ниже этой границы, а открытие существующей
+   карты исправляет ранее сохранённый неверный порядок.
+10. Collector vector и поддерживаемые QGIS style resources используют один
+    `collector_order`. Style materializes как authenticated `NGWRasterLayer`,
+    поэтому `computeCollectorOrderedInsertIndex()` учитывает и vector, и raster
+    NGW layers; remote id стиля отвечает за tile identity, parent resource id —
+    только за extent.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
-`INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`.
+`INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
+`INV-TRACK-LAYER-TOP`, `INV-COLLECTOR-RASTER-STYLES`.
 
 ## Изменение rendering pipeline
 
@@ -57,7 +73,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 - не теряется ли deferred reload после batch layer fill.
 
 Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
-`SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`.
+`SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
+`SMOKE-COLLECTOR-IMPORT`.
 
 ## Производительность
 

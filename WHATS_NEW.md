@@ -4,6 +4,18 @@
 в [`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md), история merge —
 в [`docs/history/upstream/`](docs/history/upstream/README.md).
 
+## 3.1.2.4 — 2026-07-24
+
+- Collector project импортирует `qgis_vector_style` и `qgis_raster_style` как
+  read-only raster tile layers с общим порядком относительно vector-слоёв.
+- Обновление продолжается автоматически после возврата с Android-экрана
+  специального разрешения; повторный ручной запуск проверки не нужен.
+- Дефолтный OpenStreetMap Standard aka Mapnik создаётся в каждом Collector
+  workspace и остаётся внизу списка без сброса видимости.
+- Project-managed Collector-слои редактируются по галочке элемента Collector и
+  исходящему направлению синхронизации, а не общему `is_editable`.
+- «Мои треки» закреплены наверху списка; Collector batch вставляет слои ниже.
+
 ## 3.1.2.2 — 2026-07-20
 
 - Исправлено добавление Веб ГИС в production ЛИСА/Белка: после успешного входа

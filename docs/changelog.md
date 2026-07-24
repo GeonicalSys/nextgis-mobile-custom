@@ -1,12 +1,54 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-07-20
+last_verified: 2026-07-24
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-07-24
+
+- Версия форка унифицирована до `versionCode` 195 / `versionName` 3.1.2.4 для
+  Lisa Release, Belka Release и Lisa Debug; maplib VERSION_NAME сопряжён для
+  debug и release.
+- Collector project теперь импортирует уже штатно распознаваемые
+  `qgis_vector_style` и `qgis_raster_style` как authenticated read-only raster
+  tile layers, сохраняет их общий порядок с vectors и синхронизирует
+  добавление, свойства, порядок и удаление.
+- Зафиксирована граница поддержки: `Connection.java` не расширяется
+  дополнительными современными style classes без отдельного продуктового
+  решения; Activity/Dialog используют единый import helper.
+
+## 2026-07-23
+
+- Self-hosted updater сохраняет одноразовое pending-состояние и автоматически
+  продолжает установку после возврата с Android-экрана специального разрешения;
+  повторный ручной запуск проверки обновлений больше не требуется.
+- Дефолтный `OpenStreetMap Standard aka Mapnik` теперь создаётся для каждого
+  Collector workspace и нормализуется внизу списка без сброса видимости;
+  добавлены invariant, change-impact и smoke-контракт этого порядка.
+- Исправлен debug-only versioning для AGP 9.1: Lisa Debug получает
+  `194`/`3.1.2.3` через Variant API, production Lisa/Belka остаются на
+  `193`/`3.1.2.2`, а maplib version сопрягается отдельно для debug/release.
+- Добавлена обязательная автоматическая APK version matrix и усилены инструкции
+  агентов: неподдерживаемый version DSL, handoff без сборки и вывод версии из
+  имени APK теперь явно запрещены.
+- Исправлена политика редактирования project-managed Collector-слоёв:
+  приложение использует галочку элемента Collector и исходящее направление
+  синхронизации, не блокируя полевые слои общим `is_editable` из mobile config.
+- «Мои треки» закреплён наверху списка: Collector batch вставляет слои ниже него,
+  а ранее сохранённый неверный порядок исправляется при открытии карты.
+- Android-приложение включено в общую модель экосистемы ЛИСА вместе с
+  `standart_profiles` и проектом QGIS Plugins; добавлены единый маршрут для
+  агентов, карта владельцев, end-to-end поток через NextGIS Web/Collector и
+  отдельный контракт явного offline basemap handoff.
+- Добавлен проверяемый `registry/ecosystem.yaml`: внешние docs entries,
+  межпроектные контракты и граница, запрещающая прямую Android-зависимость от
+  desktop profiles, plugin mirrors и `variables.py`.
+- Validator проверяет локальные ссылки экосистемы и, когда соседний workspace
+  доступен, существование его входных и контрактных документов.
 
 ## 2026-07-20
 

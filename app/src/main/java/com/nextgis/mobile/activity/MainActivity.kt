@@ -1417,6 +1417,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onResume() {
         super.onResume()
+        if (AppUpdateManager.resumePendingInstallation(this)) {
+            startupUpdateCheckPending = false
+            startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
+        }
         val gisApp = application as IGISApplication
         if (gisApp.isLayerFillServiceBusy) {
             /* Defer: avoids re-entrancy with MapFragment/map resume and window token races after screen on. */

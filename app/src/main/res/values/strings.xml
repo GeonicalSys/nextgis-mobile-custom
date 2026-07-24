@@ -162,7 +162,8 @@
     <string name="update_error">Update failed: %1$s</string>
     <string name="update_invalid">The downloaded update did not pass verification.</string>
     <string name="update_install_permission_title">Allow update installation</string>
-    <string name="update_install_permission_message">Allow this app to install unknown apps in Android settings. Then return and tap “Check updates” again; the downloaded APK will be reused.</string>
+    <string name="update_install_permission_message">Allow this app to install unknown apps in Android settings. After you return, installation will continue automatically and the downloaded APK will be reused.</string>
+    <string name="update_install_permission_not_granted">Install permission was not granted. The update was not installed.</string>
     <string name="update_open_settings">Open settings</string>
     <string name="intro1">Welcome to NextGIS Mobile!\n\nThis app can:\n* Create and navigate multi-layered maps\n* Add and create geodata\n* Help in field data collection\n* Write tracks\nand much more!</string>
     <string name="intro2">Sign in to get the most out of this app, synchronize your data and get regular updates (support plan is needed). You can sign in later in Settings.</string>

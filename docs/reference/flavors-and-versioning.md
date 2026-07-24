@@ -1,10 +1,11 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-07-20
+last_verified: 2026-07-23
 related_code:
   - app/build.gradle
   - maplib/build.gradle
+  - tools/verify-apk-version-matrix.ps1
   - app/src/main/AndroidManifest.xml
 ---
 
@@ -36,9 +37,23 @@ service permission, updater identity и оба account resource keys в merged A
 
 - `versionName = <upstream-base>.<fork-patch>`.
 - `versionCode` увеличивается для каждого публикуемого APK.
-- `maplib` BuildConfig version синхронизируется с app, если контракт использует
-  её для протокола, диагностики или совместимости.
+- Production constants приложения находятся в `defaultConfig`; debug-only
+  constants применяются к `lisaDebug` через публичный
+  `androidComponents.onVariants` API.
+- В AGP `9.1.0` `versionCode`/`versionName` нельзя задавать в application
+  `buildTypes`. Для maplib debug не задаётся library `versionName`: меняется
+  только явный `BuildConfig.VERSION_NAME`.
+- `maplib` BuildConfig version синхронизируется с app для каждого variant,
+  поскольку используется в user-agent/диагностике.
 - Обе flavors одного релиза должны иметь согласованную версию.
+- Debug-only bump обязан оставить обе production release metadata без
+  изменений. Проверка — `tools\verify-apk-version-matrix.ps1` из root.
+
+Имя локального APK не является version contract: общий
+`base.archivesName` основан на production default и может дать debug APK
+basename с production version. `output-metadata.json`, `aapt dump badging` и
+publisher являются источниками истины; publisher формирует каноническое имя по
+фактической metadata.
 
 ## Update flavor
 

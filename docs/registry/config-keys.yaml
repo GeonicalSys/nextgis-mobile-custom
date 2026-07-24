@@ -85,6 +85,11 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  updater-pending-install:
+    owner: app
+    location_name: app_update_state SharedPreferences
+    source: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+    purpose: One-shot validated update manifest used only while Android install permission is pending
   collector-registry:
     owner: maplibui
     location_name: collector_projects_registry.json

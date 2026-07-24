@@ -8,7 +8,9 @@ package com.nextgis.mobile.util;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -18,6 +20,7 @@ import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
@@ -58,6 +61,8 @@ public final class AppUpdateManager
 {
     private static final String UPDATE_FLAVOR_METADATA =
             "com.nextgis.mobile.UPDATE_FLAVOR";
+    private static final String UPDATE_STATE_PREFERENCES = "app_update_state";
+    private static final String KEY_PENDING_INSTALL_MANIFEST = "pending_install_manifest";
     private static final int BUFFER_SIZE = 128 * 1024;
     private static final int MAX_MANIFEST_SIZE = 512 * 1024;
     private static final long MAX_APK_SIZE = 1024L * 1024L * 1024L;
@@ -90,6 +95,55 @@ public final class AppUpdateManager
             return;
         }
         checkForUpdate(activity, false);
+    }
+
+
+    public static boolean resumePendingInstallation(Activity activity)
+    {
+        if (!isActivityUsable(activity)) {
+            return false;
+        }
+
+        UpdateManifest manifest;
+        try {
+            manifest = readPendingInstallation(activity);
+        } catch (JSONException error) {
+            clearPendingInstallation(activity);
+            showError(activity, error);
+            return true;
+        }
+        if (manifest == null) {
+            return false;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                && !activity.getPackageManager().canRequestPackageInstalls()) {
+            clearPendingInstallation(activity);
+            Toast.makeText(
+                    activity,
+                    R.string.update_install_permission_not_granted,
+                    Toast.LENGTH_LONG)
+                    .show();
+            return true;
+        }
+
+        try {
+            validateManifest(activity, manifest);
+            if (manifest.versionCode <= BuildConfig.VERSION_CODE) {
+                clearPendingInstallation(activity);
+                return true;
+            }
+        } catch (IOException error) {
+            clearPendingInstallation(activity);
+            showError(activity, error);
+            return true;
+        }
+
+        // Consume the one-shot continuation before starting asynchronous work. If validation or
+        // installation later fails, the normal updater UI remains the explicit retry path.
+        clearPendingInstallation(activity);
+        downloadAndInstall(activity, manifest);
+        return true;
     }
 
 
@@ -354,7 +408,7 @@ public final class AppUpdateManager
 
                 runOnUiThread(activity, () -> {
                     dismiss(progressDialog);
-                    requestInstallation(activity, apkFile);
+                    requestInstallation(activity, apkFile, manifest);
                 });
             } catch (Exception error) {
                 runOnUiThread(activity, () -> {
@@ -544,7 +598,10 @@ public final class AppUpdateManager
     }
 
 
-    private static void requestInstallation(Activity activity, File apkFile)
+    private static void requestInstallation(
+            Activity activity,
+            File apkFile,
+            UpdateManifest manifest)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
                 && !activity.getPackageManager().canRequestPackageInstalls()) {
@@ -553,10 +610,21 @@ public final class AppUpdateManager
                     .setMessage(R.string.update_install_permission_message)
                     .setNegativeButton(android.R.string.cancel, null)
                     .setPositiveButton(R.string.update_open_settings, (dialog, which) -> {
+                        if (!savePendingInstallation(activity, manifest)) {
+                            showError(
+                                    activity,
+                                    new IOException("Cannot persist pending update state"));
+                            return;
+                        }
                         Intent settingsIntent = new Intent(
                                 Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
                                 Uri.parse("package:" + activity.getPackageName()));
-                        activity.startActivity(settingsIntent);
+                        try {
+                            activity.startActivity(settingsIntent);
+                        } catch (ActivityNotFoundException error) {
+                            clearPendingInstallation(activity);
+                            showError(activity, error);
+                        }
                     })
                     .show();
             return;
@@ -577,6 +645,44 @@ public final class AppUpdateManager
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             activity.startActivity(fallbackIntent);
         }
+    }
+
+
+    private static boolean savePendingInstallation(Activity activity, UpdateManifest manifest)
+    {
+        return pendingInstallationPreferences(activity)
+                .edit()
+                .putString(KEY_PENDING_INSTALL_MANIFEST, manifest.toJson().toString())
+                .commit();
+    }
+
+
+    private static UpdateManifest readPendingInstallation(Activity activity)
+            throws JSONException
+    {
+        String json = pendingInstallationPreferences(activity)
+                .getString(KEY_PENDING_INSTALL_MANIFEST, null);
+        if (json == null || json.trim().isEmpty()) {
+            return null;
+        }
+        return UpdateManifest.fromJson(new JSONObject(json));
+    }
+
+
+    private static void clearPendingInstallation(Activity activity)
+    {
+        pendingInstallationPreferences(activity)
+                .edit()
+                .remove(KEY_PENDING_INSTALL_MANIFEST)
+                .commit();
+    }
+
+
+    private static SharedPreferences pendingInstallationPreferences(Context context)
+    {
+        return context.getSharedPreferences(
+                UPDATE_STATE_PREFERENCES,
+                Context.MODE_PRIVATE);
     }
 
 
@@ -734,6 +840,31 @@ public final class AppUpdateManager
                     json.getString("signingCertificateSha256"),
                     json.getString("publishedAt").trim(),
                     json.optString("releaseNotes", "").trim());
+        }
+
+
+        JSONObject toJson()
+        {
+            JSONObject json = new JSONObject();
+            try {
+                json.put("schemaVersion", 1);
+                json.put("applicationId", applicationId);
+                json.put("flavor", flavor);
+                json.put("channel", channel);
+                json.put("versionCode", versionCode);
+                json.put("versionName", versionName);
+                json.put("minSdk", minSdk);
+                json.put("targetSdk", targetSdk);
+                json.put("apkUrl", apkUrl);
+                json.put("apkSize", apkSize);
+                json.put("apkSha256", apkSha256);
+                json.put("signingCertificateSha256", signingCertificateSha256);
+                json.put("publishedAt", publishedAt);
+                json.put("releaseNotes", releaseNotes);
+            } catch (JSONException error) {
+                throw new IllegalStateException("Cannot persist pending update manifest", error);
+            }
+            return json;
         }
     }
 }
