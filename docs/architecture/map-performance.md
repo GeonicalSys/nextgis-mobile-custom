@@ -28,6 +28,8 @@ GeoJSON в Java и может повторно читать атрибуты д�
 ## Уже реализовано
 
 - spatial query через RTree и `VectorLayer.query(GeoEnvelope)`;
+  identify затем уточняет hit: полигоны — PIP, линии — пересечение с
+  tap-envelope (±20dp), не bbox объекта;
 - zoom-aware упрощённые геометрии `geom_<zoom>`;
 - render cache с безопасным fallback на построение из БД;
 - lite reload для уже подготовленных source-данных;

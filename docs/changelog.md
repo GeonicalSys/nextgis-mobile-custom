@@ -1,15 +1,40 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-07-24
+last_verified: 2026-07-25
 related_code:
   - docs
 ---
 
 # История документационной системы
 
+## 2026-07-25
+
+- Identify линий: refine RTree-кандидатов через пересечение геометрии с
+  tap-envelope (±20dp), а не bbox объекта; `GeoLineString.intersects` учитывает
+  вершины внутри envelope (иначе короткий сегмент внутри tap давал miss).
+- Режим редактирования геометрии (`MODE_EDIT` / walk / touch): на нижней панели
+  стандартный крестик навигации → `cancelEdits()` (как верхний X); без пункта
+  в толстых `edit_*.xml`.
+- Identify (`MODE_INFO`): кнопка формы атрибутов в нижней панели при
+  `VectorLayer.isEditingAllowed()` (политика коллектора); lean-меню
+  `attributes` / `attributes_editable`, BottomToolbar ALWAYS до 3 пунктов;
+  тап → сеанс редактирования слоя + форма.
+
 ## 2026-07-24
 
+- Исправлена регрессия zoom-выражений: `interpolate`/`step` по zoom снова
+  верхний уровень (scale в stop outputs; label zoom gate через `step(0..24)`),
+  иначе MapLibre отвергал property и ломал масштаб/opacity.
+- Rule-based: слойные дефолты MapLibre (stops, scale, opacity, SymbolLayer
+  clamp) берутся из «прочих»; merge наследует scale flags и opacity; zoom-scale
+  expression — outer switchCase; явный reset min/max подписей.
+- Lisa Debug поднят до `versionCode` 196 / `versionName` 3.1.2.5 (maplib debug
+  VERSION_NAME синхронизирован); Lisa/Belka Release остаются на `195` /
+  `3.1.2.4`.
+- Rule-based стили: зум видимости подписей работает per-category через feature
+  props; незаданные опциональные поля наследуются из «Стиль для прочих
+  (по умолчанию)»; zoom-stops слоя в rule-режиме берутся из прочих.
 - Версия форка унифицирована до `versionCode` 195 / `versionName` 3.1.2.4 для
   Lisa Release, Belka Release и Lisa Debug; maplib VERSION_NAME сопряжён для
   debug и release.

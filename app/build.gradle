@@ -29,8 +29,8 @@ apply plugin: 'kotlin-android'
 
 def productionVersionCode = 195
 def productionVersionName = '3.1.2.4'
-def debugVersionCode = 195
-def debugVersionName = '3.1.2.4'
+def debugVersionCode = 196
+def debugVersionName = '3.1.2.5'
 
 def geonicalSigningPropertyNames = [
         'GEONICAL_STORE_FILE',

@@ -22,23 +22,18 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
+<!-- Non-editable layer identify/info bar: prev + next only (lean menu — do not hide siblings). -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_edit_attributes"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_action_attributes"
-        android:title="@string/edit_attributes"
-        />
-    <item
         android:id="@+id/menu_prev"
-        app:showAsAction="ifRoom|withText"
+        app:showAsAction="always"
         android:icon="@drawable/ic_action_av_skip_previous"
         android:title="@string/attributes_prev"/>
     <item
         android:id="@+id/menu_next"
-        app:showAsAction="ifRoom|withText"
+        app:showAsAction="always"
         android:icon="@drawable/ic_action_av_skip_next"
         android:title="@string/attributes_next"/>
 </menu>

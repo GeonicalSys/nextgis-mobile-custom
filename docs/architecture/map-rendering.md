@@ -57,6 +57,19 @@ related_code:
     поэтому `computeCollectorOrderedInsertIndex()` учитывает и vector, и raster
     NGW layers; remote id стиля отвечает за tile identity, parent resource id —
     только за extent.
+11. Rule-based векторный стиль: слойные MapLibre-дефолты (size/text stops,
+    scale-with-zoom, opacity подписей, SymbolLayer min/max) берутся из
+    «стиля для прочих (по умолчанию)», не из базового `mStyle` рендерера.
+    `FieldStyleRule` при apply мержит категорию с прочими для type-default
+    полей (зум подписей, zoom-stops, флаги scale, opacity=255, шаблон/поле,
+    иконка и т.п.). Per-feature `label_min_zoom`/`label_max_zoom` режут
+    видимость через data-driven `text-opacity`; SymbolLayer clamp сбрасывается
+    явно. Data-driven scale — {@code interpolate(zoom)} наверху, {@code case} только
+    в значениях stops (zoom нельзя вкладывать в case — MapLibre spec). Ограничение:
+    категория с `scale=false` наследует `true` от прочих (false = unset).
+12. Identify/select: RTree даёт кандидатов по envelope; refine через
+    `EditLayerOverlay.notContains` — полигоны PIP, линии/точки пересечение с
+    tap-envelope (±20dp), не пустой угол bbox линии.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,

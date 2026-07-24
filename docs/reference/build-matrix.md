@@ -23,10 +23,10 @@ related_code:
 | minSdk | `26` |
 | App versionCode (release) | `195` |
 | App versionName (release) | `3.1.2.4` |
-| App versionCode (debug) | `195` |
-| App versionName (debug) | `3.1.2.4` |
+| App versionCode (debug) | `196` |
+| App versionName (debug) | `3.1.2.5` |
 | maplib VERSION_NAME (release) | `3.1.2.4` |
-| maplib VERSION_NAME (debug) | `3.1.2.4` |
+| maplib VERSION_NAME (debug) | `3.1.2.5` |
 | MapLibre Android SDK | `13.0.2` |
 | OkHttp | `5.3.2` |
 | Release application/account | `com.nextgis.mobile.geonical` / `com.nextgis.account.geonical` |

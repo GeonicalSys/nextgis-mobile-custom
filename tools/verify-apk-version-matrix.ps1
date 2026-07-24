@@ -118,8 +118,8 @@ $matrix = @(
         Name = 'Lisa Debug'
         Directory = 'app\build\outputs\apk\lisa\debug'
         ApplicationId = 'com.nextgis.mobile.debug'
-        VersionCode = 195
-        VersionName = '3.1.2.4'
+        VersionCode = 196
+        VersionName = '3.1.2.5'
     },
     [pscustomobject]@{
         Name = 'Lisa Release'
@@ -148,7 +148,7 @@ foreach ($entry in $matrix) {
 }
 
 $maplibVersions = @{
-    debug = '3.1.2.4'
+    debug = '3.1.2.5'
     release = '3.1.2.4'
 }
 

@@ -944,6 +944,9 @@ public class MapFragment
                 mSelectedLayer!!.isLocked = true
                 mActivity!!.showEditToolbar()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT
+                toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
+                mFinishListener = View.OnClickListener { cancelEdits() }
+                toolbar.setNavigationOnClickListener(mFinishListener)
                 toolbar.setOnMenuItemClickListener { menuItem ->
                     onOptionsItemSelected(
                         menuItem.itemId
@@ -958,6 +961,9 @@ public class MapFragment
                 mActivity!!.showEditToolbar()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT_BY_WALK
                 undoRedoOverlay!!.clearHistory()
+                toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
+                mFinishListener = View.OnClickListener { cancelEdits() }
+                toolbar.setNavigationOnClickListener(mFinishListener)
 
                 mMapRef.get()!!.map!!.unselectFeatureFromEdit(false, true)
                 mMapRef.get()!!.map!!.hideVertex()
@@ -973,6 +979,9 @@ public class MapFragment
                 mSelectedLayer!!.isLocked = true
                 mActivity!!.showEditToolbar()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT_BY_TOUCH
+                toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
+                mFinishListener = View.OnClickListener { cancelEdits() }
+                toolbar.setNavigationOnClickListener(mFinishListener)
                 toolbar.setOnMenuItemClickListener { menuItem ->
                     onOptionsItemSelected(menuItem.itemId)
                 }
@@ -1175,6 +1184,40 @@ public class MapFragment
         mEditAttributesFormFromEditMode = true
         layerUI.showEditForm(activity, featureId, null, -1)
         return true
+    }
+
+    /**
+     * From identify (MODE_INFO): enter layer edit session and open the attribute form
+     * for [featureId]. Gated by [VectorLayer.isEditingAllowed].
+     */
+    fun startAttributeFormFromIdentify(featureId: Long) {
+        val layer = mSelectedLayer ?: return
+        if (!layer.isEditingAllowed) {
+            showLayerNotEditableInCollectorToast()
+            return
+        }
+
+        if (featureId != Constants.NOT_FOUND.toLong()) {
+            editLayerOverlay?.setSelectedFeature(featureId)
+        }
+
+        val fragmentManager = mActivity?.supportFragmentManager ?: return
+        val attributesFragment =
+            fragmentManager.findFragmentByTag("ATTRIBUTES") as? AttributesFragment
+        attributesFragment?.setSkipRestoreOnDestroy(true)
+
+        (activity as? MainActivity)?.finishFragment()
+        if (attributesFragment != null && attributesFragment.isTablet) {
+            fragmentManager.beginTransaction().remove(attributesFragment).commit()
+        }
+
+        startLayerEditMode()
+        mActivity?.bottomToolbar?.post {
+            if (mode != MODE_SELECT_ACTION) {
+                startLayerEditMode()
+            }
+            showSelectedFeatureAttributesFormFromEditMode()
+        }
     }
 
     private fun updateCenterCrossVisibility() {
@@ -2440,13 +2483,13 @@ public class MapFragment
 //            Log.e("CCLICK", "on long:")
 //            Log.e("CCLICK", clickeEnelope.toString())
             items = vectorLayer.query(clickeEnelope)
-            for (i in items.indices) {    // FIXME hack for bad RTree cache
+            for (i in items.indices) {    // Refine RTree envelope candidates by actual geometry
                 featureId = items[i]
                 geometry = vectorLayer.getGeometryForId(featureId)
 
 //                Log.e("CCLICK", "on long check contains point:" + point.toString())
 //                Log.e("CCLICK", "on long check contains poly:" + geometry.toString())
-                if (EditLayerOverlay.notContains(geometry, point)) {
+                if (EditLayerOverlay.notContains(geometry, point, clickeEnelope)) {
                     continue
                 }
                 val feature = vectorLayer.getFeature(featureId)
@@ -2810,10 +2853,10 @@ public class MapFragment
 
                     var i = 0
                     while (i < items.size) {
-                        // FIXME hack for bad RTree cache
+                        // Refine RTree envelope candidates by actual geometry
                         featureId = items[i]
                         geometry = vectorLayer.getGeometryForId(featureId)
-                        if (EditLayerOverlay.notContains(geometry, point)) {
+                        if (EditLayerOverlay.notContains(geometry, point, mapEnv)) {
                             i++
                             continue
                         }
@@ -3002,14 +3045,14 @@ public class MapFragment
 
                     var i = 0
                     while (i < items.size) {
-                        // FIXME hack for bad RTree cache
+                        // Refine RTree envelope candidates by actual geometry
                         featureId = items[i]
                         geometry = vectorLayer.getLargeGeometryForId(featureId)
 
 //                        Log.e("CCLICK", "on Up check contains point:" + point.toString())
 //                        Log.e("CCLICK", "on Up check contains poly:" + geometry.toString())
 
-                        if (EditLayerOverlay.notContains(geometry, point)) {
+                        if (EditLayerOverlay.notContains(geometry, point, exactEnv)) {
                             i++
                             continue
                         }
