@@ -119,6 +119,28 @@ invariants:
     verify_smoke: [SMOKE-COLLECTOR-IMPORT]
     must_update_docs:
       - docs/architecture/collector-projects.md
+  INV-COLLECTOR-LAYER-IDENTITY:
+    title: Collector layer identity is stable and duplicate-safe
+    owners: [maplib, maplibui]
+    statement: >
+      A project-managed layer keeps account, remote id and project-origin metadata as one
+      identity. Loading or rebuilding a spatial cache must not persist a partially initialized
+      layer config. A managed-layer 404 is resolved by composition sync, never by silently
+      converting the layer to an unmanaged local vector. Before additions, composition sync
+      indexes physical layers by account plus remote id: one matching layer with only missing
+      origin may be repaired in place, while duplicate, manual, wrong-kind or mismatched-account
+      identities block apply and must not create another copy.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NgwLayerIdentityBackup.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-COLLECTOR-IDENTITY]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - docs/registry/config-keys.yaml
   INV-COLLECTOR-RASTER-STYLES:
     title: Supported Collector styles materialize as read-only raster layers
     owners: [maplib, maplibui]
@@ -199,16 +221,115 @@ invariants:
       - docs/architecture/map-rendering.md
   INV-BACKUP-BEFORE-DESTRUCTION:
     title: Required backup gates destructive layer mutation
-    owners: [maplibui]
-    statement: If backup fails, schema rebuild or Collector vector-layer removal must leave local feature data unchanged; removal of a recreatable raster-style tile cache is not a data-backup operation.
+    owners: [maplibui, maplib]
+    statement: >
+      For editable NGW vector layers, a successful data backup is required before any destructive
+      mutation — remote sync delete/overwrite, schema rebuild, Collector vector-layer removal,
+      manual layer delete, or manual feature delete. Backup must include attachment file bytes
+      (local files or NGW download), not metadata alone. If backup fails, local feature data must
+      remain unchanged and the user must see an alert with the failure reason. Non-editable Collector
+      layers and recreatable raster-style tile caches are not data-backup operations. LayerBackups/
+      is capped by preference layer_backup_max_gb (default 5); oldest ZIP archives are deleted when
+      the limit is exceeded. After a successful attachment push, the local file stays under the
+      server attach id and FeatureAttachments is updated so identification works without a second sync.
     related_code:
       - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java
     verify_smoke: [SMOKE-BACKUP-GATE]
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/ngw-sync-and-storage.md
       - docs/runbooks/incident-and-rollback.md
+      - docs/registry/config-keys.yaml
+      - docs/reference/settings-and-config.md
+  INV-MULTIPOLYGON-REPAIR:
+    title: Invalid multi-polygons repair into one feature before attribute entry
+    owners: [app, maplib, maplibui]
+    statement: >
+      Automatic topology repair is enabled only when the selected layer type is exactly
+      GTMultiPolygon. A valid input remains unchanged; an invalid input may split or union
+      polygonal parts but must produce one valid GeoMultiPolygon with the original CRS,
+      one feature and one attribute-form handoff. Empty, non-polygonal or still-invalid
+      repair output blocks Save and keeps geometry editing active. GTPolygon, LineString
+      and MultiLineString retain their existing behavior and never enter this repair path.
+      MapLibre conversion assigns CRS to the multi-polygon, polygons and rings. For drafts
+      created by an older conversion, repair recovers a missing collection CRS from the
+      nested polygon, ring or point before the JTS round trip.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/MultiPolygonGeometryRepair.java
+      - maplib/src/test/java/com/nextgis/maplib/util/MultiPolygonGeometryRepairTest.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-MULTIPOLYGON-REPAIR]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - app/docs/README.md
+  INV-GPS-TRACK-FILTER:
+    title: Track and walk recording retain real movement through 160 km/h
+    owners: [maplib, maplibui, app]
+    statement: >
+      TrackerService and WalkEditService use the same accuracy-aware sequence filter without
+      pedestrian/vehicle profiles. Valid movement through 160 km/h must be retained with or
+      without Android reported speed. Invalid coordinates, mock fixes, accuracy above 50 m,
+      delayed/future fixes, reported speed above 100 m/s, physically implausible distance or
+      acceleration and material isolated chord spikes are rejected. Motion is compared with
+      the newest accepted fix, including the delayed chord buffer, so one rejection cannot
+      anchor the sequence indefinitely. Sampling gaps above 30 seconds drain, rather than
+      discard, the previous valid buffer. Track recording obeys tracks_location_source only;
+      walk digitizing obeys location_source only. When both GPS and network are enabled,
+      network remains an initial and outage fallback, but a usable GPS fix suppresses network
+      fixes for 12 seconds so mixed-provider jitter cannot corrupt the recorded sequence.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
+      - maplib/src/test/java/com/nextgis/maplib/util/LocationTrackFilterCoreTest.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiterCore.java
+      - maplib/src/test/java/com/nextgis/maplib/util/LocationProviderArbiterCoreTest.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    must_update_docs:
+      - docs/architecture/crash-recovery.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - maplibui/docs/README.md
+  INV-CRASH-DRAFT-RECOVERY:
+    title: Crash-safe track resume and geometry/form drafts
+    owners: [app, maplibui, maplib]
+    statement: >
+      Track recording uses durable preference track_recording_enabled, cleared only by the
+      explicit menu finish action. After reboot or process death, recording auto-resumes
+      without a dialog; already inserted trackpoints must not be lost (closing an unfinished
+      track and starting a new id is allowed). Walk digitizing keeps walkedit_temp on
+      unexpected service death and offers Continue/Discard even if START_STICKY already
+      restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/touch
+      editing synchronously journals its latest WKT plus active-map/layer/feature identity in
+      GeometryEditDraftStore and offers Continue/Discard after process/task death; only
+      explicit Cancel, successful layer update, or handoff to the attribute form clears it.
+      Attribute forms persist a typed FeatureFormDraftStore snapshot (fields, geometry,
+      pending photos) until Save or Discard, recovered via Continue/Discard at app start.
+      Activity.onPause after successful Save must not recreate the cleared form draft. A
+      successful cold-restored form result must carry layer/new-feature identity and must not
+      depend on a retained MapFragment.mSelectedLayer or temporary MapLibre edit session. If
+      the inserted row is absent from the process-local GeoJSON source, Save must reload layer
+      data from SQLite and make the object visible without an application restart.
+    related_code:
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/BootLoader.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+    verify_smoke: [SMOKE-CRASH-DRAFT-RECOVERY]
+    must_update_docs:
+      - docs/architecture/crash-recovery.md
   INV-UPDATER-IDENTITY:
     title: Self-hosted updater validates product and artifact identity
     owners: [app]

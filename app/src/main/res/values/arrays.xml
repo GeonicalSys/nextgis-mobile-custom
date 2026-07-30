@@ -38,4 +38,18 @@
         <item>@string/map_bg_neutral</item>
         <item>@string/map_bg_dark</item>
     </string-array>
+    <string-array name="layer_backup_max_gb_entries" translatable="false">
+        <item>1 GB</item>
+        <item>2 GB</item>
+        <item>5 GB</item>
+        <item>10 GB</item>
+        <item>20 GB</item>
+    </string-array>
+    <string-array name="layer_backup_max_gb_values" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+    </string-array>
 </resources>

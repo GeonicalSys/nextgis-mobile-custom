@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-07-23
+last_verified: 2026-07-30
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -46,6 +46,8 @@ service permission, updater identity и оба account resource keys в merged A
 - `maplib` BuildConfig version синхронизируется с app для каждого variant,
   поскольку используется в user-agent/диагностике.
 - Обе flavors одного релиза должны иметь согласованную версию.
+- Общая зависимость `maplib` от JTS Core `1.20.0` входит во все варианты
+  одинаково; исправление мультиполигонов не является flavor-specific feature.
 - Debug-only bump обязан оставить обе production release metadata без
   изменений. Проверка — `tools\verify-apk-version-matrix.ps1` из root.
 

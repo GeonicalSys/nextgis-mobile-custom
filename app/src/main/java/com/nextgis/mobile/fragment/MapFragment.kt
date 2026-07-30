@@ -44,7 +44,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Vibrator
 import android.preference.PreferenceManager
-import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -74,6 +73,7 @@ import com.nextgis.maplib.api.IGISApplication
 import com.nextgis.maplib.api.ILayer
 import com.nextgis.maplib.api.ILayerView
 import com.nextgis.maplib.datasource.Feature
+import com.nextgis.maplib.datasource.Geo
 import com.nextgis.maplib.datasource.GeoEnvelope
 import com.nextgis.maplib.datasource.GeoGeometry
 import com.nextgis.maplib.datasource.GeoGeometryFactory
@@ -84,13 +84,11 @@ import com.nextgis.maplib.datasource.GeoMultiPoint
 import com.nextgis.maplib.datasource.GeoMultiPolygon
 import com.nextgis.maplib.datasource.GeoPoint
 import com.nextgis.maplib.datasource.GeoPolygon
-import com.nextgis.maplib.display.SimpleFeatureRenderer
 import com.nextgis.maplib.location.GpsEventSource
 import com.nextgis.maplib.map.Layer
 import com.nextgis.maplib.map.LayerGroup
 import com.nextgis.maplib.map.MLP.MLGeometryEditClass
 import com.nextgis.maplib.map.MPLFeaturesUtils
-import com.nextgis.maplib.map.MPLFeaturesUtils.id_name
 import com.nextgis.maplib.map.MapDrawable
 import com.nextgis.maplib.map.MaplibreMapInteraction
 import com.nextgis.maplib.map.VectorLayer
@@ -102,6 +100,7 @@ import com.nextgis.maplib.util.FileUtil
 import com.nextgis.maplib.util.GeoConstants
 import com.nextgis.maplib.util.LocationUtil
 import com.nextgis.maplib.util.MapUtil
+import com.nextgis.maplib.util.MultiPolygonGeometryRepair
 import com.nextgis.maplibui.GISApplication
 import com.nextgis.maplibui.api.EditEventListener
 import com.nextgis.maplibui.api.ILayerUI
@@ -120,6 +119,7 @@ import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.service.WalkEditService
 import com.nextgis.maplibui.util.ConstantsUI
 import com.nextgis.maplibui.util.ControlHelper
+import com.nextgis.maplibui.util.GeometryEditDraftStore
 import com.nextgis.maplibui.util.NotificationHelper
 import com.nextgis.maplibui.util.SettingsConstantsUI
 import com.nextgis.mobile.MainApplication
@@ -235,10 +235,24 @@ public class MapFragment
 
     var longClickProcessed = false
 
+    /** Soft-interrupt: walk mode or orphan draft while WalkEditService is dead. */
+    private var walkInterruptPromptShown = false
+    /** Set by MainActivity recovery hub to avoid duplicate walk dialogs. */
+    var crashRecoveryWalkDialogShown = false
+    /** Continue can be pressed before MapLibre has finished rebuilding its editable sources. */
+    private var pendingManualGeometryResume = false
+    private var pendingManualGeometrySnapshot: GeometryEditDraftStore.Snapshot? = null
+    private var manualGeometryResumeRetryCount = 0
+    private val manualGeometryResumeMaxRetries = 35
+    private val manualGeometryResumeRunnable = Runnable {
+        tryResumeManualGeometryFromDraft()
+    }
+
     /** Bounded delayed retries when MapLibre is not ready at end of layer-fill batch. */
     private var mapReloadAfterFillRetryCount = 0
     private val mapReloadAfterFillMaxRetries = 35
     private var mapReloadAfterFillRetryRunnable: Runnable? = null
+    private var mapReloadAfterFillAwaitingCompletion = false
 
     private val mapViewOrNull get() = mMapRef.get()
     private val mapDrawableOrNull get() = mapViewOrNull?.map
@@ -457,8 +471,19 @@ public class MapFragment
     }
 
     override fun setMapLayersLoaded() {
-        /* Full style just applied — user-location-source exists; onResume may have run too early. */
         updateLastLocation()
+        if (mapReloadAfterFillAwaitingCompletion) {
+            mapReloadAfterFillAwaitingCompletion = false
+            (mApp as? IGISApplication)?.clearMapReloadAfterLayerFillPending()
+            HyperLog.v(
+                Constants.TAG,
+                "reloadMapStyleAfterLayerFill: completed after MapLibre style/source apply"
+            )
+        }
+        if (pendingManualGeometryResume) {
+            HyperLog.v(Constants.TAG, "GeometryDraft retry after MapLibre layers loaded")
+            tryResumeManualGeometryFromDraft()
+        }
     }
 
     override fun loadLayersLite(){
@@ -475,12 +500,17 @@ public class MapFragment
     override fun reloadMapStyleAndLayersAfterLayerFillBatch(): Boolean {
         val mapRef = mMapRef.get() ?: return false
         val mapDrawable = mapRef.map ?: return false
+        mapReloadAfterFillAwaitingCompletion = true
         if (mapDrawable.getMaplibreMap() == null) {
             scheduleMapReloadAfterLayerFillRetry()
             return false
         }
         mapReloadAfterFillRetryCount = 0
-        return doReloadMapStyleAndLayersAfterLayerFillBatch()
+        val started = doReloadMapStyleAndLayersAfterLayerFillBatch()
+        if (!started) {
+            scheduleMapReloadAfterLayerFillRetry()
+        }
+        return started
     }
 
     override fun reloadLayerStyle(layerId: Int) {
@@ -546,7 +576,6 @@ public class MapFragment
             mapReloadAfterFillRetryRunnable = null
             if (doReloadMapStyleAndLayersAfterLayerFillBatch()) {
                 mapReloadAfterFillRetryCount = 0
-                (mApp as? IGISApplication)?.clearMapReloadAfterLayerFillPending()
             } else if (mMapRef.get()?.map?.getMaplibreMap() == null
                 && mapReloadAfterFillRetryCount < mapReloadAfterFillMaxRetries) {
                 scheduleMapReloadAfterLayerFillRetry()
@@ -626,6 +655,9 @@ public class MapFragment
                     mMapRef.get()!!.map!!.updateMarkerByEditObject();
                     mMapRef.get()!!.buffer()
                     mMapRef.get()!!.postInvalidate()
+                    persistManualGeometryDraft(
+                        if (id == com.nextgis.maplibui.R.id.menu_edit_undo) "undo" else "redo"
+                    )
                 }
                 return result
             }
@@ -633,14 +665,19 @@ public class MapFragment
             com.nextgis.maplibui.R.id.menu_edit_by_touch -> {
                 setNewMode(MODE_EDIT_BY_TOUCH)
                 result = editLayerOverlay!!.onOptionsItemSelected(id)
+                if (result) {
+                    persistManualGeometryDraft("switch-to-touch")
+                }
                 return result
             }
 
             com.nextgis.maplibui.R.id.menu_edit_by_walk -> {
                 setNewMode(MODE_EDIT_BY_WALK)
                 result = editLayerOverlay!!.onOptionsItemSelected(id)
-                if (result)
+                if (result) {
                     undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
+                    clearManualGeometryDraft("switch-to-walk")
+                }
 
                 (mApp!!.map as MapDrawable).updateHistoryByWalkEnd()
                 return result
@@ -748,6 +785,62 @@ public class MapFragment
             featureId = feature.id
         }
 
+        /*
+         * Only GTMultiPolygon layers opt into automatic topology repair. Keep one feature and one
+         * attribute form: JTS may split an invalid ring into several polygon parts, but the parts
+         * remain components of the same GeoMultiPolygon.
+         */
+        if (MultiPolygonGeometryRepair.supportsLayerType(
+                mSelectedLayer?.geometryType ?: GeoConstants.GTNone
+            )
+            && geometry is GeoMultiPolygon
+        ) {
+            val repair = MultiPolygonGeometryRepair.repairIfNeeded(geometry)
+            when (repair.status) {
+                MultiPolygonGeometryRepair.Status.REPAIRED -> {
+                    geometry = repair.geometry
+                    feature?.geometry = geometry
+                    editLayerOverlay!!.fillDrawItems(geometry)
+                    mMapRef.get()?.map?.let { map ->
+                        if (map.editingObject != null) {
+                            map.replaceGeometryFromHistoryChanges(geometry)
+                            map.updateMarkerByEditObject()
+                        }
+                    }
+                    HyperLog.v(
+                        Constants.TAG,
+                        "MultiPolygon geometry repaired layer=${mSelectedLayer!!.id} " +
+                            "feature=$featureId parts=${repair.polygonCount} " +
+                            "reason=${repair.diagnostic}"
+                    )
+                    Toast.makeText(
+                        context,
+                        getString(
+                            com.nextgis.maplibui.R.string.multipolygon_repaired,
+                            repair.polygonCount
+                        ),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                MultiPolygonGeometryRepair.Status.FAILED -> {
+                    HyperLog.w(
+                        Constants.TAG,
+                        "MultiPolygon geometry repair failed layer=${mSelectedLayer!!.id} " +
+                            "feature=$featureId reason=${repair.diagnostic}"
+                    )
+                    Toast.makeText(
+                        context,
+                        com.nextgis.maplibui.R.string.multipolygon_repair_failed,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return false
+                }
+
+                MultiPolygonGeometryRepair.Status.UNCHANGED -> Unit
+            }
+        }
+
         if (geometry == null || !geometry.isValid) {
             Toast.makeText(
                 context,
@@ -773,6 +866,7 @@ public class MapFragment
                 //show attributes edit activity
                 val vectorLayerUI = mSelectedLayer as IVectorLayerUI
                 vectorLayerUI.showEditForm(mActivity, featureId, geometry, -1)
+                clearManualGeometryDraft("handoff-to-attribute-form")
             } else {
                 var uri =  Uri.parse("content://" + mApp!!.authority + "/" + mSelectedLayer!!.path.name)
                 uri = ContentUris.withAppendedId(uri!!, featureId)
@@ -781,13 +875,56 @@ public class MapFragment
                 try {
                     values.put(Constants.FIELD_GEOM, geometry.toBlob())
                 } catch (e: IOException) {
-                    e.printStackTrace()
+                    editLayerOverlay!!.setHasEdits(true)
+                    HyperLog.e(
+                        Constants.TAG,
+                        "GeometryDraft geometry serialization failed layer=${mSelectedLayer!!.id} " +
+                            "feature=$featureId: ${e.message}",
+                        e
+                    )
+                    Toast.makeText(
+                        context,
+                        com.nextgis.maplibui.R.string.error_db_update,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return false
                 }
 
-                mActivity!!.contentResolver.update(uri, values, null, null)
+                val updated = try {
+                    mActivity!!.contentResolver.update(uri, values, null, null)
+                } catch (e: RuntimeException) {
+                    editLayerOverlay!!.setHasEdits(true)
+                    HyperLog.e(
+                        Constants.TAG,
+                        "GeometryDraft save-to-layer crashed layer=${mSelectedLayer!!.id} " +
+                            "feature=$featureId: ${e.message}",
+                        e
+                    )
+                    Toast.makeText(
+                        context,
+                        com.nextgis.maplibui.R.string.error_db_update,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return false
+                }
+                if (updated != 1) {
+                    editLayerOverlay!!.setHasEdits(true)
+                    HyperLog.e(
+                        Constants.TAG,
+                        "GeometryDraft save-to-layer failed layer=${mSelectedLayer!!.id} " +
+                            "feature=$featureId updated=$updated"
+                    )
+                    Toast.makeText(
+                        context,
+                        com.nextgis.maplibui.R.string.error_db_update,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return false
+                }
 
                 mMapRef.get()!!.map!!.cancelFeatureEdit(false)
                 setNewMode(MODE_SELECT_ACTION)
+                clearManualGeometryDraft("geometry-save-success")
 
             }
         }
@@ -834,18 +971,70 @@ public class MapFragment
             val id = data.getLongExtra(ConstantsUI.KEY_FEATURE_ID, Constants.NOT_FOUND.toLong())
 
             if (id != Constants.NOT_FOUND.toLong()) {
+                val previousLayer = mSelectedLayer
+                val resultLayerId = data.getIntExtra(
+                    ConstantsUI.KEY_LAYER_ID,
+                    previousLayer?.id ?: Constants.NOT_FOUND
+                )
+                val resultLayer = when {
+                    previousLayer?.id == resultLayerId -> previousLayer
+                    resultLayerId != Constants.NOT_FOUND ->
+                        mMapRef.get()?.map?.getLayerById(resultLayerId) as? VectorLayer
+                    else -> previousLayer
+                }
+                if (resultLayer == null) {
+                    HyperLog.e(
+                        Constants.TAG,
+                        "FormSave result cannot resolve layer resultLayer=$resultLayerId " +
+                            "feature=$id mode=${modeName(mode)}"
+                    )
+                    setNewMode(MODE_NORMAL)
+                    return
+                }
+
+                val wasNewFeature = data.getBooleanExtra(
+                    ConstantsUI.KEY_WAS_NEW_FEATURE,
+                    previousLayer != null
+                        && editLayerOverlay?.selectedFeatureId == Constants.NOT_FOUND.toLong()
+                )
+                HyperLog.v(
+                    Constants.TAG,
+                    "FormSave result received layer=$resultLayerId feature=$id " +
+                        "wasNew=$wasNewFeature mode=${modeName(mode)} " +
+                        "retainedLayer=${previousLayer?.id ?: Constants.NOT_FOUND}"
+                )
+                val mapDrawable = mMapRef.get()?.map
+                val hasActiveCreationSession = wasNewFeature
+                    && previousLayer?.id == resultLayer.id
+                    && mapDrawable?.editingObject != null
+                    && mapDrawable.originalSelectedFeature != null
+
+                mSelectedLayer = resultLayer
+                editLayerOverlay!!.setSelectedLayer(resultLayer)
                 editLayerOverlay!!.setSelectedFeature(id)
-                if (mSelectedLayer != null) mSelectedLayer!!.showFeature(id)
+                resultLayer.showFeature(id)
                 setNewMode(MODE_SELECT_ACTION)
 
-                if (mMapRef.get() == null || mMapRef.get()!!.map == null)
-                    return;
-                mMapRef.get()!!.map!!.finishCreateNewFeature(
-                    id,
-                    selectedLayer!! )
-                mMapRef.get()!!.map!!.reloadFeatureToMaplibre(id, selectedLayer)
-                mMapRef.get()!!.map!!.updateSelectedMarker()
-                mMapRef.get()!!.map.hideSelectedDotSource()
+                if (mapDrawable == null) {
+                    HyperLog.w(
+                        Constants.TAG,
+                        "FormSave result applied to overlay but map is unavailable " +
+                            "layer=${resultLayer.id} feature=$id"
+                    )
+                    return
+                }
+                if (hasActiveCreationSession) {
+                    mapDrawable.finishCreateNewFeature(id, resultLayer)
+                } else if (wasNewFeature) {
+                    HyperLog.v(
+                        Constants.TAG,
+                        "FormSave cold-recovery result has no temporary MapLibre edit session; " +
+                            "reloading persisted feature layer=${resultLayer.id} feature=$id"
+                    )
+                }
+                mapDrawable.reloadFeatureToMaplibre(id, resultLayer)
+                mapDrawable.updateSelectedMarker()
+                mapDrawable.hideSelectedDotSource()
             }
         } else if (editLayerOverlay!!.selectedFeatureGeometry != null) editLayerOverlay!!.setHasEdits(
             true
@@ -877,10 +1066,24 @@ public class MapFragment
         editLayerOverlay!!.setSelectedFeature(featureId)
         mMapRef.get()!!.map!!.cancelFeatureEdit(featureId != -1L)
         setNewMode(MODE_SELECT_ACTION)
+        clearManualGeometryDraft("geometry-cancel")
+    }
+
+    private fun modeName(value: Int): String {
+        return when (value) {
+            MODE_NORMAL -> "MODE_NORMAL"
+            MODE_SELECT_ACTION -> "MODE_SELECT_ACTION"
+            MODE_EDIT -> "MODE_EDIT"
+            MODE_INFO -> "MODE_INFO"
+            MODE_EDIT_BY_WALK -> "MODE_EDIT_BY_WALK"
+            MODE_EDIT_BY_TOUCH -> "MODE_EDIT_BY_TOUCH"
+            MODE_SELECT_FOR_VIEW -> "MODE_SELECT_FOR_VIEW"
+            else -> "MODE_UNKNOWN($value)"
+        }
     }
 
     fun setNewMode(mode: Int, vararg readOnly: Boolean) {
-
+        val previousMode = this.mode
         var askPerm = false
         if (mMapRef.get()!!.map!!.checkMeasurment(mode)){
             mRulerOverlay!!.stopMeasuring()
@@ -892,22 +1095,20 @@ public class MapFragment
             mActivity!!.setSubtitle(null)
             mMapRef.get()!!.map.stoptMeasuring()
 
+        }
 
+        if (previousMode != mode) {
+            HyperLog.v(
+                Constants.TAG,
+                "MapFragment mode ${modeName(previousMode)} -> ${modeName(mode)} " +
+                    "layer=${mSelectedLayer?.id ?: Constants.NOT_FOUND} " +
+                    "feature=${editLayerOverlay?.selectedFeatureId ?: Constants.NOT_FOUND} " +
+                    "hasEdits=${editLayerOverlay?.hasEdits() == true}"
+            )
         }
-        var promt = ""
-        when(mode){
-            0 ->  promt=  "MODE_NORMAL"
-            1 ->  promt=  "MODE_SELECT_ACTION"
-            2 ->  promt=  "MODE_EDIT"
-            3 ->  promt=  "MODE_INFO"
-            4 ->  promt=  "MODE_EDIT_BY_WALK"
-            5 ->  promt=  "MODE_EDIT_BY_TOUCH"
-            6 ->  promt=  "MODE_SELECT_FOR_VIEW"
-            else -> promt=  "MODE_ELSE"
-        }
-//        Log.e("MMOODDEE", "mode set to " + promt);
 
         this.mode = mode
+        walkUiAttachedInProcess = mode == MODE_EDIT_BY_WALK
 
         hideMainButton()
         hideAddByTapButton()
@@ -1020,6 +1221,10 @@ public class MapFragment
                                 editLayerOverlay!!.createNewGeometry()
                                 undoRedoOverlay!!.clearHistory()
                                 setNewMode(MODE_EDIT)
+                                HyperLog.v(
+                                    Constants.TAG,
+                                    "Geometry edit session started new layer=${mSelectedLayer!!.id}"
+                                )
                                 // skip - because next save from maplibre correct
                                 //undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
                                 editLayerOverlay!!.setHasEdits(true)
@@ -1242,13 +1447,12 @@ public class MapFragment
 
         var featureName: String? =
             String.format(getString(com.nextgis.maplibui.R.string.feature_n), featureId)
-        val labelField = mSelectedLayer!!.preferences.getString(
-            SettingsConstantsUI.KEY_PREF_LAYER_LABEL,
-            Constants.FIELD_ID
-        )!!
-        if ((labelField != Constants.FIELD_ID) && !noFeature && featureId != Constants.NOT_FOUND.toLong()) {
+        if (mSelectedLayer!!.featureLabelField != Constants.FIELD_ID &&
+            !noFeature &&
+            featureId != Constants.NOT_FOUND.toLong()
+        ) {
             val feature = mSelectedLayer!!.getFeature(featureId)
-            if (feature != null) featureName = feature.getFieldValueAsString(labelField)
+            if (feature != null) featureName = mSelectedLayer!!.getFeatureLabel(feature)
         }
 
         featureName =
@@ -1296,6 +1500,7 @@ public class MapFragment
 
     override fun onDestroyView() {
         HyperLog.v(Constants.TAG, "MapFragment.onDestroyView")
+        mMapRef.get()?.removeCallbacks(manualGeometryResumeRunnable)
         mapReloadAfterFillRetryRunnable?.let { r ->
             view?.removeCallbacks(r)
         }
@@ -1605,37 +1810,25 @@ public class MapFragment
         }
 
         val ctx = context
-        if (WalkEditService.isServiceRunning(ctx)) {
-            val preferences = (ctx ?: return).getSharedPreferences(
-                WalkEditService.TEMP_PREFERENCES,
-                Context.MODE_MULTI_PROCESS
-            )
-            val layerId = preferences.getInt(ConstantsUI.KEY_LAYER_ID, Constants.NOT_FOUND)
-            val featureId =
-                preferences.getLong(ConstantsUI.KEY_FEATURE_ID, Constants.NOT_FOUND.toLong())
-            val layer = mMapRef.get()!!.map.getLayerById(layerId)
-            if (layer != null && layer is VectorLayer) {
-                mSelectedLayer = layer
-                editLayerOverlay!!.setSelectedLayer(mSelectedLayer)
-
-                if (featureId > Constants.NOT_FOUND) editLayerOverlay!!.setSelectedFeature(featureId)
-                else editLayerOverlay!!.newGeometryByWalk()
-
-                val geometry = GeoGeometryFactory.fromWKT(
-                    preferences.getString(ConstantsUI.KEY_GEOMETRY, ""),
-                    GeoConstants.CRS_WEB_MERCATOR )
-                if (geometry != null) editLayerOverlay!!.setGeometryFromWalkEdit(geometry)
-                //need start ByWalking editing on maplibre
-
-                mMapRef.get()?.map?.startEditByWalkFromRestore(
-                    mSelectedLayer,
-                    editLayerOverlay!!.selectedFeature)
-
-                mode = MODE_EDIT_BY_WALK
-                if (featureId <= Constants.NOT_FOUND && geometry != null) {
-                    attachMaplibreToCurrentWalkOverlayGeometry()
-                }
-            }
+        val savedWalkSession =
+            savedInstanceState?.getInt(KEY_MODE, MODE_NORMAL) == MODE_EDIT_BY_WALK
+        /*
+         * savedInstanceState can also be restored after process death.  This process-only marker
+         * distinguishes a configuration recreation from a cold restoration of the task.
+         */
+        val restoringAttachedWalkUi = savedWalkSession && walkUiAttachedInProcess
+        val walkServiceRunning = WalkEditService.isServiceRunning(ctx)
+        /*
+         * A configuration recreation of an already visible walk session may be restored
+         * silently.  A cold Activity must leave the durable draft untouched until the recovery
+         * hub receives an explicit Continue/Discard answer.
+         */
+        if (restoringAttachedWalkUi
+            && (walkServiceRunning || WalkEditService.hasValidDraft(ctx))) {
+            restoreWalkSessionFromDraft(preferRunningService = walkServiceRunning)
+        } else if (savedWalkSession) {
+            // The recovery hub owns a saved task restored in a new process.
+            mode = MODE_NORMAL
         }
 
         if (mode == MODE_EDIT_BY_WALK) {
@@ -1651,9 +1844,408 @@ public class MapFragment
         ) startMeasuring()
     }
 
+    /**
+     * Rebuild overlay / MapLibre walk session from walkedit_temp.
+     * @return true if draft was applied to UI
+     */
+    private fun restoreWalkSessionFromDraft(preferRunningService: Boolean): Boolean {
+        val ctx = context ?: return false
+        if (!WalkEditService.hasValidDraft(ctx) && !preferRunningService)
+            return false
+        val preferences = WalkEditService.getDraftPreferences(ctx)
+        val layerId = preferences.getInt(ConstantsUI.KEY_LAYER_ID, Constants.NOT_FOUND)
+        val featureId =
+            preferences.getLong(ConstantsUI.KEY_FEATURE_ID, Constants.NOT_FOUND.toLong())
+        val layer = mMapRef.get()?.map?.getLayerById(layerId) ?: return false
+        if (layer !is VectorLayer)
+            return false
+        mSelectedLayer = layer
+        editLayerOverlay!!.setSelectedLayer(mSelectedLayer)
+
+        if (featureId > Constants.NOT_FOUND) editLayerOverlay!!.setSelectedFeature(featureId)
+        else editLayerOverlay!!.newGeometryByWalk()
+
+        val geometry = GeoGeometryFactory.fromWKT(
+            preferences.getString(ConstantsUI.KEY_GEOMETRY, ""),
+            GeoConstants.CRS_WEB_MERCATOR
+        )
+        if (geometry != null) editLayerOverlay!!.setGeometryFromWalkEdit(geometry)
+
+        mMapRef.get()?.map?.startEditByWalkFromRestore(
+            mSelectedLayer,
+            editLayerOverlay!!.selectedFeature
+        )
+
+        mode = MODE_EDIT_BY_WALK
+        if (featureId <= Constants.NOT_FOUND && geometry != null) {
+            attachMaplibreToCurrentWalkOverlayGeometry()
+        }
+        return true
+    }
+
+    fun hasInterruptedWalkDraft(): Boolean {
+        val ctx = context ?: return false
+        if (!WalkEditService.hasValidDraft(ctx))
+            return false
+        /*
+         * START_STICKY can restart the service before MainActivity resumes.  That is still an
+         * interrupted UI session when no walk editor is attached, and must go through the hub.
+         */
+        return mode != MODE_EDIT_BY_WALK || !WalkEditService.isServiceRunning(ctx)
+    }
+
+    /** Pause a sticky service that has no attached walk editor while the hub awaits a decision. */
+    fun pauseInterruptedWalkForRecovery() {
+        val ctx = context ?: return
+        if (mode != MODE_EDIT_BY_WALK) {
+            WalkEditService.pauseAndKeepDraft(ctx)
+        }
+    }
+
+    /** Continue after crash / soft-interrupt: restore UI and restart WalkEditService. */
+    fun resumeWalkFromDraft(): Boolean {
+        val ctx = context ?: return false
+        if (!WalkEditService.hasValidDraft(ctx))
+            return false
+        walkInterruptPromptShown = false
+        crashRecoveryWalkDialogShown = false
+        if (!restoreWalkSessionFromDraft(preferRunningService = false))
+            return false
+        setNewMode(MODE_EDIT_BY_WALK)
+        val activityName = activity?.javaClass?.name
+        return WalkEditService.resumeFromDraft(ctx, activityName)
+    }
+
+    fun discardWalkDraft() {
+        val ctx = context ?: return
+        walkInterruptPromptShown = false
+        crashRecoveryWalkDialogShown = false
+        if (WalkEditService.isServiceRunning(ctx)) {
+            WalkEditService.stopAndClearDraft(ctx)
+        }
+        // Make Discard observable immediately; ACTION_STOP clears it again when the service exits.
+        WalkEditService.clearDraft(ctx)
+        if (mode == MODE_EDIT_BY_WALK) {
+            setNewMode(MODE_SELECT_ACTION)
+        }
+    }
+
+    /**
+     * Soft-interrupt while UI is still in walk mode but the service died.
+     * Offers Continue / Discard once per interruption.
+     */
+    fun checkWalkServiceWatchdog() {
+        val ctx = context ?: return
+        if (WalkEditService.isServiceRunning(ctx)) {
+            walkInterruptPromptShown = false
+            return
+        }
+        /*
+         * Orphan drafts discovered during cold start belong to MainActivity's ordered recovery
+         * hub.  This local watchdog only owns a service death while the walk UI is already open.
+         */
+        val interrupted = mode == MODE_EDIT_BY_WALK && WalkEditService.hasValidDraft(ctx)
+        if (!interrupted)
+            return
+        if (walkInterruptPromptShown || crashRecoveryWalkDialogShown)
+            return
+        walkInterruptPromptShown = true
+        showWalkInterruptedDialog()
+    }
+
+    private fun showWalkInterruptedDialog() {
+        val act = activity ?: return
+        AlertDialog.Builder(act)
+            .setTitle(com.nextgis.maplibui.R.string.walkedit_interrupted_title)
+            .setMessage(com.nextgis.maplibui.R.string.walkedit_interrupted_message)
+            .setPositiveButton(com.nextgis.maplibui.R.string.walkedit_continue) { _, _ ->
+                resumeWalkFromDraft()
+            }
+            .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
+                discardWalkDraft()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun isManualGeometryEditMode(value: Int = mode): Boolean {
+        return value == MODE_EDIT || value == MODE_EDIT_BY_TOUCH
+    }
+
+    private fun currentMapDraftPath(): String? {
+        return mApp?.map?.path?.absolutePath
+    }
+
+    /**
+     * Persist the latest non-walk geometry. commit() in the store is deliberate: apply() can
+     * still be pending when the user swipes the process away.
+     */
+    private fun persistManualGeometryDraft(reason: String): Boolean {
+        if (!isManualGeometryEditMode()) {
+            return false
+        }
+
+        val overlay = editLayerOverlay ?: return false
+        if (!overlay.hasEdits()) {
+            GeometryEditDraftStore.clear(context, "no-edits-$reason")
+            return false
+        }
+
+        val layer = mSelectedLayer
+        val feature = overlay.selectedFeature
+        val geometry = feature?.geometry
+        val mapPath = currentMapDraftPath()
+        if (layer == null || feature == null || geometry == null || mapPath.isNullOrBlank()) {
+            HyperLog.w(
+                Constants.TAG,
+                "GeometryDraft save skipped reason=$reason mode=${modeName(mode)} " +
+                    "layer=${layer?.id ?: Constants.NOT_FOUND} feature=${feature?.id
+                        ?: Constants.NOT_FOUND} geometry=${geometry?.type ?: Constants.NOT_FOUND}"
+            )
+            return false
+        }
+
+        return try {
+            val snapshot = GeometryEditDraftStore.Snapshot().apply {
+                layerId = layer.id
+                featureId = feature.id
+                editMode = mode
+                geometryWkt = geometry.toWKT(true)
+                this.mapPath = mapPath
+            }
+            GeometryEditDraftStore.save(requireContext(), snapshot, reason)
+        } catch (e: RuntimeException) {
+            HyperLog.e(
+                Constants.TAG,
+                "GeometryDraft save crashed reason=$reason layer=${layer.id} " +
+                    "feature=${feature.id}: ${e.message}",
+                e
+            )
+            false
+        }
+    }
+
+    private fun recoverableManualGeometryDraft(): GeometryEditDraftStore.Snapshot? {
+        val ctx = context ?: return null
+        val snapshot = GeometryEditDraftStore.load(ctx) ?: return null
+        val currentMapPath = currentMapDraftPath()
+        if (currentMapPath.isNullOrBlank() || snapshot.mapPath != currentMapPath) {
+            HyperLog.w(
+                Constants.TAG,
+                "GeometryDraft rejected: active map differs layer=${snapshot.layerId}"
+            )
+            GeometryEditDraftStore.clear(ctx, "map-mismatch")
+            return null
+        }
+
+        val layer = mMapRef.get()?.map?.getLayerById(snapshot.layerId)
+        if (layer !is VectorLayer) {
+            HyperLog.w(
+                Constants.TAG,
+                "GeometryDraft rejected: vector layer missing layer=${snapshot.layerId}"
+            )
+            GeometryEditDraftStore.clear(ctx, "layer-missing")
+            return null
+        }
+        if (!layer.isEditingAllowed) {
+            HyperLog.w(
+                Constants.TAG,
+                "GeometryDraft temporarily unavailable: layer not editable layer=${snapshot.layerId}"
+            )
+            return null
+        }
+
+        val geometry = GeometryEditDraftStore.geometryFromSnapshot(snapshot)
+        if (geometry == null || !Geo.isGeometryTypeSame(layer.geometryType, geometry.type)) {
+            HyperLog.w(
+                Constants.TAG,
+                "GeometryDraft rejected: geometry type mismatch layer=${snapshot.layerId} " +
+                    "layerType=${layer.geometryType} draftType=${geometry?.type
+                        ?: Constants.NOT_FOUND}"
+            )
+            GeometryEditDraftStore.clear(ctx, "geometry-invalid")
+            return null
+        }
+        if (snapshot.featureId != Constants.NOT_FOUND.toLong()
+            && layer.getFeature(snapshot.featureId) == null
+        ) {
+            HyperLog.w(
+                Constants.TAG,
+                "GeometryDraft rejected: feature missing layer=${snapshot.layerId} " +
+                    "feature=${snapshot.featureId}"
+            )
+            GeometryEditDraftStore.clear(ctx, "feature-missing")
+            return null
+        }
+        return snapshot
+    }
+
+    fun hasInterruptedManualGeometryDraft(): Boolean {
+        val snapshot = recoverableManualGeometryDraft() ?: return false
+        val sameLiveSession = isManualGeometryEditMode()
+            && mSelectedLayer?.id == snapshot.layerId
+            && editLayerOverlay?.selectedFeatureId == snapshot.featureId
+            && editLayerOverlay?.hasEdits() == true
+        HyperLog.v(
+            Constants.TAG,
+            "GeometryDraft recovery check interrupted=${!sameLiveSession} " +
+                "uiMode=${modeName(mode)} layer=${snapshot.layerId} feature=${snapshot.featureId}"
+        )
+        return !sameLiveSession
+    }
+
+    /**
+     * Continue from the recovery hub. MapLibre sources are asynchronous on cold start, so a
+     * bounded retry keeps the user's explicit choice pending until the editable source exists.
+     */
+    fun resumeManualGeometryFromDraft(): Boolean {
+        val snapshot = recoverableManualGeometryDraft() ?: return false
+        pendingManualGeometryResume = true
+        pendingManualGeometrySnapshot = snapshot
+        manualGeometryResumeRetryCount = 0
+        HyperLog.v(
+            Constants.TAG,
+            "GeometryDraft Continue requested layer=${snapshot.layerId} " +
+                "feature=${snapshot.featureId} mode=${modeName(snapshot.editMode)}"
+        )
+        return tryResumeManualGeometryFromDraft()
+    }
+
+    private fun tryResumeManualGeometryFromDraft(): Boolean {
+        if (!pendingManualGeometryResume) {
+            return false
+        }
+        val snapshot = pendingManualGeometrySnapshot ?: recoverableManualGeometryDraft() ?: run {
+            pendingManualGeometryResume = false
+            return false
+        }
+        val layer = mMapRef.get()?.map?.getLayerById(snapshot.layerId) as? VectorLayer
+            ?: return scheduleManualGeometryResumeRetry("layer-not-ready")
+        val geometry = GeometryEditDraftStore.geometryFromSnapshot(snapshot)
+            ?: run {
+                pendingManualGeometryResume = false
+                GeometryEditDraftStore.clear(context, "resume-geometry-invalid")
+                return false
+            }
+        val feature = if (snapshot.featureId == Constants.NOT_FOUND.toLong()) {
+            Feature().apply { id = Constants.NOT_FOUND.toLong() }
+        } else {
+            layer.getFeature(snapshot.featureId)
+                ?: return scheduleManualGeometryResumeRetry("feature-not-ready")
+        }
+        feature.geometry = geometry
+
+        val mapDrawable = mMapRef.get()?.map
+            ?: return scheduleManualGeometryResumeRetry("map-not-ready")
+        if (snapshot.editMode == MODE_EDIT
+            && (mapDrawable.maplibreMap == null || mapDrawable.maplibreMap.style == null)
+        ) {
+            return scheduleManualGeometryResumeRetry("maplibre-style-not-ready")
+        }
+
+        mSelectedLayer = layer
+        editLayerOverlay!!.setSelectedLayer(layer)
+        editLayerOverlay!!.selectedFeature = feature
+        editLayerOverlay!!.fillDrawItems(geometry)
+
+        if (snapshot.editMode == MODE_EDIT) {
+            mapDrawable.startFeatureSelectionForEdit(
+                layer,
+                layer.geometryType,
+                feature,
+                snapshot.featureId == Constants.NOT_FOUND.toLong(),
+                layer.defaultStyleNoExcept,
+                false
+            )
+            if (mapDrawable.editingObject == null) {
+                return scheduleManualGeometryResumeRetry("editable-source-not-ready")
+            }
+            mapDrawable.replaceGeometryFromHistoryChanges(geometry)
+            mapDrawable.updateMarkerByEditObject()
+        }
+
+        undoRedoOverlay!!.clearHistory()
+        undoRedoOverlay!!.saveToHistory(feature)
+        editLayerOverlay!!.setHasEdits(true)
+        setNewMode(snapshot.editMode)
+        defineMenuItems()
+        mMapRef.get()?.buffer()
+        mMapRef.get()?.postInvalidate()
+
+        pendingManualGeometryResume = false
+        pendingManualGeometrySnapshot = null
+        manualGeometryResumeRetryCount = 0
+        mMapRef.get()?.removeCallbacks(manualGeometryResumeRunnable)
+        HyperLog.v(
+            Constants.TAG,
+            "GeometryDraft resumed layer=${snapshot.layerId} feature=${snapshot.featureId} " +
+                "mode=${modeName(snapshot.editMode)} geometryType=${geometry.type}"
+        )
+        return true
+    }
+
+    private fun scheduleManualGeometryResumeRetry(reason: String): Boolean {
+        if (!pendingManualGeometryResume) {
+            return false
+        }
+        if (manualGeometryResumeRetryCount >= manualGeometryResumeMaxRetries) {
+            pendingManualGeometryResume = false
+            pendingManualGeometrySnapshot = null
+            HyperLog.e(
+                Constants.TAG,
+                "GeometryDraft resume timed out reason=$reason retries=$manualGeometryResumeRetryCount"
+            )
+            context?.let {
+                Toast.makeText(
+                    it,
+                    com.nextgis.maplibui.R.string.geometry_edit_restore_error,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            return false
+        }
+        manualGeometryResumeRetryCount++
+        if (manualGeometryResumeRetryCount == 1
+            || manualGeometryResumeRetryCount % 10 == 0
+        ) {
+            HyperLog.v(
+                Constants.TAG,
+                "GeometryDraft resume deferred reason=$reason " +
+                    "retry=$manualGeometryResumeRetryCount"
+            )
+        }
+        mMapRef.get()?.removeCallbacks(manualGeometryResumeRunnable)
+        mMapRef.get()?.postDelayed(manualGeometryResumeRunnable, 100)
+        return true
+    }
+
+    fun discardManualGeometryDraft() {
+        pendingManualGeometryResume = false
+        pendingManualGeometrySnapshot = null
+        manualGeometryResumeRetryCount = 0
+        mMapRef.get()?.removeCallbacks(manualGeometryResumeRunnable)
+        GeometryEditDraftStore.clear(context, "user-discard")
+        HyperLog.v(Constants.TAG, "GeometryDraft Discard selected")
+    }
+
+    private fun clearManualGeometryDraft(reason: String) {
+        pendingManualGeometryResume = false
+        pendingManualGeometrySnapshot = null
+        manualGeometryResumeRetryCount = 0
+        mMapRef.get()?.removeCallbacks(manualGeometryResumeRunnable)
+        GeometryEditDraftStore.clear(context, reason)
+    }
+
 
     override fun onPause() {
-        HyperLog.v(Constants.TAG, "MapFragment.onPause")
+        HyperLog.v(
+            Constants.TAG,
+            "MapFragment.onPause mode=${modeName(mode)} " +
+                "layer=${mSelectedLayer?.id ?: Constants.NOT_FOUND} " +
+                "feature=${editLayerOverlay?.selectedFeatureId ?: Constants.NOT_FOUND} " +
+                "hasEdits=${editLayerOverlay?.hasEdits() == true}"
+        )
+        persistManualGeometryDraft("onPause")
         if (null != mCurrentLocationOverlay) {
             mCurrentLocationOverlay!!.stopShowingCurrentLocation()
         }
@@ -1859,6 +2451,7 @@ public class MapFragment
             // need getFeature from old overlay and update in maplibre logic
                 mMapRef.get()?.map?.updateWalkingFeature(editLayerOverlay!!.selectedFeature)
         }
+        checkWalkServiceWatchdog()
 
 
         val listOfLayers = (context?.applicationContext  as IGISApplication).getlayersToRefresh()
@@ -3195,6 +3788,7 @@ public class MapFragment
         if (mode == MODE_EDIT_BY_TOUCH || mNeedSave) {
             mNeedSave = false
             undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
+            persistManualGeometryDraft("touch-pan-stop")
         }
     }
 
@@ -3231,8 +3825,9 @@ public class MapFragment
             mapDrawable.reloadCurrentTrackToMap(location)
         }
 
+        // Soft-interrupt: do not keep appending MapLibre-only points without the service.
         if (mode == MODE_EDIT_BY_WALK && !WalkEditService.isServiceRunning(context)) {
-            mapDrawable.addPointByWalk(LatLng(location.latitude, location.longitude))
+            checkWalkServiceWatchdog()
         }
     }
 
@@ -3604,6 +4199,13 @@ public class MapFragment
     }
 
     public companion object {
+        /**
+         * Survives Activity recreation but not process death, unlike savedInstanceState.
+         * It prevents a restored task from silently bypassing crash recovery.
+         */
+        @Volatile
+        private var walkUiAttachedInProcess = false
+
         const val MODE_NORMAL: Int = 0
         const val MODE_SELECT_ACTION: Int = 1
         const val MODE_EDIT: Int = 2
@@ -3650,6 +4252,11 @@ public class MapFragment
             return
         }
         setNewMode(MODE_EDIT)
+        HyperLog.v(
+            Constants.TAG,
+            "Geometry edit session started existing layer=${layer.id} " +
+                "feature=${editLayerOverlay!!.selectedFeatureId}"
+        )
         undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
         editLayerOverlay!!.setHasEdits(false)
         mMapRef.get()?.map?.startFeatureSelectionForEdit(
@@ -3685,7 +4292,16 @@ public class MapFragment
                             if (event == DISMISS_EVENT_MANUAL)
                                 return
                             if (event != DISMISS_EVENT_ACTION) {
-                                layer!!.deleteAddChanges(selectedFeatureId)
+                                val deleted = layer!!.deleteAddChanges(selectedFeatureId)
+                                if (deleted <= 0) {
+                                    layer.showFeature(selectedFeatureId)
+                                    editLayerOverlay!!.setSelectedFeature(selectedFeatureId)
+                                    mMapRef.get()!!.map!!.showFeatureFromHide(
+                                        selectedFeatureId, layer.id,
+                                        mMapRef.get()!!.map!!.hiddedFeature)
+                                    defineMenuItems()
+                                    return
+                                }
                                 mMapRef.get()!!.map!!.deleteFeature(selectedFeatureId, layer.id)
                             }
                         }
@@ -3759,6 +4375,7 @@ public class MapFragment
         * */
         editLayerOverlay!!.updateActions(editObject)
         undoRedoOverlay!!.saveToHistory(originalSelectedFeature)
+        persistManualGeometryDraft("maplibre-change")
     }
 
     override fun getSelectedLayer(): VectorLayer? {
@@ -3774,9 +4391,11 @@ public class MapFragment
         if (feature.geometry()!= null && feature.geometry() is MultiPolygon){
             val multipoly = feature.geometry() as MultiPolygon
             val geomultiPolygon = GeoMultiPolygon()
+            geomultiPolygon.crs = GeoConstants.CRS_WEB_MERCATOR
             for (poly in multipoly.coordinates()){
                 val geoPolygon = GeoPolygon()
                 geoPolygon.crs = GeoConstants.CRS_WEB_MERCATOR
+                geoPolygon.outerRing.crs = GeoConstants.CRS_WEB_MERCATOR
 
                 var iter = 0
                 for (outer in poly){
@@ -3791,6 +4410,7 @@ public class MapFragment
                     } else {
                         // inner
                         val ring = GeoLinearRing()
+                        ring.crs = GeoConstants.CRS_WEB_MERCATOR
 
                         for (outer2 in outer){
                             val points: DoubleArray = convert4326To3857(outer2.longitude(), outer2.latitude())
@@ -3930,28 +4550,7 @@ public class MapFragment
     }
 
     fun getHintText(vectorLayer: VectorLayer, feature: Feature?):String? {
-
-        if (feature == null)
-            return null
-
-        var fieldToDisplay = ((vectorLayer.renderer as SimpleFeatureRenderer).style).field
-
-        if (!TextUtils.isEmpty(fieldToDisplay) && fieldToDisplay.equals(id_name)){ // id of feature
-            return feature.id.toString()
-        }
-
-        if (TextUtils.isEmpty(fieldToDisplay)) {
-            fieldToDisplay = if (vectorLayer.fields.size > 0 && vectorLayer.fields[0] != null )  vectorLayer.fields [0].name else ""
-        }
-
-        val objectValueForHint = feature.getFieldValue((fieldToDisplay))
-        var valueForHint = "";
-        if (objectValueForHint == null ) {
-            valueForHint = feature.id.toString()
-        } else
-            valueForHint = objectValueForHint.toString()
-
-        return valueForHint
+        return vectorLayer.getFeatureLabel(feature)
     }
 
     override fun onCameraIdle() {

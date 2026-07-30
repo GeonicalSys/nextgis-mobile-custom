@@ -15,11 +15,51 @@ preferences:
     type: boolean
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
     purpose: Enable application update checks
+  layer_backup_max_gb:
+    owner: app
+    type: string
+    default: "5"
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    ui: app/src/main/res/xml/preferences_general.xml (Общие → Другое)
+    purpose: Max size of LayerBackups/ directory in gigabytes; oldest ZIPs are deleted when exceeded
   sw_track_service:
     owner: app
     type: boolean
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
     purpose: Tracking foreground-service preference
+  track_recording_enabled:
+    owner: maplib
+    type: boolean
+    default: false
+    source: maplib/src/main/java/com/nextgis/maplib/util/SettingsConstants.java
+    purpose: >
+      Durable flag that track recording is on; cleared only by explicit Stop track menu.
+      BootLoader and MainActivity auto-resume TrackerService when true.
+  ngw_identity_backup:
+    owner: maplib
+    type: string
+    default: absent
+    source: maplib/src/main/java/com/nextgis/maplib/util/SettingsConstants.java
+    purpose: >
+      Per-layer SharedPreferences JSON containing the last fully initialized NGW account,
+      remote id, sync policy and origin; used only to heal an interrupted/partial layer config.
+  feature_form_draft:
+    owner: maplibui
+    type: shared_preferences_file
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
+    purpose: JSON snapshot of unfinished attribute form (fields, geometry, pending photos)
+  geometry_edit_draft:
+    owner: maplibui
+    type: shared_preferences_file
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
+    purpose: >
+      Latest unfinished non-walk geometry WKT plus active map, layer, feature and edit-mode
+      identity; cleared only by explicit Cancel, successful update, form handoff or Discard
+  walkedit_temp:
+    owner: maplibui
+    type: shared_preferences_file
+    source: maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+    purpose: Durable walk-digitizing draft (WKT, layer/feature ids); cleared only on explicit Save/Cancel
 manifest_metadata:
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
@@ -110,10 +150,26 @@ storage:
     owner: maplibui
     location_name: LayerBackups
     source: maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
+    purpose: ZIP archives of editable layer geometry/attributes/attachments before destructive ops; quota via layer_backup_max_gb
 layer_json:
+  feature_label_field:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+    type: string
+    default: _id
+    purpose: >
+      Field used as the feature title in identify candidate lists, selection
+      toolbar and attribute table; independent from renderer text labels.
+    migration: >
+      Existing per-layer layer_label preference remains the fallback and is
+      mirrored into config.json after the first successful layer load.
   mobile_render_mode:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
+    purpose: >
+      Select classic rendering or opt-in local_vector_tiles for read-only
+      polygon/multipolygon and simple circle Point layers; unsupported geometry,
+      editability or point style falls back to classic rendering.
   render_mode:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java

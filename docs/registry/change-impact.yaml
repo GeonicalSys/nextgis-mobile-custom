@@ -79,6 +79,24 @@ triggers:
       - maplib/docs/manifest.yaml
     verify: [AUTO-MAPLIB-UNIT, SMOKE-MAP-COLD-START, SMOKE-LOCATION-CURSOR-TOP, SMOKE-HOT-RASTER]
     strict_docs: false
+  - id: MULTIPOLYGON-REPAIR
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/util/MultiPolygonGeometryRepair.java
+      - maplib/src/test/java/com/nextgis/maplib/util/MultiPolygonGeometryRepairTest.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    owners: [maplib, app]
+    read:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+    invariants: [INV-MULTIPOLYGON-REPAIR]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - maplib/docs/manifest.yaml
+      - app/docs/README.md
+    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES, SMOKE-MULTIPOLYGON-REPAIR]
+    strict_docs: true
   - id: MAP-BASE-LAYERS
     paths:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
@@ -94,6 +112,30 @@ triggers:
       - app/docs/README.md
       - app/docs/manifest.yaml
     verify: [AUTO-APP-RELEASES, SMOKE-MAP-COLD-START, SMOKE-COLLECTOR-IMPORT]
+    strict_docs: true
+  - id: GPS-RECORDING
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiterCore.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+    owners: [maplib, maplibui, app]
+    read:
+      - docs/architecture/crash-recovery.md
+      - docs/reference/official-differences.md
+    invariants: [INV-GPS-TRACK-FILTER, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs:
+      - docs/architecture/crash-recovery.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - maplib/docs/manifest.yaml
+      - maplibui/docs/README.md
+      - maplibui/docs/manifest.yaml
+      - app/docs/README.md
+      - app/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GPS-RECORDING, SMOKE-WALK]
     strict_docs: true
   - id: LAYER-FILL-AND-REORDER
     paths:
@@ -148,7 +190,7 @@ triggers:
     owners: [maplib, maplibui, app]
     read:
       - docs/architecture/collector-projects.md
-    invariants: [INV-COLLECTOR-RESOURCE, INV-COLLECTOR-RASTER-STYLES, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-COLLECTOR-FORM-ATOMIC, INV-BACKUP-BEFORE-DESTRUCTION]
+    invariants: [INV-COLLECTOR-RESOURCE, INV-COLLECTOR-LAYER-IDENTITY, INV-COLLECTOR-RASTER-STYLES, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-COLLECTOR-FORM-ATOMIC, INV-BACKUP-BEFORE-DESTRUCTION]
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/map-rendering.md
@@ -156,7 +198,7 @@ triggers:
       - docs/registry/config-keys.yaml
       - maplib/docs/manifest.yaml
       - maplibui/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-RESUME, SMOKE-COLLECTOR-INCOMPLETE, SMOKE-FORM-ROLLBACK, SMOKE-COLLECTOR-SWITCH, SMOKE-BACKUP-GATE]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-IDENTITY, SMOKE-COLLECTOR-RESUME, SMOKE-COLLECTOR-INCOMPLETE, SMOKE-FORM-ROLLBACK, SMOKE-COLLECTOR-SWITCH, SMOKE-BACKUP-GATE]
     strict_docs: false
   - id: NGRC-LOCAL-UNDERLAY
     paths:

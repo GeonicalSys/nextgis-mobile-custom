@@ -334,6 +334,7 @@ public class AttributesFragment
         PhotoGallery.getOfflineAttaches(app, mLayer, mItemId, mAttaches, false, null);
 
         Map<String, AttachInfo> onlineAttaches =  PhotoGallery.getOnlineAttaches(app, mLayer, mItemId);
+        PhotoGallery.excludeOfflineAttachIds(mAttaches, onlineAttaches);
 
         if (mAttaches.size() > 0 || onlineAttaches.size()>0 ) {
 

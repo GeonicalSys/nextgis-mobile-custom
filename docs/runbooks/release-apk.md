@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-07-23
+last_verified: 2026-07-30
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -59,6 +59,8 @@ APK может содержать production basename. Это не версия 
 - подпись ожидаемым release certificate;
 - Sentry manifest policy: interaction breadcrumbs и view hierarchy выключены,
   crash screenshot включён, trace/profile sample rate равен `0.05`;
+- JTS Core присутствует в обеих release-сборках, а
+  `MultiPolygonGeometryRepairTest` проходит в `:maplib:testDebugUnitTest`;
 - запуск поверх существующего профиля.
 
 ## Self-hosted update manifest

@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-07-25
+last_verified: 2026-07-30
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -15,13 +15,26 @@ UI и Map host, управляет брендами, preferences, release и sel
 
 - запуск приложения и открытие карты;
 - управление слоями, edit/walk/track через библиотеки;
+- запись трека и геометрии обходом при валидном движении до 160 км/ч без выбора
+  профиля, с отбрасыванием плохих и одиночных выбросов GPS; Network остаётся
+  резервом и не смешивается со свежим пригодным GPS-потоком;
+- crash recovery: запись трека возобновляется без диалога, затем recovery hub
+  последовательно предлагает черновик обхода, обычной геометрии и формы атрибутов;
 - редактирование геометрии: выход крестиком на нижней панели (`cancelEdits`);
-- идентификация объекта: форма атрибутов в нижней панели только если слой
-  допускает редактирование (`isEditingAllowed`);
+- сохранение `GTMultiPolygon`: невалидный контур исправляется в один
+  многокомпонентный feature до единственной формы атрибутов; простой Polygon и
+  линии автоматически не исправляются; ручной MapLibre-конвертер сохраняет CRS
+  контейнера и колец;
+- идентификация объекта: список совпадений и верхняя панель используют
+  `feature_label_field`; форма атрибутов в нижней панели доступна только если
+  слой допускает редактирование (`isEditingAllowed`);
 - выбор и переключение Collector projects;
 - сохранение «Мои треки» наверху списка слоёв при создании и открытии карты;
 - сохранение дефолтного `OpenStreetMap Standard aka Mapnik` внизу списка каждой
   карты, включая новый Collector workspace;
+- завершение batch import только после фактического MapLibre style/source apply;
+- индикатор синхронизации сверяется с прямым состоянием адаптера и останавливается,
+  даже если lifecycle фрагмента пропустил финальный broadcast;
 - добавление vector/raster NGW-слоя по прямому URL, включая проверенный guest fallback;
 - получение ресурсов, подготовленных desktop QGIS-плагинами, только через
   NextGIS Web/Collector или явный import поддерживаемого portable artifact, без
@@ -71,8 +84,34 @@ UI и Map host, управляет брендами, preferences, release и sel
   path, а не только UI dialog.
 - «Мои треки» оказался внизу: проверить прямой порядок `LayerGroup` и
   `MainApplication.checkTracksLayerExist()`.
+- После crash открылась форма вместо незавершённого обхода: проверить
+  `MainActivity.maybeOfferCrashRecovery()`, `MapFragment.hasInterruptedWalkDraft()`
+  и отсутствие silent cold restore в `onViewStateRestored()`.
+- После crash пропала линия из обычного редактора: проверить HyperLog-события
+  `MapFragment mode`, `GeometryDraft saved`, `CrashRecovery` и
+  `GeometryDraft resumed`; координаты в журнал намеренно не попадают.
+- Трек или обход перестал расти в автомобиле: проверить причины
+  `LocationTrackFilter` и filter stats; provider должен соответствовать
+  отдельной настройке режима, валидная скорость до 160 км/ч не отбрасывается,
+  а `networkSuppressed` растёт только при свежем пригодном GPS.
+- Save восстановленной формы упал после успешного insert: проверить
+  `FormSave result ready`, `FormSave result received` и разрешение `layer_id`
+  из активной карты; cold restore не должен требовать старый `mSelectedLayer`.
+- Форма предлагается сразу после успешного Save: проверить terminal guard
+  `ModifyAttributesActivity.clearFormDraft()` перед последующим `onPause()`.
 - OSM исчез из Collector-проекта или поднялся выше остальных слоёв: проверить
   `MainApplication.ensureBaseOsmLayerAtBottom()` и индекс `0` активной карты.
+- Sync завершён в журнале, но иконка продолжает вращаться: проверить
+  `NGWSyncService.isSyncStarted()` и reconciliation в `LayersFragment`; состояние
+  адаптера не должно зависеть от доставки broadcast.
+- Полевые точки выбираются, но появились только после restart: проверить
+  completion post-fill reload и `MapLibre post-load verification`; pending-флаг
+  очищается только из `MapFragment.setMapLayersLoaded()`.
+- Самопересекающийся мультиполигон не перешёл к форме: проверить
+  `MultiPolygon geometry repair failed`; при отказе пользователь должен остаться
+  в редактировании геометрии без частично созданного объекта. Сообщение
+  `converted repair is empty or invalid` для обычной «бабочки» означает
+  регрессию передачи CRS.
 - URL не импортируется: проверить parser, совпадение server URL с аккаунтом,
   response code, тип ресурса и `data.read`; отсутствие `data.write` — read-only,
   а не ошибка импорта.

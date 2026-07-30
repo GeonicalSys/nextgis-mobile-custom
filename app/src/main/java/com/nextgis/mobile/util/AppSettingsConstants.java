@@ -38,6 +38,7 @@ public interface AppSettingsConstants
     String KEY_PREF_APP_VERSION   = "app_version";
     String KEY_PREF_SHOW_SYNC     = "show_sync";
     String KEY_PREF_UPDATE_CHECK  = "check_updates";
+    String KEY_PREF_LAYER_BACKUP_MAX_GB = "layer_backup_max_gb";
 
     /**
      * Preference keys - in UI

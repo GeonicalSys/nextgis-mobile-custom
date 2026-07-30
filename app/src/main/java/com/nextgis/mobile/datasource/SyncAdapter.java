@@ -41,6 +41,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.hypertrack.hyperlog.HyperLog;
 import com.nextgis.maplib.api.IGISApplication;
+import com.nextgis.maplib.service.NGWSyncService;
 import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.SettingsConstants;
@@ -114,6 +115,7 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
     }
 
     private void sendSyncFinishBroadcast() {
+        NGWSyncService.markSyncFinished();
         Intent finish = new Intent(SYNC_FINISH);
         finish.setPackage(getContext().getPackageName());
         getContext().sendBroadcast(finish);
@@ -168,14 +170,8 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
                 break;
 
             case SYNC_CHANGES:
-                largeIcon = NotificationHelper.getLargeIcon(com.nextgis.maplibui.R.drawable.ic_action_warning_dark, context.getResources());
-                builder.setProgress(0, 0, false)
-                        .setTicker(context.getString(com.nextgis.maplib.R.string.sync_error))
-                        .setContentTitle(context.getString(com.nextgis.maplib.R.string.synchronization))
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(message))
-                        .setContentText(message);
-                break;
+                // Sync failures are shown in-app (dialog), never as notifications.
+                return;
         }
 
         builder.setLargeIcon(largeIcon);

@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-07-23
+last_verified: 2026-07-30
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -14,29 +14,34 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
     responsibility: Process initialization, logging, GISApplication configuration, default OSM at internal index zero and tracks at the top of the reversed layer list for every map/workspace.
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    responsibility: Main navigation, direct NGW resource URL resolution, Collector project switch with active-track protection, backup sharing UI and updater continuation on activity resume.
+    responsibility: Main navigation, ordered walk/manual-geometry/form crash-recovery hub, direct NGW resource URL resolution, Collector project switch with active-track protection, backup sharing UI and updater continuation on activity resume.
   - path: app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
     responsibility: Settings navigation and updater continuation after Android special install permission returns to a manual update check.
   - path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-    responsibility: Map screen and MaplibreMapInteraction implementation.
+    responsibility: Map screen, MaplibreMapInteraction implementation, acknowledgement of completed post-fill style/source reload, GTMultiPolygon-only topology repair before one attribute-form handoff, durable non-walk geometry journal, and explicit restoration/discard of interrupted walk or geometry drafts.
+  - path: app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
+    responsibility: Layer drawer and sync controls, including reconciliation of the animation with adapter-owned process sync state after lifecycle-sensitive broadcasts.
   - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
     responsibility: Branch-specific Lisa Mobile manifest, trusted versioned URL, integrity, identity and process-death-safe continuation after Android install permission.
+  - path: app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+    responsibility: Surface the base per-account NGW synchronization result and user-visible transient-server failure without duplicating layer retry state.
 public_contracts:
   - id: map-host
     symbol: MapFragment implements MaplibreMapInteraction
     path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     consumers: [maplib, maplibui]
-settings_refs: [map_show_loc, map_show_compass, check_updates, sw_track_service, apk_version_update, updater-pending-install, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
+settings_refs: [feature_label_field, map_show_loc, map_show_compass, check_updates, sw_track_service, apk_version_update, updater-pending-install, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
 storage_contracts:
   - id: updater-pending-install
     path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
-invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-LOCATION-CURSOR-TOP, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-NGRC-PRESERVE, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-ECOSYSTEM-SERVER-BOUNDARY]
+invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-LOCATION-CURSOR-TOP, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-NGRC-PRESERVE, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-ECOSYSTEM-SERVER-BOUNDARY, INV-CRASH-DRAFT-RECOVERY, INV-MULTIPOLYGON-REPAIR, INV-GPS-TRACK-FILTER]
 global_docs:
   - docs/architecture/overview.md
   - docs/architecture/lisa-ecosystem.md
   - docs/architecture/map-rendering.md
+  - docs/architecture/crash-recovery.md
   - docs/reference/build-matrix.md
   - docs/reference/flavors-and-versioning.md
   - docs/runbooks/release-apk.md
-smoke_tests: [AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-HOT-RASTER, SMOKE-LOCATION-CURSOR-TOP, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-SWITCH, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE]
+smoke_tests: [AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-HOT-RASTER, SMOKE-LOCATION-CURSOR-TOP, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-SWITCH, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE, SMOKE-CRASH-DRAFT-RECOVERY, SMOKE-MULTIPOLYGON-REPAIR, SMOKE-GPS-RECORDING]
 upstream_hotspots: [MAP-HOST, APP-FLAVORS]

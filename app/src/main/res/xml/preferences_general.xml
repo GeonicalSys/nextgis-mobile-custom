@@ -57,6 +57,15 @@
             android:title="@string/update_check"
             android:singleLineTitle="false"
             app:iconSpaceReserved="false" />
+        <ListPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="5"
+            android:entries="@array/layer_backup_max_gb_entries"
+            android:entryValues="@array/layer_backup_max_gb_values"
+            android:key="layer_backup_max_gb"
+            android:title="@string/layer_backup_max_gb"
+            android:singleLineTitle="false"
+            />
         <Preference
             app:iconSpaceReserved="false"
             android:key="reset_settings"

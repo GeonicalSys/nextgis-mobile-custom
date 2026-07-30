@@ -106,7 +106,9 @@ import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_START
 import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_STOP
 import com.nextgis.maplibui.util.ControlHelper
 import com.nextgis.maplibui.util.CollectorProjectRegistry
+import com.nextgis.maplibui.util.FeatureFormDraftStore
 import com.nextgis.maplibui.util.LayerBackupManager
+import com.nextgis.maplibui.util.LayerUtil
 import com.nextgis.maplibui.util.NGIDUtils
 import com.nextgis.maplibui.util.NGWResourceImportHelper
 import com.nextgis.maplibui.util.SettingsConstantsUI
@@ -157,6 +159,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     private var ngwUrlImportInProgress = false
     private val startupUpdateCheckHandler = Handler(Looper.getMainLooper())
     private var startupUpdateCheckPending = false
+    private var crashRecoveryOffered = false
     private val startupUpdateCheckRunnable = Runnable {
         if (!startupUpdateCheckPending || isFinishing || isDestroyed || !hasWindowFocus()) {
             return@Runnable
@@ -415,20 +418,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
             PERMISSIONS_REQUEST_ACCOUNT -> processAllPermisions(PERMISSIONS_REQUEST_ACCOUNT)
             PERMISSIONS_REQUEST_MEMORY -> processAllPermisions(PERMISSIONS_REQUEST_MEMORY)
-            PERMISSIONS_REQUEST_PUSH ->                 // turn on sync notify
-                if (permissions.size > 0) {
-                    var i = 0
-                    while (i < permissions.size) {
-                        if (permissions[i] == Manifest.permission.POST_NOTIFICATIONS
-                            && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            PreferenceManager.getDefaultSharedPreferences(
-                                applicationContext).edit()
-                                .putBoolean(AppSettingsConstants.KEY_PREF_SHOW_SYNC, true)
-                                .commit()
-                        }
-                        i++
-                    }
-                }
+            PERMISSIONS_REQUEST_PUSH -> {
+                // Notification permission alone must not enable sync notifications;
+                // that remains the user toggle KEY_PREF_SHOW_SYNC (default false).
+            }
 
             LOCATION_BACKGROUND_REQUEST -> {
                 if (mTrackItem != null)
@@ -724,6 +717,103 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 showCollectorProjectsDialog()
             }
         }
+    }
+
+    /**
+     * Recovery hub: track auto-resumes silently; walk/manual-geometry/form drafts are offered
+     * one at a time in that order.
+     */
+    private fun maybeOfferCrashRecovery() {
+        if (crashRecoveryOffered || isFinishing || isDestroyed) {
+            return
+        }
+        val map = mapFragment ?: return
+        HyperLog.v(Constants.TAG, "CrashRecovery hub check started")
+        if (map.hasInterruptedWalkDraft()) {
+            crashRecoveryOffered = true
+            map.crashRecoveryWalkDialogShown = true
+            map.pauseInterruptedWalkForRecovery()
+            HyperLog.v(Constants.TAG, "CrashRecovery offering walk draft")
+            AlertDialog.Builder(this)
+                .setTitle(com.nextgis.maplibui.R.string.walkedit_interrupted_title)
+                .setMessage(com.nextgis.maplibui.R.string.walkedit_interrupted_message)
+                .setPositiveButton(com.nextgis.maplibui.R.string.walkedit_continue) { _, _ ->
+                    HyperLog.v(Constants.TAG, "CrashRecovery walk Continue selected")
+                    map.resumeWalkFromDraft()
+                    maybeOfferManualGeometryDraftRecovery()
+                }
+                .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
+                    HyperLog.v(Constants.TAG, "CrashRecovery walk Discard selected")
+                    map.discardWalkDraft()
+                    maybeOfferManualGeometryDraftRecovery()
+                }
+                .setCancelable(false)
+                .show()
+            return
+        }
+        maybeOfferManualGeometryDraftRecovery()
+    }
+
+    private fun maybeOfferManualGeometryDraftRecovery() {
+        val map = mapFragment ?: return
+        if (!map.hasInterruptedManualGeometryDraft()) {
+            maybeOfferFormDraftRecovery()
+            return
+        }
+        crashRecoveryOffered = true
+        HyperLog.v(Constants.TAG, "CrashRecovery offering manual geometry draft")
+        AlertDialog.Builder(this)
+            .setTitle(com.nextgis.maplibui.R.string.geometry_edit_interrupted_title)
+            .setMessage(com.nextgis.maplibui.R.string.geometry_edit_interrupted_message)
+            .setPositiveButton(com.nextgis.maplibui.R.string.geometry_edit_continue) { _, _ ->
+                HyperLog.v(Constants.TAG, "CrashRecovery geometry Continue selected")
+                map.resumeManualGeometryFromDraft()
+                maybeOfferFormDraftRecovery()
+            }
+            .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
+                HyperLog.v(Constants.TAG, "CrashRecovery geometry Discard selected")
+                map.discardManualGeometryDraft()
+                maybeOfferFormDraftRecovery()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun maybeOfferFormDraftRecovery() {
+        val draft = FeatureFormDraftStore.load(this)
+        if (draft == null) {
+            crashRecoveryOffered = true
+            HyperLog.v(Constants.TAG, "CrashRecovery hub check completed: no remaining drafts")
+            return
+        }
+        if (!LayerUtil.isEditFormDraftRecoverable(this, draft)) {
+            HyperLog.w(
+                Constants.TAG,
+                "CrashRecovery discarding invalid form draft layer=${draft.layerId} " +
+                    "feature=${draft.featureId}"
+            )
+            FeatureFormDraftStore.clear(this)
+            crashRecoveryOffered = true
+            return
+        }
+        crashRecoveryOffered = true
+        HyperLog.v(
+            Constants.TAG,
+            "CrashRecovery offering form draft layer=${draft.layerId} feature=${draft.featureId}"
+        )
+        AlertDialog.Builder(this)
+            .setTitle(com.nextgis.maplibui.R.string.form_draft_title)
+            .setMessage(com.nextgis.maplibui.R.string.form_draft_message)
+            .setPositiveButton(com.nextgis.maplibui.R.string.form_draft_continue) { _, _ ->
+                HyperLog.v(Constants.TAG, "CrashRecovery form Continue selected")
+                LayerUtil.showEditFormFromDraft(this, draft)
+            }
+            .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
+                HyperLog.v(Constants.TAG, "CrashRecovery form Discard selected")
+                FeatureFormDraftStore.clear(this)
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun showCollectorProjectsDialog() {
@@ -1452,9 +1542,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
         mapFragment!!.reloadTracks()
 
+        // Durable track-recording flag: silently resume after crash/reboot (no dialog).
+        TrackerService.ensureRecordingRunningIfEnabled(this)
 
-
-
+        maybeOfferCrashRecovery()
         if (SDCardUtils.isSDCardUsedAndExtracted(this)) {
             val builder = android.app.AlertDialog.Builder(this@MainActivity)
             builder.setMessage(com.nextgis.maplibui.R.string.no_sd_card_attention)
@@ -1616,11 +1707,12 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         if (null != mLayersFragment && !mLayersFragment!!.isDrawerOpen) {
-            val hasUnfinishedTracks = TrackerService.hasUnfinishedTracks(this)
+            val recording = TrackerService.isTrackerServiceRunning(this)
+                    || TrackerService.isTrackRecordingEnabled(this)
             val title =
-                if (hasUnfinishedTracks) com.nextgis.maplibui.R.string.track_stop else com.nextgis.maplibui.R.string.track_start
+                if (recording) com.nextgis.maplibui.R.string.track_stop else com.nextgis.maplibui.R.string.track_start
             val icon =
-                if (hasUnfinishedTracks) com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
+                if (recording) com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
             setTrackItem(menu.findItem(R.id.menu_track), title, icon)
         }
 

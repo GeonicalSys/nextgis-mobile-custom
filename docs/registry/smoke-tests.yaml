@@ -63,8 +63,8 @@ tests:
   SMOKE-COLLECTOR-IMPORT:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Prepare a Collector project with editable enabled only for field vectors and add supported qgis_vector_style and qgis_raster_style items between vectors, Select the NGW Collector resource, Import its composition, Verify style tiles load with the project account and mixed order matches Collector, Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row, Start object creation and inspect offered layers, Reopen and run composition sync, Repeat import with two different layers sharing a display name]
-    expected: Project metadata and isolated workspace are created, layers are keyed by remote id, supported styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks stays on top, default OSM stays at internal index zero without visibility reset, and only Collector vectors with editable plus outbound sync are offered for object creation.
+    steps: [Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors, Reset all settings, Select the NGW Collector resource and import its composition, Verify every layer has a distinct local storage path, Enable the Point layer only in the local layer drawer without changing server config or running sync, Verify Point features render immediately while identify returns the same objects, Verify style tiles load with the project account and mixed order matches Collector, Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row, Start object creation and inspect offered layers, Reopen and run composition sync, Repeat import with two different layers sharing a display name]
+    expected: Project metadata and isolated workspace are created, concurrent fills use distinct storage and fail without retaining incomplete layers, enabling a layer omitted from the initial live style rebuilds its source/layer from local data without server config update, sync or app restart, layers are keyed by remote id, supported styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks stays on top, default OSM stays at internal index zero without visibility reset, and only Collector vectors with editable plus outbound sync are offered for object creation.
   SMOKE-COLLECTOR-RESUME:
     type: device
     scope: [app, maplib, maplibui]
@@ -75,6 +75,19 @@ tests:
     scope: [maplib, maplibui]
     steps: [Fail one referenced-resource request while opening a Collector resource, Attempt import]
     expected: Import is rejected before a new workspace is prepared and no partial project is reported as successful.
+  SMOKE-COLLECTOR-IDENTITY:
+    type: device
+    scope: [maplib, maplibui]
+    steps:
+      - Import a Collector project and record each layer account, remote id and managed origin
+      - Corrupt or remove one vector R-tree file, then cold-open the project and run sync
+      - Return 404 for one managed layer while it is still referenced by the project snapshot
+      - Remove layer_origin and that layer's ngw_identity_backup from one otherwise valid legacy-style config, then reopen and sync
+      - Create a second physical layer with the same account and remote id, then run composition sync
+    expected: >
+      Cache repair preserves NGW identity; a managed 404 does not convert the layer to local;
+      one unowned physical match is adopted without redownload; an ambiguous duplicate identity
+      records local_identity_conflict, blocks composition apply and never creates another layer.
   SMOKE-FORM-ROLLBACK:
     type: device
     scope: [maplib, maplibui]
@@ -90,6 +103,29 @@ tests:
     scope: [maplibui]
     steps: [Prepare unsent local layer data, Trigger schema rebuild or Collector removal, Simulate backup failure]
     expected: Destructive mutation is cancelled and local layer data remains.
+  SMOKE-CRASH-DRAFT-RECOVERY:
+    type: device
+    scope: [app, maplibui, maplib]
+    steps:
+      - Start track recording, Force Stop or reboot, reopen app
+      - Start walk digitizing a line, swipe the app away while editing geometry, reopen it even if Android has already restarted WalkEditService
+      - Create a line with the normal vertex editor, move/add vertices, swipe the app away before saving geometry, reopen and choose Continue
+      - Repeat normal line editing for an existing feature, choose Discard after reopening
+      - Fill attribute form with fields/photos, Force Stop, reopen app
+      - After recovering geometry for a new line, open its attribute form, swipe the app away, recover the form, press Save
+      - For walk/manual geometry/form choose Continue then Discard on a second run
+      - Add a point with unchanged default attributes, press Save, return to the map, then restart the app
+    expected: >
+      Track recording auto-resumes without a dialog and previous trackpoints remain;
+      finish is only via Stop track menu. Walk draft offers Continue/Discard and Continue
+      restores vertices and GPS writing even when its sticky service was already restarted;
+      Cancel/Save does not re-offer. Normal vertex/touch editing offers its own
+      Continue/Discard dialog; Continue restores the latest visible geometry in the same map,
+      layer and feature while Discard clears it. Form Continue restores fields/photos and
+      Save persists and returns to the correct layer without depending on the pre-crash map
+      selection or crashing; the newly inserted geometry appears on the map without an app
+      restart, and Discard clears the draft. Saving a new point with unchanged
+      defaults never creates or re-offers an attribute-form draft.
   SMOKE-SYNC-OFF-CONFIG:
     type: device
     scope: [maplib, maplibui]
@@ -98,8 +134,8 @@ tests:
   SMOKE-MULTI-ACCOUNT-SYNC:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Open a Collector project whose account is not first in Android account order, Make another map account unavailable, Run manual sync, Restart and inspect enabled account schedules]
-    expected: The active Collector account sync runs first, another account error has a separate result, and enabled schedules are restored without duplicate work.
+    steps: [Open a Collector project whose account is not first in Android account order, Make another map account unavailable, Run manual sync, Leave and return to the layer drawer while sync finishes, Verify the sync icon stops, Restart and inspect enabled account schedules]
+    expected: The active Collector account sync runs first, another account error has a separate result, the sync animation stops from adapter-owned state even if the final broadcast was missed, and enabled schedules are restored without duplicate work.
   SMOKE-NGW-ACCOUNT-ADD:
     type: device
     scope: [app, maplibui]
@@ -110,6 +146,42 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Start geometry-by-walk editing, Pause and resume the app, Finish geometry]
     expected: Geometry and editing state survive lifecycle transitions without duplicate reload.
+  SMOKE-GPS-RECORDING:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Select GPS only for tracks and GPS plus network for ordinary location
+      - Record a track while walking and then in a vehicle at several legal road speeds
+      - Repeat vehicle movement with walk digitizing and stop normally
+      - With GPS plus network enabled, verify network fallback before the first GPS fix and after GPS is unavailable for more than 12 seconds
+      - Set a sampling interval above 30 seconds and record several fixes
+      - Pass through a section with one poor-accuracy or visibly displaced fix
+      - Export HyperLog and inspect filter/provider counters
+    expected: >
+      Track and walk geometry progress continuously at vehicle speed without a
+      speed_dist rejection cascade; each mode obeys only its own provider setting.
+      A recent usable GPS stream is not interleaved with network fixes, while network
+      resumes as a fallback after 12 seconds without usable GPS.
+      Long sampling gaps preserve prior valid fixes, the final two buffered fixes are
+      flushed on stop, and isolated inaccurate or displaced garbage is absent. The
+      automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
+  SMOKE-MULTIPOLYGON-REPAIR:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - In an editable GTMultiPolygon layer draw a bow-tie outer ring by walk or vertices
+      - Repeat the manual self-crossing edit with both a minimal bow-tie and additional vertices
+      - Press Save and inspect the repaired geometry before completing the single attribute form
+      - Save attributes, reopen the feature and synchronize it
+      - Repeat with overlapping multi-polygon parts and with a valid hole
+      - Attempt to save a ring with too few distinct positions
+      - Repeat a self-crossing shape in GTPolygon and a line layer
+    expected: >
+      Invalid multi-polygon topology becomes one valid GeoMultiPolygon feature with all
+      resulting parts, original CRS and valid holes; exactly one form owns the attributes
+      and every repair started from the MapLibre editor retains Web Mercator CRS; the
+      feature survives reopen and sync. An unrecoverable result stays in geometry
+      editing without a partial insert. Simple Polygon and line layers are not auto-repaired.
   SMOKE-TRACK-NO-FLAGS:
     type: device
     scope: [maplib, maplibui]

@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-07-24
+last_verified: 2026-07-30
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java
@@ -103,6 +103,13 @@ import и composition sync создают raster styles через один
 только после успешного заполнения замены — это правило действует и на повторных
 repair-проходах.
 
+Каталог каждого нового слоя резервируется атомарным `mkdir` с UUID до открытия
+SQLite. Время запуска, число слоёв и короткое случайное число не являются
+identity: параллельные задачи одной партии не должны получить одну таблицу.
+Если первый либо любой следующий batch insert вернул ошибку, задача немедленно
+выходит через exception, транзакция откатывается, а неполный слой удаляется.
+Продолжать тысячи вставок после первой ошибки схемы запрещено.
+
 ## Composition sync
 
 Composition sync сравнивает серверный состав проекта с локальным для vectors и
@@ -112,9 +119,30 @@ Composition sync сравнивает серверный состав проек
 Удаление raster-style слоя очищает только воспроизводимый tile cache и не
 требует data backup.
 
+Identity project-managed слоя — единая тройка `account + remote_id +
+layer_origin(project_uid)`. При загрузке vector layer восстановление R-tree может
+перезаписать только файл индекса: сохранять `config.json`, пока подкласс ещё не
+прочитал NGW identity, запрещено. Последняя полностью прочитанная identity
+дублируется в per-layer SharedPreferences (`ngw_identity_backup`) и используется
+для восстановления оборванной/частичной записи конфигурации.
+
+Перед добавлением composition sync индексирует все физические NGW-слои проекта
+по `account + remote_id`, а не только слои с сохранившимся managed-флагом.
+Единственный совпавший слой без `layer_origin` получает метку проекта на месте,
+без повторной загрузки. Два совпадения, manual-origin, неверный тип или account
+дают `local_identity_conflict`: весь apply пропускается, поэтому неоднозначность
+не размножает дубликаты. Пока активен durable import batch, новые additions
+откладываются до следующей синхронизации.
+
+HTTP 404 при feature sync managed-слоя также не превращает его в локальный
+неуправляемый слой. Решение об удалении принимает только composition sync по
+полному snapshot проекта; если snapshot неполон, существующий слой сохраняется.
+
 Если обязательный backup не создан, локальные данные сохраняются и
 разрушительная операция отменяется. Backups создаёт `LayerBackupManager` в
-`LayerBackups/`; архив для передачи — `ng-layer-backups.zip` с manifest.
+`LayerBackups/` (полный слой или selective feature ZIP); архив для передачи —
+`ng-layer-backups.zip` с manifest. Размер каталога ограничен
+`layer_backup_max_gb` (default 5); при превышении удаляются самые старые ZIP.
 
 Форма обновляется отдельной файловой транзакцией: проверяются серверный hash и
 hash распакованных файлов, новая пара `form.json`/`ngfp_meta.json` ставится через
@@ -165,6 +193,9 @@ destructive composition apply. После импорта в её `config.json` �
 - editable включён только у полевых элементов Collector: создавать объекты можно
   только в них, «Мои треки» остаётся наверху, а OSM — внизу списка после импорта;
 - запуск/возврат после screen off во время большого layer fill.
+- сброс настроек и импорт проекта минимум с 13 слоями: все каталоги уникальны;
+  точечный слой с начальным `visible=false` после локального включения виден
+  сразу, а identify и карта согласованы без server config update, sync и restart;
 - убийство процесса в середине партии и автоматическая докачка после запуска;
 - отказ от импорта неполного snapshot и сохранение существующего workspace;
 - ошибка/прерывание обновления формы с восстановлением прежней пары файлов;

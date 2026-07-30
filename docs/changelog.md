@@ -1,15 +1,80 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-07-25
+last_verified: 2026-07-30
 related_code:
   - docs
 ---
 
 # История документационной системы
 
+## 2026-07-30
+
+- Версия форка поднята до `3.1.2.7`: Lisa/Belka Release `versionCode` 198,
+  Lisa Debug `versionCode` 199; maplib `VERSION_NAME` `3.1.2.7` для debug и
+  release.
+- Общий GPS-фильтр трека и обхода больше не ограничен пешеходными 25 км/ч:
+  валидные последовательности сохраняются до 160 км/ч без профилей движения.
+  Проверка идёт от последнего принятого фикса, длинный интервал не удаляет
+  буфер, а одиночные выбросы отбрасываются с учётом accuracy. Источники трека и
+  обычного местоположения теперь строго следуют своим настройкам. При совместно
+  включённых GPS и Network свежий пригодный GPS имеет приоритет, а Network
+  автоматически возвращается как резерв через 12 секунд без GPS.
+- Невалидная геометрия слоя `GTMultiPolygon` перед формой атрибутов исправляется
+  через JTS в один валидный мультиполигон: самопересечение может стать несколькими
+  частями, но feature и форма остаются одними. Неисправимый результат остаётся в
+  редакторе; простые Polygon и линейные слои намеренно не затронуты. Исправлена
+  потеря CRS контейнера при ручном MapLibre-редактировании, из-за которой ранее
+  отбрасывался результат исправления любого самопересечения.
+- Локальное включение vector layer, который был `visible=false` при import,
+  сверяется с текущим MapLibre style: при отсутствии live source/render layer
+  выполняется data reload даже при наличии старой process-cache записи. Для
+  появления точек больше не требуется менять server `visible` и запускать sync.
+- Collector batch fill атомарно резервирует уникальные UUID-каталоги слоёв и
+  прекращает задачу на первой SQL-ошибке вместо продолжения по общей/неверной
+  таблице. Post-fill reload подтверждается только после фактического появления
+  видимых vector sources/layers в MapLibre и имеет один ограниченный полный retry.
+- Sync adapter напрямую публикует process-wide started/finished state во всех
+  путях завершения; layer drawer сверяет с ним анимацию, поэтому пропущенный
+  lifecycle broadcast больше не оставляет бесконечный spinner.
+- Временный сбой NGW/external PostGIS при pull векторного слоя больше не обрывает
+  весь проход: после остальных слоёв выполняется отложенный повтор только
+  проблемных слоёв с минимальной паузой 15 секунд; исчерпанный серверный retry
+  получает отдельное пользовательское сообщение.
+- Выбранное в «Настройки слоя → Поля» поле имени объекта сохраняется в
+  `config.json` как `feature_label_field`; identify-список нескольких объектов,
+  верхняя панель и таблица атрибутов используют один резолвер с fallback на
+  `_id`. Старый per-layer `layer_label` остаётся совместимым.
+
+## 2026-07-29
+
+- `local_vector_tiles` расширен на read-only `GTPoint` с простым круговым
+  маркером и подписью из одного поля/фиксированного текста; rule-style, custom
+  icon, template и editable варианты сохраняют classic fallback.
+- Collector layer identity защищена от потери при восстановлении R-tree:
+  `config.json` не записывается до полной загрузки NGW-полей, а последняя
+  целая identity хранится в per-layer backup.
+- Managed-layer HTTP 404 больше не переводит слой в локальный unmanaged.
+  Composition sync сверяет все физические слои по `account + remote_id`,
+  восстанавливает единственную потерянную origin-метку и блокирует apply при
+  неоднозначности вместо повторного импорта.
+
 ## 2026-07-25
 
+- Crash recovery: Save from a cold-restored new-feature form now returns layer and
+  new-row identity to `MapFragment`; the map resolves the active layer and reloads
+  the persisted feature without dereferencing the pre-crash selection or temporary
+  MapLibre edit session. If the new row is missing from the in-memory GeoJSON list,
+  `MapDrawable` reloads layer data from SQLite rather than refreshing stale styles,
+  so the saved geometry appears without restarting the app.
+- Crash recovery: normal vertex/touch geometry editing now synchronously journals
+  the latest WKT with map/layer/feature identity, offers Continue/Discard after
+  task/process death, waits for cold MapLibre sources, and logs recovery decisions
+  without logging coordinates. Existing-feature geometry drafts clear only after
+  one row was actually updated.
+- Crash recovery: cold walk drafts now win over stale form drafts even when Android
+  already restarted `WalkEditService`; successful attribute Save cannot recreate a
+  ghost draft from `onPause()`, and stale feature drafts are rejected before edit.
 - Identify линий: refine RTree-кандидатов через пересечение геометрии с
   tap-envelope (±20dp), а не bbox объекта; `GeoLineString.intersects` учитывает
   вершины внутри envelope (иначе короткий сегмент внутри tap давал miss).

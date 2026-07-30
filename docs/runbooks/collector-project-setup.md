@@ -1,7 +1,7 @@
 ---
 title: Подготовка NGW Collector-проекта
 type: runbook
-last_verified: 2026-07-23
+last_verified: 2026-07-29
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerOriginMetadata.java
@@ -34,8 +34,10 @@ related_code:
   разрешённым потоком.
 - Общий `is_editable` в mobile config управляет обычными/вручную
   импортированными слоями и не заменяет галочку элемента Collector.
-- Для тяжёлого read-only polygon/multipolygon можно явно задать
-  `mobile_render_mode = local_vector_tiles`. Приложение сохраняет значение в
+- Для тяжёлого read-only polygon/multipolygon или простого точечного слоя можно
+  явно задать `mobile_render_mode = local_vector_tiles`. Точка должна
+  использовать простой renderer, `MarkerStyleCircle` (`type = 2`) без custom icon и подпись
+  из одного поля либо фиксированного текста. Приложение сохраняет значение в
   `layer_origin.render_mode`; неподдерживаемый случай откатывается к classic rendering.
 - FormBuilder-форма связывается со слоем через `form_id`. При rebuild/fill связь должна
   сохраняться.
@@ -61,7 +63,8 @@ Project workspace хранит `collector_project` с `project_uid`, account, re
 - ручной слой остаётся вне project-managed состава;
 - изменение состава добавляет/переупорядочивает управляемые слои;
 - перед destructive rebuild/removal создаётся backup, а при ошибке backup операция отменяется;
-- `local_vector_tiles` слой отображается и имеет classic fallback при ошибке provider.
+- `local_vector_tiles` polygon либо простая read-only точка отображается и
+  имеет classic fallback при ошибке provider или неподдерживаемом стиле.
 
 Подробные контракты: [Collector architecture](../architecture/collector-projects.md). Открытые
 задачи: [Collector roadmap](../roadmap/collector.md).

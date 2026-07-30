@@ -1,7 +1,7 @@
 ---
 title: Производительность запуска карты
 type: architecture
-last_verified: 2026-07-19
+last_verified: 2026-07-29
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
@@ -33,9 +33,16 @@ GeoJSON в Java и может повторно читать атрибуты д�
 - zoom-aware упрощённые геометрии `geom_<zoom>`;
 - render cache с безопасным fallback на построение из БД;
 - lite reload для уже подготовленных source-данных;
-- opt-in `local_vector_tiles` для read-only polygon/multipolygon слоёв;
+- opt-in `local_vector_tiles` для read-only polygon/multipolygon и простых
+  точечных слоёв;
 - loopback `LocalVectorTileServer` и ленивый `LocalVectorTileProvider`;
 - fallback на классический `GeoJsonSource` для неподдерживаемой геометрии или ошибки provider.
+
+Точечный fast path намеренно узкий: только `GTPoint`, простой renderer,
+`SimpleMarkerStyle.MarkerStyleCircle` (`type = 2`), без custom icon, rule-style и label
+template. Подпись поддерживает одно поле (`field`, включая `_id`) либо
+фиксированный `text`. Редактируемый слой и любой неподдерживаемый вариант стиля
+остаются на classic path.
 
 ## Следующие кандидаты
 
@@ -53,6 +60,8 @@ GeoJSON в Java и может повторно читать атрибуты д�
 
 - `sourceFeaturesHashMap` используется не только rendering-кодом, но и selection/edit/update paths.
 - Подписи полигонов требуют отдельного point source.
+- Точечный MVT fast path не поддерживает `MultiPoint`, rule-style, custom icon
+  и label template; эти случаи обязаны сохранять classic fallback.
 - Rule-style и label templates требуют атрибутов, а не только геометрии.
 - Progressive/lazy загрузка не должна менять порядок слоёв или терять deferred reload после batch fill.
 - Любой новый режим сначала включается только для read-only слоя с явным metadata/config opt-in и
@@ -60,6 +69,6 @@ GeoJSON в Java и может повторно читать атрибуты д�
 
 ## Проверка гипотезы
 
-Минимальная perf-матрица: cold/warm start, cache hit/miss, 5–10 тыс. и около 50 тыс. полигонов,
-editable/read-only, подписи и rule-style, screen off/on и повторный вход. Сравнивать p50/p95 по
+Минимальная perf-матрица: cold/warm start, cache hit/miss, 5–10 тыс. и около 50 тыс. полигонов
+или точек, editable/read-only, подписи и rule-style, screen off/on и повторный вход. Сравнивать p50/p95 по
 этапам, peak heap, отсутствие ANR и корректность identify/edit fallback.

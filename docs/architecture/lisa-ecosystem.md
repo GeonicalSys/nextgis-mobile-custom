@@ -1,11 +1,12 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-07-23
+last_verified: 2026-07-30
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
+  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
 ---
 
@@ -62,6 +63,12 @@ QGIS-инструменты могут создавать, оформлять и
 - schema полей, права `data.read`/`data.write` и sync direction;
 - стили, формы, composition и lifecycle управляемых слоёв;
 - различие между server-managed ресурсом и локальной immutable `.ngrc`-подложкой.
+
+Временный HTTP `5xx` или `ExternalDatabaseError` внешней БД не изменяет этот
+контракт и не превращает серверный слой в локальный. Android откладывает только
+упавший pull до второго прохода синхронизации, не повторяя уже успешные слои и не
+отправляя локальные изменения до успешного чтения. Publisher-side изменений для
+такого восстановления не требуется.
 
 Изменение publisher-side логики в `stand_project`, `sync_ngw`,
 или `nextgis_connect` требует consumer-smoke в Android, если меняется этот
