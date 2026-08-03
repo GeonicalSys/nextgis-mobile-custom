@@ -1,12 +1,18 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-07-30
+last_verified: 2026-08-01
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-01
+
+- Canonical desktop, Plugins и Android workspaces перенесены под
+  `C:\dev\lisa`; старые пути оставлены только для rollback.
+- Agent workflow теперь начинает межкомпонентную работу с общего Git preflight.
 
 ## 2026-07-30
 

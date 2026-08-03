@@ -12,17 +12,17 @@ systems:
   desktop-profiles:
     title: LISA/BELKA QGIS profiles and launcher
     kind: external_workspace
-    location: Q:/standart_profiles
-    current_machine_path: Q:/standart_profiles
+    location: ../../standart_profiles
+    current_machine_path: C:/dev/lisa/standart_profiles
     origin: https://github.com/GeonicalSystem/standart_profiles.git
     docs_entry: docs/START-HERE.md
     docs_url: https://github.com/GeonicalSystem/standart_profiles/blob/main/docs/START-HERE.md
     source_of_truth: Desktop launcher/bootstrap, QGIS runtime selection, brands, roles, profile assets and delivery.
   qgis-plugins:
-    title: Geonical QGIS Plugins develop workspace
+    title: Geonical QGIS Plugins workspace
     kind: external_workspace
-    location: "%APPDATA%/QGIS/QGIS3/profiles/develop/python/plugins"
-    current_machine_path: C:/Users/lyubi/AppData/Roaming/QGIS/QGIS3/profiles/develop/python/plugins
+    location: ../../plugins
+    current_machine_path: C:/dev/lisa/plugins
     origin: https://github.com/GeonicalSystem/geonical-docs.git
     docs_entry: geonical-docs/START-HERE.md
     docs_url: https://github.com/GeonicalSystem/geonical-docs/blob/main/START-HERE.md

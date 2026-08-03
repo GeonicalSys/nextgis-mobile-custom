@@ -9,13 +9,14 @@ git-сабмодули `maplib`, `maplibui`, `easypicker`. Основной яз
 
 Перед изменением кода прочитай:
 
-1. [`docs/START-HERE.md`](docs/START-HERE.md) — ментальная модель и маршрутизация.
-2. [`docs/guides/change-checklist.md`](docs/guides/change-checklist.md).
-3. Локальные `AGENTS.md`, `docs/README.md` и `docs/manifest.yaml` затронутых
+1. Из `C:\dev\lisa` выполни `tools\workspace-preflight.ps1 -Fetch`.
+2. [`docs/START-HERE.md`](docs/START-HERE.md) — ментальная модель и маршрутизация.
+3. [`docs/guides/change-checklist.md`](docs/guides/change-checklist.md).
+4. Локальные `AGENTS.md`, `docs/README.md` и `docs/manifest.yaml` затронутых
    модулей.
-4. [`docs/registry/change-impact.yaml`](docs/registry/change-impact.yaml) —
+5. [`docs/registry/change-impact.yaml`](docs/registry/change-impact.yaml) —
    blast radius, обязательные документы и проверки.
-5. [`docs/registry/invariants.yaml`](docs/registry/invariants.yaml) и, для
+6. [`docs/registry/invariants.yaml`](docs/registry/invariants.yaml) и, для
    upstream-задач,
    [`docs/registry/upstream-overlaps.yaml`](docs/registry/upstream-overlaps.yaml).
 
@@ -24,8 +25,8 @@ git-сабмодули `maplib`, `maplibui`, `easypicker`. Основной яз
 [`docs/registry/ecosystem.yaml`](docs/registry/ecosystem.yaml). Связанные
 проекты экосистемы:
 
-- `Q:\standart_profiles` — launcher, QGIS runtime, брендовые профили и доставка;
-- `%APPDATA%\QGIS\QGIS3\profiles\develop\python\plugins` — канонические
+- `C:\dev\lisa\standart_profiles` — launcher, QGIS runtime, брендовые профили и доставка;
+- `C:\dev\lisa\plugins` — канонические
   исходники QGIS-плагинов и `geonical-docs`;
 - этот workspace — Android-клиент ЛИСА/БЕЛКА.
 

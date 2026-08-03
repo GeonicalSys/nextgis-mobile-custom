@@ -36,7 +36,7 @@ related_code:
 ## Обязательная сборка и проверка версии
 
 ```powershell
-Set-Location Q:\android_projects\android_gisapp
+Set-Location C:\dev\lisa\android_projects\android_gisapp
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version-matrix.ps1
 ```
 
@@ -95,14 +95,14 @@ updater сохраняет проверенный manifest в app-private `app_u
 
 ## Публикация
 
-Publisher находится в `Q:\android_projects\upload_mobile`. Он принимает явный путь к
+Publisher находится в `C:\dev\lisa\android_projects\upload_mobile`. Он принимает явный путь к
 APK и извлекает package/flavor/version/certificate из APK; ручной manifest не
 является входом.
 
 Сначала обязательный dry-run:
 
 ```powershell
-Set-Location Q:\android_projects\upload_mobile
+Set-Location C:\dev\lisa\android_projects\upload_mobile
 .\publish_apk.bat "ПУТЬ_К_APK" --branch lisa --notes "Описание" --dry-run
 ```
 
@@ -119,7 +119,7 @@ APK через `aapt`/`apksigner`, сериализуют операции об�
 описаны в operational contract ниже.
 
 Полный operational contract и rollback хранится отдельно от исходников
-приложения: `Q:\android_projects\upload_mobile\apk_version_system.md`.
+приложения: `C:\dev\lisa\android_projects\upload_mobile\apk_version_system.md`.
 
 ## Завершение
 

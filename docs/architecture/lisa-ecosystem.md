@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-07-30
+last_verified: 2026-08-01
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -16,19 +16,19 @@ related_code:
 
 | Система | Канонический источник | Ответственность |
 |---|---|---|
-| Desktop profile | `Q:\standart_profiles` | launcher/bootstrap, QGIS runtime, бренды, роли, эталонный профиль и доставка |
-| QGIS Plugins | `%APPDATA%\QGIS\QGIS3\profiles\develop\python\plugins` | исходники плагинов, desktop workflows, подготовка и публикация GIS-ресурсов |
+| Desktop profile | `C:\dev\lisa\standart_profiles` | launcher/bootstrap, QGIS runtime, бренды, роли, эталонный профиль и доставка |
+| QGIS Plugins | `C:\dev\lisa\plugins` | исходники плагинов, desktop workflows, подготовка и публикация GIS-ресурсов |
 | Android Mobile | этот workspace | полевой клиент, локальное GIS storage, NGW/Collector import и sync, APK release |
 
 `profiles/*/python/plugins/` внутри `standart_profiles` — deployment mirrors, а
 не четвёртый источник кода. Изменение плагина выполняется и проверяется в
-профиле `develop`, затем отдельно доставляется в desktop profile.
+Plugins workspace, затем отдельно доставляется в desktop profile.
 
 ## Поток
 
 ```mermaid
 flowchart LR
-    source["Plugins/develop<br/>исходники QGIS-плагинов"]
+    source["plugins workspace<br/>исходники QGIS-плагинов"]
     profiles["standart_profiles<br/>launcher, roles, profile"]
     mirror["brand plugin mirror"]
     qgis["Desktop QGIS ЛИСА/БЕЛКА"]
@@ -105,14 +105,14 @@ version, artifact hash и signing certificate. Совместимость с с�
 | Изменение | Проект-владелец | Дополнительный контекст |
 |---|---|---|
 | launcher, QGIS runtime, role, brand profile | `standart_profiles` | его `AGENTS.md` и `docs/START-HERE.md` |
-| исходник QGIS-плагина или WebGIS publisher | Plugins/develop | root `AGENTS.md`, `geonical-docs/START-HERE.md`, pack плагина |
+| исходник QGIS-плагина или WebGIS publisher | `C:\dev\lisa\plugins` | root `AGENTS.md`, `geonical-docs/START-HERE.md`, pack плагина |
 | Android import, Collector, sync, storage, updater | этот workspace | root/module `AGENTS.md`, Android registries |
 | общий NGW resource contract | publisher и consumer | docs/registry обоих владельцев + end-to-end smoke |
 | offline basemap для Android | QGIS plugin + Android importer | qtiles pack, app rendering/storage docs и import smoke |
 
 На текущей машине соседние входы находятся в
-`Q:\standart_profiles\docs\START-HERE.md` и
-`%APPDATA%\QGIS\QGIS3\profiles\develop\python\plugins\geonical-docs\START-HERE.md`.
+`C:\dev\lisa\standart_profiles\docs\START-HERE.md` и
+`C:\dev\lisa\plugins\geonical-docs\START-HERE.md`.
 Канонические web-входы:
 [standart_profiles](https://github.com/GeonicalSystem/standart_profiles/blob/main/docs/START-HERE.md)
 и

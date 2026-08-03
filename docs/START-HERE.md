@@ -1,7 +1,7 @@
 ---
 title: С чего начать — GeonicalSystem NextGIS Mobile
 type: guide
-last_verified: 2026-07-23
+last_verified: 2026-08-01
 related_code:
   - app/build.gradle
   - settings.gradle
@@ -15,14 +15,14 @@ related_code:
 
 | Проект | Владеет |
 |---|---|
-| `Q:\standart_profiles` | запуском QGIS, брендами, ролями и доставкой desktop-профиля |
-| проект Plugins в `%APPDATA%\QGIS\QGIS3\profiles\develop\python\plugins` | исходниками QGIS-плагинов, подготовкой и публикацией GIS-ресурсов |
+| `C:\dev\lisa\standart_profiles` | запуском QGIS, брендами, ролями и доставкой desktop-профиля |
+| `C:\dev\lisa\plugins` | исходниками QGIS-плагинов, подготовкой и публикацией GIS-ресурсов |
 | этот workspace | Android-приложением, локальными полевыми данными, NGW/Collector import и sync |
 
 Между desktop workspace и Android нет скрытого файлового импорта. Связь
 проходит через ресурсы NextGIS Web/Collector или явный пользовательский импорт
 поддерживаемого переносимого артефакта; одинаковый бренд `LISA` не делает
-`Q:\standart_profiles` runtime-зависимостью APK. Полная карта:
+`<central-root>` runtime-зависимостью APK. Полная карта:
 [`architecture/lisa-ecosystem.md`](architecture/lisa-ecosystem.md), точные
 машиночитаемые связи: [`registry/ecosystem.yaml`](registry/ecosystem.yaml).
 
@@ -63,7 +63,8 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 
 ## Быстрый цикл агента
 
-1. Определи репозитории и модули в scope.
+1. Из `C:\dev\lisa` выполни `tools\workspace-preflight.ps1 -Fetch` и определи
+   репозитории/модули в scope.
 2. Открой ближайшие `AGENTS.md` и manifests.
 3. Найди trigger в `change-impact.yaml`.
 4. Проверь invariant IDs и upstream hotspots.

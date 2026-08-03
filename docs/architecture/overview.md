@@ -65,7 +65,7 @@ Desktop-профиль ЛИСА и QGIS-плагины находятся в о�
 публикуют ресурсы в NextGIS Web; Android получает их через NGW API, Collector
 import и sync. Отдельные offline-артефакты передаются только через явный
 пользовательский import поддерживаемого формата. Поэтому изменение общего
-resource contract проверяется с обеих сторон, а файлы `Q:\standart_profiles`,
+resource contract проверяется с обеих сторон, а файлы `<central-root>`,
 QGIS plugin mirrors и `variables.py` никогда не читаются APK напрямую.
 
 Владельцы, канонические входы документации и end-to-end поток описаны в
