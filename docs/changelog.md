@@ -10,6 +10,9 @@ related_code:
 
 ## 2026-08-12
 
+- Git-регламент ИИ-агентов унифицирован в root и Android-библиотеках; проверка
+  новых submodule pointers подтвердила отсутствие изменений runtime и перечня
+  отличий от официального приложения.
 - Канонические GitHub-ссылки Android root и submodule переведены из личного
   namespace `GeonicalSystem` в организацию `GeonicalSys`; upstream NextGIS не
   изменён.
