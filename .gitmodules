@@ -1,12 +1,12 @@
 [submodule "maplib"]
 	path = maplib
-	url = https://github.com/GeonicalSystem/android_maplib.git
+	url = https://github.com/GeonicalSys/android_maplib.git
 	branch = master
 [submodule "maplibui"]
 	path = maplibui
-	url = https://github.com/GeonicalSystem/android_maplibui.git
+	url = https://github.com/GeonicalSys/android_maplibui.git
 	branch = master
 [submodule "easypicker"]
 	path = easypicker
-	url = https://github.com/GeonicalSystem/easypicker.git
+	url = https://github.com/GeonicalSys/easypicker.git
 	branch = master

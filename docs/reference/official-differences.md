@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-07-30
+last_verified: 2026-08-12
 related_code:
   - app/build.gradle
   - app/src/main
@@ -24,7 +24,7 @@ related_code:
 `3.1.2.7` / `versionCode` 199. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 
-- GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSystem/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
+- GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3ed054795e0f50923de787761a77b40a58);
 - Android MapLib — [`2f6af2a`](https://github.com/nextgis/android_maplib/commit/2f6af2a298abbee604b22daf60a030df28dd7cc3);
 - Android MapLib UI — [`87b922e`](https://github.com/nextgis/android_maplibui/commit/87b922ee48bf5cd38bd842435235c106e21f8c12);

@@ -5,27 +5,27 @@ systems:
     kind: workspace
     location: .
     repository: root
-    origin: https://github.com/GeonicalSystem/nextgis-mobile-custom.git
+    origin: https://github.com/GeonicalSys/nextgis-mobile-custom.git
     docs_entry: docs/START-HERE.md
-    docs_url: https://github.com/GeonicalSystem/nextgis-mobile-custom/blob/my-maplibre/docs/START-HERE.md
+    docs_url: https://github.com/GeonicalSys/nextgis-mobile-custom/blob/my-maplibre/docs/START-HERE.md
     source_of_truth: Android source, Gradle variants, local GIS storage, NGW/Collector consumer behavior and APK release.
   desktop-profiles:
     title: LISA/BELKA QGIS profiles and launcher
     kind: external_workspace
     location: ../../standart_profiles
     current_machine_path: C:/dev/lisa/standart_profiles
-    origin: https://github.com/GeonicalSystem/standart_profiles.git
+    origin: https://github.com/GeonicalSys/standart_profiles.git
     docs_entry: docs/START-HERE.md
-    docs_url: https://github.com/GeonicalSystem/standart_profiles/blob/main/docs/START-HERE.md
+    docs_url: https://github.com/GeonicalSys/standart_profiles/blob/main/docs/START-HERE.md
     source_of_truth: Desktop launcher/bootstrap, QGIS runtime selection, brands, roles, profile assets and delivery.
   qgis-plugins:
     title: Geonical QGIS Plugins workspace
     kind: external_workspace
     location: ../../plugins
     current_machine_path: C:/dev/lisa/plugins
-    origin: https://github.com/GeonicalSystem/geonical-docs.git
+    origin: https://github.com/GeonicalSys/geonical-docs.git
     docs_entry: geonical-docs/START-HERE.md
-    docs_url: https://github.com/GeonicalSystem/geonical-docs/blob/main/START-HERE.md
+    docs_url: https://github.com/GeonicalSys/geonical-docs/blob/main/START-HERE.md
     source_of_truth: QGIS plugin sources, desktop workflows, GIS resource publishing and central plugin documentation.
 contracts:
   - id: ECO-NGW-RESOURCE-EXCHANGE
