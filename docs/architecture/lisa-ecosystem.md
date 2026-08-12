@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-08-01
+last_verified: 2026-08-12
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -114,9 +114,9 @@ version, artifact hash и signing certificate. Совместимость с с�
 `C:\dev\lisa\standart_profiles\docs\START-HERE.md` и
 `C:\dev\lisa\plugins\geonical-docs\START-HERE.md`.
 Канонические web-входы:
-[standart_profiles](https://github.com/GeonicalSystem/standart_profiles/blob/main/docs/START-HERE.md)
+[standart_profiles](https://github.com/GeonicalSys/standart_profiles/blob/main/docs/START-HERE.md)
 и
-[geonical-docs](https://github.com/GeonicalSystem/geonical-docs/blob/main/START-HERE.md).
+[geonical-docs](https://github.com/GeonicalSys/geonical-docs/blob/main/START-HERE.md).
 
 Точные IDs и проверяемые пути: [ecosystem.yaml](../registry/ecosystem.yaml).
 

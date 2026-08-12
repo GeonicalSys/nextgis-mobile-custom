@@ -1,12 +1,18 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-01
+last_verified: 2026-08-12
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-12
+
+- Канонические GitHub-ссылки Android root и submodule переведены из личного
+  namespace `GeonicalSystem` в организацию `GeonicalSys`; upstream NextGIS не
+  изменён.
 
 ## 2026-08-01
 

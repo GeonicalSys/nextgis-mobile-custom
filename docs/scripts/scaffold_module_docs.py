@@ -122,7 +122,7 @@ def main() -> int:
         # Windows cannot form a relative path across drive letters. This occurs
         # in standalone/temp workspaces; use the canonical root-repository URL.
         central_ref = (
-            "https://github.com/GeonicalSystem/nextgis-mobile-custom/"
+            "https://github.com/GeonicalSys/nextgis-mobile-custom/"
             "tree/my-maplibre/docs"
         )
     entries_yaml = yaml.safe_dump(

@@ -5,7 +5,7 @@ repositories:
     path: .
     kind: root
     expected_branch: my-maplibre
-    origin: https://github.com/GeonicalSystem/nextgis-mobile-custom.git
+    origin: https://github.com/GeonicalSys/nextgis-mobile-custom.git
     upstream: https://github.com/nextgis/nextgis_mobile_android.git
     docs_policy: required
     module_ids: [app, wizardpager]
@@ -14,7 +14,7 @@ repositories:
     path: maplib
     kind: submodule
     expected_branch: my-maplibre
-    origin: https://github.com/GeonicalSystem/android_maplib.git
+    origin: https://github.com/GeonicalSys/android_maplib.git
     upstream: https://github.com/nextgis/android_maplib.git
     docs_policy: required
     module_ids: [maplib]
@@ -23,7 +23,7 @@ repositories:
     path: maplibui
     kind: submodule
     expected_branch: my-maplibre
-    origin: https://github.com/GeonicalSystem/android_maplibui.git
+    origin: https://github.com/GeonicalSys/android_maplibui.git
     upstream: https://github.com/nextgis/android_maplibui.git
     docs_policy: required
     module_ids: [maplibui]
@@ -32,7 +32,7 @@ repositories:
     path: easypicker
     kind: submodule
     expected_branch: my-maplibre
-    origin: https://github.com/GeonicalSystem/easypicker.git
+    origin: https://github.com/GeonicalSys/easypicker.git
     upstream: https://github.com/nextgis/easypicker.git
     docs_policy: required
     module_ids: [easypicker-module]
