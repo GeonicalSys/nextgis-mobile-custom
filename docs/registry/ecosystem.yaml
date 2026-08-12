@@ -1,0 +1,100 @@
+schema_version: 1
+systems:
+  mobile-app:
+    title: GeonicalSystem NextGIS Mobile
+    kind: workspace
+    location: .
+    repository: root
+    origin: https://github.com/GeonicalSys/nextgis-mobile-custom.git
+    docs_entry: docs/START-HERE.md
+    docs_url: https://github.com/GeonicalSys/nextgis-mobile-custom/blob/my-maplibre/docs/START-HERE.md
+    source_of_truth: Android source, Gradle variants, local GIS storage, NGW/Collector consumer behavior and APK release.
+  desktop-profiles:
+    title: LISA/BELKA QGIS profiles and launcher
+    kind: external_workspace
+    location: ../../standart_profiles
+    current_machine_path: C:/dev/lisa/standart_profiles
+    origin: https://github.com/GeonicalSys/standart_profiles.git
+    docs_entry: docs/START-HERE.md
+    docs_url: https://github.com/GeonicalSys/standart_profiles/blob/main/docs/START-HERE.md
+    source_of_truth: Desktop launcher/bootstrap, QGIS runtime selection, brands, roles, profile assets and delivery.
+  qgis-plugins:
+    title: Geonical QGIS Plugins workspace
+    kind: external_workspace
+    location: ../../plugins
+    current_machine_path: C:/dev/lisa/plugins
+    origin: https://github.com/GeonicalSys/geonical-docs.git
+    docs_entry: geonical-docs/START-HERE.md
+    docs_url: https://github.com/GeonicalSys/geonical-docs/blob/main/START-HERE.md
+    source_of_truth: QGIS plugin sources, desktop workflows, GIS resource publishing and central plugin documentation.
+contracts:
+  - id: ECO-NGW-RESOURCE-EXCHANGE
+    from: qgis-plugins
+    to: mobile-app
+    type: server_resource_contract
+    transport: NextGIS Web API and Collector resources
+    statement: QGIS publishers and the Android consumer preserve resource identity, type, schema, permissions, style/form composition and sync semantics; transient NGW or external-database availability never mutates resource identity or local data, and Android retries only failed pull layers without repeating successful ones.
+    owners: [app, maplib, maplibui]
+    local_docs:
+      - docs/architecture/lisa-ecosystem.md
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/architecture/collector-projects.md
+    external_docs:
+      - system: qgis-plugins
+        path: geonical-docs/architecture/mobile-client.md
+      - system: qgis-plugins
+        path: geonical-docs/runbooks/06-ngw-webgis-deploy.md
+    verify: [SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-IMPORT, SMOKE-MULTI-ACCOUNT-SYNC]
+  - id: ECO-DESKTOP-MOBILE-OPERATIONS
+    from: desktop-profiles
+    to: mobile-app
+    type: indirect_operational_context
+    transport: Desktop QGIS plugins publish to NextGIS Web; Android consumes the server resources.
+    statement: The desktop profile does not deploy or configure the APK directly; end-to-end changes cross the plugin and NGW boundary explicitly.
+    owners: [app]
+    local_docs:
+      - docs/architecture/lisa-ecosystem.md
+    external_docs:
+      - system: desktop-profiles
+        path: docs/START-HERE.md
+      - system: desktop-profiles
+        path: docs/architecture/overview.md
+      - system: desktop-profiles
+        path: docs/architecture/mobile-boundary.md
+      - system: qgis-plugins
+        path: geonical-docs/architecture/mobile-client.md
+    verify: [SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-IMPORT]
+  - id: ECO-OFFLINE-BASEMAP-HANDOFF
+    from: qgis-plugins
+    to: mobile-app
+    type: portable_artifact_contract
+    transport: Explicit user or release import of a supported offline basemap package.
+    statement: qtiles_geonical produces an offline package but does not publish it automatically; producer and Android consumer must agree on format, CRS, zoom range and lifecycle without sharing a desktop workspace path.
+    owners: [app, maplib, maplibui]
+    local_docs:
+      - docs/architecture/lisa-ecosystem.md
+      - docs/architecture/map-rendering.md
+      - docs/architecture/collector-projects.md
+    external_docs:
+      - system: qgis-plugins
+        path: qtiles_geonical/docs/README.md
+      - system: qgis-plugins
+        path: geonical-docs/architecture/mobile-client.md
+      - system: qgis-plugins
+        path: geonical-docs/runbooks/06-ngw-webgis-deploy.md
+    verify: [SMOKE-NGRC-PRESERVE, SMOKE-UPDATE-DATA-PRESERVE]
+boundaries:
+  - id: ECO-NO-DIRECT-FILESYSTEM
+    systems: [desktop-profiles, qgis-plugins, mobile-app]
+    statement: Android runtime never reads QGIS profiles, plugin mirrors, variables.py or other desktop workspace files; shared data crosses through an explicit server/API contract or an explicit import of a supported portable artifact.
+    owners: [app, maplib, maplibui]
+    local_docs:
+      - docs/architecture/lisa-ecosystem.md
+    verify: [AUTO-DOCS-VALIDATE]
+  - id: ECO-SOURCE-OWNERSHIP
+    systems: [desktop-profiles, qgis-plugins, mobile-app]
+    statement: Every change is implemented and tested in its canonical source workspace; deployment mirrors and another project's generated artifacts are not source code.
+    owners: [app]
+    local_docs:
+      - docs/architecture/lisa-ecosystem.md
+    verify: [AUTO-DOCS-VALIDATE]

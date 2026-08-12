@@ -16,14 +16,32 @@ invariants:
   INV-VERSION-COUPLING:
     title: Fork version and maplib diagnostic version stay compatible
     owners: [app, maplib]
-    statement: Use <upstream-base>.<fork-patch>, monotonically increase app versionCode, and keep maplib BuildConfig version aligned when the contract uses it.
+    statement: Use <upstream-base>.<fork-patch>, monotonically increase app versionCode per published channel, keep maplib BuildConfig version aligned per variant, and ensure a debug-only bump leaves both production release APK metadata unchanged.
     related_code:
       - app/build.gradle
       - maplib/build.gradle
-    verify_smoke: [SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
+    verify_smoke: [AUTO-APP-VERSION-MATRIX, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
     must_update_docs:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
+      - docs/runbooks/release-apk.md
+  INV-NGW-ACCOUNT-IDENTITY:
+    title: Every build variant exposes one consistent NGW account identity
+    owners: [app, maplibui]
+    statement: MainApplication runtime account type, AccountAuthenticator metadata and SyncAdapter metadata must resolve to the same variant-specific value; provider runtime and manifest authorities must also match.
+    related_code:
+      - app/build.gradle
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/res/xml/syncadapter.xml
+      - maplibui/src/main/res/xml/authenticator.xml
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/NGWLoginActivity.java
+    verify_smoke: [SMOKE-NGW-ACCOUNT-ADD, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
+    must_update_docs:
+      - docs/reference/flavors-and-versioning.md
+      - docs/architecture/ngw-sync-and-storage.md
+      - app/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
   INV-LAYER-ORDER:
     title: LayerGroup index zero is the bottom of the stack
     owners: [maplib, maplibui]
@@ -34,6 +52,30 @@ invariants:
     verify_smoke: [SMOKE-NGRC-ORDER, SMOKE-LAYER-REORDER]
     must_update_docs:
       - docs/architecture/map-rendering.md
+  INV-DEFAULT-OSM-BOTTOM:
+    title: Every map preserves the default OSM basemap at the bottom
+    owners: [app, maplib, maplibui]
+    statement: Ensure every map, including each isolated Collector workspace, contains exactly one direct default OpenStreetMap Standard aka Mapnik layer at LayerGroup index zero; project composition must not manage or remove it, and normalization must preserve its visibility.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    verify_smoke: [SMOKE-MAP-COLD-START, SMOKE-COLLECTOR-IMPORT]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/architecture/collector-projects.md
+  INV-TRACK-LAYER-TOP:
+    title: My Tracks stays at the top of the user layer list
+    owners: [app, maplib, maplibui]
+    statement: Keep every direct tracks layer last in internal LayerGroup order so it is first in the reversed UI list, and insert Collector project layers below it.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    verify_smoke: [SMOKE-MAP-COLD-START, SMOKE-COLLECTOR-IMPORT]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/architecture/collector-projects.md
   INV-HOT-ADD-CONSISTENCY:
     title: Hot-added raster order matches the layer list without restart
     owners: [app, maplib, maplibui]
@@ -56,6 +98,16 @@ invariants:
     verify_smoke: [SMOKE-TRACK-NO-FLAGS]
     must_update_docs:
       - docs/architecture/map-rendering.md
+  INV-LOCATION-CURSOR-TOP:
+    title: Location cursor stays above every map object
+    owners: [maplib, app]
+    statement: Treat user-location-layer as a render-only overlay outside LayerGroup order and restore it as the last MapLibre style layer after cold, lite and hot layer mutations.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-COLD-START, SMOKE-HOT-RASTER]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
   INV-COLLECTOR-RESOURCE:
     title: Collector resources remain selectable and importable
     owners: [maplib, maplibui]
@@ -67,37 +119,277 @@ invariants:
     verify_smoke: [SMOKE-COLLECTOR-IMPORT]
     must_update_docs:
       - docs/architecture/collector-projects.md
+  INV-COLLECTOR-LAYER-IDENTITY:
+    title: Collector layer identity is stable and duplicate-safe
+    owners: [maplib, maplibui]
+    statement: >
+      A project-managed layer keeps account, remote id and project-origin metadata as one
+      identity. Loading or rebuilding a spatial cache must not persist a partially initialized
+      layer config. A managed-layer 404 is resolved by composition sync, never by silently
+      converting the layer to an unmanaged local vector. Before additions, composition sync
+      indexes physical layers by account plus remote id: one matching layer with only missing
+      origin may be repaired in place, while duplicate, manual, wrong-kind or mismatched-account
+      identities block apply and must not create another copy.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NgwLayerIdentityBackup.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-COLLECTOR-IDENTITY]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - docs/registry/config-keys.yaml
+  INV-COLLECTOR-RASTER-STYLES:
+    title: Supported Collector styles materialize as read-only raster layers
+    owners: [maplib, maplibui]
+    statement: Import only the QGIS vector/raster style classes already recognized by Connection as authenticated project-managed NGW raster layers; keep the style id as tile identity, the parent resource id as extent source, preserve mixed project order, and never expose the style as editable.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-COLLECTOR-IMPORT]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
   INV-COLLECTOR-ISOLATION:
     title: Collector projects use isolated local workspaces
     owners: [app, maplib, maplibui]
-    statement: Project identity, map path and layers must not leak between Collector projects during import or switch.
+    statement: Project identity, map path, layers and tracks must not leak between Collector projects; ContentProvider operations must resolve the active map after every in-process switch.
     related_code:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
       - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     verify_smoke: [SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-SWITCH]
     must_update_docs:
       - docs/architecture/collector-projects.md
+  INV-COLLECTOR-EDITABILITY:
+    title: Collector item policy controls managed-layer editing
+    owners: [app, maplib, maplibui]
+    statement: A project-managed NGW layer is editable only when its Collector item allows editing and outbound sync is enabled; generic mobile is_editable remains the gate for ordinary and manually imported layers.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [SMOKE-COLLECTOR-IMPORT, SMOKE-NGW-URL-IMPORT]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+      - docs/runbooks/collector-project-setup.md
+      - docs/reference/official-differences.md
+  INV-COLLECTOR-RESUMABLE:
+    title: Collector import is complete or safely resumable
+    owners: [maplib, maplibui]
+    statement: Reject incomplete remote snapshots, persist unfinished batches, and after process death requeue only missing or broken layers.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    verify_smoke: [SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-RESUME, SMOKE-COLLECTOR-INCOMPLETE]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+  INV-COLLECTOR-FORM-ATOMIC:
+    title: Collector form updates preserve one valid file pair
+    owners: [maplib, maplibui]
+    statement: Validate downloaded and unpacked hashes, install form/meta as one recoverable transaction, and preserve the previous form on failure.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/LayerFormHashUtil.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+    verify_smoke: [SMOKE-FORM-ROLLBACK]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+  INV-NGRC-PRESERVE:
+    title: Imported NGRc underlays survive app and project updates
+    owners: [maplib, maplibui]
+    statement: Treat manually imported NGRc as immutable local project data, record provenance, and never remove it through Collector composition sync.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    verify_smoke: [SMOKE-NGRC-ORDER, SMOKE-NGRC-PRESERVE, SMOKE-UPDATE-DATA-PRESERVE]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+      - docs/architecture/map-rendering.md
   INV-BACKUP-BEFORE-DESTRUCTION:
     title: Required backup gates destructive layer mutation
-    owners: [maplibui]
-    statement: If backup fails, schema rebuild or Collector layer removal must leave the local layer unchanged.
+    owners: [maplibui, maplib]
+    statement: >
+      For editable NGW vector layers, a successful data backup is required before any destructive
+      mutation — remote sync delete/overwrite, schema rebuild, Collector vector-layer removal,
+      manual layer delete, or manual feature delete. Backup must include attachment file bytes
+      (local files or NGW download), not metadata alone. If backup fails, local feature data must
+      remain unchanged and the user must see an alert with the failure reason. Non-editable Collector
+      layers and recreatable raster-style tile caches are not data-backup operations. LayerBackups/
+      is capped by preference layer_backup_max_gb (default 5); oldest ZIP archives are deleted when
+      the limit is exceeded. After a successful attachment push, the local file stays under the
+      server attach id and FeatureAttachments is updated so identification works without a second sync.
     related_code:
       - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java
     verify_smoke: [SMOKE-BACKUP-GATE]
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/ngw-sync-and-storage.md
       - docs/runbooks/incident-and-rollback.md
+      - docs/registry/config-keys.yaml
+      - docs/reference/settings-and-config.md
+  INV-MULTIPOLYGON-REPAIR:
+    title: Invalid multi-polygons repair into one feature before attribute entry
+    owners: [app, maplib, maplibui]
+    statement: >
+      Automatic topology repair is enabled only when the selected layer type is exactly
+      GTMultiPolygon. A valid input remains unchanged; an invalid input may split or union
+      polygonal parts but must produce one valid GeoMultiPolygon with the original CRS,
+      one feature and one attribute-form handoff. Empty, non-polygonal or still-invalid
+      repair output blocks Save and keeps geometry editing active. GTPolygon, LineString
+      and MultiLineString retain their existing behavior and never enter this repair path.
+      MapLibre conversion assigns CRS to the multi-polygon, polygons and rings. For drafts
+      created by an older conversion, repair recovers a missing collection CRS from the
+      nested polygon, ring or point before the JTS round trip.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/MultiPolygonGeometryRepair.java
+      - maplib/src/test/java/com/nextgis/maplib/util/MultiPolygonGeometryRepairTest.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-MULTIPOLYGON-REPAIR]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - app/docs/README.md
+  INV-GPS-TRACK-FILTER:
+    title: Track and walk recording retain real movement through 160 km/h
+    owners: [maplib, maplibui, app]
+    statement: >
+      TrackerService and WalkEditService use the same accuracy-aware sequence filter without
+      pedestrian/vehicle profiles. Valid movement through 160 km/h must be retained with or
+      without Android reported speed. Invalid coordinates, mock fixes, accuracy above 50 m,
+      delayed/future fixes, reported speed above 100 m/s, physically implausible distance or
+      acceleration and material isolated chord spikes are rejected. Motion is compared with
+      the newest accepted fix, including the delayed chord buffer, so one rejection cannot
+      anchor the sequence indefinitely. Sampling gaps above 30 seconds drain, rather than
+      discard, the previous valid buffer. Track recording obeys tracks_location_source only;
+      walk digitizing obeys location_source only. When both GPS and network are enabled,
+      network remains an initial and outage fallback, but a usable GPS fix suppresses network
+      fixes for 12 seconds so mixed-provider jitter cannot corrupt the recorded sequence.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
+      - maplib/src/test/java/com/nextgis/maplib/util/LocationTrackFilterCoreTest.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiterCore.java
+      - maplib/src/test/java/com/nextgis/maplib/util/LocationProviderArbiterCoreTest.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    must_update_docs:
+      - docs/architecture/crash-recovery.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - maplibui/docs/README.md
+  INV-CRASH-DRAFT-RECOVERY:
+    title: Crash-safe track resume and geometry/form drafts
+    owners: [app, maplibui, maplib]
+    statement: >
+      Track recording uses durable preference track_recording_enabled, cleared only by the
+      explicit menu finish action. After reboot or process death, recording auto-resumes
+      without a dialog; already inserted trackpoints must not be lost (closing an unfinished
+      track and starting a new id is allowed). Walk digitizing keeps walkedit_temp on
+      unexpected service death and offers Continue/Discard even if START_STICKY already
+      restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/touch
+      editing synchronously journals its latest WKT plus active-map/layer/feature identity in
+      GeometryEditDraftStore and offers Continue/Discard after process/task death; only
+      explicit Cancel, successful layer update, or handoff to the attribute form clears it.
+      Attribute forms persist a typed FeatureFormDraftStore snapshot (fields, geometry,
+      pending photos) until Save or Discard, recovered via Continue/Discard at app start.
+      Activity.onPause after successful Save must not recreate the cleared form draft. A
+      successful cold-restored form result must carry layer/new-feature identity and must not
+      depend on a retained MapFragment.mSelectedLayer or temporary MapLibre edit session. If
+      the inserted row is absent from the process-local GeoJSON source, Save must reload layer
+      data from SQLite and make the object visible without an application restart.
+    related_code:
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/BootLoader.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+    verify_smoke: [SMOKE-CRASH-DRAFT-RECOVERY]
+    must_update_docs:
+      - docs/architecture/crash-recovery.md
   INV-UPDATER-IDENTITY:
     title: Self-hosted updater validates product and artifact identity
     owners: [app]
-    statement: Reject update artifacts with mismatched flavor, application ID, version, size, APK hash or signing certificate.
+    statement: Resolve the lisa, belka or debug repository branch from the build variant and reject manifests or APKs with mismatched schema, branch/channel, application ID, version/code-name pair, trusted versioned URL, size, APK hash or signing certificate.
     related_code:
       - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
       - app/src/main/AndroidManifest.xml
     verify_smoke: [SMOKE-SELF-UPDATE]
     must_update_docs:
       - docs/runbooks/release-apk.md
       - docs/reference/flavors-and-versioning.md
+  INV-UPDATER-PERMISSION-RESUME:
+    title: Self-hosted update resumes after Android install permission
+    owners: [app]
+    statement: When Android special access blocks installation, persist only the validated pending manifest, re-check permission and artifact contracts on activity resume, reuse the validated cached APK and continue without a second manual update check.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
+    verify_smoke: [SMOKE-SELF-UPDATE]
+    must_update_docs:
+      - docs/runbooks/release-apk.md
+      - app/docs/README.md
+  INV-NGW-URL-IMPORT:
+    title: Direct NGW URL import preserves account, permission and layer contracts
+    owners: [maplib, maplibui, app]
+    statement: Parse only unambiguous HTTP(S) resource URLs, resolve style links to a supported parent layer, create guest accounts only after validation, and keep resources without data.write read-only and pull-only.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    verify_smoke: [SMOKE-NGW-URL-IMPORT]
+    must_update_docs:
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/registry/dependencies.yaml
+  INV-SYNC-ACCOUNT-ISOLATION:
+    title: One NGW account failure does not suppress another account
+    owners: [app, maplib, maplibui]
+    statement: Keep account sync results isolated, prioritize the active Collector account for manual serial sync, and restore each enabled account schedule after restart.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java
+    verify_smoke: [SMOKE-MULTI-ACCOUNT-SYNC]
+    must_update_docs:
+      - docs/architecture/ngw-sync-and-storage.md
+  INV-ECOSYSTEM-SERVER-BOUNDARY:
+    title: Desktop and Android integrate through explicit server contracts
+    owners: [app, maplib, maplibui]
+    statement: Android runtime never reads standart_profiles, QGIS plugin mirrors, variables.py or other desktop workspace files; shared data crosses through NextGIS Web/Collector with explicit identity, schema and permission semantics or through explicit import of a supported portable artifact.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    verify_smoke: [SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-IMPORT, SMOKE-MULTI-ACCOUNT-SYNC]
+    must_update_docs:
+      - docs/architecture/lisa-ecosystem.md
+      - docs/registry/ecosystem.yaml

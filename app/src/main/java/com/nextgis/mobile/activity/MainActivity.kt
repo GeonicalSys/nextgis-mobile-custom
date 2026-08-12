@@ -23,11 +23,13 @@
 package com.nextgis.mobile.activity
 
 import android.Manifest
+import android.accounts.AccountManager
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -52,6 +54,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -68,6 +71,10 @@ import com.nextgis.maplib.api.IGISApplication
 import com.nextgis.maplib.api.ILayer
 import com.nextgis.maplib.datasource.GeoMultiPoint
 import com.nextgis.maplib.datasource.GeoPoint
+import com.nextgis.maplib.datasource.ngw.Connection
+import com.nextgis.maplib.datasource.ngw.Resource
+import com.nextgis.maplib.datasource.ngw.ResourceGroup
+import com.nextgis.maplib.map.LayerGroup
 import com.nextgis.maplib.map.MapDrawable
 import com.nextgis.maplib.map.NGWVectorLayer
 import com.nextgis.maplib.map.VectorLayer
@@ -77,6 +84,7 @@ import com.nextgis.maplib.util.FileUtil
 import com.nextgis.maplib.util.GeoConstants
 import com.nextgis.maplib.util.MapUtil
 import com.nextgis.maplib.util.NGWUtil
+import com.nextgis.maplib.util.NGWResourceUrl
 import com.nextgis.maplib.util.NetworkUtil
 import com.nextgis.maplib.util.SettingsConstants
 import com.nextgis.maplibui.GISApplication
@@ -86,6 +94,7 @@ import com.nextgis.maplibui.api.IVectorLayerUI
 import com.nextgis.maplibui.fragment.BottomToolbar
 import com.nextgis.maplibui.fragment.LayerFillProgressDialogFragment
 import com.nextgis.maplibui.mapui.TrackLayerUI.CODE_TRACK_LIST
+import com.nextgis.maplibui.mapui.SyncAccountWorker
 import com.nextgis.maplibui.overlay.EditLayerOverlay
 import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.service.TrackerService.BackgroundPermissionCallback
@@ -97,8 +106,11 @@ import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_START
 import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_STOP
 import com.nextgis.maplibui.util.ControlHelper
 import com.nextgis.maplibui.util.CollectorProjectRegistry
+import com.nextgis.maplibui.util.FeatureFormDraftStore
 import com.nextgis.maplibui.util.LayerBackupManager
+import com.nextgis.maplibui.util.LayerUtil
 import com.nextgis.maplibui.util.NGIDUtils
+import com.nextgis.maplibui.util.NGWResourceImportHelper
 import com.nextgis.maplibui.util.SettingsConstantsUI
 import com.nextgis.maplibui.util.UiUtil
 import com.nextgis.mobile.MainApplication
@@ -117,6 +129,7 @@ import java.io.IOException
 import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
+import java.util.concurrent.Executors
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -140,8 +153,13 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     protected var mBackPressed: Long = 0
     protected var mTrackItem: MenuItem? = null
+    private val ngwUrlExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "NGWResourceUrl").apply { isDaemon = true }
+    }
+    private var ngwUrlImportInProgress = false
     private val startupUpdateCheckHandler = Handler(Looper.getMainLooper())
     private var startupUpdateCheckPending = false
+    private var crashRecoveryOffered = false
     private val startupUpdateCheckRunnable = Runnable {
         if (!startupUpdateCheckPending || isFinishing || isDestroyed || !hasWindowFocus()) {
             return@Runnable
@@ -400,20 +418,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
             PERMISSIONS_REQUEST_ACCOUNT -> processAllPermisions(PERMISSIONS_REQUEST_ACCOUNT)
             PERMISSIONS_REQUEST_MEMORY -> processAllPermisions(PERMISSIONS_REQUEST_MEMORY)
-            PERMISSIONS_REQUEST_PUSH ->                 // turn on sync notify
-                if (permissions.size > 0) {
-                    var i = 0
-                    while (i < permissions.size) {
-                        if (permissions[i] == Manifest.permission.POST_NOTIFICATIONS
-                            && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            PreferenceManager.getDefaultSharedPreferences(
-                                applicationContext).edit()
-                                .putBoolean(AppSettingsConstants.KEY_PREF_SHOW_SYNC, true)
-                                .commit()
-                        }
-                        i++
-                    }
-                }
+            PERMISSIONS_REQUEST_PUSH -> {
+                // Notification permission alone must not enable sync notifications;
+                // that remains the user toggle KEY_PREF_SHOW_SYNC (default false).
+            }
 
             LOCATION_BACKGROUND_REQUEST -> {
                 if (mTrackItem != null)
@@ -711,6 +719,103 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
     }
 
+    /**
+     * Recovery hub: track auto-resumes silently; walk/manual-geometry/form drafts are offered
+     * one at a time in that order.
+     */
+    private fun maybeOfferCrashRecovery() {
+        if (crashRecoveryOffered || isFinishing || isDestroyed) {
+            return
+        }
+        val map = mapFragment ?: return
+        HyperLog.v(Constants.TAG, "CrashRecovery hub check started")
+        if (map.hasInterruptedWalkDraft()) {
+            crashRecoveryOffered = true
+            map.crashRecoveryWalkDialogShown = true
+            map.pauseInterruptedWalkForRecovery()
+            HyperLog.v(Constants.TAG, "CrashRecovery offering walk draft")
+            AlertDialog.Builder(this)
+                .setTitle(com.nextgis.maplibui.R.string.walkedit_interrupted_title)
+                .setMessage(com.nextgis.maplibui.R.string.walkedit_interrupted_message)
+                .setPositiveButton(com.nextgis.maplibui.R.string.walkedit_continue) { _, _ ->
+                    HyperLog.v(Constants.TAG, "CrashRecovery walk Continue selected")
+                    map.resumeWalkFromDraft()
+                    maybeOfferManualGeometryDraftRecovery()
+                }
+                .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
+                    HyperLog.v(Constants.TAG, "CrashRecovery walk Discard selected")
+                    map.discardWalkDraft()
+                    maybeOfferManualGeometryDraftRecovery()
+                }
+                .setCancelable(false)
+                .show()
+            return
+        }
+        maybeOfferManualGeometryDraftRecovery()
+    }
+
+    private fun maybeOfferManualGeometryDraftRecovery() {
+        val map = mapFragment ?: return
+        if (!map.hasInterruptedManualGeometryDraft()) {
+            maybeOfferFormDraftRecovery()
+            return
+        }
+        crashRecoveryOffered = true
+        HyperLog.v(Constants.TAG, "CrashRecovery offering manual geometry draft")
+        AlertDialog.Builder(this)
+            .setTitle(com.nextgis.maplibui.R.string.geometry_edit_interrupted_title)
+            .setMessage(com.nextgis.maplibui.R.string.geometry_edit_interrupted_message)
+            .setPositiveButton(com.nextgis.maplibui.R.string.geometry_edit_continue) { _, _ ->
+                HyperLog.v(Constants.TAG, "CrashRecovery geometry Continue selected")
+                map.resumeManualGeometryFromDraft()
+                maybeOfferFormDraftRecovery()
+            }
+            .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
+                HyperLog.v(Constants.TAG, "CrashRecovery geometry Discard selected")
+                map.discardManualGeometryDraft()
+                maybeOfferFormDraftRecovery()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun maybeOfferFormDraftRecovery() {
+        val draft = FeatureFormDraftStore.load(this)
+        if (draft == null) {
+            crashRecoveryOffered = true
+            HyperLog.v(Constants.TAG, "CrashRecovery hub check completed: no remaining drafts")
+            return
+        }
+        if (!LayerUtil.isEditFormDraftRecoverable(this, draft)) {
+            HyperLog.w(
+                Constants.TAG,
+                "CrashRecovery discarding invalid form draft layer=${draft.layerId} " +
+                    "feature=${draft.featureId}"
+            )
+            FeatureFormDraftStore.clear(this)
+            crashRecoveryOffered = true
+            return
+        }
+        crashRecoveryOffered = true
+        HyperLog.v(
+            Constants.TAG,
+            "CrashRecovery offering form draft layer=${draft.layerId} feature=${draft.featureId}"
+        )
+        AlertDialog.Builder(this)
+            .setTitle(com.nextgis.maplibui.R.string.form_draft_title)
+            .setMessage(com.nextgis.maplibui.R.string.form_draft_message)
+            .setPositiveButton(com.nextgis.maplibui.R.string.form_draft_continue) { _, _ ->
+                HyperLog.v(Constants.TAG, "CrashRecovery form Continue selected")
+                LayerUtil.showEditFormFromDraft(this, draft)
+            }
+            .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
+                HyperLog.v(Constants.TAG, "CrashRecovery form Discard selected")
+                FeatureFormDraftStore.clear(this)
+            }
+            .setCancelable(false)
+            .show()
+    }
+
     private fun showCollectorProjectsDialog() {
         val projects = CollectorProjectRegistry.listProjects(this)
         if (projects.isEmpty()) {
@@ -755,6 +860,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     private fun switchCollectorProject(project: CollectorProjectRegistry.ProjectInfo) {
         val gisApp = application as IGISApplication
+        if (TrackerService.isTrackerServiceRunning(this)) {
+            Toast.makeText(this, R.string.collector_project_switch_tracking, Toast.LENGTH_LONG).show()
+            return
+        }
         if (gisApp.isLayerFillServiceBusy) {
             Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
             return
@@ -783,7 +892,18 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             return
         }
 
-        (application as? GISApplication)?.closeMapObj()
+        val account = gisApp.getAccount(project.accountName)
+        val app = application as? GISApplication
+        if (account != null && app != null
+            && ContentResolver.getSyncAutomatically(account, gisApp.authority)
+        ) {
+            val period = GISApplication.getAccountSyncTime(account, app)
+            SyncAccountWorker.scheduleSoon(this, account.name, period)
+            HyperLog.v(
+                Constants.TAG,
+                "Collector project switch: scheduled composition/data sync account=${account.name}"
+            )
+        }
         HyperLog.v(
             Constants.TAG,
             "Collector project switch: activated projectUid=${project.projectUid}"
@@ -1387,6 +1507,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onResume() {
         super.onResume()
+        if (AppUpdateManager.resumePendingInstallation(this)) {
+            startupUpdateCheckPending = false
+            startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
+        }
         val gisApp = application as IGISApplication
         if (gisApp.isLayerFillServiceBusy) {
             /* Defer: avoids re-entrancy with MapFragment/map resume and window token races after screen on. */
@@ -1418,9 +1542,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
         mapFragment!!.reloadTracks()
 
+        // Durable track-recording flag: silently resume after crash/reboot (no dialog).
+        TrackerService.ensureRecordingRunningIfEnabled(this)
 
-
-
+        maybeOfferCrashRecovery()
         if (SDCardUtils.isSDCardUsedAndExtracted(this)) {
             val builder = android.app.AlertDialog.Builder(this@MainActivity)
             builder.setMessage(com.nextgis.maplibui.R.string.no_sd_card_attention)
@@ -1431,6 +1556,142 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
 
     }
+
+    fun addNGWLayerByUrl() {
+        val input = EditText(this).apply {
+            hint = getString(R.string.ngw_resource_url_hint)
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or
+                android.text.InputType.TYPE_TEXT_VARIATION_URI
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.action_add_by_url)
+            .setView(input)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                importNGWResourceByUrl(input.text?.toString().orEmpty())
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun importNGWResourceByUrl(rawUrl: String) {
+        if (ngwUrlImportInProgress) {
+            Toast.makeText(this, R.string.ngw_url_import_in_progress, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val parsed = try {
+            NGWResourceUrl.parse(rawUrl)
+        } catch (_: IllegalArgumentException) {
+            Toast.makeText(this, R.string.ngw_resource_url_invalid, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        ngwUrlImportInProgress = true
+        mapFragment?.changeProgress(true)
+        ngwUrlExecutor.execute {
+            val resolved = resolveNGWResource(parsed)
+            runOnUiThread {
+                ngwUrlImportInProgress = false
+                mapFragment?.changeProgress(false)
+                if (isFinishing || isDestroyed) {
+                    return@runOnUiThread
+                }
+                handleResolvedNGWResource(resolved)
+            }
+        }
+    }
+
+    private fun resolveNGWResource(parsed: NGWResourceUrl): NGWUrlResolution {
+        val connections = NetworkUtil.fillConnections(this, AccountManager.get(this))
+        var connection: Connection? = null
+        for (index in 0 until connections.childrenCount) {
+            val candidate = connections.getChild(index)
+            if (candidate is Connection && parsed.matchesServerUrl(candidate.url)) {
+                connection = candidate
+                break
+            }
+        }
+
+        val needsGuestAccount = connection == null
+        val targetConnection = connection ?: Connection(
+            parsed.accountName,
+            Constants.NGW_ACCOUNT_GUEST,
+            "",
+            parsed.serverUrl
+        )
+        val guest = Constants.NGW_ACCOUNT_GUEST == targetConnection.login
+        if (!targetConnection.connect(guest, parsed.resourceId)) {
+            return NGWUrlResolution(parsed, null, 401, needsGuestAccount)
+        }
+
+        val loaded = targetConnection.rootResource.loadTargetResource()
+        return NGWUrlResolution(
+            parsed,
+            loaded.resource,
+            loaded.responseCode,
+            needsGuestAccount
+        )
+    }
+
+    private fun handleResolvedNGWResource(resolved: NGWUrlResolution) {
+        val resource = resolved.resource
+        if (resource == null) {
+            val message = when (resolved.responseCode) {
+                401, 403 -> R.string.ngw_resource_permission_denied
+                404 -> R.string.ngw_resource_not_found
+                in 200..299 -> R.string.ngw_resource_type_unsupported
+                else -> R.string.ngw_resource_load_failed
+            }
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if (!NGWResourceImportHelper.supports(resource)) {
+            Toast.makeText(this, R.string.ngw_resource_type_unsupported, Toast.LENGTH_LONG).show()
+            return
+        }
+        if (!resource.hasDataReadPermission()) {
+            Toast.makeText(this, R.string.ngw_resource_permission_denied, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if (resolved.needsGuestAccount) {
+            val app = application as IGISApplication
+            val accountAdded = app.addAccount(
+                resolved.parsed.accountName,
+                resolved.parsed.serverUrl,
+                Constants.NGW_ACCOUNT_GUEST,
+                "",
+                Constants.NGW_ACCOUNT_GUEST
+            )
+            if (!accountAdded) {
+                Toast.makeText(this, R.string.ngw_guest_account_failed, Toast.LENGTH_LONG).show()
+                return
+            }
+        }
+
+        val group = (application as IGISApplication).map as? LayerGroup
+        val result = NGWResourceImportHelper.importResource(this, group, resource)
+        val message = when (result) {
+            NGWResourceImportHelper.Result.VECTOR_QUEUED -> R.string.ngw_resource_import_started
+            NGWResourceImportHelper.Result.RASTER_ADDED -> R.string.ngw_resource_added
+            NGWResourceImportHelper.Result.READ_PERMISSION_DENIED ->
+                R.string.ngw_resource_permission_denied
+            NGWResourceImportHelper.Result.UNSUPPORTED -> R.string.ngw_resource_type_unsupported
+            NGWResourceImportHelper.Result.FAILED -> R.string.ngw_resource_load_failed
+        }
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        if (result == NGWResourceImportHelper.Result.RASTER_ADDED) {
+            mLayersFragment?.onResume()
+        }
+    }
+
+    private data class NGWUrlResolution(
+        val parsed: NGWResourceUrl,
+        val resource: Resource?,
+        val responseCode: Int,
+        val needsGuestAccount: Boolean
+    )
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -1446,11 +1707,12 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         if (null != mLayersFragment && !mLayersFragment!!.isDrawerOpen) {
-            val hasUnfinishedTracks = TrackerService.hasUnfinishedTracks(this)
+            val recording = TrackerService.isTrackerServiceRunning(this)
+                    || TrackerService.isTrackRecordingEnabled(this)
             val title =
-                if (hasUnfinishedTracks) com.nextgis.maplibui.R.string.track_stop else com.nextgis.maplibui.R.string.track_start
+                if (recording) com.nextgis.maplibui.R.string.track_stop else com.nextgis.maplibui.R.string.track_start
             val icon =
-                if (hasUnfinishedTracks) com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
+                if (recording) com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
             setTrackItem(menu.findItem(R.id.menu_track), title, icon)
         }
 
@@ -1576,6 +1838,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     override fun onDestroy() {
         HyperLog.v(Constants.TAG, "MainActivity.onDestroy")
         startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
+        ngwUrlExecutor.shutdownNow()
         mMessageReceiver = null
         mTrackReceiver = null
         super.onDestroy()

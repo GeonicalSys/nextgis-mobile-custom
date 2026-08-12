@@ -15,4 +15,7 @@ alwaysApply: true
   нужно явно отметить в финальном ответе.
 - Central docs change: обновить frontmatter `last_verified` и
   `docs/changelog.md`.
+- Межпроектный desktop/mobile contract: обновить `docs/registry/ecosystem.yaml`,
+  основной Android-документ и документацию фактического publisher/consumer в
+  `standart_profiles` или `geonical-docs`, если она входит в scope.
 - После правок запустить `py -3 docs/scripts/validate_docs.py --workspace-root .`.

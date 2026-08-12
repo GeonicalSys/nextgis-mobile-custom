@@ -17,6 +17,7 @@ import com.nextgis.maplib.api.IGISApplication;
 import com.nextgis.maplib.api.INGWLayer;
 
 import com.hypertrack.hyperlog.HyperLog;
+import com.nextgis.maplib.map.CollectorProjectMetadata;
 import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.mobile.datasource.SyncAdapter;
@@ -108,8 +109,7 @@ public class OfflineSyncIntentService extends IntentService {
             }
             Log.d("SSYNC", "OfflineSyncIntentService accounts queued=" + mAccounts.size()
                     + " manual=" + manualSync + " lpath=" + lpath);
-            SyncResult syncResult = new SyncResult();
-            SyncAdapter syncAdapter = new SyncAdapter(getApplicationContext(), true);
+            prioritizeActiveCollectorAccount(application, mAccounts);
 
             Bundle bundle = new Bundle();
             if (lpath != null) {
@@ -117,18 +117,57 @@ public class OfflineSyncIntentService extends IntentService {
             }
             bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, manualSync);
             for (Account account : mAccounts) {
-                Log.d("SSYNC", "onPerformSync call for: " + account.name);
-                syncAdapter.onPerformSync(account,
-                        bundle,
-                        com.nextgis.mobile.util.AppSettingsConstants.AUTHORITY,
-                        null, syncResult);
-                Log.d("SSYNC", "onPerformSync finished for: " + account.name
-                        + " hasError=" + syncResult.hasError()
-                        + " stats=" + syncResult.stats);
+                try {
+                    // SyncResult and SyncAdapter carry per-run state. Reusing either
+                    // leaked errors/cancellation from one account into the next one.
+                    SyncResult syncResult = new SyncResult();
+                    SyncAdapter syncAdapter = new SyncAdapter(getApplicationContext(), true);
+                    Log.d("SSYNC", "onPerformSync call for: " + account.name);
+                    syncAdapter.onPerformSync(account,
+                            new Bundle(bundle),
+                            com.nextgis.mobile.util.AppSettingsConstants.AUTHORITY,
+                            null, syncResult);
+                    Log.d("SSYNC", "onPerformSync finished for: " + account.name
+                            + " hasError=" + syncResult.hasError()
+                            + " stats=" + syncResult.stats);
+                } catch (Exception accountError) {
+                    // A broken secondary account must not suppress the remaining
+                    // project accounts in this manual sync run.
+                    Log.e("SSYNC", "Account sync failed: " + account.name, accountError);
+                    HyperLog.e(Constants.TAG,
+                            "OfflineSyncIntentService account failed: " + account.name,
+                            accountError);
+                }
             }
         } catch (Exception e) {
             Log.e("SSYNC", "handleActionFoo failed: " + e.getMessage(), e);
             HyperLog.e(Constants.TAG, "OfflineSyncIntentService.handleActionFoo crash: " + e.getMessage(), e);
+        }
+    }
+
+    private void prioritizeActiveCollectorAccount(
+            IGISApplication application,
+            List<Account> accounts) {
+        if (application == null || application.getMap() == null || accounts.size() < 2) {
+            return;
+        }
+
+        CollectorProjectMetadata metadata = application.getMap().getCollectorProjectMetadata();
+        if (metadata == null || !metadata.isValid()) {
+            return;
+        }
+
+        String activeAccountName = metadata.getAccountName();
+        for (int i = 0; i < accounts.size(); i++) {
+            Account account = accounts.get(i);
+            if (activeAccountName.equals(account.name)) {
+                if (i > 0) {
+                    accounts.remove(i);
+                    accounts.add(0, account);
+                }
+                Log.d("SSYNC", "Active Collector account prioritized: " + account.name);
+                return;
+            }
         }
     }
 

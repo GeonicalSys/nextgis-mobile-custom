@@ -15,16 +15,95 @@ preferences:
     type: boolean
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
     purpose: Enable application update checks
+  layer_backup_max_gb:
+    owner: app
+    type: string
+    default: "5"
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    ui: app/src/main/res/xml/preferences_general.xml (Общие → Другое)
+    purpose: Max size of LayerBackups/ directory in gigabytes; oldest ZIPs are deleted when exceeded
   sw_track_service:
     owner: app
     type: boolean
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
     purpose: Tracking foreground-service preference
+  track_recording_enabled:
+    owner: maplib
+    type: boolean
+    default: false
+    source: maplib/src/main/java/com/nextgis/maplib/util/SettingsConstants.java
+    purpose: >
+      Durable flag that track recording is on; cleared only by explicit Stop track menu.
+      BootLoader and MainActivity auto-resume TrackerService when true.
+  ngw_identity_backup:
+    owner: maplib
+    type: string
+    default: absent
+    source: maplib/src/main/java/com/nextgis/maplib/util/SettingsConstants.java
+    purpose: >
+      Per-layer SharedPreferences JSON containing the last fully initialized NGW account,
+      remote id, sync policy and origin; used only to heal an interrupted/partial layer config.
+  feature_form_draft:
+    owner: maplibui
+    type: shared_preferences_file
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
+    purpose: JSON snapshot of unfinished attribute form (fields, geometry, pending photos)
+  geometry_edit_draft:
+    owner: maplibui
+    type: shared_preferences_file
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
+    purpose: >
+      Latest unfinished non-walk geometry WKT plus active map, layer, feature and edit-mode
+      identity; cleared only by explicit Cancel, successful update, form handoff or Discard
+  walkedit_temp:
+    owner: maplibui
+    type: shared_preferences_file
+    source: maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+    purpose: Durable walk-digitizing draft (WKT, layer/feature ids); cleared only on explicit Save/Cancel
 manifest_metadata:
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
     source: app/src/main/AndroidManifest.xml
     purpose: Bind installed and downloaded APK to lisa or belka update channel
+  io.sentry.traces.user-interaction.enable:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Disable automatic UI interaction breadcrumbs
+  io.sentry.attach-screenshot:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Attach a screenshot to crash diagnostics
+  io.sentry.attach-view-hierarchy:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Disable collection of the full Android view hierarchy
+  io.sentry.traces.sample-rate:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Sample production performance traces at 0.05
+  io.sentry.traces.profiling.sample-rate:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Sample production profiles at 0.05
+runtime_constants:
+  apk_version_update:
+    owner: app
+    type: https_url
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    purpose: Base URL of the branch-oriented Lisa Mobile APK repository
+variant_resources:
+  provider_auth:
+    owner: app
+    source: app/build.gradle
+    purpose: Variant-specific GIS ContentProvider and SyncAdapter authority
+  nextgis_accounts_auth:
+    owner: app
+    source: app/build.gradle
+    purpose: Variant-specific AccountAuthenticator account type
+  nextgis_accounts_auth_type:
+    owner: app
+    source: app/build.gradle
+    purpose: Variant-specific SyncAdapter account type; must equal nextgis_accounts_auth and MainApplication runtime type
 build_inputs:
   sentry.properties:
     owner: app
@@ -46,6 +125,11 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  updater-pending-install:
+    owner: app
+    location_name: app_update_state SharedPreferences
+    source: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+    purpose: One-shot validated update manifest used only while Android install permission is pending
   collector-registry:
     owner: maplibui
     location_name: collector_projects_registry.json
@@ -54,14 +138,38 @@ storage:
     owner: maplibui
     location_name: collector_projects
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+  collector-import-journal:
+    owner: maplibui
+    location_name: collector_import_journal SharedPreferences
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
+  collector-form-transaction:
+    owner: maplibui
+    location_name: .collector_form_transaction.properties and same-directory stage/backup files
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
   layer-backups:
     owner: maplibui
     location_name: LayerBackups
     source: maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
+    purpose: ZIP archives of editable layer geometry/attributes/attachments before destructive ops; quota via layer_backup_max_gb
 layer_json:
+  feature_label_field:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+    type: string
+    default: _id
+    purpose: >
+      Field used as the feature title in identify candidate lists, selection
+      toolbar and attribute table; independent from renderer text labels.
+    migration: >
+      Existing per-layer layer_label preference remains the fallback and is
+      mirrored into config.json after the first successful layer load.
   mobile_render_mode:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
+    purpose: >
+      Select classic rendering or opt-in local_vector_tiles for read-only
+      polygon/multipolygon and simple circle Point layers; unsupported geometry,
+      editability or point style falls back to classic rendering.
   render_mode:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
@@ -71,3 +179,7 @@ layer_json:
   mobile:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
+  ngrc_provenance:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
+    purpose: Immutable-local NGRc source name, archive SHA-256 and import timestamp

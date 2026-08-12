@@ -27,6 +27,7 @@ REGISTRY_FILES = (
     "repositories.yaml",
     "modules.yaml",
     "dependencies.yaml",
+    "ecosystem.yaml",
     "invariants.yaml",
     "change-impact.yaml",
     "config-keys.yaml",
@@ -391,6 +392,195 @@ def validate_smoke_tests(data: Any, modules: Mapping[str, Any], validation: Vali
             if scope not in modules and scope not in {"docs", "root"}:
                 validation.error(location, f"unknown scope {scope!r}")
     return set(tests)
+
+
+def validate_ecosystem(
+    data: Any,
+    repos: Mapping[str, Any],
+    modules: Mapping[str, Any],
+    smoke_ids: set[str],
+    workspace: Path,
+    validation: Validation,
+) -> set[str]:
+    root = require_mapping(data, "registry/ecosystem.yaml", validation)
+    if root.get("schema_version") != 1:
+        validation.error("registry/ecosystem.yaml", "schema_version must be 1")
+    systems = require_mapping(root.get("systems"), "ecosystem.systems", validation)
+    if not systems:
+        validation.error("ecosystem.systems", "must be non-empty")
+
+    external_roots: dict[str, Path] = {}
+    for system_id, raw in systems.items():
+        location = f"ecosystem.systems.{system_id}"
+        item = require_mapping(raw, location, validation)
+        require_fields(
+            item,
+            {
+                "title",
+                "kind",
+                "location",
+                "origin",
+                "docs_entry",
+                "docs_url",
+                "source_of_truth",
+            },
+            location,
+            validation,
+        )
+        kind = item.get("kind")
+        if kind not in {"workspace", "external_workspace"}:
+            validation.error(location, "kind must be workspace or external_workspace")
+        for field in ("title", "location", "origin", "docs_entry", "docs_url", "source_of_truth"):
+            if not isinstance(item.get(field), str) or not item.get(field, "").strip():
+                validation.error(location, f"{field} must be a non-empty string")
+        if isinstance(item.get("origin"), str) and not item["origin"].startswith("https://"):
+            validation.error(location, "origin must be an HTTPS URL")
+        if isinstance(item.get("docs_url"), str) and not item["docs_url"].startswith("https://"):
+            validation.error(location, "docs_url must be an HTTPS URL")
+
+        if kind == "workspace":
+            repository_id = item.get("repository")
+            if repository_id not in repos:
+                validation.error(
+                    location, f"unknown local repository {repository_id!r}"
+                )
+            local_root = workspace_target(
+                workspace,
+                item.get("location"),
+                f"{location}.location",
+                validation,
+                allow_dot=True,
+                kind="dir",
+            )
+            docs_entry = portable_path(
+                item.get("docs_entry"), f"{location}.docs_entry", validation
+            )
+            if local_root is not None and docs_entry is not None:
+                docs_path = local_root / docs_entry
+                if not docs_path.is_file():
+                    validation.error(location, f"docs entry does not exist: {docs_entry!r}")
+        else:
+            docs_entry = portable_path(
+                item.get("docs_entry"), f"{location}.docs_entry", validation
+            )
+            current_path = item.get("current_machine_path")
+            if current_path is not None and (
+                not isinstance(current_path, str) or not current_path.strip()
+            ):
+                validation.error(location, "current_machine_path must be a non-empty string")
+            elif isinstance(current_path, str):
+                candidate = Path(current_path)
+                if candidate.is_dir():
+                    external_roots[str(system_id)] = candidate
+                    if docs_entry is not None and not (candidate / docs_entry).is_file():
+                        validation.error(
+                            location,
+                            f"available external docs entry does not exist: {docs_entry!r}",
+                        )
+                else:
+                    validation.info(
+                        f"{system_id}: external workspace is unavailable at "
+                        f"{current_path!r}; docs_url remains the portable entry"
+                    )
+
+    seen_ids: set[str] = set()
+
+    def validate_common_record(
+        item: Mapping[str, Any], location: str, *, with_endpoints: bool
+    ) -> None:
+        record_id = item.get("id")
+        if not isinstance(record_id, str) or not record_id:
+            validation.error(location, "id must be a non-empty string")
+        elif record_id in seen_ids:
+            validation.error(location, f"duplicate ecosystem id {record_id!r}")
+        else:
+            seen_ids.add(record_id)
+        if with_endpoints:
+            for field in ("from", "to"):
+                if item.get(field) not in systems:
+                    validation.error(location, f"unknown {field} system {item.get(field)!r}")
+        else:
+            members = as_list(item.get("systems"))
+            if len(members) < 2:
+                validation.error(location, "systems must contain at least two entries")
+            for system_id in members:
+                if system_id not in systems:
+                    validation.error(location, f"unknown system {system_id!r}")
+        for owner in as_list(item.get("owners")):
+            if owner not in modules:
+                validation.error(location, f"unknown local owner module {owner!r}")
+        for index, path_value in enumerate(as_list(item.get("local_docs"))):
+            workspace_target(
+                workspace,
+                path_value,
+                f"{location}.local_docs[{index}]",
+                validation,
+                kind="file",
+            )
+        for smoke in as_list(item.get("verify")):
+            if smoke not in smoke_ids:
+                validation.error(location, f"unknown smoke test {smoke!r}")
+
+    for index, raw in enumerate(as_list(root.get("contracts"))):
+        location = f"ecosystem.contracts[{index}]"
+        item = require_mapping(raw, location, validation)
+        require_fields(
+            item,
+            {
+                "id",
+                "from",
+                "to",
+                "type",
+                "transport",
+                "statement",
+                "owners",
+                "local_docs",
+                "external_docs",
+                "verify",
+            },
+            location,
+            validation,
+        )
+        validate_common_record(item, location, with_endpoints=True)
+        for ref_index, raw_ref in enumerate(as_list(item.get("external_docs"))):
+            ref_location = f"{location}.external_docs[{ref_index}]"
+            ref = require_mapping(raw_ref, ref_location, validation)
+            require_fields(ref, {"system", "path"}, ref_location, validation)
+            system_id = ref.get("system")
+            if system_id not in systems:
+                validation.error(ref_location, f"unknown system {system_id!r}")
+                continue
+            path_value = portable_path(ref.get("path"), f"{ref_location}.path", validation)
+            external_root = external_roots.get(str(system_id))
+            if external_root is not None and path_value is not None:
+                if not (external_root / path_value).is_file():
+                    validation.error(
+                        ref_location,
+                        f"available external document does not exist: {path_value!r}",
+                    )
+
+    for index, raw in enumerate(as_list(root.get("boundaries"))):
+        location = f"ecosystem.boundaries[{index}]"
+        item = require_mapping(raw, location, validation)
+        require_fields(
+            item,
+            {"id", "systems", "statement", "owners", "local_docs", "verify"},
+            location,
+            validation,
+        )
+        validate_common_record(item, location, with_endpoints=False)
+
+    local_systems = [
+        system_id
+        for system_id, raw in systems.items()
+        if isinstance(raw, Mapping) and raw.get("kind") == "workspace"
+    ]
+    if len(local_systems) != 1:
+        validation.error(
+            "ecosystem.systems",
+            f"exactly one local workspace is required, found {local_systems}",
+        )
+    return seen_ids
 
 
 def collect_config_ids(data: Any, modules: Mapping[str, Any], repos: Mapping[str, Any], workspace: Path, validation: Validation) -> set[str]:
@@ -769,6 +959,14 @@ def main(argv: Iterable[str] | None = None) -> int:
         )
     validate_dependencies(loaded["dependencies.yaml"], modules, workspace, validation)
     smoke_ids = validate_smoke_tests(loaded["smoke-tests.yaml"], modules, validation)
+    validate_ecosystem(
+        loaded["ecosystem.yaml"],
+        repos,
+        modules,
+        smoke_ids,
+        workspace,
+        validation,
+    )
     config_ids = collect_config_ids(
         loaded["config-keys.yaml"], modules, repos, workspace, validation
     )

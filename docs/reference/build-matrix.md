@@ -1,13 +1,14 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-07-19
+last_verified: 2026-07-30
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
   - app/build.gradle
   - maplib/build.gradle
   - maplibui/build.gradle
+  - tools/verify-apk-version-matrix.ps1
 ---
 
 # Матрица сборки и версий
@@ -20,14 +21,28 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode | `187` |
-| App versionName | `3.0.3.9` |
-| maplib VERSION_NAME | `3.0.3.9` |
+| App versionCode (release) | `198` |
+| App versionName (release) | `3.1.2.7` |
+| App versionCode (debug) | `199` |
+| App versionName (debug) | `3.1.2.7` |
+| maplib VERSION_NAME (release) | `3.1.2.7` |
+| maplib VERSION_NAME (debug) | `3.1.2.7` |
 | MapLibre Android SDK | `13.0.2` |
+| JTS Core | `1.20.0` |
 | OkHttp | `5.3.2` |
+| Release application/account | `com.nextgis.mobile.geonical` / `com.nextgis.account.geonical` |
+| Debug application/account | `com.nextgis.mobile.debug` / `com.nextgis.account.debug` |
 
 Значения фиксируют проверенное состояние на `last_verified`, но код остаётся
-источником истины. Изменение таблицы сборки требует обеих release-сборок.
+источником истины. Production version задаётся `defaultConfig`, debug app
+override — `androidComponents.onVariants`, debug maplib version — отдельным
+`buildConfigField`. Application version DSL внутри `buildTypes` для AGP 9.1.0
+запрещён.
+
+`org.locationtech.jts:jts-core:1.20.0` — общая runtime-зависимость `maplib`,
+используемая при сохранении для проверки и исправления топологии только
+`GTMultiPolygon`. Она одинакова для Lisa/Belka и debug/release и не меняет
+variant identity.
 
 ## Основные задачи
 
@@ -37,3 +52,12 @@ related_code:
 .\gradlew.bat :app:assembleLisaRelease
 .\gradlew.bat :app:assembleBelkaRelease
 ```
+
+Любое изменение app/maplib version проверяется одной матрицей из корня:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version-matrix.ps1
+```
+
+Она собирает все три поддерживаемых APK и проверяет реальные package/version
+через `aapt`, а также debug/release `maplib.BuildConfig.VERSION_NAME`.

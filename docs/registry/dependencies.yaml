@@ -8,6 +8,7 @@ edges:
     contracts:
       - maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java
       - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
   - from: app
     to: easypicker-module
     type: gradle
@@ -28,6 +29,8 @@ edges:
     contracts:
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
       - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
   - from: maplibui
     to: easypicker-module
     type: gradle
@@ -50,3 +53,13 @@ runtime_contracts:
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
     implementers: [maplib]
     callers: [maplib, maplibui, app]
+  ngw-url-import:
+    owner: maplib
+    defined_in: maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
+    implementers: [maplib, maplibui, app]
+    callers: [app]
+  ngw-account-identity:
+    owner: app
+    defined_in: app/build.gradle
+    implementers: [app, maplibui]
+    callers: [app, maplibui]

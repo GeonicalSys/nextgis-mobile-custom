@@ -15,3 +15,4 @@ related_code:
 - [2026-03: upstream 3.0.2 / 173](2026-03-sync.md)
 - [2026-03-30: сверка layer fill с upstream](2026-03-30-layer-fill-comparison.md)
 - [2026-05-15: upstream 3.0.3 / 178](2026-05-15-sync.md)
+- [2026-07-19: selective upstream 3.1.2 / 191](2026-07-19-sync-3.1.2.md)

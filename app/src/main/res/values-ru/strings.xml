@@ -123,6 +123,8 @@
     <string name="pref_sync_notification">Уведомление синхронизации</string>
     <string name="alert_sync_turned_off">Синхронизация данных невозможна, так как она отключена на уровне операционной системы. Включить обратно?</string>
     <string name="alert_sync_title">Синхронизация:</string>
+    <string name="sync_failed_retry_title">Синхронизация не удалась</string>
+    <string name="sync_failed_retry_message">Синхронизация не удалась. %1$s. Повторить?</string>
 
     <string name="tap_to_measure">Нажмите на карту для выбора точек</string>
     <string name="permissions">Разрешения</string>
@@ -150,6 +152,8 @@
     <string name="update_new">Найдена версия %1$s. Вы хотите обновиться?</string>
     <string name="update_title">Обновить?</string>
     <string name="update_check">Проверить обновления</string>
+    <string name="layer_backup_max_gb">Лимит хранилища резервных копий слоёв</string>
+    <string name="layer_backup_max_gb_summary">Сейчас занято: %1$s. При достижении лимита удаляются самые старые копии.</string>
     <string name="update_no">Обновлений не найдено</string>
     <string name="update_current_version">Установленная версия: %1$s</string>
     <string name="update_checking">Проверка обновлений…</string>
@@ -159,7 +163,8 @@
     <string name="update_error">Не удалось обновить приложение: %1$s</string>
     <string name="update_invalid">Загруженное обновление не прошло проверку.</string>
     <string name="update_install_permission_title">Разрешите установку обновлений</string>
-    <string name="update_install_permission_message">Разрешите этому приложению установку неизвестных приложений в настройках Android. Затем вернитесь и снова нажмите «Проверить обновления» — скачанный APK будет использован повторно.</string>
+    <string name="update_install_permission_message">Разрешите этому приложению установку неизвестных приложений в настройках Android. После возврата установка продолжится автоматически, скачанный APK будет использован повторно.</string>
+    <string name="update_install_permission_not_granted">Разрешение на установку не выдано. Обновление не установлено.</string>
     <string name="update_open_settings">Открыть настройки</string>
     <string name="intro1">Добро пожаловать в NextGIS Mobile!\n\nЭто приложение поможет вам:\n* Показывать карты из одного или нескольких слоёв\n* Загружать и создавать геоданные\n* Осуществлять полевой сбор данных\n* Записывать треки\nи многое другое!</string>
     <string name="intro2">Войдите для эффективной работы, синхронизации и получения регулярных обновлений (необходима подписка). Вы можете войти позже через настройки.</string>
@@ -229,6 +234,18 @@
 
     <string name="copied">Текст скопирован в буфер обмена</string>
 
+    <string name="action_add_by_url">Добавить слой NGW по URL</string>
+    <string name="ngw_resource_url_hint">https://example.nextgis.com/resource/123</string>
+    <string name="ngw_resource_url_invalid">Введите корректный HTTP- или HTTPS-адрес ресурса NGW, заканчивающийся на /resource/&lt;id&gt;.</string>
+    <string name="ngw_url_import_in_progress">Другой адрес слоя уже проверяется.</string>
+    <string name="ngw_resource_not_found">Ресурс NGW не найден.</string>
+    <string name="ngw_resource_permission_denied">У аккаунта нет прав на чтение этого ресурса.</string>
+    <string name="ngw_resource_type_unsupported">Этот тип ресурса NGW нельзя добавить как слой карты.</string>
+    <string name="ngw_resource_load_failed">Не удалось загрузить ресурс NGW.</string>
+    <string name="ngw_guest_account_failed">Не удалось создать гостевой аккаунт для этого сервера NGW.</string>
+    <string name="ngw_resource_import_started">Загрузка слоя началась.</string>
+    <string name="ngw_resource_added">Слой добавлен.</string>
+
     <string name="web_src">https://nextgis.ru/nextgis-mobile</string>
     <string name="copyright" translatable="false"><![CDATA[© <a href=\"https://nextgis.ru\">NextGIS</a>, 2012–%s]]></string>
     <string name="support">Поддержка</string>
@@ -241,4 +258,5 @@
     <string name="collector_project_already_active">Этот проект Collector уже активен</string>
     <string name="collector_project_switch_busy">Дождитесь окончания загрузки слоев перед сменой проекта</string>
     <string name="collector_project_switch_edit_mode">Сохраните или отмените редактирование перед сменой проекта</string>
+    <string name="collector_project_switch_tracking">Остановите запись активного трека перед сменой проекта</string>
 </resources>

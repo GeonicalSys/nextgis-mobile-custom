@@ -1,7 +1,7 @@
 ---
 title: GeonicalSystem NextGIS Mobile — документация
 type: index
-last_verified: 2026-07-19
+last_verified: 2026-07-23
 related_code:
   - settings.gradle
   - .gitmodules
@@ -18,6 +18,7 @@ related_code:
 | Задача | Начать с |
 |---|---|
 | Первый раз в проекте | [START-HERE.md](START-HERE.md) |
+| Связь с `standart_profiles` и QGIS Plugins | [architecture/lisa-ecosystem.md](architecture/lisa-ecosystem.md) |
 | Изменение кода | [guides/change-checklist.md](guides/change-checklist.md) |
 | MapLibre/layer order | [architecture/map-rendering.md](architecture/map-rendering.md) |
 | Map performance | [architecture/map-performance.md](architecture/map-performance.md) |
@@ -27,6 +28,7 @@ related_code:
 | Release APK | [runbooks/release-apk.md](runbooks/release-apk.md) |
 | Настройки/build | [reference/build-matrix.md](reference/build-matrix.md) и [reference/settings-and-config.md](reference/settings-and-config.md) |
 | Отличия форка | [reference/fork-customizations.md](reference/fork-customizations.md) |
+| Передача отличий official-разработчикам | [reference/official-differences.md](reference/official-differences.md) |
 | Открытые Collector-задачи | [roadmap/collector.md](roadmap/collector.md) |
 | Blast radius | [registry/change-impact.yaml](registry/change-impact.yaml) |
 

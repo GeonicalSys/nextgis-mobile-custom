@@ -1,17 +1,54 @@
 schema_version: 1
 triggers:
+  - id: OFFICIAL-DIFFERENCES
+    paths: [app/build.gradle, app/src/**, maplib, maplibui, easypicker, .gitmodules]
+    owners: [app, maplib, maplibui, easypicker-module]
+    read:
+      - docs/reference/official-differences.md
+      - docs/reference/fork-customizations.md
+      - docs/runbooks/upstream-sync.md
+    invariants: []
+    must_update_docs:
+      - docs/reference/official-differences.md
+    verify: [AUTO-DOCS-VALIDATE]
+    strict_docs: true
   - id: BUILD-AND-FLAVORS
-    paths: [app/build.gradle, build.gradle, gradle/wrapper/gradle-wrapper.properties, app/src/lisa/**, app/src/belka/**]
-    owners: [app]
+    paths: [app/build.gradle, maplib/build.gradle, build.gradle, gradle/wrapper/gradle-wrapper.properties, app/src/lisa/**, app/src/belka/**, tools/verify-apk-version-matrix.ps1]
+    owners: [app, maplib]
     read:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
-    invariants: [INV-FLAVORS, INV-VERSION-COUPLING]
+      - docs/runbooks/release-apk.md
+    invariants: [INV-FLAVORS, INV-VERSION-COUPLING, INV-NGW-ACCOUNT-IDENTITY]
     must_update_docs:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
+      - docs/runbooks/release-apk.md
       - app/docs/manifest.yaml
-    verify: [SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
+      - maplib/docs/manifest.yaml
+    verify: [AUTO-APP-VERSION-MATRIX, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-NGW-ACCOUNT-ADD]
+    strict_docs: true
+  - id: NGW-ACCOUNT-IDENTITY
+    paths:
+      - app/build.gradle
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/res/xml/syncadapter.xml
+      - maplibui/src/main/res/xml/authenticator.xml
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/NGWLoginActivity.java
+      - maplibui/src/main/java/com/nextgis/maplibui/fragment/NGWLoginFragment.java
+    owners: [app, maplibui]
+    read:
+      - docs/reference/flavors-and-versioning.md
+      - docs/architecture/ngw-sync-and-storage.md
+    invariants: [INV-NGW-ACCOUNT-IDENTITY]
+    must_update_docs:
+      - docs/reference/flavors-and-versioning.md
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/registry/config-keys.yaml
+      - app/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
+    verify: [AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-NGW-ACCOUNT-ADD]
     strict_docs: true
   - id: REPOSITORY-TOPOLOGY
     paths: [.gitmodules, settings.gradle, tools/upstream-sync.ps1]
@@ -36,12 +73,70 @@ triggers:
     read:
       - docs/architecture/map-rendering.md
       - maplib/docs/README.md
-    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-NO-TRACK-FLAGS]
+    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-NO-TRACK-FLAGS, INV-LOCATION-CURSOR-TOP]
     must_update_docs:
       - docs/architecture/map-rendering.md
       - maplib/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, SMOKE-MAP-COLD-START, SMOKE-HOT-RASTER]
+    verify: [AUTO-MAPLIB-UNIT, SMOKE-MAP-COLD-START, SMOKE-LOCATION-CURSOR-TOP, SMOKE-HOT-RASTER]
     strict_docs: false
+  - id: MULTIPOLYGON-REPAIR
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/util/MultiPolygonGeometryRepair.java
+      - maplib/src/test/java/com/nextgis/maplib/util/MultiPolygonGeometryRepairTest.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    owners: [maplib, app]
+    read:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+    invariants: [INV-MULTIPOLYGON-REPAIR]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - maplib/docs/manifest.yaml
+      - app/docs/README.md
+    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES, SMOKE-MULTIPOLYGON-REPAIR]
+    strict_docs: true
+  - id: MAP-BASE-LAYERS
+    paths:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    owners: [app, maplib, maplibui]
+    read:
+      - docs/architecture/map-rendering.md
+      - docs/architecture/collector-projects.md
+    invariants: [INV-LAYER-ORDER, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/architecture/collector-projects.md
+      - app/docs/README.md
+      - app/docs/manifest.yaml
+    verify: [AUTO-APP-RELEASES, SMOKE-MAP-COLD-START, SMOKE-COLLECTOR-IMPORT]
+    strict_docs: true
+  - id: GPS-RECORDING
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiterCore.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+    owners: [maplib, maplibui, app]
+    read:
+      - docs/architecture/crash-recovery.md
+      - docs/reference/official-differences.md
+    invariants: [INV-GPS-TRACK-FILTER, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs:
+      - docs/architecture/crash-recovery.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - maplib/docs/manifest.yaml
+      - maplibui/docs/README.md
+      - maplibui/docs/manifest.yaml
+      - app/docs/README.md
+      - app/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    strict_docs: true
   - id: LAYER-FILL-AND-REORDER
     paths:
       - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
@@ -50,7 +145,7 @@ triggers:
     read:
       - docs/architecture/map-rendering.md
       - docs/architecture/collector-projects.md
-    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-COLLECTOR-ISOLATION]
+    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-RESUMABLE, INV-NGRC-PRESERVE]
     must_update_docs:
       - maplibui/docs/manifest.yaml
       - docs/architecture/map-rendering.md
@@ -74,19 +169,73 @@ triggers:
     strict_docs: true
   - id: COLLECTOR
     paths:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java
       - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LayerFormHashUtil.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
+      - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     owners: [maplib, maplibui, app]
     read:
       - docs/architecture/collector-projects.md
-    invariants: [INV-COLLECTOR-RESOURCE, INV-COLLECTOR-ISOLATION, INV-BACKUP-BEFORE-DESTRUCTION]
+    invariants: [INV-COLLECTOR-RESOURCE, INV-COLLECTOR-LAYER-IDENTITY, INV-COLLECTOR-RASTER-STYLES, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-COLLECTOR-FORM-ATOMIC, INV-BACKUP-BEFORE-DESTRUCTION]
     must_update_docs:
       - docs/architecture/collector-projects.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
       - docs/registry/config-keys.yaml
-    verify: [SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-SWITCH, SMOKE-BACKUP-GATE]
+      - maplib/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-IDENTITY, SMOKE-COLLECTOR-RESUME, SMOKE-COLLECTOR-INCOMPLETE, SMOKE-FORM-ROLLBACK, SMOKE-COLLECTOR-SWITCH, SMOKE-BACKUP-GATE]
     strict_docs: false
+  - id: NGRC-LOCAL-UNDERLAY
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/util/FileUtil.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    owners: [maplib, maplibui]
+    read:
+      - docs/architecture/map-rendering.md
+      - docs/architecture/collector-projects.md
+    invariants: [INV-LAYER-ORDER, INV-NGRC-PRESERVE]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/architecture/collector-projects.md
+      - maplib/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-NGRC-ORDER, SMOKE-NGRC-PRESERVE, SMOKE-UPDATE-DATA-PRESERVE]
+    strict_docs: true
+  - id: ACCOUNT-SYNC-SCHEDULING
+    paths:
+      - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+      - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java
+      - maplibui/src/main/java/com/nextgis/maplibui/fragment/NGWSettingsFragment.java
+    owners: [app, maplib, maplibui]
+    read:
+      - docs/architecture/ngw-sync-and-storage.md
+    invariants: [INV-SYNC-ACCOUNT-ISOLATION]
+    must_update_docs:
+      - docs/architecture/ngw-sync-and-storage.md
+      - app/docs/manifest.yaml
+      - maplib/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-MULTI-ACCOUNT-SYNC]
+    strict_docs: true
   - id: BACKUP-AND-DESTRUCTIVE-LAYER-CHANGE
     paths:
       - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
@@ -104,12 +253,15 @@ triggers:
   - id: SELF-HOSTED-UPDATER
     paths:
       - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
       - app/src/main/AndroidManifest.xml
       - app/src/main/res/xml/provider_paths.xml
     owners: [app]
     read:
       - docs/runbooks/release-apk.md
-    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY]
+    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME]
     must_update_docs:
       - docs/runbooks/release-apk.md
       - docs/registry/config-keys.yaml
@@ -117,3 +269,43 @@ triggers:
       - app/docs/manifest.yaml
     verify: [SMOKE-SELF-UPDATE, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
     strict_docs: true
+  - id: NGW-URL-IMPORT
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/res/menu/add_layer.xml
+    owners: [maplib, maplibui, app]
+    read:
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/architecture/map-rendering.md
+    invariants: [INV-NGW-URL-IMPORT, INV-HOT-ADD-CONSISTENCY]
+    must_update_docs:
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/registry/dependencies.yaml
+      - maplib/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
+      - app/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-NGW-URL-IMPORT]
+    strict_docs: true
+  - id: LISA-ECOSYSTEM-CONTRACT
+    paths:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/**
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    owners: [app, maplib, maplibui]
+    read:
+      - docs/architecture/lisa-ecosystem.md
+      - docs/registry/ecosystem.yaml
+    invariants: [INV-ECOSYSTEM-SERVER-BOUNDARY]
+    must_update_docs:
+      - docs/architecture/lisa-ecosystem.md
+      - docs/registry/ecosystem.yaml
+    verify: [AUTO-DOCS-VALIDATE, SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-IMPORT]
+    strict_docs: false

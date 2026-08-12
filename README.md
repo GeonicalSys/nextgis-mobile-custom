@@ -109,6 +109,9 @@ For this GeonicalSystem fork, development, architecture, release and AI-agent
 documentation starts at [docs/START-HERE.md](docs/START-HERE.md). The docs are
 validated locally with
 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/docs-check.ps1 -RunTests`.
+Its boundary with the LISA desktop profile, QGIS plugins and shared NextGIS Web
+resources is documented in
+[docs/architecture/lisa-ecosystem.md](docs/architecture/lisa-ecosystem.md).
 
 ## Community and ecosystem
 

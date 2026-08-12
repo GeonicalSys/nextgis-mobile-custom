@@ -146,6 +146,9 @@ public class SettingsFragment
                         return true;
                     });
                 }
+                final ListPreference backupQuota = (ListPreference) findPreference(
+                        AppSettingsConstants.KEY_PREF_LAYER_BACKUP_MAX_GB);
+                initializeLayerBackupQuota(getActivity(), backupQuota);
 
                 break;
             case SettingsConstantsUI.ACTION_PREFS_MAP:
@@ -405,6 +408,37 @@ public class SettingsFragment
                 }
             });
         }
+    }
+
+
+    public static void initializeLayerBackupQuota(
+            final Activity activity,
+            final ListPreference preference) {
+        if (preference == null || activity == null) {
+            return;
+        }
+        updateLayerBackupQuotaSummary(activity, preference);
+        preference.setOnPreferenceChangeListener((pref, newValue) -> {
+            // Persist first via ListPreference default handling; refresh summary after change.
+            new Handler().post(() -> updateLayerBackupQuotaSummary(activity, preference));
+            return true;
+        });
+    }
+
+
+    private static void updateLayerBackupQuotaSummary(
+            Activity activity,
+            ListPreference preference) {
+        if (activity == null || preference == null) {
+            return;
+        }
+        long bytes = com.nextgis.maplibui.util.LayerBackupManager.getBackupDirectorySize(activity);
+        String sizeText = android.text.format.Formatter.formatFileSize(activity, bytes);
+        CharSequence entry = preference.getEntry();
+        String limit = entry != null ? entry.toString() : preference.getValue();
+        preference.setSummary(activity.getString(
+                R.string.layer_backup_max_gb_summary, sizeText)
+                + " (" + limit + ")");
     }
 
 

@@ -159,7 +159,7 @@ public class IntroActivity extends NGActivity implements PageFragmentCallbacks, 
 
         @Override
         public int getCount() {
-            return 2;
+            return mCurrentPageSequence.size();
         }
     }
 
@@ -171,10 +171,7 @@ public class IntroActivity extends NGActivity implements PageFragmentCallbacks, 
 
         @Override
         protected PageList onNewRootPageList() {
-            return new PageList(new IntroPage(this, "1"),
-                    new IntroPage(this, "2")
-                    //new IntroPage(this, "3")
-            );
+            return new PageList(new IntroPage(this, "2"));
         }
     }
 

@@ -1,10 +1,11 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-07-19
+last_verified: 2026-07-30
 related_code:
   - app/build.gradle
   - maplib/build.gradle
+  - tools/verify-apk-version-matrix.ps1
   - app/src/main/AndroidManifest.xml
 ---
 
@@ -21,16 +22,49 @@ related_code:
 перезаписывать их одним общим значением. Debug может иметь отдельное тестовое
 имя и application ID suffix.
 
+## Variant identity
+
+| Variants | Application ID | GIS provider authority | NGW account type |
+|---|---|---|---|
+| `lisaRelease`, `belkaRelease` | `com.nextgis.mobile.geonical` | `com.nextgis.mobile.geonical.provider` | `com.nextgis.account.geonical` |
+| `lisaDebug` | `com.nextgis.mobile.debug` | `com.nextgis.mobile.provider.debug` | `com.nextgis.account.debug` |
+
+Account type — единый контракт runtime/authenticator/sync adapter. При изменении
+`applicationIdSuffix` необходимо проверить также provider authority, FileProvider,
+service permission, updater identity и оба account resource keys в merged APK.
+
 ## Версия
 
 - `versionName = <upstream-base>.<fork-patch>`.
 - `versionCode` увеличивается для каждого публикуемого APK.
-- `maplib` BuildConfig version синхронизируется с app, если контракт использует
-  её для протокола, диагностики или совместимости.
+- Production constants приложения находятся в `defaultConfig`; debug-only
+  constants применяются к `lisaDebug` через публичный
+  `androidComponents.onVariants` API.
+- В AGP `9.1.0` `versionCode`/`versionName` нельзя задавать в application
+  `buildTypes`. Для maplib debug не задаётся library `versionName`: меняется
+  только явный `BuildConfig.VERSION_NAME`.
+- `maplib` BuildConfig version синхронизируется с app для каждого variant,
+  поскольку используется в user-agent/диагностике.
 - Обе flavors одного релиза должны иметь согласованную версию.
+- Общая зависимость `maplib` от JTS Core `1.20.0` входит во все варианты
+  одинаково; исправление мультиполигонов не является flavor-specific feature.
+- Debug-only bump обязан оставить обе production release metadata без
+  изменений. Проверка — `tools\verify-apk-version-matrix.ps1` из root.
+
+Имя локального APK не является version contract: общий
+`base.archivesName` основан на production default и может дать debug APK
+basename с production version. `output-metadata.json`, `aapt dump badging` и
+publisher являются источниками истины; publisher формирует каноническое имя по
+фактической metadata.
 
 ## Update flavor
 
 Flavor передаётся updater через manifest metadata
 `com.nextgis.mobile.UPDATE_FLAVOR` и сверяется с update manifest и APK archive.
 Нельзя разрешать установку APK другого бренда через автоматическое обновление.
+
+Repository branches: Lisa Release — `lisa`, Belka Release — `belka`, Lisa Debug
+— `debug`. Для production manifest содержит `channel=stable`, для Debug —
+`channel=debug`. URL manifest имеет вид
+`https://apps-geonical.ru/lisa-mobile/<branch>/manifest.json` без отдельного
+сегмента `stable`.

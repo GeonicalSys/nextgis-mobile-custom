@@ -38,6 +38,7 @@ public interface AppSettingsConstants
     String KEY_PREF_APP_VERSION   = "app_version";
     String KEY_PREF_SHOW_SYNC     = "show_sync";
     String KEY_PREF_UPDATE_CHECK  = "check_updates";
+    String KEY_PREF_LAYER_BACKUP_MAX_GB = "layer_backup_max_gb";
 
     /**
      * Preference keys - in UI
@@ -68,5 +69,5 @@ public interface AppSettingsConstants
 
     int FIRSTSTART_DOWNLOADZOOM = 5;
 
-    String APK_VERSION_UPDATE = "https://wiki-geonical.ru/mobile";
+    String APK_VERSION_UPDATE = "https://apps-geonical.ru/lisa-mobile";
 }

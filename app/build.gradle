@@ -27,6 +27,11 @@ apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
+def productionVersionCode = 198
+def productionVersionName = '3.1.2.7'
+def debugVersionCode = 199
+def debugVersionName = '3.1.2.7'
+
 def geonicalSigningPropertyNames = [
         'GEONICAL_STORE_FILE',
         'GEONICAL_STORE_PASSWORD',
@@ -76,8 +81,8 @@ android {
         compileSdk 36
         targetSdkVersion 36
         // Fork versioning: docs/reference/build-matrix.md and docs/runbooks/release-apk.md
-        versionCode 187
-        versionName '3.0.3.9'
+        versionCode productionVersionCode
+        versionName productionVersionName
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
 
         def props = new Properties()
@@ -124,15 +129,19 @@ android {
             applicationIdSuffix '.geonical'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            // Muted burnt-orange production palette. Debug keeps maplibui's green palette.
-            resValue 'color', 'primary', '#B65F2E'
-            resValue 'color', 'primary_dark', '#7A3518'
-            resValue 'color', 'accent', '#C97B45'
+            // Bright fox-orange production palette. Debug keeps maplibui's green palette.
+            resValue 'color', 'primary', '#D75A12'
+            resValue 'color', 'primary_dark', '#94320A'
+            resValue 'color', 'accent', '#C94F0C'
             // APP_NAME intentionally NOT set in release buildType — productFlavors lisa/belka
             // own that key (CUSTOMIZATIONS §14). Adding it here would override the flavor value.
             resValue 'string', 'SENTRY_DSN', sentryDsn
             resValue 'string', 'provider_auth', 'com.nextgis.mobile.geonical.provider'
             resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.geonical.account'
+            // authenticator.xml, syncadapter.xml and MainApplication must expose the same type.
+            // Without this app-level override maplibuiRelease falls back to com.nextgis.account,
+            // so AccountManager rejects the Geonical runtime type after valid NGW authentication.
+            resValue 'string', 'nextgis_accounts_auth', 'com.nextgis.account.geonical'
             resValue 'string', 'nextgis_accounts_auth_type', 'com.nextgis.account.geonical'
             buildConfigField "String", "providerAuth", '"com.nextgis.mobile.geonical.provider"'
             buildConfigField "String", "nextgismobile_accounts_auth", '"com.nextgis.account.geonical"'
@@ -151,6 +160,7 @@ android {
             resValue 'string', 'SENTRY_DSN', sentryDsn
             resValue 'string', 'provider_auth', 'com.nextgis.mobile.provider.debug'
             resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.account.debug'
+            resValue 'string', 'nextgis_accounts_auth', 'com.nextgis.account.debug'
             resValue 'string', 'nextgis_accounts_auth_type', 'com.nextgis.account.debug'
             buildConfigField "String", "providerAuth", '"com.nextgis.mobile.provider.debug"'
             buildConfigField "String", "nextgismobile_accounts_auth", '"com.nextgis.account.debug"'
@@ -163,9 +173,10 @@ android {
         targetCompatibility JavaVersion.VERSION_21
     }
 
-    // APKs: outputs/apk/<flavor>/<buildType>/ (e.g. lisa/release vs belka/release) — same basename is OK.
+    // The archive basename follows the production default. Variant identity/version must be read
+    // from APK metadata; the publisher assigns the canonical versioned filename after inspection.
     base {
-        archivesName = "ngmobile-${defaultConfig.versionName}"
+        archivesName = "ngmobile-${productionVersionName}"
     }
 
 }
@@ -175,6 +186,14 @@ androidComponents {
     beforeVariants(selector().withBuildType("debug")) { variantBuilder ->
         if (variantBuilder.productFlavors.any { it.second == "belka" }) {
             variantBuilder.enable = false
+        }
+    }
+    // AGP 9.x does not expose application versionCode/versionName on buildTypes.
+    // Override the single enabled debug output through the public Variant API instead.
+    onVariants(selector().withBuildType("debug")) { variant ->
+        variant.outputs.each { output ->
+            output.versionCode.set(debugVersionCode)
+            output.versionName.set(debugVersionName)
         }
     }
 }

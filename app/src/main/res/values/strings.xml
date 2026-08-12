@@ -124,6 +124,8 @@
     <string name="pref_sync_notification">Show sync notification</string>
     <string name="alert_sync_turned_off">Syncing is turned off in your system settings and currently not possible. Turn back on?</string>
     <string name="alert_sync_title">Sync:</string>
+    <string name="sync_failed_retry_title">Synchronization failed</string>
+    <string name="sync_failed_retry_message">Synchronization failed. %1$s. Retry?</string>
     <string name="tap_to_measure">Tap on map to check points</string>
     <string name="permissions">Permissions</string>
 
@@ -153,6 +155,8 @@
     <string name="update_new">Version %1$s found. Would you like to update?</string>
     <string name="update_title">Update?</string>
     <string name="update_check">Check updates</string>
+    <string name="layer_backup_max_gb">Layer backups storage limit</string>
+    <string name="layer_backup_max_gb_summary">Current size: %1$s. Oldest backups are removed when the limit is reached.</string>
     <string name="update_no">No updates found</string>
     <string name="update_current_version">Installed version: %1$s</string>
     <string name="update_checking">Checking for updates…</string>
@@ -162,7 +166,8 @@
     <string name="update_error">Update failed: %1$s</string>
     <string name="update_invalid">The downloaded update did not pass verification.</string>
     <string name="update_install_permission_title">Allow update installation</string>
-    <string name="update_install_permission_message">Allow this app to install unknown apps in Android settings. Then return and tap “Check updates” again; the downloaded APK will be reused.</string>
+    <string name="update_install_permission_message">Allow this app to install unknown apps in Android settings. After you return, installation will continue automatically and the downloaded APK will be reused.</string>
+    <string name="update_install_permission_not_granted">Install permission was not granted. The update was not installed.</string>
     <string name="update_open_settings">Open settings</string>
     <string name="intro1">Welcome to NextGIS Mobile!\n\nThis app can:\n* Create and navigate multi-layered maps\n* Add and create geodata\n* Help in field data collection\n* Write tracks\nand much more!</string>
     <string name="intro2">Sign in to get the most out of this app, synchronize your data and get regular updates (support plan is needed). You can sign in later in Settings.</string>
@@ -205,6 +210,7 @@
     <string name="collector_project_already_active">This Collector project is already active</string>
     <string name="collector_project_switch_busy">Wait for layer loading to finish before switching projects</string>
     <string name="collector_project_switch_edit_mode">Save or cancel editing before switching projects</string>
+    <string name="collector_project_switch_tracking">Stop the active track before switching projects</string>
     <string name="collector_project_visible">visible</string>
     <string name="collector_project_hidden">hidden</string>
     <string name="collector_project_show_only">Show only this</string>
@@ -237,6 +243,18 @@
     <string name="push_perm_why_text">To receive notifications you need to give permissions</string>
 
     <string name="copied">Text copied to clipboard</string>
+
+    <string name="action_add_by_url">Add NGW layer by URL</string>
+    <string name="ngw_resource_url_hint">https://example.nextgis.com/resource/123</string>
+    <string name="ngw_resource_url_invalid">Enter a valid HTTP or HTTPS NGW resource URL ending in /resource/&lt;id&gt;.</string>
+    <string name="ngw_url_import_in_progress">Another layer URL is already being checked.</string>
+    <string name="ngw_resource_not_found">The NGW resource was not found.</string>
+    <string name="ngw_resource_permission_denied">This account does not have permission to read the resource.</string>
+    <string name="ngw_resource_type_unsupported">This NGW resource type cannot be added as a map layer.</string>
+    <string name="ngw_resource_load_failed">Could not load the NGW resource.</string>
+    <string name="ngw_guest_account_failed">Could not create a guest account for this NGW server.</string>
+    <string name="ngw_resource_import_started">Layer download started.</string>
+    <string name="ngw_resource_added">Layer added.</string>
 
 
 

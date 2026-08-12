@@ -44,13 +44,27 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/abc_primary_text_material_dark" />
 
-        <ImageButton
-            android:id="@+id/sync"
+        <FrameLayout
+            android:id="@+id/sync_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/ic_action_sync"
-            tools:ignore="ContentDescription" />
+            android:layout_margin="5dp">
+
+            <ImageButton
+                android:id="@+id/sync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_action_sync"
+                tools:ignore="ContentDescription" />
+
+            <View
+                android:id="@+id/sync_pending_badge"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="top|end"
+                android:background="@drawable/sync_pending_badge"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/new_layer"

@@ -135,6 +135,8 @@ public class AttributesFragment
     protected Menu mBottomMenu;
 
     private boolean readOnly = true;
+    /** When true, {@link #onDestroyView()} does not restore the selection bottom bar. */
+    private boolean mSkipRestoreOnDestroy = false;
 
     MessageReceiver messageReceiver;
     WeakReference<PhotoPicker> photoPickerWeakReference = new WeakReference<>(null);
@@ -242,12 +244,20 @@ public class AttributesFragment
     }
 
 
+    public void setSkipRestoreOnDestroy(boolean skip)
+    {
+        mSkipRestoreOnDestroy = skip;
+    }
+
+
     @Override
     public void onDestroyView()
     {
-        if (getActivity() != null) {
-            ((MainActivity) getActivity()).restoreBottomBar(readOnly ? MapFragment.MODE_SELECT_FOR_VIEW : MapFragment.MODE_SELECT_ACTION);
+        if (getActivity() != null && !mSkipRestoreOnDestroy) {
+            ((MainActivity) getActivity()).restoreBottomBar(
+                    readOnly ? MapFragment.MODE_SELECT_FOR_VIEW : MapFragment.MODE_SELECT_ACTION);
         }
+        mSkipRestoreOnDestroy = false;
         super.onDestroyView();
     }
 
@@ -324,6 +334,7 @@ public class AttributesFragment
         PhotoGallery.getOfflineAttaches(app, mLayer, mItemId, mAttaches, false, null);
 
         Map<String, AttachInfo> onlineAttaches =  PhotoGallery.getOnlineAttaches(app, mLayer, mItemId);
+        PhotoGallery.excludeOfflineAttachIds(mAttaches, onlineAttaches);
 
         if (mAttaches.size() > 0 || onlineAttaches.size()>0 ) {
 
@@ -650,6 +661,7 @@ public class AttributesFragment
             return;
 
         mEditLayerOverlay = overlay;
+        this.readOnly = readOnly;
 
         if (!isTablet())
             toolbar.getBackground().setAlpha(255);
@@ -658,14 +670,10 @@ public class AttributesFragment
         if (mBottomMenu != null)
             mBottomMenu.clear();
 
-        toolbar.inflateMenu(R.menu.attributes);
-        if (readOnly) {
-
-//            toolbar.findViewById(R.id.menu_edit_attributes).setVisibility(View.GONE);
-//            toolbar.getMenu().findItem(R.id.menu_edit_attributes).setEnabled(false);
-            toolbar.getMenu().findItem(R.id.menu_edit_attributes).setVisible(false);
-
-        }
+        // Lean menus only: do not inflate edit then setVisible(false) — hidden ALWAYS
+        // items still consume BottomToolbar action slots.
+        boolean editingAllowed = mLayer.isEditingAllowed();
+        toolbar.inflateMenu(editingAllowed ? R.menu.attributes_editable : R.menu.attributes);
 
         toolbar.setOnMenuItemClickListener(
                 new BottomToolbar.OnMenuItemClickListener()
@@ -682,10 +690,21 @@ public class AttributesFragment
                         } else if (menuItem.getItemId() == R.id.menu_prev) {
                             selectItem(false);
                             return true;
-                        } else if (menuItem.getItemId() == R.id.menu_edit_attributes && !readOnly) {
-                            IVectorLayerUI vectorLayerUI = (IVectorLayerUI) mLayer;
-                            if (null != vectorLayerUI)
-                                vectorLayerUI.showEditForm(getActivity(), mItemId, null,  -1);
+                        } else if (menuItem.getItemId() == R.id.menu_edit_attributes) {
+                            if (!mLayer.isEditingAllowed()) {
+                                return true;
+                            }
+                            if (AttributesFragment.this.readOnly) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                if (activity != null && activity.getMapFragment() != null) {
+                                    activity.getMapFragment().startAttributeFormFromIdentify(mItemId);
+                                }
+                            } else {
+                                IVectorLayerUI vectorLayerUI = (IVectorLayerUI) mLayer;
+                                if (null != vectorLayerUI) {
+                                    vectorLayerUI.showEditForm(getActivity(), mItemId, null, -1);
+                                }
+                            }
                             return true;
                         }
 

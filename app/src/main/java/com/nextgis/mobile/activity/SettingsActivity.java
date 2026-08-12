@@ -48,6 +48,7 @@ import com.nextgis.mobile.R;
 import com.nextgis.mobile.fragment.SettingsFragment;
 import com.nextgis.mobile.fragment.SettingsHeaderFragment;
 import com.nextgis.mobile.util.AppConstants;
+import com.nextgis.mobile.util.AppUpdateManager;
 import com.nextgis.mobile.util.Logger;
 
 /**
@@ -114,6 +115,13 @@ public class SettingsActivity
             case SettingsConstantsUI.ACTION_PREFS_NGID:
                 break;
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        AppUpdateManager.resumePendingInstallation(this);
     }
 
 

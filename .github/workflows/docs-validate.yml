@@ -27,7 +27,7 @@ jobs:
       - name: Validate documentation and module packs
         run: python docs/scripts/validate_docs.py --workspace-root .
 
-      - name: Report change-impact requirements
+      - name: Enforce change-impact requirements
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         shell: bash
@@ -42,7 +42,7 @@ jobs:
             args+=(--changed-file "$path")
           done
           if ((${#args[@]})); then
-            python docs/scripts/validate_docs.py --workspace-root . "${args[@]}"
+            python docs/scripts/validate_docs.py --workspace-root . "${args[@]}" --enforce-diff
           fi
 
       - name: Test documentation tooling

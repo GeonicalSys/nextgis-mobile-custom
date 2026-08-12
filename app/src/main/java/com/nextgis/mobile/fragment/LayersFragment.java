@@ -33,7 +33,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.PeriodicSync;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -64,6 +63,7 @@ import com.nextgis.maplib.api.IGISApplication;
 import com.nextgis.maplib.api.ILayer;
 import com.nextgis.maplib.api.INGWLayer;
 import com.nextgis.maplib.datasource.ngw.SyncAdapter;
+import com.nextgis.maplib.map.LayerGroup;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.map.MapDrawable;
@@ -73,9 +73,9 @@ import com.nextgis.maplib.service.NGWSyncService;
 import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.SettingsConstants;
+import android.text.TextUtils;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.fragment.LayersListAdapter;
-import com.nextgis.maplibui.fragment.NGWSettingsFragment;
 import com.nextgis.maplibui.fragment.ReorderedLayerView;
 import com.nextgis.maplibui.mapui.SyncAccountWorker;
 import com.nextgis.maplibui.util.ControlHelper;
@@ -119,10 +119,38 @@ public class LayersFragment
     protected TextView              mInfoText;
     protected SyncReceiver          mSyncReceiver;
     protected ImageButton           mSyncButton;
+    protected View                  mSyncPendingBadge;
     protected ImageButton           mNewLayer;
     protected List<Account>         mAccounts;
+    private boolean mSyncFailureDialogShowing;
+
+    private static final String PREF_PENDING_SYNC_ERROR = "pending_sync_error";
+    private static final int SYNC_ERROR_MESSAGE_MAX = 200;
+    private static final long SYNC_STATE_RECONCILE_DELAY_MS = 1500L;
 
     ObjectAnimator rotation;
+
+    /**
+     * Broadcast delivery is lifecycle-sensitive. While the animator is running, reconcile it with
+     * the adapter-owned process state so a missed final broadcast cannot leave an infinite spinner.
+     */
+    private final Runnable mSyncStateReconcileRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mSyncButton == null || !isAdded()) {
+                return;
+            }
+            if (!NGWSyncService.isSyncStarted()) {
+                HyperLog.v(Constants.TAG,
+                        "LayersFragment: stopping stale sync animation after state reconciliation");
+                refreshSyncButtonAnimateState(false);
+                updateInfo();
+                refreshPendingChangesBadge();
+                return;
+            }
+            mSyncButton.postDelayed(this, SYNC_STATE_RECONCILE_DELAY_MS);
+        }
+    };
 
     /** Posted from {@link #syncState()}; cleared in {@link #onDestroyView()} to avoid NPE after layout is nulled. */
     private final Runnable mSyncDrawerStateRunnable = new Runnable() {
@@ -226,6 +254,7 @@ public class LayersFragment
         }
 
         mSyncButton = view.findViewById(R.id.sync);
+        mSyncPendingBadge = view.findViewById(R.id.sync_pending_badge);
         mNewLayer = view.findViewById(R.id.new_layer);
         mNewLayer.setOnClickListener(this);
         mInfoText = view.findViewById(R.id.info);
@@ -233,6 +262,7 @@ public class LayersFragment
         setupSyncOptions();
 
         updateInfo();
+        refreshPendingChangesBadge();
         return view;
     }
 
@@ -257,6 +287,9 @@ public class LayersFragment
                 mSyncButton.setEnabled(false);
                 mSyncButton.setVisibility(View.GONE);
             }
+            if (null != mSyncPendingBadge) {
+                mSyncPendingBadge.setVisibility(View.GONE);
+            }
             if (null != mInfoText) {
                 mInfoText.setVisibility(View.INVISIBLE);
             }
@@ -270,6 +303,7 @@ public class LayersFragment
                 mInfoText.setVisibility(View.VISIBLE);
             }
         }
+        refreshPendingChangesBadge();
     }
 
 
@@ -519,7 +553,12 @@ public class LayersFragment
                 rotation.setRepeatCount(ValueAnimator.INFINITE);
                 rotation.setInterpolator(new LinearInterpolator()); // smooth rotate
             }
-            rotation.start();
+            if (!rotation.isStarted()) {
+                rotation.start();
+            }
+            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
+            mSyncButton.postDelayed(
+                    mSyncStateReconcileRunnable, SYNC_STATE_RECONCILE_DELAY_MS);
 
 // old rotation
 //            RotateAnimation rotateAnimation = new RotateAnimation(
@@ -530,6 +569,7 @@ public class LayersFragment
 //
             //mSyncButton.startAnimation(rotateAnimation);
         } else {
+            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
             if (rotation!= null)
                 rotation.cancel();
             mSyncButton.clearAnimation();
@@ -555,46 +595,177 @@ public class LayersFragment
 
         refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
         updateInfo();
-
+        refreshPendingChangesBadge();
+        maybeShowPendingSyncFailure();
     }
 
 
     @Override
     public void onPause()
     {
+        refreshSyncButtonAnimateState(false);
         getActivity().unregisterReceiver(mSyncReceiver);
         super.onPause();
     }
 
-    private void checkAccountForSync(final Context context, final Account account){
-        final String authority = context.getString(R.string.provider_auth);
-        boolean isYourAccountSyncEnabled = NGWSettingsFragment.isAccountSyncEnabled(account, authority);
-        if (!isYourAccountSyncEnabled){
-            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    NGWSettingsFragment.setAccountSyncEnabled(account, authority, true);
-                    long period = Constants.DEFAULT_SYNC_PERIOD;
-                    if (context.getApplicationContext() instanceof GISApplication) {
-                        period = GISApplication.getAccountSyncTime(
-                                account, (GISApplication) context.getApplicationContext());
-                    }
-                    AccountUtil.saveSyncPeriodForAccount(context, account.name, period);
-                    SyncAccountWorker.scheduleSoon(context, account.name, period);
-                    HyperLog.v(Constants.TAG, "LayersFragment: sync enabled from prompt account="
-                            + account.name + " period=" + period);
-                    Log.d("SSYNC", "checkAccountForSync enabled account=" + account.name
-                            + " authority=" + authority + " period=" + period);
+    /**
+     * Dot on the sync button when the map has local NGW/vector edits not yet pushed.
+     */
+    protected void refreshPendingChangesBadge() {
+        if (mSyncPendingBadge == null) {
+            return;
+        }
+        if (mSyncButton == null || mSyncButton.getVisibility() != View.VISIBLE) {
+            mSyncPendingBadge.setVisibility(View.GONE);
+            return;
+        }
+        boolean pending = false;
+        try {
+            if (getActivity() != null) {
+                IGISApplication app = (IGISApplication) getActivity().getApplication();
+                MapBase map = app != null ? app.getMap() : null;
+                if (map instanceof LayerGroup) {
+                    pending = ((LayerGroup) map).isChanges();
+                }
+            }
+        } catch (RuntimeException ex) {
+            HyperLog.w(Constants.TAG, "refreshPendingChangesBadge: " + ex.getMessage(), ex);
+        }
+        mSyncPendingBadge.setVisibility(pending ? View.VISIBLE : View.GONE);
+    }
 
+    private void storePendingSyncError(String error) {
+        Context context = getContext();
+        if (context == null || TextUtils.isEmpty(error)) {
+            return;
+        }
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(PREF_PENDING_SYNC_ERROR, error)
+                .apply();
+    }
+
+    private String takePendingSyncError() {
+        Context context = getContext();
+        if (context == null) {
+            return null;
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String error = prefs.getString(PREF_PENDING_SYNC_ERROR, null);
+        if (!TextUtils.isEmpty(error)) {
+            prefs.edit().remove(PREF_PENDING_SYNC_ERROR).apply();
+        }
+        return error;
+    }
+
+    private void maybeShowPendingSyncFailure() {
+        String error = takePendingSyncError();
+        if (!TextUtils.isEmpty(error)) {
+            showSyncFailureDialog(error);
+        }
+    }
+
+    private String shortenSyncError(String error) {
+        if (error == null) {
+            return "";
+        }
+        String trimmed = error.replace("\r\n", " ").replace('\n', ' ').trim();
+        if (trimmed.length() <= SYNC_ERROR_MESSAGE_MAX) {
+            return trimmed;
+        }
+        return trimmed.substring(0, SYNC_ERROR_MESSAGE_MAX - 1) + "…";
+    }
+
+    private void showSyncFailureDialog(final String error) {
+        if (!isAdded() || getActivity() == null || getActivity().isFinishing()) {
+            storePendingSyncError(error);
+            return;
+        }
+        if (mSyncFailureDialogShowing) {
+            storePendingSyncError(error);
+            return;
+        }
+        mSyncFailureDialogShowing = true;
+        final String shortError = shortenSyncError(error);
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.sync_failed_retry_title)
+                .setMessage(getString(R.string.sync_failed_retry_message, shortError))
+                .setPositiveButton(com.nextgis.maplibui.R.string.retry, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mSyncFailureDialogShowing = false;
+                        startManualSync();
+                    }
+                })
+                .setNegativeButton(com.nextgis.maplibui.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mSyncFailureDialogShowing = false;
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        mSyncFailureDialogShowing = false;
+                    }
+                })
+                .show();
+    }
+
+    /** Same path as tapping the drawer sync button (without the OS auto-sync prompt). */
+    protected void startManualSync() {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        try {
+            if (!isSomeToSync()) {
+                Toast.makeText(context, com.nextgis.maplibui.R.string.sync_no_layers, LENGTH_LONG).show();
+            }
+        } catch (Exception ex) {
+            HyperLog.e("SYNC", ex.getMessage());
+        }
+
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String base = preferences.getString("ngid_url", NGIDUtils.NGID_MY);
+        boolean offlineSync = preferences.getBoolean(KEY_PREF_OFFLINE_SYNC_ON, false);
+
+        if (offlineSync || !NGIDUtils.NGID_MY.equals(base)) {
+            HyperLog.v(Constants.TAG, "startManualSync: on-premise sync");
+            OfflineSyncIntentService.startActionFoo(context);
+        } else {
+            final Runnable switchRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    Context ctx = getContext();
+                    if (ctx == null) {
+                        return;
+                    }
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+                    if (!prefs.getBoolean(KEY_PREF_OFFLINE_SYNC_ON, false)) {
+                        prefs.edit().putBoolean(KEY_PREF_OFFLINE_SYNC_ON, true).apply();
+                    }
+                    OfflineSyncIntentService.startActionFoo(ctx);
                 }
             };
-                new AlertDialog.Builder(context).setTitle(R.string.alert_sync_title)
-                        .setMessage(R.string.alert_sync_turned_off)
-                        .setPositiveButton(com.nextgis.maplibui.R.string.yes, onClickListener)
-                        .setNegativeButton(com.nextgis.maplibui.R.string.cancel, null)
-                        .create()
-                        .show();
+
+            GISApplication.getInstance().startRunnable(switchRunnable);
+
+            for (Account account : mAccounts) {
+                HyperLog.v(Constants.TAG, "startManualSync: queue for " + account.name);
+                Bundle settingsBundle = new Bundle();
+                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                ContentResolver.setIsSyncable(account, AUTHORITY, 1);
+                Log.d("SSYNC", "LayersFragment requestSync account=" + account.name
+                        + " authority=" + AUTHORITY + " isSyncable="
+                        + ContentResolver.getIsSyncable(account, AUTHORITY)
+                        + " auto=" + ContentResolver.getSyncAutomatically(account, AUTHORITY));
+                ContentResolver.requestSync(account, AUTHORITY, settingsBundle);
+            }
         }
+        updateInfo();
+        refreshPendingChangesBadge();
     }
 
     public boolean isSomeToSync(){
@@ -664,60 +835,8 @@ public class LayersFragment
 
         switch (v.getId()) {
             case R.id.sync:
-                HyperLog.v(Constants.TAG, "onClick sync cliked!");
-
-                try {
-                    if (! isSomeToSync())
-                        Toast.makeText(v.getContext(), com.nextgis.maplibui.R.string.sync_no_layers, LENGTH_LONG).show();
-                } catch (Exception ex){
-                    HyperLog.e("SYNC", ex.getMessage());
-                }
-
-
-                final SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                String base = mPreferences.getString("ngid_url", NGIDUtils.NGID_MY);
-                boolean offlineSync = mPreferences.getBoolean(KEY_PREF_OFFLINE_SYNC_ON, false);
-
-                if (offlineSync || !NGIDUtils.NGID_MY.equals(base)){
-                    HyperLog.v(Constants.TAG, "onClick start on-premise sync");
-                    OfflineSyncIntentService.startActionFoo(v.getContext());
-                } else {
-
-                    final Runnable switchRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            final SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                            boolean offlineSync = mPreferences.getBoolean(KEY_PREF_OFFLINE_SYNC_ON, false);
-                            if (!offlineSync)
-                                mPreferences.edit().
-                                        putBoolean(KEY_PREF_OFFLINE_SYNC_ON, true).
-                                        apply();
-                            OfflineSyncIntentService.startActionFoo(v.getContext());
-                        }
-                    };
-
-                    GISApplication.getInstance().startRunnable(switchRunnable);
-
-                    for (Account account : mAccounts) {
-                        HyperLog.v(Constants.TAG, "onClick add sync to queue for " + account.name +" account");
-                        // attentd - no turned on sync
-                        checkAccountForSync(v.getContext(), account);
-
-                        Bundle settingsBundle = new Bundle();
-                        settingsBundle.putBoolean(
-                                ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                        settingsBundle.putBoolean(
-                                ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                        ContentResolver.setIsSyncable(account, AUTHORITY, 1);
-                        Log.d("SSYNC", "LayersFragment requestSync account=" + account.name
-                                + " authority=" + AUTHORITY + " isSyncable="
-                                + ContentResolver.getIsSyncable(account, AUTHORITY)
-                                + " auto=" + ContentResolver.getSyncAutomatically(account, AUTHORITY));
-                        ContentResolver.requestSync(account, AUTHORITY, settingsBundle);
-                    }
-                }
-
-                updateInfo();
+                HyperLog.v(Constants.TAG, "onClick sync clicked!");
+                startManualSync();
                 break;
             case R.id.new_layer:
                 if (getActivity() != null) {
@@ -750,6 +869,10 @@ public class LayersFragment
                 application.sendEvent(GA_LAYER, GA_CREATE, GA_IMPORT);
                 ((MainActivity) getActivity()).addLocalLayer();
                 return true;
+            case R.id.menu_add_by_url:
+                application.sendEvent(GA_LAYER, GA_CREATE, GA_NGW);
+                ((MainActivity) getActivity()).addNGWLayerByUrl();
+                return true;
             case R.id.menu_add_remote:
                 application.sendEvent(GA_LAYER, GA_CREATE, GA_GEOSERVICE);
                 ((MainActivity) getActivity()).addRemoteLayer();
@@ -779,20 +902,29 @@ public class LayersFragment
             if (intent.getAction().equals(SyncAdapter.SYNC_START)) {
                 refreshSyncButtonAnimateState(true);
             } else if (intent.getAction().equals(SyncAdapter.SYNC_FINISH) || intent.getAction().equals(SyncAdapter.SYNC_CANCELED)) {
-                if (intent.hasExtra(SyncAdapter.EXCEPTION))
-                    Toast.makeText(getContext(), intent.getStringExtra(SyncAdapter.EXCEPTION), LENGTH_LONG).show();
+                if (intent.hasExtra(SyncAdapter.EXCEPTION)) {
+                    String error = intent.getStringExtra(SyncAdapter.EXCEPTION);
+                    if (isResumed()) {
+                        showSyncFailureDialog(error);
+                    } else {
+                        storePendingSyncError(error);
+                    }
+                }
 
                 refreshSyncButtonAnimateState(false);
                 updateInfo();
+                refreshPendingChangesBadge();
             } else {
                 refreshSyncButtonAnimateState(false);
                 updateInfo();
+                refreshPendingChangesBadge();
             }
         }
     }
 
     @Override
     public void onDestroyView() {
+        refreshSyncButtonAnimateState(false);
         super.onDestroyView();
 
         if (mLayersListView != null) {
@@ -807,6 +939,8 @@ public class LayersFragment
 
         mListAdapter = null;
         mLayersListView = null;
+        mSyncButton = null;
+        mSyncPendingBadge = null;
         if (mDrawerLayout != null) {
             mDrawerLayout.removeCallbacks(mSyncDrawerStateRunnable);
             if (mDrawerToggle != null && mDrawerToggleRegistered) {

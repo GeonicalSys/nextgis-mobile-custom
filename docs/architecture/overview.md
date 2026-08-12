@@ -1,7 +1,7 @@
 ---
 title: Архитектура Android-форка
 type: architecture
-last_verified: 2026-07-19
+last_verified: 2026-07-23
 related_code:
   - settings.gradle
   - app/build.gradle
@@ -57,3 +57,17 @@ app ───────────────► maplibui ──────
 - Root координирует совместимые pointers сабмодулей и central docs.
 - Новая cross-repository связь фиксируется в `dependencies.yaml` и
   `change-impact.yaml`.
+
+## Внешняя граница экосистемы
+
+Desktop-профиль ЛИСА и QGIS-плагины находятся в отдельных проектах и не
+являются Gradle/runtime-зависимостями приложения. Они подготавливают и
+публикуют ресурсы в NextGIS Web; Android получает их через NGW API, Collector
+import и sync. Отдельные offline-артефакты передаются только через явный
+пользовательский import поддерживаемого формата. Поэтому изменение общего
+resource contract проверяется с обеих сторон, а файлы `<central-root>`,
+QGIS plugin mirrors и `variables.py` никогда не читаются APK напрямую.
+
+Владельцы, канонические входы документации и end-to-end поток описаны в
+[`lisa-ecosystem.md`](lisa-ecosystem.md) и
+[`../registry/ecosystem.yaml`](../registry/ecosystem.yaml).
