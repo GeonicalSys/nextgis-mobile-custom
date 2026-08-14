@@ -1,12 +1,18 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-12
+last_verified: 2026-08-14
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-14
+
+- Зафиксирован publisher-contract `vector_only`: служебное `idqgs` в NGW не
+  входит в mobile `fields[]`, не требует Android-изменений и не меняет
+  одностороннее направление NGW → Android для этих слоёв.
 
 ## 2026-08-12
 
