@@ -33,7 +33,7 @@ contracts:
     to: mobile-app
     type: server_resource_contract
     transport: NextGIS Web API and Collector resources
-    statement: QGIS publishers and the Android consumer preserve resource identity, type, schema, permissions, style/form composition and sync semantics; publisher-only idqgs may exist in vector_only feature schema but is excluded from mobile fields and does not make the layer Android-editable; transient NGW or external-database availability never mutates resource identity or local data, and Android retries only failed pull layers without repeating successful ones.
+    statement: QGIS publishers and the Android consumer preserve resource identity, type, schema, permissions, style/form composition and sync semantics; export-only idqgs in a vector_only feature schema is included in mobile fields as LONG so the local schema matches NGW, but it does not make the layer Android-editable; transient NGW or external-database availability never mutates resource identity or local data, and Android retries only failed pull layers without repeating successful ones.
     owners: [app, maplib, maplibui]
     local_docs:
       - docs/architecture/lisa-ecosystem.md

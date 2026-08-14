@@ -10,9 +10,9 @@ related_code:
 
 ## 2026-08-14
 
-- Зафиксирован publisher-contract `vector_only`: служебное `idqgs` в NGW не
-  входит в mobile `fields[]`, не требует Android-изменений и не меняет
-  одностороннее направление NGW → Android для этих слоёв.
+- Уточнён publisher-contract `vector_only`: служебное `idqgs BIGINT` входит в
+  mobile `fields[]` как `LONG` (`type: 13`), чтобы локальная схема совпадала с
+  NGW. Android-код не меняется; направление остаётся NGW → Android.
 
 ## 2026-08-12
 
