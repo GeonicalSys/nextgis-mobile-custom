@@ -50,8 +50,17 @@ registry/docs. Общую карту отличий открывай в
 - Root: `android_gisapp`; сабмодули: `maplib`, `maplibui`, `easypicker`.
 - Рабочая ветка форка обычно `my-maplibre`; всегда проверяй фактическую ветку.
 - У каждого репозитория `origin` — GeonicalSystem, `upstream` — NextGIS.
-- Не выполняй `commit`, `push`, merge, rebase, изменение `git config` или
-  разрушительные git-команды без явного запроса пользователя.
+- Запрос пользователя изменить/исправить/добавить код или документацию
+  разрешает routine delivery: preflight, отдельные `codex/*` ветки в каждом
+  затронутом репозитории, scoped commits, push и связанные Draft PR. Не
+  запрашивай отдельное разрешение на каждый Git-шаг. Read-only запросы такого
+  разрешения не дают.
+- Не делай direct push в `my-maplibre`/`main`/`master`, force push, tag/release,
+  deployment, rebase опубликованной ветки или merge без явного намерения
+  пользователя завершить задачу через merge/release. Обычный app PR использует
+  Squash Merge; `maplib`, `maplibui` и `easypicker` используют Merge Commit.
+- Для cross-repository задачи создай связанные Draft PR и до merge запиши
+  порядок библиотека -> submodule pointer/root -> publisher.
 - Workspace может быть dirty. Сохраняй пользовательские изменения и не
   подмешивай к ним несвязанные правки.
 - Upstream merge: сначала инвентаризация и backup tags, затем
