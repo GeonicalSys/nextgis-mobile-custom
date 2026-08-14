@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-08-12
+last_verified: 2026-08-14
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -63,6 +63,12 @@ QGIS-инструменты могут создавать, оформлять и
 - schema полей, права `data.read`/`data.write` и sync direction;
 - стили, формы, composition и lifecycle управляемых слоёв;
 - различие между server-managed ресурсом и локальной immutable `.ngrc`-подложкой.
+
+В publisher-режиме `vector_only` управляемые `sync_ngw` слои могут содержать
+служебное `idqgs BIGINT`. Оно связывает web-объект с первичным `id` PostgreSQL для
+одностороннего обновления сервера. `idqgs` не входит в mobile `fields[]`, не требует
+колонки в PostgreSQL и не делает слой редактируемым на Android. Для таких слоёв
+контрактное направление — только NGW → Android.
 
 Временный HTTP `5xx` или `ExternalDatabaseError` внешней БД не изменяет этот
 контракт и не превращает серверный слой в локальный. Android откладывает только
