@@ -1,7 +1,7 @@
 ---
 title: Каталог кастомизаций форка
 type: reference
-last_verified: 2026-07-20
+last_verified: 2026-08-15
 related_code:
   - app
   - maplib
@@ -24,12 +24,14 @@ related_code:
 |---|---|---|
 | Сборка, AGP, flavors и версии | [build-matrix.md](build-matrix.md), [release-apk.md](../runbooks/release-apk.md) | `app/build.gradle`, `maplib/build.gradle` |
 | Walk-by-geometry | [map-rendering.md](../architecture/map-rendering.md) | `MapFragment`, `MapDrawable`, `EditLayerOverlay`, `WalkEditService` |
+| Вынос координат и звуковое наведение | [stakeout.md](../architecture/stakeout.md) | `StakeoutGeometryTarget`, `GpsEventSource`, `StakeoutController`, `MapFragment` |
 | MapLibre rendering, hot reload и порядок слоёв | [map-rendering.md](../architecture/map-rendering.md) | `MapDrawable`, `MPLFeaturesUtils`, `VectorLayerRenderCache` |
 | Производительность карты и локальные vector tiles | [map-performance.md](../architecture/map-performance.md) | `VectorLayer`, `LocalVectorTileProvider`, `LocalVectorTileServer` |
 | NGW sync, account scheduling, layer fill и staged schema rebuild | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md), [collector-projects.md](../architecture/collector-projects.md) | `SyncAdapter`, `SyncAccountWorker`, `LayerFillService`, `GISApplication` |
 | Variant-specific Android account/provider identity | [flavors-and-versioning.md](flavors-and-versioning.md), [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md) | `app/build.gradle`, `MainApplication`, authenticator/sync adapter XML |
 | NGW resource UI и batch import | [collector-project-setup.md](../runbooks/collector-project-setup.md) | `SelectNGWResourceActivity`, `NGWResourcesListAdapter`, `LayerFillProgressDialogFragment` |
 | Прямой импорт NGW vector/raster по URL и read-only permissions | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md) | `NGWResourceUrl`, `ResourceGroup`, `NGWResourceImportHelper`, `MainActivity` |
+| Локальные редактируемые vector layers и GeoJSON/KML/GPX WGS 84 | module packs `maplib`/`maplibui`/`app`, `INV-LOCAL-VECTOR-LAYERS` | `VectorLayer`, `GeoJSONUtil`, `CoordinatePointParser`, `LayerFillService` |
 | Config из NGW description и `SYNC_NONE` | [settings-and-config.md](settings-and-config.md), [collector-projects.md](../architecture/collector-projects.md) | `NgwLayerConfigAdapter`, sync classes |
 | Collector metadata, complete snapshot, resumable import, form transaction и composition apply | [collector-projects.md](../architecture/collector-projects.md) | `CollectorResource`, `CollectorImportJournal`, `CollectorFormFileTransaction`, `CollectorProjectCompositionSync` |
 | Backup перед удалением/перезаливкой | [collector-projects.md](../architecture/collector-projects.md) | `LayerBackupManager`, `GISApplication` |
@@ -63,6 +65,15 @@ related_code:
 - Runtime, authenticator и sync adapter используют один account type каждого variant:
   `INV-NGW-ACCOUNT-IDENTITY`.
 - `versionName` приложения и `maplib` выравниваются, а `versionCode` форка остаётся уникальным.
+- Вынос использует ближайшую точку/границу, WGS84-расстояние, отображает accuracy,
+  ведёт дистанционные звуковые зоны по GPS/mock fix, ориентирует стрелку по компасу телефона
+  и сохраняет звук/частый GPS при выключенном экране через foreground service:
+  `INV-STAKEOUT-GUIDANCE`.
+- Ручные и импортированные локальные векторные слои редактируемы; GeoJSON
+  принимает стандартные формы WGS 84/EPSG:4326, а KML/GPX разворачиваются в
+  последовательность точек WGS 84. Выключенный редактируемый слой остаётся в
+  выборе для нового объекта и автоматически включается после выбора:
+  `INV-LOCAL-VECTOR-LAYERS`.
 
 ## Как поддерживать каталог
 

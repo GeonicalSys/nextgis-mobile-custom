@@ -10,6 +10,77 @@ preferences:
     type: boolean
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
     purpose: Show compass UI
+  map_rotation_enabled:
+    owner: app
+    type: boolean
+    default: false
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    consumer: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    purpose: Allow two-finger MapLibre rotation; disabling restores north-up orientation
+  map_bearing:
+    owner: app
+    type: float_degrees
+    default: 0
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    consumer: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    purpose: Persist camera bearing only while explicit map rotation is enabled
+  photo_overlay_enabled:
+    owner: app
+    type: boolean
+    default: true
+    source: app/src/main/res/xml/preferences_map.xml
+    consumer: maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java
+    purpose: Burn WGS84 coordinates into newly attached photos
+    migration: Enabled once on existing installations by photo_overlay_defaults_enabled_v1
+  photo_overlay_use_object_coords:
+    owner: app
+    type: boolean
+    default: true
+    source: app/src/main/res/xml/preferences_map.xml
+    consumer: maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java
+    purpose: Use the edited object's representative coordinate for the photo overlay
+    migration: Enabled once on existing installations by photo_overlay_defaults_enabled_v1
+  photo_overlay_defaults_enabled_v1:
+    owner: app
+    type: boolean
+    default: false
+    source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+    purpose: One-time marker after enabling the two new photo-overlay defaults on an existing install
+  stakeout_sound_enabled:
+    owner: app
+    type: boolean
+    default: true
+    source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
+    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат)
+    purpose: Initial sound-guidance state for each new foreground stakeout session
+  stakeout_far_distance:
+    owner: app
+    type: string_decimal_meters
+    default: "5.0"
+    source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
+    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат)
+    purpose: Outer boundary for the slow stakeout cue
+  stakeout_medium_distance:
+    owner: app
+    type: string_decimal_meters
+    default: "1.0"
+    source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
+    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат)
+    purpose: Outer boundary for the medium stakeout cue
+  stakeout_near_distance:
+    owner: app
+    type: string_decimal_meters
+    default: "0.5"
+    source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
+    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат)
+    purpose: Outer boundary for the fast stakeout cue
+  stakeout_reached_distance:
+    owner: app
+    type: string_decimal_meters
+    default: "0.1"
+    source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
+    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат)
+    purpose: Horizontal in-tolerance distance requiring two fresh GPS or mock precision fixes
   check_updates:
     owner: app
     type: boolean

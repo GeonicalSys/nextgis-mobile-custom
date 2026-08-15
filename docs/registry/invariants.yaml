@@ -42,6 +42,21 @@ invariants:
       - docs/architecture/ngw-sync-and-storage.md
       - app/docs/manifest.yaml
       - maplibui/docs/manifest.yaml
+  INV-NGW-RESOURCE-DIALOG-LIFECYCLE:
+    title: NGW resource errors use only a live Activity window
+    owners: [maplibui]
+    statement: >
+      Asynchronous NGW connection and resource-tree failures may use application context for
+      background work and localized strings, but a user dialog must use the owning Activity only
+      while it is neither finishing nor destroyed. A late result after the selector lifecycle ends
+      is discarded from UI and must never terminate the process with BadTokenException.
+    related_code:
+      - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    verify_smoke: [AUTO-MAPLIBUI-ASSEMBLE, SMOKE-NGW-CONNECTION-FAILURE]
+    must_update_docs:
+      - maplibui/docs/README.md
+      - maplibui/docs/manifest.yaml
+      - docs/reference/official-differences.md
   INV-LAYER-ORDER:
     title: LayerGroup index zero is the bottom of the stack
     owners: [maplib, maplibui]
@@ -108,6 +123,25 @@ invariants:
     verify_smoke: [SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-COLD-START, SMOKE-HOT-RASTER]
     must_update_docs:
       - docs/architecture/map-rendering.md
+  INV-MAP-CAMERA-CONTROLS:
+    title: Map rotation is explicit and location recovery is predictable
+    owners: [app]
+    statement: >
+      Two-finger map rotation is disabled by default and changes only through the
+      dedicated toolbar toggle. Disabling rotation returns the camera north-up and
+      keeps tilt disabled. The location action always resets north, raises zoom to at
+      least 12 without zooming out, and when no current fix exists centers on the first
+      layer with a valid finite extent at zoom 12 regardless of extent size.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+      - app/src/main/res/menu/main.xml
+    verify_smoke: [SMOKE-MAP-CAMERA-CONTROLS]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/settings-and-config.md
+      - docs/reference/official-differences.md
   INV-COLLECTOR-RESOURCE:
     title: Collector resources remain selectable and importable
     owners: [maplib, maplibui]
@@ -174,7 +208,11 @@ invariants:
   INV-COLLECTOR-EDITABILITY:
     title: Collector item policy controls managed-layer editing
     owners: [app, maplib, maplibui]
-    statement: A project-managed NGW layer is editable only when its Collector item allows editing and outbound sync is enabled; generic mobile is_editable remains the gate for ordinary and manually imported layers.
+    statement: >
+      A project-managed NGW layer is editable only when its Collector item allows editing
+      and outbound sync is enabled; generic mobile is_editable remains the gate for ordinary
+      and manually imported layers. Visibility never changes creation eligibility: an eligible
+      hidden layer is offered and becomes persistently visible before its editor starts.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java
       - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -297,6 +335,48 @@ invariants:
       - docs/reference/official-differences.md
       - maplib/docs/README.md
       - maplibui/docs/README.md
+  INV-STAKEOUT-GUIDANCE:
+    title: Foreground-service stakeout uses nearest boundaries, receiver accuracy and compass-only direction
+    owners: [maplib, app]
+    statement: >
+      Stakeout accepts selected Point/MultiPoint, LineString/MultiLineString and
+      Polygon/MultiPolygon geometry in EPSG:4326 or EPSG:3857 without mutating the
+      feature. Lines use the nearest segment point; polygons use the nearest outer or
+      inner boundary even when the current fix is inside. User distance and bearing are
+      WGS84 geodesic results, never raw Web Mercator distance. While stakeout
+      is active, an owner-based high-frequency location lease sets minDistance to zero
+      and restores ordinary user settings after the final release. Audio is scheduled by
+      monotonic time, stops for stale fixes and never uses network fixes for
+      precision bands. GPS and Android mock fixes use distance-based bands even when the
+      receiver bridge publishes a coarse accuracy placeholder; the reported horizontal
+      accuracy remains visible in the widget and the final cue requires two consecutive
+      fresh in-tolerance fixes. Audible bands use a full-scale-limited short damped tap with
+      3x digital gain and the final state a double tap, not a sustained high tone. A location foreground service,
+      ongoing silent notification and partial wake lock keep GPS and audio active while the
+      screen is off or the UI is paused; explicit stop releases all three. Direction uses
+      only the device rotation-vector compass,
+      never movement bearing; without a live compass it shows the absolute cardinal
+      direction and keeps the arrow screen-correct by subtracting an explicitly enabled
+      map bearing. The map widget does not duplicate object name or coordinate
+      source. Process death never silently restarts audible stakeout guidance.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
+      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
+      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
+      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
+      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    must_update_docs:
+      - docs/architecture/stakeout.md
+      - docs/reference/settings-and-config.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - maplib/docs/manifest.yaml
+      - app/docs/README.md
+      - app/docs/manifest.yaml
   INV-CRASH-DRAFT-RECOVERY:
     title: Crash-safe track resume and geometry/form drafts
     owners: [app, maplibui, maplib]
@@ -393,3 +473,34 @@ invariants:
     must_update_docs:
       - docs/architecture/lisa-ecosystem.md
       - docs/registry/ecosystem.yaml
+  INV-LOCAL-VECTOR-LAYERS:
+    title: Local vector layers remain editable and accept standard WGS84 coordinate files
+    owners: [maplib, maplibui, app]
+    statement: >
+      A vector layer created in the application or imported from a local GeoJSON file
+      is editable by default. GeoJSON without an explicit CRS is WGS84; CRS84 and common
+      EPSG:4326 URN or OGC URL forms are accepted as WGS84, while EPSG:3857 aliases are
+      converted through the existing Web Mercator path and other coordinate systems remain
+      unsupported. A local KML or GPX file is treated as WGS84 and every valid coordinate,
+      in source order, becomes a separate point in one editable layer; source geometry,
+      styling and route/track topology are deliberately not retained. SQLite bulk-write
+      PRAGMAs are configured before the import transaction and are never changed from inside
+      an active transaction. An editable local layer remains in the object-creation picker
+      while hidden; choosing it enables and saves visibility before editing starts.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/util/GeoJSONUtil.java
+      - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
+      - maplib/src/main/java/com/nextgis/maplib/util/CoordinatePointParser.java
+      - maplib/src/main/java/com/nextgis/maplib/util/CoordinatePointLayerImporter.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/mapui/LayerFactoryUI.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [SMOKE-LOCAL-VECTOR-LAYERS]
+    must_update_docs:
+      - maplib/docs/README.md
+      - maplibui/docs/README.md
+      - app/docs/README.md
+      - docs/reference/official-differences.md

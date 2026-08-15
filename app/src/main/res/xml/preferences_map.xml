@@ -126,7 +126,7 @@
 
         <CheckBoxPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="photo_overlay_enabled"
             android:summary="@string/photo_overlay_enabled_summary"
             android:singleLineTitle="false"
@@ -134,7 +134,7 @@
 
         <CheckBoxPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dependency="photo_overlay_enabled"
             android:key="photo_overlay_use_object_coords"
             android:singleLineTitle="false"

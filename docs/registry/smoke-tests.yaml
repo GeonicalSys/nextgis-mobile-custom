@@ -15,6 +15,11 @@ tests:
     scope: maplibui
     command: .\gradlew.bat :maplibui:assembleDebug
     expected: Maplibui debug library assembles.
+  AUTO-APP-DEBUG:
+    type: automatic
+    scope: [app, maplib]
+    command: .\gradlew.bat :app:assembleLisaDebug
+    expected: Lisa Debug APK assembles with the consuming debug maplib variant.
   AUTO-APP-RELEASES:
     type: automatic
     scope: app
@@ -35,6 +40,20 @@ tests:
     scope: [app, maplib]
     steps: [Open a map containing overlapping saved and active tracks plus vector layers, Move the current location onto the overlap, Perform a lite reload or hot layer update]
     expected: The standing and moving location cursor remains fully visible above tracks and every other MapLibre object before and after reload.
+  SMOKE-MAP-CAMERA-CONTROLS:
+    type: device
+    scope: app
+    steps:
+      - Cold-open a project and verify two-finger rotation does nothing until the toolbar rotation button is pressed
+      - Enable rotation, rotate to several bearings, recreate the activity and verify the enabled state and bearing are restored
+      - Disable rotation and verify the camera returns north-up and rotation gestures stop working
+      - At zooms below and above 12 press location with a current fix, then repeat with location unavailable and a project layer having a finite extent
+      - Repeat the no-location case in an empty project and while stakeout lacks a device compass
+    expected: >
+      Rotation is explicit and persistent, tilt remains disabled, location resets north and never
+      zooms out while enforcing zoom 12, missing location centers on the first valid layer at zoom
+      12 regardless of extent size, an empty project reports no location, and the stakeout
+      arrow/cardinal fallback stays correct at non-zero map bearings.
   SMOKE-NGRC-ORDER:
     type: device
     scope: [maplib, maplibui]
@@ -63,8 +82,8 @@ tests:
   SMOKE-COLLECTOR-IMPORT:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors, Reset all settings, Select the NGW Collector resource and import its composition, Verify every layer has a distinct local storage path, Enable the Point layer only in the local layer drawer without changing server config or running sync, Verify Point features render immediately while identify returns the same objects, Verify style tiles load with the project account and mixed order matches Collector, Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row, Start object creation and inspect offered layers, Reopen and run composition sync, Repeat import with two different layers sharing a display name]
-    expected: Project metadata and isolated workspace are created, concurrent fills use distinct storage and fail without retaining incomplete layers, enabling a layer omitted from the initial live style rebuilds its source/layer from local data without server config update, sync or app restart, layers are keyed by remote id, supported styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks stays on top, default OSM stays at internal index zero without visibility reset, and only Collector vectors with editable plus outbound sync are offered for object creation.
+    steps: [Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, an editable field vector whose initial visible is false, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors, Reset all settings, Select the NGW Collector resource and import its composition, Verify every layer has a distinct local storage path, Enable the read-only Point layer only in the local layer drawer without changing server config or running sync, Verify Point features render immediately while identify returns the same objects, Verify style tiles load with the project account and mixed order matches Collector, Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row, Start object creation and inspect offered layers, Select the hidden editable vector and add an object, Reopen and run composition sync, Repeat import with two different layers sharing a display name]
+    expected: Project metadata and isolated workspace are created, concurrent fills use distinct storage and fail without retaining incomplete layers, enabling a layer omitted from the initial live style rebuilds its source/layer from local data without server config update, sync or app restart, layers are keyed by remote id, supported styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks stays on top, default OSM stays at internal index zero without visibility reset, and only Collector vectors with editable plus outbound sync are offered for object creation regardless of visibility; selecting a hidden eligible vector makes it visibly persist before editing.
   SMOKE-COLLECTOR-RESUME:
     type: device
     scope: [app, maplib, maplibui]
@@ -141,6 +160,17 @@ tests:
     scope: [app, maplibui]
     steps: [Install a release APK beside official and debug variants, Add a Web GIS with valid credentials, Reopen the Web GIS selector, Inspect Android AccountManager and exported HyperLog]
     expected: The login screen closes only after the variant-specific Android account is created and listed; authenticator, sync adapter and runtime account types match, and a local add failure keeps the form open with an error and diagnostic log.
+  SMOKE-NGW-CONNECTION-FAILURE:
+    type: device
+    scope: [app, maplibui]
+    steps:
+      - Configure a Web GIS endpoint that returns HTTP 500 for authentication or resource loading
+      - Open the NGW resource selector and wait for the request to fail
+      - Repeat and close the selector or leave its Activity before the request completes
+    expected: >
+      While the selector Activity is alive, the user sees a plain connection error and can retry;
+      after the Activity is finished or destroyed, the late result creates no dialog. Neither path
+      throws BadTokenException or terminates the application.
   SMOKE-WALK:
     type: device
     scope: [app, maplib, maplibui]
@@ -165,6 +195,39 @@ tests:
       Long sampling gaps preserve prior valid fixes, the final two buffered fixes are
       flushed on stop, and isolated inaccurate or displaced garbage is absent. The
       automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
+  SMOKE-STAKEOUT:
+    type: device
+    scope: [app, maplib]
+    steps:
+      - Connect the production geodetic receiver path and verify it publishes corrected WGS84 GPS fixes for the pole tip
+      - Configure stakeout thresholds 5, 1, 0.5 and 0.1 metres and enable sound
+      - Select editable and read-only Point, LineString, Polygon and their Multi variants, then start Слежение
+      - Approach a point, a line segment interior, a polygon exterior boundary and an interior ring from both sides
+      - For a polygon, repeat while starting inside its area
+      - Cross every threshold repeatedly and hold at 0.1 m with both good accuracy and a constant coarse value such as 10 m
+      - Stand still and rotate the device, then walk along a known bearing while turning the device independently
+      - Repeat on a device/emulator without a rotation-vector sensor and compare the cardinal label with a known north-up bearing
+        - Mute and unmute the widget, rotate portrait/landscape, lock the screen and press Home for several minutes, then resume and stop the mode
+      - Repeat with GPS loss/stale fixes, a network fallback, a mock-GPS receiver application, Bluetooth active and a non-normal Android audio mode
+        - Export the debug log and verify it does not contain stakeout coordinates or extended mock Location samples
+      - Open map settings after upgrading an existing install, verify both photo-coordinate options are initially enabled, disable them, restart and verify the explicit choice persists
+      - Run a 4–8 hour field session and assess sound fatigue, battery use and CPU temperature
+    expected: >
+      The widget contains direction, distance, reported horizontal accuracy, mute and stop;
+      it never duplicates object name or coordinate source. Point uses its coordinate, line uses the nearest
+      segment point and polygon uses the nearest outer/inner boundary even from inside. Sound
+      cadence changes at configured distances without overlapping, chattering or using network
+      fixes for precision guidance. Coarse or placeholder accuracy remains visible but does not
+      silence GPS/mock distance bands. The final cue occurs once only after two fresh precision fixes
+        whose distance is within tolerance. Stale/lost GPS silences audio; screen-off and background
+        state keep cues and high-frequency GPS active under an ongoing silent notification. Foreground
+        resume restores the widget, and explicit stop removes the notification and restores ordinary
+        location sampling. Device rotation follows the true-north phone compass
+      both stationary and moving; without it north-up plus a cardinal label is used. Mock GPS from the
+      receiver remains accepted, navigation cues remain audible with Bluetooth/audio-mode changes,
+        use a loud short damped tap rather than a high sustained tone, and system volume can reduce it.
+        The migrated photo defaults do not overwrite later explicit user choices. Debug logs do not
+        contain stakeout coordinate samples or extended mock Location fields.
   SMOKE-MULTIPOLYGON-REPAIR:
     type: device
     scope: [app, maplib, maplibui]
@@ -207,3 +270,26 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Add a public vector resource URL without a pre-existing account, Add a raster resource URL from an existing account, Add a QGIS style URL, Open a vector resource without data.write permission]
     expected: Guest account is created only for the validated public server, vector and raster appear through the normal reload flow, style resolves to its parent layer, and the no-write vector is read-only and pull-only.
+  SMOKE-LOCAL-VECTOR-LAYERS:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Create point, line and polygon vector layers from the application
+      - Add and edit one feature in each layer, restart the application and edit them again
+      - Hide an editable layer, open object creation, select it and add a feature
+      - Import a WGS84 GeoJSON without crs and one with urn:ogc:def:crs:EPSG::4326
+      - On Android 16 import an EPSG:3857 GeoJSON and inspect the application log
+      - Import a KML containing Point, LineString and Polygon coordinates
+      - Import a GPX containing wpt, rtept and trkpt coordinates with name, time and elevation
+      - Compare the resulting point count and order with both source files
+      - Verify imported feature positions, add or edit a feature, restart and reopen the layers
+      - Attempt to import malformed and coordinate-empty KML/GPX files
+      - Attempt to import a file with an unsupported CRS such as EPSG:32637
+    expected: >
+      Manually created, local GeoJSON and flattened KML/GPX layers are editable before and after restart;
+      a hidden editable layer remains offered for object creation and becomes persistently visible when selected;
+      WGS84 data with no CRS or a common EPSG:4326 name imports at the correct position,
+      each valid KML/GPX coordinate is a point in source order with available metadata,
+      EPSG:3857 import does not attempt to change SQLite safety PRAGMAs inside a transaction,
+      while an actually unsupported CRS and invalid or empty XML are rejected with a plain
+      user-facing message and leave no incomplete layer.

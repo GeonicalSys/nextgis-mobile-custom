@@ -53,6 +53,8 @@
     <string name="warning_no_edit_layers">No editable layers</string>
     <string name="select_layer">Select layer to edit</string>
     <string name="menu_locate">Locate</string>
+    <string name="allow_map_rotation">Allow map rotation</string>
+    <string name="disable_map_rotation">Disable map rotation</string>
     <string name="select_file">Select file to create layer</string>
     <string name="warning_install_file_manager">Please install a File Manager</string>
     <string name="error_file_unsupported">File type is not supported</string>
@@ -255,6 +257,30 @@
     <string name="ngw_guest_account_failed">Could not create a guest account for this NGW server.</string>
     <string name="ngw_resource_import_started">Layer download started.</string>
     <string name="ngw_resource_added">Layer added.</string>
+
+    <string name="stakeout_action">Stakeout</string>
+    <string name="stakeout_title">Stakeout</string>
+    <string name="stakeout_direction">Direction to target</string>
+    <string name="stakeout_waiting_for_gps">Waiting for GPS</string>
+    <string name="stakeout_distance_format">%1$s m</string>
+    <string name="stakeout_accuracy_format">Accuracy: ±%1$s m</string>
+    <string name="stakeout_reached">In tolerance</string>
+    <string name="stakeout_mute">Mute stakeout sound</string>
+    <string name="stakeout_unmute">Enable stakeout sound</string>
+    <string name="stakeout_stop">Stop stakeout</string>
+    <string name="stakeout_unavailable">This object cannot be used for stakeout</string>
+    <string name="stakeout_settings_title">Stakeout</string>
+    <string name="stakeout_sound_enabled">Sound guidance</string>
+    <string name="stakeout_far_distance">Slow signal distance</string>
+    <string name="stakeout_medium_distance">Medium signal distance</string>
+    <string name="stakeout_near_distance">Fast signal distance</string>
+    <string name="stakeout_reached_distance">In-tolerance distance</string>
+    <string name="stakeout_threshold_summary">%1$s m</string>
+    <string name="stakeout_threshold_invalid">Distances must be positive and decrease from the slow signal to the in-tolerance signal</string>
+    <string name="stakeout_background_title">Stakeout is active</string>
+    <string name="stakeout_background_text">Sound guidance continues in the background</string>
+    <string name="stakeout_background_channel">Stakeout guidance</string>
+    <string name="stakeout_background_channel_summary">Ongoing sound and location guidance for an active stakeout</string>
 
 
 

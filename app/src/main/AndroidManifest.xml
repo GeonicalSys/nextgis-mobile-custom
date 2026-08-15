@@ -74,6 +74,12 @@
             android:foregroundServiceType="dataSync"
             android:exported="false"/>
 
+        <service
+            android:name=".stakeout.StakeoutForegroundService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
         <meta-data
             android:name="io.sentry.dsn"
             android:value="@string/SENTRY_DSN" />

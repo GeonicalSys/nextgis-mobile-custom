@@ -53,6 +53,8 @@
     <string name="warning_no_edit_layers">Нет редактируемых слоёв</string>
     <string name="select_layer">Выберите слой для редактирования</string>
     <string name="menu_locate">Найти</string>
+    <string name="allow_map_rotation">Разрешить вращение карты</string>
+    <string name="disable_map_rotation">Запретить вращение карты</string>
     <string name="select_file">Выберите файл для создания слоя</string>
     <string name="warning_install_file_manager">Пожалуйста, установите менеджер файлов</string>
     <string name="error_file_unsupported">Тип файла не поддерживается</string>
@@ -259,4 +261,27 @@
     <string name="collector_project_switch_busy">Дождитесь окончания загрузки слоев перед сменой проекта</string>
     <string name="collector_project_switch_edit_mode">Сохраните или отмените редактирование перед сменой проекта</string>
     <string name="collector_project_switch_tracking">Остановите запись активного трека перед сменой проекта</string>
+    <string name="stakeout_action">Слежение</string>
+    <string name="stakeout_title">Вынос координат</string>
+    <string name="stakeout_direction">Направление к объекту</string>
+    <string name="stakeout_waiting_for_gps">Ожидание GPS</string>
+    <string name="stakeout_distance_format">%1$s м</string>
+    <string name="stakeout_accuracy_format">Точность: ±%1$s м</string>
+    <string name="stakeout_reached">В допуске</string>
+    <string name="stakeout_mute">Выключить звук выноса</string>
+    <string name="stakeout_unmute">Включить звук выноса</string>
+    <string name="stakeout_stop">Завершить вынос</string>
+    <string name="stakeout_unavailable">Этот объект нельзя использовать для выноса</string>
+    <string name="stakeout_settings_title">Вынос координат</string>
+    <string name="stakeout_sound_enabled">Звуковые подсказки</string>
+    <string name="stakeout_far_distance">Расстояние редкого сигнала</string>
+    <string name="stakeout_medium_distance">Расстояние среднего сигнала</string>
+    <string name="stakeout_near_distance">Расстояние частого сигнала</string>
+    <string name="stakeout_reached_distance">Расстояние допуска</string>
+    <string name="stakeout_threshold_summary">%1$s м</string>
+    <string name="stakeout_threshold_invalid">Расстояния должны быть положительными и уменьшаться от редкого сигнала к допуску</string>
+    <string name="stakeout_background_title">Вынос координат активен</string>
+    <string name="stakeout_background_text">Звуковые подсказки работают в фоне</string>
+    <string name="stakeout_background_channel">Вынос координат</string>
+    <string name="stakeout_background_channel_summary">Звуковое наведение и местоположение при активном выносе</string>
 </resources>

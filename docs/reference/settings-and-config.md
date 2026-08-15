@@ -1,10 +1,12 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-07-29
+last_verified: 2026-08-15
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+  - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
   - app/src/main/res/xml/preferences_general.xml
+  - app/src/main/res/xml/preferences_map.xml
   - app/src/main/AndroidManifest.xml
   - maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
@@ -25,8 +27,20 @@ related_code:
 
 ## Группы
 
-- App map/UI: location, compass, info, zoom controls, layer list.
+- App map/UI: location, compass, info, zoom controls, layer list. Internal
+  `map_rotation_enabled=false` keeps two-finger rotation locked by default;
+  `map_bearing=0` stores the last bearing only while the user has explicitly
+  enabled rotation. Neither key is shown in the general settings screen: the
+  state is controlled by the toolbar button next to location.
+- Фото-вложения: `photo_overlay_enabled=true` и
+  `photo_overlay_use_object_coords=true` включены по умолчанию. Миграция
+  `photo_overlay_defaults_enabled_v1` один раз включает оба ключа на уже
+  установленной версии; после этого ручной выбор пользователя сохраняется.
 - Tracking/location: интервалы, distance, foreground service toggles.
+- Вынос координат: начальное состояние звука и четыре строго убывающих порога
+  `stakeout_far_distance`, `stakeout_medium_distance`, `stakeout_near_distance`,
+  `stakeout_reached_distance` в метрах. Некорректный набор не применяется;
+  runtime использует безопасные значения `5 / 1 / 0,5 / 0,1`.
 - Updates: `check_updates`, update flavor metadata, release repository fields.
 - Backups: `layer_backup_max_gb` (Общие → Другое, default 5 GB) caps `LayerBackups/`.
 - Collector: project registry JSON, project metadata, composition state.

@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-07-30
+last_verified: 2026-08-15
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
@@ -106,11 +106,32 @@ related_code:
     контейнеру, полигонам и кольцам. Repair дополнительно восстанавливает
     отсутствующий CRS контейнера из дочерней геометрии для ранее созданных
     edit/draft-объектов; количество вершин на это поведение не влияет.
+18. Виджет выноса координат является обычным Android overlay над картой и не
+    добавляет временные MapLibre source/layer. Выбранный feature остаётся
+    подсвечен штатным view-selection, поэтому запуск/остановка выноса не должны
+    пересоздавать style или менять порядок слоёв. Геометрический расчёт описан в
+    [`stakeout.md`](stakeout.md).
+19. Видимость векторного слоя не является правом редактирования. Список слоя для
+    нового объекта включает все слои подходящего типа с `isEditingAllowed=true`,
+    в том числе `visible=false`. Перед запуском редактора выбранный скрытый слой
+    получает `visible=true`, сохраняется и обновляется в live MapLibre style через
+    штатный `onLayerVisibleChanged()`/`checkLayerVisibility()`.
+20. Жест вращения MapLibre выключен по умолчанию и включается только отдельной
+    кнопкой в верхней панели. Наклон и встроенный MapLibre compass остаются
+    выключенными. Запрет вращения плавно возвращает bearing `0`; разрешение и
+    последний bearing сохраняются между открытиями карты. Кнопка текущего
+    положения всегда возвращает север вверх, не уменьшает текущий zoom и при
+    zoom ниже `12` повышает его до `12`. Если текущей координаты нет, она берёт
+    первый слой с конечным и инициализированным охватом, центрирует карту по
+    середине этого охвата и выставляет zoom `12` независимо от его размера. Если
+    нет ни координаты, ни пригодного слоя, остаётся обычное сообщение об
+    отсутствии местоположения.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
 `INV-TRACK-LAYER-TOP`, `INV-COLLECTOR-RASTER-STYLES`,
-`INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`.
+`INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`,
+`INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`.
 
 ## Изменение rendering pipeline
 
@@ -126,7 +147,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 
 Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
 `SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
-`SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`.
+`SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`,
+`SMOKE-MAP-CAMERA-CONTROLS`.
 
 ## Производительность
 

@@ -63,4 +63,43 @@
         android:singleLineTitle="false"
         />
 
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        android:title="@string/stakeout_settings_title">
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            android:defaultValue="true"
+            android:key="stakeout_sound_enabled"
+            android:title="@string/stakeout_sound_enabled" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="5.0"
+            android:inputType="numberDecimal"
+            android:key="stakeout_far_distance"
+            android:title="@string/stakeout_far_distance" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="1.0"
+            android:inputType="numberDecimal"
+            android:key="stakeout_medium_distance"
+            android:title="@string/stakeout_medium_distance" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="0.5"
+            android:inputType="numberDecimal"
+            android:key="stakeout_near_distance"
+            android:title="@string/stakeout_near_distance" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="0.1"
+            android:inputType="numberDecimal"
+            android:key="stakeout_reached_distance"
+            android:title="@string/stakeout_reached_distance" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
