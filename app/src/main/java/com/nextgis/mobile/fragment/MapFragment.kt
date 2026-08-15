@@ -55,6 +55,7 @@ import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -101,6 +102,7 @@ import com.nextgis.maplib.util.GeoConstants
 import com.nextgis.maplib.util.LocationUtil
 import com.nextgis.maplib.util.MapUtil
 import com.nextgis.maplib.util.MultiPolygonGeometryRepair
+import com.nextgis.maplib.util.StakeoutGeometryTarget
 import com.nextgis.maplibui.GISApplication
 import com.nextgis.maplibui.api.EditEventListener
 import com.nextgis.maplibui.api.ILayerUI
@@ -127,6 +129,7 @@ import com.nextgis.mobile.R
 import com.nextgis.mobile.activity.MainActivity
 import com.nextgis.mobile.util.AppConstants
 import com.nextgis.mobile.util.AppSettingsConstants
+import com.nextgis.mobile.stakeout.StakeoutController
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import org.maplibre.android.camera.CameraPosition
@@ -143,6 +146,7 @@ import org.maplibre.geojson.Point
 import org.maplibre.geojson.Polygon
 import java.io.IOException
 import java.lang.ref.WeakReference
+import java.text.NumberFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.math.atan
@@ -187,6 +191,14 @@ public class MapFragment
     protected var mStatusPanel: FrameLayout? = null
     protected var mScaleRulerLayout: LinearLayout? = null
     protected var mScaleRulerText: TextView? = null
+    private var mStakeoutPanel: View? = null
+    private var mStakeoutDirection: ImageView? = null
+    private var mStakeoutDistance: TextView? = null
+    private var mStakeoutDetails: TextView? = null
+    private var mStakeoutSound: ImageButton? = null
+    private var mStakeoutStop: ImageButton? = null
+    private var mStakeoutController: StakeoutController? = null
+    private var lastStakeoutUiState: StakeoutController.UiState? = null
 
     //, mZoomLevel;
     protected var mScaleRuler: ImageView? = null
@@ -276,6 +288,16 @@ public class MapFragment
         mApp = mActivity!!.application as MainApplication
         mVibrator = mActivity!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         mGpsEventSource = mApp!!.gpsEventSource
+        mStakeoutController = StakeoutController(
+            mActivity!!,
+            mPreferences!!,
+            mGpsEventSource!!,
+            object : StakeoutController.Listener {
+                override fun onStakeoutStateChanged(state: StakeoutController.UiState) {
+                    updateStakeoutWidget(state)
+                }
+            }
+        )
 
         mMapRef = WeakReference(MapViewOverlays(mActivity, mApp!!.map as MapDrawable))
 
@@ -385,6 +407,14 @@ public class MapFragment
         if (mZoom != null) mZoom!!.text = zoomText
 
         mScaleRulerLayout = view.findViewById(R.id.ll_ruler)
+        mStakeoutPanel = view.findViewById(R.id.stakeout_panel)
+        mStakeoutDirection = view.findViewById(R.id.stakeout_direction)
+        mStakeoutDistance = view.findViewById(R.id.stakeout_distance)
+        mStakeoutDetails = view.findViewById(R.id.stakeout_details)
+        mStakeoutSound = view.findViewById(R.id.stakeout_sound)
+        mStakeoutStop = view.findViewById(R.id.stakeout_stop)
+        mStakeoutSound?.setOnClickListener { mStakeoutController?.toggleMuted() }
+        mStakeoutStop?.setOnClickListener { setNewMode(MODE_NORMAL) }
         drawScaleRuler()
 
         return view
@@ -444,8 +474,20 @@ public class MapFragment
 
         mapDrawable.maplibreMap = mapboxMap
 
-        mapboxMap.uiSettings.isRotateGesturesEnabled = false
+        mapboxMap.uiSettings.isRotateGesturesEnabled = isMapRotationEnabled
+        mapboxMap.uiSettings.isTiltGesturesEnabled = false
         mapboxMap.uiSettings.isCompassEnabled = false
+
+        val restoredBearing = if (isMapRotationEnabled) {
+            try {
+                mPreferences?.getFloat(AppSettingsConstants.KEY_PREF_MAP_BEARING, 0f) ?: 0f
+            } catch (_: ClassCastException) {
+                0f
+            }
+        } else {
+            0f
+        }
+        setMapBearing(mapboxMap, restoredBearing.toDouble(), false)
 
         mapboxMap.addOnCameraIdleListener(this)
 
@@ -1078,12 +1120,18 @@ public class MapFragment
             MODE_EDIT_BY_WALK -> "MODE_EDIT_BY_WALK"
             MODE_EDIT_BY_TOUCH -> "MODE_EDIT_BY_TOUCH"
             MODE_SELECT_FOR_VIEW -> "MODE_SELECT_FOR_VIEW"
+            MODE_STAKEOUT -> "MODE_STAKEOUT"
             else -> "MODE_UNKNOWN($value)"
         }
     }
 
     fun setNewMode(mode: Int, vararg readOnly: Boolean) {
         val previousMode = this.mode
+        if (previousMode == MODE_STAKEOUT && mode != MODE_STAKEOUT) {
+            mStakeoutController?.stop()
+            mStakeoutPanel?.visibility = View.GONE
+            lastStakeoutUiState = null
+        }
         var askPerm = false
         if (mMapRef.get()!!.map!!.checkMeasurment(mode)){
             mRulerOverlay!!.stopMeasuring()
@@ -1109,6 +1157,7 @@ public class MapFragment
 
         this.mode = mode
         walkUiAttachedInProcess = mode == MODE_EDIT_BY_WALK
+        stakeoutUiAttachedInProcess = mode == MODE_STAKEOUT
 
         hideMainButton()
         hideAddByTapButton()
@@ -1134,6 +1183,13 @@ public class MapFragment
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_NONE
                 undoRedoOverlay!!.clearHistory()
                 mMapRef.get()!!.map!!.unselectFeatureFromView()
+                mStakeoutPanel?.visibility = View.GONE
+                mScaleRulerLayout?.visibility = if (
+                    mPreferences?.getBoolean(
+                        AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER,
+                        false
+                    ) == true
+                ) View.VISIBLE else View.GONE
             }
 
             MODE_EDIT -> {
@@ -1253,6 +1309,7 @@ public class MapFragment
                             R.id.menu_feature_edit_attributes -> showSelectedFeatureAttributesFormFromEditMode()
                             R.id.menu_feature_delete -> deleteFeature()
                             R.id.menu_feature_attributes -> setNewMode(MODE_INFO)
+                            R.id.menu_feature_stakeout -> startStakeout()
                         }
                         true
                     })
@@ -1286,12 +1343,30 @@ public class MapFragment
                                 true
                             )
                             R.id.menu_feature_edit -> startLayerEditMode()
+                            R.id.menu_feature_stakeout -> startStakeout()
                         }
                         true
                     })
 
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_HIGHLIGHT
                 undoRedoOverlay!!.clearHistory()
+            }
+
+            MODE_STAKEOUT -> {
+                if (mSelectedLayer == null || mStakeoutController?.isActive != true) {
+                    setNewMode(MODE_NORMAL)
+                    return
+                }
+                mSelectedLayer!!.isLocked = true
+                toolbar.visibility = View.GONE
+                mActivity!!.title = getString(R.string.stakeout_title)
+                mActivity!!.setSubtitle(null)
+                mFinishListener = View.OnClickListener { setNewMode(MODE_NORMAL) }
+                editLayerOverlay!!.mode = EditLayerOverlay.MODE_HIGHLIGHT
+                undoRedoOverlay!!.clearHistory()
+                mStakeoutPanel?.visibility = View.VISIBLE
+                mScaleRulerLayout?.visibility = View.GONE
+                if (mStatusPanelMode != 0) mStatusPanel?.visibility = View.VISIBLE
             }
 
             MODE_INFO -> {
@@ -1434,7 +1509,7 @@ public class MapFragment
     }
 
     protected fun defineMenuItems() {
-        if (mode == MODE_NORMAL || mode == MODE_INFO) return
+        if (mode == MODE_NORMAL || mode == MODE_INFO || mode == MODE_STAKEOUT) return
 
         if (mSelectedLayer == null) {
             setNewMode(MODE_NORMAL)
@@ -1491,6 +1566,17 @@ public class MapFragment
             if (item != null) {
                 ControlHelper.setEnabled(item, !isViewOnlySelection && editingAllowed)
             }
+
+            item = toolbar.menu.findItem(R.id.menu_feature_stakeout)
+            if (item != null) {
+                val geometry = editLayerOverlay!!.selectedFeatureGeometry
+                ControlHelper.setEnabled(
+                    item,
+                    hasSelectedFeature
+                            && geometry != null
+                            && StakeoutGeometryTarget.isSupportedType(geometry.type)
+                )
+            }
         }
 
         val editAttributesItem = toolbar.menu.findItem(com.nextgis.maplibui.R.id.menu_edit_attributes)
@@ -1517,6 +1603,15 @@ public class MapFragment
         editLayerOverlay?.mBottomToolbar = null
 
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        if (mStakeoutController?.isActive == true) {
+            mSelectedLayer?.isLocked = false
+        }
+        mStakeoutController?.release()
+        mStakeoutController = null
+        super.onDestroy()
     }
 
 
@@ -1807,6 +1902,31 @@ public class MapFragment
 
             editLayerOverlay!!.setSelectedLayer(mSelectedLayer)
             editLayerOverlay!!.selectedFeature = feature
+        }
+
+        val savedStakeoutSession =
+            savedInstanceState?.getInt(KEY_MODE, MODE_NORMAL) == MODE_STAKEOUT
+        if (savedStakeoutSession) {
+            if (stakeoutUiAttachedInProcess) {
+                val geometry = editLayerOverlay?.selectedFeatureGeometry
+                if (geometry != null) {
+                    try {
+                        mStakeoutController?.start(geometry)
+                    } catch (exception: RuntimeException) {
+                        HyperLog.w(
+                            Constants.TAG,
+                            "Stakeout restore after configuration change failed",
+                            exception
+                        )
+                        mode = MODE_SELECT_FOR_VIEW
+                    }
+                } else {
+                    mode = MODE_SELECT_FOR_VIEW
+                }
+            } else {
+                // Do not silently restart audible guidance after process death.
+                mode = if (mSelectedLayer != null) MODE_SELECT_FOR_VIEW else MODE_NORMAL
+            }
         }
 
         val ctx = context
@@ -2246,6 +2366,7 @@ public class MapFragment
                 "hasEdits=${editLayerOverlay?.hasEdits() == true}"
         )
         persistManualGeometryDraft("onPause")
+        mStakeoutController?.setForeground(false)
         if (null != mCurrentLocationOverlay) {
             mCurrentLocationOverlay!!.stopShowingCurrentLocation()
         }
@@ -2260,8 +2381,13 @@ public class MapFragment
         val edit = mPreferences!!.edit()
         if (null != mMapRef.get()) {
             if (mMapRef.get()!!.map!!.maplibreMap != null) {
+                val mapLibreMap = mMapRef.get()!!.map!!.maplibreMap
                 edit.putFloat(SettingsConstantsUI.KEY_PREF_ZOOM_LEVEL,
-                    mMapRef.get()!!.map!!.maplibreMap.cameraPosition.zoom.toFloat())
+                    mapLibreMap.cameraPosition.zoom.toFloat())
+                edit.putFloat(
+                    AppSettingsConstants.KEY_PREF_MAP_BEARING,
+                    if (isMapRotationEnabled) mapLibreMap.cameraPosition.bearing.toFloat() else 0f
+                )
 
                 val point2 = mMapRef.get()!!.map.getMaplibreCenter()
                 edit.putLong(
@@ -2310,7 +2436,7 @@ public class MapFragment
 
         showControls =
             mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER, false)
-        if (showControls) mScaleRulerLayout!!.visibility = View.VISIBLE
+        if (showControls && mode != MODE_STAKEOUT) mScaleRulerLayout!!.visibility = View.VISIBLE
         else mScaleRulerLayout!!.visibility = View.GONE
 
         showControls = mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_ZOOM, true)
@@ -2356,6 +2482,7 @@ public class MapFragment
         }
         if (null != mGpsEventSource) {
             mGpsEventSource!!.addListener(this)
+            mStakeoutController?.setForeground(true)
             if (mGPSDialog == null || !mGPSDialog!!.isShowing) mGPSDialog =
                 NotificationHelper.showLocationInfo(
                     activity
@@ -2386,7 +2513,7 @@ public class MapFragment
                 mStatusPanel!!.visibility = View.VISIBLE
                 fillStatusPanel(mGpsEventSource!!.lastKnownLocation)
 
-                if (mode != MODE_NORMAL && mStatusPanelMode != 3) mStatusPanel!!.visibility =
+                if (mode != MODE_NORMAL && mode != MODE_STAKEOUT && mStatusPanelMode != 3) mStatusPanel!!.visibility =
                     View.INVISIBLE
             } else {
                 mStatusPanel!!.removeAllViews()
@@ -2607,6 +2734,7 @@ public class MapFragment
             //open form
             val layer = layers[0] as VectorLayer
 
+            ensureLayerVisibleForCreation(layer)
             mSelectedLayer = layer
             editLayerOverlay!!.setSelectedLayer(layer)
             setNewMode(MODE_SELECT_ACTION)
@@ -2645,6 +2773,7 @@ public class MapFragment
             //open form
             val layer = layers[0] as VectorLayer
 
+            ensureLayerVisibleForCreation(layer)
             mSelectedLayer = layer
             editLayerOverlay!!.setSelectedLayer(layer)
             createPointFromOverlay(false)
@@ -2702,6 +2831,7 @@ public class MapFragment
             //open form
             val vectorLayer = layers[0]
             if (vectorLayer is ILayerUI) {
+                ensureLayerVisibleForCreation(vectorLayer as VectorLayer)
                 mSelectedLayer = vectorLayer as VectorLayer
                 editLayerOverlay!!.setSelectedLayer(mSelectedLayer)
 
@@ -2734,23 +2864,7 @@ public class MapFragment
         }
     }
 
-    protected fun removeHideLayers(layerList: MutableList<ILayer>): MutableList<ILayer> {
-        var i = 0
-        while (i < layerList.size) {
-            val layerView = layerList[i] as ILayerView
-            if (null != layerView) {
-                if (!layerView.isVisible) {
-                    layerList.removeAt(i)
-                    i--
-                }
-            }
-            i++
-        }
-
-        return layerList
-    }
-
-    /** Visible vector layers allowed for object creation (collector «Редактируемый» policy). */
+    /** Vector layers allowed for object creation (collector «Редактируемый» policy). */
     protected fun filterLayersForCreation(layerList: MutableList<ILayer>): MutableList<ILayer> {
         var i = 0
         while (i < layerList.size) {
@@ -2761,7 +2875,14 @@ public class MapFragment
             }
             i++
         }
-        return removeHideLayers(layerList)
+        return layerList
+    }
+
+    /** Object creation must not start in a hidden target layer. */
+    private fun ensureLayerVisibleForCreation(layer: VectorLayer) {
+        if (layer.isVisible) return
+        layer.setVisible(true)
+        layer.save()
     }
 
     private fun showLayerNotEditableInCollectorToast() {
@@ -2789,6 +2910,7 @@ public class MapFragment
             // around createPointFromOverlay(true) — reconciled: keep fork pipeline as the more
             // deterministic path (§17 Walk reconciliation).
             val layer = layers[0] as VectorLayer
+            ensureLayerVisibleForCreation(layer)
             mSelectedLayer = layer
             editLayerOverlay!!.setSelectedLayer(layer)
             editLayerOverlay!!.newGeometryByWalk()
@@ -2993,9 +3115,9 @@ public class MapFragment
         useCreatePointFromOverlay: Boolean,
         startFillByWalk: Boolean
     ) {
-        val vectorLayer = layer as VectorLayer?
-        if (layer == null) return  // TODO toast?
+        val vectorLayer = layer as? VectorLayer ?: return  // TODO toast?
 
+        ensureLayerVisibleForCreation(vectorLayer)
 
         if (mSelectedLayer != null) mSelectedLayer!!.isLocked = false
 
@@ -4059,24 +4181,29 @@ public class MapFragment
     fun locateCurrentPosition() {
         val mapDrawable = mapDrawableOrNull
         if (mCurrentCenter != null && mapDrawable?.maplibreMap != null) {
+            val mapLibreMap = mapDrawable.maplibreMap
+            val targetZoom = maxOf(mapLibreMap.cameraPosition.zoom, LOCATE_MIN_ZOOM)
+                .coerceIn(mapLibreMap.minZoomLevel, mapLibreMap.maxZoomLevel)
             mapViewOrNull!!.panTo(mCurrentCenter)
 
             val lonLat = convert3857To4326(mCurrentCenter!!.x, mCurrentCenter!!.y)
 
             val targetPosition = CameraPosition.Builder()
                 .target(LatLng(lonLat[1], lonLat[0]))
-                .zoom(mapDrawable.maplibreMap.cameraPosition.zoom)
+                .zoom(targetZoom)
                 .bearing(0.0)
                 .tilt(0.0)
                 .build()
 
-            mapDrawable.maplibreMap.animateCamera(
+            persistMapBearing(0f)
+            mapLibreMap.animateCamera(
                 CameraUpdateFactory.newCameraPosition(targetPosition),
-                2000)
+                CAMERA_ANIMATION_MS)
             /* Menu «локация» only moves the camera; MapLibre puck is updated from GPS callbacks.
                Push the current fix onto user-location-source so the marker appears without resume. */
             updateLastLocation()
-        } else {
+        } else if (!locateFirstLayerExtent()) {
+            mapDrawable?.maplibreMap?.let { setMapBearing(it, 0.0, true) }
             Toast.makeText(
                 mActivity,
                 com.nextgis.maplibui.R.string.error_no_location,
@@ -4084,6 +4211,123 @@ public class MapFragment
             ).show()
         }
     }
+
+    val isMapRotationEnabled: Boolean
+        get() = mPreferences?.getBoolean(
+            AppSettingsConstants.KEY_PREF_MAP_ROTATION_ENABLED,
+            false
+        ) ?: false
+
+    fun toggleMapRotation(): Boolean {
+        val enabled = !isMapRotationEnabled
+        mPreferences?.edit()
+            ?.putBoolean(AppSettingsConstants.KEY_PREF_MAP_ROTATION_ENABLED, enabled)
+            ?.apply()
+
+        mapDrawableOrNull?.maplibreMap?.let { mapLibreMap ->
+            mapLibreMap.uiSettings.isRotateGesturesEnabled = enabled
+            mapLibreMap.uiSettings.isTiltGesturesEnabled = false
+            if (!enabled) {
+                persistMapBearing(0f)
+                setMapBearing(mapLibreMap, 0.0, true)
+            }
+        }
+        return enabled
+    }
+
+    private fun locateFirstLayerExtent(): Boolean {
+        val mapView = mapViewOrNull ?: return false
+        val mapDrawable = mapDrawableOrNull ?: return false
+        val mapLibreMap = mapDrawable.maplibreMap ?: return false
+        var fallbackLayer: ILayer? = null
+        var fallbackExtent: GeoEnvelope? = null
+        for (candidate in mapView.getAllLayers()) {
+            try {
+                val extent = candidate.extents
+                if (isUsableExtent(extent)) {
+                    fallbackLayer = candidate
+                    fallbackExtent = extent
+                    break
+                }
+            } catch (exception: RuntimeException) {
+                HyperLog.w(
+                    Constants.TAG,
+                    "Locate fallback: cannot read extent for layer id=${candidate.id}",
+                    exception
+                )
+            }
+        }
+        val layer = fallbackLayer ?: return false
+        val extent = fallbackExtent ?: return false
+
+        persistMapBearing(0f)
+        setMapBearing(mapLibreMap, 0.0, false)
+        val center = extent.center
+        val lonLat = convert3857To4326(center.x, center.y)
+        val fallbackZoom = LOCATE_MIN_ZOOM.coerceIn(
+            mapLibreMap.minZoomLevel,
+            mapLibreMap.maxZoomLevel
+        )
+        mapDrawable.setZoomAndCenter(
+            fallbackZoom.toFloat(),
+            center,
+            true,
+            CAMERA_ANIMATION_MS
+        )
+        val targetPosition = CameraPosition.Builder()
+            .target(LatLng(lonLat[1], lonLat[0]))
+            .zoom(fallbackZoom)
+            .bearing(0.0)
+            .tilt(0.0)
+            .build()
+        mapLibreMap.animateCamera(
+            CameraUpdateFactory.newCameraPosition(targetPosition),
+            CAMERA_ANIMATION_MS
+        )
+        HyperLog.v(
+            Constants.TAG,
+            "Locate fallback: layer=\"${layer.name}\" id=${layer.id}"
+        )
+        return true
+    }
+
+    private fun isUsableExtent(extent: GeoEnvelope?): Boolean {
+        if (extent == null || !extent.isInit()) return false
+        val coordinates = doubleArrayOf(
+            extent.minX,
+            extent.minY,
+            extent.maxX,
+            extent.maxY
+        )
+        return coordinates.all { it.isFinite() } &&
+            extent.minX <= extent.maxX && extent.minY <= extent.maxY
+    }
+
+    private fun persistMapBearing(bearing: Float) {
+        mPreferences?.edit()
+            ?.putFloat(AppSettingsConstants.KEY_PREF_MAP_BEARING, bearing)
+            ?.apply()
+    }
+
+    private fun setMapBearing(mapLibreMap: MapLibreMap, bearing: Double, animate: Boolean) {
+        val current = mapLibreMap.cameraPosition
+        val safeBearing = if (bearing.isFinite()) normalizeBearing(bearing) else 0.0
+        val targetPosition = CameraPosition.Builder()
+            .target(current.target)
+            .zoom(current.zoom)
+            .bearing(safeBearing)
+            .tilt(0.0)
+            .build()
+        val update = CameraUpdateFactory.newCameraPosition(targetPosition)
+        if (animate) {
+            mapLibreMap.animateCamera(update, NORTH_UP_ANIMATION_MS)
+        } else {
+            mapLibreMap.moveCamera(update)
+        }
+    }
+
+    private fun normalizeBearing(bearing: Double): Double =
+        ((bearing % 360.0) + 360.0) % 360.0
 
 
     fun addNGWLayer() {
@@ -4206,6 +4450,9 @@ public class MapFragment
         @Volatile
         private var walkUiAttachedInProcess = false
 
+        @Volatile
+        private var stakeoutUiAttachedInProcess = false
+
         const val MODE_NORMAL: Int = 0
         const val MODE_SELECT_ACTION: Int = 1
         const val MODE_EDIT: Int = 2
@@ -4213,6 +4460,7 @@ public class MapFragment
         const val MODE_EDIT_BY_WALK: Int = 4
         public const val MODE_EDIT_BY_TOUCH: Int = 5
         const val MODE_SELECT_FOR_VIEW: Int = 6
+        const val MODE_STAKEOUT: Int = 7
 
 
         protected const val KEY_MODE: String = "mode"
@@ -4221,6 +4469,88 @@ public class MapFragment
         protected const val BUNDLE_KEY_SAVED_FEATURE: String = "feature_blob"
         protected const val BUNDLE_KEY_IS_MEASURING: String = "is_measuring"
         const val EDIT_LAYER: Int = 2
+        private const val LOCATE_MIN_ZOOM = 12.0
+        private const val CAMERA_ANIMATION_MS = 800
+        private const val NORTH_UP_ANIMATION_MS = 350
+    }
+
+    private fun startStakeout() {
+        val layer = mSelectedLayer ?: return
+        val featureId = editLayerOverlay?.selectedFeatureId ?: Constants.NOT_FOUND.toLong()
+        if (featureId == Constants.NOT_FOUND.toLong()) return
+        val geometry = editLayerOverlay?.selectedFeatureGeometry
+            ?: layer.getLargeGeometryForId(featureId)
+            ?: return
+        try {
+            mStakeoutController?.start(geometry)
+            setNewMode(MODE_STAKEOUT)
+        } catch (exception: RuntimeException) {
+            HyperLog.w(Constants.TAG, "Stakeout target initialization failed", exception)
+            Toast.makeText(context, R.string.stakeout_unavailable, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun updateStakeoutWidget(state: StakeoutController.UiState) {
+        lastStakeoutUiState = state
+        if (mode != MODE_STAKEOUT) return
+        mStakeoutPanel?.visibility = View.VISIBLE
+        mStakeoutSound?.setImageResource(
+            if (state.muted) R.drawable.ic_stakeout_sound_off
+            else R.drawable.ic_stakeout_sound_on
+        )
+        mStakeoutSound?.contentDescription = getString(
+            if (state.muted) R.string.stakeout_unmute else R.string.stakeout_mute
+        )
+
+        if (state.waitingForFix || state.distanceMeters == null) {
+            mStakeoutDistance?.setText(R.string.stakeout_waiting_for_gps)
+            mStakeoutDetails?.visibility = View.GONE
+            mStakeoutDirection?.alpha = 0.35f
+            return
+        }
+
+        val format = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
+            maximumFractionDigits = if (state.distanceMeters < 10.0) 2 else 1
+            minimumFractionDigits = if (state.distanceMeters < 10.0) 2 else 0
+        }
+        val distance = getString(
+            R.string.stakeout_distance_format,
+            format.format(state.distanceMeters)
+        )
+        mStakeoutDistance?.text = if (state.reached) {
+            "$distance\n${getString(R.string.stakeout_reached)}"
+        } else {
+            distance
+        }
+        val details = mutableListOf<String>()
+        state.accuracyMeters?.let { accuracy ->
+            val accuracyFormat = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
+                maximumFractionDigits = 3
+                minimumFractionDigits = 0
+            }
+            details += getString(
+                R.string.stakeout_accuracy_format,
+                accuracyFormat.format(accuracy)
+            )
+        }
+        if (!state.usesDeviceCompass) {
+            details += cardinalDirection(state.absoluteBearingDegrees)
+        }
+        mStakeoutDetails?.text = details.joinToString(" · ")
+        mStakeoutDetails?.visibility = if (details.isEmpty()) View.GONE else View.VISIBLE
+        mStakeoutDirection?.alpha = 1f
+        mStakeoutDirection?.rotation = if (state.usesDeviceCompass) {
+            state.relativeBearingDegrees
+        } else {
+            val mapBearing = mapDrawableOrNull?.maplibreMap?.cameraPosition?.bearing ?: 0.0
+            normalizeBearing(state.absoluteBearingDegrees - mapBearing).toFloat()
+        }
+    }
+
+    private fun cardinalDirection(bearingDegrees: Float): String {
+        val directions = resources.getStringArray(R.array.stakeout_cardinal_directions)
+        val index = ((bearingDegrees + 22.5f) / 45f).toInt() % directions.size
+        return directions[index]
     }
 
     private fun startLayerEditMode() {
@@ -4561,6 +4891,12 @@ public class MapFragment
         mScaleRulerText!!.text = rulerText
         if (mZoom != null)
             mZoom!!.text = zoomText
+        if (isMapRotationEnabled) {
+            mapDrawableOrNull?.maplibreMap?.cameraPosition?.bearing?.let {
+                persistMapBearing(it.toFloat())
+            }
+        }
+        lastStakeoutUiState?.let { updateStakeoutWidget(it) }
     }
 
     private inner class MessageStyling : BroadcastReceiver() {

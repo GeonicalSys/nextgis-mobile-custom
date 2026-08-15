@@ -50,4 +50,9 @@
         android:icon="@drawable/ic_action_information_light"
         android:title="@string/action_attributes"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_feature_stakeout"
+        android:icon="@drawable/ic_stakeout"
+        android:title="@string/stakeout_action"
+        app:showAsAction="always"/>
 </menu>

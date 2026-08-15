@@ -50,6 +50,20 @@ triggers:
       - maplibui/docs/manifest.yaml
     verify: [AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-NGW-ACCOUNT-ADD]
     strict_docs: true
+  - id: NGW-RESOURCE-SELECTION-LIFECYCLE
+    paths:
+      - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    owners: [maplibui]
+    read:
+      - maplibui/docs/README.md
+      - docs/reference/official-differences.md
+    invariants: [INV-NGW-RESOURCE-DIALOG-LIFECYCLE]
+    must_update_docs:
+      - maplibui/docs/README.md
+      - maplibui/docs/manifest.yaml
+      - docs/reference/official-differences.md
+    verify: [AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-DEBUG, SMOKE-NGW-CONNECTION-FAILURE]
+    strict_docs: true
   - id: REPOSITORY-TOPOLOGY
     paths: [.gitmodules, settings.gradle, tools/upstream-sync.ps1]
     owners: [app, maplib, maplibui, easypicker-module]
@@ -73,11 +87,11 @@ triggers:
     read:
       - docs/architecture/map-rendering.md
       - maplib/docs/README.md
-    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-NO-TRACK-FLAGS, INV-LOCATION-CURSOR-TOP]
+    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-NO-TRACK-FLAGS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS]
     must_update_docs:
       - docs/architecture/map-rendering.md
       - maplib/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, SMOKE-MAP-COLD-START, SMOKE-LOCATION-CURSOR-TOP, SMOKE-HOT-RASTER]
+    verify: [AUTO-MAPLIB-UNIT, SMOKE-MAP-COLD-START, SMOKE-LOCATION-CURSOR-TOP, SMOKE-HOT-RASTER, SMOKE-MAP-CAMERA-CONTROLS]
     strict_docs: false
   - id: MULTIPOLYGON-REPAIR
     paths:
@@ -136,6 +150,34 @@ triggers:
       - app/docs/README.md
       - app/docs/manifest.yaml
     verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    strict_docs: true
+  - id: STAKEOUT-GUIDANCE
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
+      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - maplib/src/test/java/com/nextgis/maplib/util/StakeoutGeometryTargetTest.java
+      - maplib/src/test/java/com/nextgis/maplib/util/StakeoutGuidancePolicyTest.java
+      - app/src/main/java/com/nextgis/mobile/stakeout
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java
+      - app/src/main/res/layout/layout_stakeout_panel.xml
+      - app/src/main/res/xml/preferences_location.xml
+    owners: [maplib, app]
+    read:
+      - docs/architecture/stakeout.md
+      - docs/reference/settings-and-config.md
+    invariants: [INV-STAKEOUT-GUIDANCE]
+    must_update_docs:
+      - docs/architecture/stakeout.md
+      - docs/reference/settings-and-config.md
+      - docs/registry/config-keys.yaml
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - maplib/docs/manifest.yaml
+      - app/docs/README.md
+      - app/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
     strict_docs: true
   - id: LAYER-FILL-AND-REORDER
     paths:
@@ -309,3 +351,31 @@ triggers:
       - docs/registry/ecosystem.yaml
     verify: [AUTO-DOCS-VALIDATE, SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-IMPORT]
     strict_docs: false
+  - id: LOCAL-VECTOR-LAYERS
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/util/GeoJSONUtil.java
+      - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
+      - maplib/src/main/java/com/nextgis/maplib/util/CoordinatePointParser.java
+      - maplib/src/main/java/com/nextgis/maplib/util/CoordinatePointLayerImporter.java
+      - maplib/src/test/java/com/nextgis/maplib/util/GeoJSONUtilCrsTest.java
+      - maplib/src/test/java/com/nextgis/maplib/util/CoordinatePointParserTest.java
+      - maplibui/src/main/java/com/nextgis/maplibui/mapui/LayerFactoryUI.java
+      - maplibui/src/main/java/com/nextgis/maplibui/dialog/CreateLocalLayerDialog.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    owners: [maplib, maplibui, app]
+    read:
+      - maplib/docs/README.md
+      - docs/reference/official-differences.md
+    invariants: [INV-LOCAL-VECTOR-LAYERS]
+    must_update_docs:
+      - maplib/docs/README.md
+      - maplib/docs/manifest.yaml
+      - maplibui/docs/README.md
+      - maplibui/docs/manifest.yaml
+      - app/docs/README.md
+      - app/docs/manifest.yaml
+      - docs/reference/official-differences.md
+    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-LOCAL-VECTOR-LAYERS]
+    strict_docs: true

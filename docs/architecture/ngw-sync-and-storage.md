@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-07-30
+last_verified: 2026-08-15
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
@@ -61,6 +61,8 @@ NGW account привязан не только к серверным credentials
 Release ЛИСА/Белка используют `com.nextgis.account.geonical`, debug —
 `com.nextgis.account.debug`. GIS provider аналогично должен совпадать между
 `BuildConfig.providerAuth`, manifest provider и `SyncAdapter.contentAuthority`.
+Выпуск `3.1.2.8` меняет только version tuple (`200` release / `201` debug) и не
+меняет эти application/account/provider identity.
 Library defaults нельзя считать достаточными: app variant обязан перекрывать оба
 account resource keys. Иначе HTTP-аутентификация проходит, но Android отклоняет
 `addAccountExplicitly()` как аккаунт незарегистрированного типа.

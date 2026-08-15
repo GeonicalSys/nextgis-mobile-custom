@@ -80,6 +80,7 @@ import com.nextgis.mobile.util.AppUpdateManager;
 import com.nextgis.mobile.util.CustomPreference;
 import com.nextgis.mobile.util.IntEditTextPreference;
 import com.nextgis.mobile.util.SelectMapPathPreference;
+import com.nextgis.mobile.stakeout.StakeoutSettings;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -203,6 +204,12 @@ public class SettingsFragment
                 final EditTextPreference accurateMaxCount = (EditTextPreference) findPreference(
                         SettingsConstants.KEY_PREF_LOCATION_ACCURATE_COUNT);
                 initializeAccurateTaking(accurateMaxCount);
+
+                initializeStakeoutThresholds(
+                        (EditTextPreference) findPreference(StakeoutSettings.KEY_FAR_DISTANCE),
+                        (EditTextPreference) findPreference(StakeoutSettings.KEY_MEDIUM_DISTANCE),
+                        (EditTextPreference) findPreference(StakeoutSettings.KEY_NEAR_DISTANCE),
+                        (EditTextPreference) findPreference(StakeoutSettings.KEY_REACHED_DISTANCE));
                 break;
             case SettingsConstantsUI.ACTION_PREFS_TRACKING:
                 //addPreferencesFromResource(R.xml.preferences_tracks);
@@ -835,6 +842,48 @@ public class SettingsFragment
     }
 
 
+    private static void initializeStakeoutThresholds(
+            final EditTextPreference far,
+            final EditTextPreference medium,
+            final EditTextPreference near,
+            final EditTextPreference reached)
+    {
+        final EditTextPreference[] preferences = {far, medium, near, reached};
+        for (EditTextPreference preference : preferences) {
+            if (preference == null) {
+                continue;
+            }
+            preference.setSummary(preference.getContext().getString(
+                    R.string.stakeout_threshold_summary, preference.getText()));
+            preference.setOnPreferenceChangeListener((changedPreference, newValue) -> {
+                try {
+                    double farValue = StakeoutSettings.parseDistance(
+                            changedPreference == far ? newValue.toString() : far.getText());
+                    double mediumValue = StakeoutSettings.parseDistance(
+                            changedPreference == medium ? newValue.toString() : medium.getText());
+                    double nearValue = StakeoutSettings.parseDistance(
+                            changedPreference == near ? newValue.toString() : near.getText());
+                    double reachedValue = StakeoutSettings.parseDistance(
+                            changedPreference == reached ? newValue.toString() : reached.getText());
+                    if (StakeoutSettings.isValid(
+                            farValue, mediumValue, nearValue, reachedValue)) {
+                        changedPreference.setSummary(changedPreference.getContext().getString(
+                                R.string.stakeout_threshold_summary, newValue.toString()));
+                        return true;
+                    }
+                } catch (NumberFormatException ignored) {
+                    // The same human-readable validation message covers empty/non-numeric input.
+                }
+                Toast.makeText(
+                        changedPreference.getContext(),
+                        R.string.stakeout_threshold_invalid,
+                        Toast.LENGTH_LONG).show();
+                return false;
+            });
+        }
+    }
+
+
     private static String getMinSummary(
             Context context,
             CharSequence newEntry,
@@ -891,6 +940,11 @@ public class SettingsFragment
         editor.remove(SettingsConstants.KEY_PREF_LOCATION_MIN_TIME);
         editor.remove(SettingsConstants.KEY_PREF_LOCATION_MIN_DISTANCE);
         editor.remove(SettingsConstants.KEY_PREF_LOCATION_ACCURATE_COUNT);
+        editor.remove(StakeoutSettings.KEY_SOUND_ENABLED);
+        editor.remove(StakeoutSettings.KEY_FAR_DISTANCE);
+        editor.remove(StakeoutSettings.KEY_MEDIUM_DISTANCE);
+        editor.remove(StakeoutSettings.KEY_NEAR_DISTANCE);
+        editor.remove(StakeoutSettings.KEY_REACHED_DISTANCE);
         editor.remove(SettingsConstants.KEY_PREF_TRACKS_SOURCE);
         editor.remove(SettingsConstants.KEY_PREF_TRACKS_MIN_TIME);
         editor.remove(SettingsConstants.KEY_PREF_TRACKS_MIN_DISTANCE);

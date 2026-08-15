@@ -12,4 +12,9 @@
         android:icon="@drawable/ic_action_edit_light"
         android:title="@string/action_start_layer_edit"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_feature_stakeout"
+        android:icon="@drawable/ic_stakeout"
+        android:title="@string/stakeout_action"
+        app:showAsAction="always"/>
 </menu>

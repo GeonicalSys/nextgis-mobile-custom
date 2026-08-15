@@ -1,7 +1,7 @@
 ---
 title: С чего начать — GeonicalSystem NextGIS Mobile
 type: guide
-last_verified: 2026-08-01
+last_verified: 2026-08-15
 related_code:
   - app/build.gradle
   - settings.gradle
@@ -53,11 +53,13 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 |---|---|
 | `MapDrawable`, style/source/layer | `architecture/map-rendering.md`, `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY` |
 | `LayerFillService`, import NGRc/Collector | map rendering + collector docs + `maplibui` pack |
+| локальные GeoJSON/KML/GPX, WGS 84 или редактируемость ручного слоя | `INV-LOCAL-VECTOR-LAYERS`, packs `maplib`, `maplibui` и `app` |
 | `GISApplication`, schema rebuild, removal | collector docs + `INV-BACKUP-BEFORE-DESTRUCTION` |
 | `MaplibreMapInteraction` или `IGISApplication` | dependencies + change-impact + packs `app`, `maplib`, `maplibui` |
 | `app/build.gradle` | flavors/versioning + release runbook |
 | `.gitmodules`, submodule pointers, upstream | upstream runbook + overlaps registry |
 | preferences/manifest metadata | settings registry + owning module pack |
+| вынос координат, звуковые зоны, частый GPS | `architecture/stakeout.md`, `INV-STAKEOUT-GUIDANCE`, packs `app` и `maplib` |
 | формат/права/состав NGW или Collector между QGIS и Android | `architecture/lisa-ecosystem.md`, `registry/ecosystem.yaml`, затем docs проекта-владельца |
 | launcher, профиль QGIS или доставка desktop-плагина | docs `standart_profiles`; Android docs нужны только при изменении общего server contract |
 

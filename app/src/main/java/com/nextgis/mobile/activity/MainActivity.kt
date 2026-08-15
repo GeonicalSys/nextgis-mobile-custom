@@ -176,6 +176,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         PreferenceManager.setDefaultValues(this, R.xml.preferences_map, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_location, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_tracks, false)
+        migratePhotoOverlayDefaults()
 
         if (!mPreferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false)) {
             startActivity(Intent(this, IntroActivity::class.java))
@@ -289,6 +290,27 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             //                if (!isLoggedIn)
             //                    showSnack();
         }
+    }
+
+    private fun migratePhotoOverlayDefaults() {
+        if (mPreferences.getBoolean(
+                AppSettingsConstants.KEY_PREF_PHOTO_OVERLAY_DEFAULTS_MIGRATED,
+                false
+            )
+        ) {
+            return
+        }
+        mPreferences.edit()
+            .putBoolean(
+                SettingsConstantsUI.KEY_PREF_PHOTO_OVERLAY_ENABLED,
+                SettingsConstantsUI.DEFAULT_PHOTO_OVERLAY_ENABLED
+            )
+            .putBoolean(
+                SettingsConstantsUI.KEY_PREF_PHOTO_OVERLAY_USE_OBJECT,
+                SettingsConstantsUI.DEFAULT_PHOTO_OVERLAY_USE_OBJECT
+            )
+            .putBoolean(AppSettingsConstants.KEY_PREF_PHOTO_OVERLAY_DEFAULTS_MIGRATED, true)
+            .apply()
     }
 
     private fun showSnack() {
@@ -456,6 +478,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         mToolbar?.setSubtitle(null)
         mToolbar?.menu?.clear()
         mToolbar?.inflateMenu(R.menu.main)
+        updateMapRotationMenuItem(mToolbar?.menu?.findItem(R.id.menu_map_rotation))
         mLayersFragment!!.isDrawerToggleEnabled = true
         mLayersFragment!!.syncState()
     }
@@ -467,6 +490,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             menuInflater.inflate(R.menu.main, menu)
+            updateMapRotationMenuItem(menu.findItem(R.id.menu_map_rotation))
 
             //restoreActionBar();
             return true
@@ -514,6 +538,12 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
             R.id.menu_locate -> {
                 locateCurrentPosition()
+                return true
+            }
+
+            R.id.menu_map_rotation -> {
+                val enabled = mapFragment?.toggleMapRotation() ?: false
+                updateMapRotationMenuItem(item, enabled)
                 return true
             }
 
@@ -1080,8 +1110,9 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                     if (null != mapFragment) {
                         mapFragment!!.addLocalTMSLayer(uri)
                     }
-                } else if (fileName.lowercase(Locale.getDefault())
-                        .endsWith("geojson")
+                } else if (fileName.lowercase(Locale.getDefault()).let {
+                        it.endsWith("geojson") || it.endsWith("kml") || it.endsWith("gpx")
+                    }
                 ) { //create local vector layer
                     if (null != mapFragment) {
                         mapFragment!!.addLocalVectorLayer(uri)
@@ -1133,6 +1164,21 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         if (null != mapFragment) {
             mapFragment!!.locateCurrentPosition()
         }
+    }
+
+    private fun updateMapRotationMenuItem(
+        item: MenuItem?,
+        enabled: Boolean = mapFragment?.isMapRotationEnabled == true
+    ) {
+        item ?: return
+        item.setIcon(
+            if (enabled) R.drawable.ic_map_rotation_enabled
+            else R.drawable.ic_map_rotation_disabled
+        )
+        item.setTitle(
+            if (enabled) R.string.disable_map_rotation
+            else R.string.allow_map_rotation
+        )
     }
 
 
@@ -1720,6 +1766,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
         val log = menu.findItem(R.id.menu_share_log)
         log?.setVisible(mPreferences.getBoolean("save_log", true))
+        updateMapRotationMenuItem(menu.findItem(R.id.menu_map_rotation))
 
         return super.onPrepareOptionsMenu(menu)
     }

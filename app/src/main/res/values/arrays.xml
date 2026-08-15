@@ -52,4 +52,14 @@
         <item>10</item>
         <item>20</item>
     </string-array>
+    <string-array name="stakeout_cardinal_directions">
+        <item>N</item>
+        <item>NE</item>
+        <item>E</item>
+        <item>SE</item>
+        <item>S</item>
+        <item>SW</item>
+        <item>W</item>
+        <item>NW</item>
+    </string-array>
 </resources>
