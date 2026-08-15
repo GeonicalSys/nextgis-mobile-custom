@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Replace with Belka-specific drawable resources when the final icon is ready. -->
-    <item name="app_launcher_icon" type="drawable">@drawable/ic_launcher</item>
+    <item name="app_launcher_icon" type="drawable">@drawable/ic_launcher_belka</item>
 </resources>

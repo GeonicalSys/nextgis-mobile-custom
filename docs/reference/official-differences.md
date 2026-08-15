@@ -20,8 +20,8 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.8` / `versionCode` 200; Lisa Debug
-`3.1.2.8` / `versionCode` 201. Сверено с официальным приложением `3.1.2` и с
+Состояние форка: Lisa/Belka Release `3.1.2.9` / `versionCode` 202; Lisa Debug
+`3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
@@ -894,7 +894,10 @@ process state.
 ### Два независимых бренда
 
 Из одного проекта выпускаются «ЛИСА» и «Белка». У них разные названия, иконки,
-цветовые ресурсы и идентификатор канала обновления. Release-пакеты имеют
+цветовые ресурсы и идентификатор канала обновления. Manifest, intro и about
+разрешают общую ссылку `app_launcher_icon` через flavor: Lisa использует
+`ic_launcher_lisa`, Belka — отдельный `ic_launcher_belka`, подготовленный для
+всех пяти Android density buckets. Release-пакеты имеют
 GeonicalSystem application ID, поэтому могут устанавливаться отдельно от
 официального NextGIS Mobile. Debug-сборка также отделена от production и может
 использоваться на том же устройстве для проверки изменений.

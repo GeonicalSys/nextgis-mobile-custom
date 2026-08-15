@@ -11,6 +11,10 @@ entrypoints:
 key_components:
   - path: app/build.gradle
     responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, version and signing configuration.
+  - path: app/src/lisa/res/values/launcher_icon.xml
+    responsibility: Lisa launcher, intro and about icon binding to density-specific ic_launcher_lisa resources without changing Belka branding.
+  - path: app/src/belka/res/values/launcher_icon.xml
+    responsibility: Belka-only launcher, intro and about icon binding to density-specific ic_launcher_belka resources without changing Lisa branding.
   - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
     responsibility: Process initialization, logging, GISApplication configuration, creation of editable local vector layers, default OSM at internal index zero and tracks at the top of the reversed layer list for every map/workspace.
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt

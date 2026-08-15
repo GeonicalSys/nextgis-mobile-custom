@@ -10,6 +10,12 @@ related_code:
 
 ## 2026-08-15
 
+- Версия форка поднята до `3.1.2.9`: Lisa/Belka Release `versionCode` 202,
+  Lisa Debug `versionCode` 203; maplib `VERSION_NAME` синхронизирован с
+  приложением для debug и release.
+- Lisa и Belka получили обновлённые отдельные launcher-иконки для
+  `mdpi`–`xxxhdpi`; flavor-ссылка `app_launcher_icon` использует их также на
+  intro/about, а Belka больше не наследует общий launcher из `app/src/main`.
 - Версия форка поднята до `3.1.2.8`: Lisa/Belka Release `versionCode` 200,
   Lisa Debug `versionCode` 201; maplib `VERSION_NAME` синхронизирован с приложением
   для debug и release. Пользовательский раздел «В разработке» оформлен как

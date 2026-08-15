@@ -10,6 +10,9 @@ last_verified: 2026-08-15
 
 Продуктовый Android-модуль: запускает GISApplication, предоставляет основной
 UI и Map host, управляет брендами, preferences, release и self-hosted update.
+Launcher и экраны intro/about получают иконку через flavor-ресурс
+`app_launcher_icon`: Lisa использует `ic_launcher_lisa`, Belka — отдельный
+`ic_launcher_belka` во всех пяти Android density buckets.
 
 ## Основные сценарии
 
@@ -92,7 +95,9 @@ UI и Map host, управляет брендами, preferences, release и sel
 - Кнопка геолокации не перешла к слою без GPS: проверить, что хотя бы один слой
   имеет конечный и инициализированный `GeoEnvelope`; пустой проект сохраняет
   обычное сообщение об отсутствии местоположения.
-- Неправильный бренд: `app/build.gradle`, flavor resources и manifest metadata.
+- Неправильный бренд или launcher: проверить `app/build.gradle`,
+  `app/src/<flavor>/res/values/launcher_icon.xml`, соответствующие
+  `drawable-*` flavor resources и manifest metadata.
 - Version change: запускать `tools\verify-apk-version-matrix.ps1`; не определять
   версию debug по basename APK.
 - Update отклонён: проверить schema, branch/channel, identity, version,

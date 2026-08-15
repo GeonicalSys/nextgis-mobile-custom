@@ -7,6 +7,8 @@ related_code:
   - maplib/build.gradle
   - tools/verify-apk-version-matrix.ps1
   - app/src/main/AndroidManifest.xml
+  - app/src/lisa/res
+  - app/src/belka/res
 ---
 
 # Flavors и версионирование форка
@@ -22,6 +24,12 @@ related_code:
 перезаписывать их одним общим значением. Debug может иметь отдельное тестовое
 имя и application ID suffix.
 
+`app_launcher_icon` также разрешается на уровне flavor и используется manifest,
+intro и about. Lisa ссылается на `ic_launcher_lisa`, Belka — на собственный
+`ic_launcher_belka`; для обеих иконок поддерживаются `mdpi`, `hdpi`, `xhdpi`,
+`xxhdpi` и `xxxhdpi`. Общая `app/src/main`-иконка не должна подменять branding
+release-варианта.
+
 ## Variant identity
 
 | Variants | Application ID | GIS provider authority | NGW account type |
@@ -35,8 +43,8 @@ service permission, updater identity и оба account resource keys в merged A
 
 ## Версия
 
-- Текущий выпуск: Lisa/Belka Release `3.1.2.8` / `versionCode 200`, Lisa Debug
-  `3.1.2.8` / `versionCode 201`; maplib сообщает `3.1.2.8` во всех трёх APK.
+- Текущий выпуск: Lisa/Belka Release `3.1.2.9` / `versionCode 202`, Lisa Debug
+  `3.1.2.9` / `versionCode 203`; maplib сообщает `3.1.2.9` во всех трёх APK.
 - `versionName = <upstream-base>.<fork-patch>`.
 - `versionCode` увеличивается для каждого публикуемого APK.
 - Production constants приложения находятся в `defaultConfig`; debug-only
