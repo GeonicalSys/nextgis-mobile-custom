@@ -9,14 +9,16 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/AndroidManifest.xml
+  - app/src/lisa/res/values/launcher_icon.xml
+  - app/src/belka/res/values/launcher_icon.xml
 ---
 
 # Выпуск Lisa и Belka APK
 
 ## Версия
 
-Проверяемый выпуск `3.1.2.8`: production `versionCode 200`, Lisa Debug
-`versionCode 201`, диагностический `maplib.VERSION_NAME 3.1.2.8` для обоих
+Проверяемый выпуск `3.1.2.9`: production `versionCode 202`, Lisa Debug
+`versionCode 203`, диагностический `maplib.VERSION_NAME 3.1.2.9` для обоих
 build types.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
@@ -58,6 +60,8 @@ APK может содержать production basename. Это не версия 
 Дополнительно проверить для каждого APK:
 
 - display name и applicationId;
+- launcher, intro и about используют иконку соответствующего flavor: Lisa —
+  `ic_launcher_lisa`, Belka — `ic_launcher_belka`;
 - embedded `UPDATE_FLAVOR` совпадает с flavor;
 - versionCode/versionName;
 - подпись ожидаемым release certificate;

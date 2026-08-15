@@ -21,17 +21,19 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `200` |
-| App versionName (release) | `3.1.2.8` |
-| App versionCode (debug) | `201` |
-| App versionName (debug) | `3.1.2.8` |
-| maplib VERSION_NAME (release) | `3.1.2.8` |
-| maplib VERSION_NAME (debug) | `3.1.2.8` |
+| App versionCode (release) | `202` |
+| App versionName (release) | `3.1.2.9` |
+| App versionCode (debug) | `203` |
+| App versionName (debug) | `3.1.2.9` |
+| maplib VERSION_NAME (release) | `3.1.2.9` |
+| maplib VERSION_NAME (debug) | `3.1.2.9` |
 | MapLibre Android SDK | `13.0.2` |
 | JTS Core | `1.20.0` |
 | OkHttp | `5.3.2` |
 | Release application/account | `com.nextgis.mobile.geonical` / `com.nextgis.account.geonical` |
 | Debug application/account | `com.nextgis.mobile.debug` / `com.nextgis.account.debug` |
+| Lisa launcher resource | `@drawable/ic_launcher_lisa` |
+| Belka launcher resource | `@drawable/ic_launcher_belka` |
 
 Значения фиксируют проверенное состояние на `last_verified`, но код остаётся
 источником истины. Production version задаётся `defaultConfig`, debug app
@@ -61,3 +63,5 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version
 
 Она собирает все три поддерживаемых APK и проверяет реальные package/version
 через `aapt`, а также debug/release `maplib.BuildConfig.VERSION_NAME`.
+При изменении flavor resources дополнительно собираются обе release-flavors и
+вручную проверяются launcher, intro и about каждого бренда.

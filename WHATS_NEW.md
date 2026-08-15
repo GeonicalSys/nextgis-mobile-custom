@@ -4,6 +4,10 @@
 в [`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md), история merge —
 в [`docs/history/upstream/`](docs/history/upstream/README.md).
 
+## 3.1.2.9 — 2026-08-15
+
+- Обновлены фирменные иконки приложений «ЛИСА» и «Белка».
+
 ## 3.1.2.8 — 2026-08-15
 
 - При добавлении объекта список показывает все редактируемые векторные слои подходящего

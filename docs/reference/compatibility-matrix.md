@@ -13,8 +13,8 @@ related_code:
 
 | Связка | Статус |
 |---|---|
-| app `3.1.2.8` ↔ maplib `3.1.2.8` (release) | Текущий Lisa/Belka Release |
-| app `3.1.2.8` ↔ maplib `3.1.2.8` (debug) | Текущий Lisa Debug |
+| app `3.1.2.9` ↔ maplib `3.1.2.9` (release) | Текущий Lisa/Belka Release |
+| app `3.1.2.9` ↔ maplib `3.1.2.9` (debug) | Текущий Lisa Debug |
 | app ↔ maplibui pointer из root | Проверять совместной сборкой |
 | maplibui ↔ maplib pointer из root | Публичный API проверять compile + smoke |
 | Android API 26–36 | Gradle declaration; device coverage зависит от выполненной матрицы |
