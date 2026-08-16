@@ -897,7 +897,8 @@ process state.
 цветовые ресурсы и идентификатор канала обновления. Manifest, intro и about
 разрешают общую ссылку `app_launcher_icon` через flavor: Lisa использует
 `ic_launcher_lisa`, Belka — отдельный `ic_launcher_belka`, подготовленный для
-всех пяти Android density buckets. Release-пакеты имеют
+всех пяти Android density buckets. Artwork Belka не разделяется с Lisa и не
+берётся из `app/src/main`. Release-пакеты имеют
 GeonicalSystem application ID, поэтому могут устанавливаться отдельно от
 официального NextGIS Mobile. Debug-сборка также отделена от production и может
 использоваться на том же устройстве для проверки изменений.

@@ -27,8 +27,9 @@ related_code:
 `app_launcher_icon` также разрешается на уровне flavor и используется manifest,
 intro и about. Lisa ссылается на `ic_launcher_lisa`, Belka — на собственный
 `ic_launcher_belka`; для обеих иконок поддерживаются `mdpi`, `hdpi`, `xhdpi`,
-`xxhdpi` и `xxxhdpi`. Общая `app/src/main`-иконка не должна подменять branding
-release-варианта.
+`xxhdpi` и `xxxhdpi`. Artwork Belka живёт только в `app/src/belka/res/drawable-*`
+и не должна попадать в Lisa. Общая `app/src/main`-иконка не должна подменять
+branding release-варианта.
 
 ## Variant identity
 
