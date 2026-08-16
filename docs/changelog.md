@@ -1,15 +1,23 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-15
+last_verified: 2026-08-16
 related_code:
   - docs
 ---
 
 # История документационной системы
 
+## 2026-08-16
+
+- Artwork Belka в `ic_launcher_belka` заменена на круговую эмблему белки;
+  идентификаторы ресурсов и номер версии не менялись.
+
 ## 2026-08-15
 
+- Belka получила новую artwork launcher-иконки в `ic_launcher_belka`
+  (`mdpi`–`xxxhdpi`); идентификаторы ресурсов, Lisa-брендинг и номер версии
+  не менялись.
 - Версия форка поднята до `3.1.2.9`: Lisa/Belka Release `versionCode` 202,
   Lisa Debug `versionCode` 203; maplib `VERSION_NAME` синхронизирован с
   приложением для debug и release.
