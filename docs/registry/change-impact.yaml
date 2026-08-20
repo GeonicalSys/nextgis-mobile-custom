@@ -87,12 +87,34 @@ triggers:
     read:
       - docs/architecture/map-rendering.md
       - maplib/docs/README.md
-    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-NO-TRACK-FLAGS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS]
+    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-SPATIAL-CACHE-CONSISTENCY, INV-NO-TRACK-FLAGS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS]
     must_update_docs:
       - docs/architecture/map-rendering.md
       - maplib/docs/manifest.yaml
     verify: [AUTO-MAPLIB-UNIT, SMOKE-MAP-COLD-START, SMOKE-LOCATION-CURSOR-TOP, SMOKE-HOT-RASTER, SMOKE-MAP-CAMERA-CONTROLS]
     strict_docs: false
+  - id: SPATIAL-CACHE-CONSISTENCY
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoEnvelope.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+    owners: [maplib]
+    read:
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/architecture/map-rendering.md
+      - maplib/docs/README.md
+    invariants: [INV-SPATIAL-CACHE-CONSISTENCY]
+    must_update_docs:
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - maplib/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES, SMOKE-NGW-LARGE-PULL-CACHE]
+    strict_docs: true
   - id: MULTIPOLYGON-REPAIR
     paths:
       - maplib/src/main/java/com/nextgis/maplib/util/MultiPolygonGeometryRepair.java
@@ -271,6 +293,7 @@ triggers:
       - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
       - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
       - maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
@@ -279,13 +302,13 @@ triggers:
     owners: [app, maplib, maplibui]
     read:
       - docs/architecture/ngw-sync-and-storage.md
-    invariants: [INV-SYNC-ACCOUNT-ISOLATION, INV-PROJECT-OPERATION-EXCLUSION]
+    invariants: [INV-SYNC-ACCOUNT-ISOLATION, INV-PROJECT-OPERATION-EXCLUSION, INV-SPATIAL-CACHE-CONSISTENCY]
     must_update_docs:
       - docs/architecture/ngw-sync-and-storage.md
       - app/docs/manifest.yaml
       - maplib/docs/manifest.yaml
       - maplibui/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-MULTI-ACCOUNT-SYNC]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-NGW-LARGE-PULL-CACHE]
     strict_docs: true
   - id: BACKUP-AND-DESTRUCTIVE-LAYER-CHANGE
     paths:

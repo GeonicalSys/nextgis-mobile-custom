@@ -77,6 +77,8 @@ related_code:
     перестраивается и сохраняется отдельно. `VectorLayer.fromJSON()` не сохраняет
     конфигурацию слоя во время этой перестройки: NGW-поля подкласса в этот момент
     ещё не прочитаны, и запись частичного `config.json` недопустима.
+    Все публичные чтения/изменения `GeometryRTree` сериализованы; `tighten()` не
+    скрывает `ConcurrentModificationException` после обнуления envelope.
 14. `local_vector_tiles` сохраняет тот же style-order contract. Помимо
     polygon/multipolygon, локальный `VectorSource` допускается для read-only
     `GTPoint` только с простым круговым маркером и подписью из одного поля либо
@@ -133,12 +135,19 @@ related_code:
     рабочий слой и его render source остаются до успешной замены. Если процесс
     оборвался между сохранением замены и удалением старой копии, допустим
     восстанавливаемый дубликат, но не потеря обеих копий.
+22. Инкрементальный NGW pull не публикует insert/update/delete broadcast для
+    каждой строки: после полного SQLite-apply выполняется одна R-tree rebuild.
+    Публичные операции R-tree сериализованы, а notify callback не меняет индекс
+    во время bulk/rebuild. Hot style refresh берёт отдельные `Feature` из
+    `VectorLayerRenderCache`, последовательно вычисляет props и публикует готовый
+    snapshot на main thread; live `Feature.properties` на worker не изменяется.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
 `INV-TRACK-LAYER-TOP`, `INV-COLLECTOR-RASTER-STYLES`,
 `INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`,
-`INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`.
+`INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`,
+`INV-SPATIAL-CACHE-CONSISTENCY`.
 
 ## Изменение rendering pipeline
 
@@ -155,7 +164,7 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
 `SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
 `SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`,
-`SMOKE-MAP-CAMERA-CONTROLS`.
+`SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`.
 
 ## Производительность
 

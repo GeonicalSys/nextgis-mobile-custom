@@ -10,6 +10,13 @@ related_code:
 
 ## 2026-08-20
 
+- Добавлен `INV-SPATIAL-CACHE-CONSISTENCY` и
+  `SMOKE-NGW-LARGE-PULL-CACHE`: массовый incremental NGW pull не создаёт
+  построчный broadcast storm, R-tree сериализует операции и пересобирается один
+  раз, а MapLibre style refresh работает с независимым snapshot свойств.
+- Повторно проверен официальный `nextgis/android_maplib`: по состоянию на
+  20 августа incremental bulk, полная синхронизация R-tree и безопасный
+  `tighten()` в official отсутствуют.
 - Добавлен `INV-PROJECT-OPERATION-EXCLUSION`: ручная sync работает только с
   активной картой, резервирует workspace до конца всех последовательных account,
   блокирует switch/mutation и повторный полный запуск; fill/rebuild могут

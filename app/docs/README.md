@@ -58,6 +58,9 @@ Launcher и экраны intro/about получают иконку через fl
   даже если lifecycle фрагмента пропустил финальный broadcast;
 - ручная синхронизация запускается только для NGW-слоёв активного проекта;
   повторный запуск и переключение проекта блокируются на всё время sync/fill;
+- массовый incremental pull не создаёт построчные spatial-cache уведомления:
+  R-tree перестраивается один раз, а style props применяются к отдельному
+  snapshot, не к live MapLibre feature;
 - добавление vector/raster NGW-слоя по прямому URL, включая проверенный guest fallback;
 - получение ресурсов, подготовленных desktop QGIS-плагинами, только через
   NextGIS Web/Collector или явный import поддерживаемого portable artifact, без
@@ -115,6 +118,9 @@ Launcher и экраны intro/about получают иконку через fl
 - Переключение доступно во время sync: проверить lease
   `ProjectOperationCoordinator` от `OfflineSyncIntentService.startActionFoo()` до
   конца последнего account и проверку в `MainActivity`.
+- Вылет `notify_insert → GeoEnvelope.width/GeometryRTree`: это регрессия bulk
+  incremental pull; проверить единственную итоговую cache rebuild и отсутствие
+  `LinkedTreeMap` ошибок при обновлении style.
 - Удаление проекта затронуло Web GIS: это регрессия — штатный путь удаляет только
   active workspace после backup gate и не вызывает remote delete/account API.
 - «Мои треки» оказался внизу: проверить прямой порядок `LayerGroup` и

@@ -163,6 +163,31 @@ UI, но не является единственным владельцем с�
 Отправка локальных изменений и обновление времени успешной синхронизации не
 выполняются, пока pull слоя не завершился успешно.
 
+### Инкрементальный pull и пространственный индекс
+
+Инкрементальный pull одного `NGWVectorLayer` является одной bulk-операцией.
+Вставки, изменения и удаления продолжают выполняться в SQLite с обычной
+проверкой backup/change-table, но не отправляют отдельный Android broadcast на
+каждую строку. После успешного применения всех серверных изменений слой один раз
+перестраивает R-tree из итоговой SQLite и публикует один reload карты.
+
+Публичные операции `GeometryRTree` сериализованы. `VectorLayer.notifyInsert`,
+`notifyUpdate` и `notifyDelete` не изменяют индекс во время bulk/rebuild, а
+receiver дополнительно перехватывает и логирует локальный cache callback failure,
+чтобы исключение из `BroadcastReceiver.onReceive()` не завершало процесс.
+Незавершённый `GeoEnvelope` имеет нулевые dimensions/area и не разыменовывает
+`null` при защитной проверке. Это закрывает гонку, когда sync-worker выполнял
+`tighten()`/`rebuildCache()`, а main thread одновременно обрабатывал сотни
+`notify_insert`.
+
+MapLibre style refresh использует независимые объекты `Feature`, загруженные из
+geometry render cache, и выполняется в общей последовательной очереди vector
+reload. Live `sourceFeaturesHashMap` на worker-потоке не мутируется; при cache
+miss запускается полный data reload. Поэтому Gson `LinkedTreeMap` свойств одного
+`Feature` не изменяется одновременно main и worker потоками.
+
+ID контракта: `INV-SPATIAL-CACHE-CONSISTENCY`.
+
 ## Несовпадение схемы и тяжёлый rebuild
 
 `NGWVectorLayer` передаёт приложению fingerprint причины mismatch: отсутствующая
@@ -196,6 +221,8 @@ Rebuild является staged replacement. Старый слой и его SQL
 - foreground-service требования Android 14+.
 - отказ от project switch во время всей ручной sync и layer fill;
 - staged schema rebuild, лимит неизменного fingerprint и ручной reset guard;
+- массовый incremental pull с одной итоговой R-tree rebuild, без построчных
+  notify и без `LinkedTreeMap` style errors;
 - null-intent/system-timeout `LayerFillService` без
   `ForegroundServiceDidNotStopInTimeException`, с сохранённым import journal.
 

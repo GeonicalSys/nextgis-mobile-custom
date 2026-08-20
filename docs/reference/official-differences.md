@@ -506,6 +506,13 @@ Render cache хранит подготовленную геометрию на �
 (`invalidateOnStyleChange`) не сбрасывает geometry cache; меняется лишь
 `features-styled.geojson`.
 
+Hot style refresh не изменяет `Feature` из live `sourceFeaturesHashMap` на
+worker-потоке. Он загружает независимый geometry snapshot из render cache,
+применяет props в общей последовательной vector-reload очереди и публикует
+готовый список на main thread; cache miss переводит операцию в полный data
+reload. Так Gson `LinkedTreeMap` одного MapLibre feature не записывается
+одновременно из двух потоков.
+
 **Промах (miss) и запись.** Если cache отсутствует, устарел или `geomGeneration`
 в `meta.json` не совпадает с `KEY_PREF_GEOM_CACHE_GENERATION` слоя — данные
 снова читаются из БД, после чего `save()` атомарно пишет tmp-файлы и meta.
@@ -908,6 +915,15 @@ Collector‑проект обслуживается первым; ошибка �
 завершения. Поэтому пропущенный lifecycle-зависимый broadcast не оставляет
 бесконечно вращающийся индикатор: layer drawer сверяет анимацию с фактическим
 process state.
+
+Инкрементальный pull большого векторного слоя в форке подавляет построчные
+insert/update/delete broadcast и после SQLite-apply выполняет одну пересборку
+R-tree и один reload слоя. Операции `GeometryRTree` сериализованы; незавершённый
+envelope не разыменовывает `null`, а ошибка cache receiver не завершает main
+thread. В проверенном official `nextgis/android_maplib` на 20 августа 2026 года
+incremental bulk-защиты нет, операции add/remove R-tree не сериализованы, а
+`tighten()` по-прежнему глотает `ConcurrentModificationException` после
+`unInit()`.
 
 ## Продуктовые решения форка
 

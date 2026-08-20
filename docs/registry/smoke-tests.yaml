@@ -165,6 +165,18 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Prepare two stored projects and an active map whose Collector account is not first in Android account order, make another account used by the active map unavailable, add a detectable server change only to the inactive project, run manual sync twice rapidly, leave and return to the layer drawer while sync finishes, verify the sync icon stops, restart and inspect enabled account schedules]
     expected: Only accounts with NGW layers in the active map run, its Collector account runs first, the inactive project change is not pulled, another active-map account error has a separate result, the second full sync is refused, the spinner stops even if the final broadcast was missed, and enabled schedules are restored without duplicate work.
+  SMOKE-NGW-LARGE-PULL-CACHE:
+    type: device
+    scope: [app, maplib]
+    steps:
+      - Prepare an open NGW vector layer where one pull creates and deletes at least 1000 features while the map is visible
+      - Start manual sync once and interact with the map while that layer is applied
+      - Reopen the project, run a no-change sync and export HyperLog
+    expected: >
+      The process remains alive and responsive; incremental pull emits no per-row vector cache
+      notification storm, performs one final spatial cache rebuild and one layer reload; no
+      notify_insert/GeoEnvelope/GeometryRTree crash, LinkedTreeMap style exception or spatial cache
+      count mismatch appears on reopen, and the no-change sync leaves cache and SQLite counts equal.
   SMOKE-NGW-ACCOUNT-ADD:
     type: device
     scope: [app, maplibui]

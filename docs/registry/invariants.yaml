@@ -486,6 +486,31 @@ invariants:
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/ngw-sync-and-storage.md
+  INV-SPATIAL-CACHE-CONSISTENCY:
+    title: Vector spatial cache remains consistent across sync and main-thread notifications
+    owners: [maplib]
+    statement: >
+      An incremental NGW pull suppresses per-row insert, update and delete broadcasts and performs
+      one spatial-cache rebuild plus one map reload after the SQLite result is complete. Public
+      GeometryRTree reads and mutations are serialized; a cache rebuild never exposes an envelope
+      after unInit and never swallows ConcurrentModificationException while leaving null bounds.
+      Vector-layer notifications do not mutate a cache during bulk/rebuild, and a receiver callback
+      failure is logged without terminating the Android main thread. MapLibre style workers never
+      mutate Feature.properties already published to the live map; they use an independent render-cache
+      snapshot or fall back to a full data reload.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoEnvelope.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-NGW-LARGE-PULL-CACHE]
+    must_update_docs:
+      - docs/architecture/ngw-sync-and-storage.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
   INV-ECOSYSTEM-SERVER-BOUNDARY:
     title: Desktop and Android integrate through explicit server contracts
     owners: [app, maplib, maplibui]
