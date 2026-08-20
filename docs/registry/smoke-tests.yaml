@@ -276,6 +276,23 @@ tests:
       and every repair started from the MapLibre editor retains Web Mercator CRS; the
       feature survives reopen and sync. An unrecoverable result stays in geometry
       editing without a partial insert. Simple Polygon and line layers are not auto-repaired.
+  SMOKE-GEOMETRY-SKETCH-WORKFLOW:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Create new Point, LineString, Polygon and MultiPolygon features and inspect the attribute action as soon as starter geometry exists
+      - Verify Polygon and MultiPolygon start as one square and expose the same vertex, center, location, walk and touch actions as LineString
+      - Inspect the overflow and try repeated taps where add/delete polygon and add/delete hole actions used to be
+      - Move, insert and delete vertices, then press the attribute action instead of Save and complete the form
+      - Repeat a rapid double tap on the attribute action and cancel one new-feature form
+      - Reopen an existing multi-part MultiPolygon with a valid hole and edit one vertex without changing its part/ring count
+    expected: >
+      New polygons start with four corners; a new MultiPolygon contains exactly one polygon
+      part and no sketch action can add or delete a part or hole. The standard polygon toolbar
+      follows the line toolbar and only touch falls into overflow on the reference device.
+      For every supported geometry type the attribute action becomes enabled with geometry and
+      follows the same validation, topology repair and single-form handoff as Save. Existing
+      multipart geometry and holes remain intact unless their vertices are explicitly edited.
   SMOKE-TRACK-NO-FLAGS:
     type: device
     scope: [maplib, maplibui]

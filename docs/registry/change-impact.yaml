@@ -133,6 +133,33 @@ triggers:
       - app/docs/README.md
     verify: [AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES, SMOKE-MULTIPOLYGON-REPAIR]
     strict_docs: true
+  - id: GEOMETRY-SKETCH-WORKFLOW
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/MLP
+      - maplib/src/test/java/com/nextgis/maplib/map/MLP
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
+      - maplibui/src/main/res/menu/edit_polygon.xml
+      - maplibui/src/main/res/menu/edit_multipolygon.xml
+      - maplibui/src/main/res/values/geometry_edit_ids.xml
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    owners: [maplib, maplibui, app]
+    read:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - docs/runbooks/device-smoke-tests.md
+    invariants: [INV-GEOMETRY-SKETCH-WORKFLOW, INV-MULTIPOLYGON-REPAIR, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - docs/runbooks/device-smoke-tests.md
+      - maplib/docs/README.md
+      - maplib/docs/manifest.yaml
+      - maplibui/docs/README.md
+      - maplibui/docs/manifest.yaml
+      - app/docs/README.md
+      - app/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GEOMETRY-SKETCH-WORKFLOW]
+    strict_docs: true
   - id: MAP-BASE-LAYERS
     paths:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
