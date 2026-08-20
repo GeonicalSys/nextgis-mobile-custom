@@ -1,7 +1,7 @@
 ---
 title: Подготовка NGW Collector-проекта
 type: runbook
-last_verified: 2026-07-29
+last_verified: 2026-08-20
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerOriginMetadata.java
@@ -59,6 +59,9 @@ Project workspace хранит `collector_project` с `project_uid`, account, re
 - «Мои треки» находится наверху списка слоёв;
 - создание объекта предлагает только элементы Collector с включённым
   редактированием и исходящей синхронизацией;
+- просмотр вкладок свойств слоя без изменений сохраняет двустороннее
+  направление, а временно выбранный режим «только с сервера» можно вернуть в
+  двусторонний без удаления слоя;
 - district subset, renderer, zoom, form и sync mode применены;
 - ручной слой остаётся вне project-managed состава;
 - изменение состава добавляет/переупорядочивает управляемые слои;

@@ -299,6 +299,7 @@ triggers:
       - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
       - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java
       - maplibui/src/main/java/com/nextgis/maplibui/fragment/NGWSettingsFragment.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/VectorLayerSettingsActivity.java
     owners: [app, maplib, maplibui]
     read:
       - docs/architecture/ngw-sync-and-storage.md
@@ -308,7 +309,7 @@ triggers:
       - app/docs/manifest.yaml
       - maplib/docs/manifest.yaml
       - maplibui/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-NGW-LARGE-PULL-CACHE]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LAYER-SYNC-SETTINGS]
     strict_docs: true
   - id: BACKUP-AND-DESTRUCTIVE-LAYER-CHANGE
     paths:

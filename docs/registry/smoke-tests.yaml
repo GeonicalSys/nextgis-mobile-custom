@@ -84,6 +84,15 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, an editable field vector whose initial visible is false, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors, Reset all settings, Select the NGW Collector resource and import its composition, Verify every layer has a distinct local storage path, Enable the read-only Point layer only in the local layer drawer without changing server config or running sync, Verify Point features render immediately while identify returns the same objects, Verify style tiles load with the project account and mixed order matches Collector, Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row, Start object creation and inspect offered layers, Select the hidden editable vector and add an object, Reopen and run composition sync, Repeat import with two different layers sharing a display name]
     expected: Project metadata and isolated workspace are created, concurrent fills use distinct storage and fail without retaining incomplete layers, enabling a layer omitted from the initial live style rebuilds its source/layer from local data without server config update, sync or app restart, layers are keyed by remote id, supported styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks stays on top, default OSM stays at internal index zero without visibility reset, and only Collector vectors with editable plus outbound sync are offered for object creation regardless of visibility; selecting a hidden eligible vector makes it visibly persist before editing.
+  SMOKE-LAYER-SYNC-SETTINGS:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Choose a Collector-managed vector whose project item is editable, generic mobile is_editable is false and synchronization direction is both
+      - Open layer properties, visit Synchronization, Fields and General, then leave without changing anything
+      - Reopen properties and verify the direction is still both and the layer remains available for creating or editing objects
+      - Select server-to-device only, close and reopen properties, then return the same layer to both directions
+    expected: A no-op settings visit never mutates the stored direction; the Collector owning policy keeps the direction control available independently of generic is_editable, and an accidentally server-only layer becomes editable again after selecting both without deleting or reimporting it.
   SMOKE-COLLECTOR-RESUME:
     type: device
     scope: [app, maplib, maplibui]

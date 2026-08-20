@@ -10,6 +10,10 @@ related_code:
 
 ## 2026-08-20
 
+- Закреплён no-op контракт свойств NGW-слоя: просмотр вкладок не меняет
+  двустороннюю синхронизацию на «только с сервера», а editable Collector-слой
+  можно вернуть из server-only режима без удаления и повторного импорта;
+  добавлен `SMOKE-LAYER-SYNC-SETTINGS`.
 - Добавлен `INV-SPATIAL-CACHE-CONSISTENCY` и
   `SMOKE-NGW-LARGE-PULL-CACHE`: массовый incremental NGW pull не создаёт
   построчный broadcast storm, R-tree сериализует операции и пересобирается один

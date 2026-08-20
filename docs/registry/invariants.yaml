@@ -213,13 +213,17 @@ invariants:
       A project-managed NGW layer is editable only when its Collector item allows editing
       and outbound sync is enabled; generic mobile is_editable remains the gate for ordinary
       and manually imported layers. Visibility never changes creation eligibility: an eligible
-      hidden layer is offered and becomes persistently visible before its editor starts.
+      hidden layer is offered and becomes persistently visible before its editor starts. Merely
+      opening or paging through layer settings never changes the persisted sync direction, and a
+      Collector-owned editable layer can configure that direction even while generic is_editable
+      is false, so server-only mode can be repaired without reimporting the layer.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java
       - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/VectorLayerSettingsActivity.java
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-    verify_smoke: [SMOKE-COLLECTOR-IMPORT, SMOKE-NGW-URL-IMPORT]
+    verify_smoke: [SMOKE-COLLECTOR-IMPORT, SMOKE-NGW-URL-IMPORT, SMOKE-LAYER-SYNC-SETTINGS]
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/runbooks/collector-project-setup.md
