@@ -111,6 +111,7 @@ import com.nextgis.maplibui.util.LayerBackupManager
 import com.nextgis.maplibui.util.LayerUtil
 import com.nextgis.maplibui.util.NGIDUtils
 import com.nextgis.maplibui.util.NGWResourceImportHelper
+import com.nextgis.maplibui.util.ProjectOperationCoordinator
 import com.nextgis.maplibui.util.SettingsConstantsUI
 import com.nextgis.maplibui.util.UiUtil
 import com.nextgis.mobile.MainApplication
@@ -853,39 +854,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             return
         }
 
-        val labels = projects.map { collectorProjectListLabel(it) }.toTypedArray()
-        AlertDialog.Builder(this)
-            .setTitle(R.string.collector_project_switch)
-            .setItems(labels) { _, which ->
-                switchCollectorProject(projects[which])
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-            .show()
-    }
-
-    private fun collectorProjectTitle(project: CollectorProjectRegistry.ProjectInfo): String {
-        return if (project.name.isNullOrBlank()) project.projectUid else project.name
-    }
-
-    private fun collectorProjectListLabel(project: CollectorProjectRegistry.ProjectInfo): String {
-        val title = if (project.isActive(this)) {
-            getString(R.string.collector_project_active_name, collectorProjectTitle(project))
-        } else {
-            collectorProjectTitle(project)
-        }
-        val districtText = if (project.district.isNullOrBlank()) {
-            getString(R.string.collector_project_no_district)
-        } else {
-            project.district
-        }
-        return getString(
-            R.string.collector_project_workspace_list_item,
-            title,
-            project.accountName,
-            project.projectRemoteId,
-            districtText
-        )
+        ProjectChooserDialog.show(this, projects, ::switchCollectorProject)
     }
 
     private fun switchCollectorProject(project: CollectorProjectRegistry.ProjectInfo) {
@@ -894,7 +863,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             Toast.makeText(this, R.string.collector_project_switch_tracking, Toast.LENGTH_LONG).show()
             return
         }
-        if (gisApp.isLayerFillServiceBusy) {
+        if (gisApp.isLayerFillServiceBusy || ProjectOperationCoordinator.isBusy()) {
             Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
             return
         }
@@ -922,7 +891,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             return
         }
 
-        val account = gisApp.getAccount(project.accountName)
+        val account = if (project.isLocal) null else gisApp.getAccount(project.accountName)
         val app = application as? GISApplication
         if (account != null && app != null
             && ContentResolver.getSyncAutomatically(account, gisApp.authority)

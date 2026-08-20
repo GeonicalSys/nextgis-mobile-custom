@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-08-15
+last_verified: 2026-08-20
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -47,13 +47,17 @@ Launcher и экраны intro/about получают иконку через fl
 - идентификация объекта: список совпадений и верхняя панель используют
   `feature_label_field`; форма атрибутов в нижней панели доступна только если
   слой допускает редактирование (`isEditingAllowed`);
-- выбор и переключение Collector projects;
+- выбор и переключение проектов по списку только из имён; раздел
+  «Настройки → Проект» с Web GIS-реквизитами, созданием пустого local workspace,
+  локальным переименованием и удалением локальной копии;
 - сохранение «Мои треки» наверху списка слоёв при создании и открытии карты;
 - сохранение дефолтного `OpenStreetMap Standard aka Mapnik` внизу списка каждой
   карты, включая новый Collector workspace;
 - завершение batch import только после фактического MapLibre style/source apply;
 - индикатор синхронизации сверяется с прямым состоянием адаптера и останавливается,
   даже если lifecycle фрагмента пропустил финальный broadcast;
+- ручная синхронизация запускается только для NGW-слоёв активного проекта;
+  повторный запуск и переключение проекта блокируются на всё время sync/fill;
 - добавление vector/raster NGW-слоя по прямому URL, включая проверенный guest fallback;
 - получение ресурсов, подготовленных desktop QGIS-плагинами, только через
   NextGIS Web/Collector или явный import поддерживаемого portable artifact, без
@@ -108,6 +112,11 @@ Launcher и экраны intro/about получают иконку через fl
   `MainActivity.onResume()`/`SettingsActivity.onResume()`.
 - Collector переключается неверно: `CollectorProjectRegistry` и project UID/map
   path, а не только UI dialog.
+- Переключение доступно во время sync: проверить lease
+  `ProjectOperationCoordinator` от `OfflineSyncIntentService.startActionFoo()` до
+  конца последнего account и проверку в `MainActivity`.
+- Удаление проекта затронуло Web GIS: это регрессия — штатный путь удаляет только
+  active workspace после backup gate и не вызывает remote delete/account API.
 - «Мои треки» оказался внизу: проверить прямой порядок `LayerGroup` и
   `MainApplication.checkTracksLayerExist()`.
 - После crash открылась форма вместо незавершённого обхода: проверить

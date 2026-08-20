@@ -115,8 +115,18 @@ tests:
   SMOKE-COLLECTOR-SWITCH:
     type: device
     scope: [app, maplibui]
-    steps: [Prepare project A with saved tracks and project B without tracks, Open the track list in A, Switch A to B to A without killing the process, Open the track list and inspect the map after each switch, Verify that switching is refused while a track is actively recording]
-    expected: Map paths, metadata, layers and track history always come from the active project; A restores its tracks, B remains empty, and an active recording cannot cross the project boundary.
+    steps: [Prepare project A with saved tracks and project B without tracks, Verify the picker rows contain only project names, Open the track list in A, Switch A to B to A without killing the process, Open the track list and inspect the map after each switch, Start manual sync and try switching immediately and between sequential accounts, Verify that switching is refused while a track is actively recording]
+    expected: Map paths, metadata, layers and track history always come from the active project; A restores its tracks, B remains empty, the picker exposes no account/id/district text, and neither sync nor active recording can cross the project boundary.
+  SMOKE-PROJECT-MANAGEMENT:
+    type: device
+    scope: [app, maplibui]
+    steps: [Open Settings then Project and verify Web GIS name/account/id/district, Create an empty local project, add one local feature, rename the project, switch away and back, delete the local project, delete a Web GIS project with one unsynchronized NGW layer, simulate a backup failure, then delete the last remaining project]
+    expected: Local projects contain their own OSM/tracks/data; aliases persist and stay unique; delete removes only the device workspace and never Web GIS/account data; unsynchronized NGW data is backed up and backup failure cancels deletion; deleting the last project opens a new empty local fallback.
+  SMOKE-SCHEMA-REBUILD-GUARD:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps: [Use a heavy NGW layer with a deliberately unchanged broken schema/config, Run sync and interrupt or fail the staged fill, Verify the old layer remains usable, repeat after the cooldown until two attempts are recorded, run sync a third time, inspect Project settings, reset the protection, fix the server config and sync again]
+    expected: Failed fill never removes the old layer; an unchanged fingerprint runs at most twice per 24 hours and the third attempt is suppressed; Project settings reports the stopped layer and reset permits a new attempt; a changed/fixed fingerprint can rebuild successfully.
   SMOKE-BACKUP-GATE:
     type: device
     scope: [maplibui]
@@ -153,8 +163,8 @@ tests:
   SMOKE-MULTI-ACCOUNT-SYNC:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Open a Collector project whose account is not first in Android account order, Make another map account unavailable, Run manual sync, Leave and return to the layer drawer while sync finishes, Verify the sync icon stops, Restart and inspect enabled account schedules]
-    expected: The active Collector account sync runs first, another account error has a separate result, the sync animation stops from adapter-owned state even if the final broadcast was missed, and enabled schedules are restored without duplicate work.
+    steps: [Prepare two stored projects and an active map whose Collector account is not first in Android account order, make another account used by the active map unavailable, add a detectable server change only to the inactive project, run manual sync twice rapidly, leave and return to the layer drawer while sync finishes, verify the sync icon stops, restart and inspect enabled account schedules]
+    expected: Only accounts with NGW layers in the active map run, its Collector account runs first, the inactive project change is not pulled, another active-map account error has a separate result, the second full sync is refused, the spinner stops even if the final broadcast was missed, and enabled schedules are restored without duplicate work.
   SMOKE-NGW-ACCOUNT-ADD:
     type: device
     scope: [app, maplibui]
@@ -270,6 +280,11 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Add a public vector resource URL without a pre-existing account, Add a raster resource URL from an existing account, Add a QGIS style URL, Open a vector resource without data.write permission]
     expected: Guest account is created only for the validated public server, vector and raster appear through the normal reload flow, style resolves to its parent layer, and the no-write vector is read-only and pull-only.
+  SMOKE-NGW-IMPORT-BACK:
+    type: device
+    scope: [app, maplibui]
+    steps: [Open Import from Web GIS, enter at least two nested resource groups, press the toolbar Back arrow repeatedly, reopen the same path and repeat with Android system Back]
+    expected: Each Back press moves exactly one resource-group level up; only Back from the root returns to the map, and the breadcrumb matches the visible directory after every step.
   SMOKE-LOCAL-VECTOR-LAYERS:
     type: device
     scope: [app, maplib, maplibui]

@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-08-15
+last_verified: 2026-08-20
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -18,9 +18,13 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
     responsibility: Process initialization, logging, GISApplication configuration, creation of editable local vector layers, default OSM at internal index zero and tracks at the top of the reversed layer list for every map/workspace.
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    responsibility: Main navigation and toolbar state for explicit map rotation/location recovery, local GeoJSON/KML/GPX file routing, photo-overlay default migration, ordered walk/manual-geometry/form crash-recovery hub, direct NGW resource URL resolution, Collector project switch with active-track protection, backup sharing UI and updater continuation on activity resume.
+    responsibility: Main navigation and toolbar state for explicit map rotation/location recovery, local GeoJSON/KML/GPX file routing, photo-overlay default migration, ordered walk/manual-geometry/form crash-recovery hub, direct NGW resource URL resolution, name-only project picker with sync/fill/track switch protection, backup sharing UI and updater continuation on activity resume.
   - path: app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
-    responsibility: Settings navigation and updater continuation after Android special install permission returns to a manual update check.
+    responsibility: Settings navigation, including the dedicated project screen, and updater continuation after Android special install permission returns to a manual update check.
+  - path: app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
+    responsibility: Active project information and controls for current-project sync, local project creation, device-only rename/delete, changed-layer backup gate and schema-rebuild guard reset.
+  - path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+    responsibility: Reserve the active project before manual sync starts and run only accounts represented by NGW layers in that active map, sequentially under one lease.
   - path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     responsibility: Map screen, MaplibreMapInteraction implementation, opt-in persistent map bearing with north-up/location/layer-extent recovery, object-creation layer eligibility with automatic target visibility, foreground stakeout host/widget, acknowledgement of completed post-fill style/source reload, GTMultiPolygon-only topology repair before one attribute-form handoff, durable non-walk geometry journal, and explicit restoration/discard of interrupted walk or geometry drafts.
   - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
@@ -46,7 +50,7 @@ settings_refs: [feature_label_field, map_show_loc, map_show_compass, map_rotatio
 storage_contracts:
   - id: updater-pending-install
     path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
-invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-NGRC-PRESERVE, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-ECOSYSTEM-SERVER-BOUNDARY, INV-CRASH-DRAFT-RECOVERY, INV-MULTIPOLYGON-REPAIR, INV-GPS-TRACK-FILTER, INV-STAKEOUT-GUIDANCE, INV-LOCAL-VECTOR-LAYERS]
+invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-PROJECT-OPERATION-EXCLUSION, INV-NGRC-PRESERVE, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-ECOSYSTEM-SERVER-BOUNDARY, INV-CRASH-DRAFT-RECOVERY, INV-MULTIPOLYGON-REPAIR, INV-GPS-TRACK-FILTER, INV-STAKEOUT-GUIDANCE, INV-LOCAL-VECTOR-LAYERS]
 global_docs:
   - docs/architecture/overview.md
   - docs/architecture/lisa-ecosystem.md
@@ -56,5 +60,5 @@ global_docs:
   - docs/reference/build-matrix.md
   - docs/reference/flavors-and-versioning.md
   - docs/runbooks/release-apk.md
-smoke_tests: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-HOT-RASTER, SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-CAMERA-CONTROLS, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-LOCAL-VECTOR-LAYERS, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-SWITCH, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE, SMOKE-CRASH-DRAFT-RECOVERY, SMOKE-MULTIPOLYGON-REPAIR, SMOKE-GPS-RECORDING, SMOKE-STAKEOUT]
+smoke_tests: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-HOT-RASTER, SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-CAMERA-CONTROLS, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-NGW-IMPORT-BACK, SMOKE-LOCAL-VECTOR-LAYERS, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-SCHEMA-REBUILD-GUARD, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE, SMOKE-CRASH-DRAFT-RECOVERY, SMOKE-MULTIPOLYGON-REPAIR, SMOKE-GPS-RECORDING, SMOKE-STAKEOUT]
 upstream_hotspots: [MAP-HOST, APP-FLAVORS]

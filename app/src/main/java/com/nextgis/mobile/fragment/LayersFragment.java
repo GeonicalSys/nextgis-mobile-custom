@@ -732,7 +732,9 @@ public class LayersFragment
 
         if (offlineSync || !NGIDUtils.NGID_MY.equals(base)) {
             HyperLog.v(Constants.TAG, "startManualSync: on-premise sync");
-            OfflineSyncIntentService.startActionFoo(context);
+            if (!OfflineSyncIntentService.startActionFoo(context)) {
+                Toast.makeText(context, R.string.project_operation_wait, LENGTH_LONG).show();
+            }
         } else {
             final Runnable switchRunnable = new Runnable() {
                 @Override
@@ -745,7 +747,9 @@ public class LayersFragment
                     if (!prefs.getBoolean(KEY_PREF_OFFLINE_SYNC_ON, false)) {
                         prefs.edit().putBoolean(KEY_PREF_OFFLINE_SYNC_ON, true).apply();
                     }
-                    OfflineSyncIntentService.startActionFoo(ctx);
+                    if (!OfflineSyncIntentService.startActionFoo(ctx)) {
+                        Toast.makeText(ctx, R.string.project_operation_wait, LENGTH_LONG).show();
+                    }
                 }
             };
 

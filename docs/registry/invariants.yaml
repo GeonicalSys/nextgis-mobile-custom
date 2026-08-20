@@ -192,9 +192,9 @@ invariants:
       - docs/architecture/map-rendering.md
       - docs/reference/official-differences.md
   INV-COLLECTOR-ISOLATION:
-    title: Collector projects use isolated local workspaces
+    title: Web GIS and local projects use isolated workspaces
     owners: [app, maplib, maplibui]
-    statement: Project identity, map path, layers and tracks must not leak between Collector projects; ContentProvider operations must resolve the active map after every in-process switch.
+    statement: Project identity, type, map path, layers and tracks must not leak between Web GIS or local projects; ContentProvider operations must resolve the active map after every in-process switch, and deletion may remove only the device workspace after its backup gate.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
       - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
@@ -202,7 +202,8 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    verify_smoke: [SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-SWITCH]
+      - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
+    verify_smoke: [SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT]
     must_update_docs:
       - docs/architecture/collector-projects.md
   INV-COLLECTOR-EDITABILITY:
@@ -263,7 +264,8 @@ invariants:
     statement: >
       For editable NGW vector layers, a successful data backup is required before any destructive
       mutation — remote sync delete/overwrite, schema rebuild, Collector vector-layer removal,
-      manual layer delete, or manual feature delete. Backup must include attachment file bytes
+      manual layer delete, manual feature delete, or active project workspace delete. Schema rebuild
+      must retain the old layer until its staged replacement is saved. Backup must include attachment file bytes
       (local files or NGW download), not metadata alone. If backup fails, local feature data must
       remain unchanged and the user must see an alert with the failure reason. Non-editable Collector
       layers and recreatable raster-style tile caches are not data-backup operations. LayerBackups/
@@ -275,7 +277,8 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
       - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java
-    verify_smoke: [SMOKE-BACKUP-GATE]
+      - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
+    verify_smoke: [SMOKE-BACKUP-GATE, SMOKE-PROJECT-MANAGEMENT, SMOKE-SCHEMA-REBUILD-GUARD]
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/ngw-sync-and-storage.md
@@ -459,6 +462,29 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java
     verify_smoke: [SMOKE-MULTI-ACCOUNT-SYNC]
     must_update_docs:
+      - docs/architecture/ngw-sync-and-storage.md
+  INV-PROJECT-OPERATION-EXCLUSION:
+    title: Active project identity is stable during database background work
+    owners: [app, maplib, maplibui]
+    statement: >
+      Manual sync operates only on accounts represented in the active map and owns that workspace
+      from the button press through every sequential account. Periodic sync, layer fill and schema
+      rebuild also own a workspace. Switch/create/rename/delete and duplicate full sync are refused
+      until all owners finish. A dependent fill may reserve only the same workspace while sync is
+      active, but must wait for sync to release database access before touching SQLite.
+      An unchanged schema mismatch is circuit-broken after two attempts in 24 hours, with at least
+      ten minutes between attempts, and LayerFillService timeout must preserve the durable import journal.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+      - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    verify_smoke: [SMOKE-COLLECTOR-SWITCH, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SCHEMA-REBUILD-GUARD]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
       - docs/architecture/ngw-sync-and-storage.md
   INV-ECOSYSTEM-SERVER-BOUNDARY:
     title: Desktop and Android integrate through explicit server contracts

@@ -20,10 +20,13 @@ import com.hypertrack.hyperlog.HyperLog;
 import com.nextgis.maplib.map.CollectorProjectMetadata;
 import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.datasource.SyncAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -40,28 +43,54 @@ public class OfflineSyncIntentService extends IntentService {
 
 
     private static final String ACTION_ACCOUNT_NAME = "com.nextgis.mobile.util.action.ACCOUNTNAME";
+    private static final String EXTRA_OPERATION_RESERVATION =
+            "com.nextgis.mobile.extra.OPERATION_RESERVATION";
+    private static final ConcurrentHashMap<String, ProjectOperationCoordinator.Lease>
+            PENDING_OPERATION_LEASES = new ConcurrentHashMap<>();
 
 
     public OfflineSyncIntentService() {
         super("OfflineSyncIntentService");
     }
 
-    public static void startActionFoo(Context context) {
-        startActionFoo(context, null);
+    public static boolean startActionFoo(Context context) {
+        return startActionFoo(context, null);
     }
 
-    public static void startActionFoo(Context context, String lpath) {
+    public static boolean startActionFoo(Context context, String lpath) {
+        ProjectOperationCoordinator.Lease operationLease =
+                ProjectOperationCoordinator.tryBegin(
+                        context, ProjectOperationCoordinator.Kind.DATA_SYNC);
+        if (operationLease == null) {
+            return false;
+        }
+        String reservation = UUID.randomUUID().toString();
+        PENDING_OPERATION_LEASES.put(reservation, operationLease);
         Intent intent = new Intent(context, OfflineSyncIntentService.class);
         intent.setAction(ACTION_OFFSYNC);
         if (lpath != null) {
             intent.putExtra(ACTION_LPATH, lpath);
         }
         intent.putExtra(EXTRA_MANUAL_SYNC, true);
-        context.startService(intent);
+        intent.putExtra(EXTRA_OPERATION_RESERVATION, reservation);
+        try {
+            context.startService(intent);
+            return true;
+        } catch (RuntimeException e) {
+            ProjectOperationCoordinator.Lease pending =
+                    PENDING_OPERATION_LEASES.remove(reservation);
+            if (pending != null) {
+                pending.close();
+            }
+            throw e;
+        }
     }
 
     /** When {@code true}, sync errors are shown to the user (button / toast). */
     public static final String EXTRA_MANUAL_SYNC = "com.nextgis.mobile.extra.MANUAL_SYNC";
+    /** Internal: the serial manual-sync runner already owns the project operation lease. */
+    public static final String EXTRA_PROJECT_OPERATION_ALREADY_HELD =
+            "com.nextgis.mobile.extra.PROJECT_OPERATION_ALREADY_HELD";
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -73,12 +102,27 @@ public class OfflineSyncIntentService extends IntentService {
                     lpath = intent.getStringExtra(ACTION_LPATH);
                 }
                 boolean manual = intent.getBooleanExtra(EXTRA_MANUAL_SYNC, true);
-                handleActionFoo(lpath, manual);
+                String reservation = intent.getStringExtra(EXTRA_OPERATION_RESERVATION);
+                handleActionFoo(lpath, manual, reservation);
             }
         }
     }
 
-    private void handleActionFoo(String lpath, boolean manualSync) {
+    private void handleActionFoo(
+            String lpath,
+            boolean manualSync,
+            String operationReservation) {
+        ProjectOperationCoordinator.Lease operationLease = operationReservation != null
+                ? PENDING_OPERATION_LEASES.remove(operationReservation) : null;
+        if (operationLease == null) {
+            operationLease = ProjectOperationCoordinator.tryBegin(
+                    this, ProjectOperationCoordinator.Kind.DATA_SYNC);
+        }
+        if (operationLease == null) {
+            HyperLog.v(Constants.TAG,
+                    "OfflineSyncIntentService skipped: project operation in progress");
+            return;
+        }
         try {
             Log.d("SSYNC", "OfflineSyncIntentService handleActionFoo lpath=" + lpath
                     + " manual=" + manualSync);
@@ -116,6 +160,7 @@ public class OfflineSyncIntentService extends IntentService {
                 bundle.putString(ACTION_LPATH, lpath);
             }
             bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, manualSync);
+            bundle.putBoolean(EXTRA_PROJECT_OPERATION_ALREADY_HELD, true);
             for (Account account : mAccounts) {
                 try {
                     // SyncResult and SyncAdapter carry per-run state. Reusing either
@@ -142,6 +187,8 @@ public class OfflineSyncIntentService extends IntentService {
         } catch (Exception e) {
             Log.e("SSYNC", "handleActionFoo failed: " + e.getMessage(), e);
             HyperLog.e(Constants.TAG, "OfflineSyncIntentService.handleActionFoo crash: " + e.getMessage(), e);
+        } finally {
+            operationLease.close();
         }
     }
 

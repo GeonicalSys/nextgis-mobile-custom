@@ -113,6 +113,7 @@ public class SettingsActivity
                 return;
             case SettingsConstantsUI.ACTION_PREFS_NGW:
             case SettingsConstantsUI.ACTION_PREFS_NGID:
+            case AppConstants.ACTION_PREFS_PROJECT:
                 break;
         }
     }
@@ -142,6 +143,9 @@ public class SettingsActivity
                 break;
             case SettingsConstantsUI.ACTION_PREFS_NGID:
                 intent = new Intent(this, NGIDSettingsActivity.class);
+                break;
+            case AppConstants.ACTION_PREFS_PROJECT:
+                intent = new Intent(this, ProjectSettingsActivity.class);
                 break;
         }
         startActivity(intent);

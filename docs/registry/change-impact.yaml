@@ -224,15 +224,19 @@ triggers:
       - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
       - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
+      - app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt
     owners: [maplib, maplibui, app]
     read:
       - docs/architecture/collector-projects.md
-    invariants: [INV-COLLECTOR-RESOURCE, INV-COLLECTOR-LAYER-IDENTITY, INV-COLLECTOR-RASTER-STYLES, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-COLLECTOR-FORM-ATOMIC, INV-BACKUP-BEFORE-DESTRUCTION]
+    invariants: [INV-COLLECTOR-RESOURCE, INV-COLLECTOR-LAYER-IDENTITY, INV-COLLECTOR-RASTER-STYLES, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-COLLECTOR-FORM-ATOMIC, INV-PROJECT-OPERATION-EXCLUSION, INV-BACKUP-BEFORE-DESTRUCTION]
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/map-rendering.md
@@ -240,6 +244,8 @@ triggers:
       - docs/registry/config-keys.yaml
       - maplib/docs/manifest.yaml
       - maplibui/docs/manifest.yaml
+      - app/docs/README.md
+      - app/docs/manifest.yaml
     verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-IDENTITY, SMOKE-COLLECTOR-RESUME, SMOKE-COLLECTOR-INCOMPLETE, SMOKE-FORM-ROLLBACK, SMOKE-COLLECTOR-SWITCH, SMOKE-BACKUP-GATE]
     strict_docs: false
   - id: NGRC-LOCAL-UNDERLAY
@@ -262,15 +268,18 @@ triggers:
   - id: ACCOUNT-SYNC-SCHEDULING
     paths:
       - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+      - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
       - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
       - maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
       - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java
       - maplibui/src/main/java/com/nextgis/maplibui/fragment/NGWSettingsFragment.java
     owners: [app, maplib, maplibui]
     read:
       - docs/architecture/ngw-sync-and-storage.md
-    invariants: [INV-SYNC-ACCOUNT-ISOLATION]
+    invariants: [INV-SYNC-ACCOUNT-ISOLATION, INV-PROJECT-OPERATION-EXCLUSION]
     must_update_docs:
       - docs/architecture/ngw-sync-and-storage.md
       - app/docs/manifest.yaml

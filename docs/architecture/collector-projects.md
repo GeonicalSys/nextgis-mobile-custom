@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-07-30
+last_verified: 2026-08-20
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java
@@ -12,12 +12,15 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+  - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
 ---
 
 # Collector projects, composition sync и backups
@@ -39,6 +42,9 @@ NGW Collector resource
 Collector project идентифицируется стабильным `project_uid`, построенным из
 account и remote project id. Registry хранится в
 `collector_projects_registry.json`, workspaces — в `collector_projects/`.
+Schema registry `2` различает `WEBGIS` и `LOCAL`; каждый workspace дополнительно
+получает атомарный `project.json`, поэтому локальный проект без server metadata
+также восстанавливается после повреждения общего registry.
 
 Импорт начинается только после полного чтения дерева Collector и всех ссылок на
 поддерживаемые ресурсы. HTTP/JSON-ошибка в середине snapshot отменяет импорт до
@@ -70,7 +76,7 @@ import и composition sync создают raster styles через один
 
 ## Изоляция
 
-- У каждого проекта собственный map/workspace.
+- У каждого Web GIS или пустого локального проекта собственный map/workspace.
 - `map.ngm`, `layers.db`, история треков и точки треков относятся к этому workspace;
   операции через `LayerContentProvider` каждый раз разрешают текущую карту приложения и не
   используют экземпляр, оставшийся от ранее открытого проекта.
@@ -78,13 +84,38 @@ import и composition sync создают raster styles через один
   последней проверки.
 - Ручные NGW-слои должны маршрутизироваться в активный проект предсказуемо.
 - Переключение проекта сначала сохраняет текущую карту, затем активирует другую.
+- Общий process-wide coordinator удерживает active project identity на всё время
+  ручной/периодической sync, layer fill и schema rebuild. Пока хотя бы одна такая
+  операция использует workspace, switch/create/rename/delete запрещены; повторная
+  полная sync того же проекта также не запускается. Зависимая цепочка
+  `sync → staged layer fill` заранее резервирует тот же workspace, но SQLite-стадии
+  выполняются последовательно: fill ждёт полного завершения sync.
 - Во время активной записи трека переключение запрещено. Это сохраняет весь сеанс в одной
   проектной базе и исключает попадание следующих точек в другой workspace.
 - Ошибка подготовки нового workspace не должна разрушать существующий проект.
-- Registry записывается атомарно с резервной копией. Если registry утрачен или
-  повреждён, он восстанавливается сканированием существующих `map.ngm` в
-  `collector_projects/`; пути за пределами этого каталога отвергаются.
+- Registry и `project.json` записываются атомарно с резервной копией. Если общий
+  registry утрачен или повреждён, он восстанавливается по sidecar, а старые
+  Web GIS workspaces без sidecar — сканированием `map.ngm`; пути за пределами
+  `collector_projects/` отвергаются.
 - После переключения активный account ставится на ближайшую синхронизацию.
+
+## Управление проектами
+
+Раздел настроек «Проект» принадлежит приложению, а операции хранения —
+`CollectorProjectRegistry`. В нём показываются пользовательское имя и тип,
+количество NGW-слоёв и слоёв с несинхронизированными изменениями. Только для
+Web GIS проекта там отображаются account, remote project id и district. В
+быстром выборе на карте остаются только имена; проекты разделены крупными
+нажимаемыми строками, активный отмечен индикатором без технических реквизитов.
+
+Пользователь может создать пустой `LOCAL` workspace, переименовать локальное
+отображаемое имя любого проекта и удалить активную локальную копию. Удаление не
+вызывает NGW API и не удаляет Android account или серверный ресурс. Перед ним
+все NGW-слои с несинхронизированными изменениями проходят обязательный full
+backup gate. Workspace сначала атомарно переименовывается в tombstone, registry
+и active preferences переключаются на последний открытый оставшийся проект,
+и только затем tombstone удаляется. Если удалён последний проект, заранее
+создаётся пустой локальный fallback с обычными OSM и «Мои треки».
 
 ## Незавершённый импорт и обновление приложения
 
@@ -109,6 +140,10 @@ identity: параллельные задачи одной партии не д�
 Если первый либо любой следующий batch insert вернул ошибку, задача немедленно
 выходит через exception, транзакция откатывается, а неполный слой удаляется.
 Продолжать тысячи вставок после первой ошибки схемы запрещено.
+
+Android toolbar Back на экране импорта NGW использует тот же `goUp()`, что и
+аппаратная кнопка: внутри дерева он поднимается к родительскому каталогу и
+закрывает импорт только из корня доступного дерева.
 
 ## Composition sync
 
@@ -182,10 +217,17 @@ destructive composition apply. После импорта в её `config.json` �
 
 - импорт Collector resource и создание отдельного workspace;
 - переключение между двумя проектами в одном процессе без смешивания слоёв и треков;
+- запрет переключения и второго запуска sync на всём интервале sync/fill, включая
+  паузу между последовательными аккаунтами;
+- создание локального проекта, локальное переименование, удаление Web GIS
+  workspace без удаления server resource и создание fallback после удаления последнего;
+- picker содержит только имена, а account/id/district доступны в «Настройки → Проект»;
 - проект с сохранёнными треками → проект без треков → обратно: список, карта и новая запись
   используют базу текущего проекта без принудительного перезапуска приложения;
 - добавление/переупорядочивание состава;
 - backup и отказ от удаления при искусственной ошибке backup;
+- два rebuild одной неизменной сломанной схемы за сутки, блокировка третьего,
+  ручной сброс защиты и сохранение старого слоя при неуспешной staged-загрузке;
 - district filter и form/render configuration;
 - проект с vector, `qgis_vector_style` и `qgis_raster_style`: все элементы
   появляются в исходном смешанном порядке, style tiles используют account

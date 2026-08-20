@@ -30,6 +30,7 @@ public interface AppConstants
      */
     String FRAGMENT_SETTINGS_HEADER_FRAGMENT = "settings_header_fragment";
     String FRAGMENT_SETTINGS_FRAGMENT = "settings_fragment";
+    String ACTION_PREFS_PROJECT = "com.nextgis.mobile.PREFS_PROJECT";
 
     int DEFAULT_COORDINATES_FRACTION_DIGITS = 6;
 }

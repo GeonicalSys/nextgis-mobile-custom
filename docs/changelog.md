@@ -1,12 +1,32 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-16
+last_verified: 2026-08-20
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-20
+
+- Добавлен `INV-PROJECT-OPERATION-EXCLUSION`: ручная sync работает только с
+  активной картой, резервирует workspace до конца всех последовательных account,
+  блокирует switch/mutation и повторный полный запуск; fill/rebuild могут
+  присоединиться только к тому же проекту.
+- Registry проектов переведён на schema `2` с `WEBGIS`/`LOCAL` и атомарными
+  `project.json`: зафиксированы создание пустого local workspace, локальное
+  переименование, backup-gated device-only delete и fallback после удаления
+  последнего проекта. Быстрый picker содержит только имена, реквизиты находятся
+  в «Настройки → Проект».
+- Schema rebuild описан как staged replacement с сохранением старого слоя до
+  успешной записи нового и circuit breaker: две попытки неизменного fingerprint
+  за 24 часа, cooldown 10 минут, статус и reset в настройках проекта.
+- Добавлены `SMOKE-PROJECT-MANAGEMENT`, `SMOKE-SCHEMA-REBUILD-GUARD` и
+  `SMOKE-NGW-IMPORT-BACK`; уточнены current-project sync, FGS timeout/resume и
+  переход toolbar Back по дереву NGW.
+- Official NextGIS Mobile/MapLib/MapLibUI/EasyPicker HEAD повторно проверены;
+  hashes от 30 июля не изменились.
 
 ## 2026-08-16
 

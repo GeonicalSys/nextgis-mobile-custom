@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-08-15
+last_verified: 2026-08-20
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
@@ -126,6 +126,13 @@ related_code:
     середине этого охвата и выставляет zoom `12` независимо от его размера. Если
     нет ни координаты, ни пригодного слоя, остаётся обычное сообщение об
     отсутствии местоположения.
+21. Schema/composition rebuild является staged replacement: новая
+    `NGWVectorLayer` создаётся в отдельном UUID-каталоге, полностью заполняется,
+    вставляется и сохраняется в `LayerGroup`. Только затем прежний слой с той же
+    парой `account + remote_id` удаляется. Ошибка fill удаляет только stage;
+    рабочий слой и его render source остаются до успешной замены. Если процесс
+    оборвался между сохранением замены и удалением старой копии, допустим
+    восстанавливаемый дубликат, но не потеря обеих копий.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
