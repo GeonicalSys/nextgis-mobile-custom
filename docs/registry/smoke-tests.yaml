@@ -45,12 +45,14 @@ tests:
     scope: app
     steps:
       - Cold-open a project and verify two-finger rotation does nothing until the toolbar rotation button is pressed
+      - Enable rotation, place two fingers simultaneously and twist immediately without a hold; repeat while pinching and with sequential finger placement
       - Enable rotation, rotate to several bearings, recreate the activity and verify the enabled state and bearing are restored
       - Disable rotation and verify the camera returns north-up and rotation gestures stop working
       - At zooms below and above 12 press location with a current fix, then repeat with location unavailable and a project layer having a finite extent
       - Repeat the no-location case in an empty project and while stakeout lacks a device compass
     expected: >
-      Rotation is explicit and persistent, tilt remains disabled, location resets north and never
+      Rotation is explicit, immediate for simultaneous two-finger contact, compatible with
+      concurrent pinch zoom and persistent; tilt remains disabled, location resets north and never
       zooms out while enforcing zoom 12, missing location centers on the first valid layer at zoom
       12 regardless of extent size, an empty project reports no location, and the stakeout
       arrow/cardinal fallback stays correct at non-zero map bearings.
@@ -148,6 +150,7 @@ tests:
       - Start track recording, Force Stop or reboot, reopen app
       - Start walk digitizing a line, swipe the app away while editing geometry, reopen it even if Android has already restarted WalkEditService
       - Create a line with the normal vertex editor, move/add vertices, swipe the app away before saving geometry, reopen and choose Continue
+      - Repeat with a partly drawn Polygon and MultiPolygon, choose Continue, then move several different restored nodes
       - Repeat normal line editing for an existing feature, choose Discard after reopening
       - Fill attribute form with fields/photos, Force Stop, reopen app
       - After recovering geometry for a new line, open its attribute form, swipe the app away, recover the form, press Save
@@ -157,9 +160,10 @@ tests:
       Track recording auto-resumes without a dialog and previous trackpoints remain;
       finish is only via Stop track menu. Walk draft offers Continue/Discard and Continue
       restores vertices and GPS writing even when its sticky service was already restarted;
-      Cancel/Save does not re-offer. Normal vertex/touch editing offers its own
+      Cancel/Save does not re-offer. Normal vertex/tap editing offers its own
       Continue/Discard dialog; Continue restores the latest visible geometry in the same map,
-      layer and feature while Discard clears it. Form Continue restores fields/photos and
+      layer and feature while Discard clears it. Restored polygon fill and nodes agree before
+      and after moving any restored node. Form Continue restores fields/photos and
       Save persists and returns to the correct layer without depending on the pre-crash map
       selection or crashing; the newly inserted geometry appears on the map without an app
       restart, and Discard clears the draft. Saving a new point with unchanged
@@ -281,15 +285,21 @@ tests:
     scope: [app, maplib, maplibui]
     steps:
       - Create new Point, LineString, Polygon and MultiPolygon features and inspect the attribute action as soon as starter geometry exists
-      - Verify Polygon and MultiPolygon start as one square and expose the same vertex, center, location, walk and touch actions as LineString
-      - Inspect the overflow and try repeated taps where add/delete polygon and add/delete hole actions used to be
+      - Verify layer selection immediately places a point or first line/polygon node at map centre without an intermediate plus action
+      - Add line and polygon nodes with map taps; select another node and verify the next tap inserts after it
+      - Insert midpoint nodes in LineString, Polygon, MultiPolygon and ruler geometry, then move the inserted nodes
+      - Inspect line and polygon toolbars: no overflow trigger or touch-append action; polygon add/delete part/hole actions are absent
+      - In an initial one-node line/polygon sketch start walk append; in an existing shape select a middle node and start walk append
+      - During polygon walk verify the live tail reaches the current location and recorded nodes stay between the selected node and its former successor
       - Move, insert and delete vertices, then press the attribute action instead of Save and complete the form
       - Repeat a rapid double tap on the attribute action and cancel one new-feature form
       - Reopen an existing multi-part MultiPolygon with a valid hole and edit one vertex without changing its part/ring count
     expected: >
-      New polygons start with four corners; a new MultiPolygon contains exactly one polygon
-      part and no sketch action can add or delete a part or hole. The standard polygon toolbar
-      follows the line toolbar and only touch falls into overflow on the reference device.
+      Creation starts immediately with one centre node; taps and midpoint actions build the
+      geometry without a generated segment or square. A new MultiPolygon contains exactly one
+      polygon part and no sketch action can add or delete a part or hole. Standard line and
+      polygon toolbars contain neither touch append nor an overflow trigger. Walk append is
+      available from the initial sketch, inserts after the selected node and previews current GPS.
       For every supported geometry type the attribute action becomes enabled with geometry and
       follows the same validation, topology repair and single-form handoff as Save. Existing
       multipart geometry and holes remain intact unless their vertices are explicitly edited.

@@ -129,7 +129,9 @@ invariants:
     statement: >
       Two-finger map rotation is disabled by default and changes only through the
       dedicated toolbar toggle. Disabling rotation returns the camera north-up and
-      keeps tilt disabled. The location action always resets north, raises zoom to at
+      keeps tilt disabled. When enabled, pinch and rotate detectors run together so an
+      immediate two-finger twist does not require a hold or sequential finger placement.
+      The location action always resets north, raises zoom to at
       least 12 without zooming out, and when no current fix exists centers on the first
       layer with a valid finite extent at zoom 12 regardless of extent size.
     related_code:
@@ -313,13 +315,18 @@ invariants:
       - maplib/docs/README.md
       - app/docs/README.md
   INV-GEOMETRY-SKETCH-WORKFLOW:
-    title: Geometry sketches use one-part polygon creation and a shared form handoff
+    title: Geometry sketches use tap-created nodes, one polygon part and a shared form handoff
     owners: [app, maplib, maplibui]
     statement: >
-      Polygon and MultiPolygon creation starts with one square outer ring. Polygon edit menus
-      match the LineString vertex tools and expose no add/delete polygon or add/delete hole
-      action. A new MultiPolygon sketch accepts at most one polygon part, while loading and
-      editing existing multipart or holed geometry does not discard its structure. For new
+      Point creation starts immediately at map centre; LineString, MultiLineString, Polygon
+      and MultiPolygon creation starts with one centre node and subsequent map taps insert
+      nodes after the selected node. Line, polygon and ruler editors expose midpoint insertion.
+      Line/polygon edit menus expose no touch-append action or overflow trigger; polygon menus
+      also expose no add/delete polygon or add/delete hole action. A new MultiPolygon sketch
+      accepts at most one polygon part, while loading and editing existing multipart or holed
+      geometry does not discard its structure. Walk append starts after the selected node and
+      remains contiguous before its former successor, with current-GPS preview at that insertion
+      position. For new
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
@@ -327,7 +334,13 @@ invariants:
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/PolygonEditClass.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/MultiPolygonEditClass.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MLP/MeasurmentLine.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
       - maplib/src/test/java/com/nextgis/maplib/map/MLP/PolygonSketchPolicyTest.java
+      - maplib/src/test/java/com/nextgis/maplib/map/MPLFeaturesUtilsPolygonTest.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+      - maplibui/src/test/java/com/nextgis/maplibui/service/WalkGeometryInsertionTest.java
       - maplibui/src/main/res/menu/edit_polygon.xml
       - maplibui/src/main/res/menu/edit_multipolygon.xml
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -420,10 +433,12 @@ invariants:
       without a dialog; already inserted trackpoints must not be lost (closing an unfinished
       track and starting a new id is allowed). Walk digitizing keeps walkedit_temp on
       unexpected service death and offers Continue/Discard even if START_STICKY already
-      restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/touch
+      restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/tap
       editing synchronously journals its latest WKT plus active-map/layer/feature identity in
       GeometryEditDraftStore and offers Continue/Discard after process/task death; only
       explicit Cancel, successful layer update, or handoff to the attribute form clears it.
+      Polygon drafts must restore as explicitly closed MapLibre rings before vertex extraction,
+      including new one-part MultiPolygon sketches, so the fill and vertices remain consistent.
       Attribute forms persist a typed FeatureFormDraftStore snapshot (fields, geometry,
       pending photos) until Save or Discard, recovered via Continue/Discard at app start.
       Activity.onPause after successful Save must not recreate the cleared form draft. A

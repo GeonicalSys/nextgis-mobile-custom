@@ -141,7 +141,15 @@ triggers:
     paths:
       - maplib/src/main/java/com/nextgis/maplib/map/MLP
       - maplib/src/test/java/com/nextgis/maplib/map/MLP
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+      - maplib/src/test/java/com/nextgis/maplib/map/MPLFeaturesUtilsPolygonTest.java
       - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometryInsertion.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
+      - maplibui/src/main/res/menu/edit_line.xml
+      - maplibui/src/main/res/menu/edit_multiline.xml
       - maplibui/src/main/res/menu/edit_polygon.xml
       - maplibui/src/main/res/menu/edit_multipolygon.xml
       - maplibui/src/main/res/values/geometry_edit_ids.xml
@@ -149,11 +157,13 @@ triggers:
     owners: [maplib, maplibui, app]
     read:
       - docs/architecture/map-rendering.md
+      - docs/architecture/crash-recovery.md
       - docs/reference/official-differences.md
       - docs/runbooks/device-smoke-tests.md
     invariants: [INV-GEOMETRY-SKETCH-WORKFLOW, INV-MULTIPOLYGON-REPAIR, INV-CRASH-DRAFT-RECOVERY]
     must_update_docs:
       - docs/architecture/map-rendering.md
+      - docs/architecture/crash-recovery.md
       - docs/reference/official-differences.md
       - docs/runbooks/device-smoke-tests.md
       - maplib/docs/README.md

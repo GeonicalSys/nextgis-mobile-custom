@@ -54,7 +54,7 @@ the count of network fixes suppressed by recent GPS, but never coordinates.
 
 | Concern | Behavior |
 |---------|----------|
-| Draft store | SharedPreferences `walkedit_temp` (layer id, feature id, WKT, ring index, timestamp) |
+| Draft store | SharedPreferences `walkedit_temp` (layer/feature ids, WKT, geometry/ring indices, next insertion index, timestamp) |
 | Explicit stop | Save edits / Cancel → `WalkEditService.stopAndClearDraft()` → draft cleared |
 | Unexpected stop | FGS kill, crash, permission stop → draft kept; HyperLog `unexpected walk end` |
 | Soft-interrupt | While UI is in walk mode (or draft exists) and service is not running → Continue/Discard dialog |
@@ -64,21 +64,24 @@ the count of network fixes suppressed by recent GPS, but never coordinates.
 
 Key types: `WalkEditService`, `EditLayerOverlay.stopGeometryByWalk`, `MapFragment` watchdog / resume helpers.
 
-## Manual geometry editing (vertex / touch)
+## Manual geometry editing (vertices / taps)
 
 | Concern | Behavior |
 |---------|----------|
 | Draft store | `GeometryEditDraftStore` (`geometry_edit_draft` prefs, JSON: active map path, layer/feature ids, edit mode, latest WKT, timestamp) |
-| Write | Synchronous after MapLibre geometry callbacks, undo/redo, touch `panStop`, and again in `MapFragment.onPause`; coordinates are not copied to HyperLog |
+| Write | Synchronous after MapLibre geometry callbacks, tap insertion, undo/redo, vertex `panStop`, and again in `MapFragment.onPause`; coordinates are not copied to HyperLog |
 | Existing object | Continue reloads its attributes from SQLite and replaces only geometry with the draft |
-| New object | Continue recreates feature id `-1`, restores the latest geometry and returns to `MODE_EDIT` / `MODE_EDIT_BY_TOUCH` |
+| New object | Continue recreates feature id `-1`, restores the latest geometry and returns to `MODE_EDIT`; legacy mode `5` drafts migrate to this mode |
 | Clear | Explicit geometry Cancel, successful existing-feature update, or successful handoff of a new geometry to the attribute form |
 | Validation | Active map path, vector layer, edit policy, feature existence and geometry type must match; this prevents cross-project `layer_id` collisions |
 | Cold MapLibre | Continue is retained through a bounded retry until editable MapLibre sources are ready; timeout keeps the draft for the next launch |
 
 The latest geometry is durable, including the visible line in the reported
 “draw line → swipe app away” case. The transient undo/redo stack itself is not
-serialized.
+serialized. Polygon conversion explicitly closes every non-empty outer/inner
+GeoJSON ring before MapLibre vertex extraction; a restored manual Polygon or
+MultiPolygon therefore shows the same fill and node order before and after a
+node is moved.
 
 Key types: `GeometryEditDraftStore`, `MapFragment.persistManualGeometryDraft`,
 `MapFragment.resumeManualGeometryFromDraft`.
