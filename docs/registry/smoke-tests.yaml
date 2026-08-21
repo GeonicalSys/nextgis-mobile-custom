@@ -320,8 +320,9 @@ tests:
       a duplicate plus button. Ruler area is displayed in hectares. A restored Polygon has one
       outer fill, the original vertex count and no invented hole. A self-intersecting simple
       Polygon remains in editing and reports self-intersection rather than insufficient points.
-      Each Undo or Redo press changes exactly one node even after selection and duplicate map
-      callbacks, and more than ten real changes remain available without a no-op boundary step.
+      Each Undo or Redo press changes exactly one node even after selection and map callbacks that
+      only refresh CRS metadata, and more than ten real changes remain available without a no-op
+      boundary step.
   SMOKE-TRACK-NO-FLAGS:
     type: device
     scope: [maplib, maplibui]

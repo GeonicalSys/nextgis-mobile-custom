@@ -340,9 +340,9 @@ invariants:
       WKT recovery preserves exactly one outer ring and only real holes, so it cannot cancel the
       fill or duplicate nodes by inventing an inner ring. An invalid simple Polygon remains in
       editing and reports self-intersection separately from an insufficient point count. Undo/Redo
-      retains 100 real geometry changes; consecutive equal snapshots from selection or duplicate
-      callbacks are ignored, one action moves exactly one edit, and a boundary attempt leaves the
-      history cursor unchanged.
+      retains 100 real coordinate-WKT changes; consecutive snapshots from selection or callbacks
+      that differ only in CRS metadata do not allocate another step, one action moves exactly one
+      edit, and a boundary attempt leaves the history cursor unchanged.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeoPolygon.java
