@@ -163,7 +163,8 @@ tests:
       Cancel/Save does not re-offer. Normal vertex/tap editing offers its own
       Continue/Discard dialog; Continue restores the latest visible geometry in the same map,
       layer and feature while Discard clears it. Restored polygon fill and nodes agree before
-      and after moving any restored node. Form Continue restores fields/photos and
+      and after moving any restored node, with one outer fill and no invented duplicate hole.
+      Form Continue restores fields/photos and
       Save persists and returns to the correct layer without depending on the pre-crash map
       selection or crashing; the newly inserted geometry appears on the map without an app
       restart, and Discard clears the draft. Saving a new point with unchanged
@@ -296,6 +297,8 @@ tests:
       - Move, insert and delete vertices, then press the attribute action instead of Save and complete the form
       - Repeat a rapid double tap on the attribute action and cancel one new-feature form
       - Reopen an existing multi-part MultiPolygon with a valid hole and edit one vertex without changing its part/ring count
+      - Interrupt a partly drawn Polygon, restart the process, choose Continue and inspect its fill, holes and vertex count
+      - Draw a self-intersecting simple Polygon and press Save
     expected: >
       Creation starts immediately with one node at the projected screen centre; taps and midpoint actions build the
       geometry without a generated segment or square. A new MultiPolygon contains exactly one
@@ -307,7 +310,9 @@ tests:
       multipart geometry and holes remain intact unless their vertices are explicitly edited.
       Cancelling a new sketch first requires confirmation; continuing leaves the sketch intact,
       while confirmed cancellation returns to normal map mode without a disabled action panel or
-      a duplicate plus button. Ruler area is displayed in hectares.
+      a duplicate plus button. Ruler area is displayed in hectares. A restored Polygon has one
+      outer fill, the original vertex count and no invented hole. A self-intersecting simple
+      Polygon remains in editing and reports self-intersection rather than insufficient points.
   SMOKE-TRACK-NO-FLAGS:
     type: device
     scope: [maplib, maplibui]

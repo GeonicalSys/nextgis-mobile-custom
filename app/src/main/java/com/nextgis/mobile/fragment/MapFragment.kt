@@ -847,9 +847,16 @@ public class MapFragment
         }
 
         if (geometry == null || !geometry.isValid) {
+            val message = invalidGeometryMessage(geometry)
+            HyperLog.w(
+                Constants.TAG,
+                "Geometry save rejected layer=${mSelectedLayer?.id ?: Constants.NOT_FOUND} " +
+                    "feature=$featureId type=${geometry?.type ?: Constants.NOT_FOUND} " +
+                    "reason=${resources.getResourceEntryName(message)}"
+            )
             Toast.makeText(
                 context,
-                com.nextgis.maplibui.R.string.not_enough_points,
+                message,
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -929,6 +936,20 @@ public class MapFragment
         }
 
         return true
+    }
+
+    private fun invalidGeometryMessage(geometry: GeoGeometry?): Int {
+        if (geometry is GeoPolygon) {
+            return when {
+                geometry.outerRing.pointCount < 3 ->
+                    com.nextgis.maplibui.R.string.not_enough_points
+                geometry.intersects() -> com.nextgis.maplib.R.string.self_intersection
+                !geometry.isHolesInside -> com.nextgis.maplib.R.string.ring_outside
+                geometry.isHolesIntersect -> com.nextgis.maplib.R.string.rings_intersection
+                else -> com.nextgis.maplib.R.string.error_geojson_invalid_geometry
+            }
+        }
+        return com.nextgis.maplibui.R.string.not_enough_points
     }
 
 

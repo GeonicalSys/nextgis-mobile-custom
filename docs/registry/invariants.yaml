@@ -334,8 +334,13 @@ invariants:
       launch duplicate forms. The selection toolbar has no duplicate add action; cancelling a
       new sketch asks for confirmation and then returns directly to normal map mode. Ruler area
       is always formatted in hectares. Line and polygon screen vertices are converted with the
-      current MapLibre projection so their first node follows the current camera centre.
+      current MapLibre projection so their first node follows the current camera centre. Polygon
+      WKT recovery preserves exactly one outer ring and only real holes, so it cannot cancel the
+      fill or duplicate nodes by inventing an inner ring. An invalid simple Polygon remains in
+      editing and reports self-intersection separately from an insufficient point count.
     related_code:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoPolygon.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/PolygonEditClass.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/MultiPolygonEditClass.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/MeasurmentLine.java
@@ -449,6 +454,8 @@ invariants:
       explicit Cancel, successful layer update, or handoff to the attribute form clears it.
       Polygon drafts must restore as explicitly closed MapLibre rings before vertex extraction,
       including new one-part MultiPolygon sketches, so the fill and vertices remain consistent.
+      Polygon WKT parsing preserves one outer ring and only actual holes; recovery must not
+      duplicate the outer ring as a fill-cancelling inner ring or duplicate its vertices.
       Attribute forms persist a typed FeatureFormDraftStore snapshot (fields, geometry,
       pending photos) until Save or Discard, recovered via Continue/Discard at app start.
       Activity.onPause after successful Save must not recreate the cleared form draft. A
@@ -465,6 +472,8 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoPolygon.java
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
     verify_smoke: [SMOKE-CRASH-DRAFT-RECOVERY]
     must_update_docs:
