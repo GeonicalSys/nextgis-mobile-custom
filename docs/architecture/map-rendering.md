@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-08-15
+last_verified: 2026-08-21
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
@@ -10,6 +10,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
+  - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/fragment/ReorderedLayerView.java
@@ -77,6 +78,8 @@ related_code:
     перестраивается и сохраняется отдельно. `VectorLayer.fromJSON()` не сохраняет
     конфигурацию слоя во время этой перестройки: NGW-поля подкласса в этот момент
     ещё не прочитаны, и запись частичного `config.json` недопустима.
+    Все публичные чтения/изменения `GeometryRTree` сериализованы; `tighten()` не
+    скрывает `ConcurrentModificationException` после обнуления envelope.
 14. `local_vector_tiles` сохраняет тот же style-order contract. Помимо
     polygon/multipolygon, локальный `VectorSource` допускается для read-only
     `GTPoint` только с простым круговым маркером и подписью из одного поля либо
@@ -93,7 +96,15 @@ related_code:
     render layer существуют в текущем style. Если хотя бы одного из них нет,
     `checkLayerVisibility()` запускает data reload; менять server config или
     выполнять sync для появления слоя не требуется.
-17. При сохранении невалидной геометрии автоматическое исправление топологии
+17. Новый Polygon/MultiPolygon скетч начинается с одного квадратного внешнего
+    кольца. Панель полигонов повторяет LineString: форма, удаление вершины,
+    перенос к центру/координате, обход и касание; команды частей и отверстий не
+    публикуются. MultiPolygon принимает только стартовую часть, но загрузка
+    существующей многосоставной геометрии не упрощает её структуру. Кнопка формы
+    нового Point/Line/Polygon и их Multi-вариантов активируется при наличии
+    геометрии и вызывает общий `saveEdits()`, включая валидацию, repair и один
+    form handoff.
+18. При сохранении невалидной геометрии автоматическое исправление топологии
     включено только для слоя с точным типом `GTMultiPolygon`. JTS
     `GeometryFixer` может разделить самопересекающееся кольцо на несколько
     полигональных частей либо объединить перекрывающиеся части, но результат
@@ -106,17 +117,17 @@ related_code:
     контейнеру, полигонам и кольцам. Repair дополнительно восстанавливает
     отсутствующий CRS контейнера из дочерней геометрии для ранее созданных
     edit/draft-объектов; количество вершин на это поведение не влияет.
-18. Виджет выноса координат является обычным Android overlay над картой и не
+19. Виджет выноса координат является обычным Android overlay над картой и не
     добавляет временные MapLibre source/layer. Выбранный feature остаётся
     подсвечен штатным view-selection, поэтому запуск/остановка выноса не должны
     пересоздавать style или менять порядок слоёв. Геометрический расчёт описан в
     [`stakeout.md`](stakeout.md).
-19. Видимость векторного слоя не является правом редактирования. Список слоя для
+20. Видимость векторного слоя не является правом редактирования. Список слоя для
     нового объекта включает все слои подходящего типа с `isEditingAllowed=true`,
     в том числе `visible=false`. Перед запуском редактора выбранный скрытый слой
     получает `visible=true`, сохраняется и обновляется в live MapLibre style через
     штатный `onLayerVisibleChanged()`/`checkLayerVisibility()`.
-20. Жест вращения MapLibre выключен по умолчанию и включается только отдельной
+21. Жест вращения MapLibre выключен по умолчанию и включается только отдельной
     кнопкой в верхней панели. Наклон и встроенный MapLibre compass остаются
     выключенными. Запрет вращения плавно возвращает bearing `0`; разрешение и
     последний bearing сохраняются между открытиями карты. Кнопка текущего
@@ -126,12 +137,31 @@ related_code:
     середине этого охвата и выставляет zoom `12` независимо от его размера. Если
     нет ни координаты, ни пригодного слоя, остаётся обычное сообщение об
     отсутствии местоположения.
+22. Schema/composition rebuild является staged replacement: новая
+    `NGWVectorLayer` создаётся в отдельном UUID-каталоге, полностью заполняется,
+    вставляется и сохраняется в `LayerGroup`. Только затем прежний слой с той же
+    парой `account + remote_id` удаляется. Ошибка fill удаляет только stage;
+    рабочий слой и его render source остаются до успешной замены. Если процесс
+    оборвался между сохранением замены и удалением старой копии, допустим
+    восстанавливаемый дубликат, но не потеря обеих копий.
+23. Инкрементальный NGW pull не публикует insert/update/delete broadcast для
+    каждой строки: после полного SQLite-apply выполняется одна R-tree rebuild.
+    Публичные операции R-tree сериализованы, а notify callback не меняет индекс
+    во время bulk/rebuild. Hot style refresh берёт отдельные `Feature` из
+    `VectorLayerRenderCache`, последовательно вычисляет props и публикует готовый
+    snapshot на main thread; live `Feature.properties` на worker не изменяется.
+24. Выключенный слой с сохранённым render mode `local_vector_tiles` продолжает
+    участвовать в tap/long-press identify через локальную SQLite/R-tree копию,
+    не включая MapLibre source и не меняя visibility. Выключенный классический
+    vector layer по-прежнему пропускается. Решение централизовано в
+    `LayerIdentifyPolicy` и одинаково для всех активных веток identify.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
 `INV-TRACK-LAYER-TOP`, `INV-COLLECTOR-RASTER-STYLES`,
 `INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`,
-`INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`.
+`INV-GEOMETRY-SKETCH-WORKFLOW`, `INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`,
+`INV-SPATIAL-CACHE-CONSISTENCY`, `INV-HIDDEN-VECTOR-TILE-IDENTIFY`.
 
 ## Изменение rendering pipeline
 
@@ -147,8 +177,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 
 Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
 `SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
-`SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`,
-`SMOKE-MAP-CAMERA-CONTROLS`.
+`SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`, `SMOKE-GEOMETRY-SKETCH-WORKFLOW`,
+`SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`.
 
 ## Производительность
 

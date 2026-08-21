@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-08-15
+last_verified: 2026-08-20
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
@@ -11,6 +11,8 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
   - maplibui/src/main/res/xml/authenticator.xml
   - app/build.gradle
   - app/src/main/res/xml/syncadapter.xml
@@ -87,6 +89,8 @@ ID контракта: `INV-NGW-ACCOUNT-IDENTITY`.
   несинхронизированные правки или удаление из проекта);
 - ручное удаление editable слоя из списка слоёв;
 - ручное удаление объекта(ов) — backup сразу при delete, пока строка ещё в БД.
+- удаление локальной копии активного проекта — full backup каждого editable
+  NGW-слоя, в котором остались несинхронизированные изменения.
 
 Backup содержит данные слоя (features/changes/attachments + файлы вложений) и
 manifest, но не заменяет серверную синхронизацию и не делает auto-restore.
@@ -117,18 +121,34 @@ ID контракта: `INV-BACKUP-BEFORE-DESTRUCTION`.
 
 ## Изменение sync
 
+Открытие или перелистывание свойств NGW-слоя без пользовательского изменения
+не записывает новое направление синхронизации. Начальный callback списка
+направлений является no-op. Для project-managed слоя доступность этого списка
+определяется Collector editable policy, поэтому текущий server-only режим или
+generic mobile `is_editable=false` не блокируют возврат в двусторонний режим.
+
 Планировщик хранит период каждого account отдельно, восстанавливает удалённые
 Android `PeriodicSync` registrations при старте и поддерживает интервалы короче
 15 минут через самоперезапускаемую WorkManager-задачу. Включение sync из любого
 экрана одновременно включает account и ставит ближайший запуск; отключение
 отменяет его unique work.
 
-Ручная синхронизация нескольких account остаётся последовательной ради одной
-карты и SQLite, но активный Collector account выполняется первым. Для каждого
-account создаются отдельные adapter/result objects, поэтому ошибка одного не
-переходит в следующий. Полностью молчащее HTTP-чтение ограничено тремя минутами;
-это inactivity timeout и не обрывает большой ответ, пока данные продолжают
-поступать.
+Ручная синхронизация работает только с текущей `IGISApplication.getMap()`, то
+есть с активным проектом. Она выбирает Android account, для которых в этой карте
+есть NGW-слои, и выполняет их последовательно; закрытые проекты не обходятся.
+Активный Collector account выполняется первым. Для каждого account создаются
+отдельные adapter/result objects, поэтому ошибка одного не переходит в следующий.
+Полностью молчащее HTTP-чтение ограничено тремя минутами; это inactivity timeout
+и не обрывает большой ответ, пока данные продолжают поступать.
+
+`ProjectOperationCoordinator` резервирует active workspace ещё при нажатии
+ручной sync и удерживает lease до конца всех account, включая промежутки между
+ними. Поэтому project switch/create/rename/delete не может попасть в окно между
+двумя адаптерами. Периодический adapter также получает lease; второй полный sync
+того же workspace отклоняется. Layer fill и schema rebuild могут заранее
+зарезервировать только тот же workspace, но доступ к SQLite получают строго после
+завершения full sync; это не даёт синхронизации и перезаливке писать в одну БД
+одновременно и одновременно закрывает окно для переключения проекта.
 
 Process-wide признак активности обновляет сам `SyncAdapter` перед `SYNC_START`
 и во всех normal/cancel/exception finish-путях. Broadcast остаётся событием для
@@ -149,6 +169,52 @@ UI, но не является единственным владельцем с�
 Отправка локальных изменений и обновление времени успешной синхронизации не
 выполняются, пока pull слоя не завершился успешно.
 
+### Инкрементальный pull и пространственный индекс
+
+Инкрементальный pull одного `NGWVectorLayer` является одной bulk-операцией.
+Вставки, изменения и удаления продолжают выполняться в SQLite с обычной
+проверкой backup/change-table, но не отправляют отдельный Android broadcast на
+каждую строку. После успешного применения всех серверных изменений слой один раз
+перестраивает R-tree из итоговой SQLite и публикует один reload карты.
+
+Публичные операции `GeometryRTree` сериализованы. `VectorLayer.notifyInsert`,
+`notifyUpdate` и `notifyDelete` не изменяют индекс во время bulk/rebuild, а
+receiver дополнительно перехватывает и логирует локальный cache callback failure,
+чтобы исключение из `BroadcastReceiver.onReceive()` не завершало процесс.
+Незавершённый `GeoEnvelope` имеет нулевые dimensions/area и не разыменовывает
+`null` при защитной проверке. Это закрывает гонку, когда sync-worker выполнял
+`tighten()`/`rebuildCache()`, а main thread одновременно обрабатывал сотни
+`notify_insert`.
+
+MapLibre style refresh использует независимые объекты `Feature`, загруженные из
+geometry render cache, и выполняется в общей последовательной очереди vector
+reload. Live `sourceFeaturesHashMap` на worker-потоке не мутируется; при cache
+miss запускается полный data reload. Поэтому Gson `LinkedTreeMap` свойств одного
+`Feature` не изменяется одновременно main и worker потоками.
+
+ID контракта: `INV-SPATIAL-CACHE-CONSISTENCY`.
+
+## Несовпадение схемы и тяжёлый rebuild
+
+`NGWVectorLayer` передаёт приложению fingerprint причины mismatch: отсутствующая
+таблица, hash server metadata/config либо hash SQLite-ошибки. Guard хранится по
+`workspace + account + remote_id` и допускает для неизменного fingerprint не
+более двух rebuild-попыток за 24 часа с интервалом не менее 10 минут. Изменившийся
+fingerprint или истёкшее окно разрешает новую попытку. Число остановленных
+слоёв и явный сброс guard доступны в «Настройки → Проект».
+
+Rebuild является staged replacement. Старый слой и его SQLite остаются в карте,
+пока новая копия полностью не загружена в отдельный каталог и не сохранена в
+`LayerGroup`. Только после этого старая копия удаляется. Ошибка fill удаляет
+только stage, поэтому сломанный server config не превращает рабочий локальный
+слой в потерю данных. Первый неуспешный SQLite insert завершает fill и откатывает
+транзакцию вместо повторения всех следующих записей.
+
+`LayerFillService` возвращает `START_NOT_STICKY`: пустой/null redelivery не
+создаёт бесконечный foreground service. На Android 15+ `onTimeout()` очищает
+текущую очередь и останавливает FGS, но сохраняет durable Collector journal,
+чтобы следующий запуск мог проверить и докачать партию.
+
 Проверить отдельно:
 
 - pull, push и конфликты;
@@ -159,6 +225,12 @@ UI, но не является единственным владельцем с�
   уход/возврат в layer drawer во время синхронизации;
 - post-push refresh и сохранение локальных данных;
 - foreground-service требования Android 14+.
+- отказ от project switch во время всей ручной sync и layer fill;
+- staged schema rebuild, лимит неизменного fingerprint и ручной reset guard;
+- массовый incremental pull с одной итоговой R-tree rebuild, без построчных
+  notify и без `LinkedTreeMap` style errors;
+- null-intent/system-timeout `LayerFillService` без
+  `ForegroundServiceDidNotStopInTimeException`, с сохранённым import journal.
 
 Связанные tests: `NgwPullDecisionTest`, `NGWUtilFeaturesUrlTest`,
 `NgwResmetaUtilTest`, `LayerConfigUtilTest`, `NgwSyncRetryPolicyTest`,

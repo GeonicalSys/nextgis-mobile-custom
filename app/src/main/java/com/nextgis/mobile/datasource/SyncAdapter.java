@@ -46,6 +46,7 @@ import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.util.NotificationHelper;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
@@ -54,6 +55,7 @@ import static com.nextgis.maplib.util.Constants.MESSAGE_ALERT_INTENT;
 import static com.nextgis.maplib.util.Constants.MESSAGE_EXTRA;
 import static com.nextgis.maplib.util.Constants.MESSAGE_TITLE_EXTRA;
 import static com.nextgis.maplibui.util.NotificationHelper.createBuilder;
+import static com.nextgis.mobile.util.OfflineSyncIntentService.EXTRA_PROJECT_OPERATION_ALREADY_HELD;
 
 public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
     private static final int NOTIFICATION_ID = 517;
@@ -73,43 +75,62 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
 
         Log.d("SSYNC", "SyncAdapter/datasource  onPerformSync account - " + account.name);
 
-        if(!AccountUtil.isUserExists(getContext())) {
-            HyperLog.v(Constants.TAG, "onPerformSync for" + account.name + " exit cos !AccountUtil.isUserExists");
-            String alertMessage = getContext().getString(com.nextgis.maplibui.R.string.sync_need_login);
-            String alertTitle = getContext().getString(com.nextgis.maplibui.R.string.sync_off_title);
-            Intent msg = new Intent(MESSAGE_ALERT_INTENT);
-            msg.putExtra(MESSAGE_EXTRA, alertMessage);
-            msg.putExtra(MESSAGE_TITLE_EXTRA, alertTitle);
-            msg.setPackage(getContext().getPackageName());
-            getContext().sendBroadcast(msg);
+        boolean operationAlreadyHeld = bundle != null
+                && bundle.getBoolean(EXTRA_PROJECT_OPERATION_ALREADY_HELD, false);
+        ProjectOperationCoordinator.Lease operationLease = operationAlreadyHeld
+                ? null
+                : ProjectOperationCoordinator.tryBegin(
+                        getContext(), ProjectOperationCoordinator.Kind.DATA_SYNC);
+        if (!operationAlreadyHeld && operationLease == null) {
+            HyperLog.v(Constants.TAG,
+                    "onPerformSync skipped (project operation in progress) for " + account.name);
             sendSyncFinishBroadcast();
             return;
         }
 
-        if (!super.isSomeToSync( account)) {
-            sendSyncFinishBroadcast();
-            return;
+        try {
+            if(!AccountUtil.isUserExists(getContext())) {
+                HyperLog.v(Constants.TAG, "onPerformSync for" + account.name + " exit cos !AccountUtil.isUserExists");
+                String alertMessage = getContext().getString(com.nextgis.maplibui.R.string.sync_need_login);
+                String alertTitle = getContext().getString(com.nextgis.maplibui.R.string.sync_off_title);
+                Intent msg = new Intent(MESSAGE_ALERT_INTENT);
+                msg.putExtra(MESSAGE_EXTRA, alertMessage);
+                msg.putExtra(MESSAGE_TITLE_EXTRA, alertTitle);
+                msg.setPackage(getContext().getPackageName());
+                getContext().sendBroadcast(msg);
+                sendSyncFinishBroadcast();
+                return;
+            }
+
+            if (!super.isSomeToSync(account)) {
+                sendSyncFinishBroadcast();
+                return;
+            }
+
+            IGISApplication gisApp = (IGISApplication) getContext().getApplicationContext();
+            if (gisApp.isLayerFillServiceBusy() && !operationAlreadyHeld) {
+                HyperLog.v(Constants.TAG, "onPerformSync skipped (layer fill in progress) for " + account.name);
+                sendSyncFinishBroadcast();
+                return;
+            }
+
+            sendNotification(getContext(), SYNC_START, null);
+
+            Log.d("SSYNC", "super.onPerformSync for " + account.name);
+
+            super.onPerformSync(account, bundle, authority, contentProviderClient, syncResult);
+
+            if (isCanceled())
+                sendNotification(getContext(), SYNC_CANCELED, null);
+            else if (syncResult.hasError() && !TextUtils.isEmpty(mError))
+                sendNotification(getContext(), SYNC_CHANGES, mError);
+            else
+                sendNotification(getContext(), SYNC_FINISH, null);
+        } finally {
+            if (operationLease != null) {
+                operationLease.close();
+            }
         }
-
-        IGISApplication gisApp = (IGISApplication) getContext().getApplicationContext();
-        if (gisApp.isLayerFillServiceBusy()) {
-            HyperLog.v(Constants.TAG, "onPerformSync skipped (layer fill in progress) for " + account.name);
-            sendSyncFinishBroadcast();
-            return;
-        }
-
-        sendNotification(getContext(), SYNC_START, null);
-
-        Log.d("SSYNC", "super.onPerformSync for " + account.name);
-
-        super.onPerformSync(account, bundle, authority, contentProviderClient, syncResult);
-
-        if (isCanceled())
-            sendNotification(getContext(), SYNC_CANCELED, null);
-        else if (syncResult.hasError() && !TextUtils.isEmpty(mError))
-            sendNotification(getContext(), SYNC_CHANGES, mError);
-        else
-            sendNotification(getContext(), SYNC_FINISH, null);
 
 //        Log.e("RRFRSH", "SyncAdapter datasource - onPerformSync end");
     }

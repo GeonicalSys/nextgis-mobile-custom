@@ -205,10 +205,12 @@ storage:
     owner: maplibui
     location_name: collector_projects_registry.json
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    purpose: Schema-v2 registry of WEBGIS/LOCAL identity, display alias, remote metadata and isolated map path
   collector-workspaces:
     owner: maplibui
-    location_name: collector_projects
+    location_name: collector_projects with atomic per-workspace project.json sidecars
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    purpose: Isolated maps/layers/tracks; tombstone rename makes device-only deletion recoverable before registry commit
   collector-import-journal:
     owner: maplibui
     location_name: collector_import_journal SharedPreferences
@@ -217,6 +219,11 @@ storage:
     owner: maplibui
     location_name: .collector_form_transaction.properties and same-directory stage/backup files
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
+  ngw-schema-rebuild-guard:
+    owner: maplibui
+    location_name: ngw_schema_rebuild_guard SharedPreferences
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
+    purpose: Per workspace/account/remote-id mismatch fingerprint with two attempts per 24 hours and ten-minute retry cooldown
   layer-backups:
     owner: maplibui
     location_name: LayerBackups

@@ -1,12 +1,60 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-16
+last_verified: 2026-08-21
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-21
+
+- `INV-PROJECT-OPERATION-EXCLUSION` и `SMOKE-PROJECT-MANAGEMENT` дополнены
+  атомарным отказом импорта Collector во время sync/fill с модальным сообщением,
+  а также успешным удалением workspace без повторного открытия карты из worker.
+- Добавлены `INV-HIDDEN-VECTOR-TILE-IDENTIFY` и
+  `SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY`: выключенный `local_vector_tiles` остаётся
+  доступным для локального просмотра атрибутов, не включая отрисовку; выключенный
+  classic layer по-прежнему исключён.
+- Актуальный official `nextgis_mobile_android/master` повторно проверен
+  21 августа 2026 года: его identify всё ещё безусловно пропускает
+  `visible=false`, а проектного registry и `local_vector_tiles` в official нет.
+
+## 2026-08-20
+
+- Добавлены `INV-GEOMETRY-SKETCH-WORKFLOW` и
+  `SMOKE-GEOMETRY-SKETCH-WORKFLOW`: новый Polygon/MultiPolygon начинается с
+  одного квадрата, полигональные меню повторяют LineString без команд частей и
+  отверстий, а кнопка формы нового объекта использует общий Save/repair handoff.
+- Закреплён no-op контракт свойств NGW-слоя: просмотр вкладок не меняет
+  двустороннюю синхронизацию на «только с сервера», а editable Collector-слой
+  можно вернуть из server-only режима без удаления и повторного импорта;
+  добавлен `SMOKE-LAYER-SYNC-SETTINGS`.
+- Добавлен `INV-SPATIAL-CACHE-CONSISTENCY` и
+  `SMOKE-NGW-LARGE-PULL-CACHE`: массовый incremental NGW pull не создаёт
+  построчный broadcast storm, R-tree сериализует операции и пересобирается один
+  раз, а MapLibre style refresh работает с независимым snapshot свойств.
+- Повторно проверен официальный `nextgis/android_maplib`: по состоянию на
+  20 августа incremental bulk, полная синхронизация R-tree и безопасный
+  `tighten()` в official отсутствуют.
+- Добавлен `INV-PROJECT-OPERATION-EXCLUSION`: ручная sync работает только с
+  активной картой, резервирует workspace до конца всех последовательных account,
+  блокирует switch/mutation и повторный полный запуск; fill/rebuild могут
+  присоединиться только к тому же проекту.
+- Registry проектов переведён на schema `2` с `WEBGIS`/`LOCAL` и атомарными
+  `project.json`: зафиксированы создание пустого local workspace, локальное
+  переименование, backup-gated device-only delete и fallback после удаления
+  последнего проекта. Быстрый picker содержит только имена, реквизиты находятся
+  в «Настройки → Проект».
+- Schema rebuild описан как staged replacement с сохранением старого слоя до
+  успешной записи нового и circuit breaker: две попытки неизменного fingerprint
+  за 24 часа, cooldown 10 минут, статус и reset в настройках проекта.
+- Добавлены `SMOKE-PROJECT-MANAGEMENT`, `SMOKE-SCHEMA-REBUILD-GUARD` и
+  `SMOKE-NGW-IMPORT-BACK`; уточнены current-project sync, FGS timeout/resume и
+  переход toolbar Back по дереву NGW.
+- Official NextGIS Mobile/MapLib/MapLibUI/EasyPicker HEAD повторно проверены;
+  hashes от 30 июля не изменились.
 
 ## 2026-08-16
 

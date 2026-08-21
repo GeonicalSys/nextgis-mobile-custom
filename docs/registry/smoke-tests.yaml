@@ -84,6 +84,15 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, an editable field vector whose initial visible is false, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors, Reset all settings, Select the NGW Collector resource and import its composition, Verify every layer has a distinct local storage path, Enable the read-only Point layer only in the local layer drawer without changing server config or running sync, Verify Point features render immediately while identify returns the same objects, Verify style tiles load with the project account and mixed order matches Collector, Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row, Start object creation and inspect offered layers, Select the hidden editable vector and add an object, Reopen and run composition sync, Repeat import with two different layers sharing a display name]
     expected: Project metadata and isolated workspace are created, concurrent fills use distinct storage and fail without retaining incomplete layers, enabling a layer omitted from the initial live style rebuilds its source/layer from local data without server config update, sync or app restart, layers are keyed by remote id, supported styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks stays on top, default OSM stays at internal index zero without visibility reset, and only Collector vectors with editable plus outbound sync are offered for object creation regardless of visibility; selecting a hidden eligible vector makes it visibly persist before editing.
+  SMOKE-LAYER-SYNC-SETTINGS:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Choose a Collector-managed vector whose project item is editable, generic mobile is_editable is false and synchronization direction is both
+      - Open layer properties, visit Synchronization, Fields and General, then leave without changing anything
+      - Reopen properties and verify the direction is still both and the layer remains available for creating or editing objects
+      - Select server-to-device only, close and reopen properties, then return the same layer to both directions
+    expected: A no-op settings visit never mutates the stored direction; the Collector owning policy keeps the direction control available independently of generic is_editable, and an accidentally server-only layer becomes editable again after selecting both without deleting or reimporting it.
   SMOKE-COLLECTOR-RESUME:
     type: device
     scope: [app, maplib, maplibui]
@@ -115,8 +124,18 @@ tests:
   SMOKE-COLLECTOR-SWITCH:
     type: device
     scope: [app, maplibui]
-    steps: [Prepare project A with saved tracks and project B without tracks, Open the track list in A, Switch A to B to A without killing the process, Open the track list and inspect the map after each switch, Verify that switching is refused while a track is actively recording]
-    expected: Map paths, metadata, layers and track history always come from the active project; A restores its tracks, B remains empty, and an active recording cannot cross the project boundary.
+    steps: [Prepare project A with saved tracks and project B without tracks, Verify the picker rows contain only project names, Open the track list in A, Switch A to B to A without killing the process, Open the track list and inspect the map after each switch, Start manual sync and try switching immediately and between sequential accounts, Verify that switching is refused while a track is actively recording]
+    expected: Map paths, metadata, layers and track history always come from the active project; A restores its tracks, B remains empty, the picker exposes no account/id/district text, and neither sync nor active recording can cross the project boundary.
+  SMOKE-PROJECT-MANAGEMENT:
+    type: device
+    scope: [app, maplibui]
+    steps: [Open Settings then Project and verify Web GIS name/account/id/district, Create an empty local project, add one local feature, rename the project, switch away and back, start synchronization and attempt to import another Collector project, delete the local project, delete a Web GIS project with one unsynchronized NGW layer, simulate a backup failure, then delete the last remaining project]
+    expected: Local projects contain their own OSM/tracks/data; aliases persist and stay unique; import during synchronization shows a readable modal request to wait and creates no project entry; successful delete reports success, removes only the device workspace and never Web GIS/account data; unsynchronized NGW data is backed up and backup failure cancels deletion; deleting the last project opens a new empty local fallback.
+  SMOKE-SCHEMA-REBUILD-GUARD:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps: [Use a heavy NGW layer with a deliberately unchanged broken schema/config, Run sync and interrupt or fail the staged fill, Verify the old layer remains usable, repeat after the cooldown until two attempts are recorded, run sync a third time, inspect Project settings, reset the protection, fix the server config and sync again]
+    expected: Failed fill never removes the old layer; an unchanged fingerprint runs at most twice per 24 hours and the third attempt is suppressed; Project settings reports the stopped layer and reset permits a new attempt; a changed/fixed fingerprint can rebuild successfully.
   SMOKE-BACKUP-GATE:
     type: device
     scope: [maplibui]
@@ -153,8 +172,20 @@ tests:
   SMOKE-MULTI-ACCOUNT-SYNC:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Open a Collector project whose account is not first in Android account order, Make another map account unavailable, Run manual sync, Leave and return to the layer drawer while sync finishes, Verify the sync icon stops, Restart and inspect enabled account schedules]
-    expected: The active Collector account sync runs first, another account error has a separate result, the sync animation stops from adapter-owned state even if the final broadcast was missed, and enabled schedules are restored without duplicate work.
+    steps: [Prepare two stored projects and an active map whose Collector account is not first in Android account order, make another account used by the active map unavailable, add a detectable server change only to the inactive project, run manual sync twice rapidly, leave and return to the layer drawer while sync finishes, verify the sync icon stops, restart and inspect enabled account schedules]
+    expected: Only accounts with NGW layers in the active map run, its Collector account runs first, the inactive project change is not pulled, another active-map account error has a separate result, the second full sync is refused, the spinner stops even if the final broadcast was missed, and enabled schedules are restored without duplicate work.
+  SMOKE-NGW-LARGE-PULL-CACHE:
+    type: device
+    scope: [app, maplib]
+    steps:
+      - Prepare an open NGW vector layer where one pull creates and deletes at least 1000 features while the map is visible
+      - Start manual sync once and interact with the map while that layer is applied
+      - Reopen the project, run a no-change sync and export HyperLog
+    expected: >
+      The process remains alive and responsive; incremental pull emits no per-row vector cache
+      notification storm, performs one final spatial cache rebuild and one layer reload; no
+      notify_insert/GeoEnvelope/GeometryRTree crash, LinkedTreeMap style exception or spatial cache
+      count mismatch appears on reopen, and the no-change sync leaves cache and SQLite counts equal.
   SMOKE-NGW-ACCOUNT-ADD:
     type: device
     scope: [app, maplibui]
@@ -245,6 +276,23 @@ tests:
       and every repair started from the MapLibre editor retains Web Mercator CRS; the
       feature survives reopen and sync. An unrecoverable result stays in geometry
       editing without a partial insert. Simple Polygon and line layers are not auto-repaired.
+  SMOKE-GEOMETRY-SKETCH-WORKFLOW:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Create new Point, LineString, Polygon and MultiPolygon features and inspect the attribute action as soon as starter geometry exists
+      - Verify Polygon and MultiPolygon start as one square and expose the same vertex, center, location, walk and touch actions as LineString
+      - Inspect the overflow and try repeated taps where add/delete polygon and add/delete hole actions used to be
+      - Move, insert and delete vertices, then press the attribute action instead of Save and complete the form
+      - Repeat a rapid double tap on the attribute action and cancel one new-feature form
+      - Reopen an existing multi-part MultiPolygon with a valid hole and edit one vertex without changing its part/ring count
+    expected: >
+      New polygons start with four corners; a new MultiPolygon contains exactly one polygon
+      part and no sketch action can add or delete a part or hole. The standard polygon toolbar
+      follows the line toolbar and only touch falls into overflow on the reference device.
+      For every supported geometry type the attribute action becomes enabled with geometry and
+      follows the same validation, topology repair and single-form handoff as Save. Existing
+      multipart geometry and holes remain intact unless their vertices are explicitly edited.
   SMOKE-TRACK-NO-FLAGS:
     type: device
     scope: [maplib, maplibui]
@@ -270,6 +318,11 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Add a public vector resource URL without a pre-existing account, Add a raster resource URL from an existing account, Add a QGIS style URL, Open a vector resource without data.write permission]
     expected: Guest account is created only for the validated public server, vector and raster appear through the normal reload flow, style resolves to its parent layer, and the no-write vector is read-only and pull-only.
+  SMOKE-NGW-IMPORT-BACK:
+    type: device
+    scope: [app, maplibui]
+    steps: [Open Import from Web GIS, enter at least two nested resource groups, press the toolbar Back arrow repeatedly, reopen the same path and repeat with Android system Back]
+    expected: Each Back press moves exactly one resource-group level up; only Back from the root returns to the map, and the breadcrumb matches the visible directory after every step.
   SMOKE-LOCAL-VECTOR-LAYERS:
     type: device
     scope: [app, maplib, maplibui]
@@ -293,3 +346,8 @@ tests:
       EPSG:3857 import does not attempt to change SQLite safety PRAGMAs inside a transaction,
       while an actually unsupported CRS and invalid or empty XML are rejected with a plain
       user-facing message and leave no incomplete layer.
+  SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY:
+    type: device
+    scope: [app, maplib]
+    steps: [Prepare overlapping classic and local_vector_tiles vector layers with known attributes, turn both layers off in the layer list, tap and long-press a known feature position, inspect the identify result and return to the layer list]
+    expected: The hidden local_vector_tiles feature appears in identification with its attributes while its display remains off; the hidden classic feature is not queried or listed.

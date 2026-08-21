@@ -126,6 +126,10 @@
 
             />
         <activity
+            android:name=".activity.ProjectSettingsActivity"
+            android:label="@string/project_settings"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name="com.nextgis.maplibui.activity.NGWSettingsActivity"
             android:label="@string/ngw_accounts" />
         <activity

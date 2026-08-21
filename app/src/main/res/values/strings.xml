@@ -210,7 +210,7 @@
     <string name="collector_projects_empty">No imported Collector projects</string>
     <string name="collector_project_workspace_list_item">%1$s\naccount: %2$s | id: %3$d | district: %4$s</string>
     <string name="collector_project_already_active">This Collector project is already active</string>
-    <string name="collector_project_switch_busy">Wait for layer loading to finish before switching projects</string>
+    <string name="collector_project_switch_busy">Wait for synchronization or data loading to finish before switching projects</string>
     <string name="collector_project_switch_edit_mode">Save or cancel editing before switching projects</string>
     <string name="collector_project_switch_tracking">Stop the active track before switching projects</string>
     <string name="collector_project_visible">visible</string>
@@ -236,6 +236,38 @@
     <string name="collector_project_detail_last_summary">Last diff: %1$s</string>
     <string name="collector_project_detail_incomplete">Last snapshot incomplete: %1$b</string>
     <string name="collector_project_detail_error">Last error: %1$s</string>
+    <string name="project_settings">Project</string>
+    <string name="project_none_active">No active project</string>
+    <string name="project_type_local">Type: local project</string>
+    <string name="project_type_webgis">Type: Web GIS project</string>
+    <string name="project_account">Account: %1$s</string>
+    <string name="project_remote_id">Project ID: %1$d</string>
+    <string name="project_district">District: %1$s</string>
+    <string name="project_value_none">not specified</string>
+    <string name="project_layer_count">Web GIS layers: %1$d</string>
+    <string name="project_pending_layer_count">Layers with unsynchronized changes: %1$d</string>
+    <string name="project_operation_status">Background work: %1$s</string>
+    <string name="project_operation_busy">in progress</string>
+    <string name="project_operation_idle">none</string>
+    <string name="project_rebuild_guard_count">Layer rebuilds stopped by protection: %1$d</string>
+    <string name="project_sync_current">Synchronize current project</string>
+    <string name="project_create_local">Create empty local project</string>
+    <string name="project_rename">Rename project on this device</string>
+    <string name="project_reset_rebuild_guard">Allow retrying stopped layer rebuilds</string>
+    <string name="project_rebuild_guard_reset_done">Layer rebuild protection has been reset</string>
+    <string name="project_delete_local_copy">Delete project from this device</string>
+    <string name="project_local_default_name">Local project</string>
+    <string name="project_create_failed">Could not create the local project</string>
+    <string name="project_rename_failed">Could not rename the project</string>
+    <string name="project_name_required">Enter a project name</string>
+    <string name="project_sync_started">Synchronization of the current project has started</string>
+    <string name="project_operation_wait">Wait for synchronization or data loading to finish</string>
+    <string name="project_delete_confirmation">Delete the local copy of “%1$s” and all its downloaded data? The project in Web GIS will not be deleted.</string>
+    <string name="project_delete_confirmation_with_changes">Delete the local copy of “%1$s”? %2$d layer(s) have unsynchronized changes. A backup will be created first; if that fails, deletion will be canceled. The project in Web GIS will not be deleted.</string>
+    <string name="project_delete_confirm">Delete from device</string>
+    <string name="project_delete_done">The local project copy has been deleted</string>
+    <string name="project_delete_backup_failed">The project was not deleted because the backup could not be created</string>
+    <string name="project_delete_failed">Could not delete the local project copy</string>
 
     <string name="choose_object">Choose object:</string>
 

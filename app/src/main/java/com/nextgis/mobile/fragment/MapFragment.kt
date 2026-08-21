@@ -72,7 +72,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.nextgis.maplib.api.GpsEventListener
 import com.nextgis.maplib.api.IGISApplication
 import com.nextgis.maplib.api.ILayer
-import com.nextgis.maplib.api.ILayerView
 import com.nextgis.maplib.datasource.Feature
 import com.nextgis.maplib.datasource.Geo
 import com.nextgis.maplib.datasource.GeoEnvelope
@@ -87,6 +86,7 @@ import com.nextgis.maplib.datasource.GeoPoint
 import com.nextgis.maplib.datasource.GeoPolygon
 import com.nextgis.maplib.location.GpsEventSource
 import com.nextgis.maplib.map.Layer
+import com.nextgis.maplib.map.LayerIdentifyPolicy
 import com.nextgis.maplib.map.LayerGroup
 import com.nextgis.maplib.map.MLP.MLGeometryEditClass
 import com.nextgis.maplib.map.MPLFeaturesUtils
@@ -244,6 +244,7 @@ public class MapFragment
     protected val ADD_POINT_BY_TAP: Int = 4
     private var mNeedSave = false
     private var mEditAttributesFormFromEditMode = false
+    private var mNewFeatureFormLaunchInProgress = false
 
     var longClickProcessed = false
 
@@ -750,28 +751,6 @@ public class MapFragment
                 return result
             }
 
-            com.nextgis.maplibui.R.id.menu_edit_add_new_inner_ring  ->{
-                val center = mMapRef.get()!!.map!!.maplibreMap.cameraPosition.target
-                val result = mMapRef.get()!!.map!!.addHole( center, mMapRef.get()!!.map!!.maplibreMap.getProjection());
-                return result
-            }
-
-            com.nextgis.maplibui.R.id.menu_edit_delete_inner_ring  ->{
-                val result = mMapRef.get()!!.map!!.deleteCurrentHole();
-                return result
-            }
-
-            com.nextgis.maplibui.R.id.menu_edit_delete_polygon  ->{
-                val result = mMapRef.get()!!.map!!.deleteCurrentPolygon();
-                return result
-            }
-
-            com.nextgis.maplibui.R.id.menu_edit_add_new_polygon  ->{
-                val center = mMapRef.get()!!.map!!.maplibreMap.cameraPosition.target
-                val result = mMapRef.get()!!.map!!.addNewPolygon(center, mMapRef.get()!!.map!!.maplibreMap.getProjection());
-                return result
-            }
-
             com.nextgis.maplibui.R.id.menu_edit_move_point_to_center  ->{
                 val center = mMapRef.get()!!.map!!.maplibreMap.cameraPosition.target
                 return mMapRef.get()!!.map!!.moveToPoint(center);
@@ -977,6 +956,10 @@ public class MapFragment
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == IVectorLayerUI.MODIFY_REQUEST) {
+            mNewFeatureFormLaunchInProgress = false
+        }
 
         if (requestCode == IVectorLayerUI.MODIFY_REQUEST && mEditAttributesFormFromEditMode) {
             mEditAttributesFormFromEditMode = false
@@ -1454,14 +1437,26 @@ public class MapFragment
         val layer = mSelectedLayer ?: return false
         val layerUI = layer as? IVectorLayerUI ?: return false
         val featureId = editLayerOverlay?.selectedFeatureId ?: Constants.NOT_FOUND.toLong()
-        if (featureId == Constants.NOT_FOUND.toLong()) return false
+        if (featureId == Constants.NOT_FOUND.toLong()) {
+            if (mNewFeatureFormLaunchInProgress) return true
+            if (editLayerOverlay?.selectedFeatureGeometry == null) return false
+
+            mNewFeatureFormLaunchInProgress = true
+            val launched = saveEdits()
+            if (!launched) {
+                mNewFeatureFormLaunchInProgress = false
+            }
+            return launched
+        }
+
+        if (mEditAttributesFormFromEditMode) return true
+        mEditAttributesFormFromEditMode = true
 
         if (!layer.isFieldsInitialized) {
             layerUI.showEditForm(activity, featureId, null, -1)
             return true
         }
 
-        mEditAttributesFormFromEditMode = true
         layerUI.showEditForm(activity, featureId, null, -1)
         return true
     }
@@ -1579,8 +1574,20 @@ public class MapFragment
             }
         }
 
-        val editAttributesItem = toolbar.menu.findItem(com.nextgis.maplibui.R.id.menu_edit_attributes)
-        if (editAttributesItem != null) ControlHelper.setEnabled(editAttributesItem, hasSelectedFeature)
+        updateEditAttributesActionAvailability()
+    }
+
+    private fun updateEditAttributesActionAvailability() {
+        val overlay = editLayerOverlay ?: return
+        val editAttributesItem = mActivity?.bottomToolbar?.menu?.findItem(
+            com.nextgis.maplibui.R.id.menu_edit_attributes
+        ) ?: return
+        val hasPersistedFeature = overlay.selectedFeatureId != Constants.NOT_FOUND.toLong()
+                && overlay.selectedFeature != null
+        val hasNewFeatureGeometry = overlay.selectedFeatureId == Constants.NOT_FOUND.toLong()
+                && overlay.selectedFeature != null
+                && overlay.selectedFeatureGeometry != null
+        ControlHelper.setEnabled(editAttributesItem, hasPersistedFeature || hasNewFeatureGeometry)
     }
 
 
@@ -3192,8 +3199,8 @@ public class MapFragment
         layersLoop@ for (layer in layers) {
             //if (!layer.isValid) continue
 
-            if (!(layer as ILayerView).isVisible) continue
             vectorLayer = layer as VectorLayer
+            if (!LayerIdentifyPolicy.shouldInclude(vectorLayer)) continue
 
 //            Log.e("CCLICK", "on long:")
 //            Log.e("CCLICK", clickeEnelope.toString())
@@ -3561,9 +3568,8 @@ public class MapFragment
                 layersLoop@ for (layer in layers) {
                     //if (!layer.isValid) continue
 
-                    if (!(layer as ILayerView).isVisible) continue
-
                     vectorLayer = layer as VectorLayer
+                    if (!LayerIdentifyPolicy.shouldInclude(vectorLayer)) continue
                     items = vectorLayer.query(mapEnv)
 
                     var i = 0
@@ -3751,9 +3757,8 @@ public class MapFragment
                 layersLoop@ for (layer in layers) {
                     //if (!layer.isValid) continue
 
-                    if (!(layer as ILayerView).isVisible) continue
-
                     vectorLayer = layer as VectorLayer
+                    if (!LayerIdentifyPolicy.shouldInclude(vectorLayer)) continue
 //                    Log.e("CCLICK", "on tapUp:")
 //                    Log.e("CCLICK", exactEnv.toString())
                     items = vectorLayer.query(exactEnv)
@@ -4706,6 +4711,7 @@ public class MapFragment
         editLayerOverlay!!.updateActions(editObject)
         undoRedoOverlay!!.saveToHistory(originalSelectedFeature)
         persistManualGeometryDraft("maplibre-change")
+        updateEditAttributesActionAvailability()
     }
 
     override fun getSelectedLayer(): VectorLayer? {

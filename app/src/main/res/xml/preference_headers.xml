@@ -49,6 +49,13 @@
 
     <PreferenceScreen
         app:iconSpaceReserved="false"
+        android:title="@string/project_settings"
+        android:key="com.nextgis.mobile.PREFS_PROJECT">
+        <Preference/>
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        app:iconSpaceReserved="false"
             android:title="@string/location"
             android:key="com.nextgis.mobile.PREFS_LOCATION"
             >
