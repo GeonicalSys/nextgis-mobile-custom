@@ -303,7 +303,9 @@ invariants:
       and MultiLineString retain their existing behavior and never enter this repair path.
       MapLibre conversion assigns CRS to the multi-polygon, polygons and rings. For drafts
       created by an older conversion, repair recovers a missing collection CRS from the
-      nested polygon, ring or point before the JTS round trip.
+      nested polygon, ring or point before the JTS round trip. A ring with fewer than three
+      distinct positions is classified before topology repair and must show the standard
+      insufficient-points message rather than a repair-failed message.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/MultiPolygonGeometryRepair.java
       - maplib/src/test/java/com/nextgis/maplib/util/MultiPolygonGeometryRepairTest.java

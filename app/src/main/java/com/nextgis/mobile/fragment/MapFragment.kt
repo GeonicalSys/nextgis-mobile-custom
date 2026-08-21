@@ -828,6 +828,20 @@ public class MapFragment
                     ).show()
                 }
 
+                MultiPolygonGeometryRepair.Status.INSUFFICIENT_POINTS -> {
+                    HyperLog.w(
+                        Constants.TAG,
+                        "MultiPolygon geometry has insufficient points layer=${mSelectedLayer!!.id} " +
+                            "feature=$featureId reason=${repair.diagnostic}"
+                    )
+                    Toast.makeText(
+                        context,
+                        com.nextgis.maplibui.R.string.not_enough_points,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return false
+                }
+
                 MultiPolygonGeometryRepair.Status.FAILED -> {
                     HyperLog.w(
                         Constants.TAG,
