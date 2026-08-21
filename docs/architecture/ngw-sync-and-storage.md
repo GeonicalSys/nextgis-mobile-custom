@@ -1,8 +1,10 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-08-20
+last_verified: 2026-08-22
 related_code:
+  - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
+  - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
   - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
@@ -210,6 +212,14 @@ Rebuild является staged replacement. Старый слой и его SQL
 только stage, поэтому сломанный server config не превращает рабочий локальный
 слой в потерю данных. Первый неуспешный SQLite insert завершает fill и откатывает
 транзакцию вместо повторения всех следующих записей.
+
+Полный fill разбирает WKT `MULTIPOLYGON` с учётом вложенности скобок, поэтому
+внутренние кольца и следующие polygon members сохраняются. При первом сбое
+чтения или записи HyperLog получает production-safe запись `NGW feature fill
+failed`: имя слоя, remote id, нулевой индекс элемента исходного массива,
+класс/ограниченное сообщение ошибки и ограниченный стек. Геометрия, значения
+полей и credentials не журналируются; объект не пропускается, транзакция слоя
+откатывается и staged replacement не подменяет рабочую копию.
 
 `LayerFillService` возвращает `START_NOT_STICKY`: пустой/null redelivery не
 создаёт бесконечный foreground service. На Android 15+ `onTimeout()` очищает

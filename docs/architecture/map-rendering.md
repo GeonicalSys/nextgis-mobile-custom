@@ -3,6 +3,7 @@ title: MapLibre rendering и порядок слоёв
 type: architecture
 last_verified: 2026-08-22
 related_code:
+  - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
@@ -118,8 +119,9 @@ related_code:
     после Stop тот же кэш снова публикуется для редактирования. Общий edit
     FillLayer допускается только для Polygon/MultiPolygon и удаляется при каждом
     обновлении LineString/MultiLineString, включая cold Continue. WKT parser
-    выделяет кольца по уровню скобок и не создаёт из внешнего кольца ложную дырку,
-    поэтому восстановленный Polygon снова имеет заливку и исходное число узлов. Площадь,
+    выделяет кольца Polygon и отдельные members MultiPolygon по уровню скобок,
+    не создаёт из внешнего кольца ложную дырку и не теряет следующие части,
+    поэтому восстановленная геометрия снова имеет заливку и исходное число узлов. Площадь,
     измеренная линейкой, выводится в гектарах. Преобразование экранных вершин
     LineString/Polygon в координаты карты выполняется через актуальную
     MapLibre-проекцию, поэтому перемещение карты перед созданием не оставляет

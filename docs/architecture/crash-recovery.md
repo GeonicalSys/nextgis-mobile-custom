@@ -3,6 +3,7 @@ title: Crash recovery and durable drafts
 type: architecture
 last_verified: 2026-08-22
 related_code:
+  - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
@@ -82,9 +83,10 @@ The latest geometry is durable, including the visible line in the reported
 serialized. Polygon conversion explicitly closes every non-empty outer/inner
 GeoJSON ring before MapLibre vertex extraction; a restored manual Polygon or
 MultiPolygon therefore shows the same fill and node order before and after a
-node is moved. WKT recovery identifies rings by parenthesis depth, preserving
-one outer ring and only actual holes instead of duplicating the outer ring as a
-hole that cancels the fill.
+node is moved. WKT recovery identifies Polygon rings and MultiPolygon members by
+parenthesis depth, preserving every polygon part, one outer ring per part and
+only actual holes instead of duplicating or truncating rings in a way that
+cancels the fill.
 
 Key types: `GeometryEditDraftStore`, `MapFragment.persistManualGeometryDraft`,
 `MapFragment.resumeManualGeometryFromDraft`.

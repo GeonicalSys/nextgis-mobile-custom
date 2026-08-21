@@ -1,8 +1,9 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-08-21
+last_verified: 2026-08-22
 related_code:
+  - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java
   - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
@@ -152,6 +153,14 @@ identity: параллельные задачи одной партии не д�
 выходит через exception, транзакция откатывается, а неполный слой удаляется.
 Продолжать тысячи вставок после первой ошибки схемы запрещено.
 
+Стандартный WKT `MULTIPOLYGON` во время полного fill разделяется по уровню
+скобок: внутреннее кольцо не обрывает polygon member, а следующие части не
+теряются. Первый сбой чтения или записи объекта по-прежнему останавливает слой,
+а не пропускает объект. HyperLog сохраняет имя слоя, remote id, нулевой индекс
+элемента в исходном JSON-массиве, класс/сообщение ошибки и ограниченный стек.
+Координаты, значения полей и credentials в эту запись не попадают; durable
+journal позволяет безопасно повторить незавершённый импорт.
+
 Android toolbar Back на экране импорта NGW использует тот же `goUp()`, что и
 аппаратная кнопка: внутри дерева он поднимается к родительскому каталогу и
 закрывает импорт только из корня доступного дерева.
@@ -255,7 +264,10 @@ destructive composition apply. После импорта в её `config.json` �
   authentication, а стили не предлагаются для создания объектов;
 - editable включён только у полевых элементов Collector: создавать объекты можно
   только в них, «Мои треки» остаётся наверху, а OSM — внизу списка после импорта;
-- запуск/возврат после screen off во время большого layer fill.
+- запуск/возврат после screen off во время большого layer fill;
+- импорт слоя с многосоставным `MULTIPOLYGON` и внутренним кольцом без потери
+  частей/дырки; при искусственной ошибке объекта — откат слоя и диагностическая
+  запись с исходным индексом без feature payload;
 - сброс настроек и импорт проекта минимум с 13 слоями: все каталоги уникальны;
   точечный слой с начальным `visible=false` после локального включения виден
   сразу, а identify и карта согласованы без server config update, sync и restart;
