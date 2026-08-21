@@ -772,7 +772,7 @@ Android-точность, временное отключение звука и 
 | Превью «хвоста» | Нет | `syncWalkGeometryToMaplibreUi(walkGpsLead=true)` — линия от последней GPS-вершины в выбранной позиции вставки до текущего GPS |
 | Сохранение при Stop | Только зафиксированные вершины сервиса | `commitWalkGpsLeadToFeature()` — в объект попадает то же, что показывал MapLibre; `appendClosingWalkSnapIfNeeded` добирает последний fix, отброшенный `min_dt` |
 | Фильтрация GPS | В основном `requestLocationUpdates(minTime, minDistance)` | Общий `LocationTrackFilter`: валидное движение до 160 км/ч без профилей, точность/возраст/скорость/ускорение и accuracy-aware chord-check — тот же класс, что у записи трека |
-| Перезагрузка карты | Может прервать edit-сессию | `canReloadVectorLayerStyleOnMap()` блокирует hot style reload в `MODE_EDIT_BY_WALK`; после `loadLayersToMaplibreMap` property-bearing edit feature восстанавливается атомарно вместе с outline и скрытым vertex cache, а shared fill включается строго для polygon layer type |
+| Перезагрузка карты | Может прервать edit-сессию | `canReloadVectorLayerStyleOnMap()` блокирует hot style reload в `MODE_EDIT_BY_WALK`; после `loadLayersToMaplibreMap` property-bearing edit feature восстанавливается атомарно вместе с outline и скрытым vertex cache, а shared fill включается только когда polygon совпадает и по текущей геометрии, и по авторитетному типу слоя |
 | Дополнение существующего | Есть | Выбранные part/ring/node и следующая позиция вставки фиксируются в draft; поток вставляется после выбранного узла, не только в конец; замыкающая вершина кольца нормализуется |
 
 #### Как устроен pipeline в форке
