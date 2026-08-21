@@ -1073,6 +1073,22 @@ public class MapFragment
         clearManualGeometryDraft("geometry-cancel")
     }
 
+    private fun requestCancelEdits() {
+        val isNewFeature = editLayerOverlay?.selectedFeatureId == Constants.NOT_FOUND.toLong()
+        if (!isNewFeature) {
+            cancelEdits()
+            return
+        }
+
+        val ctx = context ?: return
+        AlertDialog.Builder(ctx)
+            .setTitle(R.string.geometry_edit_cancel_title)
+            .setMessage(R.string.geometry_edit_cancel_message)
+            .setPositiveButton(R.string.geometry_edit_cancel_confirm) { _, _ -> cancelEdits() }
+            .setNegativeButton(R.string.geometry_edit_cancel_continue, null)
+            .show()
+    }
+
     private fun modeName(value: Int): String {
         return when (value) {
             MODE_NORMAL -> "MODE_NORMAL"
@@ -1163,7 +1179,7 @@ public class MapFragment
                 mActivity!!.showEditToolbar()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT
                 toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
-                mFinishListener = View.OnClickListener { cancelEdits() }
+                mFinishListener = View.OnClickListener { requestCancelEdits() }
                 toolbar.setNavigationOnClickListener(mFinishListener)
                 toolbar.setOnMenuItemClickListener { menuItem ->
                     onOptionsItemSelected(
@@ -1180,7 +1196,7 @@ public class MapFragment
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT_BY_WALK
                 undoRedoOverlay!!.clearHistory()
                 toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
-                mFinishListener = View.OnClickListener { cancelEdits() }
+                mFinishListener = View.OnClickListener { requestCancelEdits() }
                 toolbar.setNavigationOnClickListener(mFinishListener)
 
                 mMapRef.get()!!.map!!.unselectFeatureFromEdit(false, true)

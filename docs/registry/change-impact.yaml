@@ -157,6 +157,8 @@ triggers:
       - maplibui/src/main/res/values/geometry_edit_ids.xml
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
       - app/src/main/res/menu/select_action.xml
+      - app/src/main/res/values/strings.xml
+      - app/src/main/res/values-ru/strings.xml
     owners: [maplib, maplibui, app]
     read:
       - docs/architecture/map-rendering.md

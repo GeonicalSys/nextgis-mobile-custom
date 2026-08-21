@@ -286,7 +286,7 @@ tests:
     steps:
       - Create new Point, LineString, Polygon and MultiPolygon features and inspect the attribute action as soon as starter geometry exists
       - Verify layer selection immediately places a point or first line/polygon node at map centre without an intermediate plus action
-      - Cancel a new line/polygon sketch with the bottom cross and inspect the next screen and toolbar
+      - Cancel a new line/polygon sketch with the bottom cross, first keep editing in the confirmation dialog, then confirm cancellation
       - Close a ruler polygon and inspect the displayed area unit
       - Add line and polygon nodes with map taps; select another node and verify the next tap inserts after it
       - Insert midpoint nodes in LineString, Polygon, MultiPolygon and ruler geometry, then move the inserted nodes
@@ -305,8 +305,9 @@ tests:
       For every supported geometry type the attribute action becomes enabled with geometry and
       follows the same validation, topology repair and single-form handoff as Save. Existing
       multipart geometry and holes remain intact unless their vertices are explicitly edited.
-      Cancelling a new sketch returns to normal map mode without a disabled action panel or a
-      duplicate plus button, and ruler area is displayed in hectares.
+      Cancelling a new sketch first requires confirmation; continuing leaves the sketch intact,
+      while confirmed cancellation returns to normal map mode without a disabled action panel or
+      a duplicate plus button. Ruler area is displayed in hectares.
   SMOKE-TRACK-NO-FLAGS:
     type: device
     scope: [maplib, maplibui]
