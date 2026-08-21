@@ -15,6 +15,11 @@ tests:
     scope: maplibui
     command: .\gradlew.bat :maplibui:assembleDebug
     expected: Maplibui debug library assembles.
+  AUTO-MAPLIBUI-UNIT:
+    type: automatic
+    scope: maplibui
+    command: .\gradlew.bat :maplibui:testDebugUnitTest
+    expected: Maplibui unit tests pass.
   AUTO-APP-DEBUG:
     type: automatic
     scope: [app, maplib]
@@ -300,6 +305,7 @@ tests:
       - Reopen an existing multi-part MultiPolygon with a valid hole and edit one vertex without changing its part/ring count
       - Interrupt a partly drawn Polygon, restart the process, choose Continue and inspect its fill, holes and vertex count
       - Draw a self-intersecting simple Polygon and press Save
+      - Draw a line and polygon with more than ten nodes, select nodes without moving them, then Undo every added node and Redo them
     expected: >
       Creation starts immediately with one node at the projected screen centre; taps and midpoint actions build the
       geometry without a generated segment or square. A new MultiPolygon contains exactly one
@@ -314,6 +320,8 @@ tests:
       a duplicate plus button. Ruler area is displayed in hectares. A restored Polygon has one
       outer fill, the original vertex count and no invented hole. A self-intersecting simple
       Polygon remains in editing and reports self-intersection rather than insufficient points.
+      Each Undo or Redo press changes exactly one node even after selection and duplicate map
+      callbacks, and more than ten real changes remain available without a no-op boundary step.
   SMOKE-TRACK-NO-FLAGS:
     type: device
     scope: [maplib, maplibui]

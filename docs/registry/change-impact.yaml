@@ -181,6 +181,25 @@ triggers:
       - app/docs/manifest.yaml
     verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GEOMETRY-SKETCH-WORKFLOW]
     strict_docs: true
+  - id: GEOMETRY-EDIT-HISTORY
+    paths:
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java
+      - maplibui/src/test/java/com/nextgis/maplibui/overlay/UndoRedoOverlayTest.java
+    owners: [maplibui, app]
+    read:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - docs/runbooks/device-smoke-tests.md
+    invariants: [INV-GEOMETRY-SKETCH-WORKFLOW]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - docs/runbooks/device-smoke-tests.md
+      - maplibui/docs/README.md
+      - maplibui/docs/manifest.yaml
+      - app/docs/README.md
+    verify: [AUTO-MAPLIBUI-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GEOMETRY-SKETCH-WORKFLOW]
+    strict_docs: true
   - id: MAP-BASE-LAYERS
     paths:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java

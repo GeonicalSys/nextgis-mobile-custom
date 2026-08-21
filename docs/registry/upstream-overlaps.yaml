@@ -30,6 +30,14 @@ hotspots:
     reason: Accept interface evolution and implement it in app without discarding fork deferred reload.
     invariants: [INV-HOT-ADD-CONSISTENCY]
     verify: [AUTO-APP-RELEASES, SMOKE-HOT-RASTER]
+  GEOMETRY-EDIT-HISTORY:
+    repositories: [maplibui]
+    paths:
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java
+    default_decision: ours
+    reason: Preserve one-step-per-real-edit Undo/Redo and the 100-change field history when accepting upstream overlay changes.
+    invariants: [INV-GEOMETRY-SKETCH-WORKFLOW]
+    verify: [AUTO-MAPLIBUI-UNIT, SMOKE-GEOMETRY-SKETCH-WORKFLOW]
   COLLECTOR-RESOURCE:
     repositories: [maplib, maplibui]
     paths:
