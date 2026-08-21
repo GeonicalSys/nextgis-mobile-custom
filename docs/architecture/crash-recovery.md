@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-07-30
+last_verified: 2026-08-22
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -60,6 +60,7 @@ the count of network fixes suppressed by recent GPS, but never coordinates.
 | Soft-interrupt | While UI is in walk mode (or draft exists) and service is not running → Continue/Discard dialog |
 | Cold start | Recovery hub in `MainActivity` offers the same dialog even if Android already restarted the `START_STICKY` service; the service is paused while the user decides |
 | UI ownership | A cold draft is never restored silently by `MapFragment`; silent restore is reserved for configuration recreation of an already attached walk UI |
+| Cold MapLibre overlay | Continue reconstructs one property-bearing edit feature on the current style, restores polygon fill and outline from the same source, and extracts the vertex cache before hiding it for the active walk; Stop republishes those vertices for ordinary editing |
 | GPS pipeline | Walk uses the same 160 km/h-capable filter and GPS-first/network-fallback arbitration as tracks, but reads ordinary `location_source` and `location_min_time` / `location_min_distance` settings |
 
 Key types: `WalkEditService`, `EditLayerOverlay.stopGeometryByWalk`, `MapFragment` watchdog / resume helpers.

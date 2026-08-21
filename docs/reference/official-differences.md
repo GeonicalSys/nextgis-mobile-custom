@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-08-21
+last_verified: 2026-08-22
 related_code:
   - app/build.gradle
   - app/src/main
@@ -772,7 +772,7 @@ Android-точность, временное отключение звука и 
 | Превью «хвоста» | Нет | `syncWalkGeometryToMaplibreUi(walkGpsLead=true)` — линия от последней GPS-вершины в выбранной позиции вставки до текущего GPS |
 | Сохранение при Stop | Только зафиксированные вершины сервиса | `commitWalkGpsLeadToFeature()` — в объект попадает то же, что показывал MapLibre; `appendClosingWalkSnapIfNeeded` добирает последний fix, отброшенный `min_dt` |
 | Фильтрация GPS | В основном `requestLocationUpdates(minTime, minDistance)` | Общий `LocationTrackFilter`: валидное движение до 160 км/ч без профилей, точность/возраст/скорость/ускорение и accuracy-aware chord-check — тот же класс, что у записи трека |
-| Перезагрузка карты | Может прервать edit-сессию | `canReloadVectorLayerStyleOnMap()` блокирует hot style reload в `MODE_EDIT_BY_WALK`; после `loadLayersToMaplibreMap` — `startEditByWalkFromRestore` + `updateWalkingFeature` |
+| Перезагрузка карты | Может прервать edit-сессию | `canReloadVectorLayerStyleOnMap()` блокирует hot style reload в `MODE_EDIT_BY_WALK`; после `loadLayersToMaplibreMap` property-bearing edit feature восстанавливается атомарно вместе с polygon fill, outline и скрытым vertex cache |
 | Дополнение существующего | Есть | Выбранные part/ring/node и следующая позиция вставки фиксируются в draft; поток вставляется после выбранного узла, не только в конец; замыкающая вершина кольца нормализуется |
 
 #### Как устроен pipeline в форке
@@ -807,7 +807,11 @@ Walk использует только обычную настройку ист�
 синхронизирует edit feature в MapLibre sources (`selected-poly-source` и др.).
 Во время обхода Canvas не перерисовывает тысячи вершин — только MapLibre. После
 полной перезагрузки style `MapDrawable` восстанавливает `editingObject` из
-`featureToRestore`, если `WalkEditService` ещё работает.
+`featureToRestore`, если `WalkEditService` ещё работает. Восстановление сохраняет
+служебные свойства edit feature (`layer_id`, `feature_id`, порядок и цвет),
+подключает заливку к тому же source и заранее пересобирает скрытые вершины. Поэтому
+контур и заливка не мерцают во время продолженного обхода, а после Stop вершины
+сразу доступны для обычного редактирования.
 
 **Как используется (для пользователя).** Выбрать «Добавить объект обходом» или в
 режиме редактирования — «Дополнить геометрию обходом» на линейном/полигональном

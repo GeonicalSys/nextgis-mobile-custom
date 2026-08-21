@@ -461,6 +461,9 @@ invariants:
       explicit Cancel, successful layer update, or handoff to the attribute form clears it.
       Polygon drafts must restore as explicitly closed MapLibre rings before vertex extraction,
       including new one-part MultiPolygon sketches, so the fill and vertices remain consistent.
+      A cold walk Continue must preserve the property-bearing edit feature while atomically
+      restoring polygon fill, outline and the hidden vertex cache on the current MapLibre style;
+      the outline must not flicker during GPS updates and Stop must republish editable vertices.
       Polygon WKT parsing preserves one outer ring and only actual holes; recovery must not
       duplicate the outer ring as a fill-cancelling inner ring or duplicate its vertices.
       Attribute forms persist a typed FeatureFormDraftStore snapshot (fields, geometry,

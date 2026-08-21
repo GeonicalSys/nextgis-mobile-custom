@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-08-21
+last_verified: 2026-08-22
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
@@ -112,7 +112,10 @@ related_code:
     Multi-вариантов активируется при наличии геометрии и вызывает общий
     `saveEdits()`, включая валидацию, repair и один form handoff. При переводе
     GeoPolygon/GeoMultiPolygon в GeoJSON кольцо замыкается явно: это сохраняет
-    заливку и индексы вершин после восстановления WKT-черновика. WKT parser
+    заливку и индексы вершин после восстановления WKT-черновика. При холодном
+    продолжении обхода один property-bearing edit feature атомарно обновляет
+    `selected-poly-source`, заливку, контур и скрытый на время обхода кэш вершин;
+    после Stop тот же кэш снова публикуется для редактирования. WKT parser
     выделяет кольца по уровню скобок и не создаёт из внешнего кольца ложную дырку,
     поэтому восстановленный Polygon снова имеет заливку и исходное число узлов. Площадь,
     измеренная линейкой, выводится в гектарах. Преобразование экранных вершин
