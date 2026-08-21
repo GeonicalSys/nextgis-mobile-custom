@@ -63,8 +63,9 @@ NGW account привязан не только к серверным credentials
 Release ЛИСА/Белка используют `com.nextgis.account.geonical`, debug —
 `com.nextgis.account.debug`. GIS provider аналогично должен совпадать между
 `BuildConfig.providerAuth`, manifest provider и `SyncAdapter.contentAuthority`.
-Выпуск `3.1.2.9` меняет только version tuple (`202` release / `203` debug) и не
-меняет эти application/account/provider identity.
+Выпуск `3.1.2.10` использует production tuple `204` / `3.1.2.10`, а отдельный
+debug остаётся `203` / `3.1.2.9`; application/account/provider identity не
+меняется.
 Library defaults нельзя считать достаточными: app variant обязан перекрывать оба
 account resource keys. Иначе HTTP-аутентификация проходит, но Android отклоняет
 `addAccountExplicitly()` как аккаунт незарегистрированного типа.

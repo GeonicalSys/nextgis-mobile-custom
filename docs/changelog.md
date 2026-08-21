@@ -10,6 +10,9 @@ related_code:
 
 ## 2026-08-21
 
+- Production-версия Lisa/Belka поднята до `3.1.2.10` / `versionCode 204` после
+  публикационного dry-run, подтвердившего, что `202` уже занят; debug остаётся
+  `3.1.2.9` / `203`, release `maplib.VERSION_NAME` обновлён синхронно.
 - `INV-PROJECT-OPERATION-EXCLUSION` и `SMOKE-PROJECT-MANAGEMENT` дополнены
   атомарным отказом импорта Collector во время sync/fill с модальным сообщением,
   а также успешным удалением workspace без повторного открытия карты из worker.

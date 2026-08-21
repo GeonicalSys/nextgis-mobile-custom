@@ -20,7 +20,7 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.9` / `versionCode` 202; Lisa Debug
+Состояние форка: Lisa/Belka Release `3.1.2.10` / `versionCode` 204; Lisa Debug
 `3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 

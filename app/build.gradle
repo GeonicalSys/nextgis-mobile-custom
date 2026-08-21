@@ -27,8 +27,8 @@ apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
-def productionVersionCode = 202
-def productionVersionName = '3.1.2.9'
+def productionVersionCode = 204
+def productionVersionName = '3.1.2.10'
 def debugVersionCode = 203
 def debugVersionName = '3.1.2.9'
 

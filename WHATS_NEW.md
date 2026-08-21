@@ -4,7 +4,7 @@
 в [`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md), история merge —
 в [`docs/history/upstream/`](docs/history/upstream/README.md).
 
-## 3.1.2.9 — 2026-08-15
+## 3.1.2.10 — 2026-08-21
 
 - Обновлены фирменные иконки приложений «ЛИСА» и «Белка».
 - Добавлен раздел «Проект»: в нём видны сведения о текущем проекте, можно создать
