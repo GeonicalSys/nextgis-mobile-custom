@@ -24,8 +24,9 @@ related_code:
 `3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 
-Production `3.1.2.11` ссылается на итоговый merge-коммит соответствующей
-release-версии maplib, а не на временную feature-ветку.
+Production `3.1.2.11` ссылается на итоговый merge-коммит maplib
+[`017bda8`](https://github.com/GeonicalSys/android_maplib/commit/017bda813bb7bce1c3985d88d301638f2fbd1d0a),
+а не на временную feature-ветку.
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
