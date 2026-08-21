@@ -464,6 +464,8 @@ invariants:
       A cold walk Continue must preserve the property-bearing edit feature while atomically
       restoring polygon fill, outline and the hidden vertex cache on the current MapLibre style;
       the outline must not flicker during GPS updates and Stop must republish editable vertices.
+      The shared edit FillLayer is exclusive to Polygon/MultiPolygon and must be removed for a
+      cold-restored LineString/MultiLineString even when the preceding edit was polygonal.
       Polygon WKT parsing preserves one outer ring and only actual holes; recovery must not
       duplicate the outer ring as a fill-cancelling inner ring or duplicate its vertices.
       Attribute forms persist a typed FeatureFormDraftStore snapshot (fields, geometry,

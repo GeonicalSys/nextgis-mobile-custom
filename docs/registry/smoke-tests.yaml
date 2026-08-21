@@ -155,6 +155,7 @@ tests:
       - Start track recording, Force Stop or reboot, reopen app
       - Start walk digitizing a line, swipe the app away while editing geometry, reopen it even if Android has already restarted WalkEditService
       - Draw a polygon manually, append it by walk from a middle node, swipe the app away, choose Continue, receive more GPS fixes, then Stop the walk
+      - Repeat cold walk recovery with LineString and MultiLineString after a polygon recovery
       - Create a line with the normal vertex editor, move/add vertices, swipe the app away before saving geometry, reopen and choose Continue
       - Repeat with a partly drawn Polygon and MultiPolygon, choose Continue, then move several different restored nodes
       - Repeat normal line editing for an existing feature, choose Discard after reopening
@@ -168,6 +169,8 @@ tests:
       restores vertices and GPS writing even when its sticky service was already restarted;
       a recovered polygon keeps one stable fill and red outline through later GPS updates,
       and Stop immediately republishes all editable vertices and midpoints;
+      recovered line types show only an open red line without polygon fill and retain that
+      geometry after Stop and Save;
       Cancel/Save does not re-offer. Normal vertex/tap editing offers its own
       Continue/Discard dialog; Continue restores the latest visible geometry in the same map,
       layer and feature while Discard clears it. Restored polygon fill and nodes agree before
