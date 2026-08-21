@@ -146,6 +146,8 @@ triggers:
       - maplib/src/test/java/com/nextgis/maplib/map/MPLFeaturesUtilsPolygonTest.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeoPolygon.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
+      - maplib/src/test/java/com/nextgis/maplib/datasource/GeoMultiPolygonWktTest.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationUtil.java
       - maplib/src/test/java/com/nextgis/maplib/util/LocationUtilAreaTest.java
       - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java

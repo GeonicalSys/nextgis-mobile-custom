@@ -24,8 +24,9 @@ related_code:
 `3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 
-Production `3.1.2.11` ссылается на итоговый merge-коммит соответствующей
-release-версии maplib, а не на временную feature-ветку.
+Production `3.1.2.11` ссылается на итоговый merge-коммит maplib
+[`017bda8`](https://github.com/GeonicalSys/android_maplib/commit/017bda813bb7bce1c3985d88d301638f2fbd1d0a),
+а не на временную feature-ветку.
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -33,7 +34,7 @@ release-версии maplib, а не на временную feature-ветку.
 - Android MapLib UI — [`a426e0a`](https://github.com/nextgis/android_maplibui/commit/a426e0acfc8d111982918e04236e2e8f896674de);
 - EasyPicker — [`36ba558`](https://github.com/nextgis/easypicker/commit/36ba558ba0d1eaadcb7dc6ba46ab9286d7eedaa1).
 
-Все четыре official HEAD повторно проверены 20 августа 2026 года через
+Все четыре official HEAD повторно проверены 22 августа 2026 года через
 канонические GitHub repositories; hashes не изменились.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
@@ -96,10 +97,14 @@ callbacks, включая обновление только CRS, не заним
 `android_maplibui/master` по-прежнему используются лимит 10,
 без удаления одинаковых снимков и с предварительным сдвигом курсора истории.
 
-При crash recovery WKT Polygon разбирается без дублирования внешнего кольца как
-дырки, поэтому заливка и узлы восстанавливаются согласованно. Для обычного Polygon
-самопересечение сообщается отдельно от недостаточного числа точек. В official
-master сохранены старый позиционный WKT parser и общий текст ошибки в save path.
+При crash recovery и NGW fill WKT Polygon/MultiPolygon разбирается по уровню
+скобок без дублирования внешнего кольца как дырки, обрыва member на первой дырке
+или потери следующих частей. Поэтому заливка, части и узлы восстанавливаются
+согласованно. Для обычного Polygon самопересечение сообщается отдельно от
+недостаточного числа точек. При ошибке полного NGW fill форк дополнительно пишет
+в локальный HyperLog слой, remote id, нулевой индекс объекта, класс/сообщение и
+ограниченный стек без feature payload. В official master сохранены позиционные
+WKT parsers, `printStackTrace()` и общий текст ошибки в fill/save path.
 
 **Дополнение обходом.** Команда доступна уже после первого узла. GPS-вершины
 вставляются после выбранного узла и до его прежнего соседа, а live-хвост строится
@@ -992,7 +997,7 @@ process state.
 insert/update/delete broadcast и после SQLite-apply выполняет одну пересборку
 R-tree и один reload слоя. Операции `GeometryRTree` сериализованы; незавершённый
 envelope не разыменовывает `null`, а ошибка cache receiver не завершает main
-thread. В проверенном official `nextgis/android_maplib` на 20 августа 2026 года
+thread. В проверенном official `nextgis/android_maplib` на 22 августа 2026 года
 incremental bulk-защиты нет, операции add/remove R-tree не сериализованы, а
 `tighten()` по-прежнему глотает `ConcurrentModificationException` после
 `unInit()`.
