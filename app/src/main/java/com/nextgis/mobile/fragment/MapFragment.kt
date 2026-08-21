@@ -1066,9 +1066,10 @@ public class MapFragment
             undoRedoOverlay!!.defineUndoRedo()
         }
         val featureId = editLayerOverlay!!.selectedFeatureId
+        val wasNewFeature = featureId == Constants.NOT_FOUND.toLong()
         editLayerOverlay!!.setSelectedFeature(featureId)
         mMapRef.get()!!.map!!.cancelFeatureEdit(featureId != -1L)
-        setNewMode(MODE_SELECT_ACTION)
+        setNewMode(if (wasNewFeature) MODE_NORMAL else MODE_SELECT_ACTION)
         clearManualGeometryDraft("geometry-cancel")
     }
 
@@ -1214,10 +1215,6 @@ public class MapFragment
                     Toolbar.OnMenuItemClickListener { item ->
                         if (mSelectedLayer == null) return@OnMenuItemClickListener false
                         when (item.itemId) {
-                            R.id.menu_feature_add -> {
-                                startNewGeometryCreation(mSelectedLayer!!)
-                            }
-
                             R.id.menu_feature_edit -> startFeatureGeometryEdit()
 
                             R.id.menu_feature_edit_attributes -> showSelectedFeatureAttributesFormFromEditMode()
@@ -1487,11 +1484,6 @@ public class MapFragment
 
             item = toolbar.menu.findItem(R.id.menu_feature_edit_attributes)
             if (item != null) ControlHelper.setEnabled(item, hasSelectedFeature && editingAllowed)
-
-            item = toolbar.menu.findItem(R.id.menu_feature_add)
-            if (item != null) {
-                ControlHelper.setEnabled(item, !isViewOnlySelection && editingAllowed)
-            }
 
             item = toolbar.menu.findItem(R.id.menu_feature_stakeout)
             if (item != null) {
@@ -4398,7 +4390,7 @@ public class MapFragment
     }
 
     override fun onAreaChanged(area: Double) {
-        mActivity!!.setSubtitle(LocationUtil.formatArea(context, area))
+        mActivity!!.setSubtitle(LocationUtil.formatAreaHectares(context, area))
     }
 
     public companion object {

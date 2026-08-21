@@ -144,6 +144,8 @@ triggers:
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
       - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
       - maplib/src/test/java/com/nextgis/maplib/map/MPLFeaturesUtilsPolygonTest.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationUtil.java
+      - maplib/src/test/java/com/nextgis/maplib/util/LocationUtilAreaTest.java
       - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometryInsertion.java
@@ -154,6 +156,7 @@ triggers:
       - maplibui/src/main/res/menu/edit_multipolygon.xml
       - maplibui/src/main/res/values/geometry_edit_ids.xml
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/res/menu/select_action.xml
     owners: [maplib, maplibui, app]
     read:
       - docs/architecture/map-rendering.md

@@ -318,8 +318,9 @@ invariants:
     title: Geometry sketches use tap-created nodes, one polygon part and a shared form handoff
     owners: [app, maplib, maplibui]
     statement: >
-      Point creation starts immediately at map centre; LineString, MultiLineString, Polygon
-      and MultiPolygon creation starts with one centre node and subsequent map taps insert
+      Point creation starts immediately at the projected screen centre; LineString,
+      MultiLineString, Polygon and MultiPolygon creation starts with one projected centre node
+      and subsequent map taps insert
       nodes after the selected node. Line, polygon and ruler editors expose midpoint insertion.
       Line/polygon edit menus expose no touch-append action or overflow trigger; polygon menus
       also expose no add/delete polygon or add/delete hole action. A new MultiPolygon sketch
@@ -330,20 +331,25 @@ invariants:
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
-      launch duplicate forms.
+      launch duplicate forms. The selection toolbar has no duplicate add action; cancelling a
+      new sketch returns directly to normal map mode. Ruler area is always formatted in hectares.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/PolygonEditClass.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/MultiPolygonEditClass.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/MeasurmentLine.java
       - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationUtil.java
+      - maplib/src/test/java/com/nextgis/maplib/util/LocationUtilAreaTest.java
       - maplib/src/test/java/com/nextgis/maplib/map/MLP/PolygonSketchPolicyTest.java
       - maplib/src/test/java/com/nextgis/maplib/map/MPLFeaturesUtilsPolygonTest.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
       - maplibui/src/test/java/com/nextgis/maplibui/service/WalkGeometryInsertionTest.java
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
       - maplibui/src/main/res/menu/edit_polygon.xml
       - maplibui/src/main/res/menu/edit_multipolygon.xml
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/res/menu/select_action.xml
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-GEOMETRY-SKETCH-WORKFLOW]
     must_update_docs:
       - docs/architecture/map-rendering.md
