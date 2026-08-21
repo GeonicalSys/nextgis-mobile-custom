@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-08-20
+last_verified: 2026-08-21
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -49,7 +49,9 @@ Launcher и экраны intro/about получают иконку через fl
   контейнера и колец;
 - идентификация объекта: список совпадений и верхняя панель используют
   `feature_label_field`; форма атрибутов в нижней панели доступна только если
-  слой допускает редактирование (`isEditingAllowed`);
+  слой допускает редактирование (`isEditingAllowed`); слой с режимом
+  `local_vector_tiles` отдаёт локальные атрибуты даже при выключенной отрисовке,
+  не включая её, тогда как выключенный классический слой пропускается;
 - выбор и переключение проектов по списку только из имён; раздел
   «Настройки → Проект» с Web GIS-реквизитами, созданием пустого local workspace,
   локальным переименованием и удалением локальной копии;
@@ -121,6 +123,11 @@ Launcher и экраны intro/about получают иконку через fl
 - Переключение доступно во время sync: проверить lease
   `ProjectOperationCoordinator` от `OfflineSyncIntentService.startActionFoo()` до
   конца последнего account и проверку в `MainActivity`.
+- Импорт Collector во время sync показывает общую ошибку: ожидать модальное
+  сообщение и отсутствие новой записи проекта до завершения операции.
+- Удалённый проект исчез, но показана ошибка: fallback-карта не должна повторно
+  открываться executor-потоком удаления; переход на `MainActivity` открывает её
+  в UI-потоке после успешного результата.
 - Вылет `notify_insert → GeoEnvelope.width/GeometryRTree`: это регрессия bulk
   incremental pull; проверить единственную итоговую cache rebuild и отсутствие
   `LinkedTreeMap` ошибок при обновлении style.
@@ -155,6 +162,9 @@ Launcher и экраны intro/about получают иконку через fl
 - Полевые точки выбираются, но появились только после restart: проверить
   completion post-fill reload и `MapLibre post-load verification`; pending-флаг
   очищается только из `MapFragment.setMapLayersLoaded()`.
+- Выключенный `local_vector_tiles` не идентифицируется: проверить
+  `LayerIdentifyPolicy` и сохранённый render mode; identify не должен менять
+  видимость слоя.
 - Самопересекающийся мультиполигон не перешёл к форме: проверить
   `MultiPolygon geometry repair failed`; при отказе пользователь должен остаться
   в редактировании геометрии без частично созданного объекта. Сообщение

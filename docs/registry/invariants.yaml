@@ -501,7 +501,9 @@ invariants:
       Manual sync operates only on accounts represented in the active map and owns that workspace
       from the button press through every sequential account. Periodic sync, layer fill and schema
       rebuild also own a workspace. Switch/create/rename/delete and duplicate full sync are refused
-      until all owners finish. A dependent fill may reserve only the same workspace while sync is
+      until all owners finish. Collector import reserves the switch before creating or updating its
+      workspace entry; if another owner is active, import leaves the registry unchanged and explains
+      in a modal dialog that synchronization or loading must finish. A dependent fill may reserve only the same workspace while sync is
       active, but must wait for sync to release database access before touching SQLite.
       An unchanged schema mismatch is circuit-broken after two attempts in 24 hours, with at least
       ten minutes between attempts, and LayerFillService timeout must preserve the durable import journal.
@@ -511,9 +513,12 @@ invariants:
       - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
+      - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    verify_smoke: [SMOKE-COLLECTOR-SWITCH, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SCHEMA-REBUILD-GUARD]
+    verify_smoke: [SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SCHEMA-REBUILD-GUARD]
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/ngw-sync-and-storage.md
@@ -586,3 +591,21 @@ invariants:
       - maplibui/docs/README.md
       - app/docs/README.md
       - docs/reference/official-differences.md
+  INV-HIDDEN-VECTOR-TILE-IDENTIFY:
+    title: Local-vector-tile attributes remain identifiable while display is hidden
+    owners: [maplib, app]
+    statement: >
+      A vector layer whose persisted origin requests local_vector_tiles participates in tap and
+      long-press identification even when its display visibility is false. Identification queries
+      the local vector database and does not turn rendering on. Hidden classic vector layers remain
+      excluded, so the exception is limited to the configured rendering method.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileRenderMode.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
+      - app/docs/README.md

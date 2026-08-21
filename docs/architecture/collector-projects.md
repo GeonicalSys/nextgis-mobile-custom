@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-08-20
+last_verified: 2026-08-21
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java
@@ -13,6 +13,8 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+  - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
+  - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
@@ -51,6 +53,11 @@ Schema registry `2` различает `WEBGIS` и `LOCAL`; каждый workspa
 создания новой рабочей области: частичный проект не считается допустимым
 результатом. Повторный импорт различает слои по `account + remote_id`, поэтому
 одинаковые отображаемые имена не приводят к пропуску разных слоёв.
+
+Подготовка workspace сначала получает lease переключения и лишь затем вызывает
+`ensureProject()`. Если текущий проект синхронизируется, загружает слой или
+перестраивает схему, импорт не создаёт запись в registry и показывает отдельное
+модальное сообщение с просьбой дождаться завершения фоновой операции.
 
 ## Поддерживаемые элементы проекта
 
@@ -116,6 +123,10 @@ backup gate. Workspace сначала атомарно переименовыв�
 и active preferences переключаются на последний открытый оставшийся проект,
 и только затем tombstone удаляется. Если удалён последний проект, заранее
 создаётся пустой локальный fallback с обычными OSM и «Мои треки».
+Фоновая операция не открывает fallback-карту после удаления: экран проекта
+возвращает пользователя в `MainActivity`, который открывает новую активную карту
+на главном потоке. Поэтому уже успешное удаление не превращается в ложный
+`STORAGE_FAILED` из-за Android `Looper`.
 
 ## Незавершённый импорт и обновление приложения
 
@@ -226,8 +237,11 @@ destructive composition apply. После импорта в её `config.json` �
 - переключение между двумя проектами в одном процессе без смешивания слоёв и треков;
 - запрет переключения и второго запуска sync на всём интервале sync/fill, включая
   паузу между последовательными аккаунтами;
+- импорт другого Collector-проекта во время sync: понятное модальное ожидание и
+  отсутствие новой записи в registry до завершения операции;
 - создание локального проекта, локальное переименование, удаление Web GIS
-  workspace без удаления server resource и создание fallback после удаления последнего;
+  workspace без удаления server resource, без ложного сообщения об ошибке и с
+  созданием fallback после удаления последнего;
 - picker содержит только имена, а account/id/district доступны в «Настройки → Проект»;
 - проект с сохранёнными треками → проект без треков → обратно: список, карта и новая запись
   используют базу текущего проекта без принудительного перезапуска приложения;

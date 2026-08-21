@@ -72,7 +72,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.nextgis.maplib.api.GpsEventListener
 import com.nextgis.maplib.api.IGISApplication
 import com.nextgis.maplib.api.ILayer
-import com.nextgis.maplib.api.ILayerView
 import com.nextgis.maplib.datasource.Feature
 import com.nextgis.maplib.datasource.Geo
 import com.nextgis.maplib.datasource.GeoEnvelope
@@ -87,6 +86,7 @@ import com.nextgis.maplib.datasource.GeoPoint
 import com.nextgis.maplib.datasource.GeoPolygon
 import com.nextgis.maplib.location.GpsEventSource
 import com.nextgis.maplib.map.Layer
+import com.nextgis.maplib.map.LayerIdentifyPolicy
 import com.nextgis.maplib.map.LayerGroup
 import com.nextgis.maplib.map.MLP.MLGeometryEditClass
 import com.nextgis.maplib.map.MPLFeaturesUtils
@@ -3199,8 +3199,8 @@ public class MapFragment
         layersLoop@ for (layer in layers) {
             //if (!layer.isValid) continue
 
-            if (!(layer as ILayerView).isVisible) continue
             vectorLayer = layer as VectorLayer
+            if (!LayerIdentifyPolicy.shouldInclude(vectorLayer)) continue
 
 //            Log.e("CCLICK", "on long:")
 //            Log.e("CCLICK", clickeEnelope.toString())
@@ -3568,9 +3568,8 @@ public class MapFragment
                 layersLoop@ for (layer in layers) {
                     //if (!layer.isValid) continue
 
-                    if (!(layer as ILayerView).isVisible) continue
-
                     vectorLayer = layer as VectorLayer
+                    if (!LayerIdentifyPolicy.shouldInclude(vectorLayer)) continue
                     items = vectorLayer.query(mapEnv)
 
                     var i = 0
@@ -3758,9 +3757,8 @@ public class MapFragment
                 layersLoop@ for (layer in layers) {
                     //if (!layer.isValid) continue
 
-                    if (!(layer as ILayerView).isVisible) continue
-
                     vectorLayer = layer as VectorLayer
+                    if (!LayerIdentifyPolicy.shouldInclude(vectorLayer)) continue
 //                    Log.e("CCLICK", "on tapUp:")
 //                    Log.e("CCLICK", exactEnv.toString())
                     items = vectorLayer.query(exactEnv)

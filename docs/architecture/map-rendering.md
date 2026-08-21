@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-08-20
+last_verified: 2026-08-21
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
@@ -10,6 +10,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
+  - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/fragment/ReorderedLayerView.java
@@ -149,13 +150,18 @@ related_code:
     во время bulk/rebuild. Hot style refresh берёт отдельные `Feature` из
     `VectorLayerRenderCache`, последовательно вычисляет props и публикует готовый
     snapshot на main thread; live `Feature.properties` на worker не изменяется.
+24. Выключенный слой с сохранённым render mode `local_vector_tiles` продолжает
+    участвовать в tap/long-press identify через локальную SQLite/R-tree копию,
+    не включая MapLibre source и не меняя visibility. Выключенный классический
+    vector layer по-прежнему пропускается. Решение централизовано в
+    `LayerIdentifyPolicy` и одинаково для всех активных веток identify.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
 `INV-TRACK-LAYER-TOP`, `INV-COLLECTOR-RASTER-STYLES`,
 `INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`,
 `INV-GEOMETRY-SKETCH-WORKFLOW`, `INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`,
-`INV-SPATIAL-CACHE-CONSISTENCY`.
+`INV-SPATIAL-CACHE-CONSISTENCY`, `INV-HIDDEN-VECTOR-TILE-IDENTIFY`.
 
 ## Изменение rendering pipeline
 

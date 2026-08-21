@@ -1,12 +1,25 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-20
+last_verified: 2026-08-21
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-21
+
+- `INV-PROJECT-OPERATION-EXCLUSION` и `SMOKE-PROJECT-MANAGEMENT` дополнены
+  атомарным отказом импорта Collector во время sync/fill с модальным сообщением,
+  а также успешным удалением workspace без повторного открытия карты из worker.
+- Добавлены `INV-HIDDEN-VECTOR-TILE-IDENTIFY` и
+  `SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY`: выключенный `local_vector_tiles` остаётся
+  доступным для локального просмотра атрибутов, не включая отрисовку; выключенный
+  classic layer по-прежнему исключён.
+- Актуальный official `nextgis_mobile_android/master` повторно проверен
+  21 августа 2026 года: его identify всё ещё безусловно пропускает
+  `visible=false`, а проектного registry и `local_vector_tiles` в official нет.
 
 ## 2026-08-20
 
