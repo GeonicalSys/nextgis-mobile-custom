@@ -129,7 +129,9 @@ invariants:
     statement: >
       Two-finger map rotation is disabled by default and changes only through the
       dedicated toolbar toggle. Disabling rotation returns the camera north-up and
-      keeps tilt disabled. The location action always resets north, raises zoom to at
+      keeps tilt disabled. When enabled, pinch and rotate detectors run together so an
+      immediate two-finger twist does not require a hold or sequential finger placement.
+      The location action always resets north, raises zoom to at
       least 12 without zooming out, and when no current fix exists centers on the first
       layer with a valid finite extent at zoom 12 regardless of extent size.
     related_code:
@@ -301,7 +303,9 @@ invariants:
       and MultiLineString retain their existing behavior and never enter this repair path.
       MapLibre conversion assigns CRS to the multi-polygon, polygons and rings. For drafts
       created by an older conversion, repair recovers a missing collection CRS from the
-      nested polygon, ring or point before the JTS round trip.
+      nested polygon, ring or point before the JTS round trip. A ring with fewer than three
+      distinct positions is classified before topology repair and must show the standard
+      insufficient-points message rather than a repair-failed message.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/MultiPolygonGeometryRepair.java
       - maplib/src/test/java/com/nextgis/maplib/util/MultiPolygonGeometryRepairTest.java
@@ -313,25 +317,56 @@ invariants:
       - maplib/docs/README.md
       - app/docs/README.md
   INV-GEOMETRY-SKETCH-WORKFLOW:
-    title: Geometry sketches use one-part polygon creation and a shared form handoff
+    title: Geometry sketches use tap-created nodes, one polygon part and a shared form handoff
     owners: [app, maplib, maplibui]
     statement: >
-      Polygon and MultiPolygon creation starts with one square outer ring. Polygon edit menus
-      match the LineString vertex tools and expose no add/delete polygon or add/delete hole
-      action. A new MultiPolygon sketch accepts at most one polygon part, while loading and
-      editing existing multipart or holed geometry does not discard its structure. For new
+      Point creation starts immediately at the projected screen centre; LineString,
+      MultiLineString, Polygon and MultiPolygon creation starts with one projected centre node
+      and subsequent map taps insert
+      nodes after the selected node. Line, polygon and ruler editors expose midpoint insertion.
+      Line/polygon edit menus expose no touch-append action or overflow trigger; polygon menus
+      also expose no add/delete polygon or add/delete hole action. A new MultiPolygon sketch
+      accepts at most one polygon part, while loading and editing existing multipart or holed
+      geometry does not discard its structure. Walk append starts after the selected node and
+      remains contiguous before its former successor, with current-GPS preview at that insertion
+      position. For new
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
-      launch duplicate forms.
+      launch duplicate forms. The selection toolbar has no duplicate add action; cancelling a
+      new sketch asks for confirmation and then returns directly to normal map mode. Ruler area
+      is always formatted in hectares. Line and polygon screen vertices are converted with the
+      current MapLibre projection so their first node follows the current camera centre. Polygon
+      WKT recovery preserves exactly one outer ring and only real holes, so it cannot cancel the
+      fill or duplicate nodes by inventing an inner ring. An invalid simple Polygon remains in
+      editing and reports self-intersection separately from an insufficient point count. Undo/Redo
+      retains 100 real coordinate-WKT changes; consecutive snapshots from selection or callbacks
+      that differ only in CRS metadata do not allocate another step, one action moves exactly one
+      edit, and a boundary attempt leaves the history cursor unchanged.
     related_code:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoPolygon.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/PolygonEditClass.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/MultiPolygonEditClass.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MLP/MeasurmentLine.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationUtil.java
+      - maplib/src/test/java/com/nextgis/maplib/util/LocationUtilAreaTest.java
       - maplib/src/test/java/com/nextgis/maplib/map/MLP/PolygonSketchPolicyTest.java
+      - maplib/src/test/java/com/nextgis/maplib/map/MPLFeaturesUtilsPolygonTest.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+      - maplibui/src/test/java/com/nextgis/maplibui/service/WalkGeometryInsertionTest.java
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java
+      - maplibui/src/test/java/com/nextgis/maplibui/overlay/UndoRedoOverlayTest.java
       - maplibui/src/main/res/menu/edit_polygon.xml
       - maplibui/src/main/res/menu/edit_multipolygon.xml
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-GEOMETRY-SKETCH-WORKFLOW]
+      - app/src/main/res/menu/select_action.xml
+      - app/src/main/res/values/strings.xml
+      - app/src/main/res/values-ru/strings.xml
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-GEOMETRY-SKETCH-WORKFLOW]
     must_update_docs:
       - docs/architecture/map-rendering.md
       - docs/reference/official-differences.md
@@ -420,10 +455,19 @@ invariants:
       without a dialog; already inserted trackpoints must not be lost (closing an unfinished
       track and starting a new id is allowed). Walk digitizing keeps walkedit_temp on
       unexpected service death and offers Continue/Discard even if START_STICKY already
-      restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/touch
+      restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/tap
       editing synchronously journals its latest WKT plus active-map/layer/feature identity in
       GeometryEditDraftStore and offers Continue/Discard after process/task death; only
       explicit Cancel, successful layer update, or handoff to the attribute form clears it.
+      Polygon drafts must restore as explicitly closed MapLibre rings before vertex extraction,
+      including new one-part MultiPolygon sketches, so the fill and vertices remain consistent.
+      A cold walk Continue must preserve the property-bearing edit feature while atomically
+      restoring polygon fill, outline and the hidden vertex cache on the current MapLibre style;
+      the outline must not flicker during GPS updates and Stop must republish editable vertices.
+      The shared edit FillLayer is exclusive to Polygon/MultiPolygon and must be removed for a
+      cold-restored LineString/MultiLineString even when the preceding edit was polygonal.
+      Polygon WKT parsing preserves one outer ring and only actual holes; recovery must not
+      duplicate the outer ring as a fill-cancelling inner ring or duplicate its vertices.
       Attribute forms persist a typed FeatureFormDraftStore snapshot (fields, geometry,
       pending photos) until Save or Discard, recovered via Continue/Discard at app start.
       Activity.onPause after successful Save must not recreate the cleared form draft. A
@@ -440,6 +484,8 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/GeoPolygon.java
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
     verify_smoke: [SMOKE-CRASH-DRAFT-RECOVERY]
     must_update_docs:

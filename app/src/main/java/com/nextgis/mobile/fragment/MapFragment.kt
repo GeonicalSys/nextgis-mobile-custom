@@ -150,7 +150,6 @@ import java.text.NumberFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.math.atan
-import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.sinh
 import kotlin.math.tan
@@ -475,8 +474,7 @@ public class MapFragment
 
         mapDrawable.maplibreMap = mapboxMap
 
-        mapboxMap.uiSettings.isRotateGesturesEnabled = isMapRotationEnabled
-        mapboxMap.uiSettings.isTiltGesturesEnabled = false
+        configureMapRotationGestures(mapboxMap, isMapRotationEnabled)
         mapboxMap.uiSettings.isCompassEnabled = false
 
         val restoredBearing = if (isMapRotationEnabled) {
@@ -664,7 +662,7 @@ public class MapFragment
     }
 
     val isEditMode: Boolean
-        get() = mode == MODE_EDIT || mode == MODE_EDIT_BY_WALK || mode == MODE_EDIT_BY_TOUCH
+        get() = mode == MODE_EDIT || mode == MODE_EDIT_BY_WALK
 
     fun onOptionsItemSelected(id: Int): Boolean {
         val result: Boolean
@@ -705,25 +703,11 @@ public class MapFragment
                 return result
             }
 
-            com.nextgis.maplibui.R.id.menu_edit_by_touch -> {
-                setNewMode(MODE_EDIT_BY_TOUCH)
-                result = editLayerOverlay!!.onOptionsItemSelected(id)
-                if (result) {
-                    persistManualGeometryDraft("switch-to-touch")
-                }
-                return result
-            }
-
             com.nextgis.maplibui.R.id.menu_edit_by_walk -> {
+                undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
+                clearManualGeometryDraft("switch-to-walk")
                 setNewMode(MODE_EDIT_BY_WALK)
-                result = editLayerOverlay!!.onOptionsItemSelected(id)
-                if (result) {
-                    undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
-                    clearManualGeometryDraft("switch-to-walk")
-                }
-
-                (mApp!!.map as MapDrawable).updateHistoryByWalkEnd()
-                return result
+                return true
             }
 
             com.nextgis.maplibui.R.id.menu_edit_delete_point  ->{
@@ -844,6 +828,20 @@ public class MapFragment
                     ).show()
                 }
 
+                MultiPolygonGeometryRepair.Status.INSUFFICIENT_POINTS -> {
+                    HyperLog.w(
+                        Constants.TAG,
+                        "MultiPolygon geometry has insufficient points layer=${mSelectedLayer!!.id} " +
+                            "feature=$featureId reason=${repair.diagnostic}"
+                    )
+                    Toast.makeText(
+                        context,
+                        com.nextgis.maplibui.R.string.not_enough_points,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return false
+                }
+
                 MultiPolygonGeometryRepair.Status.FAILED -> {
                     HyperLog.w(
                         Constants.TAG,
@@ -863,9 +861,16 @@ public class MapFragment
         }
 
         if (geometry == null || !geometry.isValid) {
+            val message = invalidGeometryMessage(geometry)
+            HyperLog.w(
+                Constants.TAG,
+                "Geometry save rejected layer=${mSelectedLayer?.id ?: Constants.NOT_FOUND} " +
+                    "feature=$featureId type=${geometry?.type ?: Constants.NOT_FOUND} " +
+                    "reason=${resources.getResourceEntryName(message)}"
+            )
             Toast.makeText(
                 context,
-                com.nextgis.maplibui.R.string.not_enough_points,
+                message,
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -875,12 +880,6 @@ public class MapFragment
 
         mMapRef.get()!!.isLockMap = false
         editLayerOverlay!!.setHasEdits(false)
-
-        if (mode == MODE_EDIT_BY_TOUCH) {
-            setNewMode(MODE_EDIT)
-            undoRedoOverlay!!.clearHistory()
-            undoRedoOverlay!!.defineUndoRedo()
-        }
 
         if (mSelectedLayer != null) {
             if (featureId == Constants.NOT_FOUND.toLong()) {
@@ -951,6 +950,20 @@ public class MapFragment
         }
 
         return true
+    }
+
+    private fun invalidGeometryMessage(geometry: GeoGeometry?): Int {
+        if (geometry is GeoPolygon) {
+            return when {
+                geometry.outerRing.pointCount < 3 ->
+                    com.nextgis.maplibui.R.string.not_enough_points
+                geometry.intersects() -> com.nextgis.maplib.R.string.self_intersection
+                !geometry.isHolesInside -> com.nextgis.maplib.R.string.ring_outside
+                geometry.isHolesIntersect -> com.nextgis.maplib.R.string.rings_intersection
+                else -> com.nextgis.maplib.R.string.error_geojson_invalid_geometry
+            }
+        }
+        return com.nextgis.maplibui.R.string.not_enough_points
     }
 
 
@@ -1088,10 +1101,27 @@ public class MapFragment
             undoRedoOverlay!!.defineUndoRedo()
         }
         val featureId = editLayerOverlay!!.selectedFeatureId
+        val wasNewFeature = featureId == Constants.NOT_FOUND.toLong()
         editLayerOverlay!!.setSelectedFeature(featureId)
         mMapRef.get()!!.map!!.cancelFeatureEdit(featureId != -1L)
-        setNewMode(MODE_SELECT_ACTION)
+        setNewMode(if (wasNewFeature) MODE_NORMAL else MODE_SELECT_ACTION)
         clearManualGeometryDraft("geometry-cancel")
+    }
+
+    private fun requestCancelEdits() {
+        val isNewFeature = editLayerOverlay?.selectedFeatureId == Constants.NOT_FOUND.toLong()
+        if (!isNewFeature) {
+            cancelEdits()
+            return
+        }
+
+        val ctx = context ?: return
+        AlertDialog.Builder(ctx)
+            .setTitle(R.string.geometry_edit_cancel_title)
+            .setMessage(R.string.geometry_edit_cancel_message)
+            .setPositiveButton(R.string.geometry_edit_cancel_confirm) { _, _ -> cancelEdits() }
+            .setNegativeButton(R.string.geometry_edit_cancel_continue, null)
+            .show()
     }
 
     private fun modeName(value: Int): String {
@@ -1101,7 +1131,6 @@ public class MapFragment
             MODE_EDIT -> "MODE_EDIT"
             MODE_INFO -> "MODE_INFO"
             MODE_EDIT_BY_WALK -> "MODE_EDIT_BY_WALK"
-            MODE_EDIT_BY_TOUCH -> "MODE_EDIT_BY_TOUCH"
             MODE_SELECT_FOR_VIEW -> "MODE_SELECT_FOR_VIEW"
             MODE_STAKEOUT -> "MODE_STAKEOUT"
             else -> "MODE_UNKNOWN($value)"
@@ -1185,7 +1214,7 @@ public class MapFragment
                 mActivity!!.showEditToolbar()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT
                 toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
-                mFinishListener = View.OnClickListener { cancelEdits() }
+                mFinishListener = View.OnClickListener { requestCancelEdits() }
                 toolbar.setNavigationOnClickListener(mFinishListener)
                 toolbar.setOnMenuItemClickListener { menuItem ->
                     onOptionsItemSelected(
@@ -1202,7 +1231,7 @@ public class MapFragment
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT_BY_WALK
                 undoRedoOverlay!!.clearHistory()
                 toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
-                mFinishListener = View.OnClickListener { cancelEdits() }
+                mFinishListener = View.OnClickListener { requestCancelEdits() }
                 toolbar.setNavigationOnClickListener(mFinishListener)
 
                 mMapRef.get()!!.map!!.unselectFeatureFromEdit(false, true)
@@ -1212,23 +1241,6 @@ public class MapFragment
 
                 askPerm = true
 
-
-            }
-
-            MODE_EDIT_BY_TOUCH -> {
-                mSelectedLayer!!.isLocked = true
-                mActivity!!.showEditToolbar()
-                editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT_BY_TOUCH
-                toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
-                mFinishListener = View.OnClickListener { cancelEdits() }
-                toolbar.setNavigationOnClickListener(mFinishListener)
-                toolbar.setOnMenuItemClickListener { menuItem ->
-                    onOptionsItemSelected(menuItem.itemId)
-                }
-
-                mMapRef.get()!!.map!!.unselectFeatureFromEdit(false, true)
-                mMapRef.get()!!.map!!.hideVertex()
-                mMapRef.get()!!.map!!.hideMarker()
 
             }
 
@@ -1254,39 +1266,6 @@ public class MapFragment
                     Toolbar.OnMenuItemClickListener { item ->
                         if (mSelectedLayer == null) return@OnMenuItemClickListener false
                         when (item.itemId) {
-                            R.id.menu_feature_add -> {
-
-                                editLayerOverlay!!.selectedFeature = Feature()
-                                editLayerOverlay!!.createNewGeometry()
-                                undoRedoOverlay!!.clearHistory()
-                                setNewMode(MODE_EDIT)
-                                HyperLog.v(
-                                    Constants.TAG,
-                                    "Geometry edit session started new layer=${mSelectedLayer!!.id}"
-                                )
-                                // skip - because next save from maplibre correct
-                                //undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
-                                editLayerOverlay!!.setHasEdits(true)
-
-                                    mMapRef.get()!!.map!!.startFeatureSelectionForEdit(
-                                        mSelectedLayer,
-                                        mSelectedLayer!!.geometryType,
-                                        editLayerOverlay!!.selectedFeature,
-                                        true,
-                                        mSelectedLayer!!.defaultStyleNoExcept,
-                                        false )
-
-                                // update rudiment code - created geometry on old pre-maplibre code
-                                // on editing it updates on MotionEvent.ACTION_UP actions
-                                updateGeometryFromMaplibre(
-                                    mMapRef.get()!!.map!!.editingObject.editingFeature,
-                                    mMapRef.get()!!.map!!.originalSelectedFeature,
-                                    mMapRef.get()!!.map!!.editingObject
-                                )
-
-
-                            }
-
                             R.id.menu_feature_edit -> startFeatureGeometryEdit()
 
                             R.id.menu_feature_edit_attributes -> showSelectedFeatureAttributesFormFromEditMode()
@@ -1556,11 +1535,6 @@ public class MapFragment
 
             item = toolbar.menu.findItem(R.id.menu_feature_edit_attributes)
             if (item != null) ControlHelper.setEnabled(item, hasSelectedFeature && editingAllowed)
-
-            item = toolbar.menu.findItem(R.id.menu_feature_add)
-            if (item != null) {
-                ControlHelper.setEnabled(item, !isViewOnlySelection && editingAllowed)
-            }
 
             item = toolbar.menu.findItem(R.id.menu_feature_stakeout)
             if (item != null) {
@@ -1878,7 +1852,8 @@ public class MapFragment
         if (null == savedInstanceState) {
             mode = MODE_NORMAL
         } else {
-            mode = savedInstanceState.getInt(KEY_MODE)
+            val restoredMode = savedInstanceState.getInt(KEY_MODE)
+            mode = if (restoredMode == LEGACY_MODE_EDIT_BY_TOUCH) MODE_EDIT else restoredMode
 
             val layerId = savedInstanceState.getInt(BUNDLE_KEY_LAYER)
             val layer = mMapRef.get()!!.getLayerById(layerId)
@@ -1996,7 +1971,19 @@ public class MapFragment
             preferences.getString(ConstantsUI.KEY_GEOMETRY, ""),
             GeoConstants.CRS_WEB_MERCATOR
         )
-        if (geometry != null) editLayerOverlay!!.setGeometryFromWalkEdit(geometry)
+        if (geometry != null) {
+            val insertIndex = if (preferences.contains(WalkEditService.KEY_INSERT_INDEX)) {
+                preferences.getInt(WalkEditService.KEY_INSERT_INDEX, 0)
+            } else {
+                (geometry as? GeoLineString)?.pointCount ?: 0
+            }
+            editLayerOverlay!!.restoreWalkTarget(
+                preferences.getInt(WalkEditService.KEY_GEOMETRY_INDEX, 0),
+                preferences.getInt(WalkEditService.KEY_RING_INDEX, 0),
+                insertIndex
+            )
+            editLayerOverlay!!.setGeometryFromWalkEdit(geometry)
+        }
 
         mMapRef.get()?.map?.startEditByWalkFromRestore(
             mSelectedLayer,
@@ -2096,7 +2083,7 @@ public class MapFragment
     }
 
     private fun isManualGeometryEditMode(value: Int = mode): Boolean {
-        return value == MODE_EDIT || value == MODE_EDIT_BY_TOUCH
+        return value == MODE_EDIT
     }
 
     private fun currentMapDraftPath(): String? {
@@ -2738,13 +2725,8 @@ public class MapFragment
             Toast.makeText(mActivity, getString(R.string.warning_no_edit_layers), Toast.LENGTH_LONG)
                 .show()
         } else if (layers.size == 1) {
-            //open form
             val layer = layers[0] as VectorLayer
-
-            ensureLayerVisibleForCreation(layer)
-            mSelectedLayer = layer
-            editLayerOverlay!!.setSelectedLayer(layer)
-            setNewMode(MODE_SELECT_ACTION)
+            startNewGeometryCreation(layer)
 
             Toast.makeText(
                 mActivity,
@@ -2761,6 +2743,41 @@ public class MapFragment
                 .setTheme(mActivity!!.themeId) //.show(mActivity.getSupportFragmentManager(), "choose_layer");
                 .show(childFragmentManager, ChooseLayerDialog.TAG)
         }
+    }
+
+    /** Start a new sketch immediately: one centre point/node, then taps add subsequent nodes. */
+    private fun startNewGeometryCreation(layer: VectorLayer) {
+        ensureLayerVisibleForCreation(layer)
+        if (mSelectedLayer !== layer) {
+            mSelectedLayer?.isLocked = false
+        }
+        mSelectedLayer = layer
+        editLayerOverlay!!.setSelectedLayer(layer)
+        editLayerOverlay!!.selectedFeature = Feature()
+        editLayerOverlay!!.createNewGeometry()
+        undoRedoOverlay!!.clearHistory()
+        setNewMode(MODE_EDIT)
+        editLayerOverlay!!.setHasEdits(true)
+
+        val map = mMapRef.get()?.map ?: return
+        map.startFeatureSelectionForEdit(
+            layer,
+            layer.geometryType,
+            editLayerOverlay!!.selectedFeature,
+            true,
+            layer.defaultStyleNoExcept,
+            false
+        )
+        map.editingObject?.let { editObject ->
+            updateGeometryFromMaplibre(
+                editObject.editingFeature,
+                map.originalSelectedFeature,
+                editObject
+            )
+            map.updateMarkerByEditObject()
+        }
+        persistManualGeometryDraft("new-sketch-start")
+        HyperLog.v(Constants.TAG, "Geometry edit session started new layer=${layer.id}")
     }
 
 
@@ -2996,25 +3013,7 @@ public class MapFragment
         return p
     }
 
-    /** ~metre offsets in Web Mercator space from a WGS84 lat (good enough for a tiny start shape). */
-    private fun offsetWebMercatorMeters(anchorWm: GeoPoint, eastM: Double, northM: Double): GeoPoint {
-        val wgs = GeoPoint(anchorWm.x, anchorWm.y)
-        wgs.crs = GeoConstants.CRS_WEB_MERCATOR
-        wgs.project(GeoConstants.CRS_WGS84)
-        val lat = wgs.y
-        val lon = wgs.x
-        val dLat = northM / 111320.0
-        val dLon = eastM / (111320.0 * cos(Math.toRadians(lat)))
-        val p = GeoPoint(lon + dLon, lat + dLat)
-        p.crs = GeoConstants.CRS_WGS84
-        p.project(GeoConstants.CRS_WEB_MERCATOR)
-        return p
-    }
-
-    /**
-     * Initial geometry at walk start: line = degenerate 2-vertex segment at anchor (valid for MapLibre);
-     * polygon = small ~0.3m triangle at anchor so the ring is valid; walk then appends GPS vertices.
-     */
+    /** Initial walk geometry is one anchor node; accepted fixes are inserted after it. */
     private fun buildInitialWalkGeometry(geometryType: Int, anchorWm: GeoPoint): GeoGeometry {
         val a = geoPointWebMercatorCopy(anchorWm.x, anchorWm.y)
         when (geometryType) {
@@ -3022,13 +3021,11 @@ public class MapFragment
                 val line = GeoLineString()
                 line.crs = GeoConstants.CRS_WEB_MERCATOR
                 line.add(geoPointWebMercatorCopy(a.x, a.y))
-                line.add(geoPointWebMercatorCopy(a.x, a.y))
                 return line
             }
             GeoConstants.GTMultiLineString -> {
                 val line = GeoLineString()
                 line.crs = GeoConstants.CRS_WEB_MERCATOR
-                line.add(geoPointWebMercatorCopy(a.x, a.y))
                 line.add(geoPointWebMercatorCopy(a.x, a.y))
                 val ml = GeoMultiLineString()
                 ml.crs = GeoConstants.CRS_WEB_MERCATOR
@@ -3036,30 +3033,18 @@ public class MapFragment
                 return ml
             }
             GeoConstants.GTPolygon -> {
-                val p1 = geoPointWebMercatorCopy(a.x, a.y)
-                val p2 = offsetWebMercatorMeters(anchorWm, 0.35, 0.0)
-                val p3 = offsetWebMercatorMeters(anchorWm, 0.0, 0.35)
                 val ring = GeoLinearRing()
                 ring.crs = GeoConstants.CRS_WEB_MERCATOR
-                ring.add(p1)
-                ring.add(geoPointWebMercatorCopy(p2.x, p2.y))
-                ring.add(geoPointWebMercatorCopy(p3.x, p3.y))
-                ring.add(p1)
+                ring.add(geoPointWebMercatorCopy(a.x, a.y))
                 val poly = GeoPolygon()
                 poly.crs = GeoConstants.CRS_WEB_MERCATOR
                 poly.setOuterRing(ring)
                 return poly
             }
             GeoConstants.GTMultiPolygon -> {
-                val p1 = geoPointWebMercatorCopy(a.x, a.y)
-                val p2 = offsetWebMercatorMeters(anchorWm, 0.35, 0.0)
-                val p3 = offsetWebMercatorMeters(anchorWm, 0.0, 0.35)
                 val ring = GeoLinearRing()
                 ring.crs = GeoConstants.CRS_WEB_MERCATOR
-                ring.add(p1)
-                ring.add(geoPointWebMercatorCopy(p2.x, p2.y))
-                ring.add(geoPointWebMercatorCopy(p3.x, p3.y))
-                ring.add(p1)
+                ring.add(geoPointWebMercatorCopy(a.x, a.y))
                 val poly = GeoPolygon()
                 poly.crs = GeoConstants.CRS_WEB_MERCATOR
                 poly.setOuterRing(ring)
@@ -3071,7 +3056,6 @@ public class MapFragment
             else -> {
                 val line = GeoLineString()
                 line.crs = GeoConstants.CRS_WEB_MERCATOR
-                line.add(geoPointWebMercatorCopy(a.x, a.y))
                 line.add(geoPointWebMercatorCopy(a.x, a.y))
                 return line
             }
@@ -3141,10 +3125,7 @@ public class MapFragment
                 layerUI.showEditForm(mActivity, Constants.NOT_FOUND.toLong(), null, -1)
             }
         } else if (code == EDIT_LAYER) {
-            setNewMode(MODE_SELECT_ACTION)
-            //if (editLayerOverlay.selectedFeature == )
-            if (useCreatePointFromOverlay)
-                createPointFromOverlay(false)
+            startNewGeometryCreation(vectorLayer)
         } else if (code == ADD_GEOMETRY_BY_WALK) {
             editLayerOverlay!!.newGeometryByWalk()
             applyInitialWalkGeometryAtStartLocation()
@@ -3675,7 +3656,13 @@ public class MapFragment
     fun onSingleTapUpFromMaplibre(screenx: Float, screeny :Float) {
         if (mRulerOverlay!!.isMeasuring) return
         when (mode) {
-            MODE_EDIT -> { }
+            MODE_EDIT -> {
+                val map = mMapRef.get()?.map ?: return
+                if (map.addSketchPoint(screenx, screeny)) {
+                    undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
+                    persistManualGeometryDraft("sketch-tap")
+                }
+            }
             MODE_INFO -> {
                 if (null != editLayerOverlay) {
                     val attributesFragment =
@@ -3912,10 +3899,10 @@ public class MapFragment
     }
 
     override fun panStop() {
-        if (mode == MODE_EDIT_BY_TOUCH || mNeedSave) {
+        if (mNeedSave) {
             mNeedSave = false
             undoRedoOverlay!!.saveToHistory(editLayerOverlay!!.selectedFeature)
-            persistManualGeometryDraft("touch-pan-stop")
+            persistManualGeometryDraft("vertex-pan-stop")
         }
     }
 
@@ -4223,6 +4210,17 @@ public class MapFragment
             false
         ) ?: false
 
+    private fun configureMapRotationGestures(mapLibreMap: MapLibreMap, enabled: Boolean) {
+        mapLibreMap.uiSettings.isRotateGesturesEnabled = enabled
+        mapLibreMap.uiSettings.isTiltGesturesEnabled = false
+        // MapLibre disables rotation when pinch wins the first motion event by default. Allow both
+        // detectors to run together and lower only the rotation start angle for an immediate twist.
+        mapLibreMap.uiSettings.isDisableRotateWhenScaling = false
+        mapLibreMap.uiSettings.isIncreaseScaleThresholdWhenRotating = false
+        mapLibreMap.gesturesManager.rotateGestureDetector.angleThreshold =
+            ROTATION_ANGLE_THRESHOLD_DEGREES
+    }
+
     fun toggleMapRotation(): Boolean {
         val enabled = !isMapRotationEnabled
         mPreferences?.edit()
@@ -4230,8 +4228,7 @@ public class MapFragment
             ?.apply()
 
         mapDrawableOrNull?.maplibreMap?.let { mapLibreMap ->
-            mapLibreMap.uiSettings.isRotateGesturesEnabled = enabled
-            mapLibreMap.uiSettings.isTiltGesturesEnabled = false
+            configureMapRotationGestures(mapLibreMap, enabled)
             if (!enabled) {
                 persistMapBearing(0f)
                 setMapBearing(mapLibreMap, 0.0, true)
@@ -4444,7 +4441,7 @@ public class MapFragment
     }
 
     override fun onAreaChanged(area: Double) {
-        mActivity!!.setSubtitle(LocationUtil.formatArea(context, area))
+        mActivity!!.setSubtitle(LocationUtil.formatAreaHectares(context, area))
     }
 
     public companion object {
@@ -4463,7 +4460,6 @@ public class MapFragment
         const val MODE_EDIT: Int = 2
         const val MODE_INFO: Int = 3
         const val MODE_EDIT_BY_WALK: Int = 4
-        public const val MODE_EDIT_BY_TOUCH: Int = 5
         const val MODE_SELECT_FOR_VIEW: Int = 6
         const val MODE_STAKEOUT: Int = 7
 
@@ -4477,6 +4473,8 @@ public class MapFragment
         private const val LOCATE_MIN_ZOOM = 12.0
         private const val CAMERA_ANIMATION_MS = 800
         private const val NORTH_UP_ANIMATION_MS = 350
+        private const val ROTATION_ANGLE_THRESHOLD_DEGREES = 0.5f
+        private const val LEGACY_MODE_EDIT_BY_TOUCH = 5
     }
 
     private fun startStakeout() {

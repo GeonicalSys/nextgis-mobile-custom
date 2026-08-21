@@ -31,7 +31,9 @@ related_code:
   `map_rotation_enabled=false` keeps two-finger rotation locked by default;
   `map_bearing=0` stores the last bearing only while the user has explicitly
   enabled rotation. Neither key is shown in the general settings screen: the
-  state is controlled by the toolbar button next to location.
+  state is controlled by the toolbar button next to location. When enabled,
+  MapLibre keeps pinch and rotate detectors concurrent and uses a `0.5°` rotate
+  threshold so immediate simultaneous two-finger contact is responsive.
 - Фото-вложения: `photo_overlay_enabled=true` и
   `photo_overlay_use_object_coords=true` включены по умолчанию. Миграция
   `photo_overlay_defaults_enabled_v1` один раз включает оба ключа на уже

@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-07-30
+last_verified: 2026-08-22
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -54,31 +54,37 @@ the count of network fixes suppressed by recent GPS, but never coordinates.
 
 | Concern | Behavior |
 |---------|----------|
-| Draft store | SharedPreferences `walkedit_temp` (layer id, feature id, WKT, ring index, timestamp) |
+| Draft store | SharedPreferences `walkedit_temp` (layer/feature ids, WKT, geometry/ring indices, next insertion index, timestamp) |
 | Explicit stop | Save edits / Cancel → `WalkEditService.stopAndClearDraft()` → draft cleared |
 | Unexpected stop | FGS kill, crash, permission stop → draft kept; HyperLog `unexpected walk end` |
 | Soft-interrupt | While UI is in walk mode (or draft exists) and service is not running → Continue/Discard dialog |
 | Cold start | Recovery hub in `MainActivity` offers the same dialog even if Android already restarted the `START_STICKY` service; the service is paused while the user decides |
 | UI ownership | A cold draft is never restored silently by `MapFragment`; silent restore is reserved for configuration recreation of an already attached walk UI |
+| Cold MapLibre overlay | Continue reconstructs one property-bearing edit feature on the current style, restores polygon fill and outline from the same source only for polygon layer types, explicitly removes fill for line types, and extracts the vertex cache before hiding it for the active walk; Stop republishes those vertices for ordinary editing |
 | GPS pipeline | Walk uses the same 160 km/h-capable filter and GPS-first/network-fallback arbitration as tracks, but reads ordinary `location_source` and `location_min_time` / `location_min_distance` settings |
 
 Key types: `WalkEditService`, `EditLayerOverlay.stopGeometryByWalk`, `MapFragment` watchdog / resume helpers.
 
-## Manual geometry editing (vertex / touch)
+## Manual geometry editing (vertices / taps)
 
 | Concern | Behavior |
 |---------|----------|
 | Draft store | `GeometryEditDraftStore` (`geometry_edit_draft` prefs, JSON: active map path, layer/feature ids, edit mode, latest WKT, timestamp) |
-| Write | Synchronous after MapLibre geometry callbacks, undo/redo, touch `panStop`, and again in `MapFragment.onPause`; coordinates are not copied to HyperLog |
+| Write | Synchronous after MapLibre geometry callbacks, tap insertion, undo/redo, vertex `panStop`, and again in `MapFragment.onPause`; coordinates are not copied to HyperLog |
 | Existing object | Continue reloads its attributes from SQLite and replaces only geometry with the draft |
-| New object | Continue recreates feature id `-1`, restores the latest geometry and returns to `MODE_EDIT` / `MODE_EDIT_BY_TOUCH` |
+| New object | Continue recreates feature id `-1`, restores the latest geometry and returns to `MODE_EDIT`; legacy mode `5` drafts migrate to this mode |
 | Clear | Explicit geometry Cancel, successful existing-feature update, or successful handoff of a new geometry to the attribute form |
 | Validation | Active map path, vector layer, edit policy, feature existence and geometry type must match; this prevents cross-project `layer_id` collisions |
 | Cold MapLibre | Continue is retained through a bounded retry until editable MapLibre sources are ready; timeout keeps the draft for the next launch |
 
 The latest geometry is durable, including the visible line in the reported
 “draw line → swipe app away” case. The transient undo/redo stack itself is not
-serialized.
+serialized. Polygon conversion explicitly closes every non-empty outer/inner
+GeoJSON ring before MapLibre vertex extraction; a restored manual Polygon or
+MultiPolygon therefore shows the same fill and node order before and after a
+node is moved. WKT recovery identifies rings by parenthesis depth, preserving
+one outer ring and only actual holes instead of duplicating the outer ring as a
+hole that cancels the fill.
 
 Key types: `GeometryEditDraftStore`, `MapFragment.persistManualGeometryDraft`,
 `MapFragment.resumeManualGeometryFromDraft`.

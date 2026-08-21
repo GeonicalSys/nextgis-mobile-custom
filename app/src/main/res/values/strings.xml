@@ -212,6 +212,10 @@
     <string name="collector_project_already_active">This Collector project is already active</string>
     <string name="collector_project_switch_busy">Wait for synchronization or data loading to finish before switching projects</string>
     <string name="collector_project_switch_edit_mode">Save or cancel editing before switching projects</string>
+    <string name="geometry_edit_cancel_title">Cancel feature creation?</string>
+    <string name="geometry_edit_cancel_message">Cancel and exit editing mode? The unfinished sketch will be deleted.</string>
+    <string name="geometry_edit_cancel_confirm">Cancel creation</string>
+    <string name="geometry_edit_cancel_continue">Continue editing</string>
     <string name="collector_project_switch_tracking">Stop the active track before switching projects</string>
     <string name="collector_project_visible">visible</string>
     <string name="collector_project_hidden">hidden</string>
