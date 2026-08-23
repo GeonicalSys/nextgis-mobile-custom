@@ -442,11 +442,13 @@ invariants:
       walk digitizing obeys location_source only. When both GPS and network are enabled,
       network remains an initial and outage fallback, but a usable GPS fix suppresses network
       fixes for 12 seconds so mixed-provider jitter cannot corrupt the recorded sequence.
-      When background_recording_sound is enabled, a post-persist notification-stream pulse
-      confirms successful track/walk storage at most every 10 seconds only while the app UI
-      is hidden or the screen is off; observed persistence failures use an independent
-      one-minute throttle and distinct tone. Foreground use, filtered fixes and failed commits
-      never produce a success pulse. Revoking coarse/fine location during recording must stop
+      When background_recording_sound is enabled, a health-only zero-distance provider
+      subscription must distinguish stationary fixes from missing coordinate delivery. While
+      the app UI is hidden or the screen is off and usable callbacks remain fresh, a partial
+      wake lock keeps a notification-stream pulse on a fixed 10-second cadence independently
+      of geometry changes and inserts/commits. Stale or absent callbacks silence the pulse;
+      observed persistence failures use an independent one-minute throttle and distinct tone.
+      Foreground use stays silent. Revoking coarse/fine location during recording must stop
       either location foreground service without calling forbidden startForeground, crashing,
       clearing track_recording_enabled or discarding the durable walk draft.
     related_code:

@@ -65,7 +65,7 @@
     <string name="location">Location</string>
     <string name="track_restore">Restore current track after reboot</string>
     <string name="background_recording_sound">Background recording sound</string>
-    <string name="background_recording_sound_summary">A short sound confirms that a track or walk point was saved while the app is in the background</string>
+    <string name="background_recording_sound_summary">While the app is in the background, a sound every 10 seconds confirms that recording is on and fresh locations are still arriving</string>
     <string name="tracks_reload">Restart current track to apply changes</string>
     <string name="pref_min_time">Minimum update time</string>
     <string name="pref_min_distance">Minimum update distance</string>

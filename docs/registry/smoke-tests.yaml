@@ -246,15 +246,17 @@ tests:
     scope: [app, maplib, maplibui]
     steps:
       - Enable background recording sound and start geometry-by-walk editing
-      - Minimize the app and walk until several geometry points are saved
+      - Minimize the app, stand still for at least 35 seconds, then walk until several geometry points are saved
+      - Disable every location provider or block background location delivery and wait at least 20 seconds
       - Revoke location permission in Android settings while walk recording is active, then return to the app
       - Restore location permission and continue the retained walk draft
       - Pause and resume the app, then finish geometry
       - Disable background recording sound and repeat the minimized recording segment
     expected: >
       Geometry and editing state survive lifecycle transitions without duplicate reload.
-      While minimized, a successful persisted walk update produces a short confirmation no
-      more often than every 10 seconds; foreground and disabled-setting recording stay silent.
+      While minimized, fresh usable callbacks produce a short confirmation every 10 seconds
+      even while stationary and independently of saved vertices. The heartbeat stops after
+      callbacks become stale; foreground and disabled-setting recording stay silent.
       Permission revocation causes no crash or forbidden location-FGS restart and the walk draft
       remains available after permission is restored.
   SMOKE-GPS-RECORDING:
@@ -267,7 +269,8 @@ tests:
       - With GPS plus network enabled, verify network fallback before the first GPS fix and after GPS is unavailable for more than 12 seconds
       - Set a sampling interval above 30 seconds and record several fixes
       - Pass through a section with one poor-accuracy or visibly displaced fix
-      - Enable background recording sound, minimize the app and keep moving for at least 35 seconds
+      - Enable background recording sound, minimize the app and stand still with a usable fix for at least 35 seconds
+      - Block every enabled provider or background location delivery and wait at least 20 seconds
       - Revoke location permission in Android settings while track recording is active and reopen the app
       - Restore location permission and verify recording resumes from the retained intent
       - Return to the app, then disable the setting and repeat the minimized segment
@@ -280,8 +283,9 @@ tests:
       Long sampling gaps preserve prior valid fixes, the final two buffered fixes are
       flushed on stop, and isolated inaccurate or displaced garbage is absent. The
       automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
-      Minimized recording emits a short post-insert confirmation no more often than every
-      10 seconds, foreground recording is silent, and disabling the setting suppresses it.
+      Minimized recording emits a short heartbeat every 10 seconds while usable locations
+      keep arriving, including while stationary; it stops after location delivery becomes
+      stale. Foreground recording is silent, and disabling the setting suppresses it.
       Revoking location permission does not crash-loop a sticky location FGS; the durable track
       intent survives and recording can resume after permission is granted again.
   SMOKE-STAKEOUT:

@@ -22,7 +22,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
     responsibility: Settings navigation, including the dedicated project screen, and updater continuation after Android special install permission returns to a manual update check.
   - path: app/src/main/res/xml/preferences_tracks.xml
-    responsibility: Track settings UI, including enabled-by-default ten-second background post-persist sound feedback shared with walk recording.
+    responsibility: Track settings UI, including enabled-by-default fixed ten-second background recording heartbeat shared with walk recording and gated by fresh usable location delivery rather than coordinate movement.
   - path: app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
     responsibility: Active project information and controls for current-project sync, local project creation, device-only rename/delete, changed-layer backup gate and schema-rebuild guard reset.
   - path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
