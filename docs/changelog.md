@@ -1,12 +1,25 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-22
+last_verified: 2026-08-23
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-23
+
+- Production Lisa/Belka подготовлен как выпуск `3.1.2.12` / `versionCode 206`;
+  Lisa Debug остаётся `3.1.2.9` / 203, release `maplib.VERSION_NAME` обновлён
+  синхронно.
+- MapLibre Android `13.0.2` закреплён через явный `android-sdk-opengl` в `app`,
+  `maplibui` и `maplib`. Добавлены `INV-MAPLIBRE-BACKEND-COMPATIBILITY`,
+  `SMOKE-MAP-OPENGL-COMPATIBILITY`, cross-module dependency contract и upstream
+  hotspot, чтобы generic MapLibre 13 Vulkan artifact не вернулся при синхронизации.
+- Официальные NextGIS app/maplib/maplibui/easypicker HEAD повторно проверены и
+  не изменились; official app сохраняет Vulkan-default `android-sdk:13.0.2`,
+  поэтому OpenGL compatibility остаётся действующим отличием форка.
 
 ## 2026-08-22
 

@@ -34,12 +34,20 @@ tests:
     type: automatic
     scope: [app, maplib]
     command: powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version-matrix.ps1
-    expected: Lisa Debug, Lisa Release and Belka Release assemble; aapt reports the exact expected package and version for each APK; maplib diagnostic versions match their consuming variants.
+    expected: Lisa Debug, Lisa Release and Belka Release assemble; Lisa Release resolves MapLibre android-sdk-opengl 13.0.2 without generic/Vulkan artifact; aapt reports the exact expected package and version for each APK; maplib diagnostic versions match their consuming variants.
   SMOKE-MAP-COLD-START:
     type: device
     scope: [app, maplib]
     steps: [Open an existing multi-layer map from a cold process start, Compare visible layers and order with the saved layer list]
     expected: Map renders once with the saved visibility and order and without a crash.
+  SMOKE-MAP-OPENGL-COMPATIBILITY:
+    type: device
+    scope: [app, maplibui, maplib]
+    steps:
+      - Install Lisa Release on an Android 9 device without a compatible Vulkan implementation
+      - Complete Web GIS authorization and wait for the map screen to render
+      - Force-stop the application and cold-open the same map again
+    expected: The map renders after authorization and after a cold restart through OpenGL without No Vulkan compatible GPU found or process termination.
   SMOKE-LOCATION-CURSOR-TOP:
     type: device
     scope: [app, maplib]

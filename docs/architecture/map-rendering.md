@@ -1,8 +1,11 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-08-22
+last_verified: 2026-08-23
 related_code:
+  - app/build.gradle
+  - maplib/build.gradle
+  - maplibui/build.gradle
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
@@ -28,6 +31,8 @@ related_code:
 - `LayerFillService` загружает и вставляет импортированные слои в `LayerGroup`.
 - `ReorderedLayerView` синхронизирует порядок UI и модели.
 - `MapFragment` — host `MaplibreMapInteraction` и точка reload/lite reload.
+- Gradle-файлы `app`, `maplibui` и `maplib` совместно задают один native
+  MapLibre backend для конечного APK.
 
 ## Контракты
 
@@ -188,13 +193,21 @@ related_code:
     не включая MapLibre source и не меняя visibility. Выключенный классический
     vector layer по-прежнему пропускается. Решение централизовано в
     `LayerIdentifyPolicy` и одинаково для всех активных веток identify.
+25. MapLibre Android `13.0.2` разрешается только через явный артефакт
+    `org.maplibre.gl:android-sdk-opengl` одновременно в `app`, `maplibui` и
+    `maplib`. Generic `org.maplibre.gl:android-sdk` этой major-версии использует
+    Vulkan и не является допустимым fallback: на устройствах без совместимого
+    Vulkan-драйвера карта завершает процесс при создании surface. Смена backend
+    требует проверки runtime dependency graph, cold start карты после
+    авторизации и повторного запуска на Android 9 без Vulkan.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
 `INV-TRACK-LAYER-TOP`, `INV-COLLECTOR-RASTER-STYLES`,
 `INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`,
 `INV-GEOMETRY-SKETCH-WORKFLOW`, `INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`,
-`INV-SPATIAL-CACHE-CONSISTENCY`, `INV-HIDDEN-VECTOR-TILE-IDENTIFY`.
+`INV-SPATIAL-CACHE-CONSISTENCY`, `INV-HIDDEN-VECTOR-TILE-IDENTIFY`,
+`INV-MAPLIBRE-BACKEND-COMPATIBILITY`.
 
 ## Изменение rendering pipeline
 
@@ -212,6 +225,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
 `SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`, `SMOKE-GEOMETRY-SKETCH-WORKFLOW`,
 `SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`.
+Для изменения MapLibre dependency/backend дополнительно обязателен
+`SMOKE-MAP-OPENGL-COMPATIBILITY`.
 
 ## Производительность
 

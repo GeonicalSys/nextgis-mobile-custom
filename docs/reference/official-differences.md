@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-08-22
+last_verified: 2026-08-23
 related_code:
   - app/build.gradle
   - app/src/main
@@ -20,13 +20,15 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.11` / `versionCode` 205; Lisa Debug
+Состояние форка: Lisa/Belka Release `3.1.2.12` / `versionCode` 206; Lisa Debug
 `3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 
-Production `3.1.2.11` ссылается на итоговый merge-коммит maplib
-[`017bda8`](https://github.com/GeonicalSys/android_maplib/commit/017bda813bb7bce1c3985d88d301638f2fbd1d0a),
-а не на временную feature-ветку.
+Подготовленный `3.1.2.12` ссылается на OpenGL-коммиты maplib
+[`7066083`](https://github.com/GeonicalSys/android_maplib/commit/7066083) и
+maplibui [`8ae4f735`](https://github.com/GeonicalSys/android_maplibui/commit/8ae4f735).
+Перед merge root PR указатели обновляются на итоговые merge-коммиты библиотечных
+PR согласно порядку доставки.
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -34,8 +36,13 @@ Production `3.1.2.11` ссылается на итоговый merge-комми�
 - Android MapLib UI — [`a426e0a`](https://github.com/nextgis/android_maplibui/commit/a426e0acfc8d111982918e04236e2e8f896674de);
 - EasyPicker — [`36ba558`](https://github.com/nextgis/easypicker/commit/36ba558ba0d1eaadcb7dc6ba46ab9286d7eedaa1).
 
-Все четыре official HEAD повторно проверены 22 августа 2026 года через
+Все четыре official HEAD повторно проверены 23 августа 2026 года через
 канонические GitHub repositories; hashes не изменились.
+
+Официальный app по-прежнему подключает
+`org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
+Форк `3.1.2.12` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
 официального компонента, ниже она не считается отличием форка.
@@ -1006,6 +1013,21 @@ incremental bulk-защиты нет, операции add/remove R-tree не с
 
 Эти отличия важны для понимания сборки GeonicalSystem, но не обязательно являются
 кандидатами на перенос в официальный продукт.
+
+### OpenGL backend для совместимости устройств
+
+Начиная с MapLibre Android 13 generic artifact `org.maplibre.gl:android-sdk`
+использует Vulkan. Официальный NextGIS Mobile `3.1.2` подключает именно его.
+Форк сохраняет API и версию MapLibre `13.0.2`, но во всех consuming-модулях
+явно выбирает `org.maplibre.gl:android-sdk-opengl`.
+
+Решение принято после воспроизводимого завершения процесса с сообщением
+`No Vulkan compatible GPU found` на планшете Samsung с Android 9. Тот же
+release-код, собранный с OpenGL artifact, прошёл авторизацию, открыл карту и
+повторно запустился на этом устройстве. Форматы карт, слоёв и локальных данных
+не меняются; отличие относится только к native rendering backend. Возможное
+преимущество Vulkan по производительности сознательно уступает совместимости
+всего целевого парка устройств.
 
 ### Два независимых бренда
 

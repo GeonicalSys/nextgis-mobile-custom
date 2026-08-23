@@ -23,6 +23,28 @@ if (-not $SkipBuild) {
     }
 }
 
+Push-Location $repositoryRoot
+try {
+    $releaseRuntimeDependencies = & .\gradlew.bat -q `
+        :app:dependencies `
+        --configuration lisaReleaseRuntimeClasspath
+    if ($LASTEXITCODE -ne 0) {
+        throw "Gradle dependency report failed with exit code $LASTEXITCODE."
+    }
+}
+finally {
+    Pop-Location
+}
+
+$releaseRuntimeDependencyText = $releaseRuntimeDependencies -join "`n"
+if ($releaseRuntimeDependencyText -notmatch 'org\.maplibre\.gl:android-sdk-opengl:13\.0\.2') {
+    throw 'Lisa Release runtime does not contain MapLibre OpenGL 13.0.2.'
+}
+if ($releaseRuntimeDependencyText -match 'org\.maplibre\.gl:android-sdk(?:-vulkan)?:13\.0\.2') {
+    throw 'Lisa Release runtime contains the generic or Vulkan MapLibre 13.0.2 artifact.'
+}
+Write-Output 'OK: Lisa Release runtime uses MapLibre android-sdk-opengl:13.0.2 without generic/Vulkan artifact'
+
 $sdkCandidates = @(@(
     $env:ANDROID_SDK_ROOT,
     $env:ANDROID_HOME,
@@ -125,15 +147,15 @@ $matrix = @(
         Name = 'Lisa Release'
         Directory = 'app\build\outputs\apk\lisa\release'
         ApplicationId = 'com.nextgis.mobile.geonical'
-        VersionCode = 205
-        VersionName = '3.1.2.11'
+        VersionCode = 206
+        VersionName = '3.1.2.12'
     },
     [pscustomobject]@{
         Name = 'Belka Release'
         Directory = 'app\build\outputs\apk\belka\release'
         ApplicationId = 'com.nextgis.mobile.geonical'
-        VersionCode = 205
-        VersionName = '3.1.2.11'
+        VersionCode = 206
+        VersionName = '3.1.2.12'
     }
 )
 
@@ -149,7 +171,7 @@ foreach ($entry in $matrix) {
 
 $maplibVersions = @{
     debug = '3.1.2.9'
-    release = '3.1.2.11'
+    release = '3.1.2.12'
 }
 
 foreach ($buildType in $maplibVersions.Keys) {

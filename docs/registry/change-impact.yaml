@@ -50,6 +50,26 @@ triggers:
       - maplibui/docs/manifest.yaml
     verify: [AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-NGW-ACCOUNT-ADD]
     strict_docs: true
+  - id: MAPLIBRE-BACKEND
+    paths: [app/build.gradle, maplibui/build.gradle, maplib/build.gradle]
+    owners: [app, maplibui, maplib]
+    read:
+      - docs/architecture/map-rendering.md
+      - docs/reference/build-matrix.md
+      - docs/reference/official-differences.md
+      - app/docs/README.md
+      - maplibui/docs/README.md
+      - maplib/docs/README.md
+    invariants: [INV-MAPLIBRE-BACKEND-COMPATIBILITY]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/build-matrix.md
+      - docs/reference/official-differences.md
+      - app/docs/manifest.yaml
+      - maplibui/docs/manifest.yaml
+      - maplib/docs/manifest.yaml
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-VERSION-MATRIX, SMOKE-MAP-OPENGL-COMPATIBILITY]
+    strict_docs: true
   - id: NGW-RESOURCE-SELECTION-LIFECYCLE
     paths:
       - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java

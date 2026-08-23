@@ -4,6 +4,12 @@
 в [`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md), история merge —
 в [`docs/history/upstream/`](docs/history/upstream/README.md).
 
+## 3.1.2.12 — 2026-08-23
+
+- Исправлен вылет при открытии карты на устройствах без совместимого Vulkan,
+  включая часть планшетов с Android 9. Отрисовка карты переведена на OpenGL;
+  состав карт, слоёв и пользовательских данных не меняется.
+
 ## 3.1.2.11 — 2026-08-22
 
 - Исправлена загрузка проектов Коллектора со слоями MultiPolygon: внутренние

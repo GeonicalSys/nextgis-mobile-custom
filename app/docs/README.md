@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-08-22
+last_verified: 2026-08-23
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -12,7 +12,8 @@ last_verified: 2026-08-22
 UI и Map host, управляет брендами, preferences, release и self-hosted update.
 Launcher и экраны intro/about получают иконку через flavor-ресурс
 `app_launcher_icon`: Lisa использует `ic_launcher_lisa`, Belka — отдельный
-`ic_launcher_belka` во всех пяти Android density buckets.
+`ic_launcher_belka` во всех пяти Android density buckets. Карта использует
+MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-default artifact.
 
 ## Основные сценарии
 
@@ -96,6 +97,9 @@ Launcher и экраны intro/about получают иконку через fl
 ## Ограничения
 
 - `lisa` и `belka` — отдельные product flavors.
+- `app`, `maplibui` и `maplib` должны разрешать один MapLibre backend:
+  `org.maplibre.gl:android-sdk-opengl:13.0.2`; generic `android-sdk` версии 13
+  использует Vulkan и возвращать его в production нельзя.
 - `MapFragment` должен реализовывать актуальный `MaplibreMapInteraction`.
 - Не дублировать GIS model/storage из `maplib`.
 - Не читать `Q:\standart_profiles`, `variables.py` или QGIS plugin mirrors:
@@ -120,6 +124,8 @@ Launcher и экраны intro/about получают иконку через fl
 
 - Карта/слои: сначала проверить callbacks `MapFragment` и состояние
   `GISApplication`, затем rendering docs.
+- Crash `No Vulkan compatible GPU found` при открытии карты означает неверный
+  MapLibre runtime artifact: штатный APK использует OpenGL и не требует Vulkan.
 - Карта не вращается: проверить состояние кнопки вращения рядом с геолокацией и
   `map_rotation_enabled`; запрет вращения является штатным значением по умолчанию.
 - Кнопка геолокации не перешла к слою без GPS: проверить, что хотя бы один слой

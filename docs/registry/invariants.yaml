@@ -25,6 +25,22 @@ invariants:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
       - docs/runbooks/release-apk.md
+  INV-MAPLIBRE-BACKEND-COMPATIBILITY:
+    title: Production map rendering does not require Vulkan
+    owners: [app, maplibui, maplib]
+    statement: MapLibre Android 13.0.2 must resolve through org.maplibre.gl:android-sdk-opengl in app, maplibui and maplib; the generic android-sdk or android-sdk-vulkan artifacts must not enter the production runtime because supported devices may lack a compatible Vulkan implementation.
+    related_code:
+      - app/build.gradle
+      - maplibui/build.gradle
+      - maplib/build.gradle
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-VERSION-MATRIX, SMOKE-MAP-OPENGL-COMPATIBILITY]
+    must_update_docs:
+      - docs/reference/build-matrix.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - app/docs/README.md
+      - maplibui/docs/README.md
+      - maplib/docs/README.md
   INV-NGW-ACCOUNT-IDENTITY:
     title: Every build variant exposes one consistent NGW account identity
     owners: [app, maplibui]

@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-08-22
+last_verified: 2026-08-23
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -17,9 +17,9 @@ related_code:
 
 ## Версия
 
-Проверяемый выпуск `3.1.2.11`: production `versionCode 205`, Lisa Debug остаётся
+Проверяемый выпуск `3.1.2.12`: production `versionCode 206`, Lisa Debug остаётся
 `3.1.2.9` / `versionCode 203`; диагностический release
-`maplib.VERSION_NAME 3.1.2.11`, debug — `3.1.2.9`.
+`maplib.VERSION_NAME 3.1.2.12`, debug — `3.1.2.9`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.
@@ -48,7 +48,9 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version
 
 Скрипт собирает `lisaDebug`, `lisaRelease`, `belkaRelease`, читает APK metadata
 через `aapt` и проверяет сопряжённые debug/release значения
-`maplib.BuildConfig.VERSION_NAME`. Version change нельзя передавать дальше,
+`maplib.BuildConfig.VERSION_NAME`, а также разрешённый Lisa Release dependency
+graph: OpenGL artifact MapLibre присутствует, generic/Vulkan artifact отсутствует.
+Version change нельзя передавать дальше,
 если этот скрипт не запускался или завершился ошибкой.
 
 `base.archivesName` использует production version, поэтому локальное имя debug
@@ -69,6 +71,8 @@ APK может содержать production basename. Это не версия 
   crash screenshot включён, trace/profile sample rate равен `0.05`;
 - JTS Core присутствует в обеих release-сборках, а
   `MultiPolygonGeometryRepairTest` проходит в `:maplib:testDebugUnitTest`;
+- runtime dependency graph разрешает `org.maplibre.gl:android-sdk-opengl:13.0.2`
+  и не содержит generic/Vulkan MapLibre artifact;
 - запуск поверх существующего профиля.
 
 ## Self-hosted update manifest

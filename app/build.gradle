@@ -27,8 +27,8 @@ apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
-def productionVersionCode = 205
-def productionVersionName = '3.1.2.11'
+def productionVersionCode = 206
+def productionVersionName = '3.1.2.12'
 def debugVersionCode = 203
 def debugVersionName = '3.1.2.9'
 
@@ -224,7 +224,9 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'org.maplibre.gl:android-sdk:13.0.2'
+    // MapLibre 13's generic android-sdk artifact uses Vulkan. Keep OpenGL explicit so
+    // devices without a compatible Vulkan implementation can open the map.
+    implementation 'org.maplibre.gl:android-sdk-opengl:13.0.2'
     implementation 'com.squareup.okhttp3:okhttp:5.3.2'
 
 //    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.14"
