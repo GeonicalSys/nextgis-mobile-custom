@@ -439,6 +439,11 @@ invariants:
       walk digitizing obeys location_source only. When both GPS and network are enabled,
       network remains an initial and outage fallback, but a usable GPS fix suppresses network
       fixes for 12 seconds so mixed-provider jitter cannot corrupt the recorded sequence.
+      When background_recording_sound is enabled, a post-persist notification-stream pulse
+      confirms successful track/walk storage at most every 30 seconds only while the app UI
+      is hidden or the screen is off; observed persistence failures use an independent
+      one-minute throttle and distinct tone. Foreground use, filtered fixes and failed commits
+      never produce a success pulse.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
@@ -448,10 +453,16 @@ invariants:
       - maplib/src/test/java/com/nextgis/maplib/util/LocationProviderArbiterCoreTest.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
-    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+      - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundPolicy.java
+      - maplibui/src/test/java/com/nextgis/maplibui/util/BackgroundRecordingSoundPolicyTest.java
+      - app/src/main/res/xml/preferences_tracks.xml
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, SMOKE-GPS-RECORDING, SMOKE-WALK]
     must_update_docs:
       - docs/architecture/crash-recovery.md
       - docs/reference/official-differences.md
+      - docs/reference/settings-and-config.md
+      - docs/registry/config-keys.yaml
       - maplib/docs/README.md
       - maplibui/docs/README.md
   INV-STAKEOUT-GUIDANCE:

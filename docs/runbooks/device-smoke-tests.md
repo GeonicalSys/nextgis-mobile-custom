@@ -23,7 +23,10 @@ related_code:
    device-only delete/fallback, composition update и backup guard.
 7. Walk edit: старт, пауза/возврат, правая кнопка с человечком завершает запись
    и сохраняет скетч; шестерёнки настроек в active-walk панели нет.
-8. Tracking: запись трека без start/end flag layers на карте.
+8. Tracking: запись трека без start/end flag layers на карте; при включённом
+   звуковом контроле свернуть приложение и двигаться не менее 70 секунд — слышны
+   короткие подтверждения сохранения не чаще раза в 30 секунд. На открытом экране
+   и после выключения настройки подтверждений нет. Повторить для обхода.
 9. Update: manifest flavor/version/signature validation и безопасный отказ.
 10. Heavy sync: switch/double-sync exclusion, staged schema rebuild/circuit
     breaker и `LayerFillService` timeout/resume.

@@ -244,8 +244,15 @@ tests:
   SMOKE-WALK:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Start geometry-by-walk editing, Pause and resume the app, Finish geometry]
-    expected: Geometry and editing state survive lifecycle transitions without duplicate reload.
+    steps:
+      - Enable background recording sound and start geometry-by-walk editing
+      - Minimize the app and walk until several geometry points are saved
+      - Pause and resume the app, then finish geometry
+      - Disable background recording sound and repeat the minimized recording segment
+    expected: >
+      Geometry and editing state survive lifecycle transitions without duplicate reload.
+      While minimized, a successful persisted walk update produces a short confirmation no
+      more often than every 30 seconds; foreground and disabled-setting recording stay silent.
   SMOKE-GPS-RECORDING:
     type: device
     scope: [app, maplib, maplibui]
@@ -256,6 +263,8 @@ tests:
       - With GPS plus network enabled, verify network fallback before the first GPS fix and after GPS is unavailable for more than 12 seconds
       - Set a sampling interval above 30 seconds and record several fixes
       - Pass through a section with one poor-accuracy or visibly displaced fix
+      - Enable background recording sound, minimize the app and keep moving for at least 70 seconds
+      - Return to the app, then disable the setting and repeat the minimized segment
       - Export HyperLog and inspect filter/provider counters
     expected: >
       Track and walk geometry progress continuously at vehicle speed without a
@@ -265,6 +274,8 @@ tests:
       Long sampling gaps preserve prior valid fixes, the final two buffered fixes are
       flushed on stop, and isolated inaccurate or displaced garbage is absent. The
       automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
+      Minimized recording emits a short post-insert confirmation no more often than every
+      30 seconds, foreground recording is silent, and disabling the setting suppresses it.
   SMOKE-STAKEOUT:
     type: device
     scope: [app, maplib]

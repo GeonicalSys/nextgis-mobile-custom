@@ -40,6 +40,7 @@ lost.
 | After reboot / cold start | `BootLoader` and `MainActivity` call `TrackerService.ensureRecordingRunningIfEnabled()` — silent auto-start, no dialog |
 | Continuity of track id | Not required. Closing unfinished tracks and starting a new id after a crash is allowed; previous points remain in SQLite / on the map |
 | Forbidden stop | Reboot, process death, and legacy `track_restore=false` must not stop recording while the durable flag is set |
+| Background sound | With `background_recording_sound=true`, a short notification-stream tone confirms a successfully inserted point at most once per 30 seconds while the UI is hidden/screen off; an observed insert failure uses a distinct tone at most once per minute. A killed process cannot sound, so a missing expected pulse remains the user-visible warning |
 
 Key types: `TrackerService`, `BootLoader`, `MainActivity`.
 
@@ -65,6 +66,7 @@ the count of network fixes suppressed by recent GPS, but never coordinates.
 | Draft exclusivity | Entering or restoring walk mode clears `geometry_edit_draft`; one sketch cannot be offered both as walk and normal geometry recovery |
 | Finish action | The right action in the active-walk bottom bar uses the walking-person recording icon and invokes the existing Save/Stop transition instead of opening location settings |
 | GPS pipeline | Walk uses the same 160 km/h-capable filter and GPS-first/network-fallback arbitration as tracks, but reads ordinary `location_source` and `location_min_time` / `location_min_distance` settings |
+| Background sound | The same enabled-by-default control pulse is emitted only after the updated WKT draft commit succeeds; commit failure uses the distinct throttled failure tone |
 
 Key types: `WalkEditService`, `EditLayerOverlay.stopGeometryByWalk`, `MapFragment` watchdog / resume helpers.
 

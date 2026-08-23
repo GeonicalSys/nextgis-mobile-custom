@@ -1,15 +1,17 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-08-15
+last_verified: 2026-08-23
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
   - app/src/main/res/xml/preferences_general.xml
   - app/src/main/res/xml/preferences_map.xml
+  - app/src/main/res/xml/preferences_tracks.xml
   - app/src/main/AndroidManifest.xml
   - maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
 ---
 
 # Настройки и конфигурационные ключи
@@ -38,7 +40,14 @@ related_code:
   `photo_overlay_use_object_coords=true` включены по умолчанию. Миграция
   `photo_overlay_defaults_enabled_v1` один раз включает оба ключа на уже
   установленной версии; после этого ручной выбор пользователя сохраняется.
-- Tracking/location: интервалы, distance, foreground service toggles.
+- Tracking/location: интервалы, distance, foreground service toggles и
+  `background_recording_sound=true`. Последний ключ включает короткое звуковое
+  подтверждение не чаще одного раза в 30 секунд только после фактического
+  сохранения точки трека или обновления обхода, когда UI приложения скрыт либо
+  экран выключен. Явная ошибка сохранения получает отдельный более длинный
+  сигнал не чаще раза в минуту. Звук использует notification stream и соблюдает
+  системный беззвучный режим / DND. Это контрольный пульс, а не самостоятельный
+  watchdog: если Android уничтожил recorder process, сигналов больше не будет.
 - Вынос координат: начальное состояние звука и четыре строго убывающих порога
   `stakeout_far_distance`, `stakeout_medium_distance`, `stakeout_near_distance`,
   `stakeout_reached_distance` в метрах. Некорректный набор не применяется;

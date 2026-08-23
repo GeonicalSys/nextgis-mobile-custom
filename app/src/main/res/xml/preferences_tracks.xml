@@ -68,6 +68,15 @@
 
     <CheckBoxPreference
         app:iconSpaceReserved="false"
+        android:defaultValue="true"
+        android:key="background_recording_sound"
+        android:title="@string/background_recording_sound"
+        android:summary="@string/background_recording_sound_summary"
+        android:singleLineTitle="false"
+        />
+
+    <CheckBoxPreference
+        app:iconSpaceReserved="false"
 
         android:defaultValue="false"
         android:enabled="false"

@@ -106,6 +106,17 @@ preferences:
     purpose: >
       Durable flag that track recording is on; cleared only by explicit Stop track menu.
       BootLoader and MainActivity auto-resume TrackerService when true.
+  background_recording_sound:
+    owner: maplibui
+    type: boolean
+    default: true
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/SettingsConstantsUI.java
+    ui: app/src/main/res/xml/preferences_tracks.xml (Настройки → Треки)
+    consumer: maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
+    purpose: >
+      Play a short notification-stream confirmation, at most once per 30 seconds,
+      after a track point or walk geometry update is durably saved while the app UI
+      is hidden; play a distinct throttled tone for an observed persistence failure.
   ngw_identity_backup:
     owner: maplib
     type: string

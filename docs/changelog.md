@@ -10,6 +10,9 @@ related_code:
 
 ## 2026-08-23
 
+- Трек и обход получили общий post-persist звуковой контроль фоновой записи:
+  enabled-by-default preference, 30-секундный success throttle, отдельный
+  минутный failure throttle, suppression при видимом UI и unit policy tests.
 - Первая карта теперь всегда принадлежит активному начальному local project:
   чистая установка создаёт его до первого `MapDrawable`, а обновление один раз
   копирует прежние map-owned слои и track DB без удаления исходной standalone-

@@ -138,6 +138,8 @@
 
 
     <string name="track_restore">Продолжать трек после перезагрузки</string>
+    <string name="background_recording_sound">Звуковой контроль фоновой записи</string>
+    <string name="background_recording_sound_summary">Короткий сигнал подтверждает сохранение точки трека или обхода, когда приложение свёрнуто</string>
     <string name="action_support">Поддержка</string>
     <string name="app_support">Задавайте вопросы, сообщайте об ошибках или предлагайте новые функции используя любой удобный для вас способ. Доступна коммерческая поддержка.</string>
     <string name="email">Электронная почта</string>
