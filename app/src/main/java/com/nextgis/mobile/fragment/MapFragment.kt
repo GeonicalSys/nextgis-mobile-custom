@@ -719,7 +719,8 @@ public class MapFragment
                     result = undoRedoOverlay!!.onOptionsItemSelected(id)
                     if (result) {
                         val geometry = undoRedoOverlay!!.feature.geometry as? GeoLineString
-                        if (geometry != null) mRulerOverlay!!.setGeometry(geometry)
+                        if (geometry != null)
+                            mMapRef.get()?.map?.restoreMeasurementGeometry(geometry)
                     }
                     return result
                 }
@@ -1889,6 +1890,14 @@ public class MapFragment
         super.onSaveInstanceState(outState)
         mapLibreMapView?.onSaveInstanceState(outState)
         outState.putBoolean(BUNDLE_KEY_IS_MEASURING, mRulerOverlay!!.isMeasuring)
+        val rulerGeometry = mMapRef.get()?.map?.measurementGeometry
+        if (rulerGeometry != null) {
+            try {
+                outState.putByteArray(BUNDLE_KEY_RULER_GEOMETRY, rulerGeometry.toBlob())
+            } catch (exception: IOException) {
+                HyperLog.w(Constants.TAG, "Ruler state save failed", exception)
+            }
+        }
         outState.putInt(KEY_MODE, mode)
         outState.putInt(
             BUNDLE_KEY_LAYER,
@@ -2010,7 +2019,20 @@ public class MapFragment
             preserveRulerHistoryDuringModeRestore = false
         }
 
-        if (restoringRulerMeasurement) startMeasuring(resetHistory = false)
+        var restoredRulerGeometry: GeoLineString? = null
+        if (restoringRulerMeasurement && savedInstanceState?.containsKey(
+                BUNDLE_KEY_RULER_GEOMETRY
+            ) == true) {
+            try {
+                restoredRulerGeometry = GeoGeometryFactory.fromBlob(
+                    savedInstanceState.getByteArray(BUNDLE_KEY_RULER_GEOMETRY)
+                ) as? GeoLineString
+            } catch (exception: IOException) {
+                HyperLog.w(Constants.TAG, "Ruler state restore failed", exception)
+            }
+        }
+        if (restoringRulerMeasurement)
+            startMeasuring(resetHistory = false, restoredGeometry = restoredRulerGeometry)
     }
 
     /**
@@ -4507,8 +4529,14 @@ public class MapFragment
         }
     }
 
-    protected fun startMeasuring(resetHistory: Boolean = true) {
+    protected fun startMeasuring(
+        resetHistory: Boolean = true,
+        restoredGeometry: GeoLineString? = null
+    ) {
         mRulerOverlay!!.startMeasuring(this, mCurrentCenter)
+        mMapRef.get()!!.map.startMeasuring()
+        if (restoredGeometry != null)
+            mMapRef.get()!!.map.restoreMeasurementGeometry(restoredGeometry)
         if (resetHistory || !undoRedoOverlay!!.hasHistory()) {
             undoRedoOverlay!!.clearHistory()
             saveRulerToHistory()
@@ -4519,11 +4547,10 @@ public class MapFragment
         showAddByTapButton()
         mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_apply_dark)
         mActivity!!.showRulerToolbar()
-        mMapRef.get()!!.map.startMeasuring()
     }
 
     private fun saveRulerToHistory() {
-        val geometry = mRulerOverlay?.geometry ?: return
+        val geometry = mMapRef.get()?.map?.measurementGeometry ?: return
         val feature = Feature()
         feature.geometry = geometry
         undoRedoOverlay!!.saveToHistory(feature)
@@ -4565,6 +4592,7 @@ public class MapFragment
         protected const val BUNDLE_KEY_FEATURE_ID: String = "feature"
         protected const val BUNDLE_KEY_SAVED_FEATURE: String = "feature_blob"
         protected const val BUNDLE_KEY_IS_MEASURING: String = "is_measuring"
+        protected const val BUNDLE_KEY_RULER_GEOMETRY: String = "ruler_geometry"
         const val EDIT_LAYER: Int = 2
         private const val LOCATE_MIN_ZOOM = 12.0
         private const val CAMERA_ANIMATION_MS = 800
