@@ -28,8 +28,8 @@ hotspots:
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     default_decision: hybrid
     reason: Accept interface evolution and implement it in app without discarding fork deferred reload.
-    invariants: [INV-HOT-ADD-CONSISTENCY]
-    verify: [AUTO-APP-RELEASES, SMOKE-HOT-RASTER]
+    invariants: [INV-HOT-ADD-CONSISTENCY, INV-MAPLIBRE-VIEW-LIFECYCLE]
+    verify: [AUTO-APP-RELEASES, SMOKE-HOT-RASTER, SMOKE-MAP-SURFACE-LIFECYCLE]
   MAPLIBRE-BACKEND:
     repositories: [root, maplib, maplibui]
     paths: [app/build.gradle, maplib/build.gradle, maplibui/build.gradle]

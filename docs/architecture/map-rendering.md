@@ -200,6 +200,13 @@ related_code:
     Vulkan-драйвера карта завершает процесс при создании surface. Смена backend
     требует проверки runtime dependency graph, cold start карты после
     авторизации и повторного запуска на Android 9 без Vulkan.
+26. `MapFragment` владеет MapLibre `MapView` в пределах своего view lifecycle:
+    после `onCreate` ему передаются `onStart/onResume/onPause/onStop`, сохранение
+    состояния и low-memory callback, а `onDestroyView` уничтожает native renderer
+    и очищает только ещё актуальные ссылки `MapDrawable`. После resume
+    запрашивается repaint и HyperLog фиксирует первый полученный кадр. Нельзя
+    заменять этот контракт безусловным full style reload: он не восстанавливает
+    потерянный render surface и создаёт лишнюю нагрузку на большие проекты.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
@@ -207,7 +214,7 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`,
 `INV-GEOMETRY-SKETCH-WORKFLOW`, `INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`,
 `INV-SPATIAL-CACHE-CONSISTENCY`, `INV-HIDDEN-VECTOR-TILE-IDENTIFY`,
-`INV-MAPLIBRE-BACKEND-COMPATIBILITY`.
+`INV-MAPLIBRE-BACKEND-COMPATIBILITY`, `INV-MAPLIBRE-VIEW-LIFECYCLE`.
 
 ## Изменение rendering pipeline
 
@@ -227,6 +234,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`.
 Для изменения MapLibre dependency/backend дополнительно обязателен
 `SMOKE-MAP-OPENGL-COMPATIBILITY`.
+Для изменения `MapFragment` lifecycle дополнительно обязателен
+`SMOKE-MAP-SURFACE-LIFECYCLE`.
 
 ## Производительность
 

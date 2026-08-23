@@ -136,6 +136,7 @@ import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.MapLibreMap
+import org.maplibre.android.maps.MapView as MapLibreMapView
 import org.maplibre.android.maps.OnMapReadyCallback
 import org.maplibre.android.module.http.HttpRequestImpl
 import org.maplibre.geojson.LineString
@@ -172,6 +173,26 @@ public class MapFragment
     protected var mActivity: MainActivity? = null
 
     lateinit var mMapRef: WeakReference<MapViewOverlays>
+    private var mapLibreMapView: MapLibreMapView? = null
+    @Volatile
+    private var awaitingMapLibreFrameAfterResume = false
+    private val mapLibreFrameListener =
+        MapLibreMapView.OnDidFinishRenderingFrameListener { fully, _, _ ->
+            if (awaitingMapLibreFrameAfterResume) {
+                awaitingMapLibreFrameAfterResume = false
+                HyperLog.v(
+                    Constants.TAG,
+                    "MapLibreMapView first frame after resume fully=$fully"
+                )
+            }
+        }
+    private val mapLibreLoadFailureListener =
+        MapLibreMapView.OnDidFailLoadingMapListener { errorMessage ->
+            HyperLog.e(
+                Constants.TAG,
+                "MapLibreMapView load failed: ${errorMessage.take(500)}"
+            )
+        }
 
 
     protected var mivZoomIn: FloatingActionButton? = null
@@ -438,7 +459,10 @@ public class MapFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mapViewMaplibre = view.findViewById(R.id.mapViewMaplibre) as org.maplibre.android.maps.MapView
+        val mapViewMaplibre = view.findViewById<MapLibreMapView>(R.id.mapViewMaplibre)
+        mapLibreMapView = mapViewMaplibre
+        mapViewMaplibre.addOnDidFinishRenderingFrameListener(mapLibreFrameListener)
+        mapViewMaplibre.addOnDidFailLoadingMapListener(mapLibreLoadFailureListener)
 
         mMapRef.get()!!.map!!.maplibreMapView = mapViewMaplibre
 
@@ -452,6 +476,7 @@ public class MapFragment
     }
 
     override fun onMapReady(mapboxMap: MapLibreMap) {
+        HyperLog.v(Constants.TAG, "MapFragment.onMapReady")
         val mapRef = mMapRef.get()
         val mapDrawable = mapRef?.map
         if (mapRef == null || mapDrawable == null) {
@@ -1576,9 +1601,26 @@ public class MapFragment
         val mapView = mapViewOrNull
         if (mapView != null) {
             mapView.removeListener(this)
-            mapView.map.clearMapListeners()
+            if (mapView.map.maplibreMap != null) {
+                mapView.map.clearMapListeners()
+            }
             mMapRelativeLayout?.removeView(mapView)
         }
+
+        awaitingMapLibreFrameAfterResume = false
+        mapLibreMapView?.let { mapLibreView ->
+            HyperLog.v(Constants.TAG, "MapLibreMapView.onDestroy")
+            mapLibreView.removeOnDidFinishRenderingFrameListener(mapLibreFrameListener)
+            mapLibreView.removeOnDidFailLoadingMapListener(mapLibreLoadFailureListener)
+            mapLibreView.onDestroy()
+
+            val mapDrawable = mapDrawableOrNull
+            if (mapDrawable?.maplibreMapView === mapLibreView) {
+                mapDrawable.maplibreMap = null
+                mapDrawable.maplibreMapView = null
+            }
+        }
+        mapLibreMapView = null
 
         editLayerOverlay?.mBottomToolbar?.setOnClickListener(null)
         editLayerOverlay?.mBottomToolbar = null
@@ -1822,6 +1864,7 @@ public class MapFragment
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        mapLibreMapView?.onSaveInstanceState(outState)
         outState.putBoolean(BUNDLE_KEY_IS_MEASURING, mRulerOverlay!!.isMeasuring)
         outState.putInt(KEY_MODE, mode)
         outState.putInt(
@@ -2351,6 +2394,14 @@ public class MapFragment
     }
 
 
+    override fun onStart() {
+        super.onStart()
+        mapLibreMapView?.let { mapLibreView ->
+            HyperLog.v(Constants.TAG, "MapLibreMapView.onStart")
+            mapLibreView.onStart()
+        }
+    }
+
     override fun onPause() {
         HyperLog.v(
             Constants.TAG,
@@ -2408,13 +2459,41 @@ public class MapFragment
         mActivity?.unregisterReceiver(mMessageStyling)
         mActivity?.unregisterReceiver(mMessageReload)
 
+        awaitingMapLibreFrameAfterResume = false
+        mapLibreMapView?.let { mapLibreView ->
+            HyperLog.v(Constants.TAG, "MapLibreMapView.onPause")
+            mapLibreView.onPause()
+        }
         super.onPause()
+    }
+
+    override fun onStop() {
+        mapLibreMapView?.let { mapLibreView ->
+            HyperLog.v(Constants.TAG, "MapLibreMapView.onStop")
+            mapLibreView.onStop()
+        }
+        super.onStop()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapLibreMapView?.let { mapLibreView ->
+            HyperLog.v(Constants.TAG, "MapLibreMapView.onLowMemory")
+            mapLibreView.onLowMemory()
+        }
     }
 
 
     override fun onResume() {
         HyperLog.v(Constants.TAG, "MapFragment.onResume")
         super.onResume()
+
+        mapLibreMapView?.let { mapLibreView ->
+            awaitingMapLibreFrameAfterResume = true
+            HyperLog.v(Constants.TAG, "MapLibreMapView.onResume")
+            mapLibreView.onResume()
+            mapDrawableOrNull?.maplibreMap?.triggerRepaint()
+        }
 
         ensureMapViewBoundToApplicationMap()
         mApp?.let { (it as IGISApplication).flushPendingMapReloadAfterLayerFillIfNeeded(this) }

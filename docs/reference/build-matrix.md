@@ -21,11 +21,11 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `206` |
-| App versionName (release) | `3.1.2.12` |
+| App versionCode (release) | `207` |
+| App versionName (release) | `3.1.2.13` |
 | App versionCode (debug) | `203` |
 | App versionName (debug) | `3.1.2.9` |
-| maplib VERSION_NAME (release) | `3.1.2.12` |
+| maplib VERSION_NAME (release) | `3.1.2.13` |
 | maplib VERSION_NAME (debug) | `3.1.2.9` |
 | MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |

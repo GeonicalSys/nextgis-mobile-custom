@@ -20,12 +20,12 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.12` / `versionCode` 206; Lisa Debug
+Состояние форка: Lisa/Belka Release `3.1.2.13` / `versionCode` 207; Lisa Debug
 `3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 
-Подготовленный `3.1.2.12` ссылается на OpenGL-коммиты maplib
-[`7066083`](https://github.com/GeonicalSys/android_maplib/commit/7066083) и
+Подготовленный `3.1.2.13` ссылается на OpenGL/version-коммиты maplib
+[`ad4c0f7`](https://github.com/GeonicalSys/android_maplib/commit/ad4c0f7) и
 maplibui [`8ae4f735`](https://github.com/GeonicalSys/android_maplibui/commit/8ae4f735).
 Перед merge root PR указатели обновляются на итоговые merge-коммиты библиотечных
 PR согласно порядку доставки.
@@ -41,7 +41,7 @@ PR согласно порядку доставки.
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
-Форк `3.1.2.12` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+Форк `3.1.2.13` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
 и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
@@ -81,6 +81,27 @@ official master всё ещё пропускает список через `remo
 продуктовых отличий ниже.
 
 ## Возможности, которые могут быть полезны upstream
+
+### Полный lifecycle MapLibre MapView
+
+**Что это.** `MapFragment` передаёт созданному MapLibre `MapView` полный набор
+обязательных callbacks view lifecycle: create/start/resume, pause/stop,
+сохранение состояния, low-memory и destroy. При `onDestroyView` старый native
+renderer освобождается, а его ссылки удаляются из `MapDrawable`, только если они
+ещё указывают на уничтожаемый view. После resume запрашивается repaint; HyperLog
+фиксирует получение первого кадра либо ошибку загрузки карты.
+
+**Для чего.** На части устройств, особенно Android 9, после перехода в настройки,
+фонового режима, блокировки экрана или Activity recreation Android-интерфейс
+оставался виден, но render surface карты становился чёрным. Полная перезагрузка
+style не исправляет потерянный surface и дорого стоит для больших проектов;
+правильное восстановление выполняется на уровне lifecycle renderer.
+
+В актуальном official `MapFragment` на проверенном HEAD вызывает только
+`MapView.onCreate(savedInstanceState)` и не передаёт остальные lifecycle callbacks.
+Поэтому исправление считается действующим отличием форка и проверяется отдельным
+`SMOKE-MAP-SURFACE-LIFECYCLE` с переходами между экранами, background/foreground,
+блокировкой и пересозданием Activity.
 
 ### Упрощённый полевой скетч полигонов
 

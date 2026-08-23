@@ -41,6 +41,24 @@ invariants:
       - app/docs/README.md
       - maplibui/docs/README.md
       - maplib/docs/README.md
+  INV-MAPLIBRE-VIEW-LIFECYCLE:
+    title: MapLibre renderer follows the Fragment view lifecycle
+    owners: [app]
+    statement: >
+      Every MapLibre MapView created by MapFragment receives onCreate, onStart,
+      onResume, onPause, onStop, onSaveInstanceState, onLowMemory and onDestroy
+      from the matching Fragment view lifecycle. Returning from another screen,
+      backgrounding, screen lock or Activity recreation must resume rendering;
+      onDestroyView must release the old native renderer and clear only bindings
+      that still point to that destroyed MapView.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [AUTO-APP-RELEASES, SMOKE-MAP-SURFACE-LIFECYCLE]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - app/docs/README.md
+      - app/docs/manifest.yaml
   INV-NGW-ACCOUNT-IDENTITY:
     title: Every build variant exposes one consistent NGW account identity
     owners: [app, maplibui]

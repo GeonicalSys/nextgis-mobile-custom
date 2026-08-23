@@ -18,6 +18,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 ## Основные сценарии
 
 - запуск приложения и открытие карты;
+- сохранение отрисовки карты после возврата из настроек/другого приложения,
+  выключения экрана и пересоздания view: `MapFragment` передаёт MapLibre полный
+  lifecycle, освобождает старый native renderer и запрашивает repaint при resume;
 - вращение карты двумя пальцами только после явного разрешения кнопкой рядом с
   текущим местоположением; состояние и bearing сохраняются, запрет возвращает
   север вверх, а разрешённый rotate начинается сразу при одновременном
@@ -101,6 +104,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `org.maplibre.gl:android-sdk-opengl:13.0.2`; generic `android-sdk` версии 13
   использует Vulkan и возвращать его в production нельзя.
 - `MapFragment` должен реализовывать актуальный `MaplibreMapInteraction`.
+- Каждый созданный MapLibre `MapView` должен получить согласованную пару
+  `onCreate/onStart/onResume` и `onPause/onStop/onDestroy`; старый view нельзя
+  оставлять привязанным к `MapDrawable` после `onDestroyView`.
 - Не дублировать GIS model/storage из `maplib`.
 - Не читать `Q:\standart_profiles`, `variables.py` или QGIS plugin mirrors:
   межпроектный runtime contract — NGW API/Collector либо явный portable import.
@@ -124,6 +130,10 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 
 - Карта/слои: сначала проверить callbacks `MapFragment` и состояние
   `GISApplication`, затем rendering docs.
+- Чёрная карта при видимых Android-кнопках после возврата с другого экрана:
+  проверить последовательность `MapLibreMapView.onStart/onResume`, первый кадр
+  после resume, последующие `onPause/onStop/onDestroy` и отсутствие старой
+  ссылки `MapDrawable` на уничтоженный view.
 - Crash `No Vulkan compatible GPU found` при открытии карты означает неверный
   MapLibre runtime artifact: штатный APK использует OpenGL и не требует Vulkan.
 - Карта не вращается: проверить состояние кнопки вращения рядом с геолокацией и

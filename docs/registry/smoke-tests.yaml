@@ -48,6 +48,16 @@ tests:
       - Complete Web GIS authorization and wait for the map screen to render
       - Force-stop the application and cold-open the same map again
     expected: The map renders after authorization and after a cold restart through OpenGL without No Vulkan compatible GPU found or process termination.
+  SMOKE-MAP-SURFACE-LIFECYCLE:
+    type: device
+    scope: app
+    steps:
+      - Open a populated map and wait until MapLibre renders it
+      - Open and close layer properties and project settings at least five times
+      - Send the application to background and return, then lock and unlock the screen
+      - Recreate MainActivity by switching a Collector project or changing configuration
+      - Inspect HyperLog lifecycle entries and the first-frame-after-resume entry
+    expected: The map remains rendered and interactive after every return while Android controls stay responsive; each created MapView has balanced start/stop and one destroy, and a rendered frame follows resume without restarting the process.
   SMOKE-LOCATION-CURSOR-TOP:
     type: device
     scope: [app, maplib]

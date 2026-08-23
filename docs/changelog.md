@@ -10,6 +10,14 @@ related_code:
 
 ## 2026-08-23
 
+- Production Lisa/Belka подготовлен как патч `3.1.2.13` / `versionCode 207`;
+  MapLibre `MapView` теперь получает полный Fragment view lifecycle, старый
+  native renderer освобождается при `onDestroyView`, а resume запрашивает repaint
+  и фиксирует первый кадр в HyperLog. Добавлены
+  `INV-MAPLIBRE-VIEW-LIFECYCLE` и `SMOKE-MAP-SURFACE-LIFECYCLE`.
+- Official NextGIS Mobile HEAD повторно проверен: его `MapFragment` по-прежнему
+  вызывает только `MapView.onCreate`, поэтому lifecycle-исправление остаётся
+  действующим отличием форка.
 - Production Lisa/Belka подготовлен как выпуск `3.1.2.12` / `versionCode 206`;
   Lisa Debug остаётся `3.1.2.9` / 203, release `maplib.VERSION_NAME` обновлён
   синхронно.
