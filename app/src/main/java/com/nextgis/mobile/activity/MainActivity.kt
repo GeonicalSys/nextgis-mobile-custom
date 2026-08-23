@@ -473,6 +473,14 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         mToolbar!!.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
     }
 
+    fun showRulerToolbar() {
+        mToolbar!!.menu.clear()
+        mToolbar!!.inflateMenu(com.nextgis.maplibui.R.menu.ruler_measurement)
+        mLayersFragment!!.isDrawerToggleEnabled = false
+        mToolbar!!.navigationIcon = null
+        mapFragment!!.undoRedoOverlay?.defineUndoRedo()
+    }
+
 
     fun showDefaultToolbar() {
         mToolbar?.title = appName
@@ -1731,7 +1739,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             setTrackItem(menu.findItem(R.id.menu_track), title, icon)
         }
 
-        if (mapFragment!!.isEditMode) showEditToolbar()
+        if (mapFragment!!.isRulerMeasuring) showRulerToolbar()
+        else if (mapFragment!!.isEditMode) showEditToolbar()
 
         val log = menu.findItem(R.id.menu_share_log)
         log?.setVisible(mPreferences.getBoolean("save_log", true))

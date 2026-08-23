@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -40,7 +40,8 @@ lost.
 | After reboot / cold start | `BootLoader` and `MainActivity` call `TrackerService.ensureRecordingRunningIfEnabled()` — silent auto-start, no dialog |
 | Continuity of track id | Not required. Closing unfinished tracks and starting a new id after a crash is allowed; previous points remain in SQLite / on the map |
 | Forbidden stop | Reboot, process death, and legacy `track_restore=false` must not stop recording while the durable flag is set |
-| Background sound | With `background_recording_sound=true`, a short notification-stream tone confirms a successfully inserted point at most once per 30 seconds while the UI is hidden/screen off; an observed insert failure uses a distinct tone at most once per minute. A killed process cannot sound, so a missing expected pulse remains the user-visible warning |
+| Background sound | With `background_recording_sound=true`, a short notification-stream tone confirms a successfully inserted point at most once per 10 seconds while the UI is hidden/screen off; an observed insert failure uses a distinct tone at most once per minute. A killed process cannot sound, so a missing expected pulse remains the user-visible warning |
+| Permission revoked | If Android removes coarse/fine location while recording, a sticky restart must not call `startForeground()` for the forbidden location FGS. The service stops with `START_NOT_STICKY`, retains `track_recording_enabled`, and can resume after permission returns without crashing the app |
 
 Key types: `TrackerService`, `BootLoader`, `MainActivity`.
 
@@ -67,6 +68,7 @@ the count of network fixes suppressed by recent GPS, but never coordinates.
 | Finish action | The right action in the active-walk bottom bar uses the walking-person recording icon and invokes the existing Save/Stop transition instead of opening location settings |
 | GPS pipeline | Walk uses the same 160 km/h-capable filter and GPS-first/network-fallback arbitration as tracks, but reads ordinary `location_source` and `location_min_time` / `location_min_distance` settings |
 | Background sound | The same enabled-by-default control pulse is emitted only after the updated WKT draft commit succeeds; commit failure uses the distinct throttled failure tone |
+| Permission revoked | Missing/revoked location permission or a `startForeground()` race stops the service without a location FGS and keeps `walkedit_temp` for Continue/Discard |
 
 Key types: `WalkEditService`, `EditLayerOverlay.stopGeometryByWalk`, `MapFragment` watchdog / resume helpers.
 

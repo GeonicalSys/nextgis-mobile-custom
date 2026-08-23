@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
@@ -42,7 +42,7 @@ related_code:
   установленной версии; после этого ручной выбор пользователя сохраняется.
 - Tracking/location: интервалы, distance, foreground service toggles и
   `background_recording_sound=true`. Последний ключ включает короткое звуковое
-  подтверждение не чаще одного раза в 30 секунд только после фактического
+  подтверждение не чаще одного раза в 10 секунд только после фактического
   сохранения точки трека или обновления обхода, когда UI приложения скрыт либо
   экран выключен. Явная ошибка сохранения получает отдельный более длинный
   сигнал не чаще раза в минуту. Звук использует notification stream и соблюдает

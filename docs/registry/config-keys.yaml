@@ -114,7 +114,7 @@ preferences:
     ui: app/src/main/res/xml/preferences_tracks.xml (Настройки → Треки)
     consumer: maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
     purpose: >
-      Play a short notification-stream confirmation, at most once per 30 seconds,
+      Play a short notification-stream confirmation, at most once per 10 seconds,
       after a track point or walk geometry update is durably saved while the app UI
       is hidden; play a distinct throttled tone for an observed persistence failure.
   ngw_identity_backup:

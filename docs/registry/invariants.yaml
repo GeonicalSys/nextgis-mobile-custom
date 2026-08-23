@@ -380,7 +380,8 @@ invariants:
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
       launch duplicate forms. The selection toolbar has no duplicate add action; cancelling a
       new sketch asks for confirmation and then returns directly to normal map mode. Ruler area
-      is always formatted in hectares. Line and polygon screen vertices are converted with the
+      is always formatted in hectares, and the ruler exposes the same Undo/Redo controls as a
+      sketch so each added or moved measurement point is one reversible history step. Line and polygon screen vertices are converted with the
       current MapLibre projection so their first node follows the current camera centre. Polygon
       and MultiPolygon WKT recovery preserves every member, exactly one outer ring per member and only
       real holes, so it cannot cancel the fill, truncate a member at its first hole or lose later
@@ -408,8 +409,10 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
       - maplibui/src/test/java/com/nextgis/maplibui/service/WalkGeometryInsertionTest.java
       - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/RulerOverlay.java
       - maplibui/src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java
       - maplibui/src/test/java/com/nextgis/maplibui/overlay/UndoRedoOverlayTest.java
+      - maplibui/src/main/res/menu/ruler_measurement.xml
       - maplibui/src/main/res/menu/edit_polygon.xml
       - maplibui/src/main/res/menu/edit_multipolygon.xml
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -440,10 +443,12 @@ invariants:
       network remains an initial and outage fallback, but a usable GPS fix suppresses network
       fixes for 12 seconds so mixed-provider jitter cannot corrupt the recorded sequence.
       When background_recording_sound is enabled, a post-persist notification-stream pulse
-      confirms successful track/walk storage at most every 30 seconds only while the app UI
+      confirms successful track/walk storage at most every 10 seconds only while the app UI
       is hidden or the screen is off; observed persistence failures use an independent
       one-minute throttle and distinct tone. Foreground use, filtered fixes and failed commits
-      never produce a success pulse.
+      never produce a success pulse. Revoking coarse/fine location during recording must stop
+      either location foreground service without calling forbidden startForeground, crashing,
+      clearing track_recording_enabled or discarding the durable walk draft.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java

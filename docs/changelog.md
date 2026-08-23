@@ -1,12 +1,24 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-24
+
+- Контрольный сигнал успешной фоновой записи ускорен с 30 до 10 секунд.
+  `TrackerService` и `WalkEditService` больше не вызывают запрещённый location
+  `startForeground()` после отзыва coarse/fine permission: security race
+  останавливает сервис без crash loop и сохраняет track intent / walk draft.
+- Линейка подключена к общей истории геометрии и получила отдельную панель
+  Undo/Redo; добавления и завершённые переносы измерительных точек отменяются и
+  возвращаются по одному, с обновлением длины и площади.
+- Official app/maplibui HEAD повторно сверены: hashes не изменились, а official
+  `RulerOverlay` по-прежнему не содержит истории или панели Undo/Redo.
 
 ## 2026-08-23
 

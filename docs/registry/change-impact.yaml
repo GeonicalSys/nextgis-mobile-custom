@@ -171,6 +171,8 @@ triggers:
       - maplib/src/main/java/com/nextgis/maplib/util/LocationUtil.java
       - maplib/src/test/java/com/nextgis/maplib/util/LocationUtilAreaTest.java
       - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/RulerOverlay.java
+      - maplibui/src/main/res/menu/ruler_measurement.xml
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometryInsertion.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
@@ -206,7 +208,9 @@ triggers:
   - id: GEOMETRY-EDIT-HISTORY
     paths:
       - maplibui/src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/RulerOverlay.java
       - maplibui/src/test/java/com/nextgis/maplibui/overlay/UndoRedoOverlayTest.java
+      - maplibui/src/main/res/menu/ruler_measurement.xml
     owners: [maplibui, app]
     read:
       - docs/architecture/map-rendering.md

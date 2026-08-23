@@ -243,6 +243,7 @@ public class MapFragment
     var undoRedoOverlay: UndoRedoOverlay? = null
         protected set
     protected var mRulerOverlay: RulerOverlay? = null
+    private var preserveRulerHistoryDuringModeRestore = false
     protected var mCurrentCenter: GeoPoint? = null
     protected var mSelectedLayer: VectorLayer? = null
 
@@ -694,6 +695,9 @@ public class MapFragment
     val isEditMode: Boolean
         get() = mode == MODE_EDIT || mode == MODE_EDIT_BY_WALK
 
+    val isRulerMeasuring: Boolean
+        get() = mRulerOverlay?.isMeasuring == true
+
     fun onOptionsItemSelected(id: Int): Boolean {
         val result: Boolean
         when (id) {
@@ -711,6 +715,15 @@ public class MapFragment
 
 
             com.nextgis.maplibui.R.id.menu_edit_undo, com.nextgis.maplibui.R.id.menu_edit_redo -> {
+                if (mRulerOverlay?.isMeasuring == true) {
+                    result = undoRedoOverlay!!.onOptionsItemSelected(id)
+                    if (result) {
+                        val geometry = undoRedoOverlay!!.feature.geometry as? GeoLineString
+                        if (geometry != null) mRulerOverlay!!.setGeometry(geometry)
+                    }
+                    return result
+                }
+
                 result = undoRedoOverlay!!.onOptionsItemSelected(id)
                 if (result) {
                     val undoRedoFeature = undoRedoOverlay!!.feature
@@ -1177,6 +1190,7 @@ public class MapFragment
         var askPerm = false
         if (mMapRef.get()!!.map!!.checkMeasurment(mode)){
             mRulerOverlay!!.stopMeasuring()
+            undoRedoOverlay!!.clearHistory()
             showMainButton()
             showRulerButton()
             hideAddByTapButton()
@@ -1223,7 +1237,8 @@ public class MapFragment
                 if (mStatusPanelMode != 0) mStatusPanel!!.visibility = View.VISIBLE
                 editLayerOverlay!!.showAllFeatures()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_NONE
-                undoRedoOverlay!!.clearHistory()
+                if (!preserveRulerHistoryDuringModeRestore)
+                    undoRedoOverlay!!.clearHistory()
                 mMapRef.get()!!.map!!.unselectFeatureFromView()
                 mStakeoutPanel?.visibility = View.GONE
                 mScaleRulerLayout?.visibility = if (
@@ -1984,17 +1999,18 @@ public class MapFragment
             mode = MODE_NORMAL
         }
 
-        if (mode == MODE_EDIT_BY_WALK) {
+        val restoringRulerMeasurement = savedInstanceState?.getBoolean(
+            BUNDLE_KEY_IS_MEASURING,
+            false
+        ) == true
+        preserveRulerHistoryDuringModeRestore = restoringRulerMeasurement
+        try {
             setNewMode(mode)
-            // start fill data from service
+        } finally {
+            preserveRulerHistoryDuringModeRestore = false
         }
-        else
-            setNewMode(mode)
 
-        if (savedInstanceState != null && savedInstanceState.getBoolean(
-                BUNDLE_KEY_IS_MEASURING,
-                false )
-        ) startMeasuring()
+        if (restoringRulerMeasurement) startMeasuring(resetHistory = false)
     }
 
     /**
@@ -4472,12 +4488,14 @@ public class MapFragment
 
             R.id.add_point_by_tap -> if (mRulerOverlay!!.isMeasuring) {
                 mRulerOverlay!!.stopMeasuring()
+                undoRedoOverlay!!.clearHistory()
                 showMainButton()
                 showRulerButton()
                 hideAddByTapButton()
                 mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_add_point)
                 mActivity!!.title = mActivity!!.appName
                 mActivity!!.setSubtitle(null)
+                mActivity!!.showDefaultToolbar()
                 mMapRef.get()!!.map.stoptMeasuring()
 
             } else addPointByTap()
@@ -4489,22 +4507,37 @@ public class MapFragment
         }
     }
 
-    protected fun startMeasuring() {
+    protected fun startMeasuring(resetHistory: Boolean = true) {
         mRulerOverlay!!.startMeasuring(this, mCurrentCenter)
+        if (resetHistory || !undoRedoOverlay!!.hasHistory()) {
+            undoRedoOverlay!!.clearHistory()
+            saveRulerToHistory()
+        }
         hideOverlayPoint()
         hideMainButton()
         hideRulerButton()
         showAddByTapButton()
         mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_apply_dark)
+        mActivity!!.showRulerToolbar()
         mMapRef.get()!!.map.startMeasuring()
+    }
+
+    private fun saveRulerToHistory() {
+        val geometry = mRulerOverlay?.geometry ?: return
+        val feature = Feature()
+        feature.geometry = geometry
+        undoRedoOverlay!!.saveToHistory(feature)
     }
 
     override fun onLengthChanged(length: Double) {
         mActivity!!.title = LocationUtil.formatLength(context, length, 3)
+        saveRulerToHistory()
     }
 
     override fun onAreaChanged(area: Double) {
-        mActivity!!.setSubtitle(LocationUtil.formatAreaHectares(context, area))
+        mActivity!!.setSubtitle(
+            if (area > 0) LocationUtil.formatAreaHectares(context, area) else null
+        )
     }
 
     public companion object {

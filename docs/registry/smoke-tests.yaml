@@ -247,12 +247,16 @@ tests:
     steps:
       - Enable background recording sound and start geometry-by-walk editing
       - Minimize the app and walk until several geometry points are saved
+      - Revoke location permission in Android settings while walk recording is active, then return to the app
+      - Restore location permission and continue the retained walk draft
       - Pause and resume the app, then finish geometry
       - Disable background recording sound and repeat the minimized recording segment
     expected: >
       Geometry and editing state survive lifecycle transitions without duplicate reload.
       While minimized, a successful persisted walk update produces a short confirmation no
-      more often than every 30 seconds; foreground and disabled-setting recording stay silent.
+      more often than every 10 seconds; foreground and disabled-setting recording stay silent.
+      Permission revocation causes no crash or forbidden location-FGS restart and the walk draft
+      remains available after permission is restored.
   SMOKE-GPS-RECORDING:
     type: device
     scope: [app, maplib, maplibui]
@@ -263,7 +267,9 @@ tests:
       - With GPS plus network enabled, verify network fallback before the first GPS fix and after GPS is unavailable for more than 12 seconds
       - Set a sampling interval above 30 seconds and record several fixes
       - Pass through a section with one poor-accuracy or visibly displaced fix
-      - Enable background recording sound, minimize the app and keep moving for at least 70 seconds
+      - Enable background recording sound, minimize the app and keep moving for at least 35 seconds
+      - Revoke location permission in Android settings while track recording is active and reopen the app
+      - Restore location permission and verify recording resumes from the retained intent
       - Return to the app, then disable the setting and repeat the minimized segment
       - Export HyperLog and inspect filter/provider counters
     expected: >
@@ -275,7 +281,9 @@ tests:
       flushed on stop, and isolated inaccurate or displaced garbage is absent. The
       automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
       Minimized recording emits a short post-insert confirmation no more often than every
-      30 seconds, foreground recording is silent, and disabling the setting suppresses it.
+      10 seconds, foreground recording is silent, and disabling the setting suppresses it.
+      Revoking location permission does not crash-loop a sticky location FGS; the durable track
+      intent survives and recording can resume after permission is granted again.
   SMOKE-STAKEOUT:
     type: device
     scope: [app, maplib]
@@ -349,6 +357,7 @@ tests:
       - Interrupt a partly drawn Polygon, restart the process, choose Continue and inspect its fill, holes and vertex count
       - Draw a self-intersecting simple Polygon and press Save
       - Draw a line and polygon with more than ten nodes, select nodes without moving them, then Undo every added node and Redo them
+      - In the ruler add and move several points, Undo and Redo each change, then Undo once and add a new point
     expected: >
       Creation starts immediately with one node at the projected screen centre; taps and midpoint actions build the
       geometry without a generated segment or square. A new MultiPolygon contains exactly one
@@ -369,7 +378,8 @@ tests:
       Polygon remains in editing and reports self-intersection rather than insufficient points.
       Each Undo or Redo press changes exactly one node even after selection and map callbacks that
       only refresh CRS metadata, and more than ten real changes remain available without a no-op
-      boundary step.
+      boundary step. The ruler exposes the same enabled-at-boundaries Undo/Redo controls; each
+      press restores one measurement-point change and a new point after Undo clears the Redo branch.
   SMOKE-TRACK-NO-FLAGS:
     type: device
     scope: [maplib, maplibui]
