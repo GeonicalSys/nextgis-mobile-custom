@@ -90,6 +90,11 @@ parenthesis depth, preserving every polygon part, one outer ring per part and
 only actual holes instead of duplicating or truncating rings in a way that
 cancels the fill.
 
+The insertion-direction overlay is derived again from the restored selected
+vertex and geometry structure: it is not separate draft state. The following
+vertex therefore stays inside the restored line part or polygon ring, including
+last-to-first wrapping for a closed ring.
+
 Key types: `GeometryEditDraftStore`, `MapFragment.persistManualGeometryDraft`,
 `MapFragment.resumeManualGeometryFromDraft`.
 

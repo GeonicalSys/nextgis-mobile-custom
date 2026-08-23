@@ -17,6 +17,10 @@ related_code:
 - API 26–28 использует MapLibre `TextureView`, чтобы после background/sleep
   потерянный `SurfaceView` не перекрывал всю Activity чёрным слоем; API 29+
   сохраняет более быстрый `SurfaceView`. Renderer и SDK фиксируются в HyperLog.
+- Редактор LineString/Polygon и Multi-вариантов показывает направление вставки:
+  выбранный узел красный, его следующий узел и сегмент оранжевые; открытый конец
+  линии не имеет цели, а кольцо замыкает направление только на собственный первый
+  узел. Добавлены unit policy и device-smoke для границ частей и колец.
 - Production Lisa/Belka подготовлен как патч `3.1.2.13` / `versionCode 207`;
   MapLibre `MapView` теперь получает полный Fragment view lifecycle, старый
   native renderer освобождается при `onDestroyView`, а resume запрашивает repaint
