@@ -16,7 +16,7 @@ key_components:
   - path: app/src/belka/res/values/launcher_icon.xml
     responsibility: Belka-only launcher, intro and about icon binding to density-specific ic_launcher_belka resources without changing Lisa branding.
   - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
-    responsibility: Main-process initialization and logging; create or adopt and activate the initial autonomous project before GISApplication opens its first map; create editable local vector layers and keep default OSM at internal index zero plus tracks at the top of the reversed layer list for every workspace.
+    responsibility: Main-process initialization and logging; create or adopt and activate the initial local project before GISApplication opens its first map; create editable local vector layers and keep default OSM at internal index zero plus tracks at the top of the reversed layer list for every workspace.
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     responsibility: Main navigation and toolbar state for explicit map rotation/location recovery, local GeoJSON/KML/GPX file routing, photo-overlay default migration, ordered walk/manual-geometry/form crash-recovery hub, direct NGW resource URL resolution, name-only project picker with sync/fill/track switch protection, backup sharing UI and updater continuation on activity resume.
   - path: app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java

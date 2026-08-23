@@ -213,9 +213,9 @@ storage:
     purpose: Isolated maps/layers/tracks; tombstone rename makes device-only deletion recoverable before registry commit
   collector-initial-local-project:
     owner: maplibui
-    location_name: collector_initial_local_project_created_v1 SharedPreferences plus local:autonomous workspace identity
+    location_name: collector_initial_local_project_created_v1 SharedPreferences plus stable initial local workspace identity
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
-    purpose: One-time creation of the initial autonomous project and non-destructive adoption of a legacy standalone map before the first MapDrawable opens
+    purpose: One-time creation of the initial local project and non-destructive adoption of a legacy standalone map before the first MapDrawable opens
   collector-import-journal:
     owner: maplibui
     location_name: collector_import_journal SharedPreferences

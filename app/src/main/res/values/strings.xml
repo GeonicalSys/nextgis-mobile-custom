@@ -261,7 +261,6 @@
     <string name="project_rebuild_guard_reset_done">Layer rebuild protection has been reset</string>
     <string name="project_delete_local_copy">Delete project from this device</string>
     <string name="project_local_default_name">Local project</string>
-    <string name="project_autonomous_default_name">Autonomous project</string>
     <string name="project_create_failed">Could not create the local project</string>
     <string name="project_rename_failed">Could not rename the project</string>
     <string name="project_name_required">Enter a project name</string>

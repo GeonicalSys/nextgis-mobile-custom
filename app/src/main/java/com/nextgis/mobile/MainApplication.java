@@ -113,11 +113,11 @@ public class MainApplication extends GISApplication
         if (isDefaultApplicationProcess()) {
             try {
                 CollectorProjectRegistry.ensureInitialLocalProject(
-                        this, getString(R.string.project_autonomous_default_name));
+                        this, getString(R.string.project_local_default_name));
             } catch (RuntimeException e) {
                 // Project bootstrap must never turn a recoverable storage problem into a startup
                 // crash. GISApplication can still open the previous configured map.
-                HyperLog.w(TAG, "Initial autonomous project setup failed: "
+                HyperLog.w(TAG, "Initial local project setup failed: "
                         + e.getMessage(), e);
             }
         }

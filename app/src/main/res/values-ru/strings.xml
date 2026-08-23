@@ -286,7 +286,6 @@
     <string name="project_rebuild_guard_reset_done">Защита от повторной перезаливки сброшена</string>
     <string name="project_delete_local_copy">Удалить проект с устройства</string>
     <string name="project_local_default_name">Локальный проект</string>
-    <string name="project_autonomous_default_name">Автономный проект</string>
     <string name="project_create_failed">Не удалось создать локальный проект</string>
     <string name="project_rename_failed">Не удалось переименовать проект</string>
     <string name="project_name_required">Введите имя проекта</string>

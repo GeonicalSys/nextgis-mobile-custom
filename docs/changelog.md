@@ -10,13 +10,13 @@ related_code:
 
 ## 2026-08-23
 
-- Первая карта теперь всегда принадлежит активному `local:autonomous` project:
+- Первая карта теперь всегда принадлежит активному начальному local project:
   чистая установка создаёт его до первого `MapDrawable`, а обновление один раз
   копирует прежние map-owned слои и track DB без удаления исходной standalone-
   карты. `INV-COLLECTOR-ISOLATION` и `SMOKE-PROJECT-MANAGEMENT` расширены на
   clean install, возврат после Web GIS switch и одноразовую legacy migration.
 - Official NextGIS Mobile `e098196` и MapLib UI `a426e0a` повторно проверены
-  23 августа 2026 года; project registry и initial autonomous workspace в них
+  23 августа 2026 года; project registry и initial local workspace в них
   отсутствуют, поэтому отличие форка остаётся актуальным.
 - Production Lisa/Belka подготовлен как патч `3.1.2.14` / `versionCode 208`.
   Холодное Continue скетча теперь ждёт edit sources текущего MapLibre style,
