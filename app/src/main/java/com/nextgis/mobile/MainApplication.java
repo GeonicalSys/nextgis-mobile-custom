@@ -58,6 +58,7 @@ import com.nextgis.maplibui.mapui.RemoteTMSLayerUI;
 import com.nextgis.maplibui.mapui.TrackLayerUI;
 import com.nextgis.maplibui.mapui.VectorLayerUI;
 import com.nextgis.maplibui.service.TrackerService;
+import com.nextgis.maplibui.util.CollectorProjectRegistry;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.mobile.activity.SettingsActivity;
 import com.nextgis.mobile.util.Logger;
@@ -109,6 +110,18 @@ public class MainApplication extends GISApplication
 
         installHyperLogCrashHandler();
 
+        if (isDefaultApplicationProcess()) {
+            try {
+                CollectorProjectRegistry.ensureInitialLocalProject(
+                        this, getString(R.string.project_autonomous_default_name));
+            } catch (RuntimeException e) {
+                // Project bootstrap must never turn a recoverable storage problem into a startup
+                // crash. GISApplication can still open the previous configured map.
+                HyperLog.w(TAG, "Initial autonomous project setup failed: "
+                        + e.getMessage(), e);
+            }
+        }
+
         super.onCreate();
 
         final String appVersionLog = "NextGIS Mobile versionName=" + BuildConfig.VERSION_NAME
@@ -126,6 +139,27 @@ public class MainApplication extends GISApplication
         updateFromOldVersion();
         NGWUtil.NGUA = "ng_mobile";
         NGWUtil.UUID = TrackerService.getUid(this);
+    }
+
+    private boolean isDefaultApplicationProcess() {
+        String processName = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            processName = android.app.Application.getProcessName();
+        } else {
+            int pid = android.os.Process.myPid();
+            android.app.ActivityManager manager =
+                    (android.app.ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            if (manager != null && manager.getRunningAppProcesses() != null) {
+                for (android.app.ActivityManager.RunningAppProcessInfo process
+                        : manager.getRunningAppProcesses()) {
+                    if (process != null && process.pid == pid) {
+                        processName = process.processName;
+                        break;
+                    }
+                }
+            }
+        }
+        return TextUtils.isEmpty(processName) || getPackageName().equals(processName);
     }
 
 

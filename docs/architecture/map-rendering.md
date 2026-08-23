@@ -65,7 +65,12 @@ related_code:
     поэтому `computeCollectorOrderedInsertIndex()` учитывает и vector, и raster
     NGW layers; remote id стиля отвечает за tile identity, parent resource id —
     только за extent.
-11. Rule-based векторный стиль: слойные MapLibre-дефолты (size/text stops,
+11. Первый `MapDrawable` основного процесса всегда открывается внутри
+    зарегистрированного проекта. На чистой установке до загрузки карты создаётся
+    и активируется «Автономный проект»; при обновлении прежняя штатная
+    standalone-карта один раз копируется в его изолированный workspace без
+    удаления оригинала.
+12. Rule-based векторный стиль: слойные MapLibre-дефолты (size/text stops,
     scale-with-zoom, opacity подписей, SymbolLayer min/max) берутся из
     «стиля для прочих (по умолчанию)», не из базового `mStyle` рендерера.
     `FieldStyleRule` при apply мержит категорию с прочими для type-default

@@ -83,7 +83,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   не включая её, тогда как выключенный классический слой пропускается;
 - выбор и переключение проектов по списку только из имён; раздел
   «Настройки → Проект» с Web GIS-реквизитами, созданием пустого local workspace,
-  локальным переименованием и удалением локальной копии;
+  локальным переименованием и удалением локальной копии; чистая установка до
+  первой карты уже имеет активный «Автономный проект», а обновление один раз
+  добавляет туда прежние standalone-слои без удаления их исходной копии;
 - сохранение «Мои треки» наверху списка слоёв при создании и открытии карты;
 - сохранение дефолтного `OpenStreetMap Standard aka Mapnik` внизу списка каждой
   карты, включая новый Collector workspace;
@@ -165,6 +167,10 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `MainActivity.onResume()`/`SettingsActivity.onResume()`.
 - Collector переключается неверно: `CollectorProjectRegistry` и project UID/map
   path, а не только UI dialog.
+- После чистой установки нет «Автономного проекта» или старые ручные слои не
+  появились в его workspace: проверить ранний вызов
+  `ensureInitialLocalProject()` до `GISApplication.onCreate()`, migration marker,
+  `project.json` и наличие исходной `default.ngm`.
 - Переключение доступно во время sync: проверить lease
   `ProjectOperationCoordinator` от `OfflineSyncIntentService.startActionFoo()` до
   конца последнего account и проверку в `MainActivity`.

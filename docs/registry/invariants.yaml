@@ -235,7 +235,7 @@ invariants:
   INV-COLLECTOR-ISOLATION:
     title: Web GIS and local projects use isolated workspaces
     owners: [app, maplib, maplibui]
-    statement: Project identity, type, map path, layers and tracks must not leak between Web GIS or local projects; ContentProvider operations must resolve the active map after every in-process switch, and deletion may remove only the device workspace after its backup gate.
+    statement: The first map must belong to an active registered local project; a pre-registry standalone map is copied once into that isolated workspace without deleting its rollback source. Project identity, type, map path, layers and tracks must not leak between Web GIS or local projects; ContentProvider operations must resolve the active map after every in-process switch, and deletion may remove only the device workspace after its backup gate.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
       - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java

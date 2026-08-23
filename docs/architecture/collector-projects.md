@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-08-22
+last_verified: 2026-08-23
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -115,6 +115,21 @@ import и composition sync создают raster styles через один
 Web GIS проекта там отображаются account, remote project id и district. В
 быстром выборе на карте остаются только имена; проекты разделены крупными
 нажимаемыми строками, активный отмечен индикатором без технических реквизитов.
+
+До первого открытия `MapDrawable` основного процесса registry гарантирует
+активный локальный workspace «Автономный проект». Поэтому уже на чистой
+установке ручные слои, треки и карта принадлежат проекту, который остаётся в
+быстром выборе после импорта Web GIS/Collector.
+
+При первом запуске обновлённой версии прежняя штатная `default.ngm` вне registry
+копируется в этот автономный workspace вместе с перечисленными в карте
+каталогами слоёв и базой треков. Исходные файлы не удаляются и остаются
+rollback-копией. Маркер `collector_initial_local_project_created_v1` делает
+миграцию одноразовой; зарезервированные UID `local:autonomous` и каталог
+`local_autonomous` позволяют без дубликатов завершить инициализацию после
+прерванной записи registry. Если в момент обновления уже активен корректный Web
+GIS/local project, он остаётся активным, а автономный проект лишь добавляется в
+список для возврата к старым локальным данным.
 
 Пользователь может создать пустой `LOCAL` workspace, переименовать локальное
 отображаемое имя любого проекта и удалить активную локальную копию. Удаление не
