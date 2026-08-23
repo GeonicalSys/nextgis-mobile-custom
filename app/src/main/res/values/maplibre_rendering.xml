@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 8/9: TextureView avoids stale SurfaceView layers covering the resumed UI. -->
+    <bool name="maplibre_use_texture_view">true</bool>
+</resources>

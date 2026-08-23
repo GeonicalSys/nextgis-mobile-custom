@@ -44,7 +44,7 @@ service permission, updater identity и оба account resource keys в merged A
 
 ## Версия
 
-- Текущий выпуск: Lisa/Belka Release `3.1.2.13` / `versionCode 207`, Lisa Debug
+- Текущий выпуск: Lisa/Belka Release `3.1.2.14` / `versionCode 208`, Lisa Debug
   остаётся `3.1.2.9` / `versionCode 203`; maplib сообщает соответствующее
   variant-specific значение.
 - `versionName = <upstream-base>.<fork-patch>`.

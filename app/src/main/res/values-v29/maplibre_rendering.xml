@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Keep the faster SurfaceView renderer on Android 10 and newer. -->
+    <bool name="maplibre_use_texture_view">false</bool>
+</resources>

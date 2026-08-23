@@ -10,6 +10,13 @@ related_code:
 
 ## 2026-08-23
 
+- Production Lisa/Belka подготовлен как патч `3.1.2.14` / `versionCode 208`.
+  Холодное Continue скетча теперь ждёт edit sources текущего MapLibre style,
+  walk/manual drafts взаимоисключаются, а кнопка настроек активного обхода
+  заменена на завершение/сохранение с иконкой идущего человека.
+- API 26–28 использует MapLibre `TextureView`, чтобы после background/sleep
+  потерянный `SurfaceView` не перекрывал всю Activity чёрным слоем; API 29+
+  сохраняет более быстрый `SurfaceView`. Renderer и SDK фиксируются в HyperLog.
 - Production Lisa/Belka подготовлен как патч `3.1.2.13` / `versionCode 207`;
   MapLibre `MapView` теперь получает полный Fragment view lifecycle, старый
   native renderer освобождается при `onDestroyView`, а resume запрашивает repaint

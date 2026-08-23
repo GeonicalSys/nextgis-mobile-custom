@@ -21,6 +21,8 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - сохранение отрисовки карты после возврата из настроек/другого приложения,
   выключения экрана и пересоздания view: `MapFragment` передаёт MapLibre полный
   lifecycle, освобождает старый native renderer и запрашивает repaint при resume;
+  Android 8–9 использует `TextureView`, чтобы потерянный `SurfaceView` не оставался
+  чёрным слоем поверх всей Activity, Android 10+ сохраняет более быстрый `SurfaceView`;
 - вращение карты двумя пальцами только после явного разрешения кнопкой рядом с
   текущим местоположением; состояние и bearing сохраняются, запрет возвращает
   север вверх, а разрешённый rotate начинается сразу при одновременном
@@ -50,12 +52,16 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   mock-поставщика; foreground service сохраняет GPS и звук при выключенном экране;
 - запись трека и геометрии обходом при валидном движении до 160 км/ч без выбора
   профиля, с отбрасыванием плохих и одиночных выбросов GPS; Network остаётся
-  резервом и не смешивается со свежим пригодным GPS-потоком;
+  резервом и не смешивается со свежим пригодным GPS-потоком; правая кнопка
+  активного обхода показывает идущего человека и завершает запись с сохранением
+  скетча вместо открытия настроек местоположения;
 - crash recovery: запись трека возобновляется без диалога, затем recovery hub
   последовательно предлагает черновик обхода, обычной геометрии и формы атрибутов;
   восстановленный Polygon сохраняет заливку, внешнее кольцо и только реальные
   отверстия без удвоения узлов; после cold Continue дополнения обходом красный
-  контур и заливка не мерцают, а Stop возвращает редактируемые вершины;
+  контур и заливка не мерцают, а Stop возвращает редактируемые вершины; раннее
+  Continue ждёт принадлежности edit sources текущему MapLibre style, а вход в
+  обход удаляет параллельный черновик обычного редактора того же скетча;
   восстановленные LineString/MultiLineString показываются без polygon fill;
 - редактирование геометрии: выход крестиком на нижней панели (`cancelEdits`),
   причём для нового объекта сначала требуется подтвердить удаление скетча; после
@@ -106,7 +112,8 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - `MapFragment` должен реализовывать актуальный `MaplibreMapInteraction`.
 - Каждый созданный MapLibre `MapView` должен получить согласованную пару
   `onCreate/onStart/onResume` и `onPause/onStop/onDestroy`; старый view нельзя
-  оставлять привязанным к `MapDrawable` после `onDestroyView`.
+  оставлять привязанным к `MapDrawable` после `onDestroyView`. На API 26–28
+  `maplibre_renderTextureMode=true`, на API 29+ — `false`.
 - Не дублировать GIS model/storage из `maplib`.
 - Не читать `Q:\standart_profiles`, `variables.py` или QGIS plugin mirrors:
   межпроектный runtime contract — NGW API/Collector либо явный portable import.
@@ -134,6 +141,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   проверить последовательность `MapLibreMapView.onStart/onResume`, первый кадр
   после resume, последующие `onPause/onStop/onDestroy` и отсутствие старой
   ссылки `MapDrawable` на уничтоженный view.
+- Полностью чёрный экран вместе с Android-панелями после сна на Android 8–9:
+  проверить запись `MapLibreMapView renderer=TextureViewMapRenderer` и отсутствие
+  resource override, возвращающего `SurfaceViewMapRenderer` на API 26–28.
 - Crash `No Vulkan compatible GPU found` при открытии карты означает неверный
   MapLibre runtime artifact: штатный APK использует OpenGL и не требует Vulkan.
 - Карта не вращается: проверить состояние кнопки вращения рядом с геолокацией и
@@ -175,6 +185,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - После crash пропала линия из обычного редактора: проверить HyperLog-события
   `MapFragment mode`, `GeometryDraft saved`, `CrashRecovery` и
   `GeometryDraft resumed`; координаты в журнал намеренно не попадают.
+- Crash `GeoJsonSource.setGeoJson` сразу после раннего Continue означает регрессию
+  current-style readiness: в журнале сначала допустим `renderer attach deferred`,
+  затем обязателен `renderer attached after style load` без второго recovery prompt.
 - Трек или обход перестал расти в автомобиле: проверить причины
   `LocationTrackFilter` и filter stats; provider должен соответствовать
   отдельной настройке режима, валидная скорость до 160 км/ч не отбрасывается,

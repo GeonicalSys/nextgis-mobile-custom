@@ -207,6 +207,18 @@ related_code:
     запрашивается repaint и HyperLog фиксирует первый полученный кадр. Нельзя
     заменять этот контракт безусловным full style reload: он не восстанавливает
     потерянный render surface и создаёт лишнюю нагрузку на большие проекты.
+    На API 26–28 layout включает MapLibre `TextureView`: это целевой workaround
+    для старых Android, где потерянный `SurfaceView` после сна способен остаться
+    полноэкранным чёрным слоем поверх Android-панелей. Начиная с API 29 остаётся
+    более производительный `SurfaceView`. Тип renderer и SDK фиксируются в
+    HyperLog при создании view.
+27. Холодное восстановление walk/manual скетча проверяет принадлежность всех
+    edit sources текущему `Style`. Если стиль или source ещё создаются, привязка
+    откладывается до завершения style apply; `startFeatureSelectionForEdit()`
+    имеет дополнительную защиту и не вызывает `setGeoJson()` на отсутствующем
+    либо оставшемся от заменённого style source. Walk и обычный geometry draft
+    взаимоисключаются. Правая кнопка активного обхода с иконкой человека завершает
+    запись через штатный Save/Stop path и не открывает настройки местоположения.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,

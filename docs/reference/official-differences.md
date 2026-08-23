@@ -20,13 +20,13 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.13` / `versionCode` 207; Lisa Debug
+Состояние форка: Lisa/Belka Release `3.1.2.14` / `versionCode` 208; Lisa Debug
 `3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 
-Подготовленный `3.1.2.13` ссылается на OpenGL/version-коммиты maplib
-[`ad4c0f7`](https://github.com/GeonicalSys/android_maplib/commit/ad4c0f7) и
-maplibui [`8ae4f735`](https://github.com/GeonicalSys/android_maplibui/commit/8ae4f735).
+Подготовленный `3.1.2.14` использует OpenGL и актуальные recovery-коммиты maplib
+[`0bf3d8f`](https://github.com/GeonicalSys/android_maplib/commit/0bf3d8f) и
+maplibui [`8c9d182c`](https://github.com/GeonicalSys/android_maplibui/commit/8c9d182c).
 Перед merge root PR указатели обновляются на итоговые merge-коммиты библиотечных
 PR согласно порядку доставки.
 
@@ -41,7 +41,7 @@ PR согласно порядку доставки.
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
-Форк `3.1.2.13` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+Форк `3.1.2.14` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
 и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
@@ -89,7 +89,10 @@ official master всё ещё пропускает список через `remo
 сохранение состояния, low-memory и destroy. При `onDestroyView` старый native
 renderer освобождается, а его ссылки удаляются из `MapDrawable`, только если они
 ещё указывают на уничтожаемый view. После resume запрашивается repaint; HyperLog
-фиксирует получение первого кадра либо ошибку загрузки карты.
+фиксирует получение первого кадра либо ошибку загрузки карты. На Android 8–9
+MapView целево использует `TextureView`, чтобы stale render surface не мог
+остаться полноэкранным чёрным слоем поверх Android-панелей; Android 10+ сохраняет
+более производительный `SurfaceView`. Тип renderer записывается в HyperLog.
 
 **Для чего.** На части устройств, особенно Android 9, после перехода в настройки,
 фонового режима, блокировки экрана или Activity recreation Android-интерфейс
@@ -99,6 +102,7 @@ style не исправляет потерянный surface и дорого с�
 
 В актуальном official `MapFragment` на проверенном HEAD вызывает только
 `MapView.onCreate(savedInstanceState)` и не передаёт остальные lifecycle callbacks.
+Official layout также не включает API-зависимый `maplibre_renderTextureMode`.
 Поэтому исправление считается действующим отличием форка и проверяется отдельным
 `SMOKE-MAP-SURFACE-LIFECYCLE` с переходами между экранами, background/foreground,
 блокировкой и пересозданием Activity.
@@ -136,7 +140,9 @@ WKT parsers, `printStackTrace()` и общий текст ошибки в fill/s
 
 **Дополнение обходом.** Команда доступна уже после первого узла. GPS-вершины
 вставляются после выбранного узла и до его прежнего соседа, а live-хвост строится
-в той же позиции и до текущего местоположения.
+в той же позиции и до текущего местоположения. В активном обходе правая нижняя
+кнопка с иконкой идущего человека завершает запись через штатный Save/Stop path;
+кнопки настроек местоположения в этой панели больше нет.
 
 **Форма без промежуточного сохранения.** После появления геометрии у точки,
 линии или полигона кнопка формы активна и выполняет тот же validation/repair и
@@ -805,7 +811,8 @@ Android-точность, временное отключение звука и 
 | Превью «хвоста» | Нет | `syncWalkGeometryToMaplibreUi(walkGpsLead=true)` — линия от последней GPS-вершины в выбранной позиции вставки до текущего GPS |
 | Сохранение при Stop | Только зафиксированные вершины сервиса | `commitWalkGpsLeadToFeature()` — в объект попадает то же, что показывал MapLibre; `appendClosingWalkSnapIfNeeded` добирает последний fix, отброшенный `min_dt` |
 | Фильтрация GPS | В основном `requestLocationUpdates(minTime, minDistance)` | Общий `LocationTrackFilter`: валидное движение до 160 км/ч без профилей, точность/возраст/скорость/ускорение и accuracy-aware chord-check — тот же класс, что у записи трека |
-| Перезагрузка карты | Может прервать edit-сессию | `canReloadVectorLayerStyleOnMap()` блокирует hot style reload в `MODE_EDIT_BY_WALK`; после `loadLayersToMaplibreMap` property-bearing edit feature восстанавливается атомарно вместе с outline и скрытым vertex cache, а shared fill включается только когда polygon совпадает и по текущей геометрии, и по авторитетному типу слоя |
+| Перезагрузка карты | Может прервать edit-сессию | `canReloadVectorLayerStyleOnMap()` блокирует hot style reload в `MODE_EDIT_BY_WALK`; cold Continue ждёт, пока edit sources принадлежат текущему style, затем property-bearing edit feature восстанавливается атомарно вместе с outline и скрытым vertex cache, а shared fill включается только когда polygon совпадает и по текущей геометрии, и по авторитетному типу слоя |
+| Нижняя кнопка активного обхода | Настройки местоположения | Иконка идущего человека; завершение записи и сохранение скетча через существующий Save/Stop path |
 | Дополнение существующего | Есть | Выбранные part/ring/node и следующая позиция вставки фиксируются в draft; поток вставляется после выбранного узла, не только в конец; замыкающая вершина кольца нормализуется |
 
 #### Как устроен pipeline в форке
@@ -822,7 +829,9 @@ Android-точность, временное отключение звука и 
          → syncWalkGeometryToMaplibreUi(lead)  // MapLibre + GPS-хвост
 При Stop → commitWalkGpsLeadToFeature() → saveEdits()
 При process kill → walkedit_temp → MainActivity recovery hub
-    → Continue → startEditByWalkFromRestore → loadLayersToMaplibreMap callback
+    → Continue → startEditByWalkFromRestore
+        → current style ready: attach now
+        → sources not ready: defer → loadLayersToMaplibreMap callback
     → Discard → stop service + clear walkedit_temp
 ```
 
@@ -840,7 +849,10 @@ Walk использует только обычную настройку ист�
 синхронизирует edit feature в MapLibre sources (`selected-poly-source` и др.).
 Во время обхода Canvas не перерисовывает тысячи вершин — только MapLibre. После
 полной перезагрузки style `MapDrawable` восстанавливает `editingObject` из
-`featureToRestore`, если `WalkEditService` ещё работает. Восстановление сохраняет
+`featureToRestore`, если `WalkEditService` ещё работает. При раннем Continue
+MapDrawable проверяет не только ненулевой style, но и принадлежность всех трёх
+edit sources текущему style; до этого привязка остаётся pending, поэтому
+`GeoJsonSource.setGeoJson()` не вызывается через `null`/stale source. Восстановление сохраняет
 служебные свойства edit feature (`layer_id`, `feature_id`, порядок и цвет),
 подключает заливку к тому же source и заранее пересобирает скрытые вершины. Поэтому
 контур и заливка не мерцают во время продолженного обхода, а после Stop вершины
@@ -851,7 +863,8 @@ MultiLineString тот же pipeline явно удаляет shared polygon fill
 **Как используется (для пользователя).** Выбрать «Добавить объект обходом» или в
 режиме редактирования — «Дополнить геометрию обходом» на линейном/полигональном
 слое. Идти по контуру; на карте видна линия с «хвостом» до текущего положения.
-Остановить запись, сохранить объект обычной кнопкой. Сворачивание приложения или
+Нажать справа кнопку с идущим человеком, чтобы остановить запись и сохранить
+скетч. Сворачивание приложения или
 перезапуск процесса не должны обнулять незавершённый обход: после неожиданной
 остановки приложение предлагает продолжить или удалить черновик
 (`SMOKE-CRASH-DRAFT-RECOVERY`).
@@ -885,6 +898,10 @@ MapLibre-вершин, добавления тапом, undo/redo, оконча�
 `onPause()`. Старый draft режима касания (`5`) мигрирует в `MODE_EDIT`. После
 process/task death recovery hub предлагает
 Continue/Discard между черновиком обхода и черновиком формы.
+
+Обычный geometry draft и walk draft взаимоисключаются: вход или восстановление
+обхода очищает прежний `geometry_edit_draft`, поэтому один скетч не предлагается
+сначала как обход, а затем второй раз как обычный редактор.
 
 Черновик содержит WKT и идентификаторы активной карты, слоя, объекта и режима.
 При Continue существующий объект заново читается из SQLite (атрибуты не

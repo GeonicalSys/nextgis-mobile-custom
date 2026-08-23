@@ -56,8 +56,9 @@ tests:
       - Open and close layer properties and project settings at least five times
       - Send the application to background and return, then lock and unlock the screen
       - Recreate MainActivity by switching a Collector project or changing configuration
+      - On Android 9 repeat background and screen-lock cycles and inspect the logged renderer class
       - Inspect HyperLog lifecycle entries and the first-frame-after-resume entry
-    expected: The map remains rendered and interactive after every return while Android controls stay responsive; each created MapView has balanced start/stop and one destroy, and a rendered frame follows resume without restarting the process.
+    expected: The map remains rendered and interactive after every return while Android controls stay responsive and are never covered by a full-window black surface; Android 9 logs TextureViewMapRenderer, API 29+ logs the SurfaceView renderer, each created MapView has balanced start/stop and one destroy, and a rendered frame follows resume without restarting the process.
   SMOKE-LOCATION-CURSOR-TOP:
     type: device
     scope: [app, maplib]
@@ -172,7 +173,9 @@ tests:
     steps:
       - Start track recording, Force Stop or reboot, reopen app
       - Start walk digitizing a line, swipe the app away while editing geometry, reopen it even if Android has already restarted WalkEditService
+      - On a cold start press walk Continue immediately, before map layers or edit sources finish loading
       - Draw a polygon manually, append it by walk from a middle node, swipe the app away, choose Continue, receive more GPS fixes, then Stop the walk
+      - After restoring the walk, verify no second manual-geometry recovery prompt is offered for the same sketch
       - Repeat cold walk recovery with LineString and MultiLineString after a polygon recovery
       - Create a line with the normal vertex editor, move/add vertices, swipe the app away before saving geometry, reopen and choose Continue
       - Repeat with a partly drawn Polygon and MultiPolygon, choose Continue, then move several different restored nodes
@@ -184,7 +187,9 @@ tests:
     expected: >
       Track recording auto-resumes without a dialog and previous trackpoints remain;
       finish is only via Stop track menu. Walk draft offers Continue/Discard and Continue
-      restores vertices and GPS writing even when its sticky service was already restarted;
+      never crashes when selected before MapLibre edit sources exist; renderer attachment is
+      deferred and then restores vertices and GPS writing even when its sticky service was already
+      restarted. Walk and manual geometry drafts are mutually exclusive, so one sketch is offered once;
       a recovered polygon keeps one stable fill and red outline through later GPS updates,
       and Stop immediately republishes all editable vertices and midpoints;
       recovered line types show only an open red line without polygon fill and retain that
@@ -324,6 +329,7 @@ tests:
       - Inspect line and polygon toolbars: no overflow trigger or touch-append action; polygon add/delete part/hole actions are absent
       - In an initial one-node line/polygon sketch start walk append; in an existing shape select a middle node and start walk append
       - During polygon walk verify the live tail reaches the current location and recorded nodes stay between the selected node and its former successor
+      - While walk recording is active inspect and press the right bottom action
       - Move, insert and delete vertices, then press the attribute action instead of Save and complete the form
       - Repeat a rapid double tap on the attribute action and cancel one new-feature form
       - Reopen an existing multi-part MultiPolygon with a valid hole and edit one vertex without changing its part/ring count
@@ -335,7 +341,8 @@ tests:
       geometry without a generated segment or square. A new MultiPolygon contains exactly one
       polygon part and no sketch action can add or delete a part or hole. Standard line and
       polygon toolbars contain neither touch append nor an overflow trigger. Walk append is
-      available from the initial sketch, inserts after the selected node and previews current GPS.
+      available from the initial sketch, inserts after the selected node and previews current GPS;
+      its right bottom action shows a walking person, not settings, and finishes recording through Save.
       For every supported geometry type the attribute action becomes enabled with geometry and
       follows the same validation, topology repair and single-form handoff as Save. Existing
       multipart geometry and holes remain intact unless their vertices are explicitly edited.

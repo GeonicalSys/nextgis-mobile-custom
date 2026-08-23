@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-08-22
+last_verified: 2026-08-23
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -61,7 +61,9 @@ the count of network fixes suppressed by recent GPS, but never coordinates.
 | Soft-interrupt | While UI is in walk mode (or draft exists) and service is not running → Continue/Discard dialog |
 | Cold start | Recovery hub in `MainActivity` offers the same dialog even if Android already restarted the `START_STICKY` service; the service is paused while the user decides |
 | UI ownership | A cold draft is never restored silently by `MapFragment`; silent restore is reserved for configuration recreation of an already attached walk UI |
-| Cold MapLibre overlay | Continue reconstructs one property-bearing edit feature on the current style, restores polygon fill and outline from the same source only for polygon layer types, explicitly removes fill for line types, and extracts the vertex cache before hiding it for the active walk; Stop republishes those vertices for ordinary editing |
+| Cold MapLibre overlay | Continue can be pressed before style loading finishes. It keeps renderer attachment pending until the current style owns `selected-poly-source`, `selected-dot-source` and `vertex-source`, then reconstructs one property-bearing edit feature, restores polygon fill and outline only for polygon layer types, explicitly removes fill for line types, and extracts the vertex cache before hiding it for the active walk; Stop republishes those vertices for ordinary editing |
+| Draft exclusivity | Entering or restoring walk mode clears `geometry_edit_draft`; one sketch cannot be offered both as walk and normal geometry recovery |
+| Finish action | The right action in the active-walk bottom bar uses the walking-person recording icon and invokes the existing Save/Stop transition instead of opening location settings |
 | GPS pipeline | Walk uses the same 160 km/h-capable filter and GPS-first/network-fallback arbitration as tracks, but reads ordinary `location_source` and `location_min_time` / `location_min_distance` settings |
 
 Key types: `WalkEditService`, `EditLayerOverlay.stopGeometryByWalk`, `MapFragment` watchdog / resume helpers.
@@ -76,7 +78,7 @@ Key types: `WalkEditService`, `EditLayerOverlay.stopGeometryByWalk`, `MapFragmen
 | New object | Continue recreates feature id `-1`, restores the latest geometry and returns to `MODE_EDIT`; legacy mode `5` drafts migrate to this mode |
 | Clear | Explicit geometry Cancel, successful existing-feature update, or successful handoff of a new geometry to the attribute form |
 | Validation | Active map path, vector layer, edit policy, feature existence and geometry type must match; this prevents cross-project `layer_id` collisions |
-| Cold MapLibre | Continue is retained through a bounded retry until editable MapLibre sources are ready; timeout keeps the draft for the next launch |
+| Cold MapLibre | Continue is retained through a bounded retry until all editable source objects belong to the current MapLibre style; a non-null style alone is insufficient, and timeout keeps the draft for the next launch |
 
 The latest geometry is durable, including the visible line in the reported
 “draw line → swipe app away” case. The transient undo/redo stack itself is not
@@ -113,6 +115,10 @@ Order after map resume:
 2. Walk draft interrupted → Continue / Discard
 3. Manual geometry draft → Continue / Discard
 4. Form draft → Continue / Discard
+
+Walk and manual geometry are mutually exclusive owners of one geometry editing
+session. Starting/restoring walk removes an older non-walk geometry journal, so
+steps 2 and 3 cannot serially reopen the same sketch in different modes.
 
 Recovery decisions and journal lifecycle are written to HyperLog with the
 `CrashRecovery`, `GeometryDraft`, `FormDraft`, and `MapFragment mode` prefixes.

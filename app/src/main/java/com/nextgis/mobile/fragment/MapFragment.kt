@@ -471,6 +471,11 @@ public class MapFragment
         mMapRef.get()!!.map!!.setMapContext(this)
 
         mapViewMaplibre.onCreate(savedInstanceState)
+        HyperLog.v(
+            Constants.TAG,
+            "MapLibreMapView renderer=${mapViewMaplibre.renderView.javaClass.simpleName} " +
+                "sdk=${Build.VERSION.SDK_INT}"
+        )
 
         mapViewMaplibre.getMapAsync(this)
     }
@@ -1252,6 +1257,9 @@ public class MapFragment
 
             MODE_EDIT_BY_WALK -> {
                 mSelectedLayer!!.isLocked = true
+                if (previousMode != MODE_EDIT_BY_WALK) {
+                    clearManualGeometryDraft("walk-mode-start")
+                }
                 mActivity!!.showEditToolbar()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT_BY_WALK
                 undoRedoOverlay!!.clearHistory()
@@ -2033,10 +2041,8 @@ public class MapFragment
             editLayerOverlay!!.selectedFeature
         )
 
+        clearManualGeometryDraft("walk-session-restore")
         mode = MODE_EDIT_BY_WALK
-        if (featureId <= Constants.NOT_FOUND && geometry != null) {
-            attachMaplibreToCurrentWalkOverlayGeometry()
-        }
         return true
     }
 
@@ -2294,10 +2300,8 @@ public class MapFragment
 
         val mapDrawable = mMapRef.get()?.map
             ?: return scheduleManualGeometryResumeRetry("map-not-ready")
-        if (snapshot.editMode == MODE_EDIT
-            && (mapDrawable.maplibreMap == null || mapDrawable.maplibreMap.style == null)
-        ) {
-            return scheduleManualGeometryResumeRetry("maplibre-style-not-ready")
+        if (snapshot.editMode == MODE_EDIT && !mapDrawable.areEditSourcesReadyForCurrentStyle()) {
+            return scheduleManualGeometryResumeRetry("editable-source-not-ready")
         }
 
         mSelectedLayer = layer
@@ -3157,27 +3161,6 @@ public class MapFragment
         feat.geometry = geom
         editLayerOverlay!!.fillDrawItems(geom)
     }
-
-    /** After overlay geometry is authoritative (e.g. process restore), attach MapLibre editing to it. */
-    private fun attachMaplibreToCurrentWalkOverlayGeometry() {
-        val map = mMapRef.get()?.map ?: return
-        val layer = mSelectedLayer ?: return
-        val feat = editLayerOverlay!!.selectedFeature ?: return
-        val geom = feat.geometry ?: return
-        map.startFeatureSelectionForEdit(
-            layer,
-            layer.geometryType,
-            feat,
-            true,
-            layer.defaultStyleNoExcept,
-            true // isFillByWalking (process-restore re-attach)
-        )
-        if (map.editingObject != null) {
-            map.replaceGeometryFromHistoryChanges(geom)
-        }
-        editLayerOverlay!!.fillDrawItems(geom)
-    }
-
 
     fun onFinishChooseLayerDialog(
         code: Int,
@@ -4216,6 +4199,7 @@ public class MapFragment
     }
 
     override fun onFinishEditByWalkSession() {
+        saveEdits()
     }
 
 

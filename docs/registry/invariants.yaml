@@ -50,9 +50,14 @@ invariants:
       from the matching Fragment view lifecycle. Returning from another screen,
       backgrounding, screen lock or Activity recreation must resume rendering;
       onDestroyView must release the old native renderer and clear only bindings
-      that still point to that destroyed MapView.
+      that still point to that destroyed MapView. Android API 26-28 uses the
+      MapLibre TextureView renderer so a stale SurfaceView layer cannot cover
+      the entire resumed Activity; API 29+ keeps the faster SurfaceView renderer.
     related_code:
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/res/layout/fragment_map.xml
+      - app/src/main/res/values/maplibre_rendering.xml
+      - app/src/main/res/values-v29/maplibre_rendering.xml
     verify_smoke: [AUTO-APP-RELEASES, SMOKE-MAP-SURFACE-LIFECYCLE]
     must_update_docs:
       - docs/architecture/map-rendering.md
@@ -363,7 +368,9 @@ invariants:
       accepts at most one polygon part, while loading and editing existing multipart or holed
       geometry does not discard its structure. Walk append starts after the selected node and
       remains contiguous before its former successor, with current-GPS preview at that insertion
-      position. For new
+      position. While walk recording is active, the right bottom action uses the walking-person
+      icon and finishes recording through the existing Save path; location settings are not
+      exposed from that action. For new
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
@@ -500,6 +507,10 @@ invariants:
       including new one-part MultiPolygon sketches, so the fill and vertices remain consistent.
       A cold walk Continue must preserve the property-bearing edit feature while atomically
       restoring polygon fill, outline and the hidden vertex cache on the current MapLibre style;
+      if the current style does not yet own all edit sources, renderer attachment remains pending
+      until style application completes and must never dereference a missing or stale source.
+      Starting or restoring walk mode clears the mutually exclusive non-walk geometry draft so
+      the recovery hub cannot offer two editors for the same sketch.
       the outline must not flicker during GPS updates and Stop must republish editable vertices.
       The shared edit FillLayer is exclusive to Polygon/MultiPolygon and must be removed for a
       cold-restored LineString/MultiLineString even when the preceding edit was polygonal.
