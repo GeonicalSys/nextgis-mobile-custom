@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -9,10 +9,14 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+  - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
+  - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
   - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
   - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
@@ -185,12 +189,29 @@ backup gate. Workspace сначала атомарно переименовыв�
 только после успешного заполнения замены — это правило действует и на повторных
 repair-проходах.
 
+Target group теперь является также владельцем SQLite: новый слой получает parent
+до `create()`/fill, `DatabaseContext` поднимается по parent chain до map, а сам
+`MapContentProviderHelper` открывает `layers.db` рядом со своим map-файлом, не по
+последней process-wide preference. Collector journal содержит project UID. Если
+после restart открыт другой workspace, verify/repair не очищает journal и не
+трогает его БД, а ждёт открытия целевого проекта. Это закрывает сценарий, при
+котором каталог создавался в одном проекте, а таблицы и строки попадали в другой.
+
 Каталог каждого нового слоя резервируется атомарным `mkdir` с UUID до открытия
 SQLite. Время запуска, число слоёв и короткое случайное число не являются
 identity: параллельные задачи одной партии не должны получить одну таблицу.
 Если первый либо любой следующий batch insert вернул ошибку, задача немедленно
 выходит через exception, транзакция откатывается, а неполный слой удаляется.
 Продолжать тысячи вставок после первой ошибки схемы запрещено.
+
+До первого обращения к данным новый каталог получает `.layer-fill-partial`.
+Marker удаляется только после успешного сохранения слоя в `LayerGroup`. При
+холодном продолжении приложение удаляет из целевого workspace лишь помеченные
+каталоги, которые не указаны в загруженной карте, и одноимённые data/change/
+attachment tables. Если map уже ссылается на помеченный каталог, слой сохраняется
+и marker снимается. Любые старые непомеченные `layer_*` остаются нетронутыми:
+автоматически отличить прежний мусор от тяжёлой локальной подложки или
+пользовательских данных нельзя.
 
 Стандартный WKT `MULTIPOLYGON` во время полного fill разделяется по уровню
 скобок: внутреннее кольцо не обрывает polygon member, а следующие части не
@@ -199,6 +220,13 @@ identity: параллельные задачи одной партии не д�
 элемента в исходном JSON-массиве, класс/сообщение ошибки и ограниченный стек.
 Координаты, значения полей и credentials в эту запись не попадают; durable
 journal позволяет безопасно повторить незавершённый импорт.
+
+Число server features не является оценкой стоимости геометрии. Полученные от NGW
+Polygon и каждый member MultiPolygon проверяются JTS `IsValidOp`, а не legacy
+попарным сравнением всех сегментов кольца. Поэтому слой из нескольких объектов,
+один из которых содержит десятки тысяч координат и сотни polygon parts, остаётся
+валидируемым за ограниченное практическое время без изменения member-by-member
+семантики старого импорта.
 
 Android toolbar Back на экране импорта NGW использует тот же `goUp()`, что и
 аппаратная кнопка: внутри дерева он поднимается к родительскому каталогу и
@@ -298,6 +326,13 @@ destructive composition apply. После импорта в её `config.json` �
   мелких тайлов; проверить порядок/видимость, cold start, повторный запуск без
   дубликатов и сохранность исходной Debug-карты;
 - добавление/переупорядочивание состава;
+- импорт слоя с 15 MultiPolygon и примерно 140 тысячами координат, включая один
+  объект около 60 тысяч координат: UI и fill продолжают отвечать, локальное число
+  features равно серверному, а прогресс не интерпретирует вершины как объекты;
+- оборвать fill, открыть другой проект и перезапустить приложение: journal ждёт
+  исходный project UID, чужой `layers.db` не получает таблиц; после возврата в
+  целевой проект удаляются только помеченные unpublished stages, а referenced и
+  legacy unmarked каталоги/MBTiles сохраняются;
 - backup и отказ от удаления при искусственной ошибке backup;
 - два rebuild одной неизменной сломанной схемы за сутки, блокировка третьего,
   ручной сброс защиты и сохранение старого слоя при неуспешной staged-загрузке;

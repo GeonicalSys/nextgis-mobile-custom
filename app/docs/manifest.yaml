@@ -64,6 +64,8 @@ invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-MAPLIBRE-BACKEND-COMPATI
 global_docs:
   - docs/architecture/overview.md
   - docs/architecture/lisa-ecosystem.md
+  - docs/architecture/collector-projects.md
+  - docs/architecture/ngw-sync-and-storage.md
   - docs/architecture/map-rendering.md
   - docs/architecture/crash-recovery.md
   - docs/architecture/stakeout.md

@@ -107,6 +107,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - сохранение дефолтного `OpenStreetMap Standard aka Mapnik` внизу списка каждой
   карты, включая новый Collector workspace;
 - завершение batch import только после фактического MapLibre style/source apply;
+- продолжение незавершённого Collector import только внутри записанного project
+  UID: чужой workspace не получает его SQLite-таблиц, а после возврата удаляются
+  только app-marked unpublished layer stages; legacy unmarked каталоги остаются;
 - индикатор синхронизации сверяется с прямым состоянием адаптера и останавливается,
   даже если lifecycle фрагмента пропустил финальный broadcast;
 - ручная синхронизация запускается только для NGW-слоёв активного проекта;
@@ -191,6 +194,10 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `MainActivity.onResume()`/`SettingsActivity.onResume()`.
 - Collector переключается неверно: `CollectorProjectRegistry` и project UID/map
   path, а не только UI dialog.
+- После зависшего/оборванного Collector fill появились лишние `layer_*` или
+  таблицы другого проекта: проверить project UID import journal, parent target
+  group, `.layer-fill-partial` и обе `layers.db`; автоматически очищаются только
+  новые помеченные unpublished stages, не legacy каталоги.
 - После чистой установки нет «Локального проекта» или старые ручные слои не
   появились в его workspace: проверить ранний вызов
   `ensureInitialLocalProject()` до `GISApplication.onCreate()`, migration marker,

@@ -304,6 +304,7 @@ triggers:
   - id: LAYER-FILL-AND-REORDER
     paths:
       - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
       - maplibui/src/main/java/com/nextgis/maplibui/fragment/ReorderedLayerView.java
     owners: [maplibui, maplib, app]
     read:
@@ -340,6 +341,11 @@ triggers:
       - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
       - maplib/src/main/java/com/nextgis/maplib/util/LayerFormHashUtil.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
+      - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
@@ -349,6 +355,7 @@ triggers:
       - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java

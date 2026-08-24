@@ -126,8 +126,29 @@ tests:
   SMOKE-COLLECTOR-IMPORT:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, an editable field vector whose initial visible is false, a MultiPolygon feature with a real hole and a second polygon member, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors, Reset all settings, Select the NGW Collector resource and import its composition, Verify every layer has a distinct local storage path, Verify the MultiPolygon retains both members and exactly one hole, Enable the read-only Point layer only in the local layer drawer without changing server config or running sync, Verify Point features render immediately while identify returns the same objects, Verify style tiles load with the project account and mixed order matches Collector, Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row, Start object creation and inspect offered layers, Select the hidden editable vector and add an object, Reopen and run composition sync, Repeat import with two different layers sharing a display name]
-    expected: Project metadata and isolated workspace are created, concurrent fills use distinct storage and fail without retaining incomplete layers, the MultiPolygon keeps both polygon members and its real hole, enabling a layer omitted from the initial live style rebuilds its source/layer from local data without server config update, sync or app restart, layers are keyed by remote id, supported styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks stays on top, default OSM stays at internal index zero without visibility reset, and only Collector vectors with editable plus outbound sync are offered for object creation regardless of visibility; selecting a hidden eligible vector makes it visibly persist before editing.
+    steps:
+      - Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, an editable field vector whose initial visible is false, a MultiPolygon feature with a real hole and a second polygon member, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors
+      - Add one server layer containing 15 MultiPolygon features and about 140000 positions, with one feature near 60000 positions and hundreds of polygon members
+      - Reset all settings and import the Collector resource while interacting with the progress UI
+      - Verify every layer has a distinct local storage path and the large layer has exactly 15 local features
+      - Verify the ordinary MultiPolygon retains both members and exactly one hole
+      - Enable the read-only Point layer only in the local layer drawer without changing server config or running sync
+      - Verify Point features render immediately while identify returns the same objects
+      - Verify style tiles load with the project account and mixed order matches Collector
+      - Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row
+      - Start object creation and inspect offered layers, then select the hidden editable vector and add an object
+      - Reopen and run composition sync, then repeat import with two different layers sharing a display name
+    expected: >
+      Project metadata and isolated workspace are created; concurrent fills use distinct storage and
+      fail without retaining incomplete layers. The 15-feature large geometry layer finishes while
+      the application stays responsive and progress never presents polygon members or positions as
+      thousands of features. The ordinary MultiPolygon keeps both polygon members and its real hole.
+      Enabling a layer omitted from the initial live style rebuilds its source/layer from local data
+      without server config update, sync or app restart. Layers are keyed by remote id, supported
+      styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks
+      stays on top, default OSM stays at internal index zero without visibility reset, and only
+      Collector vectors with editable plus outbound sync are offered for object creation regardless
+      of visibility; selecting a hidden eligible vector makes it visibly persist before editing.
   SMOKE-LAYER-SYNC-SETTINGS:
     type: device
     scope: [app, maplib, maplibui]
@@ -140,8 +161,18 @@ tests:
   SMOKE-COLLECTOR-RESUME:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Start a multi-layer Collector import, Kill the application process during a layer fill, Reopen and wait for repair]
-    expected: Existing complete layers are retained and only missing or broken layers are queued again.
+    steps:
+      - Start a multi-layer Collector import and kill the application process during one layer fill
+      - Before reopening the target project, activate another project and inspect both layers.db files
+      - Reopen the application in the other project and wait beyond the normal repair delay
+      - Return to the original project and wait for repair
+      - Inspect referenced layer directories, marked partial directories, unmarked legacy layer directories and a large referenced MBTiles layer
+    expected: >
+      The durable journal waits while another project is active and creates no tables or rows in its
+      layers.db. After returning to the matching project, existing complete layers and referenced
+      directories are retained, only missing or broken layers are queued again, marked unreferenced
+      stages and their tables are removed, and every unmarked legacy directory plus the referenced
+      MBTiles layer remains untouched.
   SMOKE-COLLECTOR-INCOMPLETE:
     type: device
     scope: [maplib, maplibui]

@@ -235,10 +235,21 @@ invariants:
   INV-COLLECTOR-ISOLATION:
     title: Web GIS and local projects use isolated workspaces
     owners: [app, maplib, maplibui]
-    statement: The first map must belong to an active registered local project; a pre-registry standalone map is copied once into that isolated workspace without deleting its rollback source. Project identity, type, map path, layers and tracks must not leak between Web GIS or local projects; ContentProvider operations must resolve the active map after every in-process switch, and deletion may remove only the device workspace after its backup gate.
+    statement: >
+      The first map must belong to an active registered local project; a pre-registry standalone
+      map is copied once into that isolated workspace without deleting its rollback source.
+      Project identity, type, map path, layers and tracks must not leak between Web GIS or local
+      projects. ContentProvider operations resolve the active map after every in-process switch,
+      while layer create/insert/schema/delete operations resolve the map that owns the layer through
+      its parent chain and open layers.db beside that map file. A Collector task whose project UID
+      does not match its target group must touch neither files nor SQLite. Deletion may remove only
+      the device workspace after its backup gate.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
       - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
@@ -272,10 +283,18 @@ invariants:
   INV-COLLECTOR-RESUMABLE:
     title: Collector import is complete or safely resumable
     owners: [maplib, maplibui]
-    statement: Reject incomplete remote snapshots, persist unfinished batches, and after process death requeue only missing or broken layers.
+    statement: >
+      Reject incomplete remote snapshots, persist unfinished batches with their project UID, and
+      after process death requeue only missing or broken layers once that exact project is active.
+      Every unpublished layer directory is app-marked before data access; recovery may delete only
+      marked unreferenced stages and their owning-workspace tables, while referenced stages and every
+      unmarked legacy directory remain. Server Polygon/MultiPolygon validation must avoid the legacy
+      quadratic segment-pair scan so a small feature count with very large geometry is still resumable.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
     verify_smoke: [SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-RESUME, SMOKE-COLLECTOR-INCOMPLETE]
@@ -654,6 +673,8 @@ invariants:
       workspace entry; if another owner is active, import leaves the registry unchanged and explains
       in a modal dialog that synchronization or loading must finish. A dependent fill may reserve only the same workspace while sync is
       active, but must wait for sync to release database access before touching SQLite.
+      A resumed Collector task also validates its journal project UID against the target group and
+      preserves the journal without file or database access while another project is active.
       An unchanged schema mismatch is circuit-broken after two attempts in 24 hours, with at least
       ten minutes between attempts, and LayerFillService timeout must preserve the durable import journal.
     related_code:
@@ -666,6 +687,7 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
       - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     verify_smoke: [SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SCHEMA-REBUILD-GUARD]
     must_update_docs:
