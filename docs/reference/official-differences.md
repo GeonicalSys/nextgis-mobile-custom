@@ -93,16 +93,21 @@ project style запускается ограниченный continuous-render/
 успех требует полного кадра при уже отсутствующем foreground. Если app
 sources/layers уже готовы, но MapLibre сохранил opaque loading foreground, host
 снимает только этот foreground без тяжёлого full style reload. HyperLog фиксирует
-первый кадр, результат recovery либо ошибку загрузки карты. На Android 8–9
-MapView целево использует `TextureView`, чтобы stale render surface не мог
-остаться полноэкранным чёрным слоем поверх Android-панелей; Android 10+ сохраняет
-более производительный `SurfaceView`. Тип renderer записывается в HyperLog.
+первый кадр, результат recovery либо ошибку загрузки карты. Все API используют
+`SurfaceView`: в MapLibre OpenGL 13.0.2 он пересоздаёт EGL context/surface после
+`EGL_CONTEXT_LOST`, тогда как TextureView может остаться без нового surface
+callback уже после app-side `fully=true`. На Android 8–9 выключен tile prefetch,
+renderer ограничен 30 FPS, а полный style reload освобождает предыдущий GeoJSON
+snapshot и detached style wrappers. Тип renderer и prefetch policy записываются
+в HyperLog.
 
 **Для чего.** На части устройств, особенно Android 9, после перехода в настройки,
 фонового режима, блокировки экрана или Activity recreation Android-интерфейс
 оставался виден, но render surface карты становился чёрным. Полная перезагрузка
 style не исправляет потерянный surface и дорого стоит для больших проектов;
-правильное восстановление выполняется на уровне lifecycle renderer.
+правильное восстановление выполняется на уровне lifecycle renderer. Ограничение
+prefetch/FPS и раннее освобождение старого style snapshot уменьшают вероятность
+исходного `GL_OUT_OF_MEMORY`, но не подменяют восстановление EGL.
 
 В актуальном official `MapFragment` на повторно проверенном 24 августа 2026 года
 HEAD вызывает только

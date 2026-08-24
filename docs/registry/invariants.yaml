@@ -50,9 +50,10 @@ invariants:
       from the matching Fragment view lifecycle. Returning from another screen,
       backgrounding, screen lock or Activity recreation must resume rendering;
       onDestroyView must release the old native renderer and clear only bindings
-      that still point to that destroyed MapView. Android API 26-28 uses the
-      MapLibre TextureView renderer so a stale SurfaceView layer cannot cover
-      the entire resumed Activity; API 29+ keeps the faster SurfaceView renderer.
+      that still point to that destroyed MapView. Every supported API uses the
+      MapLibre SurfaceView renderer so EGL_CONTEXT_LOST can recreate its context
+      and surface; API 26-28 additionally disables tile prefetch and caps the
+      renderer at 30 FPS to reduce legacy-driver GL memory pressure.
       Resume and completed project-style application request a bounded continuous
       render and Android-presentation burst. Recovery may complete only after a
       fully rendered frame with no loading foreground; it must not treat an app-

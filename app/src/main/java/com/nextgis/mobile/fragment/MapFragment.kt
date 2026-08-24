@@ -510,10 +510,17 @@ public class MapFragment
         mMapRef.get()!!.map!!.setMapContext(this)
 
         mapViewMaplibre.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            // Old Mali/Adreno drivers are prone to GL_OUT_OF_MEMORY on a full-rate redraw of a
+            // large project. SurfaceView can recover the EGL context; 30 FPS also lowers the
+            // allocation/upload pressure that causes the loss in the first place.
+            mapViewMaplibre.setMaximumFps(MAPLIBRE_LEGACY_MAXIMUM_FPS)
+        }
         HyperLog.v(
             Constants.TAG,
             "MapLibreMapView renderer=${mapViewMaplibre.renderView.javaClass.simpleName} " +
-                "sdk=${Build.VERSION.SDK_INT}"
+                "sdk=${Build.VERSION.SDK_INT} tilePrefetch=" +
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
         )
 
         mapViewMaplibre.getMapAsync(this)
@@ -4839,6 +4846,7 @@ public class MapFragment
         private const val MAPLIBRE_FOREGROUND_FALLBACK_ATTEMPT = 8
         private const val MAPLIBRE_REPAINT_ATTEMPTS = 12
         private const val MAPLIBRE_REPAINT_DELAY_MS = 120L
+        private const val MAPLIBRE_LEGACY_MAXIMUM_FPS = 30
         private const val NORTH_UP_ANIMATION_MS = 350
         private const val ROTATION_ANGLE_THRESHOLD_DEGREES = 0.5f
         private const val LEGACY_MODE_EDIT_BY_TOUCH = 5

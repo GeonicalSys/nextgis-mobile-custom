@@ -10,6 +10,13 @@ related_code:
 
 ## 2026-08-24
 
+- Последующие Android 9 логи опровергли TextureView workaround: MapLibre
+  сообщал `fully=true` до `eglSwapBuffers`, а его TextureView render thread при
+  `EGL_CONTEXT_LOST` обнулял surface и мог навсегда ждать нового callback.
+  Все API возвращены на `SurfaceView`, который пересоздаёт EGL context/surface;
+  на API 26–28 выключен tile prefetch и установлен предел 30 FPS. Полный reload
+  теперь освобождает прежний GeoJSON snapshot и detached style wrappers, снижая
+  пик памяти большого Collector-проекта. Версия приложения не изменялась.
 - Device log выявил ошибочный критерий первой версии MapLibre recovery: три
   app-side callback-а могли завершить его при `fully=false` и всё ещё видимом
   loading foreground. Этот критерий удалён. Recovery временно включает
