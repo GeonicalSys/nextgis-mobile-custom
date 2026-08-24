@@ -176,6 +176,15 @@ public class MapFragment
     private var mapLibreMapView: MapLibreMapView? = null
     @Volatile
     private var awaitingMapLibreFrameAfterResume = false
+    private var mapLibreRenderRecoveryActive = false
+    private var mapLibreRenderRecoveryAttempt = 0
+    private var mapLibreRenderRecoveryFrames = 0
+    private var mapLibreRenderRecoveryReason = ""
+    private var mapLibreLayersAppliedForCurrentView = false
+    private var mapLibreLastFrameFullyRendered = false
+    private val mapLibreRenderRecoveryRunnable = Runnable {
+        runMapLibreRenderRecoveryAttempt()
+    }
     private val mapLibreFrameListener =
         MapLibreMapView.OnDidFinishRenderingFrameListener { fully, _, _ ->
             if (awaitingMapLibreFrameAfterResume) {
@@ -184,6 +193,26 @@ public class MapFragment
                     Constants.TAG,
                     "MapLibreMapView first frame after resume fully=$fully"
                 )
+            }
+            if (mapLibreRenderRecoveryActive) {
+                mapLibreLastFrameFullyRendered = fully
+                val styleFullyLoaded = mapDrawableOrNull
+                    ?.maplibreMap
+                    ?.style
+                    ?.isFullyLoaded == true
+                if (styleFullyLoaded) {
+                    mapLibreRenderRecoveryFrames++
+                }
+                val mapLibreView = mapLibreMapView
+                val loadingForegroundVisible = mapLibreView?.foreground != null
+                if ((fully && !loadingForegroundVisible) ||
+                    mapLibreRenderRecoveryFrames >= MAPLIBRE_READY_FRAME_COUNT
+                ) {
+                    finishMapLibreRenderRecovery(
+                        "frame-ready fully=$fully styleFullyLoaded=$styleFullyLoaded " +
+                            "loadingForeground=$loadingForegroundVisible"
+                    )
+                }
             }
         }
     private val mapLibreLoadFailureListener =
@@ -444,6 +473,7 @@ public class MapFragment
 
     override fun changeProgress(show: Boolean) {
         if (show) {
+            mapLibreLayersAppliedForCurrentView = false
             stylingProgrerss?.visibility = View.VISIBLE
             // MAP_STARTUP_UX_EXTRAS: default caption — see Constants.MAP_STARTUP_UX_EXTRAS_ENABLED
             textStylingProgrerss?.text =
@@ -453,6 +483,10 @@ public class MapFragment
         } else {
             stylingProgrerss?.visibility = View.GONE
             textStylingProgrerss?.text = ""
+            if (mapDrawableOrNull?.maplibreMap?.style != null) {
+                mapLibreLayersAppliedForCurrentView = true
+                startMapLibreRenderRecovery("styling-complete")
+            }
         }
     }
 
@@ -543,6 +577,8 @@ public class MapFragment
     }
 
     override fun setMapLayersLoaded() {
+        mapLibreLayersAppliedForCurrentView = true
+        startMapLibreRenderRecovery("layers-applied")
         updateLastLocation()
         if (mapReloadAfterFillAwaitingCompletion) {
             mapReloadAfterFillAwaitingCompletion = false
@@ -628,6 +664,87 @@ public class MapFragment
             return
         }
         viewMap.setMapContext(this)
+    }
+
+    private fun startMapLibreRenderRecovery(reason: String) {
+        val mapLibreView = mapLibreMapView ?: return
+        mapLibreRenderRecoveryActive = true
+        mapLibreRenderRecoveryAttempt = 0
+        mapLibreRenderRecoveryFrames = 0
+        mapLibreRenderRecoveryReason = reason
+        mapLibreLastFrameFullyRendered = false
+        HyperLog.v(Constants.TAG, "MapLibre render recovery started reason=$reason")
+        scheduleMapLibreRenderRecoveryAttempt(mapLibreView, 0L)
+    }
+
+    private fun scheduleMapLibreRenderRecoveryAttempt(
+        mapLibreView: MapLibreMapView,
+        delayMs: Long
+    ) {
+        mapLibreView.removeCallbacks(mapLibreRenderRecoveryRunnable)
+        mapLibreView.postDelayed(mapLibreRenderRecoveryRunnable, delayMs)
+    }
+
+    private fun runMapLibreRenderRecoveryAttempt() {
+        val mapLibreView = mapLibreMapView ?: return
+        if (!mapLibreRenderRecoveryActive || !isResumed) {
+            return
+        }
+        val mapLibreMap = mapDrawableOrNull?.maplibreMap ?: return
+        mapLibreRenderRecoveryAttempt++
+        mapLibreMap.triggerRepaint()
+
+        if (mapLibreRenderRecoveryAttempt < MAPLIBRE_REPAINT_ATTEMPTS) {
+            scheduleMapLibreRenderRecoveryAttempt(mapLibreView, MAPLIBRE_REPAINT_DELAY_MS)
+            return
+        }
+
+        val styleFullyLoaded = mapLibreMap.style?.isFullyLoaded == true
+        val hadLoadingForeground = mapLibreView.foreground != null
+        if (mapLibreLayersAppliedForCurrentView && hadLoadingForeground) {
+            // MapLibre keeps this foreground until it observes three frames with a fully loaded
+            // style. Large/offline projects can remain partially rendered indefinitely even
+            // though app sources and layers are already usable, leaving an opaque screen that
+            // only a camera gesture clears on faster devices.
+            mapLibreView.foreground = null
+            mapLibreMap.triggerRepaint()
+            HyperLog.w(
+                Constants.TAG,
+                "MapLibre render recovery cleared stale loading foreground " +
+                    "reason=$mapLibreRenderRecoveryReason attempts=$mapLibreRenderRecoveryAttempt " +
+                    "readyFrames=$mapLibreRenderRecoveryFrames " +
+                    "styleFullyLoaded=$styleFullyLoaded lastFully=$mapLibreLastFrameFullyRendered"
+            )
+        } else {
+            HyperLog.v(
+                Constants.TAG,
+                "MapLibre render recovery finished without foreground fallback " +
+                    "reason=$mapLibreRenderRecoveryReason attempts=$mapLibreRenderRecoveryAttempt " +
+                    "readyFrames=$mapLibreRenderRecoveryFrames " +
+                    "styleFullyLoaded=$styleFullyLoaded lastFully=$mapLibreLastFrameFullyRendered"
+            )
+        }
+        stopMapLibreRenderRecovery()
+    }
+
+    private fun finishMapLibreRenderRecovery(result: String) {
+        if (!mapLibreRenderRecoveryActive) {
+            return
+        }
+        HyperLog.v(
+            Constants.TAG,
+            "MapLibre render recovery completed reason=$mapLibreRenderRecoveryReason " +
+                "attempts=$mapLibreRenderRecoveryAttempt readyFrames=$mapLibreRenderRecoveryFrames " +
+                "result=$result"
+        )
+        stopMapLibreRenderRecovery()
+    }
+
+    private fun stopMapLibreRenderRecovery() {
+        mapLibreMapView?.removeCallbacks(mapLibreRenderRecoveryRunnable)
+        mapLibreRenderRecoveryActive = false
+        mapLibreRenderRecoveryAttempt = 0
+        mapLibreRenderRecoveryFrames = 0
     }
 
     private fun scheduleMapReloadAfterLayerFillRetry() {
@@ -1665,6 +1782,8 @@ public class MapFragment
 
     override fun onDestroyView() {
         HyperLog.v(Constants.TAG, "MapFragment.onDestroyView")
+        stopMapLibreRenderRecovery()
+        mapLibreLayersAppliedForCurrentView = false
         mMapRef.get()?.removeCallbacks(manualGeometryResumeRunnable)
         mapReloadAfterFillRetryRunnable?.let { r ->
             view?.removeCallbacks(r)
@@ -2551,6 +2670,7 @@ public class MapFragment
         mActivity?.unregisterReceiver(mMessageReload)
 
         awaitingMapLibreFrameAfterResume = false
+        stopMapLibreRenderRecovery()
         mapLibreMapView?.let { mapLibreView ->
             HyperLog.v(Constants.TAG, "MapLibreMapView.onPause")
             mapLibreView.onPause()
@@ -2583,7 +2703,7 @@ public class MapFragment
             awaitingMapLibreFrameAfterResume = true
             HyperLog.v(Constants.TAG, "MapLibreMapView.onResume")
             mapLibreView.onResume()
-            mapDrawableOrNull?.maplibreMap?.triggerRepaint()
+            startMapLibreRenderRecovery("resume")
         }
 
         ensureMapViewBoundToApplicationMap()
@@ -4645,6 +4765,9 @@ public class MapFragment
         const val EDIT_LAYER: Int = 2
         private const val LOCATE_MIN_ZOOM = 12.0
         private const val CAMERA_ANIMATION_MS = 800
+        private const val MAPLIBRE_READY_FRAME_COUNT = 3
+        private const val MAPLIBRE_REPAINT_ATTEMPTS = 12
+        private const val MAPLIBRE_REPAINT_DELAY_MS = 120L
         private const val NORTH_UP_ANIMATION_MS = 350
         private const val ROTATION_ANGLE_THRESHOLD_DEGREES = 0.5f
         private const val LEGACY_MODE_EDIT_BY_TOUCH = 5

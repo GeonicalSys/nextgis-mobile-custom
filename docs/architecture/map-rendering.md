@@ -223,7 +223,12 @@ related_code:
     после `onCreate` ему передаются `onStart/onResume/onPause/onStop`, сохранение
     состояния и low-memory callback, а `onDestroyView` уничтожает native renderer
     и очищает только ещё актуальные ссылки `MapDrawable`. После resume
-    запрашивается repaint и HyperLog фиксирует первый полученный кадр. Нельзя
+    запрашивается repaint и HyperLog фиксирует первый полученный кадр. После
+    фактического применения project style host запускает ограниченную серию
+    repaint: она даёт штатному `MapView` необходимые ready-frame callbacks, а
+    если style/sources уже применены, но opaque loading foreground остался,
+    снимает только этот foreground и запрашивает итоговый кадр. Recovery
+    отменяется при pause/destroy и не запускает бесконечный цикл. Нельзя
     заменять этот контракт безусловным full style reload: он не восстанавливает
     потерянный render surface и создаёт лишнюю нагрузку на большие проекты.
     На API 26–28 layout включает MapLibre `TextureView`: это целевой workaround

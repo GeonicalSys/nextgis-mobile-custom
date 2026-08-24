@@ -10,6 +10,15 @@ related_code:
 
 ## 2026-08-24
 
+- MapLibre recovery перенесён с единственного раннего repaint в `onResume` на
+  ограниченную серию после фактического применения project style. Если большой
+  или offline-проект уже применён, но MapLibre не снял loading foreground, host
+  снимает только его без full reload; lifecycle и результат пишутся в HyperLog.
+  `SMOKE-MAP-SURFACE-LIFECYCLE` теперь проверяет открытие большого Collector-
+  проекта без обязательного жеста по карте. Версия приложения не изменялась.
+- Official NextGIS Mobile HEAD повторно проверен 24 августа 2026 года: его
+  `setMapLayersLoaded()` остаётся пустым, полного MapView lifecycle и post-style
+  render recovery в official app нет.
 - Успешное сохранение нового или существующего объекта теперь полностью завершает
   edit session: прямой geometry Save и подтверждение формы атрибутов очищают
   MapLibre/overlay selection и возвращают стандартный `MODE_NORMAL` экран.

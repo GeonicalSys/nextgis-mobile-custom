@@ -56,9 +56,10 @@ tests:
       - Open and close layer properties and project settings at least five times
       - Send the application to background and return, then lock and unlock the screen
       - Recreate MainActivity by switching a Collector project or changing configuration
+      - Load or switch to a large Collector project without touching the map and wait for project styling to finish
       - On Android 9 repeat background and screen-lock cycles and inspect the logged renderer class
-      - Inspect HyperLog lifecycle entries and the first-frame-after-resume entry
-    expected: The map remains rendered and interactive after every return while Android controls stay responsive and are never covered by a full-window black surface; Android 9 logs TextureViewMapRenderer, API 29+ logs the SurfaceView renderer, each created MapView has balanced start/stop and one destroy, and a rendered frame follows resume without restarting the process.
+      - Inspect HyperLog lifecycle, first-frame-after-resume and render-recovery entries
+    expected: The map becomes visible after project styling without requiring a pan gesture and remains rendered and interactive after every return while Android controls stay responsive and are never covered by a full-window black surface; Android 9 logs TextureViewMapRenderer, API 29+ logs the SurfaceView renderer, each created MapView has balanced start/stop and one destroy, and bounded render recovery completes or clears only a stale loading foreground without restarting the process.
   SMOKE-LOCATION-CURSOR-TOP:
     type: device
     scope: [app, maplib]

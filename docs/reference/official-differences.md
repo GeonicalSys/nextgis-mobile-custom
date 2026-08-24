@@ -88,8 +88,11 @@ official master всё ещё пропускает список через `remo
 обязательных callbacks view lifecycle: create/start/resume, pause/stop,
 сохранение состояния, low-memory и destroy. При `onDestroyView` старый native
 renderer освобождается, а его ссылки удаляются из `MapDrawable`, только если они
-ещё указывают на уничтожаемый view. После resume запрашивается repaint; HyperLog
-фиксирует получение первого кадра либо ошибку загрузки карты. На Android 8–9
+ещё указывают на уничтожаемый view. После resume и фактического применения
+project style запускается ограниченная серия repaint; если app sources/layers
+уже готовы, но MapLibre после неё сохранил opaque loading foreground, host
+снимает только этот foreground без тяжёлого full style reload. HyperLog фиксирует
+первый кадр, результат recovery либо ошибку загрузки карты. На Android 8–9
 MapView целево использует `TextureView`, чтобы stale render surface не мог
 остаться полноэкранным чёрным слоем поверх Android-панелей; Android 10+ сохраняет
 более производительный `SurfaceView`. Тип renderer записывается в HyperLog.
@@ -100,9 +103,11 @@ MapView целево использует `TextureView`, чтобы stale render
 style не исправляет потерянный surface и дорого стоит для больших проектов;
 правильное восстановление выполняется на уровне lifecycle renderer.
 
-В актуальном official `MapFragment` на проверенном HEAD вызывает только
+В актуальном official `MapFragment` на повторно проверенном 24 августа 2026 года
+HEAD вызывает только
 `MapView.onCreate(savedInstanceState)` и не передаёт остальные lifecycle callbacks.
-Official layout также не включает API-зависимый `maplibre_renderTextureMode`.
+Его `setMapLayersLoaded()` остаётся пустым, а layout не включает API-зависимый
+`maplibre_renderTextureMode`; post-style render recovery также отсутствует.
 Поэтому исправление считается действующим отличием форка и проверяется отдельным
 `SMOKE-MAP-SURFACE-LIFECYCLE` с переходами между экранами, background/foreground,
 блокировкой и пересозданием Activity.

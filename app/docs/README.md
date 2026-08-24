@@ -21,6 +21,8 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - сохранение отрисовки карты после возврата из настроек/другого приложения,
   выключения экрана и пересоздания view: `MapFragment` передаёт MapLibre полный
   lifecycle, освобождает старый native renderer и запрашивает repaint при resume;
+  после фактического применения project style выполняется ограниченная серия
+  repaint, а оставшийся загрузочный foreground снимается без full style reload;
   Android 8–9 использует `TextureView`, чтобы потерянный `SurfaceView` не оставался
   чёрным слоем поверх всей Activity, Android 10+ сохраняет более быстрый `SurfaceView`;
 - вращение карты двумя пальцами только после явного разрешения кнопкой рядом с
@@ -153,8 +155,11 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `GISApplication`, затем rendering docs.
 - Чёрная карта при видимых Android-кнопках после возврата с другого экрана:
   проверить последовательность `MapLibreMapView.onStart/onResume`, первый кадр
-  после resume, последующие `onPause/onStop/onDestroy` и отсутствие старой
-  ссылки `MapDrawable` на уничтоженный view.
+  после resume, `MapLibre render recovery started/completed`, последующие
+  `onPause/onStop/onDestroy` и отсутствие старой ссылки `MapDrawable` на
+  уничтоженный view. Запись `cleared stale loading foreground` означает, что
+  project layers уже были применены, но MapLibre не снял свой loading foreground
+  после ограниченной серии repaint.
 - Полностью чёрный экран вместе с Android-панелями после сна на Android 8–9:
   проверить запись `MapLibreMapView renderer=TextureViewMapRenderer` и отсутствие
   resource override, возвращающего `SurfaceViewMapRenderer` на API 26–28.
