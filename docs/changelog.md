@@ -10,6 +10,29 @@ related_code:
 
 ## 2026-08-24
 
+- Последующие Android 9 логи опровергли TextureView workaround: MapLibre
+  сообщал `fully=true` до `eglSwapBuffers`, а его TextureView render thread при
+  `EGL_CONTEXT_LOST` обнулял surface и мог навсегда ждать нового callback.
+  Все API возвращены на `SurfaceView`, который пересоздаёт EGL context/surface;
+  на API 26–28 выключен tile prefetch и установлен предел 30 FPS. Полный reload
+  теперь освобождает прежний GeoJSON snapshot и detached style wrappers, снижая
+  пик памяти большого Collector-проекта. Версия приложения не изменялась.
+- Device log выявил ошибочный критерий первой версии MapLibre recovery: три
+  app-side callback-а могли завершить его при `fully=false` и всё ещё видимом
+  loading foreground. Этот критерий удалён. Recovery временно включает
+  continuous rendering, invalidates TextureView presentation, проводит камеру
+  через transaction без смещения и завершается штатно только при полном кадре с
+  уже снятым foreground; после лимита снимает зависший foreground и возвращает
+  прежний refresh mode. Версия приложения не изменялась.
+- MapLibre recovery перенесён с единственного раннего repaint в `onResume` на
+  ограниченную серию после фактического применения project style. Если большой
+  или offline-проект уже применён, но MapLibre не снял loading foreground, host
+  снимает только его без full reload; lifecycle и результат пишутся в HyperLog.
+  `SMOKE-MAP-SURFACE-LIFECYCLE` теперь проверяет открытие большого Collector-
+  проекта без обязательного жеста по карте. Версия приложения не изменялась.
+- Official NextGIS Mobile HEAD повторно проверен 24 августа 2026 года: его
+  `setMapLayersLoaded()` остаётся пустым, полного MapView lifecycle и post-style
+  render recovery в official app нет.
 - Успешное сохранение нового или существующего объекта теперь полностью завершает
   edit session: прямой geometry Save и подтверждение формы атрибутов очищают
   MapLibre/overlay selection и возвращают стандартный `MODE_NORMAL` экран.

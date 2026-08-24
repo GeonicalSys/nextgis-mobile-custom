@@ -21,8 +21,13 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - сохранение отрисовки карты после возврата из настроек/другого приложения,
   выключения экрана и пересоздания view: `MapFragment` передаёт MapLibre полный
   lifecycle, освобождает старый native renderer и запрашивает repaint при resume;
-  Android 8–9 использует `TextureView`, чтобы потерянный `SurfaceView` не оставался
-  чёрным слоем поверх всей Activity, Android 10+ сохраняет более быстрый `SurfaceView`;
+  после фактического применения project style выполняется короткий continuous-
+  render burst с presentation invalidation и камерой без смещения; recovery
+  считается успешным только после реально исчезнувшего foreground, а оставшийся
+  загрузочный foreground снимается без full style reload;
+  все поддерживаемые версии используют `SurfaceView`, который умеет пересоздать
+  потерянный EGL-контекст; на Android 8–9 дополнительно ограничены 30 FPS и
+  tile prefetch, чтобы снизить GL-memory pressure больших проектов;
 - вращение карты двумя пальцами только после явного разрешения кнопкой рядом с
   текущим местоположением; состояние и bearing сохраняются, запрет возвращает
   север вверх, а разрешённый rotate начинается сразу при одновременном
@@ -126,8 +131,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - `MapFragment` должен реализовывать актуальный `MaplibreMapInteraction`.
 - Каждый созданный MapLibre `MapView` должен получить согласованную пару
   `onCreate/onStart/onResume` и `onPause/onStop/onDestroy`; старый view нельзя
-  оставлять привязанным к `MapDrawable` после `onDestroyView`. На API 26–28
-  `maplibre_renderTextureMode=true`, на API 29+ — `false`.
+  оставлять привязанным к `MapDrawable` после `onDestroyView`.
+  `maplibre_renderTextureMode=false` на всех API; на API 26–28 tile prefetch
+  выключен и maximum FPS равен `30`.
 - Не дублировать GIS model/storage из `maplib`.
 - Не читать `Q:\standart_profiles`, `variables.py` или QGIS plugin mirrors:
   межпроектный runtime contract — NGW API/Collector либо явный portable import.
@@ -153,11 +159,18 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `GISApplication`, затем rendering docs.
 - Чёрная карта при видимых Android-кнопках после возврата с другого экрана:
   проверить последовательность `MapLibreMapView.onStart/onResume`, первый кадр
-  после resume, последующие `onPause/onStop/onDestroy` и отсутствие старой
-  ссылки `MapDrawable` на уничтоженный view.
-- Полностью чёрный экран вместе с Android-панелями после сна на Android 8–9:
-  проверить запись `MapLibreMapView renderer=TextureViewMapRenderer` и отсутствие
-  resource override, возвращающего `SurfaceViewMapRenderer` на API 26–28.
+  после resume, `MapLibre render recovery started/completed`, последующие
+  `onPause/onStop/onDestroy` и отсутствие старой ссылки `MapDrawable` на
+  уничтоженный view. `completed` не должен содержать одновременно
+  `fully=false` и `loadingForeground=true`. Запись
+  `cleared stale loading foreground` означает, что
+  project layers уже были применены, но MapLibre не снял свой loading foreground
+  после ограниченной серии repaint.
+- Полностью чёрный экран вместе с Android-панелями на Android 8–9: проверить
+  `onLowMemory`, системные `GL_OUT_OF_MEMORY`/`EGL_CONTEXT_LOST`, запись
+  `MapLibreMapView renderer=SurfaceViewMapRenderer` и `tilePrefetch=false`.
+  `TextureViewMapRenderer` на этих API является неверной конфигурацией: его
+  render thread не пересоздаёт surface после потери EGL-контекста.
 - Crash `No Vulkan compatible GPU found` при открытии карты означает неверный
   MapLibre runtime artifact: штатный APK использует OpenGL и не требует Vulkan.
 - Карта не вращается: проверить состояние кнопки вращения рядом с геолокацией и

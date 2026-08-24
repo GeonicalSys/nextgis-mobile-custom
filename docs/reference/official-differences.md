@@ -88,21 +88,35 @@ official master всё ещё пропускает список через `remo
 обязательных callbacks view lifecycle: create/start/resume, pause/stop,
 сохранение состояния, low-memory и destroy. При `onDestroyView` старый native
 renderer освобождается, а его ссылки удаляются из `MapDrawable`, только если они
-ещё указывают на уничтожаемый view. После resume запрашивается repaint; HyperLog
-фиксирует получение первого кадра либо ошибку загрузки карты. На Android 8–9
-MapView целево использует `TextureView`, чтобы stale render surface не мог
-остаться полноэкранным чёрным слоем поверх Android-панелей; Android 10+ сохраняет
-более производительный `SurfaceView`. Тип renderer записывается в HyperLog.
+ещё указывают на уничтожаемый view. После resume и фактического применения
+project style запускается ограниченный continuous-render/presentation burst;
+успех требует полного кадра при уже отсутствующем foreground. Если app
+sources/layers уже готовы, но MapLibre сохранил opaque loading foreground, host
+снимает только этот foreground без тяжёлого full style reload. HyperLog фиксирует
+первый кадр, результат recovery либо ошибку загрузки карты. Все API используют
+`SurfaceView`: в MapLibre OpenGL 13.0.2 он пересоздаёт EGL context/surface после
+`EGL_CONTEXT_LOST`, тогда как TextureView может остаться без нового surface
+callback уже после app-side `fully=true`. На Android 8–9 выключен tile prefetch,
+renderer ограничен 30 FPS, а полный style reload освобождает предыдущий GeoJSON
+snapshot и detached style wrappers. Тип renderer и prefetch policy записываются
+в HyperLog.
 
 **Для чего.** На части устройств, особенно Android 9, после перехода в настройки,
 фонового режима, блокировки экрана или Activity recreation Android-интерфейс
 оставался виден, но render surface карты становился чёрным. Полная перезагрузка
 style не исправляет потерянный surface и дорого стоит для больших проектов;
-правильное восстановление выполняется на уровне lifecycle renderer.
+правильное восстановление выполняется на уровне lifecycle renderer. Ограничение
+prefetch/FPS и раннее освобождение старого style snapshot уменьшают вероятность
+исходного `GL_OUT_OF_MEMORY`, но не подменяют восстановление EGL.
+Очистка snapshot/style wrappers поставляется через слитый `maplib` PR #16;
+app/root pointer закрепляется на его итоговом Merge Commit до Squash Merge
+приложения.
 
-В актуальном official `MapFragment` на проверенном HEAD вызывает только
+В актуальном official `MapFragment` на повторно проверенном 24 августа 2026 года
+HEAD вызывает только
 `MapView.onCreate(savedInstanceState)` и не передаёт остальные lifecycle callbacks.
-Official layout также не включает API-зависимый `maplibre_renderTextureMode`.
+Его `setMapLayersLoaded()` остаётся пустым, а layout не включает API-зависимый
+`maplibre_renderTextureMode`; post-style render recovery также отсутствует.
 Поэтому исправление считается действующим отличием форка и проверяется отдельным
 `SMOKE-MAP-SURFACE-LIFECYCLE` с переходами между экранами, background/foreground,
 блокировкой и пересозданием Activity.

@@ -223,14 +223,28 @@ related_code:
     после `onCreate` ему передаются `onStart/onResume/onPause/onStop`, сохранение
     состояния и low-memory callback, а `onDestroyView` уничтожает native renderer
     и очищает только ещё актуальные ссылки `MapDrawable`. После resume
-    запрашивается repaint и HyperLog фиксирует первый полученный кадр. Нельзя
+    запрашивается repaint и HyperLog фиксирует первый полученный кадр. После
+    фактического применения project style host запускает короткий continuous-
+    render burst, invalidates Android presentation и один раз проводит камеру
+    через native camera transaction без смещения. Успех фиксируется только для
+    полного кадра при уже отсутствующем foreground: счётчик callback-ов host не
+    подменяет внутренний `InitialRenderCallback` MapLibre. Если style/sources уже
+    применены, но opaque loading foreground остался, host снимает только этот
+    foreground и продолжает burst до ограниченного финала. Recovery отменяется
+    при pause/destroy и не запускает бесконечный цикл. Нельзя
     заменять этот контракт безусловным full style reload: он не восстанавливает
     потерянный render surface и создаёт лишнюю нагрузку на большие проекты.
-    На API 26–28 layout включает MapLibre `TextureView`: это целевой workaround
-    для старых Android, где потерянный `SurfaceView` после сна способен остаться
-    полноэкранным чёрным слоем поверх Android-панелей. Начиная с API 29 остаётся
-    более производительный `SurfaceView`. Тип renderer и SDK фиксируются в
-    HyperLog при создании view.
+    Layout на всех API использует `SurfaceView`: его render thread обрабатывает
+    `EGL_CONTEXT_LOST` внутренним пересозданием EGL context/surface. В MapLibre
+    OpenGL 13.0.2 `TextureView` после ошибки swap обнуляет известный
+    `SurfaceTexture` и ждёт нового `onSurfaceTextureAvailable`, которого у
+    оставшегося attached view может не быть; поэтому callback `fully=true` до
+    swap не является доказательством показанного кадра. На API 26–28 prefetch
+    дополнительных tiles выключен, а renderer ограничен 30 FPS для снижения
+    GL-memory pressure. Полный style reload заранее освобождает предыдущий
+    Java GeoJSON snapshot, а после `setStyle` — detached source/layer wrappers,
+    чтобы большой Collector-проект не удваивал пиковую память. Тип renderer,
+    SDK и prefetch policy фиксируются в HyperLog при создании view.
 27. Холодное восстановление walk/manual скетча проверяет принадлежность всех
     edit sources текущему `Style`. Если стиль или source ещё создаются, привязка
     откладывается до завершения style apply; `startFeatureSelectionForEdit()`

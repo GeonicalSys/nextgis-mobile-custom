@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Android 8/9: TextureView avoids stale SurfaceView layers covering the resumed UI. -->
-    <bool name="maplibre_use_texture_view">true</bool>
+    <!-- SurfaceView can recreate a lost EGL context; TextureView 13.0.2 cannot. -->
+    <bool name="maplibre_use_texture_view">false</bool>
+    <!-- Avoid prefetching extra lower-zoom tiles on memory-constrained legacy devices. -->
+    <bool name="maplibre_enable_tile_prefetch">false</bool>
 </resources>

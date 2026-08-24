@@ -33,6 +33,7 @@
         android:id="@+id/mapViewMaplibre"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        fab:maplibre_enableTilePrefetch="@bool/maplibre_enable_tile_prefetch"
         fab:maplibre_renderTextureMode="@bool/maplibre_use_texture_view" />
 
     <ImageView
