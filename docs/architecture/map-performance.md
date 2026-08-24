@@ -1,7 +1,7 @@
 ---
 title: Производительность запуска карты
 type: architecture
-last_verified: 2026-07-29
+last_verified: 2026-08-24
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
@@ -9,6 +9,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
   - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
+  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
+  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileRequestPolicy.java
 ---
 
 # Производительность запуска карты
@@ -35,7 +37,11 @@ GeoJSON в Java и может повторно читать атрибуты д�
 - lite reload для уже подготовленных source-данных;
 - opt-in `local_vector_tiles` для read-only polygon/multipolygon и простых
   точечных слоёв;
-- loopback `LocalVectorTileServer` и ленивый `LocalVectorTileProvider`;
+- loopback `LocalVectorTileServer` и ленивый `LocalVectorTileProvider`; вместо
+  `newCachedThreadPool` server использует максимум два worker и очередь 16,
+  сериализует сборку тайлов одного слоя, закрывает ожидающие socket старого
+  поколения карты и возвращает retryable `503` при переполнении либо остатке
+  heap менее 64 МБ;
 - fallback на классический `GeoJsonSource` для неподдерживаемой геометрии или ошибки provider.
 
 Точечный fast path намеренно узкий: только `GTPoint`, простой renderer,
@@ -53,8 +59,8 @@ template. Подпись поддерживает одно поле (`field`, в
    selection и fallback чтения объекта из SQLite.
 4. Для больших read-only слоёв исследовать viewport/lazy loading с debounce на `onCameraIdle`, RTree
    и упрощённой геометрией.
-5. Усилить local-vector-tile путь: clipping/simplification MVT, memory/disk cache, style parity,
-   lifecycle и диагностику.
+5. Усилить local-vector-tile путь: дальнейшая simplification MVT, bounded
+   memory/disk cache, style parity и метрики latency/overload.
 
 ## Ограничения безопасности
 
