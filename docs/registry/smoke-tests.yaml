@@ -25,6 +25,11 @@ tests:
     scope: [app, maplib]
     command: .\gradlew.bat :app:assembleLisaDebug
     expected: Lisa Debug APK assembles with the consuming debug maplib variant.
+  AUTO-APP-UNIT:
+    type: automatic
+    scope: app
+    command: .\gradlew.bat :app:testLisaDebugUnitTest
+    expected: App unit tests pass, including the Android 8–10 legacy and Android 11+ modern APK archive signature flag boundary.
   AUTO-APP-RELEASES:
     type: automatic
     scope: app
@@ -462,8 +467,8 @@ tests:
   SMOKE-SELF-UPDATE:
     type: device
     scope: [app]
-    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
-    expected: Valid same-branch same-signature update reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL or integrity is rejected.
+    steps: [On Android 9 and Android 10 update from the previous same-signature APK and confirm archive signer validation succeeds, Repeat the valid update on Android 11 or newer, Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app, Export HyperLog after one intentionally rejected APK]
+    expected: Valid same-branch same-signature update passes certificate validation on API 28–30+, reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL or integrity is rejected and its validation stage is present only in technical logs.
   SMOKE-NGW-URL-IMPORT:
     type: device
     scope: [app, maplib, maplibui]

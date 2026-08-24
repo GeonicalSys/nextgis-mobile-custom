@@ -148,7 +148,11 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - Не читать `Q:\standart_profiles`, `variables.py` или QGIS plugin mirrors:
   межпроектный runtime contract — NGW API/Collector либо явный portable import.
 - Self-hosted update принимается только для того же flavor/application/signing
-  identity и с увеличенным versionCode.
+  identity и с увеличенным versionCode. Для APK archive Android 8–10 updater
+  запрашивает legacy `GET_SIGNATURES`, потому что platform parser этих версий
+  не заполняет сертификаты по `GET_SIGNING_CERTIFICATES`; Android 11+ использует
+  современный API. Причина отклонения APK записывается в HyperLog без вывода
+  технических деталей пользователю.
 - Ожидание специального разрешения на установку хранится как одноразовый
   app-private pending manifest; после возврата manifest и APK проверяются снова.
 - Production version принадлежит `defaultConfig`; Lisa Debug переопределяет
@@ -188,7 +192,8 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   версию debug по basename APK.
 - Update отклонён: проверить schema, branch/channel, identity, version,
   versioned URL, size/hash/certificate и доступность branch manifest; не
-  отключать проверку для обхода ошибки.
+  отключать проверку для обхода ошибки. На Android 8–10 дополнительно искать
+  `App update APK validation rejected` и проверять, что archive signer не пуст.
 - После выдачи разрешения update не продолжился: проверить
   `AppUpdateManager.resumePendingInstallation()`, `app_update_state` и вызов из
   `MainActivity.onResume()`/`SettingsActivity.onResume()`.

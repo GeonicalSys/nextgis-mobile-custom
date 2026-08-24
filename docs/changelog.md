@@ -10,6 +10,10 @@ related_code:
 
 ## 2026-08-24
 
+- Self-hosted updater исправляет ложный отказ same-signature APK на Android 9–10:
+  для archive metadata API 26–29 используется `GET_SIGNATURES`, а Android 11+
+  сохраняет `GET_SIGNING_CERTIFICATES`. Добавлены policy unit tests и безопасная
+  HyperLog-диагностика этапа отказа; версия приложения не изменена.
 - Диагностика A54 подтвердила, что проблемный NGW-слой содержит 15
   MultiPolygon, но около 140 тысяч координат; legacy попарная проверка сегментов
   заменена на JTS validation с unit-регрессией на 60 тысяч вершин.

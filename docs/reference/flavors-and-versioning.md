@@ -84,6 +84,10 @@ publisher являются источниками истины; publisher фор
 Flavor передаётся updater через manifest metadata
 `com.nextgis.mobile.UPDATE_FLAVOR` и сверяется с update manifest и APK archive.
 Нельзя разрешать установку APK другого бренда через автоматическое обновление.
+На Android 8–10 проверка сертификата скачанного APK использует legacy
+`GET_SIGNATURES`, поскольку archive parser API 28–29 не заполняет подпись по
+новому флагу. Android 11+ использует `GET_SIGNING_CERTIFICATES`; в обоих случаях
+сравнивается тот же SHA-256 certificate fingerprint из update manifest.
 
 Repository branches: Lisa Release — `lisa`, Belka Release — `belka`, Lisa Debug
 — `debug`. Для production manifest содержит `channel=stable`, для Debug —

@@ -112,6 +112,11 @@ signing certificate и release notes.
 Updater должен отклонить неверные schema, flavor/channel, application ID,
 version, URL, размер, hash или certificate. После скачивания те же identity и
 integrity значения сверяются с реальным APK и установленным приложением.
+При чтении archive certificate Android 8–10 используется `GET_SIGNATURES`:
+реализация `getPackageArchiveInfo()` в API 28–29 не запускает certificate parser
+для `GET_SIGNING_CERTIFICATES`. Начиная с Android 11 updater использует
+`GET_SIGNING_CERTIFICATES`. Изменять это разделение без device-smoke API 28, 29
+и 30 нельзя.
 
 На Android 8+ при отсутствии разрешения «Установка неизвестных приложений»
 updater сохраняет проверенный manifest в app-private `app_update_state`, открывает
@@ -155,6 +160,8 @@ APK через `aapt`/`apksigner`, сериализуют операции об�
 ## Завершение
 
 - выполнить release smoke IDs;
+- выполнить updater unit test и установку same-signature APK поверх предыдущей
+  версии минимум на Android 9 и Android 11;
 - проверить download/install flow отдельно для Lisa и Belka;
 - проверить public manifest, versioned `apkUrl`, `latest.apk` и `releases.json`;
 - зафиксировать артефакты и checksums в разрешённом release-хранилище;

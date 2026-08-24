@@ -149,7 +149,7 @@ manifest_metadata:
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Bind installed and downloaded APK to lisa or belka update channel
+    purpose: Bind installed and downloaded APK to lisa or belka update channel before version, hash and API-compatible signing-certificate validation
   io.sentry.traces.user-interaction.enable:
     owner: app
     source: app/src/main/AndroidManifest.xml

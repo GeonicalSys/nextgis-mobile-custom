@@ -25,6 +25,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 
+import com.hypertrack.hyperlog.HyperLog;
+import com.nextgis.maplib.util.Constants;
 import com.nextgis.mobile.BuildConfig;
 import com.nextgis.mobile.R;
 
@@ -521,9 +523,12 @@ public final class AppUpdateManager
             throws IOException, PackageManager.NameNotFoundException, NoSuchAlgorithmException
     {
         PackageManager packageManager = activity.getPackageManager();
-        int flags = PackageManager.GET_META_DATA | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-                ? PackageManager.GET_SIGNING_CERTIFICATES
-                : PackageManager.GET_SIGNATURES);
+        int signatureFlags = AppUpdatePackageInfoPolicy.signatureFlagsForSdk(
+                Build.VERSION.SDK_INT,
+                PackageManager.GET_SIGNATURES,
+                PackageManager.GET_SIGNING_CERTIFICATES);
+        boolean useModernSignatures = signatureFlags == PackageManager.GET_SIGNING_CERTIFICATES;
+        int flags = PackageManager.GET_META_DATA | signatureFlags;
 
         PackageInfo archiveInfo;
         PackageInfo installedInfo;
@@ -540,37 +545,52 @@ public final class AppUpdateManager
         }
 
         if (archiveInfo == null || !activity.getPackageName().equals(archiveInfo.packageName)) {
-            throw new IOException(activity.getString(R.string.update_invalid));
+            throw rejectDownloadedApk(activity, "package-identity");
         }
         String archiveFlavor = archiveInfo.applicationInfo != null
                 && archiveInfo.applicationInfo.metaData != null
                 ? archiveInfo.applicationInfo.metaData.getString(UPDATE_FLAVOR_METADATA)
                 : null;
         if (!updateRepositoryBranch().equals(archiveFlavor)) {
-            throw new IOException(activity.getString(R.string.update_invalid));
+            throw rejectDownloadedApk(activity, "flavor-identity");
         }
         if (getVersionCode(archiveInfo) != manifest.versionCode
                 || manifest.versionCode <= getVersionCode(installedInfo)
                 || archiveInfo.versionName == null
                 || !manifest.versionName.equals(archiveInfo.versionName)) {
-            throw new IOException(activity.getString(R.string.update_invalid));
+            throw rejectDownloadedApk(activity, "version-identity");
         }
 
-        Set<String> archiveCertificates = certificateDigests(archiveInfo);
-        Set<String> installedCertificates = certificateDigests(installedInfo);
+        Set<String> archiveCertificates = certificateDigests(archiveInfo, useModernSignatures);
+        Set<String> installedCertificates = certificateDigests(installedInfo, useModernSignatures);
         if (!archiveCertificates.contains(manifest.signingCertificateSha256.toLowerCase(Locale.US))
                 || !installedCertificates.contains(
                         manifest.signingCertificateSha256.toLowerCase(Locale.US))) {
-            throw new IOException(activity.getString(R.string.update_invalid));
+            throw rejectDownloadedApk(
+                    activity,
+                    "signing-certificate archiveSigners=" + archiveCertificates.size()
+                            + " installedSigners=" + installedCertificates.size());
         }
     }
 
 
-    private static Set<String> certificateDigests(PackageInfo packageInfo)
+    private static IOException rejectDownloadedApk(Activity activity, String reason)
+    {
+        HyperLog.w(
+                Constants.TAG,
+                "App update APK validation rejected: " + reason
+                        + " sdk=" + Build.VERSION.SDK_INT);
+        return new IOException(activity.getString(R.string.update_invalid));
+    }
+
+
+    private static Set<String> certificateDigests(
+            PackageInfo packageInfo,
+            boolean useModernSignatures)
             throws NoSuchAlgorithmException
     {
         Signature[] signatures;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && packageInfo.signingInfo != null) {
+        if (useModernSignatures && packageInfo.signingInfo != null) {
             signatures = packageInfo.signingInfo.getApkContentsSigners();
         } else {
             signatures = packageInfo.signatures;
