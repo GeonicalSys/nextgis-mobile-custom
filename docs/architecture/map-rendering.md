@@ -11,6 +11,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+  - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
@@ -258,6 +260,18 @@ related_code:
     либо оставшемся от заменённого style source. Walk и обычный geometry draft
     взаимоисключаются. Правая кнопка активного обхода с иконкой человека завершает
     запись через штатный Save/Stop path и не открывает настройки местоположения.
+28. Растровый MBTiles хранится одним файлом `map-mbtiles.mbtiles` внутри
+    каталога локального TMS-слоя и подключается к MapLibre через `mbtiles:///`.
+    До публикации слоя проверяются SQLite header, обязательные таблицы и поля,
+    `quick_check`, raster `format`, zoom и bounds. Vector MBTiles этим путём не
+    принимается. При переносе старой распакованной подложки Debug → Geonical
+    тайлы читаются framed-потоком без центрального каталога и записываются
+    пакетами прямо в новую MBTiles SQLite: промежуточный ZIP и второе дерево
+    мелких файлов не создаются, а память не растёт с числом тайлов. Строка тайла
+    переводится из OSM `y` в MBTiles/TMS один раз. После завершения выполняются
+    sync файла и атомарное переименование; неполный stage удаляется, исходная
+    Debug-подложка остаётся на месте. Provenance в `config.json` делает повторный
+    запуск идемпотентным, а имя, видимость и взаимный порядок подложек сохраняются.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
@@ -265,7 +279,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`,
 `INV-GEOMETRY-SKETCH-WORKFLOW`, `INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`,
 `INV-SPATIAL-CACHE-CONSISTENCY`, `INV-HIDDEN-VECTOR-TILE-IDENTIFY`,
-`INV-MAPLIBRE-BACKEND-COMPATIBILITY`, `INV-MAPLIBRE-VIEW-LIFECYCLE`.
+`INV-MAPLIBRE-BACKEND-COMPATIBILITY`, `INV-MAPLIBRE-VIEW-LIFECYCLE`,
+`INV-LEGACY-UNDERLAY-MIGRATION`.
 
 ## Изменение rendering pipeline
 
@@ -282,7 +297,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
 `SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
 `SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`, `SMOKE-GEOMETRY-SKETCH-WORKFLOW`,
-`SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`.
+`SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`,
+`SMOKE-DEBUG-UNDERLAY-MIGRATION`.
 Для изменения MapLibre dependency/backend дополнительно обязателен
 `SMOKE-MAP-OPENGL-COMPATIBILITY`.
 Для изменения `MapFragment` lifecycle дополнительно обязателен

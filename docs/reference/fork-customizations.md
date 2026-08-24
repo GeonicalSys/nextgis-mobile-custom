@@ -38,6 +38,7 @@ related_code:
 | Изолированные и восстанавливаемые Collector workspaces | [collector-projects.md](../architecture/collector-projects.md) | `CollectorProjectRegistry`, `MainActivity` |
 | Незавершённые Collector задачи | [collector.md](../roadmap/collector.md) | владельцы указаны в roadmap |
 | Настройки, базовые слои, треки и immutable-local `.ngrc` | [settings-and-config.md](settings-and-config.md), [map-rendering.md](../architecture/map-rendering.md) | `Constants`, preferences XML, `TrackerService`, `TMSLayer`, `LocalTMSLayer` |
+| Raster MBTiles и перенос старых Debug-подложек в Geonical | [map-rendering.md](../architecture/map-rendering.md), [collector-projects.md](../architecture/collector-projects.md), [flavors-and-versioning.md](flavors-and-versioning.md) | `MbTilesInfo`, `LegacyUnderlayProvider`, `LegacyUnderlayImporter` |
 | Стабильность, lifecycle и диагностика | module packs и [change checklist](../guides/change-checklist.md) | `MainApplication`, `GISApplication`, сервисы и фрагменты |
 | Upstream merges и конфликтные зоны | [upstream-fork-model.md](../architecture/upstream-fork-model.md), [upstream-sync.md](../runbooks/upstream-sync.md) | четыре git-репозитория |
 | История upstream sync | [upstream history](../history/upstream/README.md) | исторические отчёты по циклам |

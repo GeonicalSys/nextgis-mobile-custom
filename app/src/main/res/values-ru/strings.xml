@@ -322,4 +322,16 @@
     <string name="stakeout_background_text">Звуковые подсказки работают в фоне</string>
     <string name="stakeout_background_channel">Вынос координат</string>
     <string name="stakeout_background_channel_summary">Звуковое наведение и местоположение при активном выносе</string>
+    <string name="project_import_debug_underlays">Перенести подложки из Debug</string>
+    <string name="legacy_underlay_import_confirmation">В текущий проект «%1$s» будут перенесены только локальные подложки. Проекты Веб-ГИС, учётные записи и пароли не переносятся. Продолжить?</string>
+    <string name="legacy_underlay_import_confirm">Перенести подложки</string>
+    <string name="legacy_underlay_import_unavailable">Установленная версия Debug не поддерживает перенос подложек</string>
+    <string name="legacy_underlay_import_failed">Не удалось перенести подложки</string>
+    <string name="legacy_underlay_import_done">Перенос завершён. Новых: %1$d; уже были перенесены: %2$d</string>
+    <string name="legacy_underlay_import_partial">Перенесено подложек: %1$d из %2$d</string>
+    <string name="legacy_underlay_export_title">Перенос локальных подложек</string>
+    <string name="legacy_underlay_export_confirmation">Разрешить приложению Geonical прочитать локальные подложки: %1$d? Данные проектов и учётных записей переданы не будут.</string>
+    <string name="legacy_underlay_export_empty">Локальных подложек для переноса нет</string>
+    <string name="legacy_underlay_export_confirm">Разрешить перенос</string>
+    <string name="legacy_underlay_export_clip_label">Локальные подложки</string>
 </resources>

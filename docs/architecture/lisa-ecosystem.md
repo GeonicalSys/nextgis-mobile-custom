@@ -90,12 +90,13 @@ Android-документацию не затрагивает.
 
 ### Offline basemap artifact
 
-`qtiles_geonical` создаёт MBTiles/ZIP на desktop и не публикует результат в NGW
-автоматически. Передача в Android — отдельное явное действие пользователя или
-release-процедуры. Producer и consumer должны согласовать поддерживаемый формат,
-CRS, zoom range и lifecycle; путь к файлу в desktop workspace частью контракта
-не является. Нельзя подменять smoke фактического Android import утверждением,
-что QGIS успешно создал файл.
+`qtiles_geonical` создаёт raster MBTiles/ZIP на desktop и не публикует результат
+в NGW автоматически. Передача в Android — отдельное явное действие пользователя
+или release-процедуры. Android consumer принимает raster MBTiles с таблицами
+`tiles`/`metadata`, Web Mercator tile matrix, поддерживаемым image format и
+согласованным zoom/bounds; vector MBTiles этим контрактом не покрывается. Путь к
+файлу в desktop workspace частью контракта не является. Нельзя подменять smoke
+фактического Android import утверждением, что QGIS успешно создал файл.
 
 ### Идентичность и секреты
 

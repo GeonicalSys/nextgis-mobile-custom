@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -74,6 +74,25 @@ APK может содержать production basename. Это не версия 
 - runtime dependency graph разрешает `org.maplibre.gl:android-sdk-opengl:13.0.2`
   и не содержит generic/Vulkan MapLibre artifact;
 - запуск поверх существующего профиля.
+
+### Выпуск bridge для старого Debug-профиля
+
+Для устройств со старой картой `com.nextgis.mobile.debug` порядок отдельный:
+
+1. Собрать и опубликовать/установить `lisaDebug` с exporter bridge, подписанный
+   тем же сертификатом, что уже установленный Debug. Если встроенного updater в
+   старой версии нет, использовать штатный MDM либо ручную/ADB-установку APK.
+2. Установить актуальный Geonical release с importer bridge и ожидаемым
+   production certificate.
+3. В Geonical вручную загрузить или выбрать правильный проект: версии
+   `3.0.3.2`/`3.0.3.3` не дают надёжной source-project identity.
+4. Запустить перенос из настроек проекта, проверить подложки после cold start и
+   повторить команду для проверки отсутствия дубликатов.
+5. Не удалять Debug и его данные, пока пользователь не подтвердил полноту
+   результата. Сам bridge ничего не удаляет.
+
+Release smoke должен включать trusted-pair и negative-пару: APK с другим
+package/certificate не должен получить URI или поток подложки.
 
 ## Self-hosted update manifest
 

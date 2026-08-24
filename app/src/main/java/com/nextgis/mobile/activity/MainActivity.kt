@@ -1081,7 +1081,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 )
                 //check the file type from extension
                 val fileName = FileUtil.getFileNameByUri(this, uri, "")
-                if (fileName.lowercase(Locale.getDefault()).endsWith("ngrc") ||
+                if (fileName.lowercase(Locale.getDefault()).endsWith("mbtiles") ||
+                    fileName.lowercase(Locale.getDefault()).endsWith("ngrc") ||
                     fileName.lowercase(Locale.getDefault()).endsWith("zip")
                 ) { //create local tile layer
                     if (null != mapFragment) {
