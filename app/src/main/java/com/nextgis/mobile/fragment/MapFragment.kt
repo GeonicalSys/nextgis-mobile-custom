@@ -986,9 +986,11 @@ public class MapFragment
                     return false
                 }
 
-                mMapRef.get()!!.map!!.cancelFeatureEdit(false)
-                setNewMode(MODE_SELECT_ACTION)
-                clearManualGeometryDraft("geometry-save-success")
+                finishSuccessfulFeatureSave(
+                    "geometry-save-success",
+                    mSelectedLayer?.id ?: Constants.NOT_FOUND,
+                    featureId
+                )
 
             }
         }
@@ -1025,8 +1027,12 @@ public class MapFragment
                 val layer = mSelectedLayer
                 if (id != Constants.NOT_FOUND.toLong() && layer != null) {
                     mMapRef.get()?.map?.reloadFeatureToMaplibre(id, layer)
-                    defineMenuItems()
                 }
+                finishSuccessfulFeatureSave(
+                    "attribute-form-save-success",
+                    layer?.id ?: Constants.NOT_FOUND,
+                    id
+                )
             }
             return
         }
@@ -1039,7 +1045,11 @@ public class MapFragment
                     val layer = mSelectedLayer
                     if (id != Constants.NOT_FOUND.toLong() && layer != null) {
                         mMapRef.get()?.map?.reloadFeatureToMaplibre(id, layer)
-                        defineMenuItems()
+                        finishSuccessfulFeatureSave(
+                            "info-form-save-success",
+                            layer.id,
+                            id
+                        )
                     }
                 }
             } else if (mode == MODE_EDIT) {
@@ -1093,15 +1103,18 @@ public class MapFragment
 
                 mSelectedLayer = resultLayer
                 editLayerOverlay!!.setSelectedLayer(resultLayer)
-                editLayerOverlay!!.setSelectedFeature(id)
                 resultLayer.showFeature(id)
-                setNewMode(MODE_SELECT_ACTION)
 
                 if (mapDrawable == null) {
                     HyperLog.w(
                         Constants.TAG,
                         "FormSave result applied to overlay but map is unavailable " +
                             "layer=${resultLayer.id} feature=$id"
+                    )
+                    finishSuccessfulFeatureSave(
+                        "form-save-success-no-map",
+                        resultLayer.id,
+                        id
                     )
                     return
                 }
@@ -1115,8 +1128,12 @@ public class MapFragment
                     )
                 }
                 mapDrawable.reloadFeatureToMaplibre(id, resultLayer)
-                mapDrawable.updateSelectedMarker()
-                mapDrawable.hideSelectedDotSource()
+                finishSuccessfulFeatureSave(
+                    if (wasNewFeature) "new-feature-form-save-success"
+                    else "existing-feature-form-save-success",
+                    resultLayer.id,
+                    id
+                )
             }
         } else if (editLayerOverlay!!.selectedFeatureGeometry != null) editLayerOverlay!!.setHasEdits(
             true
@@ -1125,6 +1142,38 @@ public class MapFragment
 
     fun hasEdits(): Boolean {
         return editLayerOverlay != null && editLayerOverlay!!.hasEdits()
+    }
+
+    /**
+     * A successful feature write is terminal for both creation and existing-feature editing.
+     * Return to the ordinary map instead of leaving a selected feature/action toolbar behind.
+     */
+    private fun finishSuccessfulFeatureSave(reason: String, layerId: Int, featureId: Long) {
+        editLayerOverlay?.setHasEdits(false)
+        editLayerOverlay?.setSelectedFeature(null)
+        mMapRef.get()?.map?.cancelFeatureEdit(false)
+        clearManualGeometryDraft(reason)
+        closeAttributesPanelAfterSuccessfulSave()
+        setNewMode(MODE_NORMAL)
+        editLayerOverlay?.setSelectedLayer(null)
+        HyperLog.v(
+            Constants.TAG,
+            "FeatureSave finished edit session reason=$reason layer=$layerId feature=$featureId"
+        )
+    }
+
+    private fun closeAttributesPanelAfterSuccessfulSave() {
+        val activity = mActivity ?: return
+        val fragmentManager = activity.supportFragmentManager
+        val attributesFragment =
+            fragmentManager.findFragmentByTag("ATTRIBUTES") as? AttributesFragment ?: return
+        if (!attributesFragment.isVisible) return
+
+        if (attributesFragment.isTablet) {
+            fragmentManager.beginTransaction().remove(attributesFragment).commit()
+        } else {
+            activity.finishFragment()
+        }
     }
 
 

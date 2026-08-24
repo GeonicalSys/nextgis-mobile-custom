@@ -378,7 +378,11 @@ invariants:
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
-      launch duplicate forms. The selection toolbar has no duplicate add action; cancelling a
+      launch duplicate forms. A successful direct geometry Save or attribute-form Save is
+      terminal for both new and existing features: the host clears edit/view selection and
+      returns to MODE_NORMAL with the standard map controls. Failed writes retain their current
+      edit context; explicit form cancellation follows its normal cancellation path. The selection
+      toolbar has no duplicate add action; cancelling a
       new sketch asks for confirmation and then returns directly to normal map mode. Ruler area
       is always formatted in hectares, and the ruler exposes the same Undo/Redo controls as a
       sketch so each added or moved measurement point is one reversible history step. Line and polygon screen vertices are converted with the
