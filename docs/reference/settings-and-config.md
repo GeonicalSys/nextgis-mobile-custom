@@ -64,7 +64,9 @@ related_code:
 - Local storage: Collector workspaces и `LayerBackups`.
 - Crash journals: `track_recording_enabled`, `walkedit_temp`,
   `geometry_edit_draft`, `feature_form_draft`; это app-private runtime state, а
-  не пользовательские настройки UI.
+  не пользовательские настройки UI. `track_recording_enabled` читается панелью
+  карты и `TrackerService` в одном основном процессе, чтобы Start/Stop не
+  расходились из-за межпроцессного кэша SharedPreferences.
 
 `mobile_render_mode: "local_vector_tiles"` применяется только как явный opt-in:
 для read-only polygon/multipolygon либо простого `Point` с круговым маркером

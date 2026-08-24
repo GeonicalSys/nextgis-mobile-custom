@@ -105,7 +105,8 @@ preferences:
     source: maplib/src/main/java/com/nextgis/maplib/util/SettingsConstants.java
     purpose: >
       Durable flag that track recording is on; cleared only by explicit Stop track menu.
-      BootLoader and MainActivity auto-resume TrackerService when true.
+      BootLoader and MainActivity auto-resume TrackerService when true. Toolbar and service
+      read it in the default application process so a delayed Start cannot overtake Stop.
   background_recording_sound:
     owner: maplibui
     type: boolean

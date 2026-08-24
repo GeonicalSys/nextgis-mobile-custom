@@ -500,6 +500,9 @@ invariants:
       Foreground use stays silent. Revoking coarse/fine location during recording must stop
       either location foreground service without calling forbidden startForeground, crashing,
       clearing track_recording_enabled or discarding the durable walk draft.
+      TrackerService must run in the default application process so a toolbar Stop cannot
+      overtake a still-pending cross-process Start; a delayed Start observed after the durable
+      intent was disabled must exit without creating an empty track.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
@@ -571,9 +574,11 @@ invariants:
       Track recording uses durable preference track_recording_enabled, cleared only by the
       explicit menu finish action. After reboot or process death, recording auto-resumes
       without a dialog; already inserted trackpoints must not be lost (closing an unfinished
-      track and starting a new id is allowed). Walk digitizing keeps walkedit_temp on
-      unexpected service death and offers Continue/Discard even if START_STICKY already
-      restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/tap
+      track and starting a new id is allowed). TrackerService shares the default application
+      process with the toolbar so lifecycle delivery and durable preference reads are ordered;
+      stale delayed Start delivery after explicit Stop creates no empty session. Walk digitizing
+      keeps walkedit_temp on unexpected service death and offers Continue/Discard even if
+      START_STICKY already restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/tap
       editing synchronously journals its latest WKT plus active-map/layer/feature identity in
       GeometryEditDraftStore and offers Continue/Discard after process/task death; only
       explicit Cancel, successful layer update, or handoff to the attribute form clears it.
