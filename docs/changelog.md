@@ -10,6 +10,13 @@ related_code:
 
 ## 2026-08-24
 
+- Device log выявил ошибочный критерий первой версии MapLibre recovery: три
+  app-side callback-а могли завершить его при `fully=false` и всё ещё видимом
+  loading foreground. Этот критерий удалён. Recovery временно включает
+  continuous rendering, invalidates TextureView presentation, проводит камеру
+  через transaction без смещения и завершается штатно только при полном кадре с
+  уже снятым foreground; после лимита снимает зависший foreground и возвращает
+  прежний refresh mode. Версия приложения не изменялась.
 - MapLibre recovery перенесён с единственного раннего repaint в `onResume` на
   ограниченную серию после фактического применения project style. Если большой
   или offline-проект уже применён, но MapLibre не снял loading foreground, host

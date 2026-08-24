@@ -138,6 +138,7 @@ import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView as MapLibreMapView
 import org.maplibre.android.maps.OnMapReadyCallback
+import org.maplibre.android.maps.renderer.MapRenderer
 import org.maplibre.android.module.http.HttpRequestImpl
 import org.maplibre.geojson.LineString
 import org.maplibre.geojson.MultiLineString
@@ -182,6 +183,8 @@ public class MapFragment
     private var mapLibreRenderRecoveryReason = ""
     private var mapLibreLayersAppliedForCurrentView = false
     private var mapLibreLastFrameFullyRendered = false
+    private var mapLibreLoadingForegroundCleared = false
+    private var mapLibrePreviousRefreshMode: MapRenderer.RenderingRefreshMode? = null
     private val mapLibreRenderRecoveryRunnable = Runnable {
         runMapLibreRenderRecoveryAttempt()
     }
@@ -205,8 +208,9 @@ public class MapFragment
                 }
                 val mapLibreView = mapLibreMapView
                 val loadingForegroundVisible = mapLibreView?.foreground != null
-                if ((fully && !loadingForegroundVisible) ||
-                    mapLibreRenderRecoveryFrames >= MAPLIBRE_READY_FRAME_COUNT
+                if (fully &&
+                    !loadingForegroundVisible &&
+                    mapLibreRenderRecoveryAttempt >= MAPLIBRE_MIN_PRESENTATION_ATTEMPTS
                 ) {
                     finishMapLibreRenderRecovery(
                         "frame-ready fully=$fully styleFullyLoaded=$styleFullyLoaded " +
@@ -668,11 +672,27 @@ public class MapFragment
 
     private fun startMapLibreRenderRecovery(reason: String) {
         val mapLibreView = mapLibreMapView ?: return
+        if (!mapLibreRenderRecoveryActive) {
+            try {
+                mapLibrePreviousRefreshMode = mapLibreView.renderingRefreshMode
+                mapLibreView.setRenderingRefreshMode(
+                    MapRenderer.RenderingRefreshMode.CONTINUOUS
+                )
+            } catch (exception: RuntimeException) {
+                mapLibrePreviousRefreshMode = null
+                HyperLog.w(
+                    Constants.TAG,
+                    "MapLibre render recovery could not enable continuous rendering",
+                    exception
+                )
+            }
+        }
         mapLibreRenderRecoveryActive = true
         mapLibreRenderRecoveryAttempt = 0
         mapLibreRenderRecoveryFrames = 0
         mapLibreRenderRecoveryReason = reason
         mapLibreLastFrameFullyRendered = false
+        mapLibreLoadingForegroundCleared = false
         HyperLog.v(Constants.TAG, "MapLibre render recovery started reason=$reason")
         scheduleMapLibreRenderRecoveryAttempt(mapLibreView, 0L)
     }
@@ -693,6 +713,32 @@ public class MapFragment
         val mapLibreMap = mapDrawableOrNull?.maplibreMap ?: return
         mapLibreRenderRecoveryAttempt++
         mapLibreMap.triggerRepaint()
+        invalidateMapLibrePresentation(mapLibreView)
+
+        if (mapLibreRenderRecoveryAttempt == MAPLIBRE_MIN_PRESENTATION_ATTEMPTS) {
+            // A real camera transaction follows the same native path as the gesture that wakes
+            // rendering on unaffected devices, but preserves the exact camera position.
+            mapLibreMap.moveCamera(
+                CameraUpdateFactory.newCameraPosition(mapLibreMap.cameraPosition)
+            )
+        }
+
+        if (mapLibreRenderRecoveryAttempt >= MAPLIBRE_FOREGROUND_FALLBACK_ATTEMPT &&
+            mapLibreLayersAppliedForCurrentView &&
+            mapLibreView.foreground != null
+        ) {
+            mapLibreView.foreground = null
+            mapLibreLoadingForegroundCleared = true
+            mapLibreMap.triggerRepaint()
+            invalidateMapLibrePresentation(mapLibreView)
+            HyperLog.w(
+                Constants.TAG,
+                "MapLibre render recovery cleared stale loading foreground " +
+                    "reason=$mapLibreRenderRecoveryReason " +
+                    "attempt=$mapLibreRenderRecoveryAttempt " +
+                    "readyFrames=$mapLibreRenderRecoveryFrames"
+            )
+        }
 
         if (mapLibreRenderRecoveryAttempt < MAPLIBRE_REPAINT_ATTEMPTS) {
             scheduleMapLibreRenderRecoveryAttempt(mapLibreView, MAPLIBRE_REPAINT_DELAY_MS)
@@ -702,12 +748,10 @@ public class MapFragment
         val styleFullyLoaded = mapLibreMap.style?.isFullyLoaded == true
         val hadLoadingForeground = mapLibreView.foreground != null
         if (mapLibreLayersAppliedForCurrentView && hadLoadingForeground) {
-            // MapLibre keeps this foreground until it observes three frames with a fully loaded
-            // style. Large/offline projects can remain partially rendered indefinitely even
-            // though app sources and layers are already usable, leaving an opaque screen that
-            // only a camera gesture clears on faster devices.
             mapLibreView.foreground = null
+            mapLibreLoadingForegroundCleared = true
             mapLibreMap.triggerRepaint()
+            invalidateMapLibrePresentation(mapLibreView)
             HyperLog.w(
                 Constants.TAG,
                 "MapLibre render recovery cleared stale loading foreground " +
@@ -721,10 +765,21 @@ public class MapFragment
                 "MapLibre render recovery finished without foreground fallback " +
                     "reason=$mapLibreRenderRecoveryReason attempts=$mapLibreRenderRecoveryAttempt " +
                     "readyFrames=$mapLibreRenderRecoveryFrames " +
-                    "styleFullyLoaded=$styleFullyLoaded lastFully=$mapLibreLastFrameFullyRendered"
+                    "styleFullyLoaded=$styleFullyLoaded lastFully=$mapLibreLastFrameFullyRendered " +
+                    "foregroundCleared=$mapLibreLoadingForegroundCleared"
             )
         }
         stopMapLibreRenderRecovery()
+    }
+
+    private fun invalidateMapLibrePresentation(mapLibreView: MapLibreMapView) {
+        mapLibreView.renderView.postInvalidateOnAnimation()
+        mapLibreView.postInvalidateOnAnimation()
+        mapLibreView.parent?.let { parent ->
+            if (parent is View) {
+                parent.postInvalidateOnAnimation()
+            }
+        }
     }
 
     private fun finishMapLibreRenderRecovery(result: String) {
@@ -741,10 +796,25 @@ public class MapFragment
     }
 
     private fun stopMapLibreRenderRecovery() {
-        mapLibreMapView?.removeCallbacks(mapLibreRenderRecoveryRunnable)
+        mapLibreMapView?.let { mapLibreView ->
+            mapLibreView.removeCallbacks(mapLibreRenderRecoveryRunnable)
+            mapLibrePreviousRefreshMode?.let { previousMode ->
+                try {
+                    mapLibreView.setRenderingRefreshMode(previousMode)
+                } catch (exception: RuntimeException) {
+                    HyperLog.w(
+                        Constants.TAG,
+                        "MapLibre render recovery could not restore rendering mode",
+                        exception
+                    )
+                }
+            }
+        }
         mapLibreRenderRecoveryActive = false
         mapLibreRenderRecoveryAttempt = 0
         mapLibreRenderRecoveryFrames = 0
+        mapLibreLoadingForegroundCleared = false
+        mapLibrePreviousRefreshMode = null
     }
 
     private fun scheduleMapReloadAfterLayerFillRetry() {
@@ -4765,7 +4835,8 @@ public class MapFragment
         const val EDIT_LAYER: Int = 2
         private const val LOCATE_MIN_ZOOM = 12.0
         private const val CAMERA_ANIMATION_MS = 800
-        private const val MAPLIBRE_READY_FRAME_COUNT = 3
+        private const val MAPLIBRE_MIN_PRESENTATION_ATTEMPTS = 4
+        private const val MAPLIBRE_FOREGROUND_FALLBACK_ATTEMPT = 8
         private const val MAPLIBRE_REPAINT_ATTEMPTS = 12
         private const val MAPLIBRE_REPAINT_DELAY_MS = 120L
         private const val NORTH_UP_ANIMATION_MS = 350

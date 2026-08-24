@@ -89,8 +89,9 @@ official master всё ещё пропускает список через `remo
 сохранение состояния, low-memory и destroy. При `onDestroyView` старый native
 renderer освобождается, а его ссылки удаляются из `MapDrawable`, только если они
 ещё указывают на уничтожаемый view. После resume и фактического применения
-project style запускается ограниченная серия repaint; если app sources/layers
-уже готовы, но MapLibre после неё сохранил opaque loading foreground, host
+project style запускается ограниченный continuous-render/presentation burst;
+успех требует полного кадра при уже отсутствующем foreground. Если app
+sources/layers уже готовы, но MapLibre сохранил opaque loading foreground, host
 снимает только этот foreground без тяжёлого full style reload. HyperLog фиксирует
 первый кадр, результат recovery либо ошибку загрузки карты. На Android 8–9
 MapView целево использует `TextureView`, чтобы stale render surface не мог

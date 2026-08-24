@@ -224,11 +224,14 @@ related_code:
     состояния и low-memory callback, а `onDestroyView` уничтожает native renderer
     и очищает только ещё актуальные ссылки `MapDrawable`. После resume
     запрашивается repaint и HyperLog фиксирует первый полученный кадр. После
-    фактического применения project style host запускает ограниченную серию
-    repaint: она даёт штатному `MapView` необходимые ready-frame callbacks, а
-    если style/sources уже применены, но opaque loading foreground остался,
-    снимает только этот foreground и запрашивает итоговый кадр. Recovery
-    отменяется при pause/destroy и не запускает бесконечный цикл. Нельзя
+    фактического применения project style host запускает короткий continuous-
+    render burst, invalidates Android presentation и один раз проводит камеру
+    через native camera transaction без смещения. Успех фиксируется только для
+    полного кадра при уже отсутствующем foreground: счётчик callback-ов host не
+    подменяет внутренний `InitialRenderCallback` MapLibre. Если style/sources уже
+    применены, но opaque loading foreground остался, host снимает только этот
+    foreground и продолжает burst до ограниченного финала. Recovery отменяется
+    при pause/destroy и не запускает бесконечный цикл. Нельзя
     заменять этот контракт безусловным full style reload: он не восстанавливает
     потерянный render surface и создаёт лишнюю нагрузку на большие проекты.
     На API 26–28 layout включает MapLibre `TextureView`: это целевой workaround
