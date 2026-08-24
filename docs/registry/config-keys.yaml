@@ -106,6 +106,19 @@ preferences:
     purpose: >
       Durable flag that track recording is on; cleared only by explicit Stop track menu.
       BootLoader and MainActivity auto-resume TrackerService when true.
+  background_recording_sound:
+    owner: maplibui
+    type: boolean
+    default: true
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/SettingsConstantsUI.java
+    ui: app/src/main/res/xml/preferences_tracks.xml (Настройки → Треки)
+    consumer: maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
+    purpose: >
+      While track or walk recording is active and the app UI is hidden, keep a fixed
+      10-second notification-stream heartbeat as long as a zero-distance health
+      subscription receives fresh usable locations, including unchanged stationary
+      coordinates; silence it when delivery stops and retain a distinct throttled
+      tone for an observed persistence failure.
   ngw_identity_backup:
     owner: maplib
     type: string
@@ -211,6 +224,11 @@ storage:
     location_name: collector_projects with atomic per-workspace project.json sidecars
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
     purpose: Isolated maps/layers/tracks; tombstone rename makes device-only deletion recoverable before registry commit
+  collector-initial-local-project:
+    owner: maplibui
+    location_name: collector_initial_local_project_created_v1 SharedPreferences plus stable initial local workspace identity
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    purpose: One-time creation of the initial local project and non-destructive adoption of a legacy standalone map before the first MapDrawable opens
   collector-import-journal:
     owner: maplibui
     location_name: collector_import_journal SharedPreferences

@@ -25,6 +25,45 @@ invariants:
       - docs/reference/build-matrix.md
       - docs/reference/flavors-and-versioning.md
       - docs/runbooks/release-apk.md
+  INV-MAPLIBRE-BACKEND-COMPATIBILITY:
+    title: Production map rendering does not require Vulkan
+    owners: [app, maplibui, maplib]
+    statement: MapLibre Android 13.0.2 must resolve through org.maplibre.gl:android-sdk-opengl in app, maplibui and maplib; the generic android-sdk or android-sdk-vulkan artifacts must not enter the production runtime because supported devices may lack a compatible Vulkan implementation.
+    related_code:
+      - app/build.gradle
+      - maplibui/build.gradle
+      - maplib/build.gradle
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-VERSION-MATRIX, SMOKE-MAP-OPENGL-COMPATIBILITY]
+    must_update_docs:
+      - docs/reference/build-matrix.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - app/docs/README.md
+      - maplibui/docs/README.md
+      - maplib/docs/README.md
+  INV-MAPLIBRE-VIEW-LIFECYCLE:
+    title: MapLibre renderer follows the Fragment view lifecycle
+    owners: [app]
+    statement: >
+      Every MapLibre MapView created by MapFragment receives onCreate, onStart,
+      onResume, onPause, onStop, onSaveInstanceState, onLowMemory and onDestroy
+      from the matching Fragment view lifecycle. Returning from another screen,
+      backgrounding, screen lock or Activity recreation must resume rendering;
+      onDestroyView must release the old native renderer and clear only bindings
+      that still point to that destroyed MapView. Android API 26-28 uses the
+      MapLibre TextureView renderer so a stale SurfaceView layer cannot cover
+      the entire resumed Activity; API 29+ keeps the faster SurfaceView renderer.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/res/layout/fragment_map.xml
+      - app/src/main/res/values/maplibre_rendering.xml
+      - app/src/main/res/values-v29/maplibre_rendering.xml
+    verify_smoke: [AUTO-APP-RELEASES, SMOKE-MAP-SURFACE-LIFECYCLE]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - app/docs/README.md
+      - app/docs/manifest.yaml
   INV-NGW-ACCOUNT-IDENTITY:
     title: Every build variant exposes one consistent NGW account identity
     owners: [app, maplibui]
@@ -196,7 +235,7 @@ invariants:
   INV-COLLECTOR-ISOLATION:
     title: Web GIS and local projects use isolated workspaces
     owners: [app, maplib, maplibui]
-    statement: Project identity, type, map path, layers and tracks must not leak between Web GIS or local projects; ContentProvider operations must resolve the active map after every in-process switch, and deletion may remove only the device workspace after its backup gate.
+    statement: The first map must belong to an active registered local project; a pre-registry standalone map is copied once into that isolated workspace without deleting its rollback source. Project identity, type, map path, layers and tracks must not leak between Web GIS or local projects; ContentProvider operations must resolve the active map after every in-process switch, and deletion may remove only the device workspace after its backup gate.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
       - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
@@ -324,18 +363,25 @@ invariants:
       MultiLineString, Polygon and MultiPolygon creation starts with one projected centre node
       and subsequent map taps insert
       nodes after the selected node. Line, polygon and ruler editors expose midpoint insertion.
+      Before insertion, the selected node is red, its ordered successor inside the same open
+      line part or closed polygon ring is a larger orange node, and their segment is a thicker
+      orange line. An open line endpoint has no successor indicator; a closed ring wraps only
+      to its own first node.
       Line/polygon edit menus expose no touch-append action or overflow trigger; polygon menus
       also expose no add/delete polygon or add/delete hole action. A new MultiPolygon sketch
       accepts at most one polygon part, while loading and editing existing multipart or holed
       geometry does not discard its structure. Walk append starts after the selected node and
       remains contiguous before its former successor, with current-GPS preview at that insertion
-      position. For new
+      position. While walk recording is active, the right bottom action uses the walking-person
+      icon and finishes recording through the existing Save path; location settings are not
+      exposed from that action. For new
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
       launch duplicate forms. The selection toolbar has no duplicate add action; cancelling a
       new sketch asks for confirmation and then returns directly to normal map mode. Ruler area
-      is always formatted in hectares. Line and polygon screen vertices are converted with the
+      is always formatted in hectares, and the ruler exposes the same Undo/Redo controls as a
+      sketch so each added or moved measurement point is one reversible history step. Line and polygon screen vertices are converted with the
       current MapLibre projection so their first node follows the current camera centre. Polygon
       and MultiPolygon WKT recovery preserves every member, exactly one outer ring per member and only
       real holes, so it cannot cancel the fill, truncate a member at its first hole or lose later
@@ -351,6 +397,8 @@ invariants:
       - maplib/src/test/java/com/nextgis/maplib/datasource/GeoMultiPolygonWktTest.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/PolygonEditClass.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/MultiPolygonEditClass.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MLP/EditDirectionPolicy.java
+      - maplib/src/test/java/com/nextgis/maplib/map/MLP/EditDirectionPolicyTest.java
       - maplib/src/main/java/com/nextgis/maplib/map/MLP/MeasurmentLine.java
       - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
@@ -361,8 +409,10 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
       - maplibui/src/test/java/com/nextgis/maplibui/service/WalkGeometryInsertionTest.java
       - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/RulerOverlay.java
       - maplibui/src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java
       - maplibui/src/test/java/com/nextgis/maplibui/overlay/UndoRedoOverlayTest.java
+      - maplibui/src/main/res/menu/ruler_measurement.xml
       - maplibui/src/main/res/menu/edit_polygon.xml
       - maplibui/src/main/res/menu/edit_multipolygon.xml
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -392,6 +442,15 @@ invariants:
       walk digitizing obeys location_source only. When both GPS and network are enabled,
       network remains an initial and outage fallback, but a usable GPS fix suppresses network
       fixes for 12 seconds so mixed-provider jitter cannot corrupt the recorded sequence.
+      When background_recording_sound is enabled, a health-only zero-distance provider
+      subscription must distinguish stationary fixes from missing coordinate delivery. While
+      the app UI is hidden or the screen is off and usable callbacks remain fresh, a partial
+      wake lock keeps a notification-stream pulse on a fixed 10-second cadence independently
+      of geometry changes and inserts/commits. Stale or absent callbacks silence the pulse;
+      observed persistence failures use an independent one-minute throttle and distinct tone.
+      Foreground use stays silent. Revoking coarse/fine location during recording must stop
+      either location foreground service without calling forbidden startForeground, crashing,
+      clearing track_recording_enabled or discarding the durable walk draft.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
@@ -401,10 +460,16 @@ invariants:
       - maplib/src/test/java/com/nextgis/maplib/util/LocationProviderArbiterCoreTest.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
-    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+      - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundPolicy.java
+      - maplibui/src/test/java/com/nextgis/maplibui/util/BackgroundRecordingSoundPolicyTest.java
+      - app/src/main/res/xml/preferences_tracks.xml
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, SMOKE-GPS-RECORDING, SMOKE-WALK]
     must_update_docs:
       - docs/architecture/crash-recovery.md
       - docs/reference/official-differences.md
+      - docs/reference/settings-and-config.md
+      - docs/registry/config-keys.yaml
       - maplib/docs/README.md
       - maplibui/docs/README.md
   INV-STAKEOUT-GUIDANCE:
@@ -466,6 +531,10 @@ invariants:
       including new one-part MultiPolygon sketches, so the fill and vertices remain consistent.
       A cold walk Continue must preserve the property-bearing edit feature while atomically
       restoring polygon fill, outline and the hidden vertex cache on the current MapLibre style;
+      if the current style does not yet own all edit sources, renderer attachment remains pending
+      until style application completes and must never dereference a missing or stale source.
+      Starting or restoring walk mode clears the mutually exclusive non-walk geometry draft so
+      the recovery hub cannot offer two editors for the same sketch.
       the outline must not flicker during GPS updates and Stop must republish editable vertices.
       The shared edit FillLayer is exclusive to Polygon/MultiPolygon and must be removed for a
       cold-restored LineString/MultiLineString even when the preceding edit was polygonal.

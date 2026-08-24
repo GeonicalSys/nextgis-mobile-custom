@@ -138,6 +138,8 @@
 
 
     <string name="track_restore">Продолжать трек после перезагрузки</string>
+    <string name="background_recording_sound">Звуковой контроль фоновой записи</string>
+    <string name="background_recording_sound_summary">При свёрнутом приложении сигнал каждые 10 секунд подтверждает, что запись включена и свежие координаты продолжают поступать</string>
     <string name="action_support">Поддержка</string>
     <string name="app_support">Задавайте вопросы, сообщайте об ошибках или предлагайте новые функции используя любой удобный для вас способ. Доступна коммерческая поддержка.</string>
     <string name="email">Электронная почта</string>

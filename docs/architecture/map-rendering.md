@@ -1,8 +1,11 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-08-22
+last_verified: 2026-08-24
 related_code:
+  - app/build.gradle
+  - maplib/build.gradle
+  - maplibui/build.gradle
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
@@ -28,6 +31,8 @@ related_code:
 - `LayerFillService` загружает и вставляет импортированные слои в `LayerGroup`.
 - `ReorderedLayerView` синхронизирует порядок UI и модели.
 - `MapFragment` — host `MaplibreMapInteraction` и точка reload/lite reload.
+- Gradle-файлы `app`, `maplibui` и `maplib` совместно задают один native
+  MapLibre backend для конечного APK.
 
 ## Контракты
 
@@ -60,7 +65,12 @@ related_code:
     поэтому `computeCollectorOrderedInsertIndex()` учитывает и vector, и raster
     NGW layers; remote id стиля отвечает за tile identity, parent resource id —
     только за extent.
-11. Rule-based векторный стиль: слойные MapLibre-дефолты (size/text stops,
+11. Первый `MapDrawable` основного процесса всегда открывается внутри
+    зарегистрированного проекта. На чистой установке до загрузки карты создаётся
+    и активируется «Локальный проект»; при обновлении прежняя штатная
+    standalone-карта один раз копируется в его изолированный workspace без
+    удаления оригинала.
+12. Rule-based векторный стиль: слойные MapLibre-дефолты (size/text stops,
     scale-with-zoom, opacity подписей, SymbolLayer min/max) берутся из
     «стиля для прочих (по умолчанию)», не из базового `mStyle` рендерера.
     `FieldStyleRule` при apply мержит категорию с прочими для type-default
@@ -102,7 +112,11 @@ related_code:
     без промежуточной кнопки `+`; нижняя панель выбора объекта также не дублирует
     эту кнопку. Отмена нового скетча крестиком требует подтверждения и только
     после него удаляет черновик и возвращает обычную карту.
-    Следующие тапы вставляют узел после выбранного; на рёбрах линий,
+    Следующие тапы вставляют узел после выбранного. Направление вставки видно до
+    действия: выбранный узел красный, его следующий узел в той же части/кольце
+    оранжевый и увеличенный, а соединяющий их сегмент утолщён и окрашен тем же
+    цветом. У последнего узла незамкнутой линии следующего маркера и сегмента нет;
+    у кольца полигона последний узел указывает на первый узел того же кольца. На рёбрах линий,
     полигонов и линейки доступны промежуточные узлы. Панели LineString/Polygon не
     публикуют режим дополнения касанием и overflow-кнопку; команды частей и
     отверстий полигона также отсутствуют. Новый MultiPolygon принимает только
@@ -131,7 +145,11 @@ related_code:
     История редактирования хранит 100 отмен и добавляет снимок только при реальном
     изменении координатного WKT. Выбор узла и MapLibre callbacks, отличающиеся
     только CRS, не создают пустого Undo/Redo-шага, а достижение границы не сдвигает
-    курсор истории.
+    курсор истории. Инструмент измерения использует те же видимые кнопки Undo/Redo:
+    добавление или перенос точки линейки создаёт шаг, отмена возвращает предыдущую
+    длину/площадь, а новая правка после Undo удаляет недоступную ветку Redo. Источник
+    этих снимков — активный MapLibre `MeasurmentLine` в `MapDrawable`, а не legacy
+    `RulerOverlay`; восстановление шага заменяет точки того же активного edit-object.
 18. При сохранении невалидной геометрии автоматическое исправление топологии
     включено только для слоя с точным типом `GTMultiPolygon`. JTS
     `GeometryFixer` может разделить самопересекающееся кольцо на несколько
@@ -188,13 +206,40 @@ related_code:
     не включая MapLibre source и не меняя visibility. Выключенный классический
     vector layer по-прежнему пропускается. Решение централизовано в
     `LayerIdentifyPolicy` и одинаково для всех активных веток identify.
+25. MapLibre Android `13.0.2` разрешается только через явный артефакт
+    `org.maplibre.gl:android-sdk-opengl` одновременно в `app`, `maplibui` и
+    `maplib`. Generic `org.maplibre.gl:android-sdk` этой major-версии использует
+    Vulkan и не является допустимым fallback: на устройствах без совместимого
+    Vulkan-драйвера карта завершает процесс при создании surface. Смена backend
+    требует проверки runtime dependency graph, cold start карты после
+    авторизации и повторного запуска на Android 9 без Vulkan.
+26. `MapFragment` владеет MapLibre `MapView` в пределах своего view lifecycle:
+    после `onCreate` ему передаются `onStart/onResume/onPause/onStop`, сохранение
+    состояния и low-memory callback, а `onDestroyView` уничтожает native renderer
+    и очищает только ещё актуальные ссылки `MapDrawable`. После resume
+    запрашивается repaint и HyperLog фиксирует первый полученный кадр. Нельзя
+    заменять этот контракт безусловным full style reload: он не восстанавливает
+    потерянный render surface и создаёт лишнюю нагрузку на большие проекты.
+    На API 26–28 layout включает MapLibre `TextureView`: это целевой workaround
+    для старых Android, где потерянный `SurfaceView` после сна способен остаться
+    полноэкранным чёрным слоем поверх Android-панелей. Начиная с API 29 остаётся
+    более производительный `SurfaceView`. Тип renderer и SDK фиксируются в
+    HyperLog при создании view.
+27. Холодное восстановление walk/manual скетча проверяет принадлежность всех
+    edit sources текущему `Style`. Если стиль или source ещё создаются, привязка
+    откладывается до завершения style apply; `startFeatureSelectionForEdit()`
+    имеет дополнительную защиту и не вызывает `setGeoJson()` на отсутствующем
+    либо оставшемся от заменённого style source. Walk и обычный geometry draft
+    взаимоисключаются. Правая кнопка активного обхода с иконкой человека завершает
+    запись через штатный Save/Stop path и не открывает настройки местоположения.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
 `INV-TRACK-LAYER-TOP`, `INV-COLLECTOR-RASTER-STYLES`,
 `INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`,
 `INV-GEOMETRY-SKETCH-WORKFLOW`, `INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`,
-`INV-SPATIAL-CACHE-CONSISTENCY`, `INV-HIDDEN-VECTOR-TILE-IDENTIFY`.
+`INV-SPATIAL-CACHE-CONSISTENCY`, `INV-HIDDEN-VECTOR-TILE-IDENTIFY`,
+`INV-MAPLIBRE-BACKEND-COMPATIBILITY`, `INV-MAPLIBRE-VIEW-LIFECYCLE`.
 
 ## Изменение rendering pipeline
 
@@ -212,6 +257,10 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
 `SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`, `SMOKE-GEOMETRY-SKETCH-WORKFLOW`,
 `SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`.
+Для изменения MapLibre dependency/backend дополнительно обязателен
+`SMOKE-MAP-OPENGL-COMPATIBILITY`.
+Для изменения `MapFragment` lifecycle дополнительно обязателен
+`SMOKE-MAP-SURFACE-LIFECYCLE`.
 
 ## Производительность
 

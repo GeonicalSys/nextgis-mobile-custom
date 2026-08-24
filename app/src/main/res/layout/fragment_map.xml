@@ -32,7 +32,8 @@
     <org.maplibre.android.maps.MapView
         android:id="@+id/mapViewMaplibre"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        fab:maplibre_renderTextureMode="@bool/maplibre_use_texture_view" />
 
     <ImageView
         android:id="@+id/iv_center_cross"

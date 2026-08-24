@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-08-22
+last_verified: 2026-08-23
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -21,13 +21,13 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `205` |
-| App versionName (release) | `3.1.2.11` |
+| App versionCode (release) | `208` |
+| App versionName (release) | `3.1.2.14` |
 | App versionCode (debug) | `203` |
 | App versionName (debug) | `3.1.2.9` |
-| maplib VERSION_NAME (release) | `3.1.2.11` |
+| maplib VERSION_NAME (release) | `3.1.2.14` |
 | maplib VERSION_NAME (debug) | `3.1.2.9` |
-| MapLibre Android SDK | `13.0.2` |
+| MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |
 | OkHttp | `5.3.2` |
 | Release application/account | `com.nextgis.mobile.geonical` / `com.nextgis.account.geonical` |
@@ -45,6 +45,15 @@ override — `androidComponents.onVariants`, debug maplib version — отдел
 используемая при сохранении для проверки и исправления топологии только
 `GTMultiPolygon`. Она одинакова для Lisa/Belka и debug/release и не меняет
 variant identity.
+
+MapLibre `13.0.2` подключается во всех трёх consuming-модулях через
+`org.maplibre.gl:android-sdk-opengl`. Generic `android-sdk` начиная с MapLibre
+13 использует Vulkan и не входит в production runtime: на устройствах без
+совместимого Vulkan-драйвера он завершает процесс при открытии карты.
+
+На API 26–28 MapLibre view использует `TextureView`, чтобы старый Android не
+оставлял полноэкранный чёрный `SurfaceView` после background/sleep. API 29–36
+сохраняют более производительный `SurfaceView`; backend в обоих случаях OpenGL.
 
 ## Основные задачи
 

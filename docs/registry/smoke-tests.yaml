@@ -34,12 +34,31 @@ tests:
     type: automatic
     scope: [app, maplib]
     command: powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version-matrix.ps1
-    expected: Lisa Debug, Lisa Release and Belka Release assemble; aapt reports the exact expected package and version for each APK; maplib diagnostic versions match their consuming variants.
+    expected: Lisa Debug, Lisa Release and Belka Release assemble; Lisa Release resolves MapLibre android-sdk-opengl 13.0.2 without generic/Vulkan artifact; aapt reports the exact expected package and version for each APK; maplib diagnostic versions match their consuming variants.
   SMOKE-MAP-COLD-START:
     type: device
     scope: [app, maplib]
     steps: [Open an existing multi-layer map from a cold process start, Compare visible layers and order with the saved layer list]
     expected: Map renders once with the saved visibility and order and without a crash.
+  SMOKE-MAP-OPENGL-COMPATIBILITY:
+    type: device
+    scope: [app, maplibui, maplib]
+    steps:
+      - Install Lisa Release on an Android 9 device without a compatible Vulkan implementation
+      - Complete Web GIS authorization and wait for the map screen to render
+      - Force-stop the application and cold-open the same map again
+    expected: The map renders after authorization and after a cold restart through OpenGL without No Vulkan compatible GPU found or process termination.
+  SMOKE-MAP-SURFACE-LIFECYCLE:
+    type: device
+    scope: app
+    steps:
+      - Open a populated map and wait until MapLibre renders it
+      - Open and close layer properties and project settings at least five times
+      - Send the application to background and return, then lock and unlock the screen
+      - Recreate MainActivity by switching a Collector project or changing configuration
+      - On Android 9 repeat background and screen-lock cycles and inspect the logged renderer class
+      - Inspect HyperLog lifecycle entries and the first-frame-after-resume entry
+    expected: The map remains rendered and interactive after every return while Android controls stay responsive and are never covered by a full-window black surface; Android 9 logs TextureViewMapRenderer, API 29+ logs the SurfaceView renderer, each created MapView has balanced start/stop and one destroy, and a rendered frame follows resume without restarting the process.
   SMOKE-LOCATION-CURSOR-TOP:
     type: device
     scope: [app, maplib]
@@ -136,8 +155,8 @@ tests:
   SMOKE-PROJECT-MANAGEMENT:
     type: device
     scope: [app, maplibui]
-    steps: [Open Settings then Project and verify Web GIS name/account/id/district, Create an empty local project, add one local feature, rename the project, switch away and back, start synchronization and attempt to import another Collector project, delete the local project, delete a Web GIS project with one unsynchronized NGW layer, simulate a backup failure, then delete the last remaining project]
-    expected: Local projects contain their own OSM/tracks/data; aliases persist and stay unique; import during synchronization shows a readable modal request to wait and creates no project entry; successful delete reports success, removes only the device workspace and never Web GIS/account data; unsynchronized NGW data is backed up and backup failure cancels deletion; deleting the last project opens a new empty local fallback.
+    steps: [Reset application data and launch once, verify Local project is already active and add one local feature, import and switch to a Web GIS project then return to Local project, upgrade an installation that has a legacy default map with one local layer and verify it appears once as Local project while the previously active valid project stays active, Open Settings then Project and verify Web GIS name/account/id/district, Create an empty local project, add one local feature, rename the project, switch away and back, start synchronization and attempt to import another Collector project, delete the local project, delete a Web GIS project with one unsynchronized NGW layer, simulate a backup failure, then delete the last remaining project]
+    expected: A clean install opens inside a registered Local project and legacy standalone data is copied once without deleting its source; local projects contain their own OSM/tracks/data; aliases persist and stay unique; import during synchronization shows a readable modal request to wait and creates no project entry; successful delete reports success, removes only the device workspace and never Web GIS/account data; unsynchronized NGW data is backed up and backup failure cancels deletion; deleting the last project opens a new empty local fallback.
   SMOKE-SCHEMA-REBUILD-GUARD:
     type: device
     scope: [app, maplib, maplibui]
@@ -154,7 +173,9 @@ tests:
     steps:
       - Start track recording, Force Stop or reboot, reopen app
       - Start walk digitizing a line, swipe the app away while editing geometry, reopen it even if Android has already restarted WalkEditService
+      - On a cold start press walk Continue immediately, before map layers or edit sources finish loading
       - Draw a polygon manually, append it by walk from a middle node, swipe the app away, choose Continue, receive more GPS fixes, then Stop the walk
+      - After restoring the walk, verify no second manual-geometry recovery prompt is offered for the same sketch
       - Repeat cold walk recovery with LineString and MultiLineString after a polygon recovery
       - Create a line with the normal vertex editor, move/add vertices, swipe the app away before saving geometry, reopen and choose Continue
       - Repeat with a partly drawn Polygon and MultiPolygon, choose Continue, then move several different restored nodes
@@ -166,7 +187,9 @@ tests:
     expected: >
       Track recording auto-resumes without a dialog and previous trackpoints remain;
       finish is only via Stop track menu. Walk draft offers Continue/Discard and Continue
-      restores vertices and GPS writing even when its sticky service was already restarted;
+      never crashes when selected before MapLibre edit sources exist; renderer attachment is
+      deferred and then restores vertices and GPS writing even when its sticky service was already
+      restarted. Walk and manual geometry drafts are mutually exclusive, so one sketch is offered once;
       a recovered polygon keeps one stable fill and red outline through later GPS updates,
       and Stop immediately republishes all editable vertices and midpoints;
       recovered line types show only an open red line without polygon fill and retain that
@@ -221,8 +244,21 @@ tests:
   SMOKE-WALK:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Start geometry-by-walk editing, Pause and resume the app, Finish geometry]
-    expected: Geometry and editing state survive lifecycle transitions without duplicate reload.
+    steps:
+      - Enable background recording sound and start geometry-by-walk editing
+      - Minimize the app, stand still for at least 35 seconds, then walk until several geometry points are saved
+      - Disable every location provider or block background location delivery and wait at least 20 seconds
+      - Revoke location permission in Android settings while walk recording is active, then return to the app
+      - Restore location permission and continue the retained walk draft
+      - Pause and resume the app, then finish geometry
+      - Disable background recording sound and repeat the minimized recording segment
+    expected: >
+      Geometry and editing state survive lifecycle transitions without duplicate reload.
+      While minimized, fresh usable callbacks produce a short confirmation every 10 seconds
+      even while stationary and independently of saved vertices. The heartbeat stops after
+      callbacks become stale; foreground and disabled-setting recording stay silent.
+      Permission revocation causes no crash or forbidden location-FGS restart and the walk draft
+      remains available after permission is restored.
   SMOKE-GPS-RECORDING:
     type: device
     scope: [app, maplib, maplibui]
@@ -233,6 +269,11 @@ tests:
       - With GPS plus network enabled, verify network fallback before the first GPS fix and after GPS is unavailable for more than 12 seconds
       - Set a sampling interval above 30 seconds and record several fixes
       - Pass through a section with one poor-accuracy or visibly displaced fix
+      - Enable background recording sound, minimize the app and stand still with a usable fix for at least 35 seconds
+      - Block every enabled provider or background location delivery and wait at least 20 seconds
+      - Revoke location permission in Android settings while track recording is active and reopen the app
+      - Restore location permission and verify recording resumes from the retained intent
+      - Return to the app, then disable the setting and repeat the minimized segment
       - Export HyperLog and inspect filter/provider counters
     expected: >
       Track and walk geometry progress continuously at vehicle speed without a
@@ -242,6 +283,11 @@ tests:
       Long sampling gaps preserve prior valid fixes, the final two buffered fixes are
       flushed on stop, and isolated inaccurate or displaced garbage is absent. The
       automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
+      Minimized recording emits a short heartbeat every 10 seconds while usable locations
+      keep arriving, including while stationary; it stops after location delivery becomes
+      stale. Foreground recording is silent, and disabling the setting suppresses it.
+      Revoking location permission does not crash-loop a sticky location FGS; the durable track
+      intent survives and recording can resume after permission is granted again.
   SMOKE-STAKEOUT:
     type: device
     scope: [app, maplib]
@@ -302,22 +348,30 @@ tests:
       - Cancel a new line/polygon sketch with the bottom cross, first keep editing in the confirmation dialog, then confirm cancellation
       - Close a ruler polygon and inspect the displayed area unit
       - Add line and polygon nodes with map taps; select another node and verify the next tap inserts after it
+      - Verify the selected node is red, its ordered successor and connecting segment are orange, an open line endpoint has no direction, and a polygon ring wraps last to first
+      - Repeat direction selection inside separate MultiLineString parts, Polygon holes and MultiPolygon parts/rings
       - Insert midpoint nodes in LineString, Polygon, MultiPolygon and ruler geometry, then move the inserted nodes
       - Inspect line and polygon toolbars: no overflow trigger or touch-append action; polygon add/delete part/hole actions are absent
       - In an initial one-node line/polygon sketch start walk append; in an existing shape select a middle node and start walk append
       - During polygon walk verify the live tail reaches the current location and recorded nodes stay between the selected node and its former successor
+      - While walk recording is active inspect and press the right bottom action
       - Move, insert and delete vertices, then press the attribute action instead of Save and complete the form
       - Repeat a rapid double tap on the attribute action and cancel one new-feature form
       - Reopen an existing multi-part MultiPolygon with a valid hole and edit one vertex without changing its part/ring count
       - Interrupt a partly drawn Polygon, restart the process, choose Continue and inspect its fill, holes and vertex count
       - Draw a self-intersecting simple Polygon and press Save
       - Draw a line and polygon with more than ten nodes, select nodes without moving them, then Undo every added node and Redo them
+      - In the ruler add and move several points, Undo and Redo each change, then Undo once and add a new point
     expected: >
       Creation starts immediately with one node at the projected screen centre; taps and midpoint actions build the
       geometry without a generated segment or square. A new MultiPolygon contains exactly one
       polygon part and no sketch action can add or delete a part or hole. Standard line and
       polygon toolbars contain neither touch append nor an overflow trigger. Walk append is
-      available from the initial sketch, inserts after the selected node and previews current GPS.
+      available from the initial sketch, inserts after the selected node and previews current GPS;
+      before insertion the selected node is red and only its ordered successor and connecting
+      segment inside the same part/ring are orange; an open endpoint has no target and a closed
+      ring wraps to its own first node. Multi geometry never points into another part or ring.
+      its right bottom action shows a walking person, not settings, and finishes recording through Save.
       For every supported geometry type the attribute action becomes enabled with geometry and
       follows the same validation, topology repair and single-form handoff as Save. Existing
       multipart geometry and holes remain intact unless their vertices are explicitly edited.
@@ -328,7 +382,8 @@ tests:
       Polygon remains in editing and reports self-intersection rather than insufficient points.
       Each Undo or Redo press changes exactly one node even after selection and map callbacks that
       only refresh CRS metadata, and more than ten real changes remain available without a no-op
-      boundary step.
+      boundary step. The ruler exposes the same enabled-at-boundaries Undo/Redo controls; each
+      press restores one measurement-point change and a new point after Undo clears the Redo branch.
   SMOKE-TRACK-NO-FLAGS:
     type: device
     scope: [maplib, maplibui]

@@ -1,7 +1,7 @@
 ---
 title: Матрица совместимости
 type: reference
-last_verified: 2026-08-21
+last_verified: 2026-08-23
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -13,12 +13,14 @@ related_code:
 
 | Связка | Статус |
 |---|---|
-| app `3.1.2.10` ↔ maplib `3.1.2.10` (release) | Текущий Lisa/Belka Release |
+| app `3.1.2.14` ↔ maplib `3.1.2.14` (release) | Текущий Lisa/Belka Release |
 | app `3.1.2.9` ↔ maplib `3.1.2.9` (debug) | Текущий Lisa Debug |
 | app ↔ maplibui pointer из root | Проверять совместной сборкой |
 | maplibui ↔ maplib pointer из root | Публичный API проверять compile + smoke |
 | Android API 26–36 | Gradle declaration; device coverage зависит от выполненной матрицы |
-| MapLibre `13.0.2` ↔ текущий rendering fork | Проверено кодовой базой; upgrade — high risk |
+| Android API 26–28 ↔ MapLibre TextureView | Targeted resume compatibility; требует device smoke после сна/background |
+| Android API 29–36 ↔ MapLibre SurfaceView | Основной производительный render view |
+| MapLibre `android-sdk-opengl:13.0.2` ↔ текущий rendering fork | OpenGL backend обязателен; generic `android-sdk` MapLibre 13 (Vulkan) несовместим с частью целевых устройств |
 | Root ↔ upstream NextGIS tips | Не гарантируется без cycle integration |
 
 Variant coupling реализован разными механизмами: app debug использует

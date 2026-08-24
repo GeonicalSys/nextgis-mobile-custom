@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-08-22
+last_verified: 2026-08-23
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -44,7 +44,7 @@ service permission, updater identity и оба account resource keys в merged A
 
 ## Версия
 
-- Текущий выпуск: Lisa/Belka Release `3.1.2.11` / `versionCode 205`, Lisa Debug
+- Текущий выпуск: Lisa/Belka Release `3.1.2.14` / `versionCode 208`, Lisa Debug
   остаётся `3.1.2.9` / `versionCode 203`; maplib сообщает соответствующее
   variant-specific значение.
 - `versionName = <upstream-base>.<fork-patch>`.
