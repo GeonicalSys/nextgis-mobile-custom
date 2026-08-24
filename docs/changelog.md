@@ -38,6 +38,17 @@ related_code:
 - Official NextGIS Mobile HEAD повторно проверен 24 августа 2026 года: его
   `setMapLayersLoaded()` остаётся пустым, полного MapView lifecycle и post-style
   render recovery в official app нет.
+- Диагностика A54 подтвердила, что проблемный NGW-слой содержит 15
+  MultiPolygon, но около 140 тысяч координат; legacy попарная проверка сегментов
+  заменена на JTS validation с unit-регрессией на 60 тысяч вершин.
+- Collector fill теперь открывает SQLite только через map-владельца слоя и
+  сверяет project UID durable journal. Новые unpublished каталоги получают
+  `.layer-fill-partial`; после process death автоматически очищаются только
+  помеченные orphan stages, тогда как referenced и legacy unmarked каталоги
+  сохраняются.
+- Звуковой контроль записи документирован в соответствии с реализацией: alarm
+  stream не зависит от громкости уведомлений, а выключенный будильник даёт
+  короткую вибрацию.
 - Успешное сохранение нового или существующего объекта теперь полностью завершает
   edit session: прямой geometry Save и подтверждение формы атрибутов очищают
   MapLibre/overlay selection и возвращают стандартный `MODE_NORMAL` экран.

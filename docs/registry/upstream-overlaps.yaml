@@ -15,12 +15,20 @@ hotspots:
     invariants: [INV-LAYER-ORDER]
     verify: [SMOKE-NGRC-ORDER]
   LAYER-FILL:
-    repositories: [maplibui]
-    paths: [maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java]
+    repositories: [maplib, maplibui]
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
     default_decision: hybrid
-    reason: Upstream fill fixes must preserve Collector batches and fork insertion order.
-    invariants: [INV-LAYER-ORDER, INV-COLLECTOR-ISOLATION]
-    verify: [SMOKE-NGRC-ORDER, SMOKE-COLLECTOR-IMPORT]
+    reason: Upstream fill fixes must preserve Collector batches, owning-workspace SQLite routing, bounded-cost server polygon validation, crash-stage cleanup and fork insertion order.
+    invariants: [INV-LAYER-ORDER, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-RESUMABLE]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, SMOKE-NGRC-ORDER, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-RESUME]
   MAP-HOST:
     repositories: [root, maplib]
     paths:

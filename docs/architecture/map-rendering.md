@@ -13,6 +13,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
   - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
   - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
@@ -209,6 +210,10 @@ related_code:
     во время bulk/rebuild. Hot style refresh берёт отдельные `Feature` из
     `VectorLayerRenderCache`, последовательно вычисляет props и публикует готовый
     snapshot на main thread; live `Feature.properties` на worker не изменяется.
+    Полный NGW fill отдельно валидирует Polygon и members MultiPolygon через JTS
+    без legacy квадратичного сравнения пар сегментов. Число features в progress
+    остаётся числом серверных объектов, независимо от количества polygon parts и
+    координат внутри них.
 24. Выключенный слой с сохранённым render mode `local_vector_tiles` продолжает
     участвовать в tap/long-press identify через локальную SQLite/R-tree копию,
     не включая MapLibre source и не меняя visibility. Выключенный классический
