@@ -8,7 +8,7 @@ systems:
     origin: https://github.com/GeonicalSys/nextgis-mobile-custom.git
     docs_entry: docs/START-HERE.md
     docs_url: https://github.com/GeonicalSys/nextgis-mobile-custom/blob/my-maplibre/docs/START-HERE.md
-    source_of_truth: Android source, Gradle variants, local GIS storage, NGW/Collector consumer behavior and APK release.
+    source_of_truth: Android source, Gradle variants, local GIS storage, NGW/Collector consumer behavior, APK release and updater identity enforcement across supported Android PackageManager versions.
   desktop-profiles:
     title: LISA/BELKA QGIS profiles and launcher
     kind: external_workspace
@@ -69,7 +69,7 @@ contracts:
     to: mobile-app
     type: portable_artifact_contract
     transport: Explicit user or release import of a supported offline basemap package.
-    statement: qtiles_geonical produces an offline package but does not publish it automatically; producer and Android consumer must agree on format, CRS, zoom range and lifecycle without sharing a desktop workspace path.
+    statement: qtiles_geonical produces raster MBTiles/ZIP but does not publish it automatically; the Android consumer accepts a tiles/metadata raster MBTiles contract with Web Mercator tile matrix, supported image format, zoom range and bounds, without sharing a desktop workspace path; vector MBTiles are out of scope.
     owners: [app, maplib, maplibui]
     local_docs:
       - docs/architecture/lisa-ecosystem.md

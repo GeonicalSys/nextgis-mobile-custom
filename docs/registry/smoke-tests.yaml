@@ -50,16 +50,17 @@ tests:
     expected: The map renders after authorization and after a cold restart through OpenGL without No Vulkan compatible GPU found or process termination.
   SMOKE-MAP-SURFACE-LIFECYCLE:
     type: device
-    scope: app
+    scope: [app, maplib]
     steps:
       - Open a populated map and wait until MapLibre renders it
       - Open and close layer properties and project settings at least five times
       - Send the application to background and return, then lock and unlock the screen
       - Recreate MainActivity by switching a Collector project or changing configuration
       - Load or switch to a large Collector project without touching the map and wait for project styling to finish
-      - On Android 9 repeat background and screen-lock cycles and inspect the logged renderer class
+      - On Android 9 leave the styled map untouched for at least ten minutes, then repeat background and screen-lock cycles and inspect renderer-mode logs
+      - During Activity recreation touch the old map surface and verify late events are ignored
       - Inspect HyperLog lifecycle, first-frame-after-resume and render-recovery entries
-    expected: The map becomes visible after project styling without requiring a pan gesture and remains rendered and interactive after every return while Android controls stay responsive and are never covered by a full-window black surface; every API logs SurfaceViewMapRenderer, Android 9 logs tilePrefetch=false and remains responsive after low-memory pressure, each created MapView has balanced start/stop and one destroy, and bounded render recovery never reports completion while fully=false or loadingForeground=true, restores dirty rendering after its continuous burst, and clears only a stale loading foreground without restarting the process.
+    expected: The map becomes visible after project styling without requiring a pan gesture and remains rendered and interactive after every return while Android controls stay responsive and are never covered by a full-window black surface; every API logs SurfaceViewMapRenderer, Android 9 logs tilePrefetch=false plus continuous rendering enabled at 5 FPS while resumed and disabled on pause, remains responsive after low-memory pressure, each created MapView has balanced start/stop and one destroy, late touches do not query a destroyed map, and bounded render recovery never reports completion while fully=false or loadingForeground=true and clears only a stale loading foreground without restarting the process. Android 10+ restore their previous rendering mode after the burst.
   SMOKE-LOCATION-CURSOR-TOP:
     type: device
     scope: [app, maplib]
@@ -96,6 +97,24 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Record project database, form and NGRc files, Install a newer same-signature APK with adb install -r, Reopen and sync the project]
     expected: Project workspaces, SQLite data, forms and unpacked NGRc tiles remain in place without manual reimport.
+  SMOKE-DEBUG-UNDERLAY-MIGRATION:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Prepare a signed 3.0.3.2 or 3.0.3.3 Debug installation with no project registry and at least two large unpacked local underlays in different TMS/OSM schemes
+      - Record the source underlay names, visibility, relative order, tile count and total source size
+      - Update Debug in place with the same debug signing certificate and verify its legacy default map opens without a recursive project copy
+      - Install the signed Geonical release, manually import and select the intended current Web GIS or local project
+      - Open Project settings, start Transfer underlays from Debug and approve the request in Debug
+      - Interrupt one transfer, repeat it, then complete all underlays and cold-open the Geonical project
+      - Run project composition/data sync and verify Debug still retains its original workspace
+    expected: >
+      Only local raster underlays enter the selected Geonical project; project/account/vector/track
+      data do not cross. Extracted tiles stream directly into one raster MBTiles file per underlay
+      without a second extracted tree or per-tile fsync, TMS/OSM rows render in the same locations,
+      names/visibility/relative order are preserved above OSM, an interrupted partial database is
+      ignored and removed, a retry creates no duplicate completed layer, sync retains the imported
+      underlays, and the complete Debug source remains available for rollback.
   SMOKE-HOT-RASTER:
     type: device
     scope: [app, maplib, maplibui]
@@ -109,8 +128,29 @@ tests:
   SMOKE-COLLECTOR-IMPORT:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, an editable field vector whose initial visible is false, a MultiPolygon feature with a real hole and a second polygon member, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors, Reset all settings, Select the NGW Collector resource and import its composition, Verify every layer has a distinct local storage path, Verify the MultiPolygon retains both members and exactly one hole, Enable the read-only Point layer only in the local layer drawer without changing server config or running sync, Verify Point features render immediately while identify returns the same objects, Verify style tiles load with the project account and mixed order matches Collector, Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row, Start object creation and inspect offered layers, Select the hidden editable vector and add an object, Reopen and run composition sync, Repeat import with two different layers sharing a display name]
-    expected: Project metadata and isolated workspace are created, concurrent fills use distinct storage and fail without retaining incomplete layers, the MultiPolygon keeps both polygon members and its real hole, enabling a layer omitted from the initial live style rebuilds its source/layer from local data without server config update, sync or app restart, layers are keyed by remote id, supported styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks stays on top, default OSM stays at internal index zero without visibility reset, and only Collector vectors with editable plus outbound sync are offered for object creation regardless of visibility; selecting a hidden eligible vector makes it visibly persist before editing.
+    steps:
+      - Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, an editable field vector whose initial visible is false, a MultiPolygon feature with a real hole and a second polygon member, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors
+      - Add one server layer containing 15 MultiPolygon features and about 140000 positions, with one feature near 60000 positions and hundreds of polygon members
+      - Reset all settings and import the Collector resource while interacting with the progress UI
+      - Verify every layer has a distinct local storage path and the large layer has exactly 15 local features
+      - Verify the ordinary MultiPolygon retains both members and exactly one hole
+      - Enable the read-only Point layer only in the local layer drawer without changing server config or running sync
+      - Verify Point features render immediately while identify returns the same objects
+      - Verify style tiles load with the project account and mixed order matches Collector
+      - Verify My Tracks is the first and OpenStreetMap Standard aka Mapnik is the last layer-list row
+      - Start object creation and inspect offered layers, then select the hidden editable vector and add an object
+      - Reopen and run composition sync, then repeat import with two different layers sharing a display name
+    expected: >
+      Project metadata and isolated workspace are created; concurrent fills use distinct storage and
+      fail without retaining incomplete layers. The 15-feature large geometry layer finishes while
+      the application stays responsive and progress never presents polygon members or positions as
+      thousands of features. The ordinary MultiPolygon keeps both polygon members and its real hole.
+      Enabling a layer omitted from the initial live style rebuilds its source/layer from local data
+      without server config update, sync or app restart. Layers are keyed by remote id, supported
+      styles appear as authenticated read-only raster layers in the same order as vectors, My Tracks
+      stays on top, default OSM stays at internal index zero without visibility reset, and only
+      Collector vectors with editable plus outbound sync are offered for object creation regardless
+      of visibility; selecting a hidden eligible vector makes it visibly persist before editing.
   SMOKE-LAYER-SYNC-SETTINGS:
     type: device
     scope: [app, maplib, maplibui]
@@ -123,8 +163,18 @@ tests:
   SMOKE-COLLECTOR-RESUME:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Start a multi-layer Collector import, Kill the application process during a layer fill, Reopen and wait for repair]
-    expected: Existing complete layers are retained and only missing or broken layers are queued again.
+    steps:
+      - Start a multi-layer Collector import and kill the application process during one layer fill
+      - Before reopening the target project, activate another project and inspect both layers.db files
+      - Reopen the application in the other project and wait beyond the normal repair delay
+      - Return to the original project and wait for repair
+      - Inspect referenced layer directories, marked partial directories, unmarked legacy layer directories and a large referenced MBTiles layer
+    expected: >
+      The durable journal waits while another project is active and creates no tables or rows in its
+      layers.db. After returning to the matching project, existing complete layers and referenced
+      directories are retained, only missing or broken layers are queued again, marked unreferenced
+      stages and their tables are removed, and every unmarked legacy directory plus the referenced
+      MBTiles layer remains untouched.
   SMOKE-COLLECTOR-INCOMPLETE:
     type: device
     scope: [maplib, maplibui]
@@ -247,6 +297,7 @@ tests:
     scope: [app, maplib, maplibui]
     steps:
       - Enable background recording sound and start geometry-by-walk editing
+      - Minimize notification volume while alarm volume remains audible, then mute alarm volume
       - Minimize the app, stand still for at least 35 seconds, then walk until several geometry points are saved
       - Disable every location provider or block background location delivery and wait at least 20 seconds
       - Revoke location permission in Android settings while walk recording is active, then return to the app
@@ -256,7 +307,9 @@ tests:
     expected: >
       Geometry and editing state survive lifecycle transitions without duplicate reload.
       While minimized, fresh usable callbacks produce a short confirmation every 10 seconds
-      even while stationary and independently of saved vertices. The heartbeat stops after
+      even while stationary and independently of saved vertices. Notification volume does not
+      suppress the alarm-stream tone; muted alarm volume produces short vibration instead.
+      The heartbeat stops after
       callbacks become stale; foreground and disabled-setting recording stay silent.
       Permission revocation causes no crash or forbidden location-FGS restart and the walk draft
       remains available after permission is restored.
@@ -265,12 +318,14 @@ tests:
     scope: [app, maplib, maplibui]
     steps:
       - Select GPS only for tracks and GPS plus network for ordinary location
+      - On Android 9 through 11 start recording from the visible map, verify the foreground notification appears before leaving the screen, walk for several fixes, then stop
       - Record a track while walking and then in a vehicle at several legal road speeds
       - Repeat vehicle movement with walk digitizing and stop normally
       - With GPS plus network enabled, verify network fallback before the first GPS fix and after GPS is unavailable for more than 12 seconds
       - Set a sampling interval above 30 seconds and record several fixes
       - Pass through a section with one poor-accuracy or visibly displaced fix
       - Enable background recording sound, minimize the app and stand still with a usable fix for at least 35 seconds
+      - Minimize notification volume while alarm volume remains audible, then mute alarm volume
       - Block every enabled provider or background location delivery and wait at least 20 seconds
       - Revoke location permission in Android settings while track recording is active and reopen the app
       - Restore location permission and verify recording resumes from the retained intent
@@ -279,14 +334,18 @@ tests:
     expected: >
       Track and walk geometry progress continuously at vehicle speed without a
       speed_dist rejection cascade; each mode obeys only its own provider setting.
+      Track Start is handled before a later Stop in the default application process; the log
+      contains actual service start before stop and no zero-fix session caused by delayed launch.
       A recent usable GPS stream is not interleaved with network fixes, while network
       resumes as a fallback after 12 seconds without usable GPS.
       Long sampling gaps preserve prior valid fixes, the final two buffered fixes are
       flushed on stop, and isolated inaccurate or displaced garbage is absent. The
       automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
       Minimized recording emits a short heartbeat every 10 seconds while usable locations
-      keep arriving, including while stationary; it stops after location delivery becomes
-      stale. Foreground recording is silent, and disabling the setting suppresses it.
+      keep arriving, including while stationary; notification volume does not suppress its
+      alarm-stream tone, while zero or muted alarm volume falls back to short vibration. It stops
+      after location delivery becomes stale. Foreground recording is silent, and disabling the
+      setting suppresses both sound and vibration.
       Revoking location permission does not crash-loop a sticky location FGS; the durable track
       intent survives and recording can resume after permission is granted again.
   SMOKE-STAKEOUT:
@@ -408,8 +467,8 @@ tests:
   SMOKE-SELF-UPDATE:
     type: device
     scope: [app]
-    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
-    expected: Valid same-branch same-signature update reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL or integrity is rejected.
+    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, On Android 9 or 10 download a valid same-certificate update whose archive PackageManager may omit SigningInfo, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
+    expected: Valid same-branch same-signature update, including the Android 9-10 legacy archive-signature fallback, reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL, integrity or certificate is rejected.
   SMOKE-NGW-URL-IMPORT:
     type: device
     scope: [app, maplib, maplibui]
@@ -448,3 +507,15 @@ tests:
     scope: [app, maplib]
     steps: [Prepare overlapping classic and local_vector_tiles vector layers with known attributes, turn both layers off in the layer list, tap and long-press a known feature position, inspect the identify result and return to the layer list]
     expected: The hidden local_vector_tiles feature appears in identification with its attributes while its display remains off; the hidden classic feature is not queried or listed.
+  SMOKE-LOCAL-VECTOR-TILE-STRESS:
+    type: device
+    scope: [app, maplib]
+    steps:
+      - Open a project with a visible local_vector_tiles polygon layer containing multi-megabyte geometry payloads
+      - Repeatedly pan and zoom across tile boundaries, rotate the device, background/restore the map and trigger several style reloads for at least ten minutes
+      - Run a synchronization while continuing to move the map and inspect heap plus HyperLog
+    expected: >
+      The app stays responsive and alive without OutOfMemoryError. Worker names never exceed
+      LocalVectorTileWorker-1 and LocalVectorTileWorker-2; queued work is bounded, obsolete map
+      generations close their sockets, and temporary queue/heap pressure is reported as throttled
+      retryable requests. The layer resumes drawing after pressure falls and identify still works.

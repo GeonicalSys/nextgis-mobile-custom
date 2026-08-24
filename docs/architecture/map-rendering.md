@@ -11,6 +11,9 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+  - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
@@ -95,7 +98,11 @@ related_code:
     polygon/multipolygon, локальный `VectorSource` допускается для read-only
     `GTPoint` только с простым круговым маркером и подписью из одного поля либо
     фиксированного текста. Rule-style, custom icon, label template, editable и
-    прочие геометрии остаются на classic `GeoJsonSource` fallback.
+    прочие геометрии остаются на classic `GeoJsonSource` fallback. Loopback-
+    сервер ограничен двумя worker и очередью 16; тайлы одного слоя строятся
+    последовательно, устаревшая очередь закрывается при смене поколения карты,
+    а нехватка heap/перегрузка возвращает retryable `503`, не создавая новые
+    потоки и не меняя rendering mode слоя.
 15. Completion пакетного fill означает не «full reload был поставлен в очередь»,
     а «новый MapLibre style применён и каждый видимый vector layer имеет source
     и хотя бы основной либо symbol style layer». До этой проверки application
@@ -207,6 +214,10 @@ related_code:
     во время bulk/rebuild. Hot style refresh берёт отдельные `Feature` из
     `VectorLayerRenderCache`, последовательно вычисляет props и публикует готовый
     snapshot на main thread; live `Feature.properties` на worker не изменяется.
+    Полный NGW fill отдельно валидирует Polygon и members MultiPolygon через JTS
+    без legacy квадратичного сравнения пар сегментов. Число features в progress
+    остаётся числом серверных объектов, независимо от количества polygon parts и
+    координат внутри них.
 24. Выключенный слой с сохранённым render mode `local_vector_tiles` продолжает
     участвовать в tap/long-press identify через локальную SQLite/R-tree копию,
     не включая MapLibre source и не меняя visibility. Выключенный классический
@@ -234,14 +245,20 @@ related_code:
     при pause/destroy и не запускает бесконечный цикл. Нельзя
     заменять этот контракт безусловным full style reload: он не восстанавливает
     потерянный render surface и создаёт лишнюю нагрузку на большие проекты.
+    Отложенное событие касания после `onDestroyView` отбрасывается в
+    `MapDrawable`, если `MapLibreMap`, `MapView` или host context уже очищены;
+    уничтоженный native renderer не участвует в identify или edit-жесте.
     Layout на всех API использует `SurfaceView`: его render thread обрабатывает
     `EGL_CONTEXT_LOST` внутренним пересозданием EGL context/surface. В MapLibre
     OpenGL 13.0.2 `TextureView` после ошибки swap обнуляет известный
     `SurfaceTexture` и ждёт нового `onSurfaceTextureAvailable`, которого у
     оставшегося attached view может не быть; поэтому callback `fully=true` до
     swap не является доказательством показанного кадра. На API 26–28 prefetch
-    дополнительных tiles выключен, а renderer ограничен 30 FPS для снижения
-    GL-memory pressure. Полный style reload заранее освобождает предыдущий
+    дополнительных tiles выключен. API 26–27 ограничены 30 FPS и после recovery
+    возвращаются к прежнему dirty-render режиму. На API 28 действует отдельная
+    совместимость: пока Fragment находится в `RESUMED`, renderer остаётся в
+    `CONTINUOUS` с пределом 5 FPS, чтобы SurfaceView регулярно публиковал буфер;
+    перед pause/destroy он явно возвращается в `WHEN_DIRTY`. Полный style reload заранее освобождает предыдущий
     Java GeoJSON snapshot, а после `setStyle` — detached source/layer wrappers,
     чтобы большой Collector-проект не удваивал пиковую память. Тип renderer,
     SDK и prefetch policy фиксируются в HyperLog при создании view.
@@ -252,6 +269,18 @@ related_code:
     либо оставшемся от заменённого style source. Walk и обычный geometry draft
     взаимоисключаются. Правая кнопка активного обхода с иконкой человека завершает
     запись через штатный Save/Stop path и не открывает настройки местоположения.
+28. Растровый MBTiles хранится одним файлом `map-mbtiles.mbtiles` внутри
+    каталога локального TMS-слоя и подключается к MapLibre через `mbtiles:///`.
+    До публикации слоя проверяются SQLite header, обязательные таблицы и поля,
+    `quick_check`, raster `format`, zoom и bounds. Vector MBTiles этим путём не
+    принимается. При переносе старой распакованной подложки Debug → Geonical
+    тайлы читаются framed-потоком без центрального каталога и записываются
+    пакетами прямо в новую MBTiles SQLite: промежуточный ZIP и второе дерево
+    мелких файлов не создаются, а память не растёт с числом тайлов. Строка тайла
+    переводится из OSM `y` в MBTiles/TMS один раз. После завершения выполняются
+    sync файла и атомарное переименование; неполный stage удаляется, исходная
+    Debug-подложка остаётся на месте. Provenance в `config.json` делает повторный
+    запуск идемпотентным, а имя, видимость и взаимный порядок подложек сохраняются.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
@@ -259,7 +288,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-COLLECTOR-LAYER-IDENTITY`, `INV-MULTIPOLYGON-REPAIR`,
 `INV-GEOMETRY-SKETCH-WORKFLOW`, `INV-STAKEOUT-GUIDANCE`, `INV-MAP-CAMERA-CONTROLS`,
 `INV-SPATIAL-CACHE-CONSISTENCY`, `INV-HIDDEN-VECTOR-TILE-IDENTIFY`,
-`INV-MAPLIBRE-BACKEND-COMPATIBILITY`, `INV-MAPLIBRE-VIEW-LIFECYCLE`.
+`INV-MAPLIBRE-BACKEND-COMPATIBILITY`, `INV-MAPLIBRE-VIEW-LIFECYCLE`,
+`INV-LEGACY-UNDERLAY-MIGRATION`.
 
 ## Изменение rendering pipeline
 
@@ -276,7 +306,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
 `SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
 `SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`, `SMOKE-GEOMETRY-SKETCH-WORKFLOW`,
-`SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`.
+`SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`,
+`SMOKE-DEBUG-UNDERLAY-MIGRATION`.
 Для изменения MapLibre dependency/backend дополнительно обязателен
 `SMOKE-MAP-OPENGL-COMPATIBILITY`.
 Для изменения `MapFragment` lifecycle дополнительно обязателен

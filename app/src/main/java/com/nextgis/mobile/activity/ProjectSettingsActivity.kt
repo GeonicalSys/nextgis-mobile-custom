@@ -2,6 +2,7 @@ package com.nextgis.mobile.activity
 
 import android.content.ContentResolver
 import android.content.Intent
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -27,9 +28,16 @@ import com.nextgis.maplibui.util.ProjectOperationCoordinator
 import com.nextgis.maplibui.util.SchemaRebuildRetryGuard
 import com.nextgis.mobile.R
 import com.nextgis.mobile.util.OfflineSyncIntentService
+import com.nextgis.mobile.util.LegacyUnderlayImporter
+import com.nextgis.mobile.util.LegacyUnderlayMigrationContract
+import android.net.Uri
 import java.util.concurrent.Executors
 
 class ProjectSettingsActivity : AppCompatActivity() {
+    companion object {
+        private const val REQUEST_DEBUG_UNDERLAYS = 6401
+    }
+
     private val executor = Executors.newSingleThreadExecutor()
     private lateinit var progress: ProgressBar
     private lateinit var actionButtons: List<Button>
@@ -48,6 +56,7 @@ class ProjectSettingsActivity : AppCompatActivity() {
             findViewById(R.id.project_create_local),
             findViewById(R.id.project_rename),
             findViewById(R.id.project_reset_rebuild_guard),
+            findViewById(R.id.project_import_debug_underlays),
             findViewById(R.id.project_delete)
         )
         findViewById<Button>(R.id.project_choose).setOnClickListener { chooseProject() }
@@ -59,6 +68,9 @@ class ProjectSettingsActivity : AppCompatActivity() {
                 this, ProjectOperationCoordinator.activeWorkspaceKey(this))
             Toast.makeText(this, R.string.project_rebuild_guard_reset_done, Toast.LENGTH_SHORT).show()
             refresh()
+        }
+        findViewById<Button>(R.id.project_import_debug_underlays).setOnClickListener {
+            confirmDebugUnderlayImport()
         }
         findViewById<Button>(R.id.project_delete).setOnClickListener { confirmDeleteProject() }
         refresh()
@@ -119,6 +131,92 @@ class ProjectSettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.project_delete).isEnabled = hasProject
         findViewById<Button>(R.id.project_choose).isEnabled =
             CollectorProjectRegistry.listProjects(this).size > 1
+        val exportIntent = LegacyUnderlayMigrationContract.createExportIntent()
+        findViewById<Button>(R.id.project_import_debug_underlays).visibility =
+            if (hasProject
+                && LegacyUnderlayMigrationContract.isGeonicalTarget(this)
+                && LegacyUnderlayMigrationContract.isTrustedDebugSourceInstalled(this)
+                && exportIntent.resolveActivity(packageManager) != null
+            ) View.VISIBLE else View.GONE
+    }
+
+    private fun confirmDebugUnderlayImport() {
+        val project = CollectorProjectRegistry.getActiveProject(this) ?: return
+        if (!canMutateProject()) return
+        AlertDialog.Builder(this)
+            .setTitle(R.string.project_import_debug_underlays)
+            .setMessage(getString(R.string.legacy_underlay_import_confirmation, project.name))
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.legacy_underlay_import_confirm) { _, _ ->
+                try {
+                    startActivityForResult(
+                        LegacyUnderlayMigrationContract.createExportIntent(),
+                        REQUEST_DEBUG_UNDERLAYS
+                    )
+                } catch (error: RuntimeException) {
+                    HyperLog.w(Constants.TAG, "Debug underlay exporter unavailable", error)
+                    Toast.makeText(
+                        this,
+                        R.string.legacy_underlay_import_unavailable,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            .show()
+    }
+
+    @Deprecated("Uses the existing activity result contract in this screen")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != REQUEST_DEBUG_UNDERLAYS || resultCode != Activity.RESULT_OK) return
+
+        val sources = ArrayList<Uri>()
+        data?.clipData?.let { clip ->
+            for (index in 0 until clip.itemCount) {
+                clip.getItemAt(index).uri?.let(sources::add)
+            }
+        }
+        if (sources.isEmpty()) {
+            data?.data?.let(sources::add)
+        }
+        if (sources.isEmpty()) {
+            Toast.makeText(this, R.string.legacy_underlay_import_failed, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val lease = ProjectOperationCoordinator.tryBegin(
+            this, ProjectOperationCoordinator.Kind.UNDERLAY_MIGRATION)
+        if (lease == null) {
+            Toast.makeText(this, R.string.project_operation_wait, Toast.LENGTH_LONG).show()
+            return
+        }
+        setBusy(true)
+        executor.execute {
+            val result = try {
+                LegacyUnderlayImporter.importAll(this, sources, lease)
+            } finally {
+                lease.close()
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                setBusy(false)
+                val message = if (result.isComplete) {
+                    getString(
+                        R.string.legacy_underlay_import_done,
+                        result.imported,
+                        result.skipped
+                    )
+                } else {
+                    getString(
+                        R.string.legacy_underlay_import_partial,
+                        result.imported,
+                        result.total
+                    )
+                }
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                if (result.imported > 0) openMap() else refresh()
+            }
+        }
     }
 
     private fun chooseProject() {

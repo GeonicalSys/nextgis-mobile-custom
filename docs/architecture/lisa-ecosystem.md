@@ -90,12 +90,13 @@ Android-документацию не затрагивает.
 
 ### Offline basemap artifact
 
-`qtiles_geonical` создаёт MBTiles/ZIP на desktop и не публикует результат в NGW
-автоматически. Передача в Android — отдельное явное действие пользователя или
-release-процедуры. Producer и consumer должны согласовать поддерживаемый формат,
-CRS, zoom range и lifecycle; путь к файлу в desktop workspace частью контракта
-не является. Нельзя подменять smoke фактического Android import утверждением,
-что QGIS успешно создал файл.
+`qtiles_geonical` создаёт raster MBTiles/ZIP на desktop и не публикует результат
+в NGW автоматически. Передача в Android — отдельное явное действие пользователя
+или release-процедуры. Android consumer принимает raster MBTiles с таблицами
+`tiles`/`metadata`, Web Mercator tile matrix, поддерживаемым image format и
+согласованным zoom/bounds; vector MBTiles этим контрактом не покрывается. Путь к
+файлу в desktop workspace частью контракта не является. Нельзя подменять smoke
+фактического Android import утверждением, что QGIS успешно создал файл.
 
 ### Идентичность и секреты
 
@@ -112,6 +113,12 @@ account type, permission или token настроены правильно.
 version, artifact hash и signing certificate. Совместимость с серверными
 ресурсами подтверждается отдельным end-to-end smoke, а не совпадением названия
 версии desktop и Android.
+
+Различия Android PackageManager не изменяют эту границу доверия: на Android
+9–10 updater может получить сертификат archive APK из legacy `signatures`, если
+современный `SigningInfo` пуст, но всё равно сравнивает тот же SHA-256 с manifest
+и установленным пакетом. Desktop credentials и publisher к этой проверке не
+привлекаются.
 
 ## Маршрутизация задачи
 

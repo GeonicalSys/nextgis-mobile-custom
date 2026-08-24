@@ -61,6 +61,7 @@ import com.nextgis.maplibui.service.TrackerService;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.mobile.activity.SettingsActivity;
+import com.nextgis.mobile.util.LegacyUnderlayMigrationContract;
 import com.nextgis.mobile.util.Logger;
 import com.nextgis.mobile.util.OfflineSyncIntentService;
 
@@ -110,7 +111,8 @@ public class MainApplication extends GISApplication
 
         installHyperLogCrashHandler();
 
-        if (isDefaultApplicationProcess()) {
+        if (isDefaultApplicationProcess()
+                && !LegacyUnderlayMigrationContract.shouldDeferDebugProjectBootstrap(this)) {
             try {
                 CollectorProjectRegistry.ensureInitialLocalProject(
                         this, getString(R.string.project_local_default_name));
@@ -120,6 +122,8 @@ public class MainApplication extends GISApplication
                 HyperLog.w(TAG, "Initial local project setup failed: "
                         + e.getMessage(), e);
             }
+        } else if (isDefaultApplicationProcess()) {
+            HyperLog.i(TAG, "Debug legacy workspace kept in place for underlay migration");
         }
 
         super.onCreate();

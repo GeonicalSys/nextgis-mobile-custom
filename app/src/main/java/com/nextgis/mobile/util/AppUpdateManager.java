@@ -25,6 +25,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 
+import com.hypertrack.hyperlog.HyperLog;
+import com.nextgis.maplib.util.Constants;
 import com.nextgis.mobile.BuildConfig;
 import com.nextgis.mobile.R;
 
@@ -521,9 +523,14 @@ public final class AppUpdateManager
             throws IOException, PackageManager.NameNotFoundException, NoSuchAlgorithmException
     {
         PackageManager packageManager = activity.getPackageManager();
-        int flags = PackageManager.GET_META_DATA | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-                ? PackageManager.GET_SIGNING_CERTIFICATES
-                : PackageManager.GET_SIGNATURES);
+        // PackageParser on Android 9 and 10 may leave SigningInfo empty for an archive even when
+        // GET_SIGNING_CERTIFICATES was requested. Ask for the legacy signatures field as a
+        // deliberate fallback; installed and downloaded APKs are still compared by SHA-256.
+        int flags = PackageManager.GET_META_DATA
+                | AppUpdatePackageInfoPolicy.signatureFlagsForSdk(
+                        Build.VERSION.SDK_INT,
+                        PackageManager.GET_SIGNATURES,
+                        PackageManager.GET_SIGNING_CERTIFICATES);
 
         PackageInfo archiveInfo;
         PackageInfo installedInfo;
@@ -540,20 +547,22 @@ public final class AppUpdateManager
         }
 
         if (archiveInfo == null || !activity.getPackageName().equals(archiveInfo.packageName)) {
-            throw new IOException(activity.getString(R.string.update_invalid));
+            throw invalidUpdate(activity, archiveInfo == null
+                    ? "archive package info unavailable"
+                    : "application id mismatch");
         }
         String archiveFlavor = archiveInfo.applicationInfo != null
                 && archiveInfo.applicationInfo.metaData != null
                 ? archiveInfo.applicationInfo.metaData.getString(UPDATE_FLAVOR_METADATA)
                 : null;
         if (!updateRepositoryBranch().equals(archiveFlavor)) {
-            throw new IOException(activity.getString(R.string.update_invalid));
+            throw invalidUpdate(activity, "update flavor mismatch");
         }
         if (getVersionCode(archiveInfo) != manifest.versionCode
                 || manifest.versionCode <= getVersionCode(installedInfo)
                 || archiveInfo.versionName == null
                 || !manifest.versionName.equals(archiveInfo.versionName)) {
-            throw new IOException(activity.getString(R.string.update_invalid));
+            throw invalidUpdate(activity, "version identity mismatch");
         }
 
         Set<String> archiveCertificates = certificateDigests(archiveInfo);
@@ -561,8 +570,16 @@ public final class AppUpdateManager
         if (!archiveCertificates.contains(manifest.signingCertificateSha256.toLowerCase(Locale.US))
                 || !installedCertificates.contains(
                         manifest.signingCertificateSha256.toLowerCase(Locale.US))) {
-            throw new IOException(activity.getString(R.string.update_invalid));
+            throw invalidUpdate(
+                    activity,
+                    "signing certificate mismatch archiveCertificates=" +
+                            archiveCertificates.size() + " installedCertificates=" +
+                            installedCertificates.size());
         }
+        HyperLog.v(
+                Constants.TAG,
+                "Updater APK validation passed sdk=" + Build.VERSION.SDK_INT +
+                        " versionCode=" + manifest.versionCode);
     }
 
 
@@ -572,6 +589,9 @@ public final class AppUpdateManager
         Signature[] signatures;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && packageInfo.signingInfo != null) {
             signatures = packageInfo.signingInfo.getApkContentsSigners();
+            if (signatures == null || signatures.length == 0) {
+                signatures = packageInfo.signatures;
+            }
         } else {
             signatures = packageInfo.signatures;
         }
@@ -586,6 +606,13 @@ public final class AppUpdateManager
             digest.reset();
         }
         return result;
+    }
+
+
+    private static IOException invalidUpdate(Activity activity, String diagnostic)
+    {
+        HyperLog.w(Constants.TAG, "Updater APK validation rejected: " + diagnostic);
+        return new IOException(activity.getString(R.string.update_invalid));
     }
 
 

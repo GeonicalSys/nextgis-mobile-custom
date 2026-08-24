@@ -119,6 +119,14 @@
             android:visibility="gone" />
 
         <Button
+            android:id="@+id/project_import_debug_underlays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/project_import_debug_underlays"
+            android:visibility="gone" />
+
+        <Button
             android:id="@+id/project_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

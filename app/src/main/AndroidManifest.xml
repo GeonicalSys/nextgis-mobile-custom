@@ -57,6 +57,11 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
+    <queries>
+        <package android:name="com.nextgis.mobile.debug" />
+        <package android:name="com.nextgis.mobile.geonical" />
+    </queries>
+
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -130,6 +135,15 @@
             android:label="@string/project_settings"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".activity.LegacyUnderlayExportActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="com.nextgis.mobile.action.EXPORT_LEGACY_UNDERLAYS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="com.nextgis.maplibui.activity.NGWSettingsActivity"
             android:label="@string/ngw_accounts" />
         <activity
@@ -186,5 +200,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        <provider
+            android:name=".provider.LegacyUnderlayProvider"
+            android:authorities="${applicationId}.legacy_underlays"
+            android:exported="false"
+            android:grantUriPermissions="true" />
     </application>
 </manifest>

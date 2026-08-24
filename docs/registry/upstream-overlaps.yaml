@@ -4,9 +4,9 @@ hotspots:
     repositories: [maplib]
     paths: [maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java]
     default_decision: hybrid
-    reason: Upstream MapLibre API changes must preserve fork layer order, hot-add and track policy.
-    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-NO-TRACK-FLAGS]
-    verify: [SMOKE-MAP-COLD-START, SMOKE-HOT-RASTER, SMOKE-TRACK-NO-FLAGS]
+    reason: Upstream MapLibre API changes must preserve fork layer order, hot-add, track policy and destroyed-view touch safety.
+    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-NO-TRACK-FLAGS, INV-MAPLIBRE-VIEW-LIFECYCLE]
+    verify: [SMOKE-MAP-COLD-START, SMOKE-HOT-RASTER, SMOKE-TRACK-NO-FLAGS, SMOKE-MAP-SURFACE-LIFECYCLE]
   RASTER-ANCHOR:
     repositories: [maplib]
     paths: [maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java]
@@ -15,12 +15,20 @@ hotspots:
     invariants: [INV-LAYER-ORDER]
     verify: [SMOKE-NGRC-ORDER]
   LAYER-FILL:
-    repositories: [maplibui]
-    paths: [maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java]
+    repositories: [maplib, maplibui]
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
     default_decision: hybrid
-    reason: Upstream fill fixes must preserve Collector batches and fork insertion order.
-    invariants: [INV-LAYER-ORDER, INV-COLLECTOR-ISOLATION]
-    verify: [SMOKE-NGRC-ORDER, SMOKE-COLLECTOR-IMPORT]
+    reason: Upstream fill fixes must preserve Collector batches, owning-workspace SQLite routing, bounded-cost server polygon validation, crash-stage cleanup and fork insertion order.
+    invariants: [INV-LAYER-ORDER, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-RESUMABLE]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, SMOKE-NGRC-ORDER, SMOKE-COLLECTOR-IMPORT, SMOKE-COLLECTOR-RESUME]
   MAP-HOST:
     repositories: [root, maplib]
     paths:
@@ -61,3 +69,15 @@ hotspots:
     reason: Preserve lisa/belka branding and fork versioning over a single upstream APP_NAME.
     invariants: [INV-FLAVORS, INV-VERSION-COUPLING]
     verify: [SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
+  RASTER-MBTILES:
+    repositories: [root, maplib, maplibui]
+    paths:
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplibui/src/main/java/com/nextgis/maplibui/mapui/LayerFactoryUI.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    default_decision: hybrid
+    reason: Accept official 3.2 raster MBTiles while retaining atomic import, OpenGL, fork layer order, project isolation and legacy Debug streaming migration.
+    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-LEGACY-UNDERLAY-MIGRATION]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES, SMOKE-HOT-RASTER, SMOKE-DEBUG-UNDERLAY-MIGRATION]

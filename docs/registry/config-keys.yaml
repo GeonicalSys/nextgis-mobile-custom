@@ -105,7 +105,8 @@ preferences:
     source: maplib/src/main/java/com/nextgis/maplib/util/SettingsConstants.java
     purpose: >
       Durable flag that track recording is on; cleared only by explicit Stop track menu.
-      BootLoader and MainActivity auto-resume TrackerService when true.
+      BootLoader and MainActivity auto-resume TrackerService when true. Toolbar and service
+      read it in the default application process so a delayed Start cannot overtake Stop.
   background_recording_sound:
     owner: maplibui
     type: boolean
@@ -115,10 +116,11 @@ preferences:
     consumer: maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
     purpose: >
       While track or walk recording is active and the app UI is hidden, keep a fixed
-      10-second notification-stream heartbeat as long as a zero-distance health
+      10-second alarm-stream heartbeat as long as a zero-distance health
       subscription receives fresh usable locations, including unchanged stationary
-      coordinates; silence it when delivery stops and retain a distinct throttled
-      tone for an observed persistence failure.
+      coordinates. Notification volume does not suppress it; zero or muted alarm volume
+      selects short vibration, including a distinct double vibration for a throttled
+      persistence failure. Silence all feedback when delivery stops or the setting is disabled.
   ngw_identity_backup:
     owner: maplib
     type: string
@@ -213,7 +215,7 @@ storage:
     owner: app
     location_name: app_update_state SharedPreferences
     source: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
-    purpose: One-shot validated update manifest used only while Android install permission is pending
+    purpose: One-shot validated update manifest used only while Android install permission is pending; resume revalidates APK identity and Android 9-10 certificate fallback before installation
   collector-registry:
     owner: maplibui
     location_name: collector_projects_registry.json
@@ -279,3 +281,7 @@ layer_json:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
     purpose: Immutable-local NGRc source name, archive SHA-256 and import timestamp
+  legacy_underlay_migration:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
+    purpose: Debug source package, stable source-layer key and migration timestamp used to make cross-package underlay retries duplicate-safe

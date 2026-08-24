@@ -10,6 +10,14 @@ related_code:
 
 ## 2026-08-24
 
+- Android delivery contract теперь требует перед integration/release полной
+  матрицы открытых и stacked PR по root и библиотекам, проверки фактического
+  включения каждого исправления и pin только на итоговые merge-коммиты. Аудит
+  вернул в общую ветку ранее оставшиеся параллельно migration/MBTiles, alarm-
+  feedback, crash-safe fill, track-start ordering и local-vector-tile OOM guard;
+  Android 9 updater fallback снова имеет отдельный unit-test API boundary.
+  Библиотечная часть закрыта Merge Commit maplib PR #18 и maplibui PR #11, а
+  root закрепляет эти итоговые commits вместо feature-веток.
 - Подготовлен выпуск Lisa/Belka `3.1.2.15` / `versionCode 209` и Lisa Debug
   `3.1.2.10` / `versionCode 204`; app/maplib coupling и независимая APK version
   matrix обновлены согласованно после исправления Android 9 EGL recovery.
@@ -38,6 +46,29 @@ related_code:
 - Official NextGIS Mobile HEAD повторно проверен 24 августа 2026 года: его
   `setMapLayersLoaded()` остаётся пустым, полного MapView lifecycle и post-style
   render recovery в official app нет.
+- По Android-логу пустого трека отделено движение обычного курсора от recorder:
+  Start отдельного процесса был доставлен только вместе с нажатым через восемь
+  минут Stop, поэтому сервис получил `raw=0`. `TrackerService` перенесён в
+  основной процесс, использует обычные in-process preferences и отбрасывает
+  запоздалый Start после уже выключенного durable intent; smoke расширен на
+  фактическое появление location FGS до ухода с карты на Android 9–11.
+- Android 16 crash после загрузки проекта и работы с картой подтверждён как OOM
+  в `LocalVectorTileProvider`: неограниченный cached pool дошёл как минимум до
+  `pool-24-thread-103`, параллельно разбирая тяжёлые геометрии слоя «Квартала».
+  Loopback tile server ограничен двумя worker и очередью 16, сериализует слой,
+  закрывает устаревшие запросы и возвращает throttled `503` при перегрузке либо
+  остатке heap менее 64 МБ; добавлены policy unit tests и stress smoke.
+- Диагностика A54 подтвердила, что проблемный NGW-слой содержит 15
+  MultiPolygon, но около 140 тысяч координат; legacy попарная проверка сегментов
+  заменена на JTS validation с unit-регрессией на 60 тысяч вершин.
+- Collector fill теперь открывает SQLite только через map-владельца слоя и
+  сверяет project UID durable journal. Новые unpublished каталоги получают
+  `.layer-fill-partial`; после process death автоматически очищаются только
+  помеченные orphan stages, тогда как referenced и legacy unmarked каталоги
+  сохраняются.
+- Звуковой контроль записи документирован в соответствии с реализацией: alarm
+  stream не зависит от громкости уведомлений, а выключенный будильник даёт
+  короткую вибрацию.
 - Успешное сохранение нового или существующего объекта теперь полностью завершает
   edit session: прямой geometry Save и подтверждение формы атрибутов очищают
   MapLibre/overlay selection и возвращают стандартный `MODE_NORMAL` экран.

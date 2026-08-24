@@ -47,9 +47,11 @@ related_code:
   координаты. Подписка не требует изменения координаты и не добавляет точки в
   геометрию, поэтому неподвижный GPS продолжает пикать; при прекращении доставки
   координат сигнал замолкает. Явная ошибка сохранения получает отдельный более
-  длинный сигнал не чаще раза в минуту. Звук использует notification stream,
-  соблюдает системный беззвучный режим / DND и удерживает partial wake lock во
-  время включённой записи для стабильного интервала.
+  длинный сигнал не чаще раза в минуту. Звук использует alarm stream и поэтому
+  не зависит от минимальной громкости уведомлений. Если alarm stream выключен
+  или его громкость равна нулю, heartbeat заменяется короткой вибрацией, а ошибка
+  сохранения — короткой двойной вибрацией. Выключение самого preference подавляет
+  и звук, и вибрацию. Partial wake lock удерживает стабильный интервал.
 - Вынос координат: начальное состояние звука и четыре строго убывающих порога
   `stakeout_far_distance`, `stakeout_medium_distance`, `stakeout_near_distance`,
   `stakeout_reached_distance` в метрах. Некорректный набор не применяется;
@@ -62,7 +64,9 @@ related_code:
 - Local storage: Collector workspaces и `LayerBackups`.
 - Crash journals: `track_recording_enabled`, `walkedit_temp`,
   `geometry_edit_draft`, `feature_form_draft`; это app-private runtime state, а
-  не пользовательские настройки UI.
+  не пользовательские настройки UI. `track_recording_enabled` читается панелью
+  карты и `TrackerService` в одном основном процессе, чтобы Start/Stop не
+  расходились из-за межпроцессного кэша SharedPreferences.
 
 `mobile_render_mode: "local_vector_tiles"` применяется только как явный opt-in:
 для read-only polygon/multipolygon либо простого `Point` с круговым маркером

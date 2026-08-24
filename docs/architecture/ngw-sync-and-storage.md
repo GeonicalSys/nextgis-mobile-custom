@@ -1,10 +1,13 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+  - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
+  - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
   - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
@@ -13,6 +16,7 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
   - maplibui/src/main/res/xml/authenticator.xml
@@ -221,6 +225,24 @@ failed`: имя слоя, remote id, нулевой индекс элемент�
 полей и credentials не журналируются; объект не пропускается, транзакция слоя
 откатывается и staged replacement не подменяет рабочую копию.
 
+Входная топология Polygon и каждого member MultiPolygon проверяется через JTS
+`IsValidOp`. Legacy `GeoLinearRing.isValid()` сравнивал пары сегментов и на
+контурах с десятками тысяч координат имел квадратичную стоимость, поэтому даже
+ответ из 15 features мог выглядеть как бесконечный fill. Member-by-member
+проверка сохраняет прежнее отношение к перекрывающимся валидным частям одного
+MultiPolygon, но не зависит квадратично от числа вершин.
+
+Все create/insert/schema/delete операции fill используют `layers.db` карты,
+владеющей слоем: layer получает parent target group до доступа к SQLite, а путь
+БД выводится из map-файла владельца. Project UID из durable journal обязан
+совпасть с metadata target group. При несовпадении задача отклоняется до работы с
+файлами или БД, а journal сохраняется до открытия нужного workspace.
+
+Каждый новый layer directory помечается `.layer-fill-partial` до загрузки и
+снимает marker только после публикации в `LayerGroup`. После process death
+убираются лишь помеченные, не referenced stages и их таблицы в БД владельца;
+непомеченные legacy directories автоматически не удаляются.
+
 `LayerFillService` возвращает `START_NOT_STICKY`: пустой/null redelivery не
 создаёт бесконечный foreground service. На Android 15+ `onTimeout()` очищает
 текущую очередь и останавливает FGS, но сохраняет durable Collector journal,
@@ -242,6 +264,9 @@ failed`: имя слоя, remote id, нулевой индекс элемент�
   notify и без `LinkedTreeMap` style errors;
 - null-intent/system-timeout `LayerFillService` без
   `ForegroundServiceDidNotStopInTimeException`, с сохранённым import journal.
+- полный fill малого числа очень больших MultiPolygon без квадратичного зависания;
+- process death и открытие другого проекта без таблиц в чужом `layers.db`, с
+  очисткой только помеченных unpublished stages после возврата к target UID.
 
 Связанные tests: `NgwPullDecisionTest`, `NGWUtilFeaturesUrlTest`,
 `NgwResmetaUtilTest`, `LayerConfigUtilTest`, `NgwSyncRetryPolicyTest`,

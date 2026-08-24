@@ -18,6 +18,10 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 ## Основные сценарии
 
 - запуск приложения и открытие карты;
+- прямой импорт raster MBTiles и явный перенос локальных TMS-подложек из
+  установленного старого Lisa Debug в активный Geonical-проект; bridge проверяет
+  оба package/signing certificate, не переносит project/account/vector/track
+  data и не удаляет источник;
 - сохранение отрисовки карты после возврата из настроек/другого приложения,
   выключения экрана и пересоздания view: `MapFragment` передаёт MapLibre полный
   lifecycle, освобождает старый native renderer и запрашивает repaint при resume;
@@ -26,8 +30,11 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   считается успешным только после реально исчезнувшего foreground, а оставшийся
   загрузочный foreground снимается без full style reload;
   все поддерживаемые версии используют `SurfaceView`, который умеет пересоздать
-  потерянный EGL-контекст; на Android 8–9 дополнительно ограничены 30 FPS и
-  tile prefetch, чтобы снизить GL-memory pressure больших проектов;
+  потерянный EGL-контекст; на Android 8–9 выключен tile prefetch. Android 8
+  ограничен 30 FPS, а Android 9 при открытой карте держит low-rate continuous
+  rendering с пределом 5 FPS и возвращается в `WHEN_DIRTY` при pause/destroy;
+  Android 10+ сохраняет обычный bounded recovery. Позднее касание уничтоженного
+  view отбрасывается до обращения к MapLibre;
 - вращение карты двумя пальцами только после явного разрешения кнопкой рядом с
   текущим местоположением; состояние и bearing сохраняются, запрет возвращает
   север вверх, а разрешённый rotate начинается сразу при одновременном
@@ -35,6 +42,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `12`, если он был меньше, а без координаты переходит к охвату первого
   пригодного слоя, центрирует карту по нему и выставляет zoom `12`;
 - управление слоями, edit/walk/track через библиотеки;
+- тяжёлые opt-in `local_vector_tiles` обслуживаются ограниченным loopback-
+  сервером: максимум две одновременные сборки и очередь 16, с отменой старого
+  поколения карты и retry вместо неограниченного роста потоков/heap;
 - новый скетч начинается сразу после выбора слоя: точка или первый узел линии/
   полигона ставится в экранную проекцию центра камеры, следующие узлы добавляются
   тапами; midpoint-вставка работает для линий, полигонов и линейки, дополнения
@@ -62,13 +72,17 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   mock-поставщика; foreground service сохраняет GPS и звук при выключенном экране;
 - запись трека и геометрии обходом при валидном движении до 160 км/ч без выбора
   профиля, с отбрасыванием плохих и одиночных выбросов GPS; Network остаётся
-  резервом и не смешивается со свежим пригодным GPS-потоком; правая кнопка
+  резервом и не смешивается со свежим пригодным GPS-потоком; сервис трека
+  запускается в основном процессе, поэтому на Android 9–11 команда завершения
+  не может обогнать ещё не исполненный Start и оставить пустую запись; правая кнопка
   активного обхода показывает идущего человека и завершает запись с сохранением
   скетча вместо открытия настроек местоположения; включённый по умолчанию
   preference звукового контроля при скрытом UI даёт стабильный сигнал каждые
   10 секунд, пока отдельная health-подписка получает свежие пригодные координаты,
-  даже если устройство неподвижно; прекращение координат гасит сигнал, а явную
-  ошибку сохранения обозначает отдельный тон не чаще раза в минуту; отзыв разрешения
+  даже если устройство неподвижно; сигнал использует громкость будильника, а при
+  нулевой громкости заменяется короткой вибрацией; прекращение координат гасит
+  сигнал, а явную ошибку сохранения обозначает отдельный тон или двойная вибрация
+  не чаще раза в минуту; отзыв разрешения
   геолокации во время записи не завершает приложение: сервис останавливается,
   сохраняя намерение трека или черновик обхода до возврата разрешения;
 - crash recovery: запись трека возобновляется без диалога, затем recovery hub
@@ -106,6 +120,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - сохранение дефолтного `OpenStreetMap Standard aka Mapnik` внизу списка каждой
   карты, включая новый Collector workspace;
 - завершение batch import только после фактического MapLibre style/source apply;
+- продолжение незавершённого Collector import только внутри записанного project
+  UID: чужой workspace не получает его SQLite-таблиц, а после возврата удаляются
+  только app-marked unpublished layer stages; legacy unmarked каталоги остаются;
 - индикатор синхронизации сверяется с прямым состоянием адаптера и останавливается,
   даже если lifecycle фрагмента пропустил финальный broadcast;
 - ручная синхронизация запускается только для NGW-слоёв активного проекта;
@@ -124,6 +141,13 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 
 ## Ограничения
 
+- Geonical не может читать private storage Debug напрямую. Перенос доступен
+  только после установки совместимой Debug bridge-сборки с прежним сертификатом
+  и только в уже выбранный активный проект. Версии `3.0.3.2`/`3.0.3.3` не дают
+  надёжной source-project identity для автоматического сопоставления.
+- Export provider отдаёт только перечисленные локальные TMS-подложки через
+  read-only content URI; accounts, credentials, registry, vector layers, tracks
+  и feature data не входят в контракт.
 - `lisa` и `belka` — отдельные product flavors.
 - `app`, `maplibui` и `maplib` должны разрешать один MapLibre backend:
   `org.maplibre.gl:android-sdk-opengl:13.0.2`; generic `android-sdk` версии 13
@@ -133,12 +157,15 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `onCreate/onStart/onResume` и `onPause/onStop/onDestroy`; старый view нельзя
   оставлять привязанным к `MapDrawable` после `onDestroyView`.
   `maplibre_renderTextureMode=false` на всех API; на API 26–28 tile prefetch
-  выключен и maximum FPS равен `30`.
+  выключен, API 26–27 ограничены 30 FPS, а API 28 — 5 FPS только при
+  непрерывной перерисовке видимой карты.
 - Не дублировать GIS model/storage из `maplib`.
 - Не читать `Q:\standart_profiles`, `variables.py` или QGIS plugin mirrors:
   межпроектный runtime contract — NGW API/Collector либо явный portable import.
 - Self-hosted update принимается только для того же flavor/application/signing
-  identity и с увеличенным versionCode.
+  identity и с увеличенным versionCode. На Android 9–10 пустой archive
+  `SigningInfo` дополняется legacy `signatures`, после чего сертификат всё равно
+  сверяется по SHA-256 с manifest и установленным пакетом.
 - Ожидание специального разрешения на установку хранится как одноразовый
   app-private pending manifest; после возврата manifest и APK проверяются снова.
 - Production version принадлежит `defaultConfig`; Lisa Debug переопределяет
@@ -166,6 +193,10 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `cleared stale loading foreground` означает, что
   project layers уже были применены, но MapLibre не снял свой loading foreground
   после ограниченной серии repaint.
+- На Android 9 после завершения recovery должна присутствовать запись
+  `MapLibre Android 9 continuous rendering enabled`; при `onPause` — парная
+  `disabled`. Отсутствие первой записи означает, что renderer не принял
+  compatibility mode.
 - Полностью чёрный экран вместе с Android-панелями на Android 8–9: проверить
   `onLowMemory`, системные `GL_OUT_OF_MEMORY`/`EGL_CONTEXT_LOST`, запись
   `MapLibreMapView renderer=SurfaceViewMapRenderer` и `tilePrefetch=false`.
@@ -185,12 +216,18 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   версию debug по basename APK.
 - Update отклонён: проверить schema, branch/channel, identity, version,
   versioned URL, size/hash/certificate и доступность branch manifest; не
-  отключать проверку для обхода ошибки.
+  отключать проверку для обхода ошибки. Запись `Updater APK validation rejected`
+  показывает этап отказа; нулевое число archive certificates на Android 9–10
+  означает сбой обоих PackageManager-представлений подписи.
 - После выдачи разрешения update не продолжился: проверить
   `AppUpdateManager.resumePendingInstallation()`, `app_update_state` и вызов из
   `MainActivity.onResume()`/`SettingsActivity.onResume()`.
 - Collector переключается неверно: `CollectorProjectRegistry` и project UID/map
   path, а не только UI dialog.
+- После зависшего/оборванного Collector fill появились лишние `layer_*` или
+  таблицы другого проекта: проверить project UID import journal, parent target
+  group, `.layer-fill-partial` и обе `layers.db`; автоматически очищаются только
+  новые помеченные unpublished stages, не legacy каталоги.
 - После чистой установки нет «Локального проекта» или старые ручные слои не
   появились в его workspace: проверить ранний вызов
   `ensureInitialLocalProject()` до `GISApplication.onCreate()`, migration marker,
@@ -210,6 +247,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   active workspace после backup gate и не вызывает remote delete/account API.
 - «Мои треки» оказался внизу: проверить прямой порядок `LayerGroup` и
   `MainApplication.checkTracksLayerExist()`.
+- Курсор положения движется, но линия трека не появляется: сначала проверить
+  `TrackerService.onStartCommand`. Если до Stop нет фактического Start и
+  `raw=0`, это lifecycle запуска сервиса, а не отбрасывание GPS-фильтром.
 - После crash открылась форма вместо незавершённого обхода: проверить
   `MainActivity.maybeOfferCrashRecovery()`, `MapFragment.hasInterruptedWalkDraft()`
   и отсутствие silent cold restore в `onViewStateRestored()`.

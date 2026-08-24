@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -75,6 +75,25 @@ APK может содержать production basename. Это не версия 
   и не содержит generic/Vulkan MapLibre artifact;
 - запуск поверх существующего профиля.
 
+### Выпуск bridge для старого Debug-профиля
+
+Для устройств со старой картой `com.nextgis.mobile.debug` порядок отдельный:
+
+1. Собрать и опубликовать/установить `lisaDebug` с exporter bridge, подписанный
+   тем же сертификатом, что уже установленный Debug. Если встроенного updater в
+   старой версии нет, использовать штатный MDM либо ручную/ADB-установку APK.
+2. Установить актуальный Geonical release с importer bridge и ожидаемым
+   production certificate.
+3. В Geonical вручную загрузить или выбрать правильный проект: версии
+   `3.0.3.2`/`3.0.3.3` не дают надёжной source-project identity.
+4. Запустить перенос из настроек проекта, проверить подложки после cold start и
+   повторить команду для проверки отсутствия дубликатов.
+5. Не удалять Debug и его данные, пока пользователь не подтвердил полноту
+   результата. Сам bridge ничего не удаляет.
+
+Release smoke должен включать trusted-pair и negative-пару: APK с другим
+package/certificate не должен получить URI или поток подложки.
+
 ## Self-hosted update manifest
 
 Публичная база: `https://apps-geonical.ru/lisa-mobile`. Ветки и manifest:
@@ -93,6 +112,10 @@ signing certificate и release notes.
 Updater должен отклонить неверные schema, flavor/channel, application ID,
 version, URL, размер, hash или certificate. После скачивания те же identity и
 integrity значения сверяются с реальным APK и установленным приложением.
+На Android 9–10 архивный `SigningInfo` бывает пустым, поэтому PackageManager
+запрашивается одновременно с `GET_SIGNING_CERTIFICATES` и `GET_SIGNATURES`.
+Legacy-поле является только запасным источником байтов сертификата: SHA-256 из
+manifest по-прежнему обязан присутствовать и у APK, и у установленного пакета.
 
 На Android 8+ при отсутствии разрешения «Установка неизвестных приложений»
 updater сохраняет проверенный manifest в app-private `app_update_state`, открывает
@@ -104,6 +127,10 @@ updater сохраняет проверенный manifest в app-private `app_u
 
 Значения signing keys/cert private data в docs не публикуются. Допустим только
 публичный fingerprint в защищённой release-инфраструктуре.
+
+Перед публикацией обновления для поддерживаемого Android 9/10 выполнить
+`SMOKE-SELF-UPDATE` на реальном устройстве или сохранить его как явно
+невыполненный device-smoke; одной проверки APK на компьютере недостаточно.
 
 ## Публикация
 
