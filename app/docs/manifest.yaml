@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -10,23 +10,25 @@ entrypoints:
   - app/src/main/AndroidManifest.xml
 key_components:
   - path: app/build.gradle
-    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.13/207 versus Lisa Debug 3.1.2.9/203 version contract, and signing configuration.
+    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.14/208 versus Lisa Debug 3.1.2.9/203 version contract, and signing configuration.
   - path: app/src/lisa/res/values/launcher_icon.xml
     responsibility: Lisa launcher, intro and about icon binding to density-specific ic_launcher_lisa resources without changing Belka branding.
   - path: app/src/belka/res/values/launcher_icon.xml
     responsibility: Belka-only launcher, intro and about icon binding to density-specific ic_launcher_belka resources without changing Lisa branding.
   - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
-    responsibility: Process initialization, logging, GISApplication configuration, creation of editable local vector layers, default OSM at internal index zero and tracks at the top of the reversed layer list for every map/workspace.
+    responsibility: Main-process initialization and logging; create or adopt and activate the initial local project before GISApplication opens its first map; create editable local vector layers and keep default OSM at internal index zero plus tracks at the top of the reversed layer list for every workspace.
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     responsibility: Main navigation and toolbar state for explicit map rotation/location recovery, local GeoJSON/KML/GPX file routing, photo-overlay default migration, ordered walk/manual-geometry/form crash-recovery hub, direct NGW resource URL resolution, name-only project picker with sync/fill/track switch protection, backup sharing UI and updater continuation on activity resume.
   - path: app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
     responsibility: Settings navigation, including the dedicated project screen, and updater continuation after Android special install permission returns to a manual update check.
+  - path: app/src/main/res/xml/preferences_tracks.xml
+    responsibility: Track settings UI, including enabled-by-default fixed ten-second background recording heartbeat shared with walk recording and gated by fresh usable location delivery rather than coordinate movement.
   - path: app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
     responsibility: Active project information and controls for current-project sync, local project creation, device-only rename/delete, changed-layer backup gate and schema-rebuild guard reset.
   - path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
     responsibility: Reserve the active project before manual sync starts and run only accounts represented by NGW layers in that active map, sequentially under one lease.
   - path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-    responsibility: Map screen, complete MapLibre MapView lifecycle and renderer-reference cleanup across pause/resume/view recreation, MaplibreMapInteraction implementation, opt-in persistent and immediate concurrent pinch/rotate gestures with north-up/location/layer-extent recovery, hidden local-vector-tile attribute identification, immediate current-camera-centre tap sketch creation with automatic target visibility, confirmed new-sketch cancellation without a duplicate add toolbar action, hectare ruler labels, selected-node walk insertion, foreground stakeout host/widget, acknowledgement of completed post-fill style/source reload, shared Save/form handoff for new geometry with duplicate-launch protection, typed Polygon validation messages, GTMultiPolygon-only topology repair, durable non-walk geometry journal, and explicit type-correct restoration/discard of interrupted walk or geometry drafts with polygon-only fill, stable outline and editable vertices after Stop.
+    responsibility: Map screen, complete MapLibre MapView lifecycle and renderer-reference cleanup across pause/resume/view recreation, API 26-28 TextureView selection with API 29+ SurfaceView retention, MaplibreMapInteraction implementation, opt-in persistent and immediate concurrent pinch/rotate gestures with north-up/location/layer-extent recovery, hidden local-vector-tile attribute identification, immediate current-camera-centre tap sketch creation with automatic target visibility, confirmed new-sketch cancellation without a duplicate add toolbar action, visible selected-to-successor insertion direction, hectare ruler labels with sketch-equivalent Undo/Redo routed to the active MapLibre measurement geometry and saved-instance restoration, selected-node walk insertion and walking-icon Save/Stop action, foreground stakeout host/widget, acknowledgement of completed post-fill style/source reload, shared Save/form handoff for new geometry with duplicate-launch protection, typed Polygon validation messages, GTMultiPolygon-only topology repair, durable non-walk geometry journal, and deferred current-style-safe restoration/discard of mutually exclusive interrupted walk or geometry drafts with polygon-only fill, stable outline and editable vertices after Stop.
   - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
     responsibility: Active stakeout lifecycle, independent GPS listener, GPS/mock precision-source gate, reported-accuracy UI state, monotonic navigation-audio scheduling and high-frequency GPS lease ownership across screen-off/background state.
   - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
@@ -46,7 +48,7 @@ public_contracts:
     symbol: MapFragment implements MaplibreMapInteraction
     path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     consumers: [maplib, maplibui]
-settings_refs: [feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, check_updates, sw_track_service, apk_version_update, updater-pending-install, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
+settings_refs: [feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, background_recording_sound, check_updates, sw_track_service, apk_version_update, updater-pending-install, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
 storage_contracts:
   - id: updater-pending-install
     path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java

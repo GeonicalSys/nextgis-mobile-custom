@@ -243,6 +243,7 @@ public class MapFragment
     var undoRedoOverlay: UndoRedoOverlay? = null
         protected set
     protected var mRulerOverlay: RulerOverlay? = null
+    private var preserveRulerHistoryDuringModeRestore = false
     protected var mCurrentCenter: GeoPoint? = null
     protected var mSelectedLayer: VectorLayer? = null
 
@@ -471,6 +472,11 @@ public class MapFragment
         mMapRef.get()!!.map!!.setMapContext(this)
 
         mapViewMaplibre.onCreate(savedInstanceState)
+        HyperLog.v(
+            Constants.TAG,
+            "MapLibreMapView renderer=${mapViewMaplibre.renderView.javaClass.simpleName} " +
+                "sdk=${Build.VERSION.SDK_INT}"
+        )
 
         mapViewMaplibre.getMapAsync(this)
     }
@@ -689,6 +695,9 @@ public class MapFragment
     val isEditMode: Boolean
         get() = mode == MODE_EDIT || mode == MODE_EDIT_BY_WALK
 
+    val isRulerMeasuring: Boolean
+        get() = mRulerOverlay?.isMeasuring == true
+
     fun onOptionsItemSelected(id: Int): Boolean {
         val result: Boolean
         when (id) {
@@ -706,6 +715,16 @@ public class MapFragment
 
 
             com.nextgis.maplibui.R.id.menu_edit_undo, com.nextgis.maplibui.R.id.menu_edit_redo -> {
+                if (mRulerOverlay?.isMeasuring == true) {
+                    result = undoRedoOverlay!!.onOptionsItemSelected(id)
+                    if (result) {
+                        val geometry = undoRedoOverlay!!.feature.geometry as? GeoLineString
+                        if (geometry != null)
+                            mMapRef.get()?.map?.restoreMeasurementGeometry(geometry)
+                    }
+                    return result
+                }
+
                 result = undoRedoOverlay!!.onOptionsItemSelected(id)
                 if (result) {
                     val undoRedoFeature = undoRedoOverlay!!.feature
@@ -1172,6 +1191,7 @@ public class MapFragment
         var askPerm = false
         if (mMapRef.get()!!.map!!.checkMeasurment(mode)){
             mRulerOverlay!!.stopMeasuring()
+            undoRedoOverlay!!.clearHistory()
             showMainButton()
             showRulerButton()
             hideAddByTapButton()
@@ -1218,7 +1238,8 @@ public class MapFragment
                 if (mStatusPanelMode != 0) mStatusPanel!!.visibility = View.VISIBLE
                 editLayerOverlay!!.showAllFeatures()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_NONE
-                undoRedoOverlay!!.clearHistory()
+                if (!preserveRulerHistoryDuringModeRestore)
+                    undoRedoOverlay!!.clearHistory()
                 mMapRef.get()!!.map!!.unselectFeatureFromView()
                 mStakeoutPanel?.visibility = View.GONE
                 mScaleRulerLayout?.visibility = if (
@@ -1252,6 +1273,9 @@ public class MapFragment
 
             MODE_EDIT_BY_WALK -> {
                 mSelectedLayer!!.isLocked = true
+                if (previousMode != MODE_EDIT_BY_WALK) {
+                    clearManualGeometryDraft("walk-mode-start")
+                }
                 mActivity!!.showEditToolbar()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT_BY_WALK
                 undoRedoOverlay!!.clearHistory()
@@ -1866,6 +1890,14 @@ public class MapFragment
         super.onSaveInstanceState(outState)
         mapLibreMapView?.onSaveInstanceState(outState)
         outState.putBoolean(BUNDLE_KEY_IS_MEASURING, mRulerOverlay!!.isMeasuring)
+        val rulerGeometry = mMapRef.get()?.map?.measurementGeometry
+        if (rulerGeometry != null) {
+            try {
+                outState.putByteArray(BUNDLE_KEY_RULER_GEOMETRY, rulerGeometry.toBlob())
+            } catch (exception: IOException) {
+                HyperLog.w(Constants.TAG, "Ruler state save failed", exception)
+            }
+        }
         outState.putInt(KEY_MODE, mode)
         outState.putInt(
             BUNDLE_KEY_LAYER,
@@ -1976,17 +2008,31 @@ public class MapFragment
             mode = MODE_NORMAL
         }
 
-        if (mode == MODE_EDIT_BY_WALK) {
+        val restoringRulerMeasurement = savedInstanceState?.getBoolean(
+            BUNDLE_KEY_IS_MEASURING,
+            false
+        ) == true
+        preserveRulerHistoryDuringModeRestore = restoringRulerMeasurement
+        try {
             setNewMode(mode)
-            // start fill data from service
+        } finally {
+            preserveRulerHistoryDuringModeRestore = false
         }
-        else
-            setNewMode(mode)
 
-        if (savedInstanceState != null && savedInstanceState.getBoolean(
-                BUNDLE_KEY_IS_MEASURING,
-                false )
-        ) startMeasuring()
+        var restoredRulerGeometry: GeoLineString? = null
+        if (restoringRulerMeasurement && savedInstanceState?.containsKey(
+                BUNDLE_KEY_RULER_GEOMETRY
+            ) == true) {
+            try {
+                restoredRulerGeometry = GeoGeometryFactory.fromBlob(
+                    savedInstanceState.getByteArray(BUNDLE_KEY_RULER_GEOMETRY)
+                ) as? GeoLineString
+            } catch (exception: IOException) {
+                HyperLog.w(Constants.TAG, "Ruler state restore failed", exception)
+            }
+        }
+        if (restoringRulerMeasurement)
+            startMeasuring(resetHistory = false, restoredGeometry = restoredRulerGeometry)
     }
 
     /**
@@ -2033,10 +2079,8 @@ public class MapFragment
             editLayerOverlay!!.selectedFeature
         )
 
+        clearManualGeometryDraft("walk-session-restore")
         mode = MODE_EDIT_BY_WALK
-        if (featureId <= Constants.NOT_FOUND && geometry != null) {
-            attachMaplibreToCurrentWalkOverlayGeometry()
-        }
         return true
     }
 
@@ -2294,10 +2338,8 @@ public class MapFragment
 
         val mapDrawable = mMapRef.get()?.map
             ?: return scheduleManualGeometryResumeRetry("map-not-ready")
-        if (snapshot.editMode == MODE_EDIT
-            && (mapDrawable.maplibreMap == null || mapDrawable.maplibreMap.style == null)
-        ) {
-            return scheduleManualGeometryResumeRetry("maplibre-style-not-ready")
+        if (snapshot.editMode == MODE_EDIT && !mapDrawable.areEditSourcesReadyForCurrentStyle()) {
+            return scheduleManualGeometryResumeRetry("editable-source-not-ready")
         }
 
         mSelectedLayer = layer
@@ -3157,27 +3199,6 @@ public class MapFragment
         feat.geometry = geom
         editLayerOverlay!!.fillDrawItems(geom)
     }
-
-    /** After overlay geometry is authoritative (e.g. process restore), attach MapLibre editing to it. */
-    private fun attachMaplibreToCurrentWalkOverlayGeometry() {
-        val map = mMapRef.get()?.map ?: return
-        val layer = mSelectedLayer ?: return
-        val feat = editLayerOverlay!!.selectedFeature ?: return
-        val geom = feat.geometry ?: return
-        map.startFeatureSelectionForEdit(
-            layer,
-            layer.geometryType,
-            feat,
-            true,
-            layer.defaultStyleNoExcept,
-            true // isFillByWalking (process-restore re-attach)
-        )
-        if (map.editingObject != null) {
-            map.replaceGeometryFromHistoryChanges(geom)
-        }
-        editLayerOverlay!!.fillDrawItems(geom)
-    }
-
 
     fun onFinishChooseLayerDialog(
         code: Int,
@@ -4216,6 +4237,7 @@ public class MapFragment
     }
 
     override fun onFinishEditByWalkSession() {
+        saveEdits()
     }
 
 
@@ -4488,12 +4510,14 @@ public class MapFragment
 
             R.id.add_point_by_tap -> if (mRulerOverlay!!.isMeasuring) {
                 mRulerOverlay!!.stopMeasuring()
+                undoRedoOverlay!!.clearHistory()
                 showMainButton()
                 showRulerButton()
                 hideAddByTapButton()
                 mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_add_point)
                 mActivity!!.title = mActivity!!.appName
                 mActivity!!.setSubtitle(null)
+                mActivity!!.showDefaultToolbar()
                 mMapRef.get()!!.map.stoptMeasuring()
 
             } else addPointByTap()
@@ -4505,22 +4529,42 @@ public class MapFragment
         }
     }
 
-    protected fun startMeasuring() {
+    protected fun startMeasuring(
+        resetHistory: Boolean = true,
+        restoredGeometry: GeoLineString? = null
+    ) {
         mRulerOverlay!!.startMeasuring(this, mCurrentCenter)
+        mMapRef.get()!!.map.startMeasuring()
+        if (restoredGeometry != null)
+            mMapRef.get()!!.map.restoreMeasurementGeometry(restoredGeometry)
+        if (resetHistory || !undoRedoOverlay!!.hasHistory()) {
+            undoRedoOverlay!!.clearHistory()
+            saveRulerToHistory()
+        }
         hideOverlayPoint()
         hideMainButton()
         hideRulerButton()
         showAddByTapButton()
         mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_apply_dark)
-        mMapRef.get()!!.map.startMeasuring()
+        mActivity!!.showRulerToolbar()
+    }
+
+    private fun saveRulerToHistory() {
+        val geometry = mMapRef.get()?.map?.measurementGeometry ?: return
+        val feature = Feature()
+        feature.geometry = geometry
+        undoRedoOverlay!!.saveToHistory(feature)
     }
 
     override fun onLengthChanged(length: Double) {
         mActivity!!.title = LocationUtil.formatLength(context, length, 3)
+        saveRulerToHistory()
     }
 
     override fun onAreaChanged(area: Double) {
-        mActivity!!.setSubtitle(LocationUtil.formatAreaHectares(context, area))
+        mActivity!!.setSubtitle(
+            if (area > 0) LocationUtil.formatAreaHectares(context, area) else null
+        )
     }
 
     public companion object {
@@ -4548,6 +4592,7 @@ public class MapFragment
         protected const val BUNDLE_KEY_FEATURE_ID: String = "feature"
         protected const val BUNDLE_KEY_SAVED_FEATURE: String = "feature_blob"
         protected const val BUNDLE_KEY_IS_MEASURING: String = "is_measuring"
+        protected const val BUNDLE_KEY_RULER_GEOMETRY: String = "ruler_geometry"
         const val EDIT_LAYER: Int = 2
         private const val LOCATE_MIN_ZOOM = 12.0
         private const val CAMERA_ANIMATION_MS = 800

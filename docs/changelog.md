@@ -1,15 +1,55 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 related_code:
   - docs
 ---
 
 # История документационной системы
 
+## 2026-08-24
+
+- Звуковой контроль фоновой записи отвязан от сохранения новых вершин: отдельная
+  подписка без порога перемещения различает неподвижное устройство и прекращение
+  доставки координат. При свежих пригодных фиксах скрытый recorder стабильно
+  пикает каждые 10 секунд; stale/missing fixes гасят сигнал.
+- Контрольный сигнал фоновой записи ускорен с 30 до 10 секунд.
+  `TrackerService` и `WalkEditService` больше не вызывают запрещённый location
+  `startForeground()` после отзыва coarse/fine permission: security race
+  останавливает сервис без crash loop и сохраняет track intent / walk draft.
+- Линейка подключена к общей истории геометрии и получила отдельную панель
+  Undo/Redo; добавления и завершённые переносы измерительных точек отменяются и
+  возвращаются по одному, с обновлением длины и площади. После device-feedback
+  источник снимков перенесён с legacy `RulerOverlay` на фактически отображаемый
+  MapLibre `MeasurmentLine`, а его геометрия добавлена в saved-instance state.
+- Official app/maplibui HEAD повторно сверены: hashes не изменились, а official
+  `RulerOverlay` по-прежнему не содержит истории или панели Undo/Redo.
+
 ## 2026-08-23
 
+- Трек и обход получили общий post-persist звуковой контроль фоновой записи:
+  enabled-by-default preference, 30-секундный success throttle, отдельный
+  минутный failure throttle, suppression при видимом UI и unit policy tests.
+- Первая карта теперь всегда принадлежит активному начальному local project:
+  чистая установка создаёт его до первого `MapDrawable`, а обновление один раз
+  копирует прежние map-owned слои и track DB без удаления исходной standalone-
+  карты. `INV-COLLECTOR-ISOLATION` и `SMOKE-PROJECT-MANAGEMENT` расширены на
+  clean install, возврат после Web GIS switch и одноразовую legacy migration.
+- Official NextGIS Mobile `e098196` и MapLib UI `a426e0a` повторно проверены
+  23 августа 2026 года; project registry и initial local workspace в них
+  отсутствуют, поэтому отличие форка остаётся актуальным.
+- Production Lisa/Belka подготовлен как патч `3.1.2.14` / `versionCode 208`.
+  Холодное Continue скетча теперь ждёт edit sources текущего MapLibre style,
+  walk/manual drafts взаимоисключаются, а кнопка настроек активного обхода
+  заменена на завершение/сохранение с иконкой идущего человека.
+- API 26–28 использует MapLibre `TextureView`, чтобы после background/sleep
+  потерянный `SurfaceView` не перекрывал всю Activity чёрным слоем; API 29+
+  сохраняет более быстрый `SurfaceView`. Renderer и SDK фиксируются в HyperLog.
+- Редактор LineString/Polygon и Multi-вариантов показывает направление вставки:
+  выбранный узел красный, его следующий узел и сегмент оранжевые; открытый конец
+  линии не имеет цели, а кольцо замыкает направление только на собственный первый
+  узел. Добавлены unit policy и device-smoke для границ частей и колец.
 - Production Lisa/Belka подготовлен как патч `3.1.2.13` / `versionCode 207`;
   MapLibre `MapView` теперь получает полный Fragment view lifecycle, старый
   native renderer освобождается при `onDestroyView`, а resume запрашивает repaint

@@ -21,11 +21,11 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `207` |
-| App versionName (release) | `3.1.2.13` |
+| App versionCode (release) | `208` |
+| App versionName (release) | `3.1.2.14` |
 | App versionCode (debug) | `203` |
 | App versionName (debug) | `3.1.2.9` |
-| maplib VERSION_NAME (release) | `3.1.2.13` |
+| maplib VERSION_NAME (release) | `3.1.2.14` |
 | maplib VERSION_NAME (debug) | `3.1.2.9` |
 | MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |
@@ -50,6 +50,10 @@ MapLibre `13.0.2` подключается во всех трёх consuming-мо
 `org.maplibre.gl:android-sdk-opengl`. Generic `android-sdk` начиная с MapLibre
 13 использует Vulkan и не входит в production runtime: на устройствах без
 совместимого Vulkan-драйвера он завершает процесс при открытии карты.
+
+На API 26–28 MapLibre view использует `TextureView`, чтобы старый Android не
+оставлял полноэкранный чёрный `SurfaceView` после background/sleep. API 29–36
+сохраняют более производительный `SurfaceView`; backend в обоих случаях OpenGL.
 
 ## Основные задачи
 
