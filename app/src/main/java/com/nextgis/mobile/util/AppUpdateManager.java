@@ -526,10 +526,11 @@ public final class AppUpdateManager
         // PackageParser on Android 9 and 10 may leave SigningInfo empty for an archive even when
         // GET_SIGNING_CERTIFICATES was requested. Ask for the legacy signatures field as a
         // deliberate fallback; installed and downloaded APKs are still compared by SHA-256.
-        int flags = PackageManager.GET_META_DATA | PackageManager.GET_SIGNATURES;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            flags |= PackageManager.GET_SIGNING_CERTIFICATES;
-        }
+        int flags = PackageManager.GET_META_DATA
+                | AppUpdatePackageInfoPolicy.signatureFlagsForSdk(
+                        Build.VERSION.SDK_INT,
+                        PackageManager.GET_SIGNATURES,
+                        PackageManager.GET_SIGNING_CERTIFICATES);
 
         PackageInfo archiveInfo;
         PackageInfo installedInfo;

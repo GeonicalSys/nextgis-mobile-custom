@@ -10,6 +10,12 @@ related_code:
 
 ## 2026-08-24
 
+- Android delivery contract теперь требует перед integration/release полной
+  матрицы открытых и stacked PR по root и библиотекам, проверки фактического
+  включения каждого исправления и pin только на итоговые merge-коммиты. Аудит
+  вернул в общую ветку ранее оставшиеся параллельно migration/MBTiles, alarm-
+  feedback, crash-safe fill, track-start ordering и local-vector-tile OOM guard;
+  Android 9 updater fallback снова имеет отдельный unit-test API boundary.
 - Подготовлен выпуск Lisa/Belka `3.1.2.15` / `versionCode 209` и Lisa Debug
   `3.1.2.10` / `versionCode 204`; app/maplib coupling и независимая APK version
   matrix обновлены согласованно после исправления Android 9 EGL recovery.

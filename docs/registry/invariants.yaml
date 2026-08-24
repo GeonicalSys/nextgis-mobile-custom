@@ -635,6 +635,8 @@ invariants:
     statement: Resolve the lisa, belka or debug repository branch from the build variant and reject manifests or APKs with mismatched schema, branch/channel, application ID, version/code-name pair, trusted versioned URL, size, APK hash or signing certificate.
     related_code:
       - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdatePackageInfoPolicy.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdatePackageInfoPolicyTest.java
       - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
       - app/src/main/AndroidManifest.xml
     verify_smoke: [SMOKE-SELF-UPDATE]
