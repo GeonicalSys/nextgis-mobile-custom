@@ -502,3 +502,15 @@ tests:
     scope: [app, maplib]
     steps: [Prepare overlapping classic and local_vector_tiles vector layers with known attributes, turn both layers off in the layer list, tap and long-press a known feature position, inspect the identify result and return to the layer list]
     expected: The hidden local_vector_tiles feature appears in identification with its attributes while its display remains off; the hidden classic feature is not queried or listed.
+  SMOKE-LOCAL-VECTOR-TILE-STRESS:
+    type: device
+    scope: [app, maplib]
+    steps:
+      - Open a project with a visible local_vector_tiles polygon layer containing multi-megabyte geometry payloads
+      - Repeatedly pan and zoom across tile boundaries, rotate the device, background/restore the map and trigger several style reloads for at least ten minutes
+      - Run a synchronization while continuing to move the map and inspect heap plus HyperLog
+    expected: >
+      The app stays responsive and alive without OutOfMemoryError. Worker names never exceed
+      LocalVectorTileWorker-1 and LocalVectorTileWorker-2; queued work is bounded, obsolete map
+      generations close their sockets, and temporary queue/heap pressure is reported as throttled
+      retryable requests. The layer resumes drawing after pressure falls and identify still works.

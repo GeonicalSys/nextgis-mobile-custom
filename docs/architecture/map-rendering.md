@@ -98,7 +98,11 @@ related_code:
     polygon/multipolygon, локальный `VectorSource` допускается для read-only
     `GTPoint` только с простым круговым маркером и подписью из одного поля либо
     фиксированного текста. Rule-style, custom icon, label template, editable и
-    прочие геометрии остаются на classic `GeoJsonSource` fallback.
+    прочие геометрии остаются на classic `GeoJsonSource` fallback. Loopback-
+    сервер ограничен двумя worker и очередью 16; тайлы одного слоя строятся
+    последовательно, устаревшая очередь закрывается при смене поколения карты,
+    а нехватка heap/перегрузка возвращает retryable `503`, не создавая новые
+    потоки и не меняя rendering mode слоя.
 15. Completion пакетного fill означает не «full reload был поставлен в очередь»,
     а «новый MapLibre style применён и каждый видимый vector layer имеет source
     и хотя бы основной либо symbol style layer». До этой проверки application

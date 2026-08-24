@@ -780,3 +780,25 @@ invariants:
       - docs/reference/official-differences.md
       - maplib/docs/README.md
       - app/docs/README.md
+  INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS:
+    title: Local vector tiles cannot exhaust the Android heap with concurrent requests
+    owners: [maplib, app]
+    statement: >
+      The loopback local-vector-tile server has at most two concurrent workers and sixteen
+      queued sockets; overload receives a retryable HTTP 503 instead of allocating another
+      worker. Builds for one layer are serialized because geometry BLOB parsing and clipping
+      retain large object graphs. A map generation change closes queued stale sockets, and a
+      request is rejected before geometry decoding when less than 64 MiB remains below the
+      runtime heap growth limit. These limits must not change layer order, identify semantics
+      or the classic rendering fallback.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileRequestPolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
+      - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileRequestPolicyTest.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-LOCAL-VECTOR-TILE-STRESS]
+    must_update_docs:
+      - docs/architecture/map-performance.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/official-differences.md
+      - maplib/docs/README.md
