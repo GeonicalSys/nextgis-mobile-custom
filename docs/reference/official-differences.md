@@ -108,8 +108,9 @@ style не исправляет потерянный surface и дорого с�
 правильное восстановление выполняется на уровне lifecycle renderer. Ограничение
 prefetch/FPS и раннее освобождение старого style snapshot уменьшают вероятность
 исходного `GL_OUT_OF_MEMORY`, но не подменяют восстановление EGL.
-Очистка snapshot/style wrappers поставляется связанным `maplib` submodule
-изменением и должна сливаться до обновляющего его app/root pointer.
+Очистка snapshot/style wrappers поставляется через слитый `maplib` PR #16;
+app/root pointer закрепляется на его итоговом Merge Commit до Squash Merge
+приложения.
 
 В актуальном official `MapFragment` на повторно проверенном 24 августа 2026 года
 HEAD вызывает только
