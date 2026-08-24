@@ -186,7 +186,6 @@ public class MapFragment
     private var mapLibreLoadingForegroundCleared = false
     private var mapLibrePreviousRefreshMode: MapRenderer.RenderingRefreshMode? = null
     private var mapLibreHostResumed = false
-    private var mapLibreAndroid9ContinuousRenderingEnabled = false
     private val mapLibreRenderRecoveryRunnable = Runnable {
         runMapLibreRenderRecoveryAttempt()
     }
@@ -512,22 +511,11 @@ public class MapFragment
         mMapRef.get()!!.map!!.setMapContext(this)
 
         mapViewMaplibre.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
-            // Android 9 SurfaceView drivers can lose the last presented buffer while MapLibre is
-            // idle. Keep a low-rate renderer alive only while this Fragment is resumed.
-            mapViewMaplibre.setMaximumFps(MAPLIBRE_ANDROID_9_CONTINUOUS_MAXIMUM_FPS)
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            // Old Mali/Adreno drivers are prone to GL_OUT_OF_MEMORY on a full-rate redraw of a
-            // large project. SurfaceView can recover the EGL context; 30 FPS also lowers the
-            // allocation/upload pressure that causes the loss in the first place.
-            mapViewMaplibre.setMaximumFps(MAPLIBRE_LEGACY_MAXIMUM_FPS)
-        }
         HyperLog.v(
             Constants.TAG,
             "MapLibreMapView renderer=${mapViewMaplibre.renderView.javaClass.simpleName} " +
                 "sdk=${Build.VERSION.SDK_INT} tilePrefetch=" +
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) +
-                " android9Continuous=${usesAndroid9ContinuousRenderingCompatibility()}"
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
         )
 
         mapViewMaplibre.getMapAsync(this)
@@ -535,9 +523,6 @@ public class MapFragment
 
     override fun onMapReady(mapboxMap: MapLibreMap) {
         HyperLog.v(Constants.TAG, "MapFragment.onMapReady")
-        if (mapLibreHostResumed) {
-            applyAndroid9ContinuousRenderingCompatibility(true, "map-ready")
-        }
         val mapRef = mMapRef.get()
         val mapDrawable = mapRef?.map
         if (mapRef == null || mapDrawable == null) {
@@ -689,7 +674,7 @@ public class MapFragment
 
     private fun startMapLibreRenderRecovery(reason: String) {
         val mapLibreView = mapLibreMapView ?: return
-        if (!mapLibreRenderRecoveryActive && !usesAndroid9ContinuousRenderingCompatibility()) {
+        if (!mapLibreRenderRecoveryActive) {
             try {
                 mapLibrePreviousRefreshMode = mapLibreView.renderingRefreshMode
             } catch (exception: RuntimeException) {
@@ -701,23 +686,16 @@ public class MapFragment
                 )
             }
         }
-        if (usesAndroid9ContinuousRenderingCompatibility()) {
-            applyAndroid9ContinuousRenderingCompatibility(
-                mapLibreHostResumed,
-                "recovery-$reason"
+        try {
+            mapLibreView.setRenderingRefreshMode(
+                MapRenderer.RenderingRefreshMode.CONTINUOUS
             )
-        } else {
-            try {
-                mapLibreView.setRenderingRefreshMode(
-                    MapRenderer.RenderingRefreshMode.CONTINUOUS
-                )
-            } catch (exception: RuntimeException) {
-                HyperLog.w(
-                    Constants.TAG,
-                    "MapLibre render recovery could not enable continuous rendering",
-                    exception
-                )
-            }
+        } catch (exception: RuntimeException) {
+            HyperLog.w(
+                Constants.TAG,
+                "MapLibre render recovery could not enable continuous rendering",
+                exception
+            )
         }
         mapLibreRenderRecoveryActive = true
         mapLibreRenderRecoveryAttempt = 0
@@ -830,22 +808,15 @@ public class MapFragment
     private fun stopMapLibreRenderRecovery() {
         mapLibreMapView?.let { mapLibreView ->
             mapLibreView.removeCallbacks(mapLibreRenderRecoveryRunnable)
-            if (usesAndroid9ContinuousRenderingCompatibility()) {
-                applyAndroid9ContinuousRenderingCompatibility(
-                    mapLibreHostResumed,
-                    if (mapLibreHostResumed) "recovery-finished" else "host-paused"
-                )
-            } else {
-                mapLibrePreviousRefreshMode?.let { previousMode ->
-                    try {
-                        mapLibreView.setRenderingRefreshMode(previousMode)
-                    } catch (exception: RuntimeException) {
-                        HyperLog.w(
-                            Constants.TAG,
-                            "MapLibre render recovery could not restore rendering mode",
-                            exception
-                        )
-                    }
+            mapLibrePreviousRefreshMode?.let { previousMode ->
+                try {
+                    mapLibreView.setRenderingRefreshMode(previousMode)
+                } catch (exception: RuntimeException) {
+                    HyperLog.w(
+                        Constants.TAG,
+                        "MapLibre render recovery could not restore rendering mode",
+                        exception
+                    )
                 }
             }
         }
@@ -854,41 +825,6 @@ public class MapFragment
         mapLibreRenderRecoveryFrames = 0
         mapLibreLoadingForegroundCleared = false
         mapLibrePreviousRefreshMode = null
-    }
-
-    private fun usesAndroid9ContinuousRenderingCompatibility(): Boolean =
-        Build.VERSION.SDK_INT == Build.VERSION_CODES.P
-
-    private fun applyAndroid9ContinuousRenderingCompatibility(enabled: Boolean, reason: String) {
-        if (!usesAndroid9ContinuousRenderingCompatibility()) {
-            return
-        }
-        val mapLibreView = mapLibreMapView ?: return
-        try {
-            mapLibreView.setRenderingRefreshMode(
-                if (enabled) {
-                    MapRenderer.RenderingRefreshMode.CONTINUOUS
-                } else {
-                    MapRenderer.RenderingRefreshMode.WHEN_DIRTY
-                }
-            )
-            if (mapLibreAndroid9ContinuousRenderingEnabled != enabled) {
-                HyperLog.v(
-                    Constants.TAG,
-                    "MapLibre Android 9 continuous rendering " +
-                        "${if (enabled) "enabled" else "disabled"} reason=$reason " +
-                        "maxFps=$MAPLIBRE_ANDROID_9_CONTINUOUS_MAXIMUM_FPS"
-                )
-            }
-            mapLibreAndroid9ContinuousRenderingEnabled = enabled
-        } catch (exception: RuntimeException) {
-            HyperLog.w(
-                Constants.TAG,
-                "MapLibre Android 9 continuous rendering change failed " +
-                    "enabled=$enabled reason=$reason",
-                exception
-            )
-        }
     }
 
     private fun scheduleMapReloadAfterLayerFillRetry() {
@@ -1959,7 +1895,6 @@ public class MapFragment
             mapLibreView.onDestroy()
         }
         mapLibreMapView = null
-        mapLibreAndroid9ContinuousRenderingEnabled = false
 
         editLayerOverlay?.mBottomToolbar?.setOnClickListener(null)
         editLayerOverlay?.mBottomToolbar = null
@@ -4918,8 +4853,6 @@ public class MapFragment
         private const val MAPLIBRE_FOREGROUND_FALLBACK_ATTEMPT = 8
         private const val MAPLIBRE_REPAINT_ATTEMPTS = 12
         private const val MAPLIBRE_REPAINT_DELAY_MS = 120L
-        private const val MAPLIBRE_LEGACY_MAXIMUM_FPS = 30
-        private const val MAPLIBRE_ANDROID_9_CONTINUOUS_MAXIMUM_FPS = 5
         private const val NORTH_UP_ANIMATION_MS = 350
         private const val ROTATION_ANGLE_THRESHOLD_DEGREES = 0.5f
         private const val LEGACY_MODE_EDIT_BY_TOUCH = 5

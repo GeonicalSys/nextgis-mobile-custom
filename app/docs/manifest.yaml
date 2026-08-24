@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-08-24
+last_verified: 2026-08-25
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -10,7 +10,7 @@ entrypoints:
   - app/src/main/AndroidManifest.xml
 key_components:
   - path: app/build.gradle
-    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.15/209 versus Lisa Debug 3.1.2.10/204 version contract, and signing configuration.
+    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.16/210 versus Lisa Debug 3.1.2.11/205 version contract, and signing configuration.
   - path: app/src/lisa/res/values/launcher_icon.xml
     responsibility: Lisa launcher, intro and about icon binding to density-specific ic_launcher_lisa resources without changing Belka branding.
   - path: app/src/belka/res/values/launcher_icon.xml

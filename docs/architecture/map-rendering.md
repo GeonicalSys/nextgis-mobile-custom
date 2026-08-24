@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-08-24
+last_verified: 2026-08-25
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -254,11 +254,10 @@ related_code:
     `SurfaceTexture` и ждёт нового `onSurfaceTextureAvailable`, которого у
     оставшегося attached view может не быть; поэтому callback `fully=true` до
     swap не является доказательством показанного кадра. На API 26–28 prefetch
-    дополнительных tiles выключен. API 26–27 ограничены 30 FPS и после recovery
-    возвращаются к прежнему dirty-render режиму. На API 28 действует отдельная
-    совместимость: пока Fragment находится в `RESUMED`, renderer остаётся в
-    `CONTINUOUS` с пределом 5 FPS, чтобы SurfaceView регулярно публиковал буфер;
-    перед pause/destroy он явно возвращается в `WHEN_DIRTY`. Полный style reload заранее освобождает предыдущий
+    дополнительных tiles выключен. Искусственный потолок FPS и постоянный
+    `CONTINUOUS` на Android 8–9 не используются: в покое renderer остаётся в
+    `WHEN_DIRTY`, recovery на всех API — короткий `CONTINUOUS` burst, затем
+    прежний dirty-режим. Полный style reload заранее освобождает предыдущий
     Java GeoJSON snapshot, а после `setStyle` — detached source/layer wrappers,
     чтобы большой Collector-проект не удваивал пиковую память. Тип renderer,
     SDK и prefetch policy фиксируются в HyperLog при создании view.

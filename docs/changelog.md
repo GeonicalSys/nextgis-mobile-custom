@@ -1,15 +1,29 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-24
+last_verified: 2026-08-25
 related_code:
   - docs
 ---
 
 # История документационной системы
 
+## 2026-08-25
+
+- С unpublished Lisa/Belka `3.1.2.16` / `210` и Lisa Debug `3.1.2.11` / `205`
+  сняты искусственный потолок 5/30 FPS и постоянный `CONTINUOUS` на Android
+  8–9: в покое renderer остаётся в `WHEN_DIRTY`, recovery на всех API — короткий
+  burst. minSdk остаётся 26; Android 8–9 поддерживаются. Номера версии не
+  менялись. `maplib` закреплён на Merge Commit PR #19 `b704187`, а не на tip
+  ветки `e74c262`.
+
 ## 2026-08-24
 
+- Подготовлен выпуск Lisa/Belka `3.1.2.16` / `versionCode 210` и Lisa Debug
+  `3.1.2.11` / `versionCode 205` поверх интеграционного squash `#23`. App и
+  maplib coupling обновлены согласованно; pointer `maplib` в Draft PR указывает
+  на commit bump ветки `codex/release-3.1.2.16` и после Merge Commit библиотеки
+  должен быть заменён на итоговый merge commit.
 - Android delivery contract теперь требует перед integration/release полной
   матрицы открытых и stacked PR по root и библиотекам, проверки фактического
   включения каждого исправления и pin только на итоговые merge-коммиты. Аудит

@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-08-24
+last_verified: 2026-08-25
 related_code:
   - app/build.gradle
   - app/src/main
@@ -20,17 +20,18 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.15` / `versionCode` 209; Lisa Debug
-`3.1.2.10` / `versionCode` 204. Сверено с официальным приложением `3.2.0` и с
+Состояние форка: Lisa/Belka Release `3.1.2.16` / `versionCode` 210; Lisa Debug
+`3.1.2.11` / `versionCode` 205. Сверено с официальным приложением `3.2.0` и с
 головами официальных библиотек на 24 августа 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
 [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
 в котором объявлена поддержка raster MBTiles:
 
 Подготовленная integration-ветка использует OpenGL и итоговые Merge Commit:
-maplib PR #18 [`534d741`](https://github.com/GeonicalSys/android_maplib/commit/534d7418dcc6e0edd6795d6977a44fa4b031c583) и
+maplib PR #19 [`b704187`](https://github.com/GeonicalSys/android_maplib/commit/b704187c6c943a29e20ab350d9dbd75bd68e8ae1)
+(содержит #18) и
 maplibui PR #11 [`e6335cf`](https://github.com/GeonicalSys/android_maplibui/commit/e6335cf4b9548e333d6478c1dbadfbd0e47e919c).
-Root PR закрепляет именно эти библиотечные merge-коммиты.
+Root закрепляет именно merge-коммит `#19`, а не tip feature-ветки.
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -44,7 +45,7 @@ Root PR закрепляет именно эти библиотечные merge-
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
-Форк `3.1.2.15` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+Форк `3.1.2.16` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
 и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
@@ -100,20 +101,20 @@ sources/layers уже готовы, но MapLibre сохранил opaque loadin
 `SurfaceView`: в MapLibre OpenGL 13.0.2 он пересоздаёт EGL context/surface после
 `EGL_CONTEXT_LOST`, тогда как TextureView может остаться без нового surface
 callback уже после app-side `fully=true`. На Android 8–9 выключен tile prefetch.
-Android 8 ограничен 30 FPS и возвращается к dirty rendering после recovery;
-Android 9 при открытой карте держит `CONTINUOUS` с пределом 5 FPS, а при
-pause/destroy возвращается в `WHEN_DIRTY`. Это не затрагивает Android 10+.
-Отложенное касание после уничтожения view отбрасывается до обращения к native
+Потолок 5/30 FPS и постоянный `CONTINUOUS` на Android 8–9 сняты: они не убирали
+чёрный экран и делали карту медленнее. Recovery на всех API — короткий burst,
+затем прежний `WHEN_DIRTY`. Отложенное касание после уничтожения view
+отбрасывается до обращения к native
 MapLibre map. Полный style reload освобождает предыдущий GeoJSON snapshot и
-detached style wrappers. Тип renderer и compatibility policy записываются в HyperLog.
+detached style wrappers. Тип renderer и prefetch policy записываются в HyperLog.
 
 **Для чего.** На части устройств, особенно Android 9, после перехода в настройки,
 фонового режима, блокировки экрана или Activity recreation Android-интерфейс
 оставался виден, но render surface карты становился чёрным. Полная перезагрузка
 style не исправляет потерянный surface и дорого стоит для больших проектов;
-правильное восстановление выполняется на уровне lifecycle renderer. Ограничение
-prefetch/FPS и раннее освобождение старого style snapshot уменьшают вероятность
-исходного `GL_OUT_OF_MEMORY`, но не подменяют восстановление EGL.
+правильное восстановление выполняется на уровне lifecycle renderer. Выключенный
+prefetch на Android 8–9 и раннее освобождение старого style snapshot уменьшают
+вероятность исходного `GL_OUT_OF_MEMORY`, но не подменяют восстановление EGL.
 Очистка snapshot/style wrappers поставляется через слитый `maplib` PR #16;
 app/root pointer закрепляется на его итоговом Merge Commit до Squash Merge
 приложения. Защита позднего touch после renderer teardown поставляется связанным
