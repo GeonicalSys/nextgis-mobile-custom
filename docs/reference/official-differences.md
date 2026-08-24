@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-08-24
+last_verified: 2026-08-25
 related_code:
   - app/build.gradle
   - app/src/main
@@ -100,20 +100,20 @@ sources/layers уже готовы, но MapLibre сохранил opaque loadin
 `SurfaceView`: в MapLibre OpenGL 13.0.2 он пересоздаёт EGL context/surface после
 `EGL_CONTEXT_LOST`, тогда как TextureView может остаться без нового surface
 callback уже после app-side `fully=true`. На Android 8–9 выключен tile prefetch.
-Android 8 ограничен 30 FPS и возвращается к dirty rendering после recovery;
-Android 9 при открытой карте держит `CONTINUOUS` с пределом 5 FPS, а при
-pause/destroy возвращается в `WHEN_DIRTY`. Это не затрагивает Android 10+.
-Отложенное касание после уничтожения view отбрасывается до обращения к native
+Потолок 5/30 FPS и постоянный `CONTINUOUS` на Android 8–9 сняты: они не убирали
+чёрный экран и делали карту медленнее. Recovery на всех API — короткий burst,
+затем прежний `WHEN_DIRTY`. Отложенное касание после уничтожения view
+отбрасывается до обращения к native
 MapLibre map. Полный style reload освобождает предыдущий GeoJSON snapshot и
-detached style wrappers. Тип renderer и compatibility policy записываются в HyperLog.
+detached style wrappers. Тип renderer и prefetch policy записываются в HyperLog.
 
 **Для чего.** На части устройств, особенно Android 9, после перехода в настройки,
 фонового режима, блокировки экрана или Activity recreation Android-интерфейс
 оставался виден, но render surface карты становился чёрным. Полная перезагрузка
 style не исправляет потерянный surface и дорого стоит для больших проектов;
-правильное восстановление выполняется на уровне lifecycle renderer. Ограничение
-prefetch/FPS и раннее освобождение старого style snapshot уменьшают вероятность
-исходного `GL_OUT_OF_MEMORY`, но не подменяют восстановление EGL.
+правильное восстановление выполняется на уровне lifecycle renderer. Выключенный
+prefetch на Android 8–9 и раннее освобождение старого style snapshot уменьшают
+вероятность исходного `GL_OUT_OF_MEMORY`, но не подменяют восстановление EGL.
 Очистка snapshot/style wrappers поставляется через слитый `maplib` PR #16;
 app/root pointer закрепляется на его итоговом Merge Commit до Squash Merge
 приложения. Защита позднего touch после renderer teardown поставляется связанным

@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-08-24
+last_verified: 2026-08-25
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -30,10 +30,10 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   считается успешным только после реально исчезнувшего foreground, а оставшийся
   загрузочный foreground снимается без full style reload;
   все поддерживаемые версии используют `SurfaceView`, который умеет пересоздать
-  потерянный EGL-контекст; на Android 8–9 выключен tile prefetch. Android 8
-  ограничен 30 FPS, а Android 9 при открытой карте держит low-rate continuous
-  rendering с пределом 5 FPS и возвращается в `WHEN_DIRTY` при pause/destroy;
-  Android 10+ сохраняет обычный bounded recovery. Позднее касание уничтоженного
+  потерянный EGL-контекст; на Android 8–9 выключен tile prefetch. Искусственный
+  потолок 5/30 FPS и постоянный `CONTINUOUS` на Android 8–9 не используются:
+  в покое renderer остаётся в `WHEN_DIRTY`, recovery на всех API — короткий
+  burst и возврат к прежнему dirty-режиму. Позднее касание уничтоженного
   view отбрасывается до обращения к MapLibre;
 - вращение карты двумя пальцами только после явного разрешения кнопкой рядом с
   текущим местоположением; состояние и bearing сохраняются, запрет возвращает
@@ -157,8 +157,8 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `onCreate/onStart/onResume` и `onPause/onStop/onDestroy`; старый view нельзя
   оставлять привязанным к `MapDrawable` после `onDestroyView`.
   `maplibre_renderTextureMode=false` на всех API; на API 26–28 tile prefetch
-  выключен, API 26–27 ограничены 30 FPS, а API 28 — 5 FPS только при
-  непрерывной перерисовке видимой карты.
+  выключен. Потолок FPS и постоянный `CONTINUOUS` на Android 8–9 не
+  используются.
 - Не дублировать GIS model/storage из `maplib`.
 - Не читать `Q:\standart_profiles`, `variables.py` или QGIS plugin mirrors:
   межпроектный runtime contract — NGW API/Collector либо явный portable import.
@@ -193,10 +193,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `cleared stale loading foreground` означает, что
   project layers уже были применены, но MapLibre не снял свой loading foreground
   после ограниченной серии repaint.
-- На Android 9 после завершения recovery должна присутствовать запись
-  `MapLibre Android 9 continuous rendering enabled`; при `onPause` — парная
-  `disabled`. Отсутствие первой записи означает, что renderer не принял
-  compatibility mode.
+- На Android 8–9 после recovery не должно быть постоянного `CONTINUOUS` и
+  `setMaximumFps`; в логе остаётся `tilePrefetch=false` и общий burst
+  `MapLibre render recovery started/completed`.
 - Полностью чёрный экран вместе с Android-панелями на Android 8–9: проверить
   `onLowMemory`, системные `GL_OUT_OF_MEMORY`/`EGL_CONTEXT_LOST`, запись
   `MapLibreMapView renderer=SurfaceViewMapRenderer` и `tilePrefetch=false`.

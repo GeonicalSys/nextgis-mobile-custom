@@ -1,12 +1,20 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-24
+last_verified: 2026-08-25
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-25
+
+- С unpublished Lisa/Belka `3.1.2.16` / `210` и Lisa Debug `3.1.2.11` / `205`
+  сняты искусственный потолок 5/30 FPS и постоянный `CONTINUOUS` на Android
+  8–9: в покое renderer остаётся в `WHEN_DIRTY`, recovery на всех API — короткий
+  burst. minSdk остаётся 26; Android 8–9 поддерживаются. Номера версии не
+  менялись.
 
 ## 2026-08-24
 
