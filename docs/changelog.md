@@ -14,7 +14,8 @@ related_code:
   сняты искусственный потолок 5/30 FPS и постоянный `CONTINUOUS` на Android
   8–9: в покое renderer остаётся в `WHEN_DIRTY`, recovery на всех API — короткий
   burst. minSdk остаётся 26; Android 8–9 поддерживаются. Номера версии не
-  менялись.
+  менялись. `maplib` закреплён на Merge Commit PR #19 `b704187`, а не на tip
+  ветки `e74c262`.
 
 ## 2026-08-24
 

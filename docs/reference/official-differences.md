@@ -28,9 +28,10 @@ related_code:
 в котором объявлена поддержка raster MBTiles:
 
 Подготовленная integration-ветка использует OpenGL и итоговые Merge Commit:
-maplib PR #18 [`534d741`](https://github.com/GeonicalSys/android_maplib/commit/534d7418dcc6e0edd6795d6977a44fa4b031c583) и
+maplib PR #19 [`b704187`](https://github.com/GeonicalSys/android_maplib/commit/b704187c6c943a29e20ab350d9dbd75bd68e8ae1)
+(содержит #18) и
 maplibui PR #11 [`e6335cf`](https://github.com/GeonicalSys/android_maplibui/commit/e6335cf4b9548e333d6478c1dbadfbd0e47e919c).
-Root PR закрепляет именно эти библиотечные merge-коммиты.
+Root закрепляет именно merge-коммит `#19`, а не tip feature-ветки.
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
