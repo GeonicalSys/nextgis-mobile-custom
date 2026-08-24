@@ -27,10 +27,10 @@ apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
-def productionVersionCode = 208
-def productionVersionName = '3.1.2.14'
-def debugVersionCode = 203
-def debugVersionName = '3.1.2.9'
+def productionVersionCode = 209
+def productionVersionName = '3.1.2.15'
+def debugVersionCode = 204
+def debugVersionName = '3.1.2.10'
 
 def geonicalSigningPropertyNames = [
         'GEONICAL_STORE_FILE',

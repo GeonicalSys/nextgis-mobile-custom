@@ -10,6 +10,9 @@ related_code:
 
 ## 2026-08-24
 
+- Подготовлен выпуск Lisa/Belka `3.1.2.15` / `versionCode 209` и Lisa Debug
+  `3.1.2.10` / `versionCode 204`; app/maplib coupling и независимая APK version
+  matrix обновлены согласованно после исправления Android 9 EGL recovery.
 - Последующие Android 9 логи опровергли TextureView workaround: MapLibre
   сообщал `fully=true` до `eglSwapBuffers`, а его TextureView render thread при
   `EGL_CONTEXT_LOST` обнулял surface и мог навсегда ждать нового callback.
