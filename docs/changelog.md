@@ -16,6 +16,8 @@ related_code:
   вернул в общую ветку ранее оставшиеся параллельно migration/MBTiles, alarm-
   feedback, crash-safe fill, track-start ordering и local-vector-tile OOM guard;
   Android 9 updater fallback снова имеет отдельный unit-test API boundary.
+  Библиотечная часть закрыта Merge Commit maplib PR #18 и maplibui PR #11, а
+  root закрепляет эти итоговые commits вместо feature-веток.
 - Подготовлен выпуск Lisa/Belka `3.1.2.15` / `versionCode 209` и Lisa Debug
   `3.1.2.10` / `versionCode 204`; app/maplib coupling и независимая APK version
   matrix обновлены согласованно после исправления Android 9 EGL recovery.
