@@ -24,8 +24,8 @@ related_code:
 `3.1.2.10` / `versionCode` 204. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 
-Подготовленный `3.1.2.15` использует OpenGL и актуальные feature-коммиты maplib
-[`0f10108`](https://github.com/GeonicalSys/android_maplib/commit/0f10108) и
+Подготовленный `3.1.2.15` использует OpenGL и итоговый Merge Commit maplib PR #17
+[`923e782`](https://github.com/GeonicalSys/android_maplib/commit/923e782d16467248fe7a711f7674111a0ba5a42c) и
 maplibui [`b3b65a41`](https://github.com/GeonicalSys/android_maplibui/commit/b3b65a41).
 Перед merge root PR указатели обновляются на итоговые merge-коммиты библиотечных
 PR согласно порядку доставки.
