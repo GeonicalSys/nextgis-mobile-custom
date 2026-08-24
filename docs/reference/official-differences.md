@@ -21,12 +21,15 @@ related_code:
 ## Основа сравнения
 
 Состояние форка: Lisa/Belka Release `3.1.2.14` / `versionCode` 208; Lisa Debug
-`3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.1.2` и с
-более новыми головами официальных библиотек на 30 июля 2026 года:
+`3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.2.0` и с
+головами официальных библиотек на 24 августа 2026 года. В частности, учтён
+официальный выпуск `3.2.0`
+[`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
+в котором объявлена поддержка raster MBTiles:
 
 Подготовленный `3.1.2.14` использует OpenGL и актуальные feature-коммиты maplib
-[`0f10108`](https://github.com/GeonicalSys/android_maplib/commit/0f10108) и
-maplibui [`b3b65a41`](https://github.com/GeonicalSys/android_maplibui/commit/b3b65a41).
+[`76aec5c`](https://github.com/GeonicalSys/android_maplib/commit/76aec5c) и
+maplibui [`4a4f03a0`](https://github.com/GeonicalSys/android_maplibui/commit/4a4f03a0).
 Перед merge root PR указатели обновляются на итоговые merge-коммиты библиотечных
 PR согласно порядку доставки.
 
@@ -37,7 +40,8 @@ PR согласно порядку доставки.
 - EasyPicker — [`36ba558`](https://github.com/nextgis/easypicker/commit/36ba558ba0d1eaadcb7dc6ba46ab9286d7eedaa1).
 
 Все четыре official HEAD повторно проверены 24 августа 2026 года через
-канонические GitHub repositories; hashes не изменились.
+канонические GitHub repositories. Release tag и feature-коммиты MBTiles
+рассматриваются отдельно от приведённых baseline hashes форка.
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
@@ -758,6 +762,28 @@ Collector composition sync **не** удаляет и не заменяет та
 протокол обновления `.ngrc` намеренно не реализован до отдельного согласованного
 контракта.
 
+#### Raster MBTiles и перенос старого Debug
+
+Поддержка растрового MBTiles сама по себе не является новым отличием форка:
+официальный NextGIS Mobile добавил её в `3.2.0` (app routing
+[`3a2676f`](https://github.com/nextgis/nextgis_mobile_android/commit/3a2676f),
+maplib implementation
+[`3853686`](https://github.com/nextgis/android_maplib/commit/3853686) и validation
+fix [`ba4523c`](https://github.com/nextgis/android_maplib/commit/ba4523c),
+maplibui integration
+[`36f3f5f`](https://github.com/nextgis/android_maplibui/commit/36f3f5f)). Форк
+переносит совместимый raster MBTiles path на свою базу `3.1.2`, сохраняя
+OpenGL backend и действующий layer-order contract.
+
+Отдельная продуктовая возможность форка — подписанный bridge между пакетами
+`com.nextgis.mobile.debug` и `com.nextgis.mobile.geonical`. Он переносит только
+локальные растровые подложки в уже выбранный активный проект. Старые
+`3.0.3.2`/`3.0.3.3` не дают надёжной identity исходного проекта, поэтому project,
+accounts, credentials, vectors и tracks не переносятся и целевой проект не
+угадывается. Распакованные тайлы потоково конвертируются прямо в MBTiles без
+второго дерева файлов; source остаётся rollback-копией, а provenance исключает
+дубликаты при retry.
+
 **Как используется (итог для пользователя).** Render cache и vector tiles
 работают автоматически, без настроек в UI. Пакетный импорт Collector показывает
 единый прогресс и одну финальную перезагрузку карты. После добавления растра
@@ -993,6 +1019,13 @@ speed выше `100 м/с` считается повреждённым. Плох
 Когда в этой настройке включены GPS и Network, `LocationProviderArbiter` не
 смешивает Network со свежим пригодным GPS-потоком: Network принимается до первого
 GPS-fix и возвращается через 12 секунд без пригодного GPS.
+
+Включённый фоновый контроль использует отдельную health-подписку без порога
+перемещения и сигнализирует раз в 10 секунд только при свежих пригодных fix.
+Сигнал идёт в Android alarm stream, поэтому минимальная громкость уведомлений его
+не глушит. Нулевая/выключенная громкость будильника переключает heartbeat на
+короткую вибрацию, а ошибку сохранения — на двойную; выключенная настройка
+фонового контроля подавляет оба вида обратной связи.
 
 ### Расширенный импорт NGW-ресурса по ссылке
 

@@ -69,7 +69,7 @@ contracts:
     to: mobile-app
     type: portable_artifact_contract
     transport: Explicit user or release import of a supported offline basemap package.
-    statement: qtiles_geonical produces an offline package but does not publish it automatically; producer and Android consumer must agree on format, CRS, zoom range and lifecycle without sharing a desktop workspace path.
+    statement: qtiles_geonical produces raster MBTiles/ZIP but does not publish it automatically; the Android consumer accepts a tiles/metadata raster MBTiles contract with Web Mercator tile matrix, supported image format, zoom range and bounds, without sharing a desktop workspace path; vector MBTiles are out of scope.
     owners: [app, maplib, maplibui]
     local_docs:
       - docs/architecture/lisa-ecosystem.md

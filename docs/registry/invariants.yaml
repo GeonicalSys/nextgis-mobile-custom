@@ -303,6 +303,30 @@ invariants:
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/map-rendering.md
+  INV-LEGACY-UNDERLAY-MIGRATION:
+    title: Debug underlays move to Geonical without copying an extracted tile tree
+    owners: [app, maplib, maplibui]
+    statement: >
+      A pre-registry com.nextgis.mobile.debug workspace remains in place until an explicit,
+      user-confirmed transfer. Only local raster underlays cross to the already selected Geonical
+      project; Web GIS project identity, accounts, credentials, vector data and tracks never cross.
+      The debug package grants read-only streaming URIs only to the pinned Geonical package and
+      signing certificate. Extracted z/x/y tiles are converted directly into one validated raster
+      MBTiles database with bounded SQLite transactions, one durable file sync and an atomic final
+      rename; source data is retained and a persistent source key makes retries duplicate-safe.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/java/com/nextgis/mobile/activity/LegacyUnderlayExportActivity.java
+      - app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java
+      - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java
+      - maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES, SMOKE-DEBUG-UNDERLAY-MIGRATION]
+    must_update_docs:
+      - docs/architecture/collector-projects.md
+      - docs/architecture/map-rendering.md
+      - docs/reference/flavors-and-versioning.md
+      - docs/reference/official-differences.md
   INV-BACKUP-BEFORE-DESTRUCTION:
     title: Required backup gates destructive layer mutation
     owners: [maplibui, maplib]
@@ -449,9 +473,11 @@ invariants:
       When background_recording_sound is enabled, a health-only zero-distance provider
       subscription must distinguish stationary fixes from missing coordinate delivery. While
       the app UI is hidden or the screen is off and usable callbacks remain fresh, a partial
-      wake lock keeps a notification-stream pulse on a fixed 10-second cadence independently
-      of geometry changes and inserts/commits. Stale or absent callbacks silence the pulse;
-      observed persistence failures use an independent one-minute throttle and distinct tone.
+      wake lock keeps an alarm-stream pulse on a fixed 10-second cadence independently of
+      notification volume, geometry changes and inserts/commits. Zero or muted alarm volume
+      falls back to a short vibration. Stale or absent callbacks silence the feedback; observed
+      persistence failures use an independent one-minute throttle and distinct tone or double
+      vibration.
       Foreground use stays silent. Revoking coarse/fine location during recording must stop
       either location foreground service without calling forbidden startForeground, crashing,
       clearing track_recording_enabled or discarding the durable walk draft.
@@ -466,6 +492,7 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundPolicy.java
+      - maplibui/src/main/AndroidManifest.xml
       - maplibui/src/test/java/com/nextgis/maplibui/util/BackgroundRecordingSoundPolicyTest.java
       - app/src/main/res/xml/preferences_tracks.xml
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, SMOKE-GPS-RECORDING, SMOKE-WALK]

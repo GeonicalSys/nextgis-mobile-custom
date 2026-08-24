@@ -322,4 +322,16 @@
 
 
 
+    <string name="project_import_debug_underlays">Transfer underlays from Debug</string>
+    <string name="legacy_underlay_import_confirmation">Only local underlays will be transferred to the current project “%1$s”. Web GIS projects, accounts and credentials will not be transferred. Continue?</string>
+    <string name="legacy_underlay_import_confirm">Transfer underlays</string>
+    <string name="legacy_underlay_import_unavailable">The installed Debug app does not support underlay transfer</string>
+    <string name="legacy_underlay_import_failed">The underlays could not be transferred</string>
+    <string name="legacy_underlay_import_done">Transfer complete. New: %1$d; already transferred: %2$d</string>
+    <string name="legacy_underlay_import_partial">Transferred %1$d of %2$d underlays</string>
+    <string name="legacy_underlay_export_title">Transfer local underlays</string>
+    <string name="legacy_underlay_export_confirmation">Allow Geonical to read %1$d local underlay(s)? Project and account data will not be shared.</string>
+    <string name="legacy_underlay_export_empty">There are no local underlays to transfer</string>
+    <string name="legacy_underlay_export_confirm">Allow transfer</string>
+    <string name="legacy_underlay_export_clip_label">Local underlays</string>
 </resources>

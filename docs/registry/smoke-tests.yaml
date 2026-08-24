@@ -95,6 +95,24 @@ tests:
     scope: [app, maplib, maplibui]
     steps: [Record project database, form and NGRc files, Install a newer same-signature APK with adb install -r, Reopen and sync the project]
     expected: Project workspaces, SQLite data, forms and unpacked NGRc tiles remain in place without manual reimport.
+  SMOKE-DEBUG-UNDERLAY-MIGRATION:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Prepare a signed 3.0.3.2 or 3.0.3.3 Debug installation with no project registry and at least two large unpacked local underlays in different TMS/OSM schemes
+      - Record the source underlay names, visibility, relative order, tile count and total source size
+      - Update Debug in place with the same debug signing certificate and verify its legacy default map opens without a recursive project copy
+      - Install the signed Geonical release, manually import and select the intended current Web GIS or local project
+      - Open Project settings, start Transfer underlays from Debug and approve the request in Debug
+      - Interrupt one transfer, repeat it, then complete all underlays and cold-open the Geonical project
+      - Run project composition/data sync and verify Debug still retains its original workspace
+    expected: >
+      Only local raster underlays enter the selected Geonical project; project/account/vector/track
+      data do not cross. Extracted tiles stream directly into one raster MBTiles file per underlay
+      without a second extracted tree or per-tile fsync, TMS/OSM rows render in the same locations,
+      names/visibility/relative order are preserved above OSM, an interrupted partial database is
+      ignored and removed, a retry creates no duplicate completed layer, sync retains the imported
+      underlays, and the complete Debug source remains available for rollback.
   SMOKE-HOT-RASTER:
     type: device
     scope: [app, maplib, maplibui]
@@ -246,6 +264,7 @@ tests:
     scope: [app, maplib, maplibui]
     steps:
       - Enable background recording sound and start geometry-by-walk editing
+      - Minimize notification volume while alarm volume remains audible, then mute alarm volume
       - Minimize the app, stand still for at least 35 seconds, then walk until several geometry points are saved
       - Disable every location provider or block background location delivery and wait at least 20 seconds
       - Revoke location permission in Android settings while walk recording is active, then return to the app
@@ -255,7 +274,9 @@ tests:
     expected: >
       Geometry and editing state survive lifecycle transitions without duplicate reload.
       While minimized, fresh usable callbacks produce a short confirmation every 10 seconds
-      even while stationary and independently of saved vertices. The heartbeat stops after
+      even while stationary and independently of saved vertices. Notification volume does not
+      suppress the alarm-stream tone; muted alarm volume produces short vibration instead.
+      The heartbeat stops after
       callbacks become stale; foreground and disabled-setting recording stay silent.
       Permission revocation causes no crash or forbidden location-FGS restart and the walk draft
       remains available after permission is restored.
@@ -270,6 +291,7 @@ tests:
       - Set a sampling interval above 30 seconds and record several fixes
       - Pass through a section with one poor-accuracy or visibly displaced fix
       - Enable background recording sound, minimize the app and stand still with a usable fix for at least 35 seconds
+      - Minimize notification volume while alarm volume remains audible, then mute alarm volume
       - Block every enabled provider or background location delivery and wait at least 20 seconds
       - Revoke location permission in Android settings while track recording is active and reopen the app
       - Restore location permission and verify recording resumes from the retained intent
@@ -284,8 +306,10 @@ tests:
       flushed on stop, and isolated inaccurate or displaced garbage is absent. The
       automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
       Minimized recording emits a short heartbeat every 10 seconds while usable locations
-      keep arriving, including while stationary; it stops after location delivery becomes
-      stale. Foreground recording is silent, and disabling the setting suppresses it.
+      keep arriving, including while stationary; notification volume does not suppress its
+      alarm-stream tone, while zero or muted alarm volume falls back to short vibration. It stops
+      after location delivery becomes stale. Foreground recording is silent, and disabling the
+      setting suppresses both sound and vibration.
       Revoking location permission does not crash-loop a sticky location FGS; the durable track
       intent survives and recording can resume after permission is granted again.
   SMOKE-STAKEOUT:

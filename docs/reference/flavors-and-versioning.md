@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-08-23
+last_verified: 2026-08-24
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -41,6 +41,16 @@ branding release-варианта.
 Account type — единый контракт runtime/authenticator/sync adapter. При изменении
 `applicationIdSuffix` необходимо проверить также provider authority, FileProvider,
 service permission, updater identity и оба account resource keys в merged APK.
+
+Разные application ID образуют разные Android sandboxes. Для одноразового
+переноса старых локальных подложек `lisaDebug` публикует отдельный read-only
+content bridge, а production Geonical вызывает его явным intent. Обе стороны
+сверяют точное имя пакета и SHA-256 signing certificate; grant действует только
+на выбранные content URI и не открывает весь каталог приложения. Публичные
+fingerprints допустимы в коде проверки, private signing key — нет. Старый Debug
+можно обновить bridge-сборкой только APK, подписанным тем же Debug-сертификатом;
+production APK не может обновить пакет Debug и не получает его private files
+напрямую.
 
 ## Версия
 
