@@ -10,6 +10,11 @@ related_code:
 
 ## 2026-08-24
 
+- Подготовлен выпуск Lisa/Belka `3.1.2.16` / `versionCode 210` и Lisa Debug
+  `3.1.2.11` / `versionCode 205` поверх интеграционного squash `#23`. App и
+  maplib coupling обновлены согласованно; pointer `maplib` в Draft PR указывает
+  на commit bump ветки `codex/release-3.1.2.16` и после Merge Commit библиотеки
+  должен быть заменён на итоговый merge commit.
 - Android delivery contract теперь требует перед integration/release полной
   матрицы открытых и stacked PR по root и библиотекам, проверки фактического
   включения каждого исправления и pin только на итоговые merge-коммиты. Аудит

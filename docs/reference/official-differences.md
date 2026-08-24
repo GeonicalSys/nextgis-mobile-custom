@@ -20,8 +20,8 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.15` / `versionCode` 209; Lisa Debug
-`3.1.2.10` / `versionCode` 204. Сверено с официальным приложением `3.2.0` и с
+Состояние форка: Lisa/Belka Release `3.1.2.16` / `versionCode` 210; Lisa Debug
+`3.1.2.11` / `versionCode` 205. Сверено с официальным приложением `3.2.0` и с
 головами официальных библиотек на 24 августа 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
 [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
@@ -44,7 +44,7 @@ Root PR закрепляет именно эти библиотечные merge-
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
-Форк `3.1.2.15` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+Форк `3.1.2.16` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
 и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
