@@ -318,6 +318,7 @@ tests:
     scope: [app, maplib, maplibui]
     steps:
       - Select GPS only for tracks and GPS plus network for ordinary location
+      - On Android 9 through 11 start recording from the visible map, verify the foreground notification appears before leaving the screen, walk for several fixes, then stop
       - Record a track while walking and then in a vehicle at several legal road speeds
       - Repeat vehicle movement with walk digitizing and stop normally
       - With GPS plus network enabled, verify network fallback before the first GPS fix and after GPS is unavailable for more than 12 seconds
@@ -333,6 +334,8 @@ tests:
     expected: >
       Track and walk geometry progress continuously at vehicle speed without a
       speed_dist rejection cascade; each mode obeys only its own provider setting.
+      Track Start is handled before a later Stop in the default application process; the log
+      contains actual service start before stop and no zero-fix session caused by delayed launch.
       A recent usable GPS stream is not interleaved with network fixes, while network
       resumes as a fallback after 12 seconds without usable GPS.
       Long sampling gaps preserve prior valid fixes, the final two buffered fixes are

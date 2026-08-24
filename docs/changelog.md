@@ -38,6 +38,12 @@ related_code:
 - Official NextGIS Mobile HEAD повторно проверен 24 августа 2026 года: его
   `setMapLayersLoaded()` остаётся пустым, полного MapView lifecycle и post-style
   render recovery в official app нет.
+- По Android-логу пустого трека отделено движение обычного курсора от recorder:
+  Start отдельного процесса был доставлен только вместе с нажатым через восемь
+  минут Stop, поэтому сервис получил `raw=0`. `TrackerService` перенесён в
+  основной процесс, использует обычные in-process preferences и отбрасывает
+  запоздалый Start после уже выключенного durable intent; smoke расширен на
+  фактическое появление location FGS до ухода с карты на Android 9–11.
 - Диагностика A54 подтвердила, что проблемный NGW-слой содержит 15
   MultiPolygon, но около 140 тысяч координат; legacy попарная проверка сегментов
   заменена на JTS validation с unit-регрессией на 60 тысяч вершин.

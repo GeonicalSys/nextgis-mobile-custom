@@ -37,6 +37,7 @@ lost.
 | Provider ownership | Track uses `tracks_location_source`; ordinary location and walk use `location_source`. Enabling a provider for the map cannot silently enable it for track recording |
 | Provider arbitration | If both sources are enabled, network is available before GPS and during GPS outages, but is suppressed for 12 seconds after each usable GPS fix to avoid mixed-provider jumps |
 | Recording flag | Durable preference `track_recording_enabled` is set on start and cleared **only** by the menu action «Stop track» / «Завершить запись трека» |
+| Process ordering | `TrackerService` runs in the default application process. The toolbar Start lifecycle therefore executes before a later toolbar Stop, and both sides observe one in-process preference state; a stale delayed Start is rejected if the durable flag is already off |
 | After reboot / cold start | `BootLoader` and `MainActivity` call `TrackerService.ensureRecordingRunningIfEnabled()` — silent auto-start, no dialog |
 | Continuity of track id | Not required. Closing unfinished tracks and starting a new id after a crash is allowed; previous points remain in SQLite / on the map |
 | Forbidden stop | Reboot, process death, and legacy `track_restore=false` must not stop recording while the durable flag is set |
