@@ -93,6 +93,10 @@ signing certificate и release notes.
 Updater должен отклонить неверные schema, flavor/channel, application ID,
 version, URL, размер, hash или certificate. После скачивания те же identity и
 integrity значения сверяются с реальным APK и установленным приложением.
+На Android 9–10 архивный `SigningInfo` бывает пустым, поэтому PackageManager
+запрашивается одновременно с `GET_SIGNING_CERTIFICATES` и `GET_SIGNATURES`.
+Legacy-поле является только запасным источником байтов сертификата: SHA-256 из
+manifest по-прежнему обязан присутствовать и у APK, и у установленного пакета.
 
 На Android 8+ при отсутствии разрешения «Установка неизвестных приложений»
 updater сохраняет проверенный manifest в app-private `app_update_state`, открывает
@@ -104,6 +108,10 @@ updater сохраняет проверенный manifest в app-private `app_u
 
 Значения signing keys/cert private data в docs не публикуются. Допустим только
 публичный fingerprint в защищённой release-инфраструктуре.
+
+Перед публикацией обновления для поддерживаемого Android 9/10 выполнить
+`SMOKE-SELF-UPDATE` на реальном устройстве или сохранить его как явно
+невыполненный device-smoke; одной проверки APK на компьютере недостаточно.
 
 ## Публикация
 

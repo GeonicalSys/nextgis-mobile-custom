@@ -234,14 +234,20 @@ related_code:
     при pause/destroy и не запускает бесконечный цикл. Нельзя
     заменять этот контракт безусловным full style reload: он не восстанавливает
     потерянный render surface и создаёт лишнюю нагрузку на большие проекты.
+    Отложенное событие касания после `onDestroyView` отбрасывается в
+    `MapDrawable`, если `MapLibreMap`, `MapView` или host context уже очищены;
+    уничтоженный native renderer не участвует в identify или edit-жесте.
     Layout на всех API использует `SurfaceView`: его render thread обрабатывает
     `EGL_CONTEXT_LOST` внутренним пересозданием EGL context/surface. В MapLibre
     OpenGL 13.0.2 `TextureView` после ошибки swap обнуляет известный
     `SurfaceTexture` и ждёт нового `onSurfaceTextureAvailable`, которого у
     оставшегося attached view может не быть; поэтому callback `fully=true` до
     swap не является доказательством показанного кадра. На API 26–28 prefetch
-    дополнительных tiles выключен, а renderer ограничен 30 FPS для снижения
-    GL-memory pressure. Полный style reload заранее освобождает предыдущий
+    дополнительных tiles выключен. API 26–27 ограничены 30 FPS и после recovery
+    возвращаются к прежнему dirty-render режиму. На API 28 действует отдельная
+    совместимость: пока Fragment находится в `RESUMED`, renderer остаётся в
+    `CONTINUOUS` с пределом 5 FPS, чтобы SurfaceView регулярно публиковал буфер;
+    перед pause/destroy он явно возвращается в `WHEN_DIRTY`. Полный style reload заранее освобождает предыдущий
     Java GeoJSON snapshot, а после `setStyle` — detached source/layer wrappers,
     чтобы большой Collector-проект не удваивал пиковую память. Тип renderer,
     SDK и prefetch policy фиксируются в HyperLog при создании view.

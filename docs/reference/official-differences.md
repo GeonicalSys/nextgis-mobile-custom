@@ -96,10 +96,13 @@ sources/layers уже готовы, но MapLibre сохранил opaque loadin
 первый кадр, результат recovery либо ошибку загрузки карты. Все API используют
 `SurfaceView`: в MapLibre OpenGL 13.0.2 он пересоздаёт EGL context/surface после
 `EGL_CONTEXT_LOST`, тогда как TextureView может остаться без нового surface
-callback уже после app-side `fully=true`. На Android 8–9 выключен tile prefetch,
-renderer ограничен 30 FPS, а полный style reload освобождает предыдущий GeoJSON
-snapshot и detached style wrappers. Тип renderer и prefetch policy записываются
-в HyperLog.
+callback уже после app-side `fully=true`. На Android 8–9 выключен tile prefetch.
+Android 8 ограничен 30 FPS и возвращается к dirty rendering после recovery;
+Android 9 при открытой карте держит `CONTINUOUS` с пределом 5 FPS, а при
+pause/destroy возвращается в `WHEN_DIRTY`. Это не затрагивает Android 10+.
+Отложенное касание после уничтожения view отбрасывается до обращения к native
+MapLibre map. Полный style reload освобождает предыдущий GeoJSON snapshot и
+detached style wrappers. Тип renderer и compatibility policy записываются в HyperLog.
 
 **Для чего.** На части устройств, особенно Android 9, после перехода в настройки,
 фонового режима, блокировки экрана или Activity recreation Android-интерфейс
@@ -110,7 +113,9 @@ prefetch/FPS и раннее освобождение старого style snaps
 исходного `GL_OUT_OF_MEMORY`, но не подменяют восстановление EGL.
 Очистка snapshot/style wrappers поставляется через слитый `maplib` PR #16;
 app/root pointer закрепляется на его итоговом Merge Commit до Squash Merge
-приложения.
+приложения. Защита позднего touch после renderer teardown поставляется связанным
+`maplib` PR #18; app PR должен ссылаться на его итоговый Merge Commit перед
+слиянием.
 
 В актуальном official `MapFragment` на повторно проверенном 24 августа 2026 года
 HEAD вызывает только
@@ -1145,6 +1150,11 @@ Production и debug используют отдельные Android account/prov
 версию и versioned URL, а после скачивания — размер, SHA-256, реальные
 versionCode/versionName и сертификат подписи APK. APK другого бренда или
 неподтверждённый файл не передаётся системному установщику.
+
+На Android 9–10 PackageManager может не заполнить современный `SigningInfo` для
+скачанного archive APK. Форк одновременно запрашивает legacy `signatures` и
+использует его только как источник тех же SHA-256 сертификатов; package/flavor,
+версия, hash и совпадение сертификата с установленным приложением не ослабляются.
 
 Если Android требует отдельно разрешить установку из этого источника,
 приложение открывает системные настройки и после возврата автоматически

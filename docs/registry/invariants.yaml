@@ -43,26 +43,30 @@ invariants:
       - maplib/docs/README.md
   INV-MAPLIBRE-VIEW-LIFECYCLE:
     title: MapLibre renderer follows the Fragment view lifecycle
-    owners: [app]
+    owners: [app, maplib]
     statement: >
       Every MapLibre MapView created by MapFragment receives onCreate, onStart,
       onResume, onPause, onStop, onSaveInstanceState, onLowMemory and onDestroy
       from the matching Fragment view lifecycle. Returning from another screen,
       backgrounding, screen lock or Activity recreation must resume rendering;
       onDestroyView must release the old native renderer and clear only bindings
-      that still point to that destroyed MapView. Every supported API uses the
+      that still point to that destroyed MapView; a late touch event must be
+      discarded before it queries that renderer. Every supported API uses the
       MapLibre SurfaceView renderer so EGL_CONTEXT_LOST can recreate its context
-      and surface; API 26-28 additionally disables tile prefetch and caps the
-      renderer at 30 FPS to reduce legacy-driver GL memory pressure.
+      and surface; API 26-28 additionally disables tile prefetch. API 26-27 cap
+      the renderer at 30 FPS. API 28 keeps CONTINUOUS rendering at no more than
+      5 FPS only while the map host is resumed, then restores WHEN_DIRTY before
+      pause or destruction. Android 10+ retain the ordinary bounded recovery.
       Resume and completed project-style application request a bounded continuous
       render and Android-presentation burst. Recovery may complete only after a
       fully rendered frame with no loading foreground; it must not treat an app-
       side frame count as MapLibre's internal InitialRenderCallback state. Once
       app sources/layers are applied, a surviving loading foreground is removed
       without a full style reload; every pending callback is cancelled on pause
-      or view destruction and the previous rendering mode is restored.
+      or view destruction and the API-specific idle rendering mode is restored.
     related_code:
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
       - app/src/main/res/layout/fragment_map.xml
       - app/src/main/res/values/maplibre_rendering.xml
       - app/src/main/res/values-v29/maplibre_rendering.xml

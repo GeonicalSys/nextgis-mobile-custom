@@ -26,8 +26,11 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   считается успешным только после реально исчезнувшего foreground, а оставшийся
   загрузочный foreground снимается без full style reload;
   все поддерживаемые версии используют `SurfaceView`, который умеет пересоздать
-  потерянный EGL-контекст; на Android 8–9 дополнительно ограничены 30 FPS и
-  tile prefetch, чтобы снизить GL-memory pressure больших проектов;
+  потерянный EGL-контекст; на Android 8–9 выключен tile prefetch. Android 8
+  ограничен 30 FPS, а Android 9 при открытой карте держит low-rate continuous
+  rendering с пределом 5 FPS и возвращается в `WHEN_DIRTY` при pause/destroy;
+  Android 10+ сохраняет обычный bounded recovery. Позднее касание уничтоженного
+  view отбрасывается до обращения к MapLibre;
 - вращение карты двумя пальцами только после явного разрешения кнопкой рядом с
   текущим местоположением; состояние и bearing сохраняются, запрет возвращает
   север вверх, а разрешённый rotate начинается сразу при одновременном
@@ -133,12 +136,15 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `onCreate/onStart/onResume` и `onPause/onStop/onDestroy`; старый view нельзя
   оставлять привязанным к `MapDrawable` после `onDestroyView`.
   `maplibre_renderTextureMode=false` на всех API; на API 26–28 tile prefetch
-  выключен и maximum FPS равен `30`.
+  выключен, API 26–27 ограничены 30 FPS, а API 28 — 5 FPS только при
+  непрерывной перерисовке видимой карты.
 - Не дублировать GIS model/storage из `maplib`.
 - Не читать `Q:\standart_profiles`, `variables.py` или QGIS plugin mirrors:
   межпроектный runtime contract — NGW API/Collector либо явный portable import.
 - Self-hosted update принимается только для того же flavor/application/signing
-  identity и с увеличенным versionCode.
+  identity и с увеличенным versionCode. На Android 9–10 пустой archive
+  `SigningInfo` дополняется legacy `signatures`, после чего сертификат всё равно
+  сверяется по SHA-256 с manifest и установленным пакетом.
 - Ожидание специального разрешения на установку хранится как одноразовый
   app-private pending manifest; после возврата manifest и APK проверяются снова.
 - Production version принадлежит `defaultConfig`; Lisa Debug переопределяет
@@ -166,6 +172,10 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   `cleared stale loading foreground` означает, что
   project layers уже были применены, но MapLibre не снял свой loading foreground
   после ограниченной серии repaint.
+- На Android 9 после завершения recovery должна присутствовать запись
+  `MapLibre Android 9 continuous rendering enabled`; при `onPause` — парная
+  `disabled`. Отсутствие первой записи означает, что renderer не принял
+  compatibility mode.
 - Полностью чёрный экран вместе с Android-панелями на Android 8–9: проверить
   `onLowMemory`, системные `GL_OUT_OF_MEMORY`/`EGL_CONTEXT_LOST`, запись
   `MapLibreMapView renderer=SurfaceViewMapRenderer` и `tilePrefetch=false`.
@@ -185,7 +195,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   версию debug по basename APK.
 - Update отклонён: проверить schema, branch/channel, identity, version,
   versioned URL, size/hash/certificate и доступность branch manifest; не
-  отключать проверку для обхода ошибки.
+  отключать проверку для обхода ошибки. Запись `Updater APK validation rejected`
+  показывает этап отказа; нулевое число archive certificates на Android 9–10
+  означает сбой обоих PackageManager-представлений подписи.
 - После выдачи разрешения update не продолжился: проверить
   `AppUpdateManager.resumePendingInstallation()`, `app_update_state` и вызов из
   `MainActivity.onResume()`/`SettingsActivity.onResume()`.

@@ -213,7 +213,7 @@ storage:
     owner: app
     location_name: app_update_state SharedPreferences
     source: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
-    purpose: One-shot validated update manifest used only while Android install permission is pending
+    purpose: One-shot validated update manifest used only while Android install permission is pending; resume revalidates APK identity and Android 9-10 certificate fallback before installation
   collector-registry:
     owner: maplibui
     location_name: collector_projects_registry.json

@@ -50,16 +50,17 @@ tests:
     expected: The map renders after authorization and after a cold restart through OpenGL without No Vulkan compatible GPU found or process termination.
   SMOKE-MAP-SURFACE-LIFECYCLE:
     type: device
-    scope: app
+    scope: [app, maplib]
     steps:
       - Open a populated map and wait until MapLibre renders it
       - Open and close layer properties and project settings at least five times
       - Send the application to background and return, then lock and unlock the screen
       - Recreate MainActivity by switching a Collector project or changing configuration
       - Load or switch to a large Collector project without touching the map and wait for project styling to finish
-      - On Android 9 repeat background and screen-lock cycles and inspect the logged renderer class
+      - On Android 9 leave the styled map untouched for at least ten minutes, then repeat background and screen-lock cycles and inspect renderer-mode logs
+      - During Activity recreation touch the old map surface and verify late events are ignored
       - Inspect HyperLog lifecycle, first-frame-after-resume and render-recovery entries
-    expected: The map becomes visible after project styling without requiring a pan gesture and remains rendered and interactive after every return while Android controls stay responsive and are never covered by a full-window black surface; every API logs SurfaceViewMapRenderer, Android 9 logs tilePrefetch=false and remains responsive after low-memory pressure, each created MapView has balanced start/stop and one destroy, and bounded render recovery never reports completion while fully=false or loadingForeground=true, restores dirty rendering after its continuous burst, and clears only a stale loading foreground without restarting the process.
+    expected: The map becomes visible after project styling without requiring a pan gesture and remains rendered and interactive after every return while Android controls stay responsive and are never covered by a full-window black surface; every API logs SurfaceViewMapRenderer, Android 9 logs tilePrefetch=false plus continuous rendering enabled at 5 FPS while resumed and disabled on pause, remains responsive after low-memory pressure, each created MapView has balanced start/stop and one destroy, late touches do not query a destroyed map, and bounded render recovery never reports completion while fully=false or loadingForeground=true and clears only a stale loading foreground without restarting the process. Android 10+ restore their previous rendering mode after the burst.
   SMOKE-LOCATION-CURSOR-TOP:
     type: device
     scope: [app, maplib]
@@ -408,8 +409,8 @@ tests:
   SMOKE-SELF-UPDATE:
     type: device
     scope: [app]
-    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
-    expected: Valid same-branch same-signature update reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL or integrity is rejected.
+    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, On Android 9 or 10 download a valid same-certificate update whose archive PackageManager may omit SigningInfo, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
+    expected: Valid same-branch same-signature update, including the Android 9-10 legacy archive-signature fallback, reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL, integrity or certificate is rejected.
   SMOKE-NGW-URL-IMPORT:
     type: device
     scope: [app, maplib, maplibui]

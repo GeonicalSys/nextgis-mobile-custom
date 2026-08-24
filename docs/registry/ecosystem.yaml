@@ -8,7 +8,7 @@ systems:
     origin: https://github.com/GeonicalSys/nextgis-mobile-custom.git
     docs_entry: docs/START-HERE.md
     docs_url: https://github.com/GeonicalSys/nextgis-mobile-custom/blob/my-maplibre/docs/START-HERE.md
-    source_of_truth: Android source, Gradle variants, local GIS storage, NGW/Collector consumer behavior and APK release.
+    source_of_truth: Android source, Gradle variants, local GIS storage, NGW/Collector consumer behavior, APK release and updater identity enforcement across supported Android PackageManager versions.
   desktop-profiles:
     title: LISA/BELKA QGIS profiles and launcher
     kind: external_workspace

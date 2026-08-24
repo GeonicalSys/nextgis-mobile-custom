@@ -113,6 +113,12 @@ version, artifact hash и signing certificate. Совместимость с с�
 ресурсами подтверждается отдельным end-to-end smoke, а не совпадением названия
 версии desktop и Android.
 
+Различия Android PackageManager не изменяют эту границу доверия: на Android
+9–10 updater может получить сертификат archive APK из legacy `signatures`, если
+современный `SigningInfo` пуст, но всё равно сравнивает тот же SHA-256 с manifest
+и установленным пакетом. Desktop credentials и publisher к этой проверке не
+привлекаются.
+
 ## Маршрутизация задачи
 
 | Изменение | Проект-владелец | Дополнительный контекст |
