@@ -20,12 +20,12 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.14` / `versionCode` 208; Lisa Debug
-`3.1.2.9` / `versionCode` 203. Сверено с официальным приложением `3.1.2` и с
+Состояние форка: Lisa/Belka Release `3.1.2.15` / `versionCode` 209; Lisa Debug
+`3.1.2.10` / `versionCode` 204. Сверено с официальным приложением `3.1.2` и с
 более новыми головами официальных библиотек на 30 июля 2026 года:
 
-Подготовленный `3.1.2.14` использует OpenGL и актуальные feature-коммиты maplib
-[`0f10108`](https://github.com/GeonicalSys/android_maplib/commit/0f10108) и
+Подготовленный `3.1.2.15` использует OpenGL и итоговый Merge Commit maplib PR #17
+[`923e782`](https://github.com/GeonicalSys/android_maplib/commit/923e782d16467248fe7a711f7674111a0ba5a42c) и
 maplibui [`b3b65a41`](https://github.com/GeonicalSys/android_maplibui/commit/b3b65a41).
 Перед merge root PR указатели обновляются на итоговые merge-коммиты библиотечных
 PR согласно порядку доставки.
@@ -41,7 +41,7 @@ PR согласно порядку доставки.
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
-Форк `3.1.2.14` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+Форк `3.1.2.15` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
 и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке

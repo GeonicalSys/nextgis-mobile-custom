@@ -44,8 +44,8 @@ service permission, updater identity и оба account resource keys в merged A
 
 ## Версия
 
-- Текущий выпуск: Lisa/Belka Release `3.1.2.14` / `versionCode 208`, Lisa Debug
-  остаётся `3.1.2.9` / `versionCode 203`; maplib сообщает соответствующее
+- Текущий выпуск: Lisa/Belka Release `3.1.2.15` / `versionCode 209`, Lisa Debug
+  использует `3.1.2.10` / `versionCode 204`; maplib сообщает соответствующее
   variant-specific значение.
 - `versionName = <upstream-base>.<fork-patch>`.
 - `versionCode` увеличивается для каждого публикуемого APK.

@@ -17,9 +17,9 @@ related_code:
 
 ## Версия
 
-Проверяемый выпуск `3.1.2.14`: production `versionCode 208`, Lisa Debug остаётся
-`3.1.2.9` / `versionCode 203`; диагностический release
-`maplib.VERSION_NAME 3.1.2.14`, debug — `3.1.2.9`.
+Проверяемый выпуск `3.1.2.15`: production `versionCode 209`, Lisa Debug —
+`3.1.2.10` / `versionCode 204`; диагностический release
+`maplib.VERSION_NAME 3.1.2.15`, debug — `3.1.2.10`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.
