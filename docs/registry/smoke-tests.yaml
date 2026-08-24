@@ -356,6 +356,8 @@ tests:
       - During polygon walk verify the live tail reaches the current location and recorded nodes stay between the selected node and its former successor
       - While walk recording is active inspect and press the right bottom action
       - Move, insert and delete vertices, then press the attribute action instead of Save and complete the form
+      - Verify the successful new-feature form returns to the standard map with no selected feature or edit/action toolbar
+      - Edit an existing feature, save once with the geometry Save action and once through the attribute form
       - Repeat a rapid double tap on the attribute action and cancel one new-feature form
       - Reopen an existing multi-part MultiPolygon with a valid hole and edit one vertex without changing its part/ring count
       - Interrupt a partly drawn Polygon, restart the process, choose Continue and inspect its fill, holes and vertex count
@@ -375,6 +377,9 @@ tests:
       For every supported geometry type the attribute action becomes enabled with geometry and
       follows the same validation, topology repair and single-form handoff as Save. Existing
       multipart geometry and holes remain intact unless their vertices are explicitly edited.
+      Every successful new/existing geometry or attribute save ends editing, clears selection,
+      closes the attributes panel and restores the standard map controls. Failed writes retain
+      their edit context; explicit form cancellation follows its normal cancellation path.
       Cancelling a new sketch first requires confirmation; continuing leaves the sketch intact,
       while confirmed cancellation returns to normal map mode without a disabled action panel or
       a duplicate plus button. Ruler area is displayed in hectares. A restored Polygon has one

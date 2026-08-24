@@ -112,7 +112,7 @@ Key types: `GeometryEditDraftStore`, `MapFragment.persistManualGeometryDraft`,
 | Clear | Successful Save, Discard in form dialog, Discard in recovery hub. Save/Discard marks the Activity terminal before `finish()`, so the following `onPause()` cannot recreate the draft |
 | Restore | Recovery hub → `LayerUtil.showEditFormFromDraft` with `apply_form_draft` |
 | Validation | A draft for an existing feature is offered only while that feature row still exists; typed control values retain their Bundle type |
-| Save result after cold restore | The result carries layer id and whether the row was newly inserted. `MapFragment` resolves the layer from the active map and reloads the persisted feature without assuming that the pre-crash `mSelectedLayer` or temporary MapLibre edit object still exists. When the new id is absent from the process-local GeoJSON list, `MapDrawable` performs a full layer-data reload instead of a style-only refresh, so the object becomes visible without restarting the app |
+| Save result after cold restore | The result carries layer id and whether the row was newly inserted. `MapFragment` resolves the layer from the active map and reloads the persisted feature without assuming that the pre-crash `mSelectedLayer` or temporary MapLibre edit object still exists. When the new id is absent from the process-local GeoJSON list, `MapDrawable` performs a full layer-data reload instead of a style-only refresh, so the object becomes visible without restarting the app. Every successful result then terminates creation/existing-feature editing, clears edit and view selection, and returns the standard `MODE_NORMAL` map UI |
 
 No layer insert until the user explicitly Saves.
 
