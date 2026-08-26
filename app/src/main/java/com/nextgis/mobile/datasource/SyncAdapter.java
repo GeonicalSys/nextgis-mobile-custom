@@ -27,6 +27,7 @@ import android.accounts.Account;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,6 +51,7 @@ import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
+import com.nextgis.mobile.util.SyncRecoveryJournal;
 
 import static com.nextgis.maplib.util.Constants.MESSAGE_ALERT_INTENT;
 import static com.nextgis.maplib.util.Constants.MESSAGE_EXTRA;
@@ -88,6 +90,8 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
             return;
         }
 
+        boolean recoveryJournalStarted = false;
+        boolean recoveryJournalComplete = false;
         try {
             if(!AccountUtil.isUserExists(getContext())) {
                 HyperLog.v(Constants.TAG, "onPerformSync for" + account.name + " exit cos !AccountUtil.isUserExists");
@@ -102,12 +106,31 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
                 return;
             }
 
-            if (!super.isSomeToSync(account)) {
+            boolean manualSync = bundle != null
+                    && bundle.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false);
+            recoveryJournalStarted = SyncRecoveryJournal.begin(
+                    getContext(), account.name, manualSync);
+
+            IGISApplication gisApp = (IGISApplication) getContext().getApplicationContext();
+            if (!gisApp.repairProjectIntegrityBeforeSync(account.name)) {
+                syncResult.stats.numConflictDetectedExceptions++;
+                Intent blocked = new Intent(MESSAGE_ALERT_INTENT);
+                blocked.putExtra(MESSAGE_TITLE_EXTRA, getContext().getString(
+                        com.nextgis.maplib.R.string.sync_project_repair_blocked_title));
+                blocked.putExtra(MESSAGE_EXTRA, getContext().getString(
+                        com.nextgis.maplib.R.string.sync_project_repair_blocked_message));
+                blocked.setPackage(getContext().getPackageName());
+                getContext().sendBroadcast(blocked);
                 sendSyncFinishBroadcast();
                 return;
             }
 
-            IGISApplication gisApp = (IGISApplication) getContext().getApplicationContext();
+            if (!super.isSomeToSync(account)) {
+                recoveryJournalComplete = true;
+                sendSyncFinishBroadcast();
+                return;
+            }
+
             if (gisApp.isLayerFillServiceBusy() && !operationAlreadyHeld) {
                 HyperLog.v(Constants.TAG, "onPerformSync skipped (layer fill in progress) for " + account.name);
                 sendSyncFinishBroadcast();
@@ -118,7 +141,16 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
 
             Log.d("SSYNC", "super.onPerformSync for " + account.name);
 
-            super.onPerformSync(account, bundle, authority, contentProviderClient, syncResult);
+            gisApp.setLayerFillBatchDeferringHeavyMapReload(true);
+            try {
+                super.onPerformSync(account, bundle, authority, contentProviderClient, syncResult);
+            } finally {
+                // Pulling and MapLibre GeoJSON rebuilding the same layer at once caused the largest
+                // observed native-memory peak. Flush one consolidated visible-layer reload only
+                // after all SQLite work for the account has finished.
+                gisApp.setLayerFillBatchDeferringHeavyMapReload(false);
+                gisApp.requestMapReloadAfterLayerFillBatch();
+            }
 
             if (isCanceled())
                 sendNotification(getContext(), SYNC_CANCELED, null);
@@ -126,7 +158,11 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
                 sendNotification(getContext(), SYNC_CHANGES, mError);
             else
                 sendNotification(getContext(), SYNC_FINISH, null);
+            recoveryJournalComplete = !isCanceled() && !syncResult.hasError();
         } finally {
+            if (recoveryJournalStarted && recoveryJournalComplete) {
+                SyncRecoveryJournal.complete(getContext(), account.name);
+            }
             if (operationLease != null) {
                 operationLease.close();
             }

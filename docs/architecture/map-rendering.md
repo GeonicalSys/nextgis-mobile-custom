@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-08-25
+last_verified: 2026-08-26
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -203,11 +203,13 @@ related_code:
     отсутствии местоположения.
 22. Schema/composition rebuild является staged replacement: новая
     `NGWVectorLayer` создаётся в отдельном UUID-каталоге, полностью заполняется,
-    вставляется и сохраняется в `LayerGroup`. Только затем прежний слой с той же
-    парой `account + remote_id` удаляется. Ошибка fill удаляет только stage;
-    рабочий слой и его render source остаются до успешной замены. Если процесс
-    оборвался между сохранением замены и удалением старой копии, допустим
-    восстанавливаемый дубликат, но не потеря обеих копий.
+    затем на main thread одним сохранением заменяет прежние копии той же
+    `account + project_uid + remote_id`. Промежуточная композиция old+new не
+    сохраняется; физические каталоги старых копий удаляются только после commit.
+    Ошибка fill/save оставляет прежний слой и удаляет только stage. Оставшиеся от
+    старого поведения дубликаты чинятся pre-sync repair после backup gate.
+    `default.ngm` и layer configs записываются через `AtomicFile`, поэтому
+    process death видит последнюю целую старую либо новую композицию.
 23. Инкрементальный NGW pull не публикует insert/update/delete broadcast для
     каждой строки: после полного SQLite-apply выполняется одна R-tree rebuild.
     Публичные операции R-tree сериализованы, а notify callback не меняет индекс
@@ -261,6 +263,10 @@ related_code:
     Java GeoJSON snapshot, а после `setStyle` — detached source/layer wrappers,
     чтобы большой Collector-проект не удваивал пиковую память. Тип renderer,
     SDK и prefetch policy фиксируются в HyperLog при создании view.
+    Во время account sync тяжёлые reload откладываются и схлопываются в один
+    финальный проход. Data-change выключенного vector layer очищает его прежний
+    GeoJSON source, но не читает всю SQLite-таблицу; включение запускает обычный
+    on-demand reload.
 27. Холодное восстановление walk/manual скетча проверяет принадлежность всех
     edit sources текущему `Style`. Если стиль или source ещё создаются, привязка
     откладывается до завершения style apply; `startFeatureSelectionForEdit()`

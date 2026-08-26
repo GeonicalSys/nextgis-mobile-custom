@@ -1,12 +1,39 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-25
+last_verified: 2026-08-26
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-26
+
+- Подготовлен выпуск Lisa/Belka `3.1.2.17` / `versionCode 211` и Lisa Debug
+  `3.1.2.17` / `versionCode 212` поверх sync-recovery. App и maplib coupling
+  обновлены согласованно; root закрепляет Merge Commit maplib PR #20
+  `4323cb0` и maplibui PR #12 `5d48122`. Публичные каналы до публикации:
+  Lisa/Belka `210` / `3.1.2.16`, Debug `204` / `3.1.2.10`.
+- Без изменения версии добавлен pre-sync repair дубликатов managed NGW-слоя с
+  backup gate и одним map commit; edited/ambiguous copies блокируют sync без
+  удаления. Staged schema refill больше не сохраняет промежуточную композицию
+  old+new, а map/layer JSON записывается через `AtomicFile`.
+- Schema preflight стал трёхсторонним (`resource.cls`/geometry/fields NGW,
+  serialized config, physical SQLite): metadata-only drift `idqgs` исправляется
+  без refill, а legacy config без типа не считается PostGIS.
+- Full untracked NGW snapshot загружается во временный файл и потоково
+  применяется одной SQLite-транзакцией; reload MapLibre откладывается до конца
+  account-pass, выключенные слои не материализуют полный GeoJSON.
+- Account sync получил `dataSync` foreground execution и durable recovery
+  marker для повтора после process death только в том же workspace. Локальные
+  изменения отправляются до большого pull; неуспешный push блокирует remote apply.
+- Удалено десятисекундное ожидание sync worker из `NGWSyncService.onDestroy()`,
+  которое блокировало Android main thread и могло само приводить к ANR.
+- Pull серверных attachment metadata больше не сравнивает их с пустым локальным
+  `META` и не скачивает сотни файлов только ради ложного `sync_remote_apply`
+  backup. Метаданные сохраняются в `FeatureAttachments`, в том числе для новых
+  features; обычный pull по-прежнему не скачивает байты вложений.
 
 ## 2026-08-25
 

@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-08-14
+last_verified: 2026-08-26
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -72,15 +72,19 @@ QGIS-инструменты могут создавать, оформлять и
 Android-кода не требуются; слой остаётся нередактируемым, контрактное направление —
 только NGW → Android.
 
-Выкладка начинается на publisher-side: обновить `stand_project`, затем повторно
-опубликовать mobile configs в `vector_only`. APK не обновляется. Существующий
-локальный слой может один раз перестроиться при первой синхронизации с новым
-description; после этого схемы совпадают и повторная перестройка не ожидается.
+Выкладка начинается на publisher-side: `stand_project` публикует mobile configs
+в `vector_only` с полем `idqgs`. Android независимо сверяет authoritative NGW
+resource class/geometry/fields с serialized config и физической SQLite. Если
+NGW и SQLite уже содержат `idqgs`, устаревший description чинится как metadata
+без скачивания слоя. Ошибочный vector/PostGIS class также чинится как metadata;
+refill допустим только при несовпадении geometry или физической таблицы и
+публикуется атомарной заменой.
 
 Временный HTTP `5xx` или `ExternalDatabaseError` внешней БД не изменяет этот
 контракт и не превращает серверный слой в локальный. Android откладывает только
-упавший pull до второго прохода синхронизации, не повторяя уже успешные слои и не
-отправляя локальные изменения до успешного чтения. Publisher-side изменений для
+упавший pull до второго прохода синхронизации, не повторяя уже успешные слои.
+Pending локальные изменения отправляются до большого pull; при ошибке push
+remote snapshot не применяется. Publisher-side изменений для
 такого восстановления не требуется.
 
 Изменение publisher-side логики в `stand_project`, `sync_ngw`,

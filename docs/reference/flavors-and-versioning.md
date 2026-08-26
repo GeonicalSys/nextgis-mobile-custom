@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-08-24
+last_verified: 2026-08-26
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -41,6 +41,9 @@ branding release-варианта.
 Account type — единый контракт runtime/authenticator/sync adapter. При изменении
 `applicationIdSuffix` необходимо проверить также provider authority, FileProvider,
 service permission, updater identity и оба account resource keys в merged APK.
+Durable sync-recovery journal хранит account name и active workspace, но account
+type и authority всегда получает через текущий `IGISApplication`; новых variant
+identity или меж-flavor данных он не вводит.
 
 Разные application ID образуют разные Android sandboxes. Для одноразового
 переноса старых локальных подложек `lisaDebug` публикует отдельный read-only
@@ -54,8 +57,8 @@ production APK не может обновить пакет Debug и не пол�
 
 ## Версия
 
-- Текущий выпуск: Lisa/Belka Release `3.1.2.16` / `versionCode 210`, Lisa Debug
-  использует `3.1.2.11` / `versionCode 205`; maplib сообщает соответствующее
+- Текущий выпуск: Lisa/Belka Release `3.1.2.17` / `versionCode 211`, Lisa Debug
+  использует `3.1.2.17` / `versionCode 212`; maplib сообщает соответствующее
   variant-specific значение.
 - `versionName = <upstream-base>.<fork-patch>`.
 - `versionCode` увеличивается для каждого публикуемого APK.

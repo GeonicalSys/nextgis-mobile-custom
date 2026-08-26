@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-08-24
+last_verified: 2026-08-26
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -256,6 +256,19 @@ layer_origin(project_uid)`. При загрузке vector layer восстан�
 не размножает дубликаты. Пока активен durable import batch, новые additions
 откладываются до следующей синхронизации.
 
+До каждого account sync выполняется repair уже повреждённой композиции. Точная
+identity включает `account + project_uid + remote_id`, поэтому одинаковый
+ресурс в другом Collector-проекте или ручной слой не затрагивается. Несколько
+managed-копий без pending changes/attachments проходят backup gate, после чего
+все лишние ссылки удаляются одним сохранением карты, а их storage — только после
+commit. Неоднозначность с локальными изменениями блокирует sync и требует
+ручного разбора; автоматическое объединение объектов между копиями запрещено.
+
+При schema refill замена использует ту же project identity. Main-thread swap
+никогда не сохраняет old+new одновременно и не удаляет рабочую таблицу до
+успешного сохранения replacement. Это устраняет окно, в котором process death
+на каждом sync размножал один и тот же слой.
+
 HTTP 404 при feature sync managed-слоя также не превращает его в локальный
 неуправляемый слой. Решение об удалении принимает только composition sync по
 полному snapshot проекта; если snapshot неполон, существующий слой сохраняется.
@@ -334,6 +347,8 @@ destructive composition apply. После импорта в её `config.json` �
   целевой проект удаляются только помеченные unpublished stages, а referenced и
   legacy unmarked каталоги/MBTiles сохраняются;
 - backup и отказ от удаления при искусственной ошибке backup;
+- repair трёх одинаковых managed-копий без pending changes до одной, а также
+  fail-closed блокировку при change/attachment хотя бы в одной копии;
 - два rebuild одной неизменной сломанной схемы за сутки, блокировка третьего,
   ручной сброс защиты и сохранение старого слоя при неуспешной staged-загрузке;
 - district filter и form/render configuration;

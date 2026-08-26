@@ -1,5 +1,11 @@
 schema_version: 1
 preferences:
+  sync_recovery_journal:
+    owner: app
+    type: app_private_shared_preferences
+    user_configurable: false
+    source: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
+    purpose: Mark one interrupted account sync with its active workspace so process restart requests an idempotent recovery pass without crossing project or flavor identity
   map_show_loc:
     owner: app
     type: boolean

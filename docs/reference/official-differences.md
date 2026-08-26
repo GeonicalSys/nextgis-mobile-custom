@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-08-25
+last_verified: 2026-08-26
 related_code:
   - app/build.gradle
   - app/src/main
@@ -20,18 +20,18 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.16` / `versionCode` 210; Lisa Debug
-`3.1.2.11` / `versionCode` 205. Сверено с официальным приложением `3.2.0` и с
-головами официальных библиотек на 24 августа 2026 года. В частности, учтён
+Состояние форка: Lisa/Belka Release `3.1.2.17` / `versionCode` 211; Lisa Debug
+`3.1.2.17` / `versionCode` 212. Сверено с официальным приложением `3.2.0` и с
+головами официальных библиотек на 26 августа 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
 [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
 в котором объявлена поддержка raster MBTiles:
 
 Подготовленная integration-ветка использует OpenGL и итоговые Merge Commit:
-maplib PR #19 [`b704187`](https://github.com/GeonicalSys/android_maplib/commit/b704187c6c943a29e20ab350d9dbd75bd68e8ae1)
-(содержит #18) и
-maplibui PR #11 [`e6335cf`](https://github.com/GeonicalSys/android_maplibui/commit/e6335cf4b9548e333d6478c1dbadfbd0e47e919c).
-Root закрепляет именно merge-коммит `#19`, а не tip feature-ветки.
+maplib PR #20 [`4323cb0`](https://github.com/GeonicalSys/android_maplib/commit/4323cb00bc9d03c3e183afdce6dc1b7012266831)
+(содержит #19/#18) и
+maplibui PR #12 [`5d48122`](https://github.com/GeonicalSys/android_maplibui/commit/5d48122d236769afb0f37247e0b3aa4c0ff8f604)
+(содержит #11). Root закрепляет именно эти merge-коммиты, а не tip feature-веток.
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -39,13 +39,13 @@ Root закрепляет именно merge-коммит `#19`, а не tip fea
 - Android MapLib UI — [`a426e0a`](https://github.com/nextgis/android_maplibui/commit/a426e0acfc8d111982918e04236e2e8f896674de);
 - EasyPicker — [`36ba558`](https://github.com/nextgis/easypicker/commit/36ba558ba0d1eaadcb7dc6ba46ab9286d7eedaa1).
 
-Все четыре official HEAD повторно проверены 24 августа 2026 года через
+Все четыре official HEAD повторно проверены 26 августа 2026 года через
 канонические GitHub repositories. Release tag и feature-коммиты MBTiles
 рассматриваются отдельно от приведённых baseline hashes форка.
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
-Форк `3.1.2.16` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+Форк `3.1.2.17` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
 и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
@@ -413,6 +413,10 @@ Collector project. Ручной NGW-слой в том же workspace district �
 или обязательный backup не удались, локальный слой остаётся без разрушительных
 изменений. Сохранённые копии можно выгрузить из приложения для восстановления,
 анализа или передачи разработчику, а после проверки — удалить через интерфейс.
+Обычное получение серверных метаданных вложений не считается разрушением и не
+создаёт ZIP: сами файлы могут оставаться только в NGW, а их online metadata
+сохраняется в SQLite. Полное удаление feature и реальные изменения его
+геометрии/атрибутов по-прежнему проходят fail-closed backup gate.
 
 ### Управляемая сервером конфигурация слоя
 
@@ -1133,25 +1137,45 @@ member вместо legacy квадратичного сравнения все�
 
 При неизменной причине schema mismatch тяжёлый слой перестраивается не более
 двух раз за 24 часа и не чаще раза в 10 минут. Новая копия сначала полностью
-строится и сохраняется отдельно; прежний рабочий слой удаляется только после
-успеха. Счётчик остановленных rebuild и ручной сброс защиты находятся в
+строится отдельно, затем одним main-thread commit заменяет прежние копии той же
+project identity; состояние old+new не сохраняется. Перед account sync старые
+дубликаты без pending changes/attachments проходят backup gate и схлопываются
+до одной копии. Edited-копии не объединяются автоматически и блокируют sync.
+Счётчик остановленных rebuild и ручной сброс защиты находятся в
 настройках проекта. Пустой повторный запуск и системный timeout fill-service
 останавливают foreground service, сохраняя durable import journal для resume.
+Map/layer JSON сохраняется через `AtomicFile`, поэтому убийство процесса во
+время commit не оставляет обрезанный `default.ngm` или `config.json`.
 
-Периодическая
-NGW-синхронизация получает уникальную задачу для каждого аккаунта и не
+NGW schema сверяется по трём представлениям: authoritative resource class,
+geometry и fields; serialized mobile config; physical SQLite columns/affinities.
+Если SQLite уже совпадает с NGW, отсутствующее в description поле вроде `idqgs`
+чинится только в metadata без скачивания слоя. Ошибочный vector/PostGIS class в
+config также чинится in-place; staged refill нужен для geometry/physical
+mismatch. Импортированный mobile config не перезаписывает authoritative
+class/geometry/fields. Legacy config без `ngw_layer_type` не классифицируется как
+PostGIS по совпавшему числовому значению константы.
+
+Периодическая NGW-синхронизация получает уникальную задачу для каждого аккаунта и не
 планируется из отдельного процесса сервиса трека. После перезапуска Android
 оставшаяся работа либо корректно продолжается, либо заменяется новой задачей с
 тем же назначением, а не дублируется. При ручной синхронизации активный
 Collector‑проект обслуживается первым; ошибка или зависшее соединение другого
 аккаунта не переносит ошибочный результат на остальные аккаунты.
 
+Тяжёлая часть ручного и системного account sync работает как `dataSync`
+foreground service. App-private journal хранит начатый account/workspace и после
+process death запрашивает один повтор только если тот же проект активен; clean
+finish снимает marker. Локальные изменения отправляются перед большим remote
+pull, а ошибка push не допускает apply snapshot для этого слоя.
+`NGWSyncService.onDestroy()` больше не ждёт worker десять секунд на Android main
+thread: состояние незавершённого прохода восстанавливается через journal.
+
 Для feature-sync временный сетевой сбой, HTTP `408`/`429`/`5xx` или
 `ExternalDatabaseError` после трёх быстрых попыток откладывает только проблемный
 векторный слой. Основной проход продолжает остальные слои, затем ждёт минимум
 15 секунд и повторяет очередь ошибок ещё максимум по три раза на слой. Успешные
-слои повторно не читаются; push локальных изменений начинается только после
-успешного pull. Если второй проход исчерпан, интерфейс сообщает, что сервер или
+слои повторно не читаются. Если второй проход исчерпан, интерфейс сообщает, что сервер или
 внешняя база временно недоступны, вместо общего сообщения об ошибке подключения.
 
 Состояние sync также выставляется непосредственно адаптером во всех путях
@@ -1163,10 +1187,17 @@ process state.
 insert/update/delete broadcast и после SQLite-apply выполняет одну пересборку
 R-tree и один reload слоя. Операции `GeometryRTree` сериализованы; незавершённый
 envelope не разыменовывает `null`, а ошибка cache receiver не завершает main
-thread. В проверенном official `nextgis/android_maplib` на 22 августа 2026 года
+thread. В проверенном official `nextgis/android_maplib` на 26 августа 2026 года
 incremental bulk-защиты нет, операции add/remove R-tree не сериализованы, а
 `tighten()` по-прежнему глотает `ConcurrentModificationException` после
 `unInit()`.
+
+Full untracked snapshot в форке не удерживает весь JSON и список feature в heap:
+HTTP body временно хранится на диске, сканируется потоково для backup/delete
+плана и вторым проходом применяется одной SQLite-транзакцией. MapLibre reload
+схлопывается до одного после account sync; выключенный слой не строит GeoJSON до
+включения. Это отдельная защита от наблюдавшегося пика RSS и Java OOM на больших
+геометриях.
 
 ## Продуктовые решения форка
 

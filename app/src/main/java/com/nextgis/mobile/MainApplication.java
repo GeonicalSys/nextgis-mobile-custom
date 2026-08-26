@@ -64,6 +64,7 @@ import com.nextgis.mobile.activity.SettingsActivity;
 import com.nextgis.mobile.util.LegacyUnderlayMigrationContract;
 import com.nextgis.mobile.util.Logger;
 import com.nextgis.mobile.util.OfflineSyncIntentService;
+import com.nextgis.mobile.util.SyncRecoveryJournal;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,6 +144,12 @@ public class MainApplication extends GISApplication
         updateFromOldVersion();
         NGWUtil.NGUA = "ng_mobile";
         NGWUtil.UUID = TrackerService.getUid(this);
+
+        if (isDefaultApplicationProcess()) {
+            new Handler(Looper.getMainLooper()).postDelayed(
+                    () -> SyncRecoveryJournal.schedulePendingIfNeeded(this),
+                    3_000L);
+        }
     }
 
     private boolean isDefaultApplicationProcess() {
