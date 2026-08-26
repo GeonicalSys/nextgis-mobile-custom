@@ -215,9 +215,14 @@ tests:
     expected: Failed fill never removes the old layer; an unchanged fingerprint runs at most twice per 24 hours and the third attempt is suppressed; Project settings reports the stopped layer and reset permits a new attempt; a changed/fixed fingerprint can rebuild successfully.
   SMOKE-BACKUP-GATE:
     type: device
-    scope: [maplibui]
-    steps: [Prepare unsent local layer data, Trigger schema rebuild or Collector removal, Simulate backup failure]
-    expected: Destructive mutation is cancelled and local layer data remains.
+    scope: [maplibui, maplib]
+    steps:
+      - Prepare unsent local layer data, trigger schema rebuild or Collector removal, simulate backup failure
+      - Sync twice a layer whose server features have attachments but whose bytes were never downloaded to the device
+    expected: >
+      Destructive mutation is cancelled and local layer data remains. Attachment metadata is
+      available through FeatureAttachments after the first pull; the second pull creates no
+      sync_remote_apply ZIP and does not download attachment bytes merely for backup.
   SMOKE-CRASH-DRAFT-RECOVERY:
     type: device
     scope: [app, maplibui, maplib]

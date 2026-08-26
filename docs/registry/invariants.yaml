@@ -215,7 +215,9 @@ invariants:
       converting the layer to an unmanaged local vector. Before additions, composition sync
       indexes physical layers by account plus remote id: one matching layer with only missing
       origin may be repaired in place, while duplicate, manual, wrong-kind or mismatched-account
-      identities block apply and must not create another copy.
+      identities block composition apply and must not create another copy. Before account sync,
+      duplicate managed identities with no pending feature/attachment changes are backup-gated and
+      collapsed by one durable map commit; ambiguous edited copies remain untouched and block sync.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
       - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -363,18 +365,23 @@ invariants:
     statement: >
       For editable NGW vector layers, a successful data backup is required before any destructive
       mutation — remote sync delete/overwrite, schema rebuild, Collector vector-layer removal,
-      manual layer delete, manual feature delete, or active project workspace delete. Schema rebuild
-      must retain the old layer until its staged replacement is saved. Backup must include attachment file bytes
+      duplicate-layer repair, manual layer delete, manual feature delete, or active project workspace
+      delete. Schema rebuild must retain the old layer until its staged replacement is saved in the
+      same map commit that removes old references. Backup must include attachment file bytes
       (local files or NGW download), not metadata alone. If backup fails, local feature data must
       remain unchanged and the user must see an alert with the failure reason. Non-editable Collector
       layers and recreatable raster-style tile caches are not data-backup operations. LayerBackups/
       is capped by preference layer_backup_max_gb (default 5); oldest ZIP archives are deleted when
       the limit is exceeded. After a successful attachment push, the local file stays under the
       server attach id and FeatureAttachments is updated so identification works without a second sync.
+      Pulling server attachment metadata without downloading its bytes is not destructive: metadata
+      is compared with and persisted to FeatureAttachments, not with optional local META files, and
+      must not trigger a feature backup by itself. Whole-feature deletion remains backup-gated.
     related_code:
       - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
       - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/util/RemoteAttachmentSyncPolicy.java
       - maplibui/src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java
       - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
     verify_smoke: [SMOKE-BACKUP-GATE, SMOKE-PROJECT-MANAGEMENT, SMOKE-SCHEMA-REBUILD-GUARD]
@@ -671,7 +678,7 @@ invariants:
   INV-SYNC-ACCOUNT-ISOLATION:
     title: One NGW account failure does not suppress another account
     owners: [app, maplib, maplibui]
-    statement: Keep account sync results isolated, prioritize the active Collector account for manual serial sync, and restore each enabled account schedule after restart.
+    statement: Keep account sync results isolated, prioritize the active Collector account for manual serial sync, restore each enabled account schedule after restart, and durably request an interrupted account pass only for the same active workspace. Pending local edits are sent before a large pull; a failed push prevents remote apply for that layer.
     related_code:
       - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
       - maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java
@@ -722,7 +729,9 @@ invariants:
       Vector-layer notifications do not mutate a cache during bulk/rebuild, and a receiver callback
       failure is logged without terminating the Android main thread. MapLibre style workers never
       mutate Feature.properties already published to the live map; they use an independent render-cache
-      snapshot or fall back to a full data reload.
+      snapshot or fall back to a full data reload. A full untracked NGW response is staged on disk and
+      stream-applied in one SQLite transaction; MapLibre reloads once after commit and hidden layers do
+      not materialize full GeoJSON until enabled.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeoEnvelope.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java

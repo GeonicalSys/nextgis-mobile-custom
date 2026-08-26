@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-08-25
+last_verified: 2026-08-26
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -127,9 +127,17 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   даже если lifecycle фрагмента пропустил финальный broadcast;
 - ручная синхронизация запускается только для NGW-слоёв активного проекта;
   повторный запуск и переключение проекта блокируются на всё время sync/fill;
+- перед account sync приложение безопасно сводит старые managed-дубликаты слоя
+  к одной копии только после backup и только при отсутствии pending changes;
+  edited-копии блокируют sync без автоматического удаления;
+- ручной и системный sync используют `dataSync` foreground execution, а
+  durable marker после process death запрашивает повтор только для того же
+  account/workspace; clean finish снимает marker;
 - массовый incremental pull не создаёт построчные spatial-cache уведомления:
   R-tree перестраивается один раз, а style props применяются к отдельному
   snapshot, не к live MapLibre feature;
+- полный untracked snapshot потоково применяется из временного файла одной
+  SQLite-транзакцией, а MapLibre получает один reload после account-pass;
 - добавление vector/raster NGW-слоя по прямому URL, включая проверенный guest fallback;
 - получение ресурсов, подготовленных desktop QGIS-плагинами, только через
   NextGIS Web/Collector или явный import поддерживаемого portable artifact, без

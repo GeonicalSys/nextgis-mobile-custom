@@ -1,12 +1,50 @@
+---
+title: Handoff инцидента NGW sync и Collector import
+type: history
+last_verified: 2026-08-26
+related_code:
+  - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+  - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+  - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+  - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+---
+
 # Handoff: устойчивость NGW data sync / Collector import (Android)
 
-**Статус:** план согласован с пользователем, **код не писали**. Этот файл — передача другому агенту, не действующий контракт. Не коммитить, пока пользователь явно не попросит.
+**Статус:** историческая передача контекста от 25 августа, не действующий
+контракт. Реализованный пересмотренный результат описан в
+[`ngw-sync-and-storage.md`](../architecture/ngw-sync-and-storage.md); версия по
+явному решению пользователя не повышалась.
 
 **Задача агента-получателя:** реализовать план ниже (пункты 0/0b/0c, затем 1/2/4/5/6). Не делать пункт 3 (потоковый pull). Не трогать desktop `lisa` PR 49.
 
 Источник Cursor-плана: `C:\Users\lyubi\.cursor\plans\sync_kill_resilience_22478c62.plan.md`  
-Чат: [Android sync kill / Collector crash](e3fdfa49-14c8-45e9-892f-095eb3a0054a)  
+Чат Codex: `e3fdfa49-14c8-45e9-892f-095eb3a0054a`
 Дата инцидентов и плана: 2026-08-25.
+
+## Результат пересмотра 2026-08-26
+
+Исходный план использован только как evidence. После анализа трёх HyperLog,
+ApplicationExitInfo, Web GIS metadata и физической SQLite реализация расширена:
+
+- добавлены трёхсторонняя schema/class/config/SQLite сверка и metadata-only
+  repair `idqgs` без refill;
+- старые managed-дубликаты чинятся внутри pre-sync после backup gate, а staged
+  replacement публикуется одним main-thread map commit;
+- map/layer JSON сохраняется через `AtomicFile`;
+- вопреки исходному отложенному пункту 3 full untracked snapshot сделан
+  потоковым через временный файл и одну SQLite-транзакцию, потому что отдельный
+  анализ подтвердил Java OOM/RSS-пик на больших геометриях;
+- добавлены send-first для pending edits, deferred MapLibre reload, `dataSync`
+  FGS и durable same-workspace account retry после process death.
+- Лог 26 августа показал отдельный metadata-only attachment цикл: 265 server
+  attachments слоя `Полевые точки` скачивались в backup при `updated=0`.
+  Сравнение перенесено с необязательного локального `META` на SQLite
+  `FeatureAttachments`; metadata refresh больше не является destructive backup
+  trigger, а новые server features сразу сохраняют online metadata.
+
+Ниже сохранён исходный план как история принятия решения; его ограничения и
+предложения не переопределяют текущие architecture/invariant docs.
 
 ---
 

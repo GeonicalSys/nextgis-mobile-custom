@@ -27,25 +27,32 @@ import static com.nextgis.maplib.util.Constants.MESSAGE_TITLE_EXTRA;
 import static com.nextgis.maplibui.util.NotificationHelper.createBuilder;
 
 import android.app.NotificationManager;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
 import com.nextgis.maplib.service.NGWSyncService;
+import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplibui.util.NotificationHelper;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
+import com.hypertrack.hyperlog.HyperLog;
 
 public class SyncService extends NGWSyncService {
 
     private static final int NOTIFICATION_ID = 518;
+    private static final int FOREGROUND_NOTIFICATION_ID = 520;
+    private static final String FOREGROUND_CHANNEL_ID = "account_sync_fgs";
     protected MessageReceiver mMessageReceiver;
+    private BroadcastReceiver mForegroundReceiver;
 
     @Override
     public void onCreate(){
@@ -58,6 +65,79 @@ public class SyncService extends NGWSyncService {
         } else {
             registerReceiver(mMessageReceiver, intentFilter);
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    FOREGROUND_CHANNEL_ID,
+                    getString(com.nextgis.maplibui.R.string.sync),
+                    NotificationManager.IMPORTANCE_LOW);
+            channel.setShowBadge(false);
+            channel.setSound(null, null);
+            NotificationManager manager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
+        }
+        mForegroundReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent != null ? intent.getAction() : null;
+                if (SyncAdapter.SYNC_START.equals(action)) {
+                    startSyncForeground();
+                } else if (SyncAdapter.SYNC_FINISH.equals(action)
+                        || SyncAdapter.SYNC_CANCELED.equals(action)
+                        || SyncAdapter.SYNC_CHANGES.equals(action)) {
+                    stopForeground(true);
+                }
+            }
+        };
+        IntentFilter foregroundFilter = new IntentFilter();
+        foregroundFilter.addAction(SyncAdapter.SYNC_START);
+        foregroundFilter.addAction(SyncAdapter.SYNC_FINISH);
+        foregroundFilter.addAction(SyncAdapter.SYNC_CANCELED);
+        foregroundFilter.addAction(SyncAdapter.SYNC_CHANGES);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                    mForegroundReceiver,
+                    foregroundFilter,
+                    Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mForegroundReceiver, foregroundFilter);
+        }
+    }
+
+    private void startSyncForeground() {
+        Intent open = new Intent(this, MainActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(
+                this,
+                0,
+                open,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                this, FOREGROUND_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_action_sync)
+                .setContentTitle(getString(com.nextgis.maplib.R.string.synchronization))
+                .setContentText(getString(com.nextgis.maplib.R.string.sync_progress))
+                .setContentIntent(contentIntent)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setProgress(0, 0, true)
+                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+                .setPriority(NotificationCompat.PRIORITY_LOW);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(
+                        FOREGROUND_NOTIFICATION_ID,
+                        builder.build(),
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+            } else {
+                startForeground(FOREGROUND_NOTIFICATION_ID, builder.build());
+            }
+        } catch (RuntimeException exception) {
+            HyperLog.w(Constants.TAG, "SyncService: could not enter foreground", exception);
+        }
     }
 
     @Override
@@ -68,6 +148,11 @@ public class SyncService extends NGWSyncService {
     @Override
     public void onDestroy(){
         unregisterReceiver(mMessageReceiver);
+        if (mForegroundReceiver != null) {
+            unregisterReceiver(mForegroundReceiver);
+            mForegroundReceiver = null;
+        }
+        stopForeground(true);
         super.onDestroy();
     }
 

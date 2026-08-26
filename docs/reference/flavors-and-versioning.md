@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-08-24
+last_verified: 2026-08-26
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -41,6 +41,9 @@ branding release-варианта.
 Account type — единый контракт runtime/authenticator/sync adapter. При изменении
 `applicationIdSuffix` необходимо проверить также provider authority, FileProvider,
 service permission, updater identity и оба account resource keys в merged APK.
+Durable sync-recovery journal хранит account name и active workspace, но account
+type и authority всегда получает через текущий `IGISApplication`; новых variant
+identity или меж-flavor данных он не вводит.
 
 Разные application ID образуют разные Android sandboxes. Для одноразового
 переноса старых локальных подложек `lisaDebug` публикует отдельный read-only

@@ -1,11 +1,12 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-08-24
+last_verified: 2026-08-26
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
+  - maplib/src/main/java/com/nextgis/maplib/map/Table.java
   - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
@@ -21,6 +22,10 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
   - maplibui/src/main/res/xml/authenticator.xml
   - app/build.gradle
+  - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+  - app/src/main/java/com/nextgis/mobile/datasource/SyncService.java
+  - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+  - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
   - app/src/main/res/xml/syncadapter.xml
 ---
 
@@ -90,7 +95,7 @@ ID контракта: `INV-NGW-ACCOUNT-IDENTITY`.
 
 Триггеры backup:
 
-- remote sync delete/overwrite атрибутов, геометрии или вложений
+- remote sync delete/overwrite атрибутов или геометрии
   (`NGWVectorLayer.getChangesFromServer` → selective feature ZIP);
 - schema rebuild / Collector layer removal (полный ZIP слоя, если остались
   несинхронизированные правки или удаление из проекта);
@@ -108,6 +113,14 @@ manifest, но не заменяет серверную синхронизаци
 `FeatureAttachments`. Если у объекта есть вложение, а байты файла сохранить
 нельзя — backup fail-closed, разрушительная операция отменяется, пользователю
 показывается alert с конкретной причиной.
+
+Обычный NGW pull получает метаданные серверных вложений, но не обязан скачивать
+их байты в каталог слоя. Metadata-only refresh не удаляет геометрию, атрибуты
+или локальные файлы и потому не является триггером backup. Серверные метаданные
+сверяются с `FeatureAttachments`, а не с необязательным локальным `META`, и
+пишутся туда также при первом создании feature. Размер файла в это сравнение не
+входит. Удаление feature целиком остаётся разрушительной операцией и по-прежнему
+проходит обязательный backup со всеми доступными байтами вложений.
 
 Квота каталога `LayerBackups/` задаётся preference `layer_backup_max_gb`
 (по умолчанию 5 ГБ, настройки Общие → Другое). При превышении удаляются самые
@@ -148,6 +161,24 @@ Android `PeriodicSync` registrations при старте и поддержива
 Полностью молчащее HTTP-чтение ограничено тремя минутами; это inactivity timeout
 и не обрывает большой ответ, пока данные продолжают поступать.
 
+Перед feature sync приложение выполняет repair активного проекта. Managed NGW
+layers группируются по `account + project_uid + remote_id`. Если одна identity
+представлена несколькими копиями без локальных правок и вложений, выбирается
+полная опубликованная таблица, остальные копии обязательно архивируются,
+удаляются из композиции одним сохранением карты и лишь затем физически очищаются.
+Если хотя бы в одной копии есть несинхронизированные данные либо backup не
+создан, sync прекращается с обычным понятным сообщением и ничего не удаляет.
+
+Начатый account-pass отмечается app-private durable journal. Чистое завершение
+снимает marker; process death оставляет его, и следующий запуск запрашивает один
+идемпотентный проход только для того же account и active workspace. Ручной и
+системный sync работают как `dataSync` foreground service на тяжёлой части
+прохода. Это повышает вероятность завершения при screen off, но не заменяет
+транзакции, backup gate и journal.
+Завершение bound `NGWSyncService` не ждёт worker на Android main thread:
+незавершённый проход фиксируется journal и повторяется после запуска, вместо
+прежнего блокирующего ожидания, которое само могло вызвать ANR.
+
 `ProjectOperationCoordinator` резервирует active workspace ещё при нажатии
 ручной sync и удерживает lease до конца всех account, включая промежутки между
 ними. Поэтому project switch/create/rename/delete не может попасть в окно между
@@ -173,8 +204,9 @@ UI, но не является единственным владельцем с�
 Ошибка первого прохода не попадает в итоговый `SyncResult`, если повторный проход
 успешен. Если он тоже исчерпан, результат содержит обычную IO-ошибку и отдельное
 пользовательское сообщение о временной недоступности сервера или внешней базы.
-Отправка локальных изменений и обновление времени успешной синхронизации не
-выполняются, пока pull слоя не завершился успешно.
+Локальные изменения одного слоя отправляются до большого remote pull. Если push
+не завершён, pull этого слоя не начинается. Время успешной синхронизации
+обновляется только после чистого завершения всего account-pass.
 
 ### Инкрементальный pull и пространственный индекс
 
@@ -201,7 +233,26 @@ miss запускается полный data reload. Поэтому Gson `Linke
 
 ID контракта: `INV-SPATIAL-CACHE-CONSISTENCY`.
 
+Полный untracked snapshot не материализуется целиком в Java heap. HTTP body
+пишется во временный app-owned JSON рядом со слоем, первым потоковым проходом
+собираются только remote IDs и план backup/delete, вторым — по одному feature
+применяется одна SQLite-транзакция. После commit выполняются одна cache rebuild
+и один отложенный MapLibre reload; при parse/IO/SQLite/OOM транзакция
+откатывается, marker синхронизации остаётся для повтора, а временный файл
+удаляется. Выключенный слой не строит полный GeoJSON snapshot до включения.
+
 ## Несовпадение схемы и тяжёлый rebuild
+
+Сверка схемы трёхсторонняя: authoritative NGW resource metadata определяет
+`resource.cls`, geometry и поля; локальный `config.json` является repairable
+metadata; SQLite `PRAGMA table_info` подтверждает физические имена и affinities.
+Если NGW и SQLite уже совпадают, а serialized fields устарели (например, нет
+`idqgs`) либо vector/PostGIS class записан неверно, исправляется только metadata
+без refill. Geometry или физическая таблица, несовместимые с authoritative NGW,
+запускают staged rebuild. При импорте мобильный config не может перезаписать уже
+проверенные NGW class/geometry/fields. Отсутствующий `ngw_layer_type` в legacy
+config сначала остаётся неизвестным, затем восстанавливается из NGW metadata, а
+не ошибочно считается PostGIS.
 
 `NGWVectorLayer` передаёт приложению fingerprint причины mismatch: отсутствующая
 таблица, hash server metadata/config либо hash SQLite-ошибки. Guard хранится по
@@ -211,11 +262,16 @@ fingerprint или истёкшее окно разрешает новую по�
 слоёв и явный сброс guard доступны в «Настройки → Проект».
 
 Rebuild является staged replacement. Старый слой и его SQLite остаются в карте,
-пока новая копия полностью не загружена в отдельный каталог и не сохранена в
-`LayerGroup`. Только после этого старая копия удаляется. Ошибка fill удаляет
-только stage, поэтому сломанный server config не превращает рабочий локальный
-слой в потерю данных. Первый неуспешный SQLite insert завершает fill и откатывает
+пока новая копия полностью не загружена в отдельный каталог. На main thread
+замена вставляется, все прежние копии той же project identity удаляются и карта
+сохраняется ровно один раз; композиция old+new никогда не сохраняется как
+промежуточное состояние. Физические данные старых копий удаляются только после
+успешного commit. Ошибка fill/commit удаляет только stage и восстанавливает
+старую композицию. Первый неуспешный SQLite insert завершает fill и откатывает
 транзакцию вместо повторения всех следующих записей.
+`Table.save/load` используют `AtomicFile`: process death во время записи
+`default.ngm` или layer `config.json` восстанавливает последнюю полную версию,
+а не оставляет обрезанный JSON.
 
 Полный fill разбирает WKT `MULTIPOLYGON` с учётом вложенности скобок, поэтому
 внутренние кольца и следующие polygon members сохраняются. При первом сбое
@@ -257,7 +313,8 @@ MultiPolygon, но не зависит квадратично от числа в
 - остановку sync spinner после normal, cancel и exception finish, включая
   уход/возврат в layer drawer во время синхронизации;
 - post-push refresh и сохранение локальных данных;
-- foreground-service требования Android 14+.
+- foreground-service требования Android 14+ и повтор account-pass после
+  принудительного убийства процесса;
 - отказ от project switch во время всей ручной sync и layer fill;
 - staged schema rebuild, лимит неизменного fingerprint и ручной reset guard;
 - массовый incremental pull с одной итоговой R-tree rebuild, без построчных
@@ -267,6 +324,13 @@ MultiPolygon, но не зависит квадратично от числа в
 - полный fill малого числа очень больших MultiPolygon без квадратичного зависания;
 - process death и открытие другого проекта без таблиц в чужом `layers.db`, с
   очисткой только помеченных unpublished stages после возврата к target UID.
+- три копии одной managed layer без локальных изменений: pre-sync repair
+  оставляет одну; с локальным change/attachment repair блокируется без удаления;
+- расхождение description/config/SQLite по `idqgs` и ошибочный PostGIS class:
+  metadata-only случай не скачивает слой, физическое/class расхождение делает
+  одну атомарную staged replacement без сохранённой пары old+new;
+- полный untracked snapshot под ограничением heap, включая interruption/OOM до
+  commit и один итоговый reload после успешного повтора.
 
 Связанные tests: `NgwPullDecisionTest`, `NGWUtilFeaturesUrlTest`,
 `NgwResmetaUtilTest`, `LayerConfigUtilTest`, `NgwSyncRetryPolicyTest`,

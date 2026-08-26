@@ -5,13 +5,21 @@ import static com.nextgis.maplib.datasource.ngw.SyncAdapter.ACTION_LPATH;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.IntentService;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.pm.ServiceInfo;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.Context;
 import android.content.PeriodicSync;
 import android.content.SyncResult;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.nextgis.maplib.api.IGISApplication;
 import com.nextgis.maplib.api.INGWLayer;
@@ -22,6 +30,8 @@ import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.datasource.SyncAdapter;
+import com.nextgis.mobile.R;
+import com.nextgis.mobile.activity.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +49,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OfflineSyncIntentService extends IntentService {
 
     private static final String ACTION_OFFSYNC = "com.nextgis.mobile.util.action.OFFSYNC";
+    private static final String SYNC_CHANNEL_ID = "manual_sync_fgs";
+    private static final int SYNC_NOTIFICATION_ID = 519;
 
 
 
@@ -51,6 +63,47 @@ public class OfflineSyncIntentService extends IntentService {
 
     public OfflineSyncIntentService() {
         super("OfflineSyncIntentService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        NotificationManager manager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager != null) {
+            NotificationChannel channel = new NotificationChannel(
+                    SYNC_CHANNEL_ID,
+                    getString(com.nextgis.maplibui.R.string.sync),
+                    NotificationManager.IMPORTANCE_LOW);
+            channel.setShowBadge(false);
+            channel.setSound(null, null);
+            manager.createNotificationChannel(channel);
+        }
+        Intent open = new Intent(this, MainActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(
+                this,
+                0,
+                open,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, SYNC_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_action_sync)
+                .setContentTitle(getString(com.nextgis.maplib.R.string.synchronization))
+                .setContentText(getString(com.nextgis.maplib.R.string.sync_progress))
+                .setContentIntent(contentIntent)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setProgress(0, 0, true)
+                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+                .setPriority(NotificationCompat.PRIORITY_LOW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                    SYNC_NOTIFICATION_ID,
+                    builder.build(),
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+        } else {
+            startForeground(SYNC_NOTIFICATION_ID, builder.build());
+        }
     }
 
     public static boolean startActionFoo(Context context) {
@@ -74,7 +127,7 @@ public class OfflineSyncIntentService extends IntentService {
         intent.putExtra(EXTRA_MANUAL_SYNC, true);
         intent.putExtra(EXTRA_OPERATION_RESERVATION, reservation);
         try {
-            context.startService(intent);
+            ContextCompat.startForegroundService(context, intent);
             return true;
         } catch (RuntimeException e) {
             ProjectOperationCoordinator.Lease pending =
@@ -84,6 +137,12 @@ public class OfflineSyncIntentService extends IntentService {
             }
             throw e;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        stopForeground(true);
+        super.onDestroy();
     }
 
     /** When {@code true}, sync errors are shown to the user (button / toast). */
