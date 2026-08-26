@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-08-24
+last_verified: 2026-08-26
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -17,9 +17,9 @@ related_code:
 
 ## Версия
 
-Проверяемый выпуск `3.1.2.16`: production `versionCode 210`, Lisa Debug —
-`3.1.2.11` / `versionCode 205`; диагностический release
-`maplib.VERSION_NAME 3.1.2.16`, debug — `3.1.2.11`.
+Проверяемый выпуск `3.1.2.17`: production `versionCode 211`, Lisa Debug —
+`3.1.2.17` / `versionCode 212`; диагностический release
+`maplib.VERSION_NAME 3.1.2.17`, debug — `3.1.2.17`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.

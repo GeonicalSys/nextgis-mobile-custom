@@ -10,6 +10,12 @@ related_code:
 
 ## 2026-08-26
 
+- Подготовлен выпуск Lisa/Belka `3.1.2.17` / `versionCode 211` и Lisa Debug
+  `3.1.2.17` / `versionCode 212` поверх Draft PR sync-recovery. App и maplib
+  coupling обновлены согласованно; pointer библиотек в Draft PR указывает на
+  commits веток и после Merge Commit должен быть заменён на итоговые merge
+  commits. Публичные каналы сейчас: Lisa/Belka `210` / `3.1.2.16`, Debug
+  `204` / `3.1.2.10`.
 - Без изменения версии добавлен pre-sync repair дубликатов managed NGW-слоя с
   backup gate и одним map commit; edited/ambiguous copies блокируют sync без
   удаления. Staged schema refill больше не сохраняет промежуточную композицию
