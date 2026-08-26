@@ -730,8 +730,9 @@ invariants:
       failure is logged without terminating the Android main thread. MapLibre style workers never
       mutate Feature.properties already published to the live map; they use an independent render-cache
       snapshot or fall back to a full data reload. A full untracked NGW response is staged on disk and
-      stream-applied in one SQLite transaction; MapLibre reloads once after commit and hidden layers do
-      not materialize full GeoJSON until enabled.
+      stream-applied in one SQLite transaction. A remote feature with missing or invalid geometry remains
+      represented by its remote ID but is not applied, so it neither aborts the layer nor deletes an existing
+      local row. MapLibre reloads once after commit and hidden layers do not materialize full GeoJSON until enabled.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeoEnvelope.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java

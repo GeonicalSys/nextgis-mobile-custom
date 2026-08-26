@@ -137,7 +137,8 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
   R-tree перестраивается один раз, а style props применяются к отдельному
   snapshot, не к live MapLibre feature;
 - полный untracked snapshot потоково применяется из временного файла одной
-  SQLite-транзакцией, а MapLibre получает один reload после account-pass;
+  SQLite-транзакцией, отдельные невалидные геометрии пропускаются без удаления
+  их прежних локальных копий, а MapLibre получает один reload после account-pass;
 - добавление vector/raster NGW-слоя по прямому URL, включая проверенный guest fallback;
 - получение ресурсов, подготовленных desktop QGIS-плагинами, только через
   NextGIS Web/Collector или явный import поддерживаемого portable artifact, без

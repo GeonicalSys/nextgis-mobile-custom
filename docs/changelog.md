@@ -10,6 +10,11 @@ related_code:
 
 ## 2026-08-26
 
+- Подготовлен неопубликованный выпуск Lisa/Belka `3.1.2.18` / `versionCode 212`
+  и Lisa Debug `3.1.2.18` / `versionCode 213`. Full untracked NGW sync теперь
+  пропускает отдельную отсутствующую или невалидную серверную геометрию,
+  сохраняет её remote ID и прежнюю локальную копию, продолжая остальной слой;
+  журнал ограничивает число детальных записей.
 - Подготовлен выпуск Lisa/Belka `3.1.2.17` / `versionCode 211` и Lisa Debug
   `3.1.2.17` / `versionCode 212` поверх sync-recovery. App и maplib coupling
   обновлены согласованно; root закрепляет Merge Commit maplib PR #20

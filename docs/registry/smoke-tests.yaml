@@ -273,12 +273,13 @@ tests:
     type: device
     scope: [app, maplib]
     steps:
-      - Prepare an open NGW vector layer where one pull creates and deletes at least 1000 features while the map is visible
+      - Prepare an open NGW vector layer where one pull creates and deletes at least 1000 features while the map is visible; include one server feature with missing or invalid geometry and an existing local copy of that remote ID
       - Start manual sync once and interact with the map while that layer is applied
       - Reopen the project, run a no-change sync and export HyperLog
     expected: >
       The process remains alive and responsive; incremental pull emits no per-row vector cache
-      notification storm, performs one final spatial cache rebuild and one layer reload; no
+      notification storm, performs one final spatial cache rebuild and one layer reload; the invalid
+      server geometry is skipped, its previous local row is retained, and the rest of the layer commits; no
       notify_insert/GeoEnvelope/GeometryRTree crash, LinkedTreeMap style exception or spatial cache
       count mismatch appears on reopen, and the no-change sync leaves cache and SQLite counts equal.
   SMOKE-NGW-ACCOUNT-ADD:
