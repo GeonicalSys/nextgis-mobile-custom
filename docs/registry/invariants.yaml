@@ -367,9 +367,10 @@ invariants:
       mutation — remote sync delete/overwrite, schema rebuild, Collector vector-layer removal,
       duplicate-layer repair, manual layer delete, manual feature delete, or active project workspace
       delete. Schema rebuild must retain the old layer until its staged replacement is saved in the
-      same map commit that removes old references. Backup must include attachment file bytes
-      (local files or NGW download), not metadata alone. If backup fails, local feature data must
-      remain unchanged and the user must see an alert with the failure reason. Non-editable Collector
+      same map commit that removes old references. Backup must include every attachment file that is
+      physically present in the layer directory, while server-only attachment metadata remains in the
+      attachment table and must never trigger a network download during backup. If backup fails, local
+      feature data must remain unchanged and the user must see an alert with the failure reason. Non-editable Collector
       layers and recreatable raster-style tile caches are not data-backup operations. LayerBackups/
       is capped by preference layer_backup_max_gb (default 5); oldest ZIP archives are deleted when
       the limit is exceeded. After a successful attachment push, the local file stays under the

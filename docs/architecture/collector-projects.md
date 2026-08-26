@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-08-26
+last_verified: 2026-08-27
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -278,6 +278,9 @@ HTTP 404 при feature sync managed-слоя также не превращае
 `LayerBackups/` (полный слой или selective feature ZIP); архив для передачи —
 `ng-layer-backups.zip` с manifest. Размер каталога ограничен
 `layer_backup_max_gb` (default 5); при превышении удаляются самые старые ZIP.
+Таблица attachment metadata попадает в backup целиком, но файлы берутся только
+из локальных каталогов слоя. Серверные вложения, которые не собирались на
+этом устройстве, не скачиваются во время backup и не мешают удалению слоя.
 
 Форма обновляется отдельной файловой транзакцией: проверяются серверный hash и
 hash распакованных файлов, новая пара `form.json`/`ngfp_meta.json` ставится через

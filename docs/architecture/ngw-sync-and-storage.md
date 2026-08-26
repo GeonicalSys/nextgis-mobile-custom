@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-08-26
+last_verified: 2026-08-27
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -104,15 +104,17 @@ ID контракта: `INV-NGW-ACCOUNT-IDENTITY`.
 - удаление локальной копии активного проекта — full backup каждого editable
   NGW-слоя, в котором остались несинхронизированные изменения.
 
-Backup содержит данные слоя (features/changes/attachments + файлы вложений) и
-manifest, но не заменяет серверную синхронизацию и не делает auto-restore.
+Backup содержит данные слоя (features/changes/attachments), фактически
+хранящиеся на устройстве файлы вложений и manifest, но не заменяет
+серверную синхронизацию и не делает auto-restore.
 Пользователь может экспортировать или удалить backups через app UI.
 
-Файлы вложений в ZIP обязательны: сначала берутся локальные
-`layerPath/{featureId}/{attachId}`, иначе скачиваются с NGW по meta из
-`FeatureAttachments`. Если у объекта есть вложение, а байты файла сохранить
-нельзя — backup fail-closed, разрушительная операция отменяется, пользователю
-показывается alert с конкретной причиной.
+В ZIP попадают только локальные `layerPath/{featureId}/` и их файлы. Строки
+`FeatureAttachments` сохраняются в `tables/attachments.json`, но отсутствующий
+локально payload не скачивается с NGW и не блокирует разрушительную операцию.
+Ошибка чтения фактически имеющегося локального файла или ошибка записи ZIP
+по-прежнему закрывает gate: локальные данные остаются без изменений, а пользователь
+получает alert с причиной.
 
 Обычный NGW pull получает метаданные серверных вложений, но не обязан скачивать
 их байты в каталог слоя. Metadata-only refresh не удаляет геометрию, атрибуты

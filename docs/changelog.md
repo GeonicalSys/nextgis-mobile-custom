@@ -1,12 +1,19 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-26
+last_verified: 2026-08-27
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-08-27
+
+- Layer backup перед ручным удалением, schema rebuild и другими destructive
+  операциями больше не докачивает server-only attachment payload. ZIP сохраняет
+  все таблицы слоя и только физически имеющиеся на устройстве файлы, что
+  устраняет `NetworkOnMainThreadException` при удалении слоя.
 
 ## 2026-08-26
 

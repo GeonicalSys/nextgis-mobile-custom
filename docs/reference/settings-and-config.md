@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-08-24
+last_verified: 2026-08-27
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
@@ -57,7 +57,9 @@ related_code:
   `stakeout_reached_distance` в метрах. Некорректный набор не применяется;
   runtime использует безопасные значения `5 / 1 / 0,5 / 0,1`.
 - Updates: `check_updates`, update flavor metadata, release repository fields.
-- Backups: `layer_backup_max_gb` (Общие → Другое, default 5 GB) caps `LayerBackups/`.
+- Backups: `layer_backup_max_gb` (Общие → Другое, default 5 GB) caps `LayerBackups/`;
+  каждый ZIP хранит таблицы слоя и только локальные файлы вложений, без
+  скачивания server-only payload по метаданным.
 - Collector: project registry JSON, project metadata, composition state.
 - Layer config: `feature_label_field`, `mobile_render_mode`, `render_mode`,
   `layer_origin`, `mobile`.

@@ -254,7 +254,7 @@ storage:
     owner: maplibui
     location_name: LayerBackups
     source: maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
-    purpose: ZIP archives of editable layer geometry/attributes/attachments before destructive ops; quota via layer_backup_max_gb
+    purpose: ZIP archives of editable layer tables plus attachment files physically present on this device before destructive ops; server-only payloads are not downloaded; quota via layer_backup_max_gb
 layer_json:
   feature_label_field:
     owner: maplib
