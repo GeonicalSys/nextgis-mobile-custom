@@ -58,7 +58,7 @@ preferences:
     default: true
     source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
     ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат)
-    purpose: Initial sound-guidance state for each new foreground stakeout session
+    purpose: Initial sound-guidance state for each new foreground stakeout or current-location-to-map-point session; static point-to-point measurement does not use it
   stakeout_far_distance:
     owner: app
     type: string_decimal_meters

@@ -81,7 +81,8 @@ tests:
       concurrent pinch zoom and persistent; tilt remains disabled, location resets north and never
       zooms out while enforcing zoom 12, missing location centers on the first valid layer at zoom
       12 regardless of extent size, an empty project reports no location, and the stakeout
-      arrow/cardinal fallback stays correct at non-zero map bearings.
+      arrow fallback stays screen-correct at non-zero map bearings while the numeric magnetic
+      azimuth remains unchanged.
   SMOKE-NGRC-ORDER:
     type: device
     scope: [maplib, maplibui]
@@ -368,14 +369,18 @@ tests:
       - For a polygon, repeat while starting inside its area
       - Cross every threshold repeatedly and hold at 0.1 m with both good accuracy and a constant coarse value such as 10 m
       - Stand still and rotate the device, then walk along a known bearing while turning the device independently
-      - Repeat on a device/emulator without a rotation-vector sensor and compare the cardinal label with a known north-up bearing
+      - Compare the displayed magnetic azimuth with a control bearing plus known local WMM2025 declination, including wrap around 0/360 degrees
+      - Repeat on a device/emulator without a rotation-vector sensor and compare the arrow with a known north-up and explicitly rotated map bearing
+      - Open the azimuth button, select current location to map point, tap and replace the target, and verify the GPS endpoint and temporary segment update
+      - Select point A to point B, choose two arbitrary points and coincident points, then tap a third point to begin a new measurement
         - Mute and unmute the widget, rotate portrait/landscape, lock the screen and press Home for several minutes, then resume and stop the mode
       - Repeat with GPS loss/stale fixes, a network fallback, a mock-GPS receiver application, Bluetooth active and a non-normal Android audio mode
         - Export the debug log and verify it does not contain stakeout coordinates or extended mock Location samples
       - Open map settings after upgrading an existing install, verify both photo-coordinate options are initially enabled, disable them, restart and verify the explicit choice persists
       - Run a 4–8 hour field session and assess sound fatigue, battery use and CPU temperature
     expected: >
-      The widget contains direction, distance, reported horizontal accuracy, mute and stop;
+      The widget contains direction, WGS84 distance, numeric WMM2025 magnetic azimuth,
+      reported horizontal accuracy, declination, mute and stop for live guidance;
       it never duplicates object name or coordinate source. Point uses its coordinate, line uses the nearest
       segment point and polygon uses the nearest outer/inner boundary even from inside. Sound
       cadence changes at configured distances without overlapping, chattering or using network
@@ -384,8 +389,11 @@ tests:
         whose distance is within tolerance. Stale/lost GPS silences audio; screen-off and background
         state keep cues and high-frequency GPS active under an ongoing silent notification. Foreground
         resume restores the widget, and explicit stop removes the notification and restores ordinary
-        location sampling. Device rotation follows the true-north phone compass
-      both stationary and moving; without it north-up plus a cardinal label is used. Mock GPS from the
+        location sampling. Device rotation follows the filtered magnetic phone compass
+      both stationary and moving; without it true bearing minus map bearing is used. The current-to-point
+      mode updates a non-persistent segment and retains live GPS/audio behavior. Point A to B uses the same
+      geodesic and magnetic-bearing calculation without GPS/audio, returns undefined azimuth for coincident
+      points and starts a new A after the completed pair. Mock GPS from the
       receiver remains accepted, navigation cues remain audible with Bluetooth/audio-mode changes,
         use a loud short damped tap rather than a high sustained tone, and system volume can reduce it.
         The migrated photo defaults do not overwrite later explicit user choices. Debug logs do not

@@ -322,6 +322,17 @@
     <string name="stakeout_background_text">Звуковые подсказки работают в фоне</string>
     <string name="stakeout_background_channel">Вынос координат</string>
     <string name="stakeout_background_channel_summary">Звуковое наведение и местоположение при активном выносе</string>
+    <string name="azimuth_tool">Азимут и расстояние</string>
+    <string name="azimuth_mode_title">Измерить азимут и расстояние</string>
+    <string name="azimuth_mode_current">От текущего положения до точки на карте</string>
+    <string name="azimuth_mode_points">Между двумя точками на карте</string>
+    <string name="azimuth_select_target">Укажите точку назначения на карте</string>
+    <string name="azimuth_select_start">Укажите точку А на карте</string>
+    <string name="azimuth_select_end">Укажите точку Б на карте</string>
+    <string name="azimuth_select_new_start">Укажите новую точку А или закройте инструмент</string>
+    <string name="azimuth_magnetic_format">Магнитный азимут: %1$s°</string>
+    <string name="azimuth_declination_format">Склонение: %1$s°</string>
+    <string name="azimuth_undefined">Магнитный азимут: —</string>
     <string name="project_import_debug_underlays">Перенести подложки из Debug</string>
     <string name="legacy_underlay_import_confirmation">В текущий проект «%1$s» будут перенесены только локальные подложки. Проекты Веб-ГИС, учётные записи и пароли не переносятся. Продолжить?</string>
     <string name="legacy_underlay_import_confirm">Перенести подложки</string>

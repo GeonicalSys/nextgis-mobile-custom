@@ -545,7 +545,7 @@ invariants:
       - maplib/docs/README.md
       - maplibui/docs/README.md
   INV-STAKEOUT-GUIDANCE:
-    title: Foreground-service stakeout uses nearest boundaries, receiver accuracy and compass-only direction
+    title: Stakeout and free-point tools use WGS84 distance, WMM2025 magnetic azimuth and transient overlays
     owners: [maplib, app]
     statement: >
       Stakeout accepts selected Point/MultiPoint, LineString/MultiLineString and
@@ -562,12 +562,18 @@ invariants:
       fresh in-tolerance fixes. Audible bands use a full-scale-limited short damped tap with
       3x digital gain and the final state a double tap, not a sustained high tone. A location foreground service,
       ongoing silent notification and partial wake lock keep GPS and audio active while the
-      screen is off or the UI is paused; explicit stop releases all three. Direction uses
-      only the device rotation-vector compass,
-      never movement bearing; without a live compass it shows the absolute cardinal
-      direction and keeps the arrow screen-correct by subtracting an explicitly enabled
-      map bearing. The map widget does not duplicate object name or coordinate
-      source. Process death never silently restarts audible stakeout guidance.
+      screen is off or the UI is paused; explicit stop releases all three. The same
+      live lifecycle is available from current location to an arbitrary map point. A
+      separate arbitrary point A to point B mode does not acquire GPS/audio resources.
+      True initial bearing is converted to numeric magnetic azimuth by subtracting
+      WMM2025 declination at the start; coincident points have undefined azimuth.
+      Direction uses only the filtered device rotation-vector magnetic compass, never
+      movement bearing; without a live compass it keeps the arrow screen-correct by
+      subtracting an explicitly enabled map bearing from true bearing. Free-point
+      markers and segment are transient MapLibre layers below the user-location cursor,
+      never project features. The map widget does not duplicate object name or
+      coordinate source. Process death never silently restarts audible guidance or
+      restores half-selected free points.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
       - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
@@ -575,8 +581,11 @@ invariants:
       - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
       - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
       - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
+      - app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt
+      - app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java
       - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
     must_update_docs:
       - docs/architecture/stakeout.md
