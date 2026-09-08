@@ -571,7 +571,8 @@ invariants:
       movement bearing; without a live compass it keeps the arrow screen-correct by
       subtracting an explicitly enabled map bearing from true bearing. Free-point
       markers and segment are transient MapLibre layers below the user-location cursor,
-      never project features. The map widget does not duplicate object name or
+      never project features. Both static endpoints and the live target are draggable;
+      the live GPS start is not editable. The map widget does not duplicate object name or
       coordinate source. Process death never silently restarts audible guidance or
       restores half-selected free points.
     related_code:

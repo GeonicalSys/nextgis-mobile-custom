@@ -109,6 +109,23 @@ class StakeoutController(
         publishLatestState()
     }
 
+    /** Replaces the live target without releasing the foreground GPS/audio resources. */
+    fun updateTarget(geometry: GeoGeometry) {
+        if (!active) {
+            start(geometry)
+            return
+        }
+        target = StakeoutGeometryTarget(geometry)
+        policy?.reset()
+        latestResult = null
+        latestBand = StakeoutGuidancePolicy.Band.SILENT
+        nextCueElapsedMillis = Long.MAX_VALUE
+        reachedConfirmations = 0
+        reachedAnnounced = false
+        waitingForFix = true
+        latestLocation?.let { updateLocation(it) } ?: publishLatestState()
+    }
+
     fun stop() {
         stopInternal(clearListener = true)
     }

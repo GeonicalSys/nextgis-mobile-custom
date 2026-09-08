@@ -371,8 +371,9 @@ tests:
       - Stand still and rotate the device, then walk along a known bearing while turning the device independently
       - Compare the displayed magnetic azimuth with a control bearing plus known local WMM2025 declination, including wrap around 0/360 degrees
       - Repeat on a device/emulator without a rotation-vector sensor and compare the arrow with a known north-up and explicitly rotated map bearing
-      - Open the azimuth button, select current location to map point, tap and replace the target, and verify the GPS endpoint and temporary segment update
-      - Select point A to point B, choose two arbitrary points and coincident points, then tap a third point to begin a new measurement
+      - Open the azimuth button, select current location to map point, drag and replace the target, and verify the fixed GPS endpoint, temporary segment and result update after release
+      - Select point A to point B, choose two arbitrary points, drag A and B independently, verify every released position recalculates the result, then test coincident points and tap a third point to begin a new measurement
+      - On a narrow portrait screen verify the numeric magnetic-azimuth value remains visible below its label instead of being clipped
         - Mute and unmute the widget, rotate portrait/landscape, lock the screen and press Home for several minutes, then resume and stop the mode
       - Repeat with GPS loss/stale fixes, a network fallback, a mock-GPS receiver application, Bluetooth active and a non-normal Android audio mode
         - Export the debug log and verify it does not contain stakeout coordinates or extended mock Location samples
@@ -391,9 +392,10 @@ tests:
         resume restores the widget, and explicit stop removes the notification and restores ordinary
         location sampling. Device rotation follows the filtered magnetic phone compass
       both stationary and moving; without it true bearing minus map bearing is used. The current-to-point
-      mode updates a non-persistent segment and retains live GPS/audio behavior. Point A to B uses the same
+      mode updates a non-persistent segment, lets only the target be dragged and retains live GPS/audio behavior. Point A to B uses the same
       geodesic and magnetic-bearing calculation without GPS/audio, returns undefined azimuth for coincident
-      points and starts a new A after the completed pair. Mock GPS from the
+      points, lets either endpoint be corrected by dragging and starts a new A after the completed pair.
+      The numeric magnetic azimuth is visible on narrow screens. Mock GPS from the
       receiver remains accepted, navigation cues remain audible with Bluetooth/audio-mode changes,
         use a loud short damped tap rather than a high sustained tone, and system volume can reduce it.
         The migrated photo defaults do not overwrite later explicit user choices. Debug logs do not

@@ -4361,7 +4361,9 @@ public class MapFragment
         if (mode == MODE_AZIMUTH_CURRENT && azimuthTargetPoint != null) {
             mapDrawable.showAzimuthMeasurement(
                 Point.fromLngLat(location.longitude, location.latitude),
-                azimuthTargetPoint!!.toMapLibrePoint()
+                azimuthTargetPoint!!.toMapLibrePoint(),
+                false,
+                true
             )
         }
 
@@ -4991,7 +4993,12 @@ public class MapFragment
             azimuthStartPoint = point
             azimuthTargetPoint = null
             azimuthStaticTrueBearing = null
-            mapDrawableOrNull?.showAzimuthMeasurement(point.toMapLibrePoint(), null)
+            mapDrawableOrNull?.showAzimuthMeasurement(
+                point.toMapLibrePoint(),
+                null,
+                true,
+                false
+            )
             mStakeoutDistance?.setText(R.string.azimuth_select_end)
             mStakeoutAzimuth?.visibility = View.GONE
             mStakeoutDetails?.visibility = View.GONE
@@ -5003,7 +5010,9 @@ public class MapFragment
         azimuthTargetPoint = point
         mapDrawableOrNull?.showAzimuthMeasurement(
             azimuthStartPoint!!.toMapLibrePoint(),
-            point.toMapLibrePoint()
+            point.toMapLibrePoint(),
+            true,
+            true
         )
         updateFreePointAzimuthResult()
     }
@@ -5034,7 +5043,7 @@ public class MapFragment
                 formatAngle(declination.toDouble())
             )
             mStakeoutDetails?.text =
-                "$declinationText\n${getString(R.string.azimuth_select_new_start)}"
+                "$declinationText\n${getString(R.string.azimuth_adjust_points)}"
             mStakeoutDetails?.visibility = View.VISIBLE
             mStakeoutSound?.visibility = View.GONE
             updateStaticAzimuthArrowForMapBearing()
@@ -5051,12 +5060,16 @@ public class MapFragment
                 val location = mGpsEventSource?.lastKnownLocation
                 mapDrawableOrNull?.showAzimuthMeasurement(
                     location?.let { Point.fromLngLat(it.longitude, it.latitude) },
-                    target.toMapLibrePoint()
+                    target.toMapLibrePoint(),
+                    false,
+                    true
                 )
             }
             MODE_AZIMUTH_POINTS -> mapDrawableOrNull?.showAzimuthMeasurement(
                 azimuthStartPoint?.toMapLibrePoint(),
-                azimuthTargetPoint?.toMapLibrePoint()
+                azimuthTargetPoint?.toMapLibrePoint(),
+                azimuthStartPoint != null,
+                azimuthTargetPoint != null
             )
         }
     }
@@ -5175,6 +5188,9 @@ public class MapFragment
             R.string.azimuth_declination_format,
             formatAngle(state.declinationDegrees.toDouble())
         )
+        if (mode == MODE_AZIMUTH_CURRENT) {
+            details += getString(R.string.azimuth_adjust_target)
+        }
         mStakeoutDetails?.text = details.joinToString(" · ")
         mStakeoutDetails?.visibility = if (details.isEmpty()) View.GONE else View.VISIBLE
         mStakeoutDirection?.rotation = if (state.magneticBearingDegrees == null) {
@@ -5316,6 +5332,35 @@ public class MapFragment
 
     override fun getMode(): Int {
         return mode;
+    }
+
+    override fun onAzimuthMeasurementPointMoved(
+        startPoint: Boolean,
+        point: Point,
+        finished: Boolean
+    ) {
+        val movedPoint = GeoPoint(point.longitude(), point.latitude()).apply {
+            crs = GeoConstants.CRS_WGS84
+        }
+        when (mode) {
+            MODE_AZIMUTH_CURRENT -> {
+                if (startPoint) return
+                azimuthTargetPoint = movedPoint
+                if (finished) {
+                    mStakeoutController?.updateTarget(movedPoint)
+                }
+            }
+            MODE_AZIMUTH_POINTS -> {
+                if (startPoint) {
+                    azimuthStartPoint = movedPoint
+                } else {
+                    azimuthTargetPoint = movedPoint
+                }
+                if (finished && azimuthStartPoint != null && azimuthTargetPoint != null) {
+                    updateFreePointAzimuthResult()
+                }
+            }
+        }
     }
 
     override
