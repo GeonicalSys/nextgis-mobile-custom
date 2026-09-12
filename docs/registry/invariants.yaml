@@ -166,7 +166,7 @@ invariants:
   INV-LOCATION-CURSOR-TOP:
     title: Location cursor stays above every map object
     owners: [maplib, app]
-    statement: Treat user-location-layer as a render-only overlay outside LayerGroup order and restore it as the last MapLibre style layer after cold, lite and hot layer mutations.
+    statement: Treat user-location-layer as a render-only overlay outside LayerGroup order, with the metric accuracy fill immediately below it; restore both above user layers after cold, lite and hot mutations and clear both when the current fix expires.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -367,9 +367,10 @@ invariants:
       mutation — remote sync delete/overwrite, schema rebuild, Collector vector-layer removal,
       duplicate-layer repair, manual layer delete, manual feature delete, or active project workspace
       delete. Schema rebuild must retain the old layer until its staged replacement is saved in the
-      same map commit that removes old references. Backup must include attachment file bytes
-      (local files or NGW download), not metadata alone. If backup fails, local feature data must
-      remain unchanged and the user must see an alert with the failure reason. Non-editable Collector
+      same map commit that removes old references. Backup must include every attachment file that is
+      physically present in the layer directory, while server-only attachment metadata remains in the
+      attachment table and must never trigger a network download during backup. If backup fails, local
+      feature data must remain unchanged and the user must see an alert with the failure reason. Non-editable Collector
       layers and recreatable raster-style tile caches are not data-backup operations. LayerBackups/
       is capped by preference layer_backup_max_gb (default 5); oldest ZIP archives are deleted when
       the limit is exceeded. After a successful attachment push, the local file stays under the
@@ -432,10 +433,10 @@ invariants:
       also expose no add/delete polygon or add/delete hole action. A new MultiPolygon sketch
       accepts at most one polygon part, while loading and editing existing multipart or holed
       geometry does not discard its structure. Walk append starts after the selected node and
-      remains contiguous before its former successor, with current-GPS preview at that insertion
-      position. While walk recording is active, the right bottom action uses the walking-person
-      icon and finishes recording through the existing Save path; location settings are not
-      exposed from that action. For new
+      remains contiguous before its former successor using service-confirmed GNSS vertices;
+      a GPS gap pauses the walk until an explicit reconnection. While walk recording is active,
+      a separate panel owns controls and normal menus remain available. Point creation locks all
+      walk controls from chooser through Save/Cancel; Finish awaits the service acknowledgement. For new
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
@@ -496,32 +497,43 @@ invariants:
     title: Track and walk recording retain real movement through 160 km/h
     owners: [maplib, maplibui, app]
     statement: >
-      TrackerService and WalkEditService use the same accuracy-aware sequence filter without
-      pedestrian/vehicle profiles. Valid movement through 160 km/h must be retained with or
-      without Android reported speed. Invalid coordinates, mock fixes, accuracy above 50 m,
-      delayed/future fixes, reported speed above 100 m/s, physically implausible distance or
-      acceleration and material isolated chord spikes are rejected. Motion is compared with
-      the newest accepted fix, including the delayed chord buffer, so one rejection cannot
-      anchor the sequence indefinitely. Sampling gaps above 30 seconds drain, rather than
-      discard, the previous valid buffer. Track recording obeys tracks_location_source only;
-      walk digitizing obeys location_source only. When both GPS and network are enabled,
-      network remains an initial and outage fallback, but a usable GPS fix suppresses network
-      fixes for 12 seconds so mixed-provider jitter cannot corrupt the recorded sequence.
-      When background_recording_sound is enabled, a health-only zero-distance provider
-      subscription must distinguish stationary fixes from missing coordinate delivery. While
-      the app UI is hidden or the screen is off and usable callbacks remain fresh, a partial
-      wake lock keeps an alarm-stream pulse on a fixed 10-second cadence independently of
-      notification volume, geometry changes and inserts/commits. Zero or muted alarm volume
-      falls back to a short vibration. Stale or absent callbacks silence the feedback; observed
-      persistence failures use an independent one-minute throttle and distinct tone or double
-      vibration.
-      Foreground use stays silent. Revoking coarse/fine location during recording must stop
-      either location foreground service without calling forbidden startForeground, crashing,
-      clearing track_recording_enabled or discarding the durable walk draft.
-      TrackerService must run in the default application process so a toolbar Stop cannot
-      overtake a still-pending cross-process Start; a delayed Start observed after the durable
-      intent was disabled must exit without creating an empty track.
+      GpsEventSource owns one GNSS acquisition stream across screen and service lifecycles.
+      Attaching/detaching a map never unregisters active recording GPS or resets its filter.
+      The final recorder owns release of the shared partial wake lock; sound off does not
+      disable background acquisition. Sensor evidence expires and cannot alone freeze a vehicle.
+      A refined stop replaces only the last owned vertex, retaining track arrival time;
+      it never appends distance for an improving stationary position. Handset handling alone
+      cannot confirm departure; direction, combined accuracy and trustworthy velocity or a
+      longer persistent position trend are required. Accurate outdoor coordinates use short
+      median/trend windows that tolerate ordinary speed uncertainty and an early corner. The
+      displayed candidate remains current while the recorder holds its stop anchor; its accuracy
+      cannot expand merely because the user has moved away from that anchor. Each recorder buffers at most 120 seconds
+      or 512 tentative observations; confirmation backfills original times/corners, while Stop
+      and gaps discard unconfirmed history. GPX URI MIME and share filename must agree,
+      including anonymous type lookup, without an added .bin suffix.
+      Current display may use GPS or Network, including approximate permission; monotonic
+      age above 8 seconds clears the marker and metric accuracy circle without waiting for
+      another callback. Resume never substitutes camera or a screen-off coordinate.
+      Recording uses only non-mock GNSS with finite coordinates, positive accuracy at most
+      50 metres and valid monotonic measurement time. Live batches retain chronological
+      session measurements without treating receipt time as current location or sound health.
+      Robust adaptive smoothing and stationary anchoring precede the sequence validator;
+      movement through 160 km/h remains supported with no manual pedestrian/vehicle profile.
+      Sampling occurs after validation and retains turns. No raw start, preview or closing
+      location may bypass filtering. GPS loss creates persistent track segments, preserved
+      by MapLibre, Canvas and GPX; walk persists gps_paused and requires explicit reconnection.
+      Background sound consumes the shared validated stream before decimation and stays
+      silent when fixes are stale, UI is visible or the setting is disabled. Existing
+      alarm/vibration fallback and persistence-error throttling remain in effect.
+      Permission revocation preserves durable track intent and walk drafts without starting
+      a forbidden location foreground service. TrackerService remains in the application
+      process so Start and Stop cannot overtake each other.
     related_code:
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - maplib/src/main/java/com/nextgis/maplib/location/LocationSubscriptionController.java
+      - maplib/src/main/java/com/nextgis/maplib/util/DeviceMotionEvidence.java
+      - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSamplerCore.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
       - maplib/src/test/java/com/nextgis/maplib/util/LocationTrackFilterCoreTest.java
@@ -544,7 +556,7 @@ invariants:
       - maplib/docs/README.md
       - maplibui/docs/README.md
   INV-STAKEOUT-GUIDANCE:
-    title: Foreground-service stakeout uses nearest boundaries, receiver accuracy and compass-only direction
+    title: Stakeout and free-point tools use WGS84 distance, WMM2025 magnetic azimuth and transient overlays
     owners: [maplib, app]
     statement: >
       Stakeout accepts selected Point/MultiPoint, LineString/MultiLineString and
@@ -561,12 +573,19 @@ invariants:
       fresh in-tolerance fixes. Audible bands use a full-scale-limited short damped tap with
       3x digital gain and the final state a double tap, not a sustained high tone. A location foreground service,
       ongoing silent notification and partial wake lock keep GPS and audio active while the
-      screen is off or the UI is paused; explicit stop releases all three. Direction uses
-      only the device rotation-vector compass,
-      never movement bearing; without a live compass it shows the absolute cardinal
-      direction and keeps the arrow screen-correct by subtracting an explicitly enabled
-      map bearing. The map widget does not duplicate object name or coordinate
-      source. Process death never silently restarts audible stakeout guidance.
+      screen is off or the UI is paused; explicit stop releases all three. The same
+      live lifecycle is available from current location to an arbitrary map point. A
+      separate arbitrary point A to point B mode does not acquire GPS/audio resources.
+      True initial bearing is converted to numeric magnetic azimuth by subtracting
+      WMM2025 declination at the start; coincident points have undefined azimuth.
+      Direction uses only the filtered device rotation-vector magnetic compass, never
+      movement bearing; without a live compass it keeps the arrow screen-correct by
+      subtracting an explicitly enabled map bearing from true bearing. Free-point
+      markers and segment are transient MapLibre layers below the user-location cursor,
+      never project features. Both static endpoints and the live target are draggable;
+      the live GPS start is not editable. The map widget does not duplicate object name or
+      coordinate source. Process death never silently restarts audible guidance or
+      restores half-selected free points.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
       - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
@@ -574,8 +593,11 @@ invariants:
       - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
       - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
       - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
+      - app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt
+      - app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java
       - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
     must_update_docs:
       - docs/architecture/stakeout.md
@@ -595,20 +617,22 @@ invariants:
       track and starting a new id is allowed). TrackerService shares the default application
       process with the toolbar so lifecycle delivery and durable preference reads are ordered;
       stale delayed Start delivery after explicit Stop creates no empty session. Walk digitizing
-      keeps walkedit_temp on unexpected service death and offers Continue/Discard even if
-      START_STICKY already restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/tap
+      keeps its full-geometry owner on unexpected service death and exposes recovery in its
+      panel; a restarted service pauses insertion. Finish preserves the draft until successful
+      feature Save or explicit Discard. An active point owner locks every walk command and
+      survives camera, failed Save and process recreation; GNSS persistence remains independent. Non-walk vertex/tap
       editing synchronously journals its latest WKT plus active-map/layer/feature identity in
       GeometryEditDraftStore and offers Continue/Discard after process/task death; only
       explicit Cancel, successful layer update, or handoff to the attribute form clears it.
       Polygon drafts must restore as explicitly closed MapLibre rings before vertex extraction,
       including new one-part MultiPolygon sketches, so the fill and vertices remain consistent.
-      A cold walk Continue must preserve the property-bearing edit feature while atomically
-      restoring polygon fill, outline and the hidden vertex cache on the current MapLibre style;
-      if the current style does not yet own all edit sources, renderer attachment remains pending
-      until style application completes and must never dereference a missing or stale source.
-      Starting or restoring walk mode clears the mutually exclusive non-walk geometry draft so
-      the recovery hub cannot offer two editors for the same sketch.
-      the outline must not flicker during GPS updates and Stop must republish editable vertices.
+      A cold walk preview restores its own source after style load, preserving root CRS before
+      conversion to WGS84. The point editor uses separate edit sources and its own journal.
+      Starting walk transfers one sketch to its service owner, but does not discard an unrelated
+      point draft. Owned forms persist the handoff before Activity launch; their UUID controls
+      which point lock or finished walk may be cleared after successful Save.
+      Finish publishes manual vertices only after the service acknowledges its final snapshot.
+
       The shared edit FillLayer is exclusive to Polygon/MultiPolygon and must be removed for a
       cold-restored LineString/MultiLineString even when the preceding edit was polygonal.
       Polygon WKT parsing preserves one outer ring and only actual holes; recovery must not
@@ -730,8 +754,9 @@ invariants:
       failure is logged without terminating the Android main thread. MapLibre style workers never
       mutate Feature.properties already published to the live map; they use an independent render-cache
       snapshot or fall back to a full data reload. A full untracked NGW response is staged on disk and
-      stream-applied in one SQLite transaction; MapLibre reloads once after commit and hidden layers do
-      not materialize full GeoJSON until enabled.
+      stream-applied in one SQLite transaction. A remote feature with missing or invalid geometry remains
+      represented by its remote ID but is not applied, so it neither aborts the layer nor deletes an existing
+      local row. MapLibre reloads once after commit and hidden layers do not materialize full GeoJSON until enabled.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeoEnvelope.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java

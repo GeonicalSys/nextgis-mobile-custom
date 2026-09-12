@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-08-24
+last_verified: 2026-09-13
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
@@ -43,21 +43,28 @@ related_code:
 - Tracking/location: интервалы, distance, foreground service toggles и
   `background_recording_sound=true`. Последний ключ включает короткое звуковое
   подтверждение по фиксированному расписанию раз в 10 секунд, когда UI приложения
-  скрыт либо экран выключен и health-подписка продолжает получать свежие пригодные
-  координаты. Подписка не требует изменения координаты и не добавляет точки в
+  скрыт либо экран выключен и общий GNSS-поток продолжает получать свежие пригодные
+  координаты. Контроль работает до прореживания точек и не добавляет точки в
   геометрию, поэтому неподвижный GPS продолжает пикать; при прекращении доставки
   координат сигнал замолкает. Явная ошибка сохранения получает отдельный более
   длинный сигнал не чаще раза в минуту. Звук использует alarm stream и поэтому
   не зависит от минимальной громкости уведомлений. Если alarm stream выключен
   или его громкость равна нулю, heartbeat заменяется короткой вибрацией, а ошибка
   сохранения — короткой двойной вибрацией. Выключение самого preference подавляет
-  и звук, и вибрацию. Partial wake lock удерживает стабильный интервал.
+  и звук, и вибрацию. Partial wake lock принадлежит GPS-записи,
+  удерживается и при выключенном звуке и освобождается последним recorder.
 - Вынос координат: начальное состояние звука и четыре строго убывающих порога
   `stakeout_far_distance`, `stakeout_medium_distance`, `stakeout_near_distance`,
   `stakeout_reached_distance` в метрах. Некорректный набор не применяется;
-  runtime использует безопасные значения `5 / 1 / 0,5 / 0,1`.
+  runtime использует безопасные значения `5 / 1 / 0,5 / 0,1`. Эти настройки
+  применяются также к измерению от текущего положения до выбранной точки. Режим
+  «между двумя точками» является статическим, не использует GPS/звук и новых
+  preference-ключей не создаёт. Магнитное склонение рассчитывается встроенной
+  WMM2025, выбора модели или ручной поправки в настройках нет.
 - Updates: `check_updates`, update flavor metadata, release repository fields.
-- Backups: `layer_backup_max_gb` (Общие → Другое, default 5 GB) caps `LayerBackups/`.
+- Backups: `layer_backup_max_gb` (Общие → Другое, default 5 GB) caps `LayerBackups/`;
+  каждый ZIP хранит таблицы слоя и только локальные файлы вложений, без
+  скачивания server-only payload по метаданным.
 - Collector: project registry JSON, project metadata, composition state.
 - Layer config: `feature_label_field`, `mobile_render_mode`, `render_mode`,
   `layer_origin`, `mobile`.
@@ -97,3 +104,19 @@ preference `layer_label` и переносится в JSON после перво
 `https://apps-geonical.ru/lisa-mobile`. Он не является preference: изменение
 host/path требует новой подписанной сборки. Ветка выбирается из build variant и
 проверяется повторно по metadata загруженного APK.
+
+## Источники и интервалы GPS
+
+Карта автоматически использует GPS и Network; запись трека и обхода — только
+GNSS. Старые переключатели источников мигрируют в пояснения. Интервалы времени
+и расстояния задают сохранение точек после фильтра, а в разделе местоположения
+относятся к обходу. Карте достаточно approximate permission; записи требуется
+fine permission. См. [GPS pipeline](../architecture/location-pipeline.md).
+
+`walkedit_temp` дополнительно хранит UUID обхода, путь активной карты, полную WKT,
+фазу RECORDING/FINISHING/FINISHED, ревизию и UUID/этап/слой/инструмент создаваемой
+точки. `WalkSessionStore` владеет этими ключами. Это внутренний журнал сессии;
+пользовательские интервалы GNSS и звуковая настройка не меняются. UUID точки
+сохраняется до её успешного Save или явного Cancel; формы переносят UUID через
+durable checkpoint до запуска Activity. Точные имена ключей определены в
+`WalkSessionStore`, сценарии — в [crash recovery](../architecture/crash-recovery.md).

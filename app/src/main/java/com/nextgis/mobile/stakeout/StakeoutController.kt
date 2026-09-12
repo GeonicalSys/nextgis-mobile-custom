@@ -34,6 +34,8 @@ class StakeoutController(
         val distanceMeters: Double? = null,
         val relativeBearingDegrees: Float = 0f,
         val absoluteBearingDegrees: Float = 0f,
+        val magneticBearingDegrees: Float? = null,
+        val declinationDegrees: Float = 0f,
         val accuracyMeters: Double? = null,
         val usesDeviceCompass: Boolean = false,
         val reached: Boolean = false,
@@ -105,6 +107,23 @@ class StakeoutController(
         waitingForFix = true
         startActiveResources()
         publishLatestState()
+    }
+
+    /** Replaces the live target without releasing the foreground GPS/audio resources. */
+    fun updateTarget(geometry: GeoGeometry) {
+        if (!active) {
+            start(geometry)
+            return
+        }
+        target = StakeoutGeometryTarget(geometry)
+        policy?.reset()
+        latestResult = null
+        latestBand = StakeoutGuidancePolicy.Band.SILENT
+        nextCueElapsedMillis = Long.MAX_VALUE
+        reachedConfirmations = 0
+        reachedAnnounced = false
+        waitingForFix = true
+        latestLocation?.let { updateLocation(it) } ?: publishLatestState()
     }
 
     fun stop() {
@@ -188,7 +207,7 @@ class StakeoutController(
         if (resourcesActive) return
         resourcesActive = true
         StakeoutForegroundService.start(applicationContext)
-        gpsEventSource.addListener(this)
+        gpsEventSource.addRawListener(this)
         gpsEventSource.acquireHighFrequencyUpdates(highFrequencyOwner)
         if (uiForeground) headingProvider.start()
         handler.removeCallbacks(cueRunnable)
@@ -199,7 +218,7 @@ class StakeoutController(
         if (!resourcesActive) return
         resourcesActive = false
         gpsEventSource.releaseHighFrequencyUpdates(highFrequencyOwner)
-        gpsEventSource.removeListener(this)
+        gpsEventSource.removeRawListener(this)
         headingProvider.stop()
         handler.removeCallbacks(cueRunnable)
         audioCue?.stop()
@@ -231,23 +250,31 @@ class StakeoutController(
             )
             return
         }
-        val heading = headingProvider.heading()
+        val magneticHeading = headingProvider.magneticHeading()
+        val declination = headingProvider.declinationDegrees()
         val absoluteBearing = normalize(result.bearingDegrees.toFloat())
+        val magneticBearing = MagneticAzimuthCalculator.fromTrueBearing(
+            result.bearingDegrees,
+            declination,
+            result.distanceMeters
+        )
         val location = latestLocation
         listener.onStakeoutStateChanged(
             UiState(
                 waitingForFix = false,
                 distanceMeters = result.distanceMeters,
-                relativeBearingDegrees = if (heading == null) {
+                relativeBearingDegrees = if (magneticHeading == null || magneticBearing == null) {
                     absoluteBearing
                 } else {
-                    normalize(absoluteBearing - heading)
+                    normalize(magneticBearing - magneticHeading)
                 },
                 absoluteBearingDegrees = absoluteBearing,
+                magneticBearingDegrees = magneticBearing,
+                declinationDegrees = declination,
                 accuracyMeters = location?.takeIf { it.hasAccuracy() }
                     ?.accuracy
                     ?.toDouble(),
-                usesDeviceCompass = heading != null,
+                usesDeviceCompass = magneticHeading != null,
                 reached = reachedConfirmations >= REQUIRED_REACHED_FIXES,
                 muted = muted
             )

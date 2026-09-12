@@ -31,6 +31,8 @@ edges:
     purpose: GIS model, storage, NGW and MapLibre contracts exposed through UI
     contracts:
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
       - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
       - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
@@ -41,6 +43,16 @@ edges:
     purpose: Picker controls exposed by maplibui forms
     contracts: []
 runtime_contracts:
+  independent-walk-session:
+    owner: maplibui
+    defined_in: maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
+    implementers: [maplibui, app]
+    callers: [app, maplibui]
+  passive-walk-preview:
+    owner: maplib
+    defined_in: maplib/src/main/java/com/nextgis/maplib/map/WalkPreviewGeometry.java
+    implementers: [maplib]
+    callers: [app]
   map-host:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java

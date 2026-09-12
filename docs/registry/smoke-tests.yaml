@@ -81,7 +81,8 @@ tests:
       concurrent pinch zoom and persistent; tilt remains disabled, location resets north and never
       zooms out while enforcing zoom 12, missing location centers on the first valid layer at zoom
       12 regardless of extent size, an empty project reports no location, and the stakeout
-      arrow/cardinal fallback stays correct at non-zero map bearings.
+      arrow fallback stays screen-correct at non-zero map bearings while the numeric magnetic
+      azimuth remains unchanged.
   SMOKE-NGRC-ORDER:
     type: device
     scope: [maplib, maplibui]
@@ -219,10 +220,13 @@ tests:
     steps:
       - Prepare unsent local layer data, trigger schema rebuild or Collector removal, simulate backup failure
       - Sync twice a layer whose server features have attachments but whose bytes were never downloaded to the device
+      - Manually delete an editable layer that has server-only attachment metadata plus one attachment collected on this device
     expected: >
       Destructive mutation is cancelled and local layer data remains. Attachment metadata is
       available through FeatureAttachments after the first pull; the second pull creates no
-      sync_remote_apply ZIP and does not download attachment bytes merely for backup.
+      sync_remote_apply ZIP and does not download attachment bytes merely for backup. Manual layer
+      deletion creates its backup without network access: tables retain all attachment metadata, the
+      ZIP contains only the locally collected attachment bytes, and deletion completes without a crash.
   SMOKE-CRASH-DRAFT-RECOVERY:
     type: device
     scope: [app, maplibui, maplib]
@@ -245,7 +249,7 @@ tests:
       finish is only via Stop track menu. Walk draft offers Continue/Discard and Continue
       never crashes when selected before MapLibre edit sources exist; renderer attachment is
       deferred and then restores vertices and GPS writing even when its sticky service was already
-      restarted. Walk and manual geometry drafts are mutually exclusive, so one sketch is offered once;
+      restarted. Walk and point geometry have different durable owners; a transferred sketch is offered once;
       a recovered polygon keeps one stable fill and red outline through later GPS updates,
       and Stop immediately republishes all editable vertices and midpoints;
       recovered line types show only an open red line without polygon fill and retain that
@@ -273,12 +277,13 @@ tests:
     type: device
     scope: [app, maplib]
     steps:
-      - Prepare an open NGW vector layer where one pull creates and deletes at least 1000 features while the map is visible
+      - Prepare an open NGW vector layer where one pull creates and deletes at least 1000 features while the map is visible; include one server feature with missing or invalid geometry and an existing local copy of that remote ID
       - Start manual sync once and interact with the map while that layer is applied
       - Reopen the project, run a no-change sync and export HyperLog
     expected: >
       The process remains alive and responsive; incremental pull emits no per-row vector cache
-      notification storm, performs one final spatial cache rebuild and one layer reload; no
+      notification storm, performs one final spatial cache rebuild and one layer reload; the invalid
+      server geometry is skipped, its previous local row is retained, and the rest of the layer commits; no
       notify_insert/GeoEnvelope/GeometryRTree crash, LinkedTreeMap style exception or spatial cache
       count mismatch appears on reopen, and the no-change sync leaves cache and SQLite counts equal.
   SMOKE-NGW-ACCOUNT-ADD:
@@ -297,6 +302,21 @@ tests:
       While the selector Activity is alive, the user sees a plain connection error and can retry;
       after the Activity is finished or destroyed, the late result creates no dialog. Neither path
       throws BadTokenException or terminates the application.
+  SMOKE-WALK-POINT-SESSION:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Start a line or polygon walk with sound disabled; check the live sketch before saving and after full/lite style reload
+      - Start point creation; verify every walk control is disabled already in the layer chooser
+      - Create point geometry, open its form and camera, background/reopen, then fail a Save and recreate the process
+      - During point creation try queued notification Resume, Finish and Discard; simulate a GPS gap
+      - Save or explicitly cancel the point; verify the same walk survives and its controls unlock, with explicit reconnection if paused
+      - Finish the walk; verify the final acknowledged geometry preserves all members/holes and remains recoverable after a validation or form failure
+    expected: >
+      Normal map menus and independent walk preview remain available. Point creation owns the
+      foreground editor without stopping GNSS. No UI or backend command controls the walk while
+      the point token exists; lifecycle and errors retain that token. Successful point Save or
+      explicit Cancel unlocks only its own session. Finish does not restart after cold launch.
   SMOKE-WALK:
     type: device
     scope: [app, maplib, maplibui]
@@ -322,37 +342,39 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
-      - Select GPS only for tracks and GPS plus network for ordinary location
-      - On Android 9 through 11 start recording from the visible map, verify the foreground notification appears before leaving the screen, walk for several fixes, then stop
-      - Record a track while walking and then in a vehicle at several legal road speeds
-      - Repeat vehicle movement with walk digitizing and stop normally
-      - With GPS plus network enabled, verify network fallback before the first GPS fix and after GPS is unavailable for more than 12 seconds
-      - Set a sampling interval above 30 seconds and record several fixes
-      - Pass through a section with one poor-accuracy or visibly displaced fix
-      - Enable background recording sound, minimize the app and stand still with a usable fix for at least 35 seconds
-      - Minimize notification volume while alarm volume remains audible, then mute alarm volume
-      - Block every enabled provider or background location delivery and wait at least 20 seconds
-      - Revoke location permission in Android settings while track recording is active and reopen the app
-      - Restore location permission and verify recording resumes from the retained intent
-      - Return to the app, then disable the setting and repeat the minimized segment
-      - Export HyperLog and inspect filter/provider counters
+      - Start a track on the visible map, turn the screen off, move, then reopen where GNSS is unavailable
+      - Verify current Network position and its metric accuracy circle; block all sources and wait over eight seconds
+      - Grant approximate location only; verify map fallback and that track/walk cannot record Network
+      - With sound disabled on Galaxy A54, record 10 minutes screen on and 10 minutes screen off; reopen repeatedly and compare GPS health raw cadence, accuracy, age, requests/stops and wake lock
+      - Stand for 20 minutes indoors with 20-30 metre accuracy, then outdoors with about 5 metre accuracy; inspect saved distance and gradual correlated drift
+      - Keep recording on a table, then hold and move the phone while remaining in place; verify handset handling does not start a false path
+      - Repeat walking starts at 3-5 and 8-12 metre accuracy; verify the current cursor follows before the line confirms and the circle does not inflate with distance from the initial anchor
+      - Start walking with an early turn inside the uncertainty radius; wait for confirmation and verify the first metres and corner appear with original timestamps
+      - Cancel a tentative departure or lose GPS before confirmation; verify the buffer is not appended and another recording session cannot inherit it
+      - Export one track and multiple tracks to a local file receiver; check .gpx filename and application/gpx+xml URI MIME including anonymous lookup
+      - Explicitly stop a track and verify end time is saved, closedTracks is one, and that track does not auto-resume
+      - Start at an uncertain fix, improve reception without moving and verify the stop vertex is corrected without an extra segment
+      - Start slow walking from that stop, then repeat starting and stopping a car with the phone fixed in its mount
+      - Walk slowly, stop, start again, turn and reverse; repeat on a road at legal vehicle speeds
+      - Lose GNSS and regain it; reload the track and export GPX
+      - Repeat with walk digitizing; verify pause, save, and explicit Continue and connect with fresh GPS
+      - Select sparse point intervals and verify corner retention and validated final points
+      - Record with screen off and both track and walk active; stop one and verify the other still receives GNSS
+      - Revoke and restore fine permission, restart the process, and verify durable track intent and walk draft
+      - Check the circle at several latitudes, zooms and camera tilts, after cold style load and hot layer add
+      - Enable background sound, stand still, mute notification volume and then alarm volume, and lose GNSS
+      - Compare battery use and run stakeout with the original external GNSS/mock receiver
     expected: >
-      Track and walk geometry progress continuously at vehicle speed without a
-      speed_dist rejection cascade; each mode obeys only its own provider setting.
-      Track Start is handled before a later Stop in the default application process; the log
-      contains actual service start before stop and no zero-fix session caused by delayed launch.
-      A recent usable GPS stream is not interleaved with network fixes, while network
-      resumes as a fallback after 12 seconds without usable GPS.
-      Long sampling gaps preserve prior valid fixes, the final two buffered fixes are
-      flushed on stop, and isolated inaccurate or displaced garbage is absent. The
-      automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
-      Minimized recording emits a short heartbeat every 10 seconds while usable locations
-      keep arriving, including while stationary; notification volume does not suppress its
-      alarm-stream tone, while zero or muted alarm volume falls back to short vibration. It stops
-      after location delivery becomes stale. Foreground recording is silent, and disabling the
-      setting suppresses both sound and vibration.
-      Revoking location permission does not crash-loop a sticky location FGS; the durable track
-      intent survives and recording can resume after permission is granted again.
+      The map shows only a current source with an honest accuracy radius and clears both marker
+      and circle on expiry. No network fix, camera anchor, cached final snap or unrecorded preview
+      enters geometry. Walking and legal vehicle movement retain turns without stationary drift
+      or isolated large jumps. GPS gaps remain separate map/Canvas/GPX segments; walk pause and
+      insertion position survive restart and require explicit reconnection. Sound uses fresh
+      measurement timestamps before decimation and keeps existing alarm/vibration behavior.
+      Screen lifecycle and ending one recording consumer do not stop another consumer.
+      Sound-disabled background recording retains its acquisition and wake lock. UI resume
+      displays the actual current accuracy without a subscription-induced restart; real
+      reception deterioration remains visible. Check battery drain during the screen-off run.
   SMOKE-STAKEOUT:
     type: device
     scope: [app, maplib]
@@ -364,14 +386,19 @@ tests:
       - For a polygon, repeat while starting inside its area
       - Cross every threshold repeatedly and hold at 0.1 m with both good accuracy and a constant coarse value such as 10 m
       - Stand still and rotate the device, then walk along a known bearing while turning the device independently
-      - Repeat on a device/emulator without a rotation-vector sensor and compare the cardinal label with a known north-up bearing
+      - Compare the displayed magnetic azimuth with a control bearing plus known local WMM2025 declination, including wrap around 0/360 degrees
+      - Repeat on a device/emulator without a rotation-vector sensor and compare the arrow with a known north-up and explicitly rotated map bearing
+      - Open the azimuth button, select current location to map point, drag and replace the target, and verify the fixed GPS endpoint, temporary segment and result update after release
+      - Select point A to point B, choose two arbitrary points, drag A and B independently, verify every released position recalculates the result, then test coincident points and tap a third point to begin a new measurement
+      - On a narrow portrait screen verify the numeric magnetic-azimuth value remains visible below its label instead of being clipped
         - Mute and unmute the widget, rotate portrait/landscape, lock the screen and press Home for several minutes, then resume and stop the mode
       - Repeat with GPS loss/stale fixes, a network fallback, a mock-GPS receiver application, Bluetooth active and a non-normal Android audio mode
         - Export the debug log and verify it does not contain stakeout coordinates or extended mock Location samples
       - Open map settings after upgrading an existing install, verify both photo-coordinate options are initially enabled, disable them, restart and verify the explicit choice persists
       - Run a 4–8 hour field session and assess sound fatigue, battery use and CPU temperature
     expected: >
-      The widget contains direction, distance, reported horizontal accuracy, mute and stop;
+      The widget contains direction, WGS84 distance, numeric WMM2025 magnetic azimuth,
+      reported horizontal accuracy, declination, mute and stop for live guidance;
       it never duplicates object name or coordinate source. Point uses its coordinate, line uses the nearest
       segment point and polygon uses the nearest outer/inner boundary even from inside. Sound
       cadence changes at configured distances without overlapping, chattering or using network
@@ -380,8 +407,12 @@ tests:
         whose distance is within tolerance. Stale/lost GPS silences audio; screen-off and background
         state keep cues and high-frequency GPS active under an ongoing silent notification. Foreground
         resume restores the widget, and explicit stop removes the notification and restores ordinary
-        location sampling. Device rotation follows the true-north phone compass
-      both stationary and moving; without it north-up plus a cardinal label is used. Mock GPS from the
+        location sampling. Device rotation follows the filtered magnetic phone compass
+      both stationary and moving; without it true bearing minus map bearing is used. The current-to-point
+      mode updates a non-persistent segment, lets only the target be dragged and retains live GPS/audio behavior. Point A to B uses the same
+      geodesic and magnetic-bearing calculation without GPS/audio, returns undefined azimuth for coincident
+      points, lets either endpoint be corrected by dragging and starts a new A after the completed pair.
+      The numeric magnetic azimuth is visible on narrow screens. Mock GPS from the
       receiver remains accepted, navigation cues remain audible with Bluetooth/audio-mode changes,
         use a loud short damped tap rather than a high sustained tone, and system volume can reduce it.
         The migrated photo defaults do not overwrite later explicit user choices. Debug logs do not
@@ -419,7 +450,7 @@ tests:
       - Inspect line and polygon toolbars: no overflow trigger or touch-append action; polygon add/delete part/hole actions are absent
       - In an initial one-node line/polygon sketch start walk append; in an existing shape select a middle node and start walk append
       - During polygon walk verify the live tail reaches the current location and recorded nodes stay between the selected node and its former successor
-      - While walk recording is active inspect and press the right bottom action
+      - While walk recording is active inspect the separate panel and finish using its acknowledged action
       - Move, insert and delete vertices, then press the attribute action instead of Save and complete the form
       - Verify the successful new-feature form returns to the standard map with no selected feature or edit/action toolbar
       - Edit an existing feature, save once with the geometry Save action and once through the attribute form
@@ -438,7 +469,7 @@ tests:
       before insertion the selected node is red and only its ordered successor and connecting
       segment inside the same part/ring are orange; an open endpoint has no target and a closed
       ring wraps to its own first node. Multi geometry never points into another part or ring.
-      its right bottom action shows a walking person, not settings, and finishes recording through Save.
+      its separate panel finishes recording only after the service persists and acknowledges the final snapshot.
       For every supported geometry type the attribute action becomes enabled with geometry and
       follows the same validation, topology repair and single-form handoff as Save. Existing
       multipart geometry and holes remain intact unless their vertices are explicitly edited.

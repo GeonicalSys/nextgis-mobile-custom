@@ -6,7 +6,6 @@
 package com.nextgis.mobile.stakeout
 
 import android.content.Context
-import android.hardware.GeomagneticField
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -27,9 +26,14 @@ internal class StakeoutHeadingProvider(
     private val adjustedMatrix = FloatArray(9)
     private val orientation = FloatArray(3)
 
-    private var latestLocation: Location? = null
-    private var trueHeading: Float? = null
+    private var magneticHeading: Float? = null
+    private var declinationDegrees = 0f
+    private var declinationLocation: Location? = null
+    private var declinationTimeMillis = 0L
     private var headingElapsedMillis = 0L
+    private var filteredSin = 0.0
+    private var filteredCos = 0.0
+    private var hasFilteredHeading = false
     private var started = false
 
     fun start() {
@@ -44,20 +48,37 @@ internal class StakeoutHeadingProvider(
     fun stop() {
         if (started) sensorManager.unregisterListener(this)
         started = false
-        trueHeading = null
+        magneticHeading = null
+        hasFilteredHeading = false
     }
 
     fun updateLocation(location: Location) {
-        latestLocation = Location(location)
+        val modelTime = location.time.takeIf { it > 0L } ?: System.currentTimeMillis()
+        val cachedLocation = declinationLocation
+        if (cachedLocation != null
+            && cachedLocation.distanceTo(location) < DECLINATION_CACHE_DISTANCE_METERS
+            && kotlin.math.abs(modelTime - declinationTimeMillis) < DECLINATION_CACHE_AGE_MILLIS
+        ) return
+
+        declinationDegrees = WorldMagneticModel2025(
+            location.latitude.toFloat(),
+            location.longitude.toFloat(),
+            if (location.hasAltitude()) location.altitude.toFloat() else 0f,
+            modelTime
+        ).declination
+        declinationLocation = Location(location)
+        declinationTimeMillis = modelTime
     }
 
-    /** Device orientation relative to true north; GNSS movement bearing is never used. */
-    fun heading(): Float? {
+    /** Device orientation relative to magnetic north; GNSS movement bearing is never used. */
+    fun magneticHeading(): Float? {
         if (SystemClock.elapsedRealtime() - headingElapsedMillis > SENSOR_STALE_MILLIS) {
             return null
         }
-        return trueHeading
+        return magneticHeading
     }
+
+    fun declinationDegrees(): Float = declinationDegrees
 
     override fun onSensorChanged(event: SensorEvent) {
         SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
@@ -70,19 +91,26 @@ internal class StakeoutHeadingProvider(
         SensorManager.remapCoordinateSystem(rotationMatrix, axisX, axisY, adjustedMatrix)
         SensorManager.getOrientation(adjustedMatrix, orientation)
 
-        val magneticHeading = Math.toDegrees(orientation[0].toDouble()).toFloat()
-        val location = latestLocation
-        val declination = if (location == null) {
-            0f
-        } else {
-            GeomagneticField(
-                location.latitude.toFloat(),
-                location.longitude.toFloat(),
-                if (location.hasAltitude()) location.altitude.toFloat() else 0f,
-                location.time
-            ).declination
+        if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
+            magneticHeading = null
+            hasFilteredHeading = false
+            return
         }
-        trueHeading = normalize(magneticHeading + declination)
+
+        val rawHeadingRadians = orientation[0].toDouble()
+        val rawSin = kotlin.math.sin(rawHeadingRadians)
+        val rawCos = kotlin.math.cos(rawHeadingRadians)
+        if (!hasFilteredHeading) {
+            filteredSin = rawSin
+            filteredCos = rawCos
+            hasFilteredHeading = true
+        } else {
+            filteredSin += FILTER_ALPHA * (rawSin - filteredSin)
+            filteredCos += FILTER_ALPHA * (rawCos - filteredCos)
+        }
+        magneticHeading = normalize(
+            Math.toDegrees(kotlin.math.atan2(filteredSin, filteredCos)).toFloat()
+        )
         headingElapsedMillis = SystemClock.elapsedRealtime()
         onHeadingChanged()
     }
@@ -91,7 +119,8 @@ internal class StakeoutHeadingProvider(
         if (sensor?.type == Sensor.TYPE_ROTATION_VECTOR
             && accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE
         ) {
-            trueHeading = null
+            magneticHeading = null
+            hasFilteredHeading = false
         }
     }
 
@@ -103,5 +132,8 @@ internal class StakeoutHeadingProvider(
     private companion object {
         const val FULL_CIRCLE = 360f
         const val SENSOR_STALE_MILLIS = 2_000L
+        const val FILTER_ALPHA = 0.2
+        const val DECLINATION_CACHE_DISTANCE_METERS = 1_000f
+        const val DECLINATION_CACHE_AGE_MILLIS = 6L * 60L * 60L * 1_000L
     }
 }

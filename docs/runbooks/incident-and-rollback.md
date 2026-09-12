@@ -1,7 +1,7 @@
 ---
 title: Инцидент и безопасный rollback
 type: runbook
-last_verified: 2026-07-19
+last_verified: 2026-08-27
 related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
@@ -17,6 +17,8 @@ related_code:
 4. При риске данных экспортировать `LayerBackups` через штатный UI.
    Каталог ограничен `layer_backup_max_gb` (default 5 ГБ); при переполнении
    удаляются самые старые ZIP, поэтому экспорт делать до очистки.
+   ZIP содержит все таблицы слоя и только те файлы вложений, которые
+   физически находились на этом устройстве; server-only payload нужно получать из NGW.
 5. Не очищать app data и не переустанавливать приложение до копирования нужных
    локальных данных.
 

@@ -400,7 +400,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     protected fun hasLocationPermissions(): Boolean {
         val permissions =
-            isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) &&
+            isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) ||
                     isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
         return permissions
     }
@@ -424,7 +424,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         permissions: Array<String>,
         grantResults: IntArray ) {
         when (requestCode) {
-            TrackerService.PERMISSIONS_REQUEST_ZERO_LOCATION_POSPONDED -> if (hasLocationPermissions()) {
+            TrackerService.PERMISSIONS_REQUEST_ZERO_LOCATION_POSPONDED -> if (com.nextgis.maplib.util.PermissionUtil.hasLocationPermissions(this)) {
                 var item: MenuItem? = null
                 try {
                     item = mToolbar!!.menu.findItem(R.id.menu_track)
@@ -795,6 +795,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     private fun maybeOfferManualGeometryDraftRecovery() {
         val map = mapFragment ?: return
+        val form = FeatureFormDraftStore.load(this)
+        if (form?.pointSessionId != null || form?.walkSessionId != null) {
+            maybeOfferFormDraftRecovery()
+            return
+        }
         if (!map.hasInterruptedManualGeometryDraft()) {
             maybeOfferFormDraftRecovery()
             return
@@ -821,6 +826,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     private fun maybeOfferFormDraftRecovery() {
         val draft = FeatureFormDraftStore.load(this)
         if (draft == null) {
+            if (maybeOfferPointCreationRecovery()) return
             crashRecoveryOffered = true
             HyperLog.v(Constants.TAG, "CrashRecovery hub check completed: no remaining drafts")
             return
@@ -832,6 +838,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                     "feature=${draft.featureId}"
             )
             FeatureFormDraftStore.clear(this)
+            maybeOfferPointCreationRecovery()
             crashRecoveryOffered = true
             return
         }
@@ -849,10 +856,30 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             }
             .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
                 HyperLog.v(Constants.TAG, "CrashRecovery form Discard selected")
-                FeatureFormDraftStore.clear(this)
+                FeatureFormDraftStore.discard(this)
+                if (draft.pointSessionId != null || draft.walkSessionId != null)
+                    mapFragment?.discardManualGeometryDraft()
             }
             .setCancelable(false)
             .show()
+    }
+
+    private fun maybeOfferPointCreationRecovery(): Boolean {
+        val map = mapFragment ?: return false
+        if (!map.hasPointCreationWithoutDraft()) return false
+        crashRecoveryOffered = true
+        AlertDialog.Builder(this)
+            .setTitle(com.nextgis.maplibui.R.string.form_draft_title)
+            .setMessage(com.nextgis.maplibui.R.string.walk_point_recovery)
+            .setPositiveButton(com.nextgis.maplibui.R.string.form_draft_continue) { _, _ ->
+                map.resumePointCreationSelection()
+            }
+            .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
+                map.discardPointCreationWithoutDraft()
+            }
+            .setCancelable(false)
+            .show()
+        return true
     }
 
     private fun showCollectorProjectsDialog() {
@@ -867,6 +894,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     private fun switchCollectorProject(project: CollectorProjectRegistry.ProjectInfo) {
         val gisApp = application as IGISApplication
+        if (com.nextgis.maplibui.util.WalkSessionStore.load(this) != null) {
+            Toast.makeText(this, com.nextgis.maplibui.R.string.walk_project_busy, Toast.LENGTH_LONG).show()
+            return
+        }
         if (TrackerService.isTrackerServiceRunning(this)) {
             Toast.makeText(this, R.string.collector_project_switch_tracking, Toast.LENGTH_LONG).show()
             return
