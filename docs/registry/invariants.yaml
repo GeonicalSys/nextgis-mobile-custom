@@ -434,9 +434,9 @@ invariants:
       accepts at most one polygon part, while loading and editing existing multipart or holed
       geometry does not discard its structure. Walk append starts after the selected node and
       remains contiguous before its former successor using service-confirmed GNSS vertices;
-      a GPS gap pauses the walk until an explicit reconnection. While walk recording is active, the right bottom action uses the walking-person
-      icon and finishes recording through the existing Save path; location settings are not
-      exposed from that action. For new
+      a GPS gap pauses the walk until an explicit reconnection. While walk recording is active,
+      a separate panel owns controls and normal menus remain available. Point creation locks all
+      walk controls from chooser through Save/Cancel; Finish awaits the service acknowledgement. For new
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
@@ -504,7 +504,10 @@ invariants:
       A refined stop replaces only the last owned vertex, retaining track arrival time;
       it never appends distance for an improving stationary position. Handset handling alone
       cannot confirm departure; direction, combined accuracy and trustworthy velocity or a
-      longer persistent position trend are required. Each recorder buffers at most 120 seconds
+      longer persistent position trend are required. Accurate outdoor coordinates use short
+      median/trend windows that tolerate ordinary speed uncertainty and an early corner. The
+      displayed candidate remains current while the recorder holds its stop anchor; its accuracy
+      cannot expand merely because the user has moved away from that anchor. Each recorder buffers at most 120 seconds
       or 512 tentative observations; confirmation backfills original times/corners, while Stop
       and gaps discard unconfirmed history. GPX URI MIME and share filename must agree,
       including anonymous type lookup, without an added .bin suffix.
@@ -614,20 +617,22 @@ invariants:
       track and starting a new id is allowed). TrackerService shares the default application
       process with the toolbar so lifecycle delivery and durable preference reads are ordered;
       stale delayed Start delivery after explicit Stop creates no empty session. Walk digitizing
-      keeps walkedit_temp on unexpected service death and offers Continue/Discard even if
-      START_STICKY already restarted the service; explicit Save/Cancel clears the draft. Non-walk vertex/tap
+      keeps its full-geometry owner on unexpected service death and exposes recovery in its
+      panel; a restarted service pauses insertion. Finish preserves the draft until successful
+      feature Save or explicit Discard. An active point owner locks every walk command and
+      survives camera, failed Save and process recreation; GNSS persistence remains independent. Non-walk vertex/tap
       editing synchronously journals its latest WKT plus active-map/layer/feature identity in
       GeometryEditDraftStore and offers Continue/Discard after process/task death; only
       explicit Cancel, successful layer update, or handoff to the attribute form clears it.
       Polygon drafts must restore as explicitly closed MapLibre rings before vertex extraction,
       including new one-part MultiPolygon sketches, so the fill and vertices remain consistent.
-      A cold walk Continue must preserve the property-bearing edit feature while atomically
-      restoring polygon fill, outline and the hidden vertex cache on the current MapLibre style;
-      if the current style does not yet own all edit sources, renderer attachment remains pending
-      until style application completes and must never dereference a missing or stale source.
-      Starting or restoring walk mode clears the mutually exclusive non-walk geometry draft so
-      the recovery hub cannot offer two editors for the same sketch.
-      the outline must not flicker during GPS updates and Stop must republish editable vertices.
+      A cold walk preview restores its own source after style load, preserving root CRS before
+      conversion to WGS84. The point editor uses separate edit sources and its own journal.
+      Starting walk transfers one sketch to its service owner, but does not discard an unrelated
+      point draft. Owned forms persist the handoff before Activity launch; their UUID controls
+      which point lock or finished walk may be cleared after successful Save.
+      Finish publishes manual vertices only after the service acknowledges its final snapshot.
+
       The shared edit FillLayer is exclusive to Polygon/MultiPolygon and must be removed for a
       cold-restored LineString/MultiLineString even when the preceding edit was polygonal.
       Polygon WKT parsing preserves one outer ring and only actual holes; recovery must not

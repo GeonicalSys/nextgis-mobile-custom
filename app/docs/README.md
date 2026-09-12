@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-09-12
+last_verified: 2026-09-13
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -255,9 +255,9 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 - Курсор положения движется, но линия трека не появляется: сначала проверить
   `TrackerService.onStartCommand`. Если до Stop нет фактического Start и
   `accepted=0`, это lifecycle запуска сервиса, а не отбрасывание GPS-фильтром.
-- После crash открылась форма вместо незавершённого обхода: проверить
-  `MainActivity.maybeOfferCrashRecovery()`, `MapFragment.hasInterruptedWalkDraft()`
-  и отсутствие silent cold restore в `onViewStateRestored()`.
+- Форма точки поверх активного обхода восстанавливается первой по UUID владельца.
+  Проверить `MainActivity.maybeOfferCrashRecovery()` и `WalkSessionStore`; старый
+  part-only обход отдельно проходит legacy adoption.
 - После crash пропала линия из обычного редактора: проверить HyperLog-события
   `MapFragment mode`, `GeometryDraft saved`, `CrashRecovery` и
   `GeometryDraft resumed`; координаты в журнал намеренно не попадают.
@@ -323,3 +323,16 @@ MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-defau
 Экспорт трека использует `ExportFileProvider`: MIME самого URI и share Intent
 совпадает с GPX, поэтому системный получатель не должен дописывать `.bin`.
 Проверять нужно также имя файла и anonymous MIME lookup на Android 16.
+
+## Независимый обход и создание точки
+
+`MapFragment` возвращает обычные меню после передачи геометрии сервису,
+подключает пассивный preview и отдельную `WalkRecordingPanel`. UUID точки
+записывается до выбора слоя; все walk-команды остаются закрыты до Save/Cancel.
+`MainActivity` восстанавливает принадлежащую этой сессии форму раньше
+дублирующего черновика геометрии. Полный контракт и ограничения проверки:
+[crash recovery](../../docs/architecture/crash-recovery.md).
+
+Курсор следует текущей сглаженной позиции независимо от ожидания начала линии;
+круг не обозначает расстояние от стоянки. Подтверждение ходьбы и новые регрессии:
+[GPS pipeline](../../docs/architecture/location-pipeline.md).

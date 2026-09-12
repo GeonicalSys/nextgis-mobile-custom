@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-09-12
+last_verified: 2026-09-13
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
@@ -112,3 +112,11 @@ GNSS. Старые переключатели источников мигрир�
 и расстояния задают сохранение точек после фильтра, а в разделе местоположения
 относятся к обходу. Карте достаточно approximate permission; записи требуется
 fine permission. См. [GPS pipeline](../architecture/location-pipeline.md).
+
+`walkedit_temp` дополнительно хранит UUID обхода, путь активной карты, полную WKT,
+фазу RECORDING/FINISHING/FINISHED, ревизию и UUID/этап/слой/инструмент создаваемой
+точки. `WalkSessionStore` владеет этими ключами. Это внутренний журнал сессии;
+пользовательские интервалы GNSS и звуковая настройка не меняются. UUID точки
+сохраняется до её успешного Save или явного Cancel; формы переносят UUID через
+durable checkpoint до запуска Activity. Точные имена ключей определены в
+`WalkSessionStore`, сценарии — в [crash recovery](../architecture/crash-recovery.md).

@@ -249,7 +249,7 @@ tests:
       finish is only via Stop track menu. Walk draft offers Continue/Discard and Continue
       never crashes when selected before MapLibre edit sources exist; renderer attachment is
       deferred and then restores vertices and GPS writing even when its sticky service was already
-      restarted. Walk and manual geometry drafts are mutually exclusive, so one sketch is offered once;
+      restarted. Walk and point geometry have different durable owners; a transferred sketch is offered once;
       a recovered polygon keeps one stable fill and red outline through later GPS updates,
       and Stop immediately republishes all editable vertices and midpoints;
       recovered line types show only an open red line without polygon fill and retain that
@@ -302,6 +302,21 @@ tests:
       While the selector Activity is alive, the user sees a plain connection error and can retry;
       after the Activity is finished or destroyed, the late result creates no dialog. Neither path
       throws BadTokenException or terminates the application.
+  SMOKE-WALK-POINT-SESSION:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Start a line or polygon walk with sound disabled; check the live sketch before saving and after full/lite style reload
+      - Start point creation; verify every walk control is disabled already in the layer chooser
+      - Create point geometry, open its form and camera, background/reopen, then fail a Save and recreate the process
+      - During point creation try queued notification Resume, Finish and Discard; simulate a GPS gap
+      - Save or explicitly cancel the point; verify the same walk survives and its controls unlock, with explicit reconnection if paused
+      - Finish the walk; verify the final acknowledged geometry preserves all members/holes and remains recoverable after a validation or form failure
+    expected: >
+      Normal map menus and independent walk preview remain available. Point creation owns the
+      foreground editor without stopping GNSS. No UI or backend command controls the walk while
+      the point token exists; lifecycle and errors retain that token. Successful point Save or
+      explicit Cancel unlocks only its own session. Finish does not restart after cold launch.
   SMOKE-WALK:
     type: device
     scope: [app, maplib, maplibui]
@@ -333,6 +348,7 @@ tests:
       - With sound disabled on Galaxy A54, record 10 minutes screen on and 10 minutes screen off; reopen repeatedly and compare GPS health raw cadence, accuracy, age, requests/stops and wake lock
       - Stand for 20 minutes indoors with 20-30 metre accuracy, then outdoors with about 5 metre accuracy; inspect saved distance and gradual correlated drift
       - Keep recording on a table, then hold and move the phone while remaining in place; verify handset handling does not start a false path
+      - Repeat walking starts at 3-5 and 8-12 metre accuracy; verify the current cursor follows before the line confirms and the circle does not inflate with distance from the initial anchor
       - Start walking with an early turn inside the uncertainty radius; wait for confirmation and verify the first metres and corner appear with original timestamps
       - Cancel a tentative departure or lose GPS before confirmation; verify the buffer is not appended and another recording session cannot inherit it
       - Export one track and multiple tracks to a local file receiver; check .gpx filename and application/gpx+xml URI MIME including anonymous lookup
@@ -434,7 +450,7 @@ tests:
       - Inspect line and polygon toolbars: no overflow trigger or touch-append action; polygon add/delete part/hole actions are absent
       - In an initial one-node line/polygon sketch start walk append; in an existing shape select a middle node and start walk append
       - During polygon walk verify the live tail reaches the current location and recorded nodes stay between the selected node and its former successor
-      - While walk recording is active inspect and press the right bottom action
+      - While walk recording is active inspect the separate panel and finish using its acknowledged action
       - Move, insert and delete vertices, then press the attribute action instead of Save and complete the form
       - Verify the successful new-feature form returns to the standard map with no selected feature or edit/action toolbar
       - Edit an existing feature, save once with the geometry Save action and once through the attribute form
@@ -453,7 +469,7 @@ tests:
       before insertion the selected node is red and only its ordered successor and connecting
       segment inside the same part/ring are orange; an open endpoint has no target and a closed
       ring wraps to its own first node. Multi geometry never points into another part or ring.
-      its right bottom action shows a walking person, not settings, and finishes recording through Save.
+      its separate panel finishes recording only after the service persists and acknowledges the final snapshot.
       For every supported geometry type the attribute action becomes enabled with geometry and
       follows the same validation, topology repair and single-form handoff as Save. Existing
       multipart geometry and holes remain intact unless their vertices are explicitly edited.

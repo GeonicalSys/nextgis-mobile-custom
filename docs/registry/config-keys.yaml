@@ -152,7 +152,7 @@ preferences:
     owner: maplibui
     type: shared_preferences_file
     source: maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
-    purpose: JSON snapshot of unfinished attribute form (fields, geometry, pending photos)
+    purpose: JSON snapshot of unfinished attribute form (fields, geometry, pending photos, optional point/walk owner UUIDs); owned handoff is committed before Activity launch
   geometry_edit_draft:
     owner: maplibui
     type: shared_preferences_file
@@ -164,7 +164,12 @@ preferences:
     owner: maplibui
     type: shared_preferences_file
     source: maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
-    purpose: Durable walk-digitizing draft (WKT, layer/feature ids, insertion target, gps_paused); a gap requires explicit reconnection and the draft clears only on explicit Save/Cancel
+    purpose: >
+      Durable full-geometry walk owner with map path, session UUID, RECORDING/FINISHING/FINISHED
+      phase, revision and optional point owner/stage/layer/tool; preserves legacy part WKT,
+      insertion target and gps_paused. Every manual command is locked until point Save/Cancel.
+      Finish acknowledges the final snapshot; successful feature Save or explicit Discard clears it.
+    session_source: maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
 manifest_metadata:
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app

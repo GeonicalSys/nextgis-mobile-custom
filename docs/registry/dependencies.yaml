@@ -43,6 +43,16 @@ edges:
     purpose: Picker controls exposed by maplibui forms
     contracts: []
 runtime_contracts:
+  independent-walk-session:
+    owner: maplibui
+    defined_in: maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
+    implementers: [maplibui, app]
+    callers: [app, maplibui]
+  passive-walk-preview:
+    owner: maplib
+    defined_in: maplib/src/main/java/com/nextgis/maplib/map/WalkPreviewGeometry.java
+    implementers: [maplib]
+    callers: [app]
   map-host:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java

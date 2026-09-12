@@ -249,6 +249,11 @@ triggers:
     strict_docs: true
   - id: GPS-RECORDING
     paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/WalkPreviewGeometry.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionPolicy.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometrySnapshot.java
+      - maplibui/src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java
       - app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
       - maplib/src/test/java/com/nextgis/maplib/util/LocationDepartureTest.java
       - maplib/src/test/resources/location/
@@ -294,7 +299,7 @@ triggers:
       - maplibui/docs/manifest.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GPS-RECORDING, SMOKE-WALK, SMOKE-WALK-POINT-SESSION]
     strict_docs: true
   - id: STAKEOUT-GUIDANCE
     paths:
