@@ -1,7 +1,7 @@
 ---
 title: Магнитный азимут, расстояние и вынос координат
 type: architecture
-last_verified: 2026-09-08
+last_verified: 2026-09-11
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
@@ -167,3 +167,9 @@ cut/fill, пикетаж и смещения в этот контракт не �
 Магнитная модель и знак склонения сверены с
 [NOAA WMM2025](https://www.ncei.noaa.gov/products/world-magnetic-model) и
 [Android `GeomagneticField`](https://developer.android.com/reference/android/hardware/GeomagneticField).
+
+## Исходные измерения
+
+Вынос подписывается через `GpsEventSource.addRawListener` и получает исходные
+GNSS/mock fix. Адаптивное сглаживание пешеходной записи не меняет его координаты
+и пороги точности; owner lease частого потока сохранён.

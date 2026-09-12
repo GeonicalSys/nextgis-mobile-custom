@@ -2955,23 +2955,6 @@ public class MapFragment
             mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_COMPASS, true)
         checkCompass(showCompass)
 
-        if (mGpsEventSource != null && mGpsEventSource!!.lastKnownLocation != null) {
-            mCurrentCenter = GeoPoint()
-
-            mCurrentCenter!!.setCoordinates(mGpsEventSource!!.lastKnownLocation.longitude, mGpsEventSource!!.lastKnownLocation.latitude)
-            mCurrentCenter!!.crs = GeoConstants.CRS_WGS84
-
-            if (!mCurrentCenter!!.project(GeoConstants.CRS_WEB_MERCATOR))
-                mCurrentCenter = null
-
-            // old convert
-            //                val  newPoint = convert4326To3857 (mGpsEventSource!!.lastKnownLocation.longitude, mGpsEventSource!!.lastKnownLocation.latitude)
-            //            mCurrentCenter!!.setCoordinates(newPoint.get(0), newPoint.get(1))
-        }
-        else
-            mCurrentCenter = null
-
-        /* Puck: not tied to status panel; after mCurrentCenter sync. Style may still load — second pass in setMapLayersLoaded. */
         updateLastLocation()
 
         if (GISApplication.needUpdateBackground){
@@ -3365,7 +3348,7 @@ public class MapFragment
                 .show()
         } else if (layers.size == 1) {
             // Fork walk implementation (CUSTOMIZATIONS §2): explicit MapLibre edit session +
-            // GPS/camera anchor for initial geometry. Upstream variant called newGeometryByWalk twice
+            // validated GNSS anchor for initial geometry. Upstream variant called newGeometryByWalk twice
             // around createPointFromOverlay(true) — reconciled: keep fork pipeline as the more
             // deterministic path (§17 Walk reconciliation).
             val layer = layers[0] as VectorLayer
@@ -3373,7 +3356,7 @@ public class MapFragment
             mSelectedLayer = layer
             editLayerOverlay!!.setSelectedLayer(layer)
             editLayerOverlay!!.newGeometryByWalk()
-            applyInitialWalkGeometryAtStartLocation()
+            if (!applyInitialWalkGeometryAtStartLocation()) return
             prepareMaplibreSessionForNewWalkGeometry()
             setNewMode(MODE_EDIT_BY_WALK)
 
@@ -3396,7 +3379,7 @@ public class MapFragment
 
     /**
      * MapLibre edit session must exist before walk recording.
-     * Start geometry must match [editLayerOverlay] (GPS/camera anchor), not the default camera-centre stub.
+     * Start geometry must match [editLayerOverlay] (validated GNSS anchor), not the default camera-centre stub.
      */
     private fun prepareMaplibreSessionForNewWalkGeometry() {
         val map = mMapRef.get()?.map ?: return
@@ -3423,23 +3406,12 @@ public class MapFragment
         )
     }
 
-    /** Web Mercator anchor: prefer last GPS fix, else map camera centre. */
+    /** Only a fresh validated GNSS fix may seed a walk recording. */
     private fun walkStartAnchorWebMercator(): GeoPoint? {
-        mGpsEventSource?.lastKnownLocation?.let { loc ->
-            val p = GeoPoint(loc.longitude, loc.latitude)
-            p.crs = GeoConstants.CRS_WGS84
-            if (p.project(GeoConstants.CRS_WEB_MERCATOR)) return p
-        }
-        if (mCurrentCenter != null && mCurrentCenter!!.crs == GeoConstants.CRS_WEB_MERCATOR) {
-            val c = GeoPoint(mCurrentCenter!!.x, mCurrentCenter!!.y)
-            c.crs = GeoConstants.CRS_WEB_MERCATOR
-            return c
-        }
-        val target = mMapRef.get()?.map?.maplibreMap?.cameraPosition?.target ?: return null
-        val p = GeoPoint(target.longitude, target.latitude)
-        p.crs = GeoConstants.CRS_WGS84
-        if (!p.project(GeoConstants.CRS_WEB_MERCATOR)) return null
-        return p
+        val loc = mGpsEventSource?.lastRecordingLocation ?: return null
+        val point = GeoPoint(loc.longitude, loc.latitude)
+        point.crs = GeoConstants.CRS_WGS84
+        return if (point.project(GeoConstants.CRS_WEB_MERCATOR)) point else null
     }
 
     private fun geoPointWebMercatorCopy(x: Double, y: Double): GeoPoint {
@@ -3497,21 +3469,22 @@ public class MapFragment
         }
     }
 
-    private fun applyInitialWalkGeometryAtStartLocation() {
-        val layer = mSelectedLayer ?: return
+    private fun applyInitialWalkGeometryAtStartLocation(): Boolean {
+        val layer = mSelectedLayer ?: return false
         val anchor = walkStartAnchorWebMercator()
         if (anchor == null) {
             Toast.makeText(
                 context,
-                com.nextgis.maplibui.R.string.error_no_location,
+                com.nextgis.maplibui.R.string.walk_gps_wait,
                 Toast.LENGTH_SHORT
             ).show()
-            return
+            return false
         }
         val geom = buildInitialWalkGeometry(layer.geometryType, anchor)
         val feat = editLayerOverlay!!.selectedFeature
         feat.geometry = geom
         editLayerOverlay!!.fillDrawItems(geom)
+        return true
     }
 
     fun onFinishChooseLayerDialog(
@@ -3530,7 +3503,7 @@ public class MapFragment
         editLayerOverlay!!.setSelectedLayer(vectorLayer)
 
 
-        if (useCreatePointFromOverlay)
+        if (useCreatePointFromOverlay && code != ADD_GEOMETRY_BY_WALK)
             createPointFromOverlay(startFillByWalk)
 
         if (code == ADD_CURRENT_LOC) {
@@ -3542,7 +3515,7 @@ public class MapFragment
             startNewGeometryCreation(vectorLayer)
         } else if (code == ADD_GEOMETRY_BY_WALK) {
             editLayerOverlay!!.newGeometryByWalk()
-            applyInitialWalkGeometryAtStartLocation()
+            if (!applyInitialWalkGeometryAtStartLocation()) return
             prepareMaplibreSessionForNewWalkGeometry()
             setNewMode(MODE_EDIT_BY_WALK)
         } else if (code == ADD_POINT_BY_TAP) {
@@ -4333,8 +4306,7 @@ public class MapFragment
 
     /**
      * Applies a GPS/network fix to [mCurrentCenter], MapLibre user-location source, track overlay,
-     * and walk-by-geometry. Used from both [onLocationChanged] and [onBestLocationChanged] because
-     * [com.nextgis.maplib.location.GpsEventSource] only dispatches the "better fix" path to the latter.
+     * and status panel. Recorded geometry is supplied exclusively by its foreground service.
      */
     private fun applyLocationFixToMap(location: Location) {
         val mapDrawable = mapDrawableOrNull ?: return
@@ -4356,7 +4328,8 @@ public class MapFragment
         mapDrawable.updateLocation(
             Point.fromLngLat(location.longitude, location.latitude),
             isStanding,
-            if (location.hasBearing()) location.bearing else 0f
+            if (location.hasBearing()) location.bearing else 0f,
+            location.accuracy
         )
         if (mode == MODE_AZIMUTH_CURRENT && azimuthTargetPoint != null) {
             mapDrawable.showAzimuthMeasurement(
@@ -4368,7 +4341,7 @@ public class MapFragment
         }
 
         if (TrackerService.hasUnfinishedTracks(context)) {
-            mapDrawable.reloadCurrentTrackToMap(location)
+            mapDrawable.reloadCurrentTrackToMap()
         }
 
         // Soft-interrupt: do not keep appending MapLibre-only points without the service.
@@ -4378,9 +4351,11 @@ public class MapFragment
     }
 
     override fun onLocationChanged(location: Location?) {
-        if (location != null) {
-            applyLocationFixToMap(location)
+        if (location == null) {
+            onLocationUnavailable()
+            return
         }
+        applyLocationFixToMap(location)
         fillStatusPanel(location)
     }
 
@@ -4393,42 +4368,28 @@ public class MapFragment
 
         if (mMapRef.get()!!.map!!.maplibreMap==null)
             return
-        mMapRef.get()!!.map!!.reloadCurrentTrackToMap(mGpsEventSource?.lastKnownLocation)
+        mMapRef.get()!!.map!!.reloadCurrentTrackToMap()
         mMapRef.get()!!.map!!.reloadTrackListToMap()
 
 
     }
 
+    override fun onLocationUnavailable() {
+        mCurrentCenter = null
+        mapDrawableOrNull?.clearLocation()
+        if (mode == MODE_AZIMUTH_CURRENT) {
+            mapDrawableOrNull?.showAzimuthMeasurement(null, azimuthTargetPoint?.toMapLibrePoint(), false, true)
+        }
+        fillStatusPanel(null)
+    }
+
     fun updateLastLocation() {
-        if (mGpsEventSource == null) {
-            return
-        }
-        val mapDrawable = mapDrawableOrNull ?: return
-
-        val loc = mGpsEventSource!!.lastKnownLocation
-        if (loc != null) {
-            val isStanding = !loc.hasBearing() || !loc.hasSpeed() || loc.speed == 0f
-            mapDrawable.updateLocation(
-                Point.fromLngLat(loc.longitude, loc.latitude),
-                isStanding,
-                if (loc.hasBearing()) loc.bearing else 0f
-            )
-            return
-        }
-
-        val center = mCurrentCenter
-        if (center != null) {
-            val lonLat = convert3857To4326(center.x, center.y)
-            mapDrawable.updateLocation(
-                Point.fromLngLat(lonLat[0], lonLat[1]),
-                true,
-                0f
-            )
-        }
+        val location = mGpsEventSource?.lastKnownLocation
+        if (location == null) onLocationUnavailable() else onLocationChanged(location)
     }
 
     private fun fillStatusPanel(location: Location?) {
-        if (mStatusPanelMode == 0) return
+        if (mStatusPanelMode == 0 || mStatusPanel == null || mActivity == null) return
 
         var panel = mStatusPanel!!.getChildAt(0)
         if (panel == null) {

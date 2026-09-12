@@ -34,6 +34,11 @@
         android:singleLineTitle="false"
         />
 
+    <Preference
+        app:iconSpaceReserved="false"
+        android:selectable="false"
+        android:title="@string/walk_sampling_settings" />
+
     <ListPreference
         app:iconSpaceReserved="false"
         android:defaultValue="2"

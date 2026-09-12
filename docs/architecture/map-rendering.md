@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-08
+last_verified: 2026-09-11
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -330,3 +330,10 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 [map-performance.md](map-performance.md). Документ не является разрешением
 включать native URI, progressive preparation или viewport loading без отдельного
 профилирования и regression matrix.
+
+## Текущая позиция и точность
+
+`user-location-source` содержит свежие Point и Polygon accuracy. Заливка в метрах
+лежит непосредственно под верхним курсором; при expiry оба очищаются. Трек
+рисуется только по сохранённым сегментам, без линии к текущему display fix.
+Подробности: [GPS pipeline](location-pipeline.md).

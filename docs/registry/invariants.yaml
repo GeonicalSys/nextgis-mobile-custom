@@ -166,7 +166,7 @@ invariants:
   INV-LOCATION-CURSOR-TOP:
     title: Location cursor stays above every map object
     owners: [maplib, app]
-    statement: Treat user-location-layer as a render-only overlay outside LayerGroup order and restore it as the last MapLibre style layer after cold, lite and hot layer mutations.
+    statement: Treat user-location-layer as a render-only overlay outside LayerGroup order, with the metric accuracy fill immediately below it; restore both above user layers after cold, lite and hot mutations and clear both when the current fix expires.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -433,8 +433,8 @@ invariants:
       also expose no add/delete polygon or add/delete hole action. A new MultiPolygon sketch
       accepts at most one polygon part, while loading and editing existing multipart or holed
       geometry does not discard its structure. Walk append starts after the selected node and
-      remains contiguous before its former successor, with current-GPS preview at that insertion
-      position. While walk recording is active, the right bottom action uses the walking-person
+      remains contiguous before its former successor using service-confirmed GNSS vertices;
+      a GPS gap pauses the walk until an explicit reconnection. While walk recording is active, the right bottom action uses the walking-person
       icon and finishes recording through the existing Save path; location settings are not
       exposed from that action. For new
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
@@ -497,32 +497,40 @@ invariants:
     title: Track and walk recording retain real movement through 160 km/h
     owners: [maplib, maplibui, app]
     statement: >
-      TrackerService and WalkEditService use the same accuracy-aware sequence filter without
-      pedestrian/vehicle profiles. Valid movement through 160 km/h must be retained with or
-      without Android reported speed. Invalid coordinates, mock fixes, accuracy above 50 m,
-      delayed/future fixes, reported speed above 100 m/s, physically implausible distance or
-      acceleration and material isolated chord spikes are rejected. Motion is compared with
-      the newest accepted fix, including the delayed chord buffer, so one rejection cannot
-      anchor the sequence indefinitely. Sampling gaps above 30 seconds drain, rather than
-      discard, the previous valid buffer. Track recording obeys tracks_location_source only;
-      walk digitizing obeys location_source only. When both GPS and network are enabled,
-      network remains an initial and outage fallback, but a usable GPS fix suppresses network
-      fixes for 12 seconds so mixed-provider jitter cannot corrupt the recorded sequence.
-      When background_recording_sound is enabled, a health-only zero-distance provider
-      subscription must distinguish stationary fixes from missing coordinate delivery. While
-      the app UI is hidden or the screen is off and usable callbacks remain fresh, a partial
-      wake lock keeps an alarm-stream pulse on a fixed 10-second cadence independently of
-      notification volume, geometry changes and inserts/commits. Zero or muted alarm volume
-      falls back to a short vibration. Stale or absent callbacks silence the feedback; observed
-      persistence failures use an independent one-minute throttle and distinct tone or double
-      vibration.
-      Foreground use stays silent. Revoking coarse/fine location during recording must stop
-      either location foreground service without calling forbidden startForeground, crashing,
-      clearing track_recording_enabled or discarding the durable walk draft.
-      TrackerService must run in the default application process so a toolbar Stop cannot
-      overtake a still-pending cross-process Start; a delayed Start observed after the durable
-      intent was disabled must exit without creating an empty track.
+      GpsEventSource owns one GNSS acquisition stream across screen and service lifecycles.
+      Attaching/detaching a map never unregisters active recording GPS or resets its filter.
+      The final recorder owns release of the shared partial wake lock; sound off does not
+      disable background acquisition. Sensor evidence expires and cannot alone freeze a vehicle.
+      A refined stop replaces only the last owned vertex, retaining track arrival time;
+      it never appends distance for an improving stationary position. Handset handling alone
+      cannot confirm departure; direction, combined accuracy and trustworthy velocity or a
+      longer persistent position trend are required. Each recorder buffers at most 120 seconds
+      or 512 tentative observations; confirmation backfills original times/corners, while Stop
+      and gaps discard unconfirmed history. GPX URI MIME and share filename must agree,
+      including anonymous type lookup, without an added .bin suffix.
+      Current display may use GPS or Network, including approximate permission; monotonic
+      age above 8 seconds clears the marker and metric accuracy circle without waiting for
+      another callback. Resume never substitutes camera or a screen-off coordinate.
+      Recording uses only non-mock GNSS with finite coordinates, positive accuracy at most
+      50 metres and valid monotonic measurement time. Live batches retain chronological
+      session measurements without treating receipt time as current location or sound health.
+      Robust adaptive smoothing and stationary anchoring precede the sequence validator;
+      movement through 160 km/h remains supported with no manual pedestrian/vehicle profile.
+      Sampling occurs after validation and retains turns. No raw start, preview or closing
+      location may bypass filtering. GPS loss creates persistent track segments, preserved
+      by MapLibre, Canvas and GPX; walk persists gps_paused and requires explicit reconnection.
+      Background sound consumes the shared validated stream before decimation and stays
+      silent when fixes are stale, UI is visible or the setting is disabled. Existing
+      alarm/vibration fallback and persistence-error throttling remain in effect.
+      Permission revocation preserves durable track intent and walk drafts without starting
+      a forbidden location foreground service. TrackerService remains in the application
+      process so Start and Stop cannot overtake each other.
     related_code:
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - maplib/src/main/java/com/nextgis/maplib/location/LocationSubscriptionController.java
+      - maplib/src/main/java/com/nextgis/maplib/util/DeviceMotionEvidence.java
+      - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSamplerCore.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
       - maplib/src/test/java/com/nextgis/maplib/util/LocationTrackFilterCoreTest.java

@@ -2,13 +2,15 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-09-08
+last_verified: 2026-09-12
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
+    responsibility: Match GPX URI MIME, anonymous MIME lookup and share filename while retaining canonical FileProvider root and grant checks.
   - path: app/build.gradle
     responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.18/212 versus Lisa Debug 3.1.2.18/213 version contract, and signing configuration.
   - path: app/src/lisa/res/values/launcher_icon.xml
@@ -76,6 +78,7 @@ storage_contracts:
     path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
 invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-MAPLIBRE-BACKEND-COMPATIBILITY, INV-MAPLIBRE-VIEW-LIFECYCLE, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-SPATIAL-CACHE-CONSISTENCY, INV-HIDDEN-VECTOR-TILE-IDENTIFY, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-PROJECT-OPERATION-EXCLUSION, INV-NGRC-PRESERVE, INV-LEGACY-UNDERLAY-MIGRATION, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-ECOSYSTEM-SERVER-BOUNDARY, INV-CRASH-DRAFT-RECOVERY, INV-MULTIPOLYGON-REPAIR, INV-GEOMETRY-SKETCH-WORKFLOW, INV-GPS-TRACK-FILTER, INV-STAKEOUT-GUIDANCE, INV-LOCAL-VECTOR-LAYERS]
 global_docs:
+  - docs/architecture/location-pipeline.md
   - docs/architecture/overview.md
   - docs/architecture/lisa-ecosystem.md
   - docs/architecture/collector-projects.md

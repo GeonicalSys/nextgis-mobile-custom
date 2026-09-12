@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-08-24
+last_verified: 2026-09-12
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -32,33 +32,30 @@ lost.
 
 | Concern | Behavior |
 |---------|----------|
-| Point durability | Each accepted GPS fix is inserted into `trackpoints` immediately |
+| Point durability | Each sampled, validated GNSS point is inserted immediately; the bounded filter and sampling tail is flushed before explicit Save |
 | GPS validation | Shared `LocationTrackFilter` retains valid movement through 160 km/h, rejects invalid/old/inaccurate fixes and isolated material spikes, and drains its delayed two-fix buffer on stop or before a long-gap segment reset |
-| Provider ownership | Track uses `tracks_location_source`; ordinary location and walk use `location_source`. Enabling a provider for the map cannot silently enable it for track recording |
-| Provider arbitration | If both sources are enabled, network is available before GPS and during GPS outages, but is suppressed for 12 seconds after each usable GPS fix to avoid mixed-provider jumps |
+| Provider ownership | Application-owned GpsEventSource; GPS/Network for display, GNSS only for track/walk recording |
+| GPS gaps | Database v6 persists trackpoints.segment; gaps survive map reload and GPX export. Walk stores gps_paused and requires explicit reconnection |
 | Recording flag | Durable preference `track_recording_enabled` is set on start and cleared **only** by the menu action «Stop track» / «Завершить запись трека» |
 | Process ordering | `TrackerService` runs in the default application process. The toolbar Start lifecycle therefore executes before a later toolbar Stop, and both sides observe one in-process preference state; a stale delayed Start is rejected if the durable flag is already off |
 | After reboot / cold start | `BootLoader` and `MainActivity` call `TrackerService.ensureRecordingRunningIfEnabled()` — silent auto-start, no dialog |
 | Continuity of track id | Not required. Closing unfinished tracks and starting a new id after a crash is allowed; previous points remain in SQLite / on the map |
 | Forbidden stop | Reboot, process death, and legacy `track_restore=false` must not stop recording while the durable flag is set |
-| Background sound | With `background_recording_sound=true`, a health-only zero-distance subscription distinguishes stationary coordinates from missing delivery. While the UI is hidden/screen off and usable fixes remain fresh, a partial wake lock keeps a short alarm-stream heartbeat on a fixed 10-second cadence independent of point inserts. Notification volume does not suppress it; if the alarm stream is muted or has zero volume, a short vibration replaces the heartbeat. An observed persistence failure uses a distinct tone or double vibration at most once per minute. Missing fresh fixes, a killed process or revoked permission silence the feedback and remain the user-visible warning |
+| Background sound | With `background_recording_sound=true`, the shared validated GNSS stream before decimation distinguishes stationary coordinates from missing delivery. While the UI is hidden/screen off and usable fixes remain fresh, the GPS session owns a partial wake lock independently of the sound setting and keeps a short alarm-stream heartbeat on a fixed 10-second cadence independent of point inserts. Notification volume does not suppress it; if the alarm stream is muted or has zero volume, a short vibration replaces the heartbeat. An observed persistence failure uses a distinct tone or double vibration at most once per minute. Missing fresh fixes, a killed process or revoked permission silence the feedback and remain the user-visible warning |
 | Permission revoked | If Android removes coarse/fine location while recording, a sticky restart must not call `startForeground()` for the forbidden location FGS. The service stops with `START_NOT_STICKY`, retains `track_recording_enabled`, and can resume after permission returns without crashing the app |
 
 Key types: `TrackerService`, `BootLoader`, `MainActivity`.
 
-The filter validates distance from the newest accepted fix, even while that fix
-is waiting in the chord buffer. This prevents a single rejection from anchoring
-all later vehicle fixes to an increasingly old point. A sampling gap above
-30 seconds starts a new validation segment only after the previous buffer has
-been emitted; user intervals of 45 seconds or more therefore do not erase data.
-HyperLog includes provider plus aggregate input/passed/dropped/chord/gap counts,
-the count of network fixes suppressed by recent GPS, but never coordinates.
+The source uses monotonic measurement age, retains historical live batches only within
+recorder lifetime, and flushes the pre-gap buffer before notifying services. Acquisition
+remains frequent even when saved points are sparse. See [location pipeline](location-pipeline.md)
+for filter thresholds, display freshness, database migration and field verification.
 
 ## Walk digitizing (line / polygon by walk)
 
 | Concern | Behavior |
 |---------|----------|
-| Draft store | SharedPreferences `walkedit_temp` (layer/feature ids, WKT, geometry/ring indices, next insertion index, timestamp) |
+| Draft store | SharedPreferences `walkedit_temp` (layer/feature ids, WKT, geometry/ring indices, next insertion index, gps_paused, timestamp) |
 | Explicit stop | Save edits / Cancel → `WalkEditService.stopAndClearDraft()` → draft cleared |
 | Unexpected stop | FGS kill, crash, permission stop → draft kept; HyperLog `unexpected walk end` |
 | Soft-interrupt | While UI is in walk mode (or draft exists) and service is not running → Continue/Discard dialog |
@@ -67,7 +64,7 @@ the count of network fixes suppressed by recent GPS, but never coordinates.
 | Cold MapLibre overlay | Continue can be pressed before style loading finishes. It keeps renderer attachment pending until the current style owns `selected-poly-source`, `selected-dot-source` and `vertex-source`, then reconstructs one property-bearing edit feature, restores polygon fill and outline only for polygon layer types, explicitly removes fill for line types, and extracts the vertex cache before hiding it for the active walk; Stop republishes those vertices for ordinary editing |
 | Draft exclusivity | Entering or restoring walk mode clears `geometry_edit_draft`; one sketch cannot be offered both as walk and normal geometry recovery |
 | Finish action | The right action in the active-walk bottom bar uses the walking-person recording icon and invokes the existing Save/Stop transition instead of opening location settings |
-| GPS pipeline | Walk uses the same 160 km/h-capable filter and GPS-first/network-fallback arbitration as tracks, but reads ordinary `location_source` and `location_min_time` / `location_min_distance` settings |
+| GPS pipeline | Shared GNSS-only filter; location_min_time / location_min_distance control point decimation, not acquisition. GPS loss or draft recovery pauses insertion until explicit Continue and connect |
 | Background sound | The same enabled-by-default fixed 10-second alarm-stream heartbeat is driven by fresh usable health callbacks rather than WKT changes, so it continues while stationary and stops when coordinates become stale; zero alarm volume falls back to vibration, and commit failure uses the distinct throttled tone/double-vibration signal |
 | Permission revoked | Missing/revoked location permission or a `startForeground()` race stops the service without a location FGS and keeps `walkedit_temp` for Continue/Discard |
 

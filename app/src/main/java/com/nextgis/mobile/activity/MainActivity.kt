@@ -400,7 +400,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     protected fun hasLocationPermissions(): Boolean {
         val permissions =
-            isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) &&
+            isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) ||
                     isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
         return permissions
     }
@@ -424,7 +424,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         permissions: Array<String>,
         grantResults: IntArray ) {
         when (requestCode) {
-            TrackerService.PERMISSIONS_REQUEST_ZERO_LOCATION_POSPONDED -> if (hasLocationPermissions()) {
+            TrackerService.PERMISSIONS_REQUEST_ZERO_LOCATION_POSPONDED -> if (com.nextgis.maplib.util.PermissionUtil.hasLocationPermissions(this)) {
                 var item: MenuItem? = null
                 try {
                     item = mToolbar!!.menu.findItem(R.id.menu_track)

@@ -207,7 +207,7 @@ class StakeoutController(
         if (resourcesActive) return
         resourcesActive = true
         StakeoutForegroundService.start(applicationContext)
-        gpsEventSource.addListener(this)
+        gpsEventSource.addRawListener(this)
         gpsEventSource.acquireHighFrequencyUpdates(highFrequencyOwner)
         if (uiForeground) headingProvider.start()
         handler.removeCallbacks(cueRunnable)
@@ -218,7 +218,7 @@ class StakeoutController(
         if (!resourcesActive) return
         resourcesActive = false
         gpsEventSource.releaseHighFrequencyUpdates(highFrequencyOwner)
-        gpsEventSource.removeListener(this)
+        gpsEventSource.removeRawListener(this)
         headingProvider.stop()
         handler.removeCallbacks(cueRunnable)
         audioCue?.stop()

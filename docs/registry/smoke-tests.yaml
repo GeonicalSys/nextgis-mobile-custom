@@ -327,37 +327,38 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
-      - Select GPS only for tracks and GPS plus network for ordinary location
-      - On Android 9 through 11 start recording from the visible map, verify the foreground notification appears before leaving the screen, walk for several fixes, then stop
-      - Record a track while walking and then in a vehicle at several legal road speeds
-      - Repeat vehicle movement with walk digitizing and stop normally
-      - With GPS plus network enabled, verify network fallback before the first GPS fix and after GPS is unavailable for more than 12 seconds
-      - Set a sampling interval above 30 seconds and record several fixes
-      - Pass through a section with one poor-accuracy or visibly displaced fix
-      - Enable background recording sound, minimize the app and stand still with a usable fix for at least 35 seconds
-      - Minimize notification volume while alarm volume remains audible, then mute alarm volume
-      - Block every enabled provider or background location delivery and wait at least 20 seconds
-      - Revoke location permission in Android settings while track recording is active and reopen the app
-      - Restore location permission and verify recording resumes from the retained intent
-      - Return to the app, then disable the setting and repeat the minimized segment
-      - Export HyperLog and inspect filter/provider counters
+      - Start a track on the visible map, turn the screen off, move, then reopen where GNSS is unavailable
+      - Verify current Network position and its metric accuracy circle; block all sources and wait over eight seconds
+      - Grant approximate location only; verify map fallback and that track/walk cannot record Network
+      - With sound disabled on Galaxy A54, record 10 minutes screen on and 10 minutes screen off; reopen repeatedly and compare GPS health raw cadence, accuracy, age, requests/stops and wake lock
+      - Stand for 20 minutes indoors with 20-30 metre accuracy, then outdoors with about 5 metre accuracy; inspect saved distance and gradual correlated drift
+      - Keep recording on a table, then hold and move the phone while remaining in place; verify handset handling does not start a false path
+      - Start walking with an early turn inside the uncertainty radius; wait for confirmation and verify the first metres and corner appear with original timestamps
+      - Cancel a tentative departure or lose GPS before confirmation; verify the buffer is not appended and another recording session cannot inherit it
+      - Export one track and multiple tracks to a local file receiver; check .gpx filename and application/gpx+xml URI MIME including anonymous lookup
+      - Explicitly stop a track and verify end time is saved, closedTracks is one, and that track does not auto-resume
+      - Start at an uncertain fix, improve reception without moving and verify the stop vertex is corrected without an extra segment
+      - Start slow walking from that stop, then repeat starting and stopping a car with the phone fixed in its mount
+      - Walk slowly, stop, start again, turn and reverse; repeat on a road at legal vehicle speeds
+      - Lose GNSS and regain it; reload the track and export GPX
+      - Repeat with walk digitizing; verify pause, save, and explicit Continue and connect with fresh GPS
+      - Select sparse point intervals and verify corner retention and validated final points
+      - Record with screen off and both track and walk active; stop one and verify the other still receives GNSS
+      - Revoke and restore fine permission, restart the process, and verify durable track intent and walk draft
+      - Check the circle at several latitudes, zooms and camera tilts, after cold style load and hot layer add
+      - Enable background sound, stand still, mute notification volume and then alarm volume, and lose GNSS
+      - Compare battery use and run stakeout with the original external GNSS/mock receiver
     expected: >
-      Track and walk geometry progress continuously at vehicle speed without a
-      speed_dist rejection cascade; each mode obeys only its own provider setting.
-      Track Start is handled before a later Stop in the default application process; the log
-      contains actual service start before stop and no zero-fix session caused by delayed launch.
-      A recent usable GPS stream is not interleaved with network fixes, while network
-      resumes as a fallback after 12 seconds without usable GPS.
-      Long sampling gaps preserve prior valid fixes, the final two buffered fixes are
-      flushed on stop, and isolated inaccurate or displaced garbage is absent. The
-      automatic core tests separately cover synthetic 0–160 km/h and provider fallback.
-      Minimized recording emits a short heartbeat every 10 seconds while usable locations
-      keep arriving, including while stationary; notification volume does not suppress its
-      alarm-stream tone, while zero or muted alarm volume falls back to short vibration. It stops
-      after location delivery becomes stale. Foreground recording is silent, and disabling the
-      setting suppresses both sound and vibration.
-      Revoking location permission does not crash-loop a sticky location FGS; the durable track
-      intent survives and recording can resume after permission is granted again.
+      The map shows only a current source with an honest accuracy radius and clears both marker
+      and circle on expiry. No network fix, camera anchor, cached final snap or unrecorded preview
+      enters geometry. Walking and legal vehicle movement retain turns without stationary drift
+      or isolated large jumps. GPS gaps remain separate map/Canvas/GPX segments; walk pause and
+      insertion position survive restart and require explicit reconnection. Sound uses fresh
+      measurement timestamps before decimation and keeps existing alarm/vibration behavior.
+      Screen lifecycle and ending one recording consumer do not stop another consumer.
+      Sound-disabled background recording retains its acquisition and wake lock. UI resume
+      displays the actual current accuracy without a subscription-induced restart; real
+      reception deterioration remains visible. Check battery drain during the screen-off run.
   SMOKE-STAKEOUT:
     type: device
     scope: [app, maplib]

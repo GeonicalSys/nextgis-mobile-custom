@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-09-08
+last_verified: 2026-09-12
 related_code:
   - app/build.gradle
   - app/src/main
@@ -22,16 +22,17 @@ related_code:
 
 Состояние форка: Lisa/Belka Release `3.1.2.18` / `versionCode` 212; Lisa Debug
 `3.1.2.18` / `versionCode` 213. Сверено с официальным приложением `3.2.0` и с
-головами официальных библиотек на 26 августа 2026 года. В частности, учтён
+головами официальных библиотек на 11 сентября 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
 [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
 в котором объявлена поддержка raster MBTiles:
 
-Подготовленная integration-ветка использует OpenGL и итоговые Merge Commit:
+Базовая OpenGL-интеграция содержит Merge Commit:
 maplib PR #20 [`4323cb0`](https://github.com/GeonicalSys/android_maplib/commit/4323cb00bc9d03c3e183afdce6dc1b7012266831)
 (содержит #19/#18) и
 maplibui PR #12 [`5d48122`](https://github.com/GeonicalSys/android_maplibui/commit/5d48122d236769afb0f37247e0b3aa4c0ff8f604)
-(содержит #11). Root закрепляет именно эти merge-коммиты, а не tip feature-веток.
+(содержит #11). Текущие открытые PR #21/#13 добавляют исправления поверх этой базы;
+app #26 пока использует промежуточные feature pins и требует repin после merge.
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -39,7 +40,7 @@ maplibui PR #12 [`5d48122`](https://github.com/GeonicalSys/android_maplibui/comm
 - Android MapLib UI — [`a426e0a`](https://github.com/nextgis/android_maplibui/commit/a426e0acfc8d111982918e04236e2e8f896674de);
 - EasyPicker — [`36ba558`](https://github.com/nextgis/easypicker/commit/36ba558ba0d1eaadcb7dc6ba46ab9286d7eedaa1).
 
-Все четыре official HEAD повторно проверены 26 августа 2026 года через
+Все четыре official HEAD повторно проверены 11 сентября 2026 года через
 канонические GitHub repositories. Release tag и feature-коммиты MBTiles
 рассматриваются отдельно от приведённых baseline hashes форка.
 
@@ -784,7 +785,8 @@ layer в style (MapLibre рисует снизу вверх). У слоя вкл
 `iconAllowOverlap` и `iconIgnorePlacement`, чтобы collision detection не прятал
 значок под треками и плотными векторами. Источник `user-location-source`
 обновляется из GPS; тип иконки (`stand` / `go`) и bearing приходят как свойства
-feature.
+feature. Круг точности — геодезическая заливка непосредственно под символом.
+Свежесть проверяется по времени измерения; устаревшие Point и Polygon очищаются.
 
 #### `.ngrc` и политика `immutable_local`
 
@@ -909,7 +911,7 @@ foreground lifecycle.
 | Элемент | Поведение |
 |---------|-----------|
 | Точки входа | «Добавить объект обходом», «Дополнить геометрию обходом» |
-| Сервис | `WalkEditService` (foreground), GPS + network providers |
+| Сервис | `WalkEditService` (foreground), общий проверенный GNSS-поток |
 | Типы геометрии | `LineString`, `Polygon`, `MultiLineString`, `MultiPolygon` |
 | Настройки GPS | `min_time` / `min_distance` из настроек местоположения |
 | Восстановление после kill | `walkedit_temp` SharedPreferences + recovery-диалог Continue/Discard; перезапущенный `START_STICKY`-сервис при холодном старте не обходит выбор пользователя |
@@ -919,10 +921,10 @@ foreground lifecycle.
 | Аспект | Official (типичное поведение) | Форк |
 |--------|------------------------------|------|
 | Отрисовка во время обхода | Canvas `DrawItems`: пересборка всех вершин каждый кадр → подвисания на длинных контурах | Геометрия на карте через MapLibre edit sources; в `draw()` остаётся только перекрестие |
-| Старт нового объекта | Заглушка из 2–3 точек в центре карты (`getNewGeometry`) | Один узел у **GPS-якоря** (последний fix → центр камеры); следующие точки даёт обход |
+| Старт нового объекта | Заглушка из 2–3 точек в центре карты (`getNewGeometry`) | Один узел свежего проверенного GNSS; следующие точки даёт сервис, камера и Network не используются |
 | MapLibre-сессия | Слабая связь overlay ↔ style | Явный `prepareMaplibreSessionForNewWalkGeometry()` / `startFeatureSelectionForEdit(..., isFillByWalking=true)` до старта `WalkEditService` |
-| Превью «хвоста» | Нет | `syncWalkGeometryToMaplibreUi(walkGpsLead=true)` — линия от последней GPS-вершины в выбранной позиции вставки до текущего GPS |
-| Сохранение при Stop | Только зафиксированные вершины сервиса | `commitWalkGpsLeadToFeature()` — в объект попадает то же, что показывал MapLibre; `appendClosingWalkSnapIfNeeded` добирает последний fix, отброшенный `min_dt` |
+| Позиция и линия | Позиция отделена от геометрии | Текущая позиция с accuracy-кругом, линия только по проверенным вершинам сервиса |
+| Сохранение при Stop | Только зафиксированные вершины сервиса | Выгрузка проверенного буфера и синхронное получение durable snapshot; raw final snap отсутствует |
 | Фильтрация GPS | В основном `requestLocationUpdates(minTime, minDistance)` | Общий `LocationTrackFilter`: валидное движение до 160 км/ч без профилей, точность/возраст/скорость/ускорение и accuracy-aware chord-check — тот же класс, что у записи трека |
 | Перезагрузка карты | Может прервать edit-сессию | `canReloadVectorLayerStyleOnMap()` блокирует hot style reload в `MODE_EDIT_BY_WALK`; cold Continue ждёт, пока edit sources принадлежат текущему style, затем property-bearing edit feature восстанавливается атомарно вместе с outline и скрытым vertex cache, а shared fill включается только когда polygon совпадает и по текущей геометрии, и по авторитетному типу слоя |
 | Нижняя кнопка активного обхода | Настройки местоположения | Иконка идущего человека; завершение записи и сохранение скетча через существующий Save/Stop path |
@@ -933,14 +935,14 @@ foreground lifecycle.
 ```text
 Пользователь → MapFragment (MODE_EDIT_BY_WALK)
     → EditLayerOverlay.newGeometryByWalk()     // пустая геометрия
-    → applyInitialWalkGeometryAtStartLocation() // якорь GPS/камера
+    → applyInitialWalkGeometryAtStartLocation() // свежий проверенный GNSS
     → prepareMaplibreSessionForNewWalkGeometry() // MapLibre edit layer
     → WalkEditService (GPS → LocationTrackFilter → вершины)
          ↕ broadcast WALKEDIT_CHANGE
     → EditLayerOverlay.WalkEditReceiver
          → setGeometryFromWalkEdit()
-         → syncWalkGeometryToMaplibreUi(lead)  // MapLibre + GPS-хвост
-При Stop → commitWalkGpsLeadToFeature() → saveEdits()
+         → syncWalkGeometryToMaplibreUi(lead)  // только геометрия сервиса
+При Stop → flush общего фильтра → durable snapshot → saveEdits()
 При process kill → walkedit_temp → MainActivity recovery hub
     → Continue → startEditByWalkFromRestore
         → current style ready: attach now
@@ -948,15 +950,11 @@ foreground lifecycle.
     → Discard → stop service + clear walkedit_temp
 ```
 
-**Сервис (`WalkEditService`).** Принимает начальную геометрию, подписывается на
-GPS, каждый принятый fix прогоняет через `LocationTrackFilter`, добавляет вершину
-в `GeoLineString` / `GeoLinearRing`, пишет WKT в `walkedit_temp` и шлёт broadcast.
-Walk использует только обычную настройку источника `location_source`; настройка
-источника трека не может неявно включить дополнительный provider.
-Если разрешены GPS и Network, пригодный GPS-fix на 12 секунд подавляет Network,
-чтобы разные источники не создавали ложные скачки. До первого GPS-fix и после
-12 секунд без пригодного GPS Network снова принимается как резерв.
-При `ACTION_STOP` — `flushWalkLocationFilterToGeometry()` и closing snap.
+**Сервис (`WalkEditService`).** Подписан на общий проверенный GNSS-поток
+Application, прореживает точки, сохраняет WKT и индекс вставки в `walkedit_temp`.
+Network используется только для позиции на карте. При потере GPS обход
+приостанавливается и требует явного соединения после восстановления сигнала.
+Stop выгружает проверенный буфер; исходный кэш не дописывает конец линии.
 
 **Карта (`EditLayerOverlay` + `MapDrawable`).** Receiver обновляет `mFeature` и
 синхронизирует edit feature в MapLibre sources (`selected-poly-source` и др.).
@@ -1047,8 +1045,8 @@ GPS-fix не должны создавать несколько активных
 сценарии курсор карты движется, но сервис не получает ни одной координаты.
 
 **Как используется.** Пользователь запускает и останавливает трек обычной
-кнопкой. Во время записи приложение показывает последнее принятое положение как
-предпросмотр продолжения линии, но сохраняет точку в базу только после проверки.
+кнопкой. Во время записи карта показывает текущую позицию отдельно от линии;
+геометрия содержит только проверенные и сохранённые GNSS-точки.
 Если процесс был остановлен системой, приложение проверяет сохранённый track ID
 и либо продолжает действующую запись, либо безопасно очищает устаревшее
 состояние. Отдельные start/end flag layers намеренно не создаются, чтобы не
@@ -1057,25 +1055,30 @@ GPS-fix не должны создавать несколько активных
 durable-флаг не зависит от deprecated multi-process preferences, а запоздалый
 Start после уже сохранённого Stop отбрасывается без создания пустого трека.
 
-Один общий фильтр применяется и к треку, и к обходу, без отдельных профилей
-«пешком/транспорт». Рабочий предел проверки расстояния — `55 м/с`
-(примерно 198 км/ч), то есть с запасом над требуемыми 160 км/ч; значение Android
-speed выше `100 м/с` считается повреждённым. Плохая точность, устаревший или
-будущий timestamp, невозможная дистанция/ускорение и одиночный материальный
-выброс по тройке точек отбрасываются. Обычные повороты и небольшие развороты
-сохраняются с допуском, зависящим от accuracy.
+Общий источник продолжает получать GPS при выключенном экране. Карта не
+перерегистрирует спутниковую подписку при уходе/возврате; wake lock записи
+не зависит от включённого звука. Акселерометр дополняет проверку стоянки,
+согласованное движение GPS сохраняет возможность ходьбы и езды с телефоном
+в держателе. Устойчивое уточнение стоянки исправляет одну собственную вершину
+без добавления ложного пути. Сырые cadence/accuracy и число GPS-перерегистраций
+фиксируются в GPS health для проверки реального фона на устройстве. На карте
+доступна приблизительная позиция по Wi-Fi/сотовым сетям с соответствующим кругом
+точности; после 8 секунд без пригодного fix позиция скрывается. Старый экранный
+кэш не выдаётся за текущие координаты. В запись попадает только GNSS.
 
-Проверка ведётся от последнего принятого фикса, включая ещё не записанные две
-точки chord-буфера. Поэтому один отказ больше не фиксирует опорную точку навсегда.
-Интервал больше 30 секунд сначала выгружает проверенный буфер и только затем
-начинает новый сегмент валидации. `TrackerService` использует только
-`tracks_location_source`; источник карты больше не переопределяет выбор трека.
-Когда в этой настройке включены GPS и Network, `LocationProviderArbiter` не
-смешивает Network со свежим пригодным GPS-потоком: Network принимается до первого
-GPS-fix и возвращается через 12 секунд без пригодного GPS.
+Адаптивный фильтр сглаживает шум, удерживает остановку и отбрасывает одиночные
+выбросы, учитывая скорость, точность и изменение курса автомобиля. Профиль
+«пешком/транспорт» выбирать не нужно; сохраняются движение до 160 км/ч и повороты.
+Движение телефона в руках не считается началом пути: требуется подтверждённое
+удаление за пределы погрешности. Начало пути временно буферизуется и добавляется
+после подтверждения с исходными временами и поворотами. GPX URI явно сообщает
+правильный MIME и в anonymous lookup, чтобы получатель не дописывал `.bin`.
+После потери GPS трек продолжается отдельным сегментом, включая экспорт GPX;
+обход требует явного продолжения соединением. Технический контракт и пределы
+проверки описаны в [GPS pipeline](../architecture/location-pipeline.md).
 
-Включённый фоновый контроль использует отдельную health-подписку без порога
-перемещения и сигнализирует раз в 10 секунд только при свежих пригодных fix.
+Фоновый звуковой контроль получает общий проверенный поток до прореживания и
+сигнализирует раз в 10 секунд только при свежих пригодных измерениях.
 Сигнал идёт в Android alarm stream, поэтому минимальная громкость уведомлений его
 не глушит. Нулевая/выключенная громкость будильника переключает heartbeat на
 короткую вибрацию, а ошибку сохранения — на двойную; выключенная настройка
