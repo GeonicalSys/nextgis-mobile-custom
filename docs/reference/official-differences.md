@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-08-26
+last_verified: 2026-09-13
 related_code:
   - app/build.gradle
   - app/src/main
@@ -568,7 +568,8 @@ Description не перекрывает это решение; для обычн
 **Что добавляет форк — точки.** Помимо встроенных фигур MapLibre доступны
 PNG-маркеры из `MarkerIconRegistry` (встроенные и пользовательские): размер,
 поворот, смещение по X/Y, якорь (9 позиций), `icon-allow-overlap` и
-`icon-ignore-placement`. Для круговых маркеров — отдельная прозрачность заливки
+`icon-ignore-placement`. Пользовательские PNG грузятся из
+`app/src/main/assets/marker_icons/*.png` (сейчас `wood_truck`, `turn`). Для круговых маркеров — отдельная прозрачность заливки
 и обводки, `circle-blur` (пресеты 0–3), масштабирование радиуса по zoom с
 пользовательскими остановками (`interpolate` на `circle-radius` / `icon-size`).
 
