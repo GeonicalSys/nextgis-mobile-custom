@@ -583,7 +583,7 @@ public final class AppUpdateManager
     }
 
 
-    private static Set<String> certificateDigests(PackageInfo packageInfo)
+    static Set<String> certificateDigests(PackageInfo packageInfo)
             throws NoSuchAlgorithmException
     {
         Signature[] signatures;
@@ -616,7 +616,7 @@ public final class AppUpdateManager
     }
 
 
-    private static long getVersionCode(PackageInfo packageInfo)
+    static long getVersionCode(PackageInfo packageInfo)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             return packageInfo.getLongVersionCode();
@@ -710,6 +710,11 @@ public final class AppUpdateManager
         return context.getSharedPreferences(
                 UPDATE_STATE_PREFERENCES,
                 Context.MODE_PRIVATE);
+    }
+
+    public static boolean isBusyOrPending(Context context) {
+        return UPDATE_CHECK_IN_PROGRESS.get() || UPDATE_DOWNLOAD_IN_PROGRESS.get()
+                || pendingInstallationPreferences(context).contains(KEY_PENDING_INSTALL_MANIFEST);
     }
 
 

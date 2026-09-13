@@ -30,6 +30,8 @@ import com.nextgis.mobile.R
 import com.nextgis.mobile.util.OfflineSyncIntentService
 import com.nextgis.mobile.util.LegacyUnderlayImporter
 import com.nextgis.mobile.util.LegacyUnderlayMigrationContract
+import com.nextgis.mobile.util.DebugCompanionInstaller
+import com.nextgis.mobile.util.AppUpdateManager
 import android.net.Uri
 import java.util.concurrent.Executors
 
@@ -79,6 +81,19 @@ class ProjectSettingsActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AppUpdateManager.resumePendingInstallation(this)
+        refresh()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && !AppUpdateManager.isBusyOrPending(this)) {
+            DebugCompanionInstaller.resume(this) { confirmDebugUnderlayImport() }
+        }
     }
 
     override fun onDestroy() {
@@ -131,18 +146,20 @@ class ProjectSettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.project_delete).isEnabled = hasProject
         findViewById<Button>(R.id.project_choose).isEnabled =
             CollectorProjectRegistry.listProjects(this).size > 1
-        val exportIntent = LegacyUnderlayMigrationContract.createExportIntent()
         findViewById<Button>(R.id.project_import_debug_underlays).visibility =
             if (hasProject
                 && LegacyUnderlayMigrationContract.isGeonicalTarget(this)
                 && LegacyUnderlayMigrationContract.isTrustedDebugSourceInstalled(this)
-                && exportIntent.resolveActivity(packageManager) != null
             ) View.VISIBLE else View.GONE
     }
 
     private fun confirmDebugUnderlayImport() {
         val project = CollectorProjectRegistry.getActiveProject(this) ?: return
         if (!canMutateProject()) return
+        if (!DebugCompanionInstaller.hasExporter(this)) {
+            DebugCompanionInstaller.offer(this, true)
+            return
+        }
         AlertDialog.Builder(this)
             .setTitle(R.string.project_import_debug_underlays)
             .setMessage(getString(R.string.legacy_underlay_import_confirmation, project.name))

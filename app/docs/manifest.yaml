@@ -11,6 +11,12 @@ entrypoints:
 key_components:
   - path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
     responsibility: Match GPX URI MIME, anonymous MIME lookup and share filename while retaining canonical FileProvider root and grant checks.
+  - path: app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
+    responsibility: Browse shared assets, attach, rename and confirm deletion with affected projects.
+  - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
+    responsibility: Separate trusted Debug installer and durable permission/project continuation.
+  - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionPolicy.java
+    responsibility: Pure manifest, URL, version and signing identity rules for the Debug companion.
   - path: app/build.gradle
     responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.18/212 versus Lisa Debug 3.1.2.18/213 version contract, and signing configuration.
   - path: app/src/lisa/res/values/launcher_icon.xml
@@ -36,7 +42,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java
     responsibility: Stream one local Debug underlay through a granted pipe without exposing paths, accounts, vectors, tracks or project identity.
   - path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java
-    responsibility: Convert legacy extracted TMS/OSM tiles directly into batched, atomically published raster MBTiles in the active Geonical project and make retries source-key idempotent.
+    responsibility: Convert legacy extracted TMS/OSM tiles directly into batched, atomically published raster MBTiles in the Geonical shared catalog followed by attachment to the active project and make retries source-key idempotent.
   - path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java
     responsibility: Pin Debug/Geonical package and signing-certificate identities, define the bounded-memory framed streaming schema and detect the one legacy bootstrap case that must stay in place.
   - path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
@@ -70,7 +76,7 @@ public_contracts:
     symbol: MapFragment implements MaplibreMapInteraction
     path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     consumers: [maplib, maplibui]
-settings_refs: [feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, background_recording_sound, check_updates, sw_track_service, apk_version_update, updater-pending-install, sync_recovery_journal, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
+settings_refs: [feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, background_recording_sound, check_updates, sw_track_service, apk_version_update, updater-pending-install, sync_recovery_journal, shared_underlays, debug_companion_install, shared_underlay_migration, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
 storage_contracts:
   - id: updater-pending-install
     path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -86,8 +92,9 @@ global_docs:
   - docs/architecture/map-rendering.md
   - docs/architecture/crash-recovery.md
   - docs/architecture/stakeout.md
+  - docs/architecture/shared-underlays.md
   - docs/reference/build-matrix.md
   - docs/reference/flavors-and-versioning.md
   - docs/runbooks/release-apk.md
-smoke_tests: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-MAP-OPENGL-COMPATIBILITY, SMOKE-MAP-SURFACE-LIFECYCLE, SMOKE-HOT-RASTER, SMOKE-DEBUG-UNDERLAY-MIGRATION, SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY, SMOKE-LOCAL-VECTOR-TILE-STRESS, SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-CAMERA-CONTROLS, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-NGW-IMPORT-BACK, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LOCAL-VECTOR-LAYERS, SMOKE-COLLECTOR-IMPORT, SMOKE-LAYER-SYNC-SETTINGS, SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-SCHEMA-REBUILD-GUARD, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE, SMOKE-CRASH-DRAFT-RECOVERY, SMOKE-MULTIPOLYGON-REPAIR, SMOKE-GEOMETRY-SKETCH-WORKFLOW, SMOKE-GPS-RECORDING, SMOKE-STAKEOUT]
+smoke_tests: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-MAP-OPENGL-COMPATIBILITY, SMOKE-MAP-SURFACE-LIFECYCLE, SMOKE-HOT-RASTER, SMOKE-DEBUG-UNDERLAY-MIGRATION, SMOKE-SHARED-UNDERLAYS, SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY, SMOKE-LOCAL-VECTOR-TILE-STRESS, SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-CAMERA-CONTROLS, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-NGW-IMPORT-BACK, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LOCAL-VECTOR-LAYERS, SMOKE-COLLECTOR-IMPORT, SMOKE-LAYER-SYNC-SETTINGS, SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-SCHEMA-REBUILD-GUARD, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE, SMOKE-CRASH-DRAFT-RECOVERY, SMOKE-MULTIPOLYGON-REPAIR, SMOKE-GEOMETRY-SKETCH-WORKFLOW, SMOKE-GPS-RECORDING, SMOKE-STAKEOUT]
 upstream_hotspots: [MAP-HOST, MAPLIBRE-BACKEND, APP-FLAVORS, RASTER-MBTILES]

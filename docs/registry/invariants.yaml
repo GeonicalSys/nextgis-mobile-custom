@@ -1,5 +1,25 @@
 schema_version: 1
 invariants:
+  INV-SHARED-UNDERLAYS:
+    title: Shared offline payloads outlive project links
+    owners: [maplib, maplibui, app]
+    statement: NGRc and raster MBTiles live once outside project workspaces; new NGRc streams directly to MBTiles, legacy payloads move without re-encoding, and confirmed catalog deletion unlinks every project before payload removal.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
+      - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
+      - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-SHARED-UNDERLAYS]
+    must_update_docs: [docs/architecture/shared-underlays.md, docs/architecture/map-rendering.md, docs/architecture/collector-projects.md]
+  INV-DEBUG-COMPANION:
+    title: Companion installation has its own identity and continuation
+    owners: [app]
+    statement: Only production Geonical updates a trusted installed Debug missing its exporter; validate debug manifest, release URL, size, hash, version, pinned and installed certificate and exporter. Keep self-update policy and state separate; resume after permission and require existing transfer confirmation in the originating project.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/DebugCompanionPolicy.java
+      - app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
+    verify_smoke: [AUTO-APP-DEBUG, SMOKE-DEBUG-COMPANION]
+    must_update_docs: [docs/architecture/shared-underlays.md, docs/reference/flavors-and-versioning.md]
   INV-FLAVORS:
     title: Lisa and Belka remain separate product flavors
     owners: [app]
@@ -327,7 +347,7 @@ invariants:
   INV-NGRC-PRESERVE:
     title: Imported NGRc underlays survive app and project updates
     owners: [maplib, maplibui]
-    statement: Treat manually imported NGRc as immutable local project data, record provenance, and never remove it through Collector composition sync.
+    statement: Treat manually imported NGRc as immutable local catalog data, record provenance, and never remove it through Collector composition sync.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java

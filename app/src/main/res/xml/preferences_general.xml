@@ -57,6 +57,8 @@
             android:title="@string/update_check"
             android:singleLineTitle="false"
             app:iconSpaceReserved="false" />
+        <Preference android:key="shared_underlays" android:title="@string/underlay_catalog"
+            android:summary="@string/underlay_catalog_summary" app:iconSpaceReserved="false" />
         <ListPreference
             app:iconSpaceReserved="false"
             android:defaultValue="5"

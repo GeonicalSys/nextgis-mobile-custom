@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-08-27
+last_verified: 2026-09-13
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -385,3 +385,7 @@ destructive composition apply. После импорта в её `config.json` �
 
 Практическая настройка: [collector-project-setup.md](../runbooks/collector-project-setup.md).
 Незавершённые задачи: [collector.md](../roadmap/collector.md).
+
+## Подложки как общие ассеты
+
+NGRc/MBTiles принадлежат общему app-private каталогу, проект содержит только `shared_underlay_id`. Удаление проекта защищает legacy подложки и снимает ссылки; composition sync не управляет ассетами. Closed workspace unlink не создаёт новый `MapBase`. См. [полный контракт](shared-underlays.md).

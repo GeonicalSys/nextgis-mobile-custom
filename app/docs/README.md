@@ -338,3 +338,7 @@ OpenGL backend вместо Vulkan-default artifact.
 Курсор следует текущей сглаженной позиции независимо от ожидания начала линии;
 круг не обозначает расстояние от стоянки. Подтверждение ходьбы и новые регрессии:
 [GPS pipeline](../../docs/architecture/location-pipeline.md).
+
+## Хранилище и обновление Debug
+
+`UnderlayCatalogActivity` доступна из настроек и меню добавления: имя, формат, размер, проекты, переименование и подтверждённое удаление. `DebugCompanionInstaller` отдельно от self-updater обновляет доверенный старый Debug, продолжает после install permission и возвращает к подтверждению переноса только в исходный проект. Кэш и preferences разделены; обычный updater сохраняет свои identity checks. Контракт и ограничение текущего публичного канала: [shared-underlays](../../docs/architecture/shared-underlays.md).

@@ -230,6 +230,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:5.3.2'
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
 
 //    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.14"
 //    debugImplementation "com.squareup.leakcanary:leakcanary-android-core:2.14"

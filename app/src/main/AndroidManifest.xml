@@ -205,5 +205,6 @@
             android:authorities="${applicationId}.legacy_underlays"
             android:exported="false"
             android:grantUriPermissions="true" />
+        <activity android:name=".activity.UnderlayCatalogActivity" android:exported="false" />
     </application>
 </manifest>

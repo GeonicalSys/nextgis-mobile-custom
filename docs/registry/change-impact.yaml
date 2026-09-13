@@ -1,5 +1,21 @@
 schema_version: 1
 triggers:
+  - id: SHARED-UNDERLAY-CATALOG
+    paths: [maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlay*.java, maplib/src/main/java/com/nextgis/maplib/util/NgrcArchive.java, maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java, maplib/src/main/java/com/nextgis/maplib/util/Underlay*.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java, app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt]
+    owners: [app, maplib, maplibui]
+    read: [docs/architecture/shared-underlays.md, docs/architecture/collector-projects.md, docs/architecture/map-rendering.md]
+    invariants: [INV-SHARED-UNDERLAYS, INV-NGRC-PRESERVE, INV-LAYER-ORDER]
+    must_update_docs: [docs/architecture/shared-underlays.md, docs/architecture/collector-projects.md, docs/architecture/map-rendering.md, docs/registry/config-keys.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-APP-RELEASES, SMOKE-SHARED-UNDERLAYS]
+    strict_docs: true
+  - id: DEBUG-COMPANION-INSTALLER
+    paths: [app/src/main/java/com/nextgis/mobile/util/DebugCompanion*.java]
+    owners: [app]
+    read: [docs/architecture/shared-underlays.md, docs/runbooks/release-apk.md, docs/reference/flavors-and-versioning.md]
+    invariants: [INV-DEBUG-COMPANION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME]
+    must_update_docs: [docs/architecture/shared-underlays.md, docs/reference/flavors-and-versioning.md, app/docs/manifest.yaml]
+    verify: [AUTO-APP-RELEASES, SMOKE-DEBUG-COMPANION]
+    strict_docs: true
   - id: OFFICIAL-DIFFERENCES
     paths: [app/build.gradle, app/src/**, maplib, maplibui, easypicker, .gitmodules]
     owners: [app, maplib, maplibui, easypicker-module]

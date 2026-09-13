@@ -24,6 +24,12 @@ related_code:
   `223f8b04` вместо промежуточных feature pins.
 - В APK добавлены PNG-маркеры точек `wood_truck` и `turn` (64×64) в
   `app/src/main/assets/marker_icons/`.
+- Описаны общий каталог NGRc/MBTiles, move recovery, потоковая конвертация,
+  межпроектный unlink и отдельный установщик Debug с проверкой exporter.
+  Добавлены registry/smoke и local module packs; версии и desktop/publisher-форматы
+  не менялись.
+- Root закрепляет Merge Commit maplib PR #22 `998daff` и maplibui PR #14
+  `4052cde3` для общего каталога подложек.
 
 ## 2026-09-12
 

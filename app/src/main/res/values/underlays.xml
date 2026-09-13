@@ -1,0 +1,17 @@
+<resources>
+    <string name="underlay_catalog">Underlay storage</string>
+    <string name="underlay_catalog_summary">Offline underlays shared by all projects</string>
+    <string name="underlay_from_catalog">Underlay from storage</string>
+    <string name="underlay_from_file">New underlay from file</string>
+    <string name="underlay_catalog_empty">No saved underlays yet</string>
+    <string name="underlay_size_pending">Size being calculated</string>
+    <string name="underlay_usage">Used in projects: %1$d</string>
+    <string name="underlay_attached">Underlay added to the project</string>
+    <string name="underlay_already_attached">This underlay is already in the project</string>
+    <string name="underlay_rename">Rename in storage</string>
+    <string name="underlay_delete">Delete from storage</string>
+    <string name="underlay_unused">No projects use this underlay.</string>
+    <string name="underlay_delete_confirm">Delete “%1$s” and remove it from every project listed below? This cannot be undone.\n\n%2$s</string>
+    <string name="underlay_operation_failed">Could not complete the operation. Your underlay data has been preserved. Please try again.</string>
+    <string name="underlay_file_required">Choose an NGRc or raster MBTiles file, or a ZIP containing MBTiles.</string>
+</resources>

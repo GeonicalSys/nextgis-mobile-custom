@@ -1,0 +1,17 @@
+<resources>
+    <string name="underlay_catalog">Хранилище подложек</string>
+    <string name="underlay_catalog_summary">Офлайн-подложки, общие для всех проектов</string>
+    <string name="underlay_from_catalog">Подложка из хранилища</string>
+    <string name="underlay_from_file">Новая подложка из файла</string>
+    <string name="underlay_catalog_empty">Сохранённых подложек пока нет</string>
+    <string name="underlay_size_pending">Размер уточняется</string>
+    <string name="underlay_usage">Используется в проектах: %1$d</string>
+    <string name="underlay_attached">Подложка добавлена в проект</string>
+    <string name="underlay_already_attached">Эта подложка уже есть в проекте</string>
+    <string name="underlay_rename">Переименовать в хранилище</string>
+    <string name="underlay_delete">Удалить из хранилища</string>
+    <string name="underlay_unused">Ни один проект не использует эту подложку.</string>
+    <string name="underlay_delete_confirm">Удалить «%1$s» и убрать её из всех перечисленных ниже проектов? Отменить это действие будет нельзя.\n\n%2$s</string>
+    <string name="underlay_operation_failed">Не удалось завершить операцию. Данные подложки сохранены. Попробуйте ещё раз.</string>
+    <string name="underlay_file_required">Выберите файл NGRc, растровый MBTiles или ZIP с MBTiles.</string>
+</resources>

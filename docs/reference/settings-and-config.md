@@ -120,3 +120,7 @@ fine permission. См. [GPS pipeline](../architecture/location-pipeline.md).
 сохраняется до её успешного Save или явного Cancel; формы переносят UUID через
 durable checkpoint до запуска Activity. Точные имена ключей определены в
 `WalkSessionStore`, сценарии — в [crash recovery](../architecture/crash-recovery.md).
+
+## Хранилище подложек
+
+В общих настройках `shared_underlays` открывает каталог с использованием по проектам. Удаление payload требует подтверждения списка проектов; обычное удаление слоя означает только «Убрать из проекта». Сброс настроек не удаляет каталог. Внутренние `shared_underlay_id`, `shared_underlay_migration` и `debug_companion_install` описаны в [контракте](../architecture/shared-underlays.md).

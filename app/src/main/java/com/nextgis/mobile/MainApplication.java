@@ -112,6 +112,14 @@ public class MainApplication extends GISApplication
 
         installHyperLogCrashHandler();
 
+        if (isDefaultApplicationProcess()) {
+            try {
+                com.nextgis.maplib.util.SharedUnderlayStore.catalog(this).recover();
+                com.nextgis.maplib.util.SharedUnderlayStore.catalog(this).cleanAbandonedStages();
+            }
+            catch (java.io.IOException e) { HyperLog.w(TAG, "Underlay recovery deferred", e); }
+        }
+
         if (isDefaultApplicationProcess()
                 && !LegacyUnderlayMigrationContract.shouldDeferDebugProjectBootstrap(this)) {
             try {
@@ -146,6 +154,7 @@ public class MainApplication extends GISApplication
         NGWUtil.UUID = TrackerService.getUid(this);
 
         if (isDefaultApplicationProcess()) {
+            com.nextgis.maplibui.util.SharedUnderlayProjects.scheduleMigration(this);
             new Handler(Looper.getMainLooper()).postDelayed(
                     () -> SyncRecoveryJournal.schedulePendingIfNeeded(this),
                     3_000L);
