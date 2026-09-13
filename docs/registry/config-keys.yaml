@@ -1,5 +1,17 @@
 schema_version: 1
 preferences:
+  location_source:
+    owner: app
+    type: string
+    default: '3'
+    source: maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+    purpose: Retired user switch; migrated to automatic GPS and Network display, shown as a non-editable explanation.
+  tracks_location_source:
+    owner: app
+    type: string
+    default: '1'
+    source: maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+    purpose: Retired user switch; migrated to GNSS-only recording for tracks and walking geometry.
   sync_recovery_journal:
     owner: app
     type: app_private_shared_preferences
@@ -58,7 +70,7 @@ preferences:
     default: true
     source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
     ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат)
-    purpose: Initial sound-guidance state for each new foreground stakeout session
+    purpose: Initial sound-guidance state for each new foreground stakeout or current-location-to-map-point session; static point-to-point measurement does not use it
   stakeout_far_distance:
     owner: app
     type: string_decimal_meters
@@ -122,11 +134,12 @@ preferences:
     consumer: maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
     purpose: >
       While track or walk recording is active and the app UI is hidden, keep a fixed
-      10-second alarm-stream heartbeat as long as a zero-distance health
-      subscription receives fresh usable locations, including unchanged stationary
+      10-second alarm-stream heartbeat as long as the shared GNSS stream
+      supplies fresh validated measurements before point decimation, including unchanged stationary
       coordinates. Notification volume does not suppress it; zero or muted alarm volume
       selects short vibration, including a distinct double vibration for a throttled
       persistence failure. Silence all feedback when delivery stops or the setting is disabled.
+      This switch does not own or disable the GPS recording wake lock.
   ngw_identity_backup:
     owner: maplib
     type: string
@@ -139,7 +152,7 @@ preferences:
     owner: maplibui
     type: shared_preferences_file
     source: maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
-    purpose: JSON snapshot of unfinished attribute form (fields, geometry, pending photos)
+    purpose: JSON snapshot of unfinished attribute form (fields, geometry, pending photos, optional point/walk owner UUIDs); owned handoff is committed before Activity launch
   geometry_edit_draft:
     owner: maplibui
     type: shared_preferences_file
@@ -151,7 +164,12 @@ preferences:
     owner: maplibui
     type: shared_preferences_file
     source: maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
-    purpose: Durable walk-digitizing draft (WKT, layer/feature ids); cleared only on explicit Save/Cancel
+    purpose: >
+      Durable full-geometry walk owner with map path, session UUID, RECORDING/FINISHING/FINISHED
+      phase, revision and optional point owner/stage/layer/tool; preserves legacy part WKT,
+      insertion target and gps_paused. Every manual command is locked until point Save/Cancel.
+      Finish acknowledges the final snapshot; successful feature Save or explicit Discard clears it.
+    session_source: maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
 manifest_metadata:
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
@@ -254,7 +272,7 @@ storage:
     owner: maplibui
     location_name: LayerBackups
     source: maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
-    purpose: ZIP archives of editable layer geometry/attributes/attachments before destructive ops; quota via layer_backup_max_gb
+    purpose: ZIP archives of editable layer tables plus attachment files physically present on this device before destructive ops; server-only payloads are not downloaded; quota via layer_backup_max_gb
 layer_json:
   feature_label_field:
     owner: maplib

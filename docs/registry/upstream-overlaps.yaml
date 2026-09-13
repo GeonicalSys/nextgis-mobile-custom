@@ -1,5 +1,15 @@
 schema_version: 1
 hotspots:
+  GPS-PIPELINE:
+    repositories: [root, maplib, maplibui]
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+    default_decision: ours
+    reason: Preserve shared acquisition, current display expiry, GNSS-only filtered recording and persistent gaps; official HEAD still keeps independent recorder subscriptions and an unbounded location cache.
+    invariants: [INV-GPS-TRACK-FILTER, INV-LOCATION-CURSOR-TOP]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-APP-RELEASES, SMOKE-GPS-RECORDING, SMOKE-WALK]
   MAP-DRAWABLE:
     repositories: [maplib]
     paths: [maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java]

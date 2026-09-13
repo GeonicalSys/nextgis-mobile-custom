@@ -2,15 +2,17 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-08-26
+last_verified: 2026-09-13
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
+    responsibility: Match GPX URI MIME, anonymous MIME lookup and share filename while retaining canonical FileProvider root and grant checks.
   - path: app/build.gradle
-    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.17/211 versus Lisa Debug 3.1.2.17/212 version contract, and signing configuration.
+    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.18/212 versus Lisa Debug 3.1.2.18/213 version contract, and signing configuration.
   - path: app/src/lisa/res/values/launcher_icon.xml
     responsibility: Lisa launcher, intro and about icon binding to density-specific ic_launcher_lisa resources without changing Belka branding.
   - path: app/src/belka/res/values/launcher_icon.xml
@@ -40,13 +42,17 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
     responsibility: Reserve the active project before manual sync starts, run as a dataSync foreground service, and process only accounts represented by NGW layers in that active map, sequentially under one lease.
   - path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-    responsibility: Map screen, complete MapLibre MapView lifecycle and renderer-reference cleanup across pause/resume/view recreation, bounded post-style continuous-render/presentation recovery and stale loading-foreground removal without full reload, EGL-recoverable SurfaceView selection on every API with API 26-27 30-FPS limits and API 28 resumed-only 5-FPS continuous compatibility mode, MaplibreMapInteraction implementation, opt-in persistent and immediate concurrent pinch/rotate gestures with north-up/location/layer-extent recovery, hidden local-vector-tile attribute identification, immediate current-camera-centre tap sketch creation with automatic target visibility, confirmed new-sketch cancellation without a duplicate add toolbar action, visible selected-to-successor insertion direction, hectare ruler labels with sketch-equivalent Undo/Redo routed to the active MapLibre measurement geometry and saved-instance restoration, selected-node walk insertion and walking-icon Save/Stop action, foreground stakeout host/widget, acknowledgement of completed post-fill style/source reload, shared Save/form handoff for new geometry with duplicate-launch protection, terminal successful-save cleanup to normal map mode with no feature selection for both new and existing objects, typed Polygon validation messages, GTMultiPolygon-only topology repair, durable non-walk geometry journal, and deferred current-style-safe restoration/discard of mutually exclusive interrupted walk or geometry drafts with polygon-only fill, stable outline and editable vertices after Stop.
+    responsibility: Map screen, complete MapLibre MapView lifecycle and renderer-reference cleanup across pause/resume/view recreation, bounded post-style continuous-render/presentation recovery and stale loading-foreground removal without full reload, EGL-recoverable SurfaceView selection on every API with API 26-27 30-FPS limits and API 28 resumed-only 5-FPS continuous compatibility mode, MaplibreMapInteraction implementation, opt-in persistent and immediate concurrent pinch/rotate gestures with north-up/location/layer-extent recovery, hidden local-vector-tile attribute identification, immediate current-camera-centre tap sketch creation with automatic target visibility, confirmed new-sketch cancellation without a duplicate add toolbar action, visible selected-to-successor insertion direction, hectare ruler labels with sketch-equivalent Undo/Redo routed to the active MapLibre measurement geometry and saved-instance restoration, selected-node independent walk insertion, passive preview and session-acknowledged Finish with full point-session control lock, foreground stakeout host/widget plus transient current-location-to-point and arbitrary-point-to-point magnetic azimuth/distance modes with draggable editable endpoints, acknowledgement of completed post-fill style/source reload, shared Save/form handoff for new geometry with duplicate-launch protection, terminal successful-save cleanup to normal map mode with no feature selection for both new and existing objects, typed Polygon validation messages, GTMultiPolygon-only topology repair, durable non-walk geometry journal, and deferred current-style-safe geometry restoration and owner-aware recovery of coexisting walk and point drafts with polygon-only fill, stable outline and editable vertices after Stop.
   - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
-    responsibility: Active stakeout lifecycle, independent GPS listener, GPS/mock precision-source gate, reported-accuracy UI state, monotonic navigation-audio scheduling and high-frequency GPS lease ownership across screen-off/background state.
+    responsibility: Active selected-feature or arbitrary-point live-guidance lifecycle, in-place target replacement without releasing foreground resources, independent GPS listener, WMM2025 magnetic-bearing UI state, GPS/mock precision-source gate, reported-accuracy UI state, monotonic navigation-audio scheduling and high-frequency GPS lease ownership across screen-off/background state.
   - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
     responsibility: Location foreground-service notification and partial wake-lock lifetime for audible stakeout guidance while the UI is paused.
   - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
-    responsibility: True-north device rotation-vector heading for the stakeout arrow without movement-bearing fallback.
+    responsibility: Circularly filtered magnetic rotation-vector heading plus location-cached WMM2025 declination for the live guidance arrow without movement-bearing fallback.
+  - path: app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt
+    responsibility: Normalize true initial bearing minus east-positive declination into clockwise magnetic azimuth and return undefined for coincident points.
+  - path: app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java
+    responsibility: Calculate offline magnetic declination from the official WMM2025 coefficients for the 2025-2030 model interval.
   - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
     responsibility: Full-scale limited low-pitched non-overlapping damped wooden-tap PCM cues with 3x digital gain and a distinct double-tap in-tolerance pattern.
   - path: app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
@@ -72,6 +78,7 @@ storage_contracts:
     path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
 invariant_refs: [INV-FLAVORS, INV-VERSION-COUPLING, INV-MAPLIBRE-BACKEND-COMPATIBILITY, INV-MAPLIBRE-VIEW-LIFECYCLE, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-SPATIAL-CACHE-CONSISTENCY, INV-HIDDEN-VECTOR-TILE-IDENTIFY, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-PROJECT-OPERATION-EXCLUSION, INV-NGRC-PRESERVE, INV-LEGACY-UNDERLAY-MIGRATION, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-ECOSYSTEM-SERVER-BOUNDARY, INV-CRASH-DRAFT-RECOVERY, INV-MULTIPOLYGON-REPAIR, INV-GEOMETRY-SKETCH-WORKFLOW, INV-GPS-TRACK-FILTER, INV-STAKEOUT-GUIDANCE, INV-LOCAL-VECTOR-LAYERS]
 global_docs:
+  - docs/architecture/location-pipeline.md
   - docs/architecture/overview.md
   - docs/architecture/lisa-ecosystem.md
   - docs/architecture/collector-projects.md

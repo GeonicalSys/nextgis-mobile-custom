@@ -249,6 +249,27 @@ triggers:
     strict_docs: true
   - id: GPS-RECORDING
     paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/WalkPreviewGeometry.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionPolicy.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometrySnapshot.java
+      - maplibui/src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java
+      - app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
+      - maplib/src/test/java/com/nextgis/maplib/util/LocationDepartureTest.java
+      - maplib/src/test/resources/location/
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - maplib/src/main/java/com/nextgis/maplib/location/LocationSubscriptionController.java
+      - maplib/src/main/java/com/nextgis/maplib/location/SensorMotionMonitor.java
+      - maplib/src/main/java/com/nextgis/maplib/util/DeviceMotionEvidence.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSamplerCore.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationMotionFilter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/RecordingSamplingPolicy.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometryInsertion.java
+      - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
+      - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiter.java
@@ -261,11 +282,13 @@ triggers:
       - app/src/main/res/xml/preferences_tracks.xml
     owners: [maplib, maplibui, app]
     read:
+      - docs/architecture/location-pipeline.md
       - docs/architecture/crash-recovery.md
       - docs/reference/official-differences.md
       - docs/reference/settings-and-config.md
     invariants: [INV-GPS-TRACK-FILTER, INV-CRASH-DRAFT-RECOVERY]
     must_update_docs:
+      - docs/architecture/location-pipeline.md
       - docs/architecture/crash-recovery.md
       - docs/reference/official-differences.md
       - docs/reference/settings-and-config.md
@@ -276,7 +299,7 @@ triggers:
       - maplibui/docs/manifest.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-GPS-RECORDING, SMOKE-WALK, SMOKE-WALK-POINT-SESSION]
     strict_docs: true
   - id: STAKEOUT-GUIDANCE
     paths:
