@@ -662,42 +662,16 @@ public class SettingsFragment
             final ListPreference listPreference,
             final boolean isTracks)
     {
-        if (listPreference != null) {
-            CharSequence[] entries = getAccuracyEntries(listPreference.getContext());
-            listPreference.setEntries(entries);
-            listPreference.setSummary(listPreference.getEntry());
-
-            listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
-            {
-                @Override
-                public boolean onPreferenceChange(
-                        Preference preference,
-                        Object newValue)
-                {
-                    int value = Integer.parseInt(newValue.toString());
-                    int idx = value - 1;
-                    CharSequence[] entries = ((ListPreference) preference).getEntries();
-                    if (idx >= 0 && idx < entries.length) {
-                        preference.setSummary(entries[idx]);
-                    }
-
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            sectionWork(preference.getContext(), isTracks);
-                        }
-                    }, 500);
-
-
-                    return true;
-
-                }
-            });
-        }
+        if (listPreference == null) return;
+        String label = listPreference.getContext().getString(isTracks
+                ? R.string.location_sources_recording : R.string.location_sources_automatic);
+        String value = isTracks ? "1" : "3";
+        listPreference.setEntries(new CharSequence[]{label});
+        listPreference.setEntryValues(new CharSequence[]{value});
+        listPreference.setValue(value);
+        listPreference.setSummary(label);
+        listPreference.setEnabled(false);
     }
-
-
 
     public static void initializeUid(CheckBoxPreference preference) {
         // async check

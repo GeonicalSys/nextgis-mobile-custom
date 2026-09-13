@@ -1,7 +1,7 @@
 ---
 title: Ручные проверки на Android-устройстве
 type: runbook
-last_verified: 2026-08-24
+last_verified: 2026-09-13
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -21,8 +21,8 @@ related_code:
 5. Offline edit/sync: правка объекта, offline, восстановление сети, успешный sync.
 6. Projects: импорт Collector, пустой local, name-only switch, settings,
    device-only delete/fallback, composition update и backup guard.
-7. Walk edit: старт, пауза/возврат, правая кнопка с человечком завершает запись
-   и сохраняет скетч; шестерёнки настроек в active-walk панели нет.
+7. Walk edit: старт, отдельная панель, видимый скетч, создание точки без
+   остановки обхода; все команды обхода заблокированы до Save/Cancel точки.
 8. Tracking: запись трека без start/end flag layers на карте; при включённом
    звуковом контроле свернуть приложение и неподвижно постоять с пригодным GPS не
    менее 35 секунд — сигналы идут каждые 10 секунд независимо от новых вершин.
@@ -172,3 +172,19 @@ related_code:
 Записать flavor/build, Android version/device, профиль (clean/existing), test ID,
 результат и наблюдаемое ограничение. Если smoke не выполнен, не писать
 «проверено»; явно указать, что осталась ручная проверка.
+
+## Проверка независимого обхода 2026-09-13
+
+На Samsung Galaxy A54 (SM-A546E, Android 16/API 36) в отдельном Debug-приложении
+локальный instrumentation harness создал временные слои и проверил реальный
+поток: старт сервиса, блокировка от выбора слоя точки, редактор, форма,
+успешное сохранение точки, отклонение отложенных команд и старого UUID, затем
+подтверждённый Finish. Проверка MapLibre `queryRenderedFeatures` нашла линию
+из Web Mercator-координат на обычной карте, при редактировании точки и после
+возврата из формы. Снимки обоих экранов просмотрены; временные слои и harness
+удалены. GPS pause в этом тесте задан синтетически; это не полевой маршрут.
+
+Отдельно остаются `SMOKE-WALK-POINT-SESSION` с камерой, ошибкой сохранения,
+process death, полным/lite style reload, landscape/крупным шрифтом, реальной
+прогулкой и длительным выключением экрана. Звук на телефоне пользователя не
+включать без снятия его явного ограничения.
