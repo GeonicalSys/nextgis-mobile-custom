@@ -1,12 +1,17 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-08-26
+last_verified: 2026-09-13
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-09-13
+
+- В APK добавлены PNG-маркеры точек `wood_truck` и `turn` (64×64) в
+  `app/src/main/assets/marker_icons/`.
 
 ## 2026-08-26
 

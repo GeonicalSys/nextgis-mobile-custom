@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-08-26
+last_verified: 2026-09-13
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -12,8 +12,10 @@ last_verified: 2026-08-26
 UI и Map host, управляет брендами, preferences, release и self-hosted update.
 Launcher и экраны intro/about получают иконку через flavor-ресурс
 `app_launcher_icon`: Lisa использует `ic_launcher_lisa`, Belka — отдельный
-`ic_launcher_belka` во всех пяти Android density buckets. Карта использует
-MapLibre Android `13.0.2` с явным OpenGL backend вместо Vulkan-default artifact.
+`ic_launcher_belka` во всех пяти Android density buckets. PNG-символы точечных
+стилей лежат в `src/main/assets/marker_icons/*.png`; имя файла без расширения —
+id изображения в MapLibre. Карта использует MapLibre Android `13.0.2` с явным
+OpenGL backend вместо Vulkan-default artifact.
 
 ## Основные сценарии
 
