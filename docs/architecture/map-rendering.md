@@ -343,3 +343,7 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 лежит непосредственно под верхним курсором; при expiry оба очищаются. Трек
 рисуется только по сохранённым сегментам, без линии к текущему display fix.
 Подробности: [GPS pipeline](location-pipeline.md).
+
+## Общий payload офлайн-подложек
+
+Новые NGRc преобразуются непосредственно в raster MBTiles общего каталога. MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).

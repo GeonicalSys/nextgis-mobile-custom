@@ -1,0 +1,10 @@
+<resources>
+    <string name="companion_title">Update Debug for underlay transfer</string>
+    <string name="companion_offer">An older Debug app is installed. Update it to transfer its offline underlays into Geonical. Debug and its data will stay on the phone.</string>
+    <string name="companion_later">Not now</string>
+    <string name="companion_update">Update Debug</string>
+    <string name="companion_loading">Downloading and checking the Debug update…</string>
+    <string name="companion_ready">Debug is updated. You can transfer underlays in project settings.</string>
+    <string name="companion_not_installed">Debug was not updated. You can try again in project settings.</string>
+    <string name="companion_failed">Could not update Debug. Check your connection and try again. The installed app and its data are unchanged.</string>
+</resources>

@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-08-26
+last_verified: 2026-09-13
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -167,3 +167,8 @@ APK через `aapt`/`apksigner`, сериализуют операции об�
 - проверить public manifest, versioned `apkUrl`, `latest.apk` и `releases.json`;
 - зафиксировать артефакты и checksums в разрешённом release-хранилище;
 - commit/push/tag/publish — только по явной команде пользователя.
+
+
+## Debug companion и каталог
+
+При выпуске изменений хранилища сначала закрыть library/app dependency chain, затем публиковать Debug с export Activity: companion отвергает старый APK без exporter, даже при валидном manifest. Сама реализация не разрешает публикацию или bump. Проверить permission-return и отмену установки, неизменность данных и отдельное подтверждение переноса. См. [контракт](../architecture/shared-underlays.md).

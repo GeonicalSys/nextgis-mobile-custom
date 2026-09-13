@@ -34,6 +34,9 @@ maplibui PR #12 [`5d48122`](https://github.com/GeonicalSys/android_maplibui/comm
 (содержит #11). Выпуск `3.1.2.18` дополнительно закрепляет Merge Commit
 maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/761d7a244a6a849cba709de1bfc6f0f1b7b034c4)
 и maplibui PR #13 [`223f8b04`](https://github.com/GeonicalSys/android_maplibui/commit/223f8b041d05d9261e3a552128a160cb8ffb4b3c).
+Каталог подложек закрепляет Merge Commit maplib PR #22
+[`998daff`](https://github.com/GeonicalSys/android_maplib/commit/998daff8a26cebc0abe76603d54eb9932ff2f339)
+и maplibui PR #14 [`4052cde3`](https://github.com/GeonicalSys/android_maplibui/commit/4052cde3b1f0c4beef19556aec1a2b533f49b1d9).
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -1254,3 +1257,10 @@ Sentry оставлен для production crashes, но сбор interaction bre
 официальные refs, проверить реализацию по коду и отредактировать этот файл. Если
 возможность появилась в official или была удалена из форка, она удаляется отсюда,
 а не помечается как историческая.
+
+
+## Общие подложки и перенос из Debug
+
+Офлайн-NGRc/MBTiles хранятся один раз в каталоге приложения и подключаются к нескольким проектам. Новый NGRc сразу превращается в MBTiles без дерева файлов; старые распакованные тайлы переносятся без перекодирования. Удаление слоя снимает ссылку, удаление файла доступно из хранилища с перечнем проектов. Geonical предлагает обновить доверенный старый Debug для переноса подложек; обычное самообновление сохраняет отдельные проверки.
+
+Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-13 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Текущая task-ветка сохраняет GPS/обход predecessors и версии Release 3.1.2.18/212, Debug 3.1.2.18/213; библиотечные PR ещё не интегрированы.

@@ -1,5 +1,27 @@
 schema_version: 1
 tests:
+  SMOKE-SHARED-UNDERLAYS:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Import NGRc with OSM and TMS coordinates; compare the geographic tile position and visibility padding.
+      - Verify one MBTiles payload and no extracted tree; repeat import in the same and another project without payload growth.
+      - Import raster MBTiles and ZIP containing one MBTiles; reject vector data and ordinary ZIP-TMS in the dedicated picker.
+      - Remove a project layer, undo, delete a project and reset settings; verify shared payload remains.
+      - Delete in catalog after confirming all project names; reopen nested closed projects and verify only matching links disappeared.
+      - Interrupt legacy move and new import at checkpoints, restart and verify original data, style and layer order.
+    expected: Shared assets preserve data across project lifecycle; only confirmed global removal deletes payload; hot-add renders without restart.
+  SMOKE-DEBUG-COMPANION:
+    type: device
+    scope: app
+    steps:
+      - Install a trusted old Debug and open Geonical; defer the offer and recreate MainActivity to see it again.
+      - Verify crash recovery and a pending self-update take precedence; the offer suppresses only the automatic self-update check.
+      - Start from project settings, allow unknown-source installation, recreate the process and return through verified cached installation.
+      - Complete installation and verify the original transfer confirmation appears only for the same active project; startup origin only shows a message.
+      - Cancel permission or installation; verify no transfer, no install loop and unchanged Debug data.
+      - Reject wrong package, flavor, code, hash, signer, URL and a signed APK without exporter.
+    expected: Only the intended newer Debug is installed; self-update stays separate and data transfer always retains explicit confirmation.
   AUTO-DOCS-VALIDATE:
     type: automatic
     scope: docs

@@ -1,0 +1,10 @@
+<resources>
+    <string name="companion_title">Обновить Debug для переноса подложек</string>
+    <string name="companion_offer">На телефоне установлен старый Debug. Обновите его, чтобы перенести офлайн-подложки в Geonical. Debug и его данные останутся на телефоне.</string>
+    <string name="companion_later">Не сейчас</string>
+    <string name="companion_update">Обновить Debug</string>
+    <string name="companion_loading">Загрузка и проверка обновления Debug…</string>
+    <string name="companion_ready">Debug обновлён. Перенос подложек доступен в настройках проекта.</string>
+    <string name="companion_not_installed">Debug не обновлён. Повторить попытку можно в настройках проекта.</string>
+    <string name="companion_failed">Не удалось обновить Debug. Проверьте подключение и попробуйте ещё раз. Установленное приложение и его данные не изменены.</string>
+</resources>

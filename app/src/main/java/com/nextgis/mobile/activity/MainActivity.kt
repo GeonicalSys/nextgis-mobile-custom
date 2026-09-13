@@ -119,6 +119,8 @@ import com.nextgis.mobile.R
 import com.nextgis.mobile.fragment.LayersFragment
 import com.nextgis.mobile.fragment.MapFragment
 import com.nextgis.mobile.util.AppUpdateManager
+import com.nextgis.mobile.util.DebugCompanionInstaller
+import com.nextgis.maplibui.service.LayerFillService
 import com.nextgis.mobile.util.AppSettingsConstants
 import com.nextgis.mobile.util.SDCardUtils
 import org.json.JSONObject
@@ -161,10 +163,24 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     private val startupUpdateCheckHandler = Handler(Looper.getMainLooper())
     private var startupUpdateCheckPending = false
     private var crashRecoveryOffered = false
+    private var companionCheckedThisLaunch = false
     private val startupUpdateCheckRunnable = Runnable {
-        if (!startupUpdateCheckPending || isFinishing || isDestroyed || !hasWindowFocus()) {
+        if (isFinishing || isDestroyed || !hasWindowFocus() || AppUpdateManager.isBusyOrPending(this)) {
             return@Runnable
         }
+        if (DebugCompanionInstaller.resume(this, null)) {
+            startupUpdateCheckPending = false
+            companionCheckedThisLaunch = true
+            return@Runnable
+        }
+        if (!companionCheckedThisLaunch) {
+            companionCheckedThisLaunch = true
+            if (DebugCompanionInstaller.offer(this, false)) {
+                startupUpdateCheckPending = false
+                return@Runnable
+            }
+        }
+        if (!startupUpdateCheckPending) return@Runnable
         startupUpdateCheckPending = false
         AppUpdateManager.checkForUpdateAutomatically(this)
     }
@@ -1061,7 +1077,9 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
 
-    fun addLocalLayer() {
+    fun addUnderlayFile() = chooseLocalFile(6410)
+    fun addLocalLayer() = chooseLocalFile(FILE_SELECT_CODE)
+    private fun chooseLocalFile(request: Int) {
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
         // https://developer.android.com/guide/topics/providers/document-provider.html#client
@@ -1076,7 +1094,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         try {
             startActivityForResult(
                 Intent.createChooser(intent, getString(R.string.select_file)),
-                FILE_SELECT_CODE
+                request
             )
         } catch (ex: ActivityNotFoundException) {
             //TODO: open select local resource dialog
@@ -1099,6 +1117,22 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
+
+            6410 -> if (resultCode == RESULT_OK) {
+                val uri = data?.data ?: return
+                val name = FileUtil.getFileNameByUri(this, uri, "").lowercase(Locale.ROOT)
+                if (name.endsWith(".ngrc") || name.endsWith(".mbtiles") || name.endsWith(".zip")) {
+                    val fill = Intent(this, LayerFillService::class.java).apply {
+                        action = LayerFillService.ACTION_ADD_TASK
+                        putExtra(LayerFillService.KEY_URI, uri)
+                        putExtra(LayerFillService.KEY_NAME, FileUtil.getFileNameByUri(this@MainActivity, uri, "").substringBeforeLast('.'))
+                        putExtra(LayerFillService.KEY_INPUT_TYPE, LayerFillService.TMS_LAYER)
+                        putExtra(LayerFillService.KEY_LAYER_GROUP_ID, (application as IGISApplication).map.id)
+                        if (!name.endsWith(".ngrc")) putExtra(LayerFillService.KEY_TMS_TYPE, com.nextgis.maplib.util.GeoConstants.TMSTYPE_MBTILES_RASTER)
+                    }
+                    LayerFillProgressDialogFragment.startFill(fill)
+                } else Toast.makeText(this, R.string.underlay_file_required, Toast.LENGTH_LONG).show()
+            }
 
             CODE_TRACK_LIST -> mapFragment!!.mMapRef.get()!!.map.reloadTrackListToMap()
 
@@ -1563,6 +1597,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     override fun onResume() {
         super.onResume()
         if (AppUpdateManager.resumePendingInstallation(this)) {
+            companionCheckedThisLaunch = true
             startupUpdateCheckPending = false
             startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
         }
@@ -1750,7 +1785,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && startupUpdateCheckPending) {
+        if (hasFocus) {
             startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
             startupUpdateCheckHandler.postDelayed(
                 startupUpdateCheckRunnable,

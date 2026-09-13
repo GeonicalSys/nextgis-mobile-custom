@@ -84,7 +84,7 @@ public class LegacyUnderlayProvider extends ContentProvider {
 
     private void writeLayer(LocalTMSLayer layer, FileOutputStream destination)
             throws IOException, JSONException {
-        File root = layer.getPath();
+        File root = layer.getPayloadDirectory();
         String rootCanonical = root.getCanonicalPath();
         File mbTiles = new File(root, MbTilesInfo.MBTILES_FILENAME);
         boolean directMbTiles = layer.getTMSType() == GeoConstants.TMSTYPE_MBTILES_RASTER

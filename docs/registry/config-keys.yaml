@@ -12,6 +12,24 @@ preferences:
     default: '1'
     source: maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
     purpose: Retired user switch; migrated to GNSS-only recording for tracks and walking geometry.
+  debug_companion_install:
+    owner: app
+    type: app_private_shared_preferences
+    user_configurable: false
+    source: app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
+    purpose: Verified companion manifest, permission/install phase and originating project UID; separate from self-update state
+  shared_underlay_migration:
+    owner: maplibui
+    type: app_private_shared_preferences
+    user_configurable: false
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
+    purpose: Completed initial shared-underlay migration marker; per-layer recovery remains idempotent
+  shared_underlays:
+    owner: app
+    type: preference_action
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_general.xml
+    purpose: Open the shared underlay catalog from general settings
   sync_recovery_journal:
     owner: app
     type: app_private_shared_preferences
