@@ -4,7 +4,8 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
-      - Open the catalog from settings and the catalog picker from Add layer; both AppCompat screens load without a theme crash.
+      - Open Underlay storage directly from Settings next to Project, return to Settings and verify General has no duplicate entry; open the catalog picker from Add layer. Both AppCompat screens load with their title and Back button.
+      - On Android 16 inspect a populated catalog and its action dialog; the first row is entirely below the toolbar and above system navigation, including after returning to the screen.
       - Reuse one archive SHA across a legacy NGRc tree and a converted MBTiles asset; verify rendering, project zoom limits and presentation after migration, interrupted redirect and cold load of an older mismatched reference.
       - Import NGRc with OSM and TMS coordinates; compare the geographic tile position and visibility padding.
       - Verify one MBTiles payload and no extracted tree; repeat import in the same and another project without payload growth.

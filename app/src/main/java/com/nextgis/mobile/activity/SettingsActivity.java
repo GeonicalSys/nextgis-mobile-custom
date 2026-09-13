@@ -114,6 +114,7 @@ public class SettingsActivity
             case SettingsConstantsUI.ACTION_PREFS_NGW:
             case SettingsConstantsUI.ACTION_PREFS_NGID:
             case AppConstants.ACTION_PREFS_PROJECT:
+            case AppConstants.ACTION_PREFS_UNDERLAYS:
                 break;
         }
     }
@@ -146,6 +147,9 @@ public class SettingsActivity
                 break;
             case AppConstants.ACTION_PREFS_PROJECT:
                 intent = new Intent(this, ProjectSettingsActivity.class);
+                break;
+            case AppConstants.ACTION_PREFS_UNDERLAYS:
+                intent = new Intent(this, UnderlayCatalogActivity.class);
                 break;
         }
         startActivity(intent);

@@ -6,6 +6,9 @@ import android.widget.*
 import android.text.format.Formatter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.hypertrack.hyperlog.HyperLog
 import com.nextgis.maplib.util.Constants
 import com.nextgis.maplib.util.SharedUnderlayCatalog
@@ -24,15 +27,21 @@ class UnderlayCatalogActivity : AppCompatActivity() {
 
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setContentView(R.layout.activity_underlay_catalog)
+        val layout = findViewById<View>(R.id.underlay_catalog_root)
+        ViewCompat.setOnApplyWindowInsetsListener(layout) { view, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            insets
+        }
+        ViewCompat.requestApplyInsets(layout)
+        setSupportActionBar(findViewById(com.nextgis.maplibui.R.id.main_toolbar))
         title = getString(if (choose) R.string.underlay_from_catalog else R.string.underlay_catalog)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val layout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        progress = ProgressBar(this)
-        list = ListView(this)
-        val empty = TextView(this).apply { setText(R.string.underlay_catalog_empty); setPadding(24, 24, 24, 24) }
-        layout.addView(progress); layout.addView(empty); layout.addView(list)
-        list.emptyView = empty
-        setContentView(layout)
+        progress = findViewById(R.id.underlay_catalog_progress)
+        list = findViewById(R.id.underlay_catalog_list)
+        list.emptyView = findViewById(R.id.underlay_catalog_empty)
         list.setOnItemClickListener { _, _, position, _ ->
             val asset = assets[position]
             if (choose) work {
