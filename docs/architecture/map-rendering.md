@@ -347,3 +347,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 ## Общий payload офлайн-подложек
 
 Новые NGRc преобразуются непосредственно в raster MBTiles общего каталога. MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
+
+При dedup дерева NGRc с готовым MBTiles ссылка меняет `tms_type` вместе с ID:
+MapLibre выбирает `mbtiles://` по формату целевого payload. Старые `levels`
+удаляются, bounds берутся из ассета, а проектные min/max zoom сохраняются.
+Ошибочные ссылки старых сборок исправляются до `LocalTMSLayer.fromJSON`.

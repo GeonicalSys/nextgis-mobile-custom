@@ -342,3 +342,9 @@ OpenGL backend вместо Vulkan-default artifact.
 ## Хранилище и обновление Debug
 
 `UnderlayCatalogActivity` доступна из настроек и меню добавления: имя, формат, размер, проекты, переименование и подтверждённое удаление. `DebugCompanionInstaller` отдельно от self-updater обновляет доверенный старый Debug, продолжает после install permission и возвращает к подтверждению переноса только в исходный проект. Кэш и preferences разделены; обычный updater сохраняет свои identity checks. Контракт и ограничение текущего публичного канала: [shared-underlays](../../docs/architecture/shared-underlays.md).
+
+Оба режима `UnderlayCatalogActivity` используют явную `AppTheme.UnderlayCatalog`
+в manifest: у приложения нет общей AppCompat-темы, а базовая `AppTheme` скрывает
+ActionBar. Тема каталога включает заголовок и кнопку «Назад» без перекрытия
+списка. При smoke проверять открытие хранилища из настроек и выбор подложки
+из меню добавления.

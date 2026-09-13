@@ -75,12 +75,27 @@ NGRc без исходного archive SHA создаётся отдельный
 удаляются при старте до появления новых импортов. Сбой публикации между rename
 и записью index восстанавливается из per-asset manifest.
 
+Один archive SHA может соответствовать старому дереву NGRc либо уже
+преобразованному MBTiles. При миграции и redirect ссылка получает `tms_type`,
+`levels` и bounds выбранного payload через `Asset.referenceConfig`; прежние
+уровни дерева удаляются при переходе на MBTiles. Имя, видимость, заданные
+пользователем min/max zoom и остальные проектные настройки сохраняются.
+Целевой payload проверяется до переноса исходной папки и записи ссылки.
+После прерывания redirect уже записанные ссылки остаются корректными, проход
+продолжает остальные проекты. Ссылки предыдущих сборок с неверным `tms_type`
+исправляются перед загрузкой слоя; корректные ссылки повторно не записываются.
+
 MapLibre и Canvas разрешают путь через shared ID, без ключа читают legacy
 `mPath`. Debug exporter также разрешает payload через каталог. Debug importer
 пишет поток сразу в каталог Geonical, затем подключает ассет к выбранному проекту;
 source-key alias обеспечивает повторное использование при повторе переноса.
 
 ## Удаление
+
+Экран хранилища и режим выбора используют явную `AppTheme.UnderlayCatalog`
+в manifest, необходимую для `AppCompatActivity`; общей темы у application нет.
+В отличие от базовой `AppTheme` она включает ActionBar с заголовком и кнопкой
+возврата, который не перекрывает список.
 
 «Убрать из проекта» удаляет только ссылку и тонкую папку слоя; undo остаётся
 штатным. Удаление проекта сначала защищает ещё не перенесённые подложки. Reset
@@ -131,17 +146,29 @@ Archive signature flags сохраняют Android 9/10 legacy fallback.
 ## Проверки и доставка
 
 JVM-тесты покрывают полный archive hash, позднюю конфигурацию, схему координат,
-изменение источника, cancellation, traversal, dedup, checkpoints миграции,
-закрытые вложенные workspace и companion identity/URL/signature/version rules.
-Android SQLite writer, actual installer и визуальный hot-add требуют device smoke.
-На момент проверки 2026-09-13 `adb devices -l` не обнаружил устройств: GUI,
-permission/install round trip, холодный запуск после move и совпадение тайлов
-на телефоне пока не проверены.
+изменение источника, cancellation, traversal, dedup обоих направлений NGRc/MBTiles,
+checkpoints миграции/redirect, закрытые вложенные workspace, восстановление
+старой неверной ссылки и companion identity/URL/signature/version rules.
+На 2026-09-13 прошли 238 maplib + 62 maplibui + 10 app unit-тестов, docs-check
+и его 7 тестов; Lisa Debug/Release и Belka Release собраны, подписи, ZIP CRC,
+выравнивание и version matrix проверены. Маркеры `turn`/`wood_truck` в APK — 64×64.
 
-Ветки `codex/shared-underlay-catalog` продолжают сохранённые изменения GPS/обхода:
-maplib #21, maplibui #13, app #26. Новые Draft PR основываются на
-`codex/skip-invalid-ngw-geometries`. Перед merge родительского PR нужно retarget
-его child PR; удаление parent head иначе закроет child. Порядок интеграции:
-maplib Merge Commit → maplibui Merge Commit → pin удалённых library merge commits
-в app → app Squash Merge. Publisher не изменён. Пока predecessors открыты,
-полученные APK — QA-артефакты, не завершённый выпуск.
+На Samsung Galaxy A54 SM-A546E / Android 16 (API 36) ЛИСА и Debug обновлены
+по ADB с сохранением данных. Временный instrumentation на изолированных
+cache-данных подтвердил побайтовое совпадение NGRc-тайла в настоящем SQLite,
+загрузку мигрированной и ранее ошибочной ссылки через `LocalTMSLayer.load`,
+корректный MBTiles URL MapLibre и сохранение проектных настроек. Программное
+открытие обоих режимов `UnderlayCatalogActivity`, загрузка списка и ActionBar
+прошли. Визуальный hot-add, переходы через обычное меню и permission/install
+round trip companion не проверены: экран телефона оставался заблокирован.
+
+Исходные изменения интегрированы: app #26 (GPS/обход), #27 (маркеры 64×64),
+#28 (каталог и companion); maplib #21/#22 и maplibui #13/#14. База исправлений —
+app `b6eabfa`, maplib `998daff`, maplibui `4052cde3`. Сохранность app squash
+проверена по содержимому, библиотек — по ancestry и итоговым pins.
+Исправления темы и формата ссылок идут в `codex/fix-underlay-catalog`;
+maplib [PR #23](https://github.com/GeonicalSys/android_maplib/pull/23)
+содержит `8e071d64`, app пока закрепляет этот QA pin. Порядок интеграции:
+maplib Merge Commit → pin удалённого merge commit в app → app Squash Merge.
+maplibui и publisher не меняются. До закрытия новой зависимости APK служат
+для QA; публикация и повышение версий в эту задачу не входят.

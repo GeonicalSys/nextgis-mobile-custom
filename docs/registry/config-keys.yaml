@@ -23,7 +23,7 @@ preferences:
     type: app_private_shared_preferences
     user_configurable: false
     source: maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
-    purpose: Completed initial shared-underlay migration marker; per-layer recovery remains idempotent
+    purpose: Completed initial shared-underlay migration marker; per-layer recovery and repair of mismatched shared raster formats remain idempotent independently of this marker
   shared_underlays:
     owner: app
     type: preference_action

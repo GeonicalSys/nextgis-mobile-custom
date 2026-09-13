@@ -33,6 +33,12 @@
     <style name="AppTheme.Dark" parent="Theme.NextGIS.AppCompat.Dark">
     </style>
 
+    <style name="AppTheme.UnderlayCatalog" parent="AppTheme">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+        <item name="windowActionBarOverlay">false</item>
+    </style>
+
     <style name="menu_labels_style">
         <item name="android:background">@drawable/abc_popup_background_mtrl_mult</item>
         <item name="android:textColor">@color/primary_text_default_material_light</item>
