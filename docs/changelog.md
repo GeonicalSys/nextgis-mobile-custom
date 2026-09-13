@@ -22,6 +22,8 @@ related_code:
   имени GPX только в MAX отложена по указанию пользователя.
 - Root закрепляет Merge Commit maplib PR #21 `761d7a2` и maplibui PR #13
   `223f8b04` вместо промежуточных feature pins.
+- В APK добавлены PNG-маркеры точек `wood_truck` и `turn` (64×64) в
+  `app/src/main/assets/marker_icons/`.
 
 ## 2026-09-12
 
