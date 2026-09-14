@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-09-13
+last_verified: 2026-09-15
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
@@ -9,6 +9,9 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/GpxSharePublisher.java
+  - app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
 ---
 
@@ -152,14 +155,20 @@ preview не могут дописать начало или конец лини
 
 ## Экспорт GPX
 
-Экспорт сохраняет `.gpx`; `ExportFileProvider` возвращает `application/gpx+xml`
-и в обычном `getType`, и в Android anonymous MIME lookup до передачи URI grant.
-Тип совпадает с share Intent и отображаемым именем файла. Стандартный
-[FileProvider](https://developer.android.com/reference/androidx/core/content/FileProvider)
-для неизвестного расширения/anonymous запроса может вернуть `application/octet-stream`,
-из-за чего принимающий файловый менеджер дописывал `.bin`. Проверка настроенных
-корней, canonical paths и read grants сохраняется; другие форматы используют
-обычное определение MIME.
+Экспорт сохраняет `.gpx`. Share Intent остаётся `application/gpx+xml`, чтобы
+в системном chooser оставались GPX-приложения. На API 29+ `GpxSharePublisher`
+копирует файл в `MediaStore.Downloads` (`Download/<имя приложения>/`) с
+`DISPLAY_NAME` `*.gpx` и MIME колонки `text/xml`. Системный `MimeTypeMap` не
+содержит GPX: `application/gpx+xml` даёт `null`, и клиент вроде MAX склеивает
+это в `.gpx.null`; `octet-stream` раньше давал `.gpx.bin`. `text/xml` известен
+карте как `xml`. Копия в Загрузках не удаляется после шаринга: получатель читает
+URI асинхронно. Путь `onlyResult` (GPX внутрь zip) в Downloads не пишет. На
+API 26–28 и при сбое insert остаётся
+[FileProvider](https://developer.android.com/reference/androidx/core/content/FileProvider);
+`ExportFileProvider` для `.gpx` тоже отдаёт `text/xml` в `getType` и anonymous
+lookup. Проверка корней и read grants FileProvider сохраняется. Другие форматы
+и zip-логи не меняются. Имя на диске `.gpx`; MAX может оставить его или дописать
+`.xml`, но не `.null`.
 
 ## Разрывы и долговечность
 
@@ -286,9 +295,9 @@ GPX и экранные координаты уже отфильтрованы: 
 неподвижного A54 в руках. Новый полевой маршрут, длительный сон, автомобиль и
 расход батареи после этих изменений ещё не проверены.
 
-Суффикс `.gpx.null` пользователь наблюдает только в MAX; Telegram и WhatsApp,
-по его проверке, принимают файл нормально. Дальнейшая адаптация под MAX
-отложена по указанию пользователя; MIME `application/gpx+xml` сохранён.
+Суффикс `.gpx.null` пользователь наблюдал только в MAX; Telegram и WhatsApp
+принимали файл нормально. Адаптация под MAX тогда была отложена. Текущий
+контракт шаринга — в разделе «Экспорт GPX» выше.
 
 Итоговые автоматические проверки этой правки: 224 maplib, 62 maplibui и 6 app
 unit tests; maplibui Debug, ЛИСА Debug/Release и БЕЛКА Release собраны успешно.

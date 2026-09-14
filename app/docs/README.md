@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-09-14
+last_verified: 2026-09-15
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -322,9 +322,11 @@ OpenGL backend вместо Vulkan-default artifact.
 или общих resources обязательны обе release-сборки; при изменении версии —
 полная debug/release version matrix.
 
-Экспорт трека использует `ExportFileProvider`: MIME самого URI и share Intent
-совпадает с GPX, поэтому системный получатель не должен дописывать `.bin`.
-Проверять нужно также имя файла и anonymous MIME lookup на Android 16.
+Экспорт трека на API 29+ идёт через MediaStore Downloads с именем `.gpx` и URI
+MIME `text/xml`; share Intent остаётся `application/gpx+xml`. `ExportFileProvider`
+для fallback FileProvider тоже отдаёт `text/xml` в `getType` и anonymous lookup,
+чтобы получатель не дописывал `.bin` или `.null`. Проверять имя вложения в MAX,
+Telegram и WhatsApp.
 
 ## Независимый обход и создание точки
 

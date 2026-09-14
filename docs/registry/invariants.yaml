@@ -529,8 +529,10 @@ invariants:
       displayed candidate remains current while the recorder holds its stop anchor; its accuracy
       cannot expand merely because the user has moved away from that anchor. Each recorder buffers at most 120 seconds
       or 512 tentative observations; confirmation backfills original times/corners, while Stop
-      and gaps discard unconfirmed history. GPX URI MIME and share filename must agree,
-      including anonymous type lookup, without an added .bin suffix.
+      and gaps discard unconfirmed history. GPX share filename stays .gpx. The share Intent
+      may remain application/gpx+xml for chooser filtering. Shared URI getType, including
+      anonymous lookup and MediaStore MIME, uses text/xml so MimeTypeMap clients do not
+      append .bin or stringify a missing GPX mapping as .null.
       Current display may use GPS or Network, including approximate permission; monotonic
       age above 8 seconds clears the marker and metric accuracy circle without waiting for
       another callback. Resume never substitutes camera or a screen-off coordinate.
@@ -564,11 +566,15 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundPolicy.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/GpxSharePublisher.java
+      - app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
       - maplibui/src/main/AndroidManifest.xml
       - maplibui/src/test/java/com/nextgis/maplibui/util/BackgroundRecordingSoundPolicyTest.java
       - app/src/main/res/xml/preferences_tracks.xml
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, SMOKE-GPS-RECORDING, SMOKE-WALK]
     must_update_docs:
+      - docs/architecture/location-pipeline.md
       - docs/architecture/crash-recovery.md
       - docs/reference/official-differences.md
       - docs/reference/settings-and-config.md

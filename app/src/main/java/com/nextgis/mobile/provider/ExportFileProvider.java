@@ -3,26 +3,25 @@ package com.nextgis.mobile.provider;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
-import java.util.Locale;
+import com.nextgis.maplibui.util.GpxSharePublisher;
 
-/** Keep the shared URI's MIME type consistent with the GPX share intent and filename. */
+/** Advertise a MimeTypeMap-known type for GPX so messengers do not stringify a null extension. */
 public final class ExportFileProvider extends FileProvider {
     @Override
     public String getType(@NonNull Uri uri) {
         // Retain FileProvider's canonical path / configured root validation.
         String detected = super.getType(uri);
-        return isGpx(uri) ? "application/gpx+xml" : detected;
+        return GpxSharePublisher.isGpxName(uri.getLastPathSegment())
+                ? GpxSharePublisher.URI_MIME_TYPE
+                : detected;
     }
 
     @Override
     public String getTypeAnonymous(@NonNull Uri uri) {
         // Android can resolve the type before the recipient receives its URI grant.
         // This reports only a format, without probing whether a particular file exists.
-        return isGpx(uri) ? getType(uri) : "application/octet-stream";
-    }
-
-    private static boolean isGpx(Uri uri) {
-        String name = uri.getLastPathSegment();
-        return name != null && name.toLowerCase(Locale.ROOT).endsWith(".gpx");
+        return GpxSharePublisher.isGpxName(uri.getLastPathSegment())
+                ? getType(uri)
+                : "application/octet-stream";
     }
 }
