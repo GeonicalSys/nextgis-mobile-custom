@@ -116,6 +116,7 @@ triggers:
   - id: MAPLIBRE-RENDERING
     paths:
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
       - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
       - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
       - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java
@@ -125,14 +126,18 @@ triggers:
       - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileProviderTest.java
       - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileRequestPolicyTest.java
       - maplib/src/test/java/com/nextgis/maplib/map/LayerIdentifyPolicyTest.java
+      - maplib/src/test/java/com/nextgis/maplib/map/UserLocationGeometryTest.java
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
     owners: [maplib, app]
     read:
       - docs/architecture/map-rendering.md
+      - docs/architecture/location-pipeline.md
       - maplib/docs/README.md
     invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-SPATIAL-CACHE-CONSISTENCY, INV-HIDDEN-VECTOR-TILE-IDENTIFY, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-NO-TRACK-FLAGS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-MAPLIBRE-VIEW-LIFECYCLE]
     must_update_docs:
       - docs/architecture/map-rendering.md
+      - docs/architecture/location-pipeline.md
       - maplib/docs/manifest.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml

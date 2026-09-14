@@ -140,6 +140,7 @@ import com.nextgis.mobile.stakeout.StakeoutController
 import com.nextgis.mobile.stakeout.StakeoutSettings
 import com.nextgis.mobile.stakeout.MagneticAzimuthCalculator
 import com.nextgis.mobile.stakeout.WorldMagneticModel2025
+import com.nextgis.mobile.location.DeviceHeadingProvider
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import org.maplibre.android.camera.CameraPosition
@@ -268,6 +269,7 @@ public class MapFragment
     private var mStakeoutCorrectionReset: TextView? = null
     private var mStakeoutController: StakeoutController? = null
     private var lastStakeoutUiState: StakeoutController.UiState? = null
+    private var deviceHeadingProvider: DeviceHeadingProvider? = null
     private var azimuthStartPoint: GeoPoint? = null
     private var azimuthTargetPoint: GeoPoint? = null
     private var azimuthStaticTrueBearing: Float? = null
@@ -2144,6 +2146,9 @@ public class MapFragment
         editLayerOverlay?.mBottomToolbar?.setOnClickListener(null)
         editLayerOverlay?.mBottomToolbar = null
 
+        stopDeviceHeading()
+        deviceHeadingProvider = null
+
         super.onDestroyView()
     }
 
@@ -2977,6 +2982,7 @@ public class MapFragment
         if (null != mGpsEventSource) {
             mGpsEventSource!!.removeListener(this)
         }
+        stopDeviceHeading()
         if (null != editLayerOverlay) {
             editLayerOverlay!!.removeListener(this)
             editLayerOverlay!!.onPause()
@@ -3124,6 +3130,7 @@ public class MapFragment
                 NotificationHelper.showLocationInfo(
                     activity
                 )
+            startDeviceHeading()
         }
 
         if (null != editLayerOverlay) {
@@ -4574,11 +4581,16 @@ public class MapFragment
         val isStanding =
             !location.hasBearing() || !location.hasSpeed() || location.speed == 0f
 
+        val headingProvider = ensureDeviceHeadingProvider()
+        headingProvider?.updateLocation(location)
+        val heading = headingProvider?.heading()
         mapDrawable.updateLocation(
             Point.fromLngLat(location.longitude, location.latitude),
             isStanding,
             if (location.hasBearing()) location.bearing else 0f,
-            location.accuracy
+            location.accuracy,
+            heading?.trueDegrees,
+            heading?.halfAngleDegrees
         )
         if (mode == MODE_AZIMUTH_CURRENT && azimuthTargetPoint != null) {
             mapDrawable.showAzimuthMeasurement(
@@ -4597,6 +4609,28 @@ public class MapFragment
         if (mode == MODE_EDIT_BY_WALK && !WalkEditService.isServiceRunning(context)) {
             checkWalkServiceWatchdog()
         }
+    }
+
+    private fun ensureDeviceHeadingProvider(): DeviceHeadingProvider? {
+        val hostContext = context ?: return deviceHeadingProvider
+        val existing = deviceHeadingProvider
+        if (existing != null) return existing
+        val created = DeviceHeadingProvider(hostContext) { applyDeviceHeadingToMap() }
+        deviceHeadingProvider = created
+        return created
+    }
+
+    private fun startDeviceHeading() {
+        ensureDeviceHeadingProvider()?.start()
+    }
+
+    private fun stopDeviceHeading() {
+        deviceHeadingProvider?.stop()
+    }
+
+    private fun applyDeviceHeadingToMap() {
+        val heading = deviceHeadingProvider?.heading()
+        mapDrawableOrNull?.updateLocationHeading(heading?.trueDegrees, heading?.halfAngleDegrees)
     }
 
     override fun onLocationChanged(location: Location?) {

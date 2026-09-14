@@ -187,13 +187,16 @@ invariants:
   INV-LOCATION-CURSOR-TOP:
     title: Location cursor stays above every map object
     owners: [maplib, app]
-    statement: Treat user-location-layer as a render-only overlay outside LayerGroup order, with the metric accuracy fill immediately below it; restore both above user layers after cold, lite and hot mutations and clear both when the current fix expires.
+    statement: Treat user-location-layer as a render-only overlay outside LayerGroup order, with the heading sector and metric accuracy fill immediately below it; restore that three-layer stack above user layers after cold, lite and hot mutations and clear the source when the current fix expires. Hide only the heading sector when compass heading is missing, unreliable or stale.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
     verify_smoke: [SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-COLD-START, SMOKE-HOT-RASTER]
     must_update_docs:
       - docs/architecture/map-rendering.md
+      - docs/architecture/location-pipeline.md
   INV-MAP-CAMERA-CONTROLS:
     title: Map rotation is explicit and location recovery is predictable
     owners: [app]

@@ -93,8 +93,17 @@ tests:
   SMOKE-LOCATION-CURSOR-TOP:
     type: device
     scope: [app, maplib]
-    steps: [Open a map containing overlapping saved and active tracks plus vector layers, Move the current location onto the overlap, Perform a lite reload or hot layer update]
-    expected: The standing and moving location cursor remains fully visible above tracks and every other MapLibre object before and after reload.
+    steps:
+      - Open a map containing overlapping saved and active tracks plus vector layers
+      - Move the current location onto the overlap and rotate the phone in place
+      - Cover or disturb the compass, then uncover it; freeze GPS while rotating
+      - Perform a lite reload or hot layer update
+    expected: >
+      The standing and moving location cursor remains fully visible above tracks and every
+      other MapLibre object before and after reload. The heading cone stays between the
+      accuracy circle and the puck, turns with the phone, and disappears without hiding the
+      circle or icon when the compass is unreliable, missing or stale.
+
   SMOKE-MAP-CAMERA-CONTROLS:
     type: device
     scope: app
