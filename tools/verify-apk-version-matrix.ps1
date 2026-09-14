@@ -140,22 +140,22 @@ $matrix = @(
         Name = 'Lisa Debug'
         Directory = 'app\build\outputs\apk\lisa\debug'
         ApplicationId = 'com.nextgis.mobile.debug'
-        VersionCode = 213
-        VersionName = '3.1.2.18'
+        VersionCode = 214
+        VersionName = '3.1.2.19'
     },
     [pscustomobject]@{
         Name = 'Lisa Release'
         Directory = 'app\build\outputs\apk\lisa\release'
         ApplicationId = 'com.nextgis.mobile.geonical'
-        VersionCode = 212
-        VersionName = '3.1.2.18'
+        VersionCode = 213
+        VersionName = '3.1.2.19'
     },
     [pscustomobject]@{
         Name = 'Belka Release'
         Directory = 'app\build\outputs\apk\belka\release'
         ApplicationId = 'com.nextgis.mobile.geonical'
-        VersionCode = 212
-        VersionName = '3.1.2.18'
+        VersionCode = 213
+        VersionName = '3.1.2.19'
     }
 )
 
@@ -170,8 +170,8 @@ foreach ($entry in $matrix) {
 }
 
 $maplibVersions = @{
-    debug = '3.1.2.18'
-    release = '3.1.2.18'
+    debug = '3.1.2.19'
+    release = '3.1.2.19'
 }
 
 foreach ($buildType in $maplibVersions.Keys) {
