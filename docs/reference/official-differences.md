@@ -20,8 +20,8 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.18` / `versionCode` 212; Lisa Debug
-`3.1.2.18` / `versionCode` 213. Сверено с официальным приложением `3.2.0` и с
+Состояние форка: Lisa/Belka Release `3.1.2.19` / `versionCode` 213; Lisa Debug
+`3.1.2.19` / `versionCode` 214. Сверено с официальным приложением `3.2.0` и с
 головами официальных библиотек на 14 сентября 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
 [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
@@ -40,6 +40,13 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 Исправления NGRc и raster-ссылок закрепляют Merge Commit maplib PR #23
 [`96db542`](https://github.com/GeonicalSys/android_maplib/commit/96db5423c5afd50c2ff887068fe7b84a77acbe76),
 сохраняющий #21/#22 и дерево проверенного `a5603fb7`.
+Выпуск `3.1.2.19` закрепляет Merge Commit maplib PR #24
+[`85dbe67`](https://github.com/GeonicalSys/android_maplib/commit/85dbe677fc62812b268a6f64ae300b1988c4c6d9)
+(конус направления), maplibui PR #15
+[`cc19ef66`](https://github.com/GeonicalSys/android_maplibui/commit/cc19ef66d2b9bf2c88463c998e5b84659c3dcb67)
+(шаринг GPX) и maplib PR #25
+[`02a9fa4`](https://github.com/GeonicalSys/android_maplib/commit/02a9fa4af1625948b2b5bfe81317acb91245b122)
+(диагностическая версия `3.1.2.19`).
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -53,7 +60,7 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
-Форк `3.1.2.18` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+Форк `3.1.2.19` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
 и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
@@ -1287,4 +1294,4 @@ Sentry оставлен для production crashes, но сбор interaction bre
 exporter старого доверенного Debug проверяется по установленной Activity,
 поэтому запуск и хранилище подложек показывают предложение обновления.
 
-Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет объединённый maplib #23 `96db542`, сохраняет GPS/обход predecessors и версии Release 3.1.2.18/212, Debug 3.1.2.18/213. Публикация APK и повышение версии отложены пользователем.
+Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #25 `02a9fa4` (содержит конус #24) и maplibui #15 `cc19ef66`; выпуск Lisa/Belka `3.1.2.19` / `213`, Debug `3.1.2.19` / `214`.

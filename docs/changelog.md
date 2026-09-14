@@ -10,6 +10,13 @@ related_code:
 
 ## 2026-09-15
 
+- Подготовлен выпуск Lisa/Belka `3.1.2.19` / `versionCode 213` и Lisa Debug
+  `3.1.2.19` / `versionCode 214`. В выпуск входят общее хранилище подложек,
+  конус направления компаса с подписью азимута и шаринг GPX с URI MIME
+  `text/xml`. Root закрепляет Merge Commit maplib PR #25 `02a9fa4` (содержит
+  конус #24) и maplibui PR #15 `cc19ef66`; app squash #30 и #31 уже в
+  `my-maplibre`.
+
 - Шаринг трека отдаёт URI MIME `text/xml` через FileProvider, чтобы MAX не
   склеивал неизвестный `application/gpx+xml` в `.gpx.null`. Intent остаётся
   `application/gpx+xml`. На устройстве MAX показал `.gpx.xml`; QGIS такой файл
