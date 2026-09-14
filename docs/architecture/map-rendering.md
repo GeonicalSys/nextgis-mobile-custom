@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -352,3 +352,10 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 MapLibre выбирает `mbtiles://` по формату целевого payload. Старые `levels`
 удаляются, bounds берутся из ассета, а проектные min/max zoom сохраняются.
 Ошибочные ссылки старых сборок исправляются до `LocalTMSLayer.fromJSON`.
+
+При отказе или отмене загрузки `LayerFillWorker` может вызвать
+`MapDrawable.deleteLayerByID` из фонового потока. Метод ставит удаление
+источников, слоёв MapLibre и Java-реестров в main queue; вызов из UI остаётся
+синхронным. Ошибка распознавания NGRc не должна превращаться в падение native
+карты во время cleanup. Штатный `Mapnik.json` и пути JPEG/PNG/WebP обрабатываются
+тем же потоковым импортом, без изменения географической схемы тайлов.

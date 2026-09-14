@@ -1,7 +1,7 @@
 ---
 title: Общее хранилище подложек и обновление Debug перед переносом
 type: architecture
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java
@@ -26,12 +26,16 @@ payload лежат в `<UUID>/manifest.json` и `<UUID>/payload/`. Проект�
 в стеке принадлежат проекту. Переименование в хранилище не переименовывает
 существующие проектные слои.
 
-Новый NGRc проходит два потоковых чтения. Первое находит `config.json` даже
-в конце ZIP и вычисляет SHA-256 **всего архива**, включая central directory и
+Новый NGRc проходит два потоковых чтения. Первое находит `config.json` либо
+штатный `Mapnik.json` даже в конце ZIP и вычисляет SHA-256 **всего архива**, включая central directory и
 comment. При совпадении с готовым ассетом конвертация не нужна. Второе чтение
 передаёт `z/x/y.tile` непосредственно в SQLite writer, максимум один тайл в
 памяти (16 MiB). Нет распакованного дерева и промежуточного полного ZIP.
 Повторная проверка хеша отвергает изменившийся между чтениями источник.
+Имена конфигурации и префикс `Mapnik/` принимаются без учёта регистра.
+Тайлы `z/x/y.jpg`, `.jpeg`, `.png`, `.webp` и `.tile` нормализуются в `.tile`
+только внутри потока; содержимое и оригинальный архив не меняются. Две
+конфигурации, в том числе под разными допустимыми именами, отвергаются.
 
 Схема берётся только из `tms_type`: OSM преобразуется в TMS один раз, TMS
 остаётся без переворота. Поддержаны PNG/JPEG/WebP, один encoding на базу;
@@ -120,6 +124,10 @@ payload. При прерывании запись остаётся в катал
 повторяется; «Не сейчас» не сохраняется. Оно ждёт освобождения окна после crash
 recovery. Pending self-update имеет приоритет. Показ предложения отменяет только
 автоматическую проверку обновления Geonical в этом запуске; ручная доступна.
+Наличие exporter проверяется через `PackageManager.resolveActivity` вместе
+с enabled/exported Activity и enabled application. `Intent.resolveActivity`
+здесь недопустим: для явного ComponentName он возвращает имя даже отсутствующей
+Activity, из-за чего старый Debug ошибочно пропускал предложение обновления.
 
 В настройках проекта кнопка переноса видна при доверенном установленном Debug
 даже без exporter. После его установки этот путь возвращается к прежнему
@@ -135,6 +143,15 @@ recovery. Pending self-update имеет приоритет. Показ пред
 повторная попытка доступна пользователю. Обычный self-updater не принимает чужой
 application ID; общими остаются только чтение versionCode и certificate digests.
 
+Установщик удерживает busy до завершения UI-перехода после проверки файла,
+учитывает видимый собственный диалог и ожидаемый внешний экран. Возврат из
+Settings/Package Installer приходит через `onActivityResult` в MainActivity
+или ProjectSettingsActivity; только после него снимается защита внешнего окна.
+Промежуточные focus events при закрытии progress не запускают повторную
+валидацию, второй permission-диалог или преждевременную отмену установки.
+После смерти процесса источником восстановления остаются сохранённые phase
+и manifest, а не временные ссылки на окна.
+
 Manifest: HTTPS `/lisa-mobile/debug/manifest.json`, schema 1, flavor/channel debug,
 пакет `com.nextgis.mobile.debug`. APK допускается только из
 `/lisa-mobile/debug/releases/<versionCode>/<filename>.apk`, без redirects,
@@ -143,9 +160,12 @@ SDK, размер, SHA-256, pinned Debug certificate и **текущая под�
 Debug**, manifest flavor APK, а также наличие enabled/exported export Activity.
 Archive signature flags сохраняют Android 9/10 legacy fallback.
 
-На 2026-09-13 публичный debug manifest отдаёт `3.1.2.17/212`; публикация новой
-версии с exporter является отдельным шагом после интеграции. Эта задача не
-публикует APK и не повышает версии. Неподходящий серверный APK не устанавливается.
+На 2026-09-14 публичный debug manifest отдаёт `3.1.2.17/212`, commit `fd7b636`.
+Эта версия уже содержит exporter и пригодна для обновления старого Debug
+`3.0.3.5/183`; само отличие от локального `3.1.2.18/213` не требует публикации
+ради переноса. Проверяется фактический скачанный APK, а не только версия или
+manifest. Эта задача не публикует APK и не повышает версии; неподходящий
+серверный APK не устанавливается.
 
 ## Проверки и доставка
 
@@ -153,7 +173,7 @@ JVM-тесты покрывают полный archive hash, позднюю ко
 изменение источника, cancellation, traversal, dedup обоих направлений NGRc/MBTiles,
 checkpoints миграции/redirect, закрытые вложенные workspace, восстановление
 старой неверной ссылки и companion identity/URL/signature/version rules.
-На 2026-09-13 прошли 238 maplib + 62 maplibui + 10 app unit-тестов, docs-check
+На 2026-09-14 прошли 241 maplib + 62 maplibui + 10 app unit-тестов, docs-check
 и его 7 тестов; Lisa Debug/Release и Belka Release собраны, подписи, ZIP CRC,
 выравнивание и version matrix проверены. Маркеры `turn`/`wood_truck` в APK — 64×64.
 
@@ -170,13 +190,33 @@ cache-данных подтвердил побайтовое совпадени�
 с низом Toolbar (242 px), системные области свободны. Визуальный hot-add,
 GUI БЕЛКА и permission/install round trip companion в этой проверке не запускались.
 
+Дополнительно 2026-09-14 на Samsung Galaxy A56 SM-A566B / Android 16 (API 36)
+проверен оригинальный архив пользователя: `Mapnik.json`, 129 JPEG-тайлов,
+побайтовое совпадение всех SQLite blobs, XYZ/TMS row conversion, повторный
+импорт без дубликата. Ошибка отсутствующей конфигурации при живом native style
+прошла через worker `Table.delete`; слой и source удалены на UI без падения.
+Данные теста находились в отдельном cache, пользовательский проект не менялся.
+
+Со старым Debug `3.0.3.5/183` подтверждены отсутствие реальной export Activity
+и предложение обновления при запуске и из настроек проекта. Серверный
+`3.1.2.17/212` скачан и проверен приложением; пользователь подтвердил успешное
+обновление Debug. После этого кнопка ведёт к штатному подтверждению переноса.
+Полный перенос пользовательских подложек в этой QA не запускался.
+
+Последующее исправление focus race отдельно проверено с локальным проверенным
+APK `3.1.2.18/213` в cache: 20 focus events оставляют ровно один permission
+диалог и phase ready; после завершения диагностического процесса продолжение
+восстанавливается. Выдача Android-разрешения автоматически открывает один
+Package Installer. Контрольная установка отменена; Debug остаётся на 212.
+Локальный тестовый manifest не публиковался и не выдаётся за серверную версию.
+
 Исходные изменения интегрированы: app #26 (GPS/обход), #27 (маркеры 64×64),
 #28 (каталог и companion); maplib #21/#22 и maplibui #13/#14. База исправлений —
 app `b6eabfa`, maplib `998daff`, maplibui `4052cde3`. Сохранность app squash
 проверена по содержимому, библиотек — по ancestry и итоговым pins.
-Исправления темы и формата ссылок идут в `codex/fix-underlay-catalog`;
+Исправления каталога, импорта и companion идут в `codex/fix-underlay-catalog`;
 maplib [PR #23](https://github.com/GeonicalSys/android_maplib/pull/23)
-содержит `8e071d64`, app [PR #29](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/29)
+содержит `a5603fb7`, app [PR #29](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/29)
 пока закрепляет этот QA pin. Порядок интеграции:
 maplib Merge Commit → pin удалённого merge commit в app → app Squash Merge.
 maplibui и publisher не меняются. До закрытия новой зависимости APK служат

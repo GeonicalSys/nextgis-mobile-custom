@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -16,7 +16,7 @@ key_components:
   - path: app/src/main/res/layout/activity_underlay_catalog.xml
     responsibility: Keep catalog toolbar, progress, empty state and scrolling assets in a vertical layout below system insets.
   - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
-    responsibility: Separate trusted Debug installer and durable permission/project continuation.
+    responsibility: Separate trusted Debug installer, actual PackageManager exporter availability and enabled/exported checks, durable permission/project continuation, and focus-safe dialog/external-result guards shared by MainActivity and ProjectSettingsActivity.
   - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionPolicy.java
     responsibility: Pure manifest, URL, version and signing identity rules for the Debug companion.
   - path: app/build.gradle

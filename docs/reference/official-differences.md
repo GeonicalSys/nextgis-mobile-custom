@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 related_code:
   - app/build.gradle
   - app/src/main
@@ -22,7 +22,7 @@ related_code:
 
 Состояние форка: Lisa/Belka Release `3.1.2.18` / `versionCode` 212; Lisa Debug
 `3.1.2.18` / `versionCode` 213. Сверено с официальным приложением `3.2.0` и с
-головами официальных библиотек на 13 сентября 2026 года. В частности, учтён
+головами официальных библиотек на 14 сентября 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
 [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
 в котором объявлена поддержка raster MBTiles:
@@ -44,7 +44,7 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 - Android MapLib UI — [`a426e0a`](https://github.com/nextgis/android_maplibui/commit/a426e0acfc8d111982918e04236e2e8f896674de);
 - EasyPicker — [`36ba558`](https://github.com/nextgis/easypicker/commit/36ba558ba0d1eaadcb7dc6ba46ab9286d7eedaa1).
 
-Все четыре official HEAD повторно проверены 13 сентября 2026 года через
+Все четыре official HEAD повторно проверены 14 сентября 2026 года через
 канонические GitHub repositories. Release tag и feature-коммиты MBTiles
 рассматриваются отдельно от приведённых baseline hashes форка.
 
@@ -1269,4 +1269,9 @@ Sentry оставлен для production crashes, но сбор interaction bre
 Управление общими подложками открывается прямо из настроек, рядом с управлением
 проектом; выбор сохранённой подложки доступен из меню добавления слоя.
 
-Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-13 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Текущая task-ветка сохраняет GPS/обход predecessors и версии Release 3.1.2.18/212, Debug 3.1.2.18/213; библиотечные PR ещё не интегрированы.
+Потоковый импорт принимает штатный `Mapnik.json` и тайлы JPEG/PNG/WebP;
+ошибка импорта не обрушает карту при удалении незавершённого слоя. Отсутствие
+exporter старого доверенного Debug проверяется по установленной Activity,
+поэтому запуск и настройки проекта показывают предложение обновления.
+
+Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Текущая task-ветка сохраняет GPS/обход predecessors и версии Release 3.1.2.18/212, Debug 3.1.2.18/213; библиотечные PR ещё не интегрированы.

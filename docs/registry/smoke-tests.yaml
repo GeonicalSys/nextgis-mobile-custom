@@ -8,6 +8,7 @@ tests:
       - On Android 16 inspect a populated catalog and its action dialog; the first row is entirely below the toolbar and above system navigation, including after returning to the screen.
       - Reuse one archive SHA across a legacy NGRc tree and a converted MBTiles asset; verify rendering, project zoom limits and presentation after migration, interrupted redirect and cold load of an older mismatched reference.
       - Import NGRc with OSM and TMS coordinates; compare the geographic tile position and visibility padding.
+      - Import an unmodified standard archive with Mapnik.json and Mapnik/z/x/y.jpg; compare all tile bytes and repeat without duplication. Reject a missing/ambiguous config with a live map and verify worker cleanup does not crash MapLibre.
       - Verify one MBTiles payload and no extracted tree; repeat import in the same and another project without payload growth.
       - Import raster MBTiles and ZIP containing one MBTiles; reject vector data and ordinary ZIP-TMS in the dedicated picker.
       - Remove a project layer, undo, delete a project and reset settings; verify shared payload remains.
@@ -19,8 +20,10 @@ tests:
     scope: app
     steps:
       - Install a trusted old Debug and open Geonical; defer the offer and recreate MainActivity to see it again.
+      - With Debug missing the export Activity, use project transfer and expect the update offer rather than the unsupported toast; verify disabled/non-exported Activity is not accepted as an available exporter.
       - Verify crash recovery and a pending self-update take precedence; the offer suppresses only the automatic self-update check.
       - Start from project settings, allow unknown-source installation, recreate the process and return through verified cached installation.
+      - Verify focus changes while progress is dismissed do not stack permission dialogs or consume the pending installer phase; return from Android Settings directly to one Package Installer prompt.
       - Complete installation and verify the original transfer confirmation appears only for the same active project; startup origin only shows a message.
       - Cancel permission or installation; verify no transfer, no install loop and unchanged Debug data.
       - Reject wrong package, flavor, code, hash, signer, URL and a signed APK without exporter.

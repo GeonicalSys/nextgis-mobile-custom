@@ -17,7 +17,7 @@ preferences:
     type: app_private_shared_preferences
     user_configurable: false
     source: app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
-    purpose: Verified companion manifest, permission/install phase and originating project UID; separate from self-update state
+    purpose: Verified companion manifest, permission/install phase and originating project UID; separate from self-update state, resumed after the external Activity result or process recreation rather than intermediate dialog focus
   shared_underlay_migration:
     owner: maplibui
     type: app_private_shared_preferences
@@ -322,7 +322,7 @@ layer_json:
   ngrc_provenance:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
-    purpose: Immutable-local NGRc source name, archive SHA-256 and import timestamp
+    purpose: Immutable-local NGRc source name, full original archive SHA-256 and import timestamp; Mapnik.json and raster path normalization do not change source identity
   legacy_underlay_migration:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java

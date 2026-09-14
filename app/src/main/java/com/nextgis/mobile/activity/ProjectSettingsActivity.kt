@@ -185,6 +185,7 @@ class ProjectSettingsActivity : AppCompatActivity() {
     @Deprecated("Uses the existing activity result contract in this screen")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (DebugCompanionInstaller.onActivityResult(this, requestCode) { confirmDebugUnderlayImport() }) return
         if (requestCode != REQUEST_DEBUG_UNDERLAYS || resultCode != Activity.RESULT_OK) return
 
         val sources = ArrayList<Uri>()
