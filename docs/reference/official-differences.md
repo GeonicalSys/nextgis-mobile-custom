@@ -37,6 +37,9 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 Каталог подложек закрепляет Merge Commit maplib PR #22
 [`998daff`](https://github.com/GeonicalSys/android_maplib/commit/998daff8a26cebc0abe76603d54eb9932ff2f339)
 и maplibui PR #14 [`4052cde3`](https://github.com/GeonicalSys/android_maplibui/commit/4052cde3b1f0c4beef19556aec1a2b533f49b1d9).
+Исправления NGRc и raster-ссылок закрепляют Merge Commit maplib PR #23
+[`96db542`](https://github.com/GeonicalSys/android_maplib/commit/96db5423c5afd50c2ff887068fe7b84a77acbe76),
+сохраняющий #21/#22 и дерево проверенного `a5603fb7`.
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -1274,4 +1277,4 @@ Sentry оставлен для production crashes, но сбор interaction bre
 exporter старого доверенного Debug проверяется по установленной Activity,
 поэтому запуск и настройки проекта показывают предложение обновления.
 
-Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Текущая task-ветка сохраняет GPS/обход predecessors и версии Release 3.1.2.18/212, Debug 3.1.2.18/213; библиотечные PR ещё не интегрированы.
+Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет объединённый maplib #23 `96db542`, сохраняет GPS/обход predecessors и версии Release 3.1.2.18/212, Debug 3.1.2.18/213. Публикация APK и повышение версии отложены пользователем.

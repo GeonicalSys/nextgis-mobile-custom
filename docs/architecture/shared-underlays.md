@@ -214,10 +214,14 @@ Package Installer. Контрольная установка отменена; D
 #28 (каталог и companion); maplib #21/#22 и maplibui #13/#14. База исправлений —
 app `b6eabfa`, maplib `998daff`, maplibui `4052cde3`. Сохранность app squash
 проверена по содержимому, библиотек — по ancestry и итоговым pins.
-Исправления каталога, импорта и companion идут в `codex/fix-underlay-catalog`;
-maplib [PR #23](https://github.com/GeonicalSys/android_maplib/pull/23)
-содержит `a5603fb7`, app [PR #29](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/29)
-пока закрепляет этот QA pin. Порядок интеграции:
-maplib Merge Commit → pin удалённого merge commit в app → app Squash Merge.
-maplibui и publisher не меняются. До закрытия новой зависимости APK служат
-для QA; публикация и повышение версий в эту задачу не входят.
+Исправления каталога, импорта и companion оформлены в
+maplib [PR #23](https://github.com/GeonicalSys/android_maplib/pull/23) и
+app [PR #29](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/29).
+Root закрепляет удалённый Merge Commit maplib
+`96db5423c5afd50c2ff887068fe7b84a77acbe76`: его дерево идентично проверенному
+`a5603fb7`, а ancestry сохраняет #21/#22/#23. App использует Squash Merge;
+после него целевое дерево сверяется с итоговой веткой, включая этот pin.
+Maplibui остаётся на `4052cde3`, easypicker — на `f91abdf`; незакрытых
+библиотечных зависимостей для исправлений нет. GPS/обход и marker-icons-64
+включены из прежних app #26/#27/#28. Повышение версии и публикация APK
+отложены по отдельному решению пользователя; publisher не меняется.
