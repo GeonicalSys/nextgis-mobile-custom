@@ -13,6 +13,7 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
+  - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
 ---
 
 # Текущая позиция и запись GPS
@@ -60,9 +61,11 @@ callbacks нет. Более свежий на 2 секунды Network fix за
 символ `user-location-layer` остаётся верхним. Радиус круга задаётся в метрах,
 масштабируется и наклоняется с картой. Сектор направления — тот же геодезический
 приём: ось — истинный курс телефона (`магнитный heading + D_WMM`, без коррекции
-выноса), полуугол — оценка точности `TYPE_ROTATION_VECTOR` (`values[4]`), длина
-ограничена 32–80 м независимо от огромного круга GPS. Нет датчика, `UNRELIABLE`
-или heading старше ~0,5 с — сектор не рисуется, круг и точка остаются.
+выноса), полуугол — оценка неопределённости heading (валидный `values[4]`,
+джиттер курса за ~0,5 с, расхождение raw/filtered и аномалия магнитометра;
+раскрытие быстрее сужения), длина ограничена 32–80 м независимо от огромного
+круга GPS. Нет датчика, `UNRELIABLE` или heading старше ~0,5 с — сектор не
+рисуется, круг и точка остаются.
 `Location.accuracy` — оценка горизонтального радиуса с вероятностью 68%,
 а не гарантированная граница ошибки. При сглаживании круг расширяется на сдвиг
 центра относительно исходного измерения; усреднение не изображает ложную

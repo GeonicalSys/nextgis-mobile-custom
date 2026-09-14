@@ -129,6 +129,8 @@ triggers:
       - maplib/src/test/java/com/nextgis/maplib/map/UserLocationGeometryTest.java
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
       - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
+      - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
+      - app/src/test/java/com/nextgis/mobile/location/HeadingConeAccuracyTest.kt
     owners: [maplib, app]
     read:
       - docs/architecture/map-rendering.md

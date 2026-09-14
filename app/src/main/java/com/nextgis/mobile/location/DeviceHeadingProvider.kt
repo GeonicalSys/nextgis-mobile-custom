@@ -17,7 +17,7 @@ import kotlin.math.sin
 
 /**
  * Phone heading for the map GPS cone: rotation-vector magnetic azimuth converted to true heading
- * with WMM declination only (no stakeout correction). Half-angle comes from `values[4]`.
+ * with WMM declination only (no stakeout correction). Half-angle follows heading uncertainty.
  */
 internal class DeviceHeadingProvider(
     context: Context,
@@ -27,13 +27,20 @@ internal class DeviceHeadingProvider(
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
+    private val magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
     private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private val rotationMatrix = FloatArray(9)
     private val adjustedMatrix = FloatArray(9)
     private val orientation = FloatArray(3)
+    private val headingWindow = HeadingSampleWindow()
 
     private var magneticHeading: Float? = null
+    private var lastRawHeadingDegrees: Float? = null
     private var headingHalfAngle: Float? = null
+    private var smoothedHalfAngle: Float? = null
+    private var sensorAccuracyDegrees: Float? = null
+    private var magneticFieldMicroTesla: Float? = null
+    private var magneticUnreliable = false
     private var declinationDegrees = 0f
     private var declinationLocation: Location? = null
     private var declinationTimeMillis = 0L
@@ -50,6 +57,13 @@ internal class DeviceHeadingProvider(
             rotationSensor,
             SensorManager.SENSOR_DELAY_UI
         )
+        if (started && magneticSensor != null) {
+            sensorManager.registerListener(
+                this,
+                magneticSensor,
+                SensorManager.SENSOR_DELAY_UI
+            )
+        }
     }
 
     fun stop() {
@@ -86,7 +100,41 @@ internal class DeviceHeadingProvider(
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type != Sensor.TYPE_ROTATION_VECTOR) return
+        when (event.sensor.type) {
+            Sensor.TYPE_MAGNETIC_FIELD -> onMagneticField(event)
+            Sensor.TYPE_ROTATION_VECTOR -> onRotationVector(event)
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        when (sensor?.type) {
+            Sensor.TYPE_ROTATION_VECTOR -> if (accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
+                clearHeading()
+                onHeadingChanged()
+            }
+            Sensor.TYPE_MAGNETIC_FIELD -> {
+                magneticUnreliable = accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE
+                if (hasFilteredHeading) {
+                    publishHalfAngle(SystemClock.elapsedRealtime(), refreshStale = false)
+                }
+            }
+        }
+    }
+
+    private fun onMagneticField(event: SensorEvent) {
+        if (event.values.size < 3) return
+        magneticUnreliable = event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE
+        magneticFieldMicroTesla = HeadingConeAccuracy.fieldMicroTesla(
+            event.values[0],
+            event.values[1],
+            event.values[2]
+        )
+        if (hasFilteredHeading) {
+            publishHalfAngle(SystemClock.elapsedRealtime(), refreshStale = false)
+        }
+    }
+
+    private fun onRotationVector(event: SensorEvent) {
         if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
             clearHeading()
             onHeadingChanged()
@@ -114,55 +162,47 @@ internal class DeviceHeadingProvider(
             filteredSin += FILTER_ALPHA * (rawSin - filteredSin)
             filteredCos += FILTER_ALPHA * (rawCos - filteredCos)
         }
+        val rawHeading = normalize(Math.toDegrees(rawHeadingRadians).toFloat())
+        lastRawHeadingDegrees = rawHeading
         magneticHeading = normalize(Math.toDegrees(atan2(filteredSin, filteredCos)).toFloat())
-        headingHalfAngle = halfAngleDegrees(event)
-        if (headingHalfAngle == null) {
-            magneticHeading = null
-            hasFilteredHeading = false
-            onHeadingChanged()
-            return
-        }
-        headingElapsedMillis = SystemClock.elapsedRealtime()
+        sensorAccuracyDegrees = HeadingConeAccuracy.sensorAccuracyDegrees(
+            event.values.size,
+            if (event.values.size >= 5) event.values[4] else -1f
+        )
+        val now = SystemClock.elapsedRealtime()
+        headingWindow.add(now, rawHeading)
+        publishHalfAngle(now, refreshStale = true)
+    }
+
+    private fun publishHalfAngle(nowElapsedMillis: Long, refreshStale: Boolean) {
+        val raw = lastRawHeadingDegrees ?: return
+        val filtered = magneticHeading ?: return
+        val combined = HeadingConeAccuracy.rawHalfAngleDegrees(
+            sensorAccuracyDegrees,
+            headingWindow.stdDevDegrees(),
+            HeadingConeAccuracy.circularDeltaDegrees(raw, filtered),
+            HeadingConeAccuracy.magneticPenaltyDegrees(magneticFieldMicroTesla, magneticUnreliable)
+        )
+        val smoothed = HeadingConeAccuracy.smoothHalfAngle(smoothedHalfAngle, combined)
+        smoothedHalfAngle = smoothed
+        headingHalfAngle = UserLocationGeometry.clampHalfAngleDegrees(smoothed)
+        if (refreshStale) headingElapsedMillis = nowElapsedMillis
         onHeadingChanged()
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        if (sensor?.type == Sensor.TYPE_ROTATION_VECTOR
-            && accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE
-        ) {
-            clearHeading()
-            onHeadingChanged()
-        }
-    }
-
-    private fun halfAngleDegrees(event: SensorEvent): Float? {
-        val estimatedRadians = if (event.values.size >= 5) event.values[4] else -1f
-        val rawDegrees = if (estimatedRadians >= 0f) {
-            Math.toDegrees(estimatedRadians.toDouble()).toFloat()
-        } else {
-            when (event.accuracy) {
-                SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> 15f
-                SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> 35f
-                SensorManager.SENSOR_STATUS_ACCURACY_LOW -> 60f
-                else -> return null
-            }
-        }
-        return UserLocationGeometry.clampHalfAngleDegrees(rawDegrees)
     }
 
     private fun clearHeading() {
         magneticHeading = null
+        lastRawHeadingDegrees = null
         headingHalfAngle = null
+        smoothedHalfAngle = null
+        sensorAccuracyDegrees = null
         hasFilteredHeading = false
+        headingWindow.clear()
     }
 
-    private fun normalize(value: Float): Float {
-        val normalized = value % FULL_CIRCLE
-        return if (normalized < 0f) normalized + FULL_CIRCLE else normalized
-    }
+    private fun normalize(value: Float): Float = HeadingConeAccuracy.normalizeDegrees(value)
 
     private companion object {
-        const val FULL_CIRCLE = 360f
         const val SENSOR_STALE_MILLIS = 500L
         const val FILTER_ALPHA = 0.2
         const val DECLINATION_CACHE_DISTANCE_METERS = 1_000f

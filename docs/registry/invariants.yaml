@@ -193,6 +193,7 @@ invariants:
       - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
       - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
+      - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
     verify_smoke: [SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-COLD-START, SMOKE-HOT-RASTER]
     must_update_docs:
       - docs/architecture/map-rendering.md

@@ -101,8 +101,9 @@ tests:
     expected: >
       The standing and moving location cursor remains fully visible above tracks and every
       other MapLibre object before and after reload. The heading cone stays between the
-      accuracy circle and the puck, turns with the phone, and disappears without hiding the
-      circle or icon when the compass is unreliable, missing or stale.
+      accuracy circle and the puck, turns with the phone, widens when heading is uncertain
+      or the compass is disturbed, narrows after the field settles, and disappears without
+      hiding the circle or icon when the compass is unreliable, missing or stale.
 
   SMOKE-MAP-CAMERA-CONTROLS:
     type: device
