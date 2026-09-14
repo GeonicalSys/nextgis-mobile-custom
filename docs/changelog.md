@@ -10,10 +10,10 @@ related_code:
 
 ## 2026-09-15
 
-- Шаринг трека кладёт GPX в MediaStore Downloads с DISPLAY_NAME `.gpx` и URI MIME
-  `text/xml`, чтобы MAX не склеивал неизвестный `application/gpx+xml` в `.gpx.null`.
-  Intent остаётся `application/gpx+xml`; FileProvider fallback на API 26–28 тоже
-  отдаёт `text/xml`. Проверка на устройстве в MAX/Telegram ещё не выполнена.
+- Шаринг трека отдаёт URI MIME `text/xml` через FileProvider, чтобы MAX не
+  склеивал неизвестный `application/gpx+xml` в `.gpx.null`. Intent остаётся
+  `application/gpx+xml`. На устройстве MAX показал `.gpx.xml`; QGIS такой файл
+  открывает. Копия в Загрузках не создаётся.
 
 ## 2026-09-14
 

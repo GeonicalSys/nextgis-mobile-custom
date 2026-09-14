@@ -322,11 +322,10 @@ OpenGL backend вместо Vulkan-default artifact.
 или общих resources обязательны обе release-сборки; при изменении версии —
 полная debug/release version matrix.
 
-Экспорт трека на API 29+ идёт через MediaStore Downloads с именем `.gpx` и URI
-MIME `text/xml`; share Intent остаётся `application/gpx+xml`. `ExportFileProvider`
-для fallback FileProvider тоже отдаёт `text/xml` в `getType` и anonymous lookup,
-чтобы получатель не дописывал `.bin` или `.null`. Проверять имя вложения в MAX,
-Telegram и WhatsApp.
+Экспорт трека идёт через FileProvider: URI MIME `text/xml`, share Intent
+`application/gpx+xml`. `ExportFileProvider` отдаёт `text/xml` в `getType` и
+anonymous lookup, чтобы получатель не дописывал `.bin` или `.null`. MAX может
+показать `.gpx.xml`; QGIS такой файл открывает.
 
 ## Независимый обход и создание точки
 

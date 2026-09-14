@@ -530,9 +530,9 @@ invariants:
       cannot expand merely because the user has moved away from that anchor. Each recorder buffers at most 120 seconds
       or 512 tentative observations; confirmation backfills original times/corners, while Stop
       and gaps discard unconfirmed history. GPX share filename stays .gpx. The share Intent
-      may remain application/gpx+xml for chooser filtering. Shared URI getType, including
-      anonymous lookup and MediaStore MIME, uses text/xml so MimeTypeMap clients do not
-      append .bin or stringify a missing GPX mapping as .null.
+      may remain application/gpx+xml for chooser filtering. FileProvider getType, including
+      anonymous lookup, uses text/xml so MimeTypeMap clients do not append .bin or
+      stringify a missing GPX mapping as .null; they may append .xml.
       Current display may use GPS or Network, including approximate permission; monotonic
       age above 8 seconds clears the marker and metric accuracy circle without waiting for
       another callback. Resume never substitutes camera or a screen-off coordinate.

@@ -379,7 +379,7 @@ tests:
       - Repeat walking starts at 3-5 and 8-12 metre accuracy; verify the current cursor follows before the line confirms and the circle does not inflate with distance from the initial anchor
       - Start walking with an early turn inside the uncertainty radius; wait for confirmation and verify the first metres and corner appear with original timestamps
       - Cancel a tentative departure or lose GPS before confirmation; verify the buffer is not appended and another recording session cannot inherit it
-      - Export one track and multiple tracks to a local file receiver; check .gpx filename, share Intent application/gpx+xml, URI MIME text/xml including anonymous FileProvider lookup; share to MAX and confirm the attachment is not .gpx.null
+      - Export one track and multiple tracks to a local file receiver; check .gpx filename, share Intent application/gpx+xml, URI MIME text/xml including anonymous FileProvider lookup; MAX may show .gpx.xml and must not show .gpx.null or .gpx.bin
       - Explicitly stop a track and verify end time is saved, closedTracks is one, and that track does not auto-resume
       - Start at an uncertain fix, improve reception without moving and verify the stop vertex is corrected without an extra segment
       - Start slow walking from that stop, then repeat starting and stopping a car with the phone fixed in its mount

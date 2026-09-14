@@ -156,19 +156,15 @@ preview не могут дописать начало или конец лини
 ## Экспорт GPX
 
 Экспорт сохраняет `.gpx`. Share Intent остаётся `application/gpx+xml`, чтобы
-в системном chooser оставались GPX-приложения. На API 29+ `GpxSharePublisher`
-копирует файл в `MediaStore.Downloads` (`Download/<имя приложения>/`) с
-`DISPLAY_NAME` `*.gpx` и MIME колонки `text/xml`. Системный `MimeTypeMap` не
-содержит GPX: `application/gpx+xml` даёт `null`, и клиент вроде MAX склеивает
-это в `.gpx.null`; `octet-stream` раньше давал `.gpx.bin`. `text/xml` известен
-карте как `xml`. Копия в Загрузках не удаляется после шаринга: получатель читает
-URI асинхронно. Путь `onlyResult` (GPX внутрь zip) в Downloads не пишет. На
-API 26–28 и при сбое insert остаётся
+в системном chooser оставались GPX-приложения. URI идёт через
 [FileProvider](https://developer.android.com/reference/androidx/core/content/FileProvider);
-`ExportFileProvider` для `.gpx` тоже отдаёт `text/xml` в `getType` и anonymous
-lookup. Проверка корней и read grants FileProvider сохраняется. Другие форматы
-и zip-логи не меняются. Имя на диске `.gpx`; MAX может оставить его или дописать
-`.xml`, но не `.null`.
+`ExportFileProvider` для `.gpx` отдаёт `text/xml` в `getType` и anonymous lookup.
+Системный `MimeTypeMap` не содержит GPX: `application/gpx+xml` даёт `null`, и
+клиент вроде MAX склеивает это в `.gpx.null`; `octet-stream` раньше давал
+`.gpx.bin`. `text/xml` известен карте как `xml`, поэтому MAX может показать
+`.gpx.xml`. QGIS такой файл открывает. Проверка корней и read grants
+FileProvider сохраняется. Другие форматы и zip-логи не меняются. Путь
+`onlyResult` (GPX внутрь zip) шаринг URI не открывает.
 
 ## Разрывы и долговечность
 

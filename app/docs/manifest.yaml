@@ -10,7 +10,7 @@ entrypoints:
   - app/src/main/AndroidManifest.xml
 key_components:
   - path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
-    responsibility: For GPX FileProvider fallback, advertise text/xml in getType and anonymous lookup so MimeTypeMap clients do not append .bin or .null, while retaining canonical root and grant checks.
+    responsibility: For GPX FileProvider URIs, advertise text/xml in getType and anonymous lookup so MimeTypeMap clients do not append .bin or .null, while retaining canonical root and grant checks.
   - path: app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
     responsibility: Browse shared assets, attach, rename and confirm deletion with affected projects; AppTheme.UnderlayCatalog and an explicit Toolbar above the list respect system bar and display cutout insets in both modes.
   - path: app/src/main/res/layout/activity_underlay_catalog.xml
