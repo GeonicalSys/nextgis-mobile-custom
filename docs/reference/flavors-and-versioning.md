@@ -97,7 +97,7 @@ Repository branches: Lisa Release — `lisa`, Belka Release — `belka`, Lisa De
 
 ## Отдельный установщик Debug
 
-Production Geonical может обновить доверенный установленный Debug перед переносом подложек. DebugCompanionInstaller не использует flavor self-updater: разрешены только debug package/channel, pinned/current Debug signer и APK с exporter. Lisa Debug и Belka не показывают это предложение. Версии этой задачей не изменяются; серверный канал и continuation описаны в [контракте](../architecture/shared-underlays.md).
+Production Geonical может обновить доверенный установленный Debug перед переносом подложек. DebugCompanionInstaller не использует flavor self-updater: разрешены только debug package/channel, pinned/current Debug signer и APK с exporter. Lisa Debug и Belka не показывают это предложение. Перенос запускается из хранилища подложек, а не с экрана «Проект». Версии этой задачей не изменяются; серверный канал и continuation описаны в [контракте](../architecture/shared-underlays.md).
 
 Готовность установленного Debug определяется реальным enabled/exported exporter
 из `PackageManager`, а не только номером версии либо явным ComponentName.

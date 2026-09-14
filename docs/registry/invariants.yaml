@@ -14,10 +14,11 @@ invariants:
   INV-DEBUG-COMPANION:
     title: Companion installation has its own identity and continuation
     owners: [app]
-    statement: Only production Geonical updates a trusted installed Debug missing its exporter; validate debug manifest, release URL, size, hash, version, pinned and installed certificate and exporter. Keep self-update policy and state separate; resume after permission and require existing transfer confirmation in the originating project.
+    statement: Only production Geonical updates a trusted installed Debug missing its exporter; validate debug manifest, release URL, size, hash, version, pinned and installed certificate and exporter. Keep self-update policy and state separate; resume after permission and return to transfer confirmation in Underlay storage for the originating project.
     related_code:
       - app/src/main/java/com/nextgis/mobile/util/DebugCompanionPolicy.java
       - app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
+      - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
     verify_smoke: [AUTO-APP-DEBUG, SMOKE-DEBUG-COMPANION]
     must_update_docs: [docs/architecture/shared-underlays.md, docs/reference/flavors-and-versioning.md]
   INV-FLAVORS:
@@ -186,13 +187,17 @@ invariants:
   INV-LOCATION-CURSOR-TOP:
     title: Location cursor stays above every map object
     owners: [maplib, app]
-    statement: Treat user-location-layer as a render-only overlay outside LayerGroup order, with the metric accuracy fill immediately below it; restore both above user layers after cold, lite and hot mutations and clear both when the current fix expires.
+    statement: Treat user-location-layer as a render-only overlay outside LayerGroup order, with the heading sector and metric accuracy fill immediately below it; restore that three-layer stack above user layers after cold, lite and hot mutations and clear the source when the current fix expires. Hide only the heading sector when compass heading is missing, unreliable or stale.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
+      - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
     verify_smoke: [SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-COLD-START, SMOKE-HOT-RASTER]
     must_update_docs:
       - docs/architecture/map-rendering.md
+      - docs/architecture/location-pipeline.md
   INV-MAP-CAMERA-CONTROLS:
     title: Map rotation is explicit and location recovery is predictable
     owners: [app]
@@ -371,6 +376,7 @@ invariants:
       - app/src/main/java/com/nextgis/mobile/activity/LegacyUnderlayExportActivity.java
       - app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java
       - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java
+      - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
       - maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES, SMOKE-DEBUG-UNDERLAY-MIGRATION]
@@ -603,7 +609,8 @@ invariants:
       live lifecycle is available from current location to an arbitrary map point. A
       separate arbitrary point A to point B mode does not acquire GPS/audio resources.
       True initial bearing is converted to numeric magnetic azimuth by subtracting
-      WMM2025 declination at the start; coincident points have undefined azimuth.
+      WMM2025 declination at the start plus the persisted east-positive user
+      correction; coincident points have undefined azimuth.
       Direction uses only the filtered device rotation-vector magnetic compass, never
       movement bearing; without a live compass it keeps the arrow screen-correct by
       subtracting an explicitly enabled map bearing from true bearing. Free-point

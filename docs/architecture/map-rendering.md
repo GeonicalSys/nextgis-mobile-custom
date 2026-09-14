@@ -11,6 +11,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+  - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
   - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
   - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
@@ -22,6 +23,8 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/fragment/ReorderedLayerView.java
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+  - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
+  - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
 ---
 
 # MapLibre rendering и порядок слоёв
@@ -57,8 +60,10 @@ related_code:
 8. `user-location-layer` — служебный overlay, а не элемент `LayerGroup`. После
    cold load, lite reload и горячего обновления style он должен быть последним
    MapLibre layer и поэтому отображаться выше треков, пользовательских векторов,
-   растров, подписей и edit overlays. `iconAllowOverlap` и
-   `iconIgnorePlacement` не позволяют collision detection скрывать курсор.
+   растров, подписей и edit overlays. Непосредственно под ним — сектор
+   `user-location-heading`, ниже — круг `user-location-accuracy`.
+   `iconAllowOverlap` и `iconIgnorePlacement` не позволяют collision detection
+   скрывать курсор.
 9. Пользовательский слой «Мои треки» остаётся последним элементом внутреннего
    `LayerGroup` и первой строкой перевёрнутого UI-списка. Collector batch
    вставляет project-managed слои ниже этой границы, а открытие существующей
@@ -298,6 +303,7 @@ related_code:
     sync файла и атомарное переименование; неполный stage удаляется, исходная
     Debug-подложка остаётся на месте. Provenance в `config.json` делает повторный
     запуск идемпотентным, а имя, видимость и взаимный порядок подложек сохраняются.
+    Пользователь запускает этот перенос из «Хранилище подложек», а не с экрана проекта.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
@@ -339,9 +345,12 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 
 ## Текущая позиция и точность
 
-`user-location-source` содержит свежие Point и Polygon accuracy. Заливка в метрах
-лежит непосредственно под верхним курсором; при expiry оба очищаются. Трек
-рисуется только по сохранённым сегментам, без линии к текущему display fix.
+`user-location-source` содержит свежие Point, Polygon accuracy и при наличии
+компаса Polygon heading. Круг в метрах лежит под сектором, сектор — под верхним
+курсором; при expiry source очищается. Ширина сектора следует за неопределённостью
+heading, а не за фиксированным углом. Иконка stand/go и её GPS-bearing не
+меняются с компасом. Трек рисуется только по сохранённым сегментам, без линии к
+текущему display fix.
 Подробности: [GPS pipeline](location-pipeline.md).
 
 ## Общий payload офлайн-подложек

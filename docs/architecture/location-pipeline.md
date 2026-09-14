@@ -7,12 +7,16 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
   - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
+  - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
+  - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/GpxSharePublisher.java
   - app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+  - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
+  - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
 ---
 
 # Текущая позиция и запись GPS
@@ -56,12 +60,19 @@ callbacks нет. Более свежий на 2 секунды Network fix за
 не являются запасным местоположением.
 
 `user-location-source` содержит Point и геодезический Polygon круга; заливка
-`user-location-accuracy` находится непосредственно под верхним символом
-`user-location-layer`. Радиус задаётся в метрах, масштабируется и наклоняется с
-картой. `Location.accuracy` — оценка горизонтального радиуса с вероятностью 68%,
+`user-location-accuracy` находится под сектором `user-location-heading`, а
+символ `user-location-layer` остаётся верхним. Радиус круга задаётся в метрах,
+масштабируется и наклоняется с картой. Сектор направления — тот же геодезический
+приём: ось — истинный курс телефона (`магнитный heading + D_WMM`, без коррекции
+выноса), полуугол — оценка неопределённости heading (валидный `values[4]`,
+джиттер курса за ~0,5 с, расхождение raw/filtered и аномалия магнитометра;
+раскрытие быстрее сужения), длина фиксирована 8 м независимо от круга GPS.
+Нет датчика, `UNRELIABLE` или heading старше ~0,5 с — сектор не
+рисуется, круг и точка остаются.
+`Location.accuracy` — оценка горизонтального радиуса с вероятностью 68%,
 а не гарантированная граница ошибки. При сглаживании круг расширяется на сдвиг
 центра относительно исходного измерения; усреднение не изображает ложную
-сантиметровую точность. Когда позиции нет, оба объекта удаляются из source.
+сантиметровую точность. Когда позиции нет, объекты удаляются из source.
 
 ## Проверка движения
 

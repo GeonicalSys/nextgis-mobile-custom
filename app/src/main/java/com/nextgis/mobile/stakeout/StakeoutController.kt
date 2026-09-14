@@ -35,6 +35,7 @@ class StakeoutController(
         val relativeBearingDegrees: Float = 0f,
         val absoluteBearingDegrees: Float = 0f,
         val magneticBearingDegrees: Float? = null,
+        /** Effective declination shown in the widget: WMM D plus persisted correction C. */
         val declinationDegrees: Float = 0f,
         val accuracyMeters: Double? = null,
         val usesDeviceCompass: Boolean = false,
@@ -154,6 +155,10 @@ class StakeoutController(
         publishLatestState()
     }
 
+    fun refreshUi() {
+        publishLatestState()
+    }
+
     fun updateLocation(location: Location) {
         if (!active) return
         latestLocation = Location(location)
@@ -252,10 +257,15 @@ class StakeoutController(
         }
         val magneticHeading = headingProvider.magneticHeading()
         val declination = headingProvider.declinationDegrees()
+        val correction = StakeoutSettings.loadCorrection(preferences)
+        val effectiveDeclination = MagneticAzimuthCalculator.effectiveDeclination(
+            declination,
+            correction
+        )
         val absoluteBearing = normalize(result.bearingDegrees.toFloat())
         val magneticBearing = MagneticAzimuthCalculator.fromTrueBearing(
             result.bearingDegrees,
-            declination,
+            effectiveDeclination,
             result.distanceMeters
         )
         val location = latestLocation
@@ -270,7 +280,7 @@ class StakeoutController(
                 },
                 absoluteBearingDegrees = absoluteBearing,
                 magneticBearingDegrees = magneticBearing,
-                declinationDegrees = declination,
+                declinationDegrees = effectiveDeclination,
                 accuracyMeters = location?.takeIf { it.hasAccuracy() }
                     ?.accuracy
                     ?.toDouble(),

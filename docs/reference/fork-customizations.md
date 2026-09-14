@@ -52,7 +52,8 @@ related_code:
   `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`.
 - Start/end flags треков намеренно отключены: `INV-NO-TRACK-FLAGS`.
 - Курсор текущего местоположения остаётся поверх треков и других объектов независимо от
-  пользовательского порядка слоёв: `INV-LOCATION-CURSOR-TOP`.
+  пользовательского порядка слоёв; под ним сектор направления компаса и круг точности:
+  `INV-LOCATION-CURSOR-TOP`.
 - Composition sync управляет только слоями с `managed_by_project = true`; `manual_ngw` и legacy
   слои не удаляются автоматически.
 - ContentProvider и сервис трека после смены Collector workspace работают только с текущей

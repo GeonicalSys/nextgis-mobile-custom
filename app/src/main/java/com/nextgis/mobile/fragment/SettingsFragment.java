@@ -210,6 +210,9 @@ public class SettingsFragment
                         (EditTextPreference) findPreference(StakeoutSettings.KEY_MEDIUM_DISTANCE),
                         (EditTextPreference) findPreference(StakeoutSettings.KEY_NEAR_DISTANCE),
                         (EditTextPreference) findPreference(StakeoutSettings.KEY_REACHED_DISTANCE));
+                initializeDeclinationCorrection(
+                        (EditTextPreference) findPreference(
+                                StakeoutSettings.KEY_DECLINATION_CORRECTION));
                 break;
             case SettingsConstantsUI.ACTION_PREFS_TRACKING:
                 //addPreferencesFromResource(R.xml.preferences_tracks);
@@ -858,6 +861,39 @@ public class SettingsFragment
     }
 
 
+    private static void initializeDeclinationCorrection(EditTextPreference preference)
+    {
+        if (preference == null) {
+            return;
+        }
+        preference.setSummary(preference.getContext().getString(
+                R.string.azimuth_correction_preference_summary, preference.getText()));
+        preference.setOnPreferenceChangeListener((changedPreference, newValue) -> {
+            try {
+                float parsed = StakeoutSettings.parseCorrection(newValue.toString());
+                if (StakeoutSettings.isValidCorrection(parsed)) {
+                    float stored = StakeoutSettings.clampCorrection(parsed);
+                    changedPreference.setSummary(changedPreference.getContext().getString(
+                            R.string.azimuth_correction_preference_summary,
+                            Float.toString(stored)));
+                    if (stored != parsed) {
+                        ((EditTextPreference) changedPreference).setText(Float.toString(stored));
+                        return false;
+                    }
+                    return true;
+                }
+            } catch (NumberFormatException ignored) {
+                // The same human-readable validation message covers empty/non-numeric input.
+            }
+            Toast.makeText(
+                    changedPreference.getContext(),
+                    R.string.azimuth_correction_invalid,
+                    Toast.LENGTH_LONG).show();
+            return false;
+        });
+    }
+
+
     private static String getMinSummary(
             Context context,
             CharSequence newEntry,
@@ -919,6 +955,7 @@ public class SettingsFragment
         editor.remove(StakeoutSettings.KEY_MEDIUM_DISTANCE);
         editor.remove(StakeoutSettings.KEY_NEAR_DISTANCE);
         editor.remove(StakeoutSettings.KEY_REACHED_DISTANCE);
+        editor.remove(StakeoutSettings.KEY_DECLINATION_CORRECTION);
         editor.remove(SettingsConstants.KEY_PREF_TRACKS_SOURCE);
         editor.remove(SettingsConstants.KEY_PREF_TRACKS_MIN_TIME);
         editor.remove(SettingsConstants.KEY_PREF_TRACKS_MIN_DISTANCE);

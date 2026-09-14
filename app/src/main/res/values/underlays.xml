@@ -3,6 +3,7 @@
     <string name="underlay_catalog_summary">Offline underlays shared by all projects</string>
     <string name="underlay_from_catalog">Underlay from storage</string>
     <string name="underlay_from_file">New underlay from file</string>
+    <string name="underlay_import_from_old_app">Import from the old app</string>
     <string name="underlay_catalog_empty">No saved underlays yet</string>
     <string name="underlay_size_pending">Size being calculated</string>
     <string name="underlay_usage">Used in projects: %1$d</string>
