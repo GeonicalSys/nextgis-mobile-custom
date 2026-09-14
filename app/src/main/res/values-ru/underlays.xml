@@ -3,6 +3,7 @@
     <string name="underlay_catalog_summary">Офлайн-подложки, общие для всех проектов</string>
     <string name="underlay_from_catalog">Подложка из хранилища</string>
     <string name="underlay_from_file">Новая подложка из файла</string>
+    <string name="underlay_import_from_old_app">Импортировать из старого приложения</string>
     <string name="underlay_catalog_empty">Сохранённых подложек пока нет</string>
     <string name="underlay_size_pending">Размер уточняется</string>
     <string name="underlay_usage">Используется в проектах: %1$d</string>

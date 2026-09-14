@@ -321,20 +321,27 @@
     <string name="stakeout_background_channel_summary">Ongoing sound and location guidance for an active stakeout</string>
     <string name="azimuth_tool">Azimuth and distance</string>
     <string name="azimuth_mode_title">Measure azimuth and distance</string>
-    <string name="azimuth_mode_current">From current location to a map point</string>
-    <string name="azimuth_mode_points">Between two map points</string>
+    <string name="azimuth_mode_current">From me to a point</string>
+    <string name="azimuth_mode_points">Between two points</string>
     <string name="azimuth_select_target">Tap the target point on the map</string>
     <string name="azimuth_select_start">Tap point A on the map</string>
     <string name="azimuth_select_end">Tap point B on the map</string>
-    <string name="azimuth_adjust_points">Drag A or B to adjust. Tap the map for a new point A</string>
-    <string name="azimuth_adjust_target">Drag the target point to adjust it</string>
     <string name="azimuth_magnetic_format">Magnetic azimuth:\n%1$s°</string>
     <string name="azimuth_declination_format">Declination: %1$s°</string>
     <string name="azimuth_undefined">Magnetic azimuth:\n—</string>
+    <string name="azimuth_correction">Correction</string>
+    <string name="azimuth_correction_format">Correction: %1$s°</string>
+    <string name="azimuth_correction_decrease">Decrease correction</string>
+    <string name="azimuth_correction_increase">Increase correction</string>
+    <string name="azimuth_correction_minus">−</string>
+    <string name="azimuth_correction_plus">+</string>
+    <string name="azimuth_correction_reset">Reset</string>
+    <string name="azimuth_correction_invalid">Enter a number from −180 to 180</string>
+    <string name="azimuth_correction_help">Added to the calculated declination. East is positive. Enter 0 to reset.</string>
+    <string name="azimuth_correction_preference_summary">%1$s°</string>
 
 
 
-    <string name="project_import_debug_underlays">Transfer underlays from Debug</string>
     <string name="legacy_underlay_import_confirmation">Only local underlays will be transferred to the current project “%1$s”. Web GIS projects, accounts and credentials will not be transferred. Continue?</string>
     <string name="legacy_underlay_import_confirm">Transfer underlays</string>
     <string name="legacy_underlay_import_unavailable">The installed Debug app does not support underlay transfer</string>

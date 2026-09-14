@@ -13,6 +13,7 @@ tests:
       - Import raster MBTiles and ZIP containing one MBTiles; reject vector data and ordinary ZIP-TMS in the dedicated picker.
       - Remove a project layer, undo, delete a project and reset settings; verify shared payload remains.
       - Delete in catalog after confirming all project names; reopen nested closed projects and verify only matching links disappeared.
+      - On Geonical with trusted Debug installed, Underlay storage shows Import from the old app; the layer picker and Project settings do not. Without an active project the action reports that there is no project and does not start Debug export.
       - Interrupt legacy move and new import at checkpoints, restart and verify original data, style and layer order.
     expected: Shared assets preserve data across project lifecycle; only confirmed global removal deletes payload; hot-add renders without restart.
   SMOKE-DEBUG-COMPANION:
@@ -20,9 +21,9 @@ tests:
     scope: app
     steps:
       - Install a trusted old Debug and open Geonical; defer the offer and recreate MainActivity to see it again.
-      - With Debug missing the export Activity, use project transfer and expect the update offer rather than the unsupported toast; verify disabled/non-exported Activity is not accepted as an available exporter.
+      - With Debug missing the export Activity, use Import from the old app in Underlay storage and expect the update offer rather than the unsupported toast; verify disabled/non-exported Activity is not accepted as an available exporter.
       - Verify crash recovery and a pending self-update take precedence; the offer suppresses only the automatic self-update check.
-      - Start from project settings, allow unknown-source installation, recreate the process and return through verified cached installation.
+      - Start from Underlay storage, allow unknown-source installation, recreate the process and return through verified cached installation.
       - Verify focus changes while progress is dismissed do not stack permission dialogs or consume the pending installer phase; return from Android Settings directly to one Package Installer prompt.
       - Complete installation and verify the original transfer confirmation appears only for the same active project; startup origin only shows a message.
       - Cancel permission or installation; verify no transfer, no install loop and unchanged Debug data.
@@ -92,8 +93,18 @@ tests:
   SMOKE-LOCATION-CURSOR-TOP:
     type: device
     scope: [app, maplib]
-    steps: [Open a map containing overlapping saved and active tracks plus vector layers, Move the current location onto the overlap, Perform a lite reload or hot layer update]
-    expected: The standing and moving location cursor remains fully visible above tracks and every other MapLibre object before and after reload.
+    steps:
+      - Open a map containing overlapping saved and active tracks plus vector layers
+      - Move the current location onto the overlap and rotate the phone in place
+      - Cover or disturb the compass, then uncover it; freeze GPS while rotating
+      - Perform a lite reload or hot layer update
+    expected: >
+      The standing and moving location cursor remains fully visible above tracks and every
+      other MapLibre object before and after reload. The heading cone stays between the
+      accuracy circle and the puck, turns with the phone, widens when heading is uncertain
+      or the compass is disturbed, narrows after the field settles, and disappears without
+      hiding the circle or icon when the compass is unreliable, missing or stale.
+
   SMOKE-MAP-CAMERA-CONTROLS:
     type: device
     scope: app
@@ -134,7 +145,7 @@ tests:
       - Record the source underlay names, visibility, relative order, tile count and total source size
       - Update Debug in place with the same debug signing certificate and verify its legacy default map opens without a recursive project copy
       - Install the signed Geonical release, manually import and select the intended current Web GIS or local project
-      - Open Project settings, start Transfer underlays from Debug and approve the request in Debug
+      - Open Underlay storage, start Import from the old app and approve the request in Debug
       - Interrupt one transfer, repeat it, then complete all underlays and cold-open the Geonical project
       - Run project composition/data sync and verify Debug still retains its original workspace
     expected: >
@@ -415,6 +426,7 @@ tests:
       - Cross every threshold repeatedly and hold at 0.1 m with both good accuracy and a constant coarse value such as 10 m
       - Stand still and rotate the device, then walk along a known bearing while turning the device independently
       - Compare the displayed magnetic azimuth with a control bearing plus known local WMM2025 declination, including wrap around 0/360 degrees
+      - Change the declination correction during measurement, confirm the magnetic azimuth and the declination line update immediately to D+C, restart the app and verify the correction persists, then reset it to 0
       - Repeat on a device/emulator without a rotation-vector sensor and compare the arrow with a known north-up and explicitly rotated map bearing
       - Open the azimuth button, select current location to map point, drag and replace the target, and verify the fixed GPS endpoint, temporary segment and result update after release
       - Select point A to point B, choose two arbitrary points, drag A and B independently, verify every released position recalculates the result, then test coincident points and tap a third point to begin a new measurement
@@ -426,7 +438,7 @@ tests:
       - Run a 4–8 hour field session and assess sound fatigue, battery use and CPU temperature
     expected: >
       The widget contains direction, WGS84 distance, numeric WMM2025 magnetic azimuth,
-      reported horizontal accuracy, declination, mute and stop for live guidance;
+      reported horizontal accuracy, effective declination D+C, a persisted declination correction, mute and stop for live guidance;
       it never duplicates object name or coordinate source. Point uses its coordinate, line uses the nearest
       segment point and polygon uses the nearest outer/inner boundary even from inside. Sound
       cadence changes at configured distances without overlapping, chattering or using network
@@ -440,7 +452,8 @@ tests:
       mode updates a non-persistent segment, lets only the target be dragged and retains live GPS/audio behavior. Point A to B uses the same
       geodesic and magnetic-bearing calculation without GPS/audio, returns undefined azimuth for coincident
       points, lets either endpoint be corrected by dragging and starts a new A after the completed pair.
-      The numeric magnetic azimuth is visible on narrow screens. Mock GPS from the
+      Declination correction changes the magnetic azimuth and the displayed effective declination immediately, survives process restart
+      and returns to 0 only after an explicit reset. Drag hints are not shown in the widget. The numeric magnetic azimuth is visible on narrow screens. Mock GPS from the
       receiver remains accepted, navigation cues remain audible with Bluetooth/audio-mode changes,
         use a loud short damped tap rather than a high sustained tone, and system volume can reduce it.
         The migrated photo defaults do not overwrite later explicit user choices. Debug logs do not

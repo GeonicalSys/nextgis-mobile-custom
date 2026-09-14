@@ -70,7 +70,7 @@
             fab:fab_addButtonColorNormal="?attr/colorPrimary"
             fab:fab_addButtonColorPressed="?attr/colorAccent"
             fab:fab_addButtonPlusIconColor="@android:color/white"
-            fab:fab_icon="@drawable/ic_stakeout"
+            fab:fab_icon="@drawable/ic_azimuth"
             fab:fab_size="mini"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -143,11 +143,11 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:orientation="vertical">
 
         <com.getbase.floatingactionbutton.FloatingActionButton

@@ -15,6 +15,16 @@
         android:layout_gravity="center_horizontal"
         android:visibility="gone" />
 
+    <Button
+        android:id="@+id/underlay_import_from_old_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/underlay_import_from_old_app"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/underlay_catalog_empty"
         android:layout_width="match_parent"

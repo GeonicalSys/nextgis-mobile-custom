@@ -9,6 +9,11 @@ package com.nextgis.mobile.stakeout
 object MagneticAzimuthCalculator {
     private const val UNDEFINED_DISTANCE_METERS = 0.01
 
+    /** East-positive WMM declination plus the persisted user correction. */
+    @JvmStatic
+    fun effectiveDeclination(modelDegrees: Float, correctionDegrees: Float): Float =
+        modelDegrees + correctionDegrees
+
     @JvmStatic
     fun fromTrueBearing(
         trueBearingDegrees: Double,
