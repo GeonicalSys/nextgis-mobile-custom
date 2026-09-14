@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-09-14
+last_verified: 2026-09-15
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -326,9 +326,10 @@ OpenGL backend вместо Vulkan-default artifact.
 или общих resources обязательны обе release-сборки; при изменении версии —
 полная debug/release version matrix.
 
-Экспорт трека использует `ExportFileProvider`: MIME самого URI и share Intent
-совпадает с GPX, поэтому системный получатель не должен дописывать `.bin`.
-Проверять нужно также имя файла и anonymous MIME lookup на Android 16.
+Экспорт трека идёт через FileProvider: URI MIME `text/xml`, share Intent
+`application/gpx+xml`. `ExportFileProvider` отдаёт `text/xml` в `getType` и
+anonymous lookup, чтобы получатель не дописывал `.bin` или `.null`. MAX может
+показать `.gpx.xml`; QGIS такой файл открывает.
 
 ## Независимый обход и создание точки
 

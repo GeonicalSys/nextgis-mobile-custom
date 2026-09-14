@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-09-14
+last_verified: 2026-09-15
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -10,7 +10,7 @@ entrypoints:
   - app/src/main/AndroidManifest.xml
 key_components:
   - path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
-    responsibility: Match GPX URI MIME, anonymous MIME lookup and share filename while retaining canonical FileProvider root and grant checks.
+    responsibility: For GPX FileProvider URIs, advertise text/xml in getType and anonymous lookup so MimeTypeMap clients do not append .bin or .null, while retaining canonical root and grant checks.
   - path: app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
     responsibility: Browse shared assets, attach, rename and confirm deletion with affected projects; offer Debug underlay import into the active project on Geonical when trusted Debug is installed, except in layer-picker mode; AppTheme.UnderlayCatalog and an explicit Toolbar above the list respect system bar and display cutout insets in both modes.
   - path: app/src/main/res/layout/activity_underlay_catalog.xml

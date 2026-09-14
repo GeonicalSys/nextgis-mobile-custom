@@ -1,12 +1,19 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-09-14
+last_verified: 2026-09-15
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-09-15
+
+- Шаринг трека отдаёт URI MIME `text/xml` через FileProvider, чтобы MAX не
+  склеивал неизвестный `application/gpx+xml` в `.gpx.null`. Intent остаётся
+  `application/gpx+xml`. На устройстве MAX показал `.gpx.xml`; QGIS такой файл
+  открывает. Копия в Загрузках не создаётся.
 
 ## 2026-09-14
 
