@@ -324,8 +324,8 @@
     <string name="stakeout_background_channel_summary">Звуковое наведение и местоположение при активном выносе</string>
     <string name="azimuth_tool">Азимут и расстояние</string>
     <string name="azimuth_mode_title">Измерить азимут и расстояние</string>
-    <string name="azimuth_mode_current">От текущего положения до точки на карте</string>
-    <string name="azimuth_mode_points">Между двумя точками на карте</string>
+    <string name="azimuth_mode_current">От себя до точки</string>
+    <string name="azimuth_mode_points">Между двумя точками</string>
     <string name="azimuth_select_target">Укажите точку назначения на карте</string>
     <string name="azimuth_select_start">Укажите точку А на карте</string>
     <string name="azimuth_select_end">Укажите точку Б на карте</string>

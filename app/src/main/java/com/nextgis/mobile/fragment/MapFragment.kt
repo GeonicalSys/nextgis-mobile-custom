@@ -5342,8 +5342,6 @@ public class MapFragment
             R.string.azimuth_correction_preference_summary,
             formatSignedAngle(correction)
         )
-        mStakeoutCorrectionReset?.visibility =
-            if (StakeoutSettings.isCorrectionReset(correction)) View.GONE else View.VISIBLE
     }
 
     private fun onDeclinationCorrectionChanged() {
