@@ -44,6 +44,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Vibrator
 import android.preference.PreferenceManager
+import android.text.InputType
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -53,6 +54,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ImageButton
@@ -135,6 +137,7 @@ import com.nextgis.mobile.activity.MainActivity
 import com.nextgis.mobile.util.AppConstants
 import com.nextgis.mobile.util.AppSettingsConstants
 import com.nextgis.mobile.stakeout.StakeoutController
+import com.nextgis.mobile.stakeout.StakeoutSettings
 import com.nextgis.mobile.stakeout.MagneticAzimuthCalculator
 import com.nextgis.mobile.stakeout.WorldMagneticModel2025
 import okhttp3.Dispatcher
@@ -158,6 +161,7 @@ import java.lang.ref.WeakReference
 import java.text.NumberFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 import kotlin.math.atan
 import kotlin.math.ln
 import kotlin.math.sinh
@@ -260,11 +264,19 @@ public class MapFragment
     private var mStakeoutDetails: TextView? = null
     private var mStakeoutSound: ImageButton? = null
     private var mStakeoutStop: ImageButton? = null
+    private var mStakeoutCorrectionValue: TextView? = null
+    private var mStakeoutCorrectionReset: TextView? = null
     private var mStakeoutController: StakeoutController? = null
     private var lastStakeoutUiState: StakeoutController.UiState? = null
     private var azimuthStartPoint: GeoPoint? = null
     private var azimuthTargetPoint: GeoPoint? = null
     private var azimuthStaticTrueBearing: Float? = null
+    private val declinationCorrectionListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == StakeoutSettings.KEY_DECLINATION_CORRECTION) {
+                onDeclinationCorrectionChanged()
+            }
+        }
 
     //, mZoomLevel;
     protected var mScaleRuler: ImageView? = null
@@ -353,6 +365,7 @@ public class MapFragment
         mTolerancePX = mActivity!!.resources.displayMetrics.density * ConstantsUI.TOLERANCE_DP
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity)
+        mPreferences?.registerOnSharedPreferenceChangeListener(declinationCorrectionListener)
         mApp = mActivity!!.application as MainApplication
         mVibrator = mActivity!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         mGpsEventSource = mApp!!.gpsEventSource
@@ -487,8 +500,21 @@ public class MapFragment
         mStakeoutDetails = view.findViewById(R.id.stakeout_details)
         mStakeoutSound = view.findViewById(R.id.stakeout_sound)
         mStakeoutStop = view.findViewById(R.id.stakeout_stop)
+        mStakeoutCorrectionValue = view.findViewById(R.id.stakeout_correction_value)
+        mStakeoutCorrectionReset = view.findViewById(R.id.stakeout_correction_reset)
         mStakeoutSound?.setOnClickListener { mStakeoutController?.toggleMuted() }
         mStakeoutStop?.setOnClickListener { setNewMode(MODE_NORMAL) }
+        view.findViewById<View>(R.id.stakeout_correction_minus)?.setOnClickListener {
+            adjustDeclinationCorrection(-StakeoutSettings.DECLINATION_CORRECTION_STEP)
+        }
+        view.findViewById<View>(R.id.stakeout_correction_plus)?.setOnClickListener {
+            adjustDeclinationCorrection(StakeoutSettings.DECLINATION_CORRECTION_STEP)
+        }
+        mStakeoutCorrectionValue?.setOnClickListener { showDeclinationCorrectionDialog() }
+        mStakeoutCorrectionReset?.setOnClickListener {
+            saveDeclinationCorrection(StakeoutSettings.DEFAULT_DECLINATION_CORRECTION)
+        }
+        bindDeclinationCorrectionRow()
         drawScaleRuler()
 
         return view
@@ -1810,6 +1836,7 @@ public class MapFragment
                 mStakeoutPanel?.visibility = View.VISIBLE
                 mScaleRulerLayout?.visibility = View.GONE
                 if (mStatusPanelMode != 0) mStatusPanel?.visibility = View.VISIBLE
+                bindDeclinationCorrectionRow()
             }
 
             MODE_AZIMUTH_CURRENT, MODE_AZIMUTH_POINTS -> {
@@ -1832,6 +1859,7 @@ public class MapFragment
                         R.string.azimuth_select_start
                     }
                 )
+                bindDeclinationCorrectionRow()
                 mScaleRulerLayout?.visibility = View.GONE
                 if (mStatusPanelMode != 0) mStatusPanel?.visibility = View.VISIBLE
                 askPerm = mode == MODE_AZIMUTH_CURRENT
@@ -2128,6 +2156,7 @@ public class MapFragment
         }
         mStakeoutController?.release()
         mStakeoutController = null
+        mPreferences?.unregisterOnSharedPreferenceChangeListener(declinationCorrectionListener)
         super.onDestroy()
     }
 
@@ -5209,9 +5238,10 @@ public class MapFragment
                 0f,
                 System.currentTimeMillis()
             ).declination
+            val correction = StakeoutSettings.loadCorrection(mPreferences)
             val magneticBearing = MagneticAzimuthCalculator.fromTrueBearing(
                 result.bearingDegrees,
-                declination,
+                MagneticAzimuthCalculator.effectiveDeclination(declination, correction),
                 result.distanceMeters
             )
             azimuthStaticTrueBearing = magneticBearing?.let {
@@ -5294,6 +5324,87 @@ public class MapFragment
             minimumFractionDigits = 1
         }.format(value)
 
+    private fun formatSignedAngle(value: Float): String {
+        val formatted = formatAngle(abs(value.toDouble()))
+        return when {
+            value > 0f -> "+$formatted"
+            value < 0f -> "−$formatted"
+            else -> formatted
+        }
+    }
+
+    private fun bindDeclinationCorrectionRow() {
+        if (!isAdded) return
+        val correction = StakeoutSettings.loadCorrection(mPreferences)
+        mStakeoutCorrectionValue?.text = getString(
+            R.string.azimuth_correction_preference_summary,
+            formatSignedAngle(correction)
+        )
+        mStakeoutCorrectionReset?.visibility =
+            if (StakeoutSettings.isCorrectionReset(correction)) View.GONE else View.VISIBLE
+    }
+
+    private fun onDeclinationCorrectionChanged() {
+        if (!isAdded) return
+        bindDeclinationCorrectionRow()
+        if (isLiveStakeoutMode(mode)) {
+            mStakeoutController?.refreshUi()
+        } else if (mode == MODE_AZIMUTH_POINTS
+            && azimuthStartPoint != null
+            && azimuthTargetPoint != null
+        ) {
+            updateFreePointAzimuthResult()
+        }
+    }
+
+    private fun adjustDeclinationCorrection(delta: Float) {
+        val prefs = mPreferences ?: return
+        saveDeclinationCorrection(StakeoutSettings.loadCorrection(prefs) + delta)
+    }
+
+    private fun saveDeclinationCorrection(value: Float) {
+        StakeoutSettings.saveCorrection(mPreferences, value)
+    }
+
+    private fun showDeclinationCorrectionDialog() {
+        val ctx = context ?: return
+        val prefs = mPreferences ?: return
+        val current = StakeoutSettings.loadCorrection(prefs)
+        val input = EditText(ctx).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER or
+                InputType.TYPE_NUMBER_FLAG_DECIMAL or
+                InputType.TYPE_NUMBER_FLAG_SIGNED
+            setText(formatSignedAngle(current).replace('−', '-'))
+            setSelectAllOnFocus(true)
+        }
+        val padding = (20 * resources.displayMetrics.density).toInt()
+        val container = FrameLayout(ctx).apply {
+            setPadding(padding, padding / 2, padding, 0)
+            addView(input)
+        }
+        val dialog = AlertDialog.Builder(ctx)
+            .setTitle(R.string.azimuth_correction)
+            .setMessage(R.string.azimuth_correction_help)
+            .setView(container)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNeutralButton(R.string.azimuth_correction_reset) { _, _ ->
+                saveDeclinationCorrection(StakeoutSettings.DEFAULT_DECLINATION_CORRECTION)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                try {
+                    saveDeclinationCorrection(StakeoutSettings.parseCorrection(input.text.toString()))
+                    dialog.dismiss()
+                } catch (exception: NumberFormatException) {
+                    Toast.makeText(ctx, R.string.azimuth_correction_invalid, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        dialog.show()
+    }
+
     private fun updateStaticAzimuthArrowForMapBearing() {
         val trueBearing = azimuthStaticTrueBearing ?: run {
             mStakeoutDirection?.rotation = 0f
@@ -5323,6 +5434,7 @@ public class MapFragment
         lastStakeoutUiState = state
         if (!isLiveStakeoutMode(mode)) return
         mStakeoutPanel?.visibility = View.VISIBLE
+        bindDeclinationCorrectionRow()
         mStakeoutSound?.visibility = View.VISIBLE
         mStakeoutSound?.setImageResource(
             if (state.muted) R.drawable.ic_stakeout_sound_off

@@ -154,6 +154,10 @@ class StakeoutController(
         publishLatestState()
     }
 
+    fun refreshUi() {
+        publishLatestState()
+    }
+
     fun updateLocation(location: Location) {
         if (!active) return
         latestLocation = Location(location)
@@ -252,10 +256,15 @@ class StakeoutController(
         }
         val magneticHeading = headingProvider.magneticHeading()
         val declination = headingProvider.declinationDegrees()
+        val correction = StakeoutSettings.loadCorrection(preferences)
+        val effectiveDeclination = MagneticAzimuthCalculator.effectiveDeclination(
+            declination,
+            correction
+        )
         val absoluteBearing = normalize(result.bearingDegrees.toFloat())
         val magneticBearing = MagneticAzimuthCalculator.fromTrueBearing(
             result.bearingDegrees,
-            declination,
+            effectiveDeclination,
             result.distanceMeters
         )
         val location = latestLocation

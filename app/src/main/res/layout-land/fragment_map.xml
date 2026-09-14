@@ -70,7 +70,7 @@
             fab:fab_addButtonColorNormal="?attr/colorPrimary"
             fab:fab_addButtonColorPressed="?attr/colorAccent"
             fab:fab_addButtonPlusIconColor="@android:color/white"
-            fab:fab_icon="@drawable/ic_stakeout"
+            fab:fab_icon="@drawable/ic_azimuth"
             fab:fab_size="mini"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton

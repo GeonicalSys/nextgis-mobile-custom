@@ -105,6 +105,14 @@
             android:inputType="numberDecimal"
             android:key="stakeout_reached_distance"
             android:title="@string/stakeout_reached_distance" />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="0"
+            android:dialogMessage="@string/azimuth_correction_help"
+            android:inputType="numberSigned|numberDecimal"
+            android:key="stakeout_declination_correction"
+            android:title="@string/azimuth_correction" />
     </PreferenceCategory>
 
 </PreferenceScreen>

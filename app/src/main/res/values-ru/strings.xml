@@ -334,6 +334,16 @@
     <string name="azimuth_magnetic_format">Магнитный азимут:\n%1$s°</string>
     <string name="azimuth_declination_format">Склонение: %1$s°</string>
     <string name="azimuth_undefined">Магнитный азимут:\n—</string>
+    <string name="azimuth_correction">Коррекция</string>
+    <string name="azimuth_correction_format">Коррекция: %1$s°</string>
+    <string name="azimuth_correction_decrease">Уменьшить коррекцию</string>
+    <string name="azimuth_correction_increase">Увеличить коррекцию</string>
+    <string name="azimuth_correction_minus">−</string>
+    <string name="azimuth_correction_plus">+</string>
+    <string name="azimuth_correction_reset">Сброс</string>
+    <string name="azimuth_correction_invalid">Введите число от −180 до 180</string>
+    <string name="azimuth_correction_help">Добавляется к расчётному склонению. Восток положителен. Для сброса введите 0.</string>
+    <string name="azimuth_correction_preference_summary">%1$s°</string>
     <string name="project_import_debug_underlays">Перенести подложки из Debug</string>
     <string name="legacy_underlay_import_confirmation">В текущий проект «%1$s» будут перенесены только локальные подложки. Проекты Веб-ГИС, учётные записи и пароли не переносятся. Продолжить?</string>
     <string name="legacy_underlay_import_confirm">Перенести подложки</string>

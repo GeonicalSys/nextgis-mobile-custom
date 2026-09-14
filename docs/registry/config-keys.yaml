@@ -117,6 +117,13 @@ preferences:
     source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
     ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат)
     purpose: Horizontal in-tolerance distance requiring two fresh GPS or mock precision fixes
+  stakeout_declination_correction:
+    owner: app
+    type: string_decimal_degrees
+    default: "0"
+    source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
+    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат) and the live/static azimuth widget
+    purpose: East-positive offset added to WMM2025 declination while converting true bearing to magnetic azimuth; persists until the user changes or resets it to 0
   check_updates:
     owner: app
     type: boolean

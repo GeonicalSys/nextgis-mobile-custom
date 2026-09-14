@@ -415,6 +415,7 @@ tests:
       - Cross every threshold repeatedly and hold at 0.1 m with both good accuracy and a constant coarse value such as 10 m
       - Stand still and rotate the device, then walk along a known bearing while turning the device independently
       - Compare the displayed magnetic azimuth with a control bearing plus known local WMM2025 declination, including wrap around 0/360 degrees
+      - Change the declination correction during measurement, confirm the magnetic azimuth updates immediately, restart the app and verify the correction persists, then reset it to 0
       - Repeat on a device/emulator without a rotation-vector sensor and compare the arrow with a known north-up and explicitly rotated map bearing
       - Open the azimuth button, select current location to map point, drag and replace the target, and verify the fixed GPS endpoint, temporary segment and result update after release
       - Select point A to point B, choose two arbitrary points, drag A and B independently, verify every released position recalculates the result, then test coincident points and tap a third point to begin a new measurement
@@ -426,7 +427,7 @@ tests:
       - Run a 4–8 hour field session and assess sound fatigue, battery use and CPU temperature
     expected: >
       The widget contains direction, WGS84 distance, numeric WMM2025 magnetic azimuth,
-      reported horizontal accuracy, declination, mute and stop for live guidance;
+      reported horizontal accuracy, declination, a persisted declination correction, mute and stop for live guidance;
       it never duplicates object name or coordinate source. Point uses its coordinate, line uses the nearest
       segment point and polygon uses the nearest outer/inner boundary even from inside. Sound
       cadence changes at configured distances without overlapping, chattering or using network
@@ -440,7 +441,8 @@ tests:
       mode updates a non-persistent segment, lets only the target be dragged and retains live GPS/audio behavior. Point A to B uses the same
       geodesic and magnetic-bearing calculation without GPS/audio, returns undefined azimuth for coincident
       points, lets either endpoint be corrected by dragging and starts a new A after the completed pair.
-      The numeric magnetic azimuth is visible on narrow screens. Mock GPS from the
+      Declination correction changes the magnetic azimuth immediately, survives process restart
+      and returns to 0 only after an explicit reset. The numeric magnetic azimuth is visible on narrow screens. Mock GPS from the
       receiver remains accepted, navigation cues remain audible with Bluetooth/audio-mode changes,
         use a loud short damped tap rather than a high sustained tone, and system volume can reduce it.
         The migrated photo defaults do not overwrite later explicit user choices. Debug logs do not

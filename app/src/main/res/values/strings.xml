@@ -331,6 +331,16 @@
     <string name="azimuth_magnetic_format">Magnetic azimuth:\n%1$s°</string>
     <string name="azimuth_declination_format">Declination: %1$s°</string>
     <string name="azimuth_undefined">Magnetic azimuth:\n—</string>
+    <string name="azimuth_correction">Correction</string>
+    <string name="azimuth_correction_format">Correction: %1$s°</string>
+    <string name="azimuth_correction_decrease">Decrease correction</string>
+    <string name="azimuth_correction_increase">Increase correction</string>
+    <string name="azimuth_correction_minus">−</string>
+    <string name="azimuth_correction_plus">+</string>
+    <string name="azimuth_correction_reset">Reset</string>
+    <string name="azimuth_correction_invalid">Enter a number from −180 to 180</string>
+    <string name="azimuth_correction_help">Added to the calculated declination. East is positive. Enter 0 to reset.</string>
+    <string name="azimuth_correction_preference_summary">%1$s°</string>
 
 
 

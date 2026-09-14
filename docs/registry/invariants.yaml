@@ -597,7 +597,8 @@ invariants:
       live lifecycle is available from current location to an arbitrary map point. A
       separate arbitrary point A to point B mode does not acquire GPS/audio resources.
       True initial bearing is converted to numeric magnetic azimuth by subtracting
-      WMM2025 declination at the start; coincident points have undefined azimuth.
+      WMM2025 declination at the start plus the persisted east-positive user
+      correction; coincident points have undefined azimuth.
       Direction uses only the filtered device rotation-vector magnetic compass, never
       movement bearing; without a live compass it keeps the arrow screen-correct by
       subtracting an explicitly enabled map bearing from true bearing. Free-point

@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
@@ -55,12 +55,15 @@ related_code:
   удерживается и при выключенном звуке и освобождается последним recorder.
 - Вынос координат: начальное состояние звука и четыре строго убывающих порога
   `stakeout_far_distance`, `stakeout_medium_distance`, `stakeout_near_distance`,
-  `stakeout_reached_distance` в метрах. Некорректный набор не применяется;
+  `stakeout_reached_distance` в метрах и сохраняемая коррекция склонения
+  `stakeout_declination_correction` в градусах (восток положителен, диапазон
+  ±180°, шаг `0,1°`, сброс в `0`). Некорректный набор порогов не применяется;
   runtime использует безопасные значения `5 / 1 / 0,5 / 0,1`. Эти настройки
   применяются также к измерению от текущего положения до выбранной точки. Режим
-  «между двумя точками» является статическим, не использует GPS/звук и новых
-  preference-ключей не создаёт. Магнитное склонение рассчитывается встроенной
-  WMM2025, выбора модели или ручной поправки в настройках нет.
+  «между двумя точками» является статическим, не использует GPS/звук и не создаёт
+  отдельных ключей, но читает ту же коррекцию склонения. Магнитное склонение
+  рассчитывается встроенной WMM2025; ручная поправка `C` добавляется к модельному
+  `D` и доступна в виджете во время измерения.
 - Updates: `check_updates`, update flavor metadata, release repository fields.
 - Backups: `layer_backup_max_gb` (Общие → Другое, default 5 GB) caps `LayerBackups/`;
   каждый ZIP хранит таблицы слоя и только локальные файлы вложений, без
