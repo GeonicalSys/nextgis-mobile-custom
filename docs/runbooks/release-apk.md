@@ -157,8 +157,12 @@ APK через `aapt`/`apksigner`, сериализуют операции об�
 пишут `manifest.json` последним. Точные пути, rollout и rollback-семантика
 описаны в operational contract ниже.
 
-Полный operational contract и rollback хранится отдельно от исходников
-приложения: `C:\dev\lisa\android_projects\upload_mobile\apk_version_system.md`.
+Полный operational contract, rollback и выборочное удаление старых APK хранятся
+отдельно от исходников приложения:
+`C:\dev\lisa\android_projects\upload_mobile\apk_version_system.md`.
+Prune не меняет `manifest.json` / `latest.apk` и не является обновлением
+приложения: он только снимает выбранные исторические `releases/<versionCode>/`
+и оставляет надгробие `versionCode`.
 
 ## Завершение
 
