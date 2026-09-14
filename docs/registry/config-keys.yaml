@@ -17,19 +17,19 @@ preferences:
     type: app_private_shared_preferences
     user_configurable: false
     source: app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
-    purpose: Verified companion manifest, permission/install phase and originating project UID; separate from self-update state
+    purpose: Verified companion manifest, permission/install phase and originating project UID; separate from self-update state, resumed after the external Activity result or process recreation rather than intermediate dialog focus
   shared_underlay_migration:
     owner: maplibui
     type: app_private_shared_preferences
     user_configurable: false
     source: maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
-    purpose: Completed initial shared-underlay migration marker; per-layer recovery remains idempotent
-  shared_underlays:
+    purpose: Completed initial shared-underlay migration marker; per-layer recovery and repair of mismatched shared raster formats remain idempotent independently of this marker
+  com.nextgis.mobile.PREFS_UNDERLAYS:
     owner: app
     type: preference_action
     user_configurable: true
-    source: app/src/main/res/xml/preferences_general.xml
-    purpose: Open the shared underlay catalog from general settings
+    source: app/src/main/res/xml/preference_headers.xml
+    purpose: Open shared underlay management directly from the top-level Settings list next to Project
   sync_recovery_journal:
     owner: app
     type: app_private_shared_preferences
@@ -322,7 +322,7 @@ layer_json:
   ngrc_provenance:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
-    purpose: Immutable-local NGRc source name, archive SHA-256 and import timestamp
+    purpose: Immutable-local NGRc source name, full original archive SHA-256 and import timestamp; Mapnik.json and raster path normalization do not change source identity
   legacy_underlay_migration:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java

@@ -56,6 +56,14 @@
 
     <PreferenceScreen
         app:iconSpaceReserved="false"
+        android:title="@string/underlay_catalog"
+        android:summary="@string/underlay_catalog_summary"
+        android:key="com.nextgis.mobile.PREFS_UNDERLAYS">
+        <Preference/>
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        app:iconSpaceReserved="false"
             android:title="@string/location"
             android:key="com.nextgis.mobile.PREFS_LOCATION"
             >

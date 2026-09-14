@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -98,3 +98,12 @@ Repository branches: Lisa Release — `lisa`, Belka Release — `belka`, Lisa De
 ## Отдельный установщик Debug
 
 Production Geonical может обновить доверенный установленный Debug перед переносом подложек. DebugCompanionInstaller не использует flavor self-updater: разрешены только debug package/channel, pinned/current Debug signer и APK с exporter. Lisa Debug и Belka не показывают это предложение. Версии этой задачей не изменяются; серверный канал и continuation описаны в [контракте](../architecture/shared-underlays.md).
+
+Готовность установленного Debug определяется реальным enabled/exported exporter
+из `PackageManager`, а не только номером версии либо явным ComponentName.
+На 2026-09-14 сервер отдаёт `3.1.2.17/212`; эта версия уже содержит exporter
+и может обновить старый `3.0.3.5/183`. Наличие более нового локального APK
+`3.1.2.18/213` не является условием переноса; серверный APK всё равно проходит
+полную проверку capability и подписи перед установкой.
+Продолжение установки привязано к результату внешнего Android-экрана;
+переключение фокуса между собственными диалогами не считается возвратом.

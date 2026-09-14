@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -389,3 +389,13 @@ destructive composition apply. После импорта в её `config.json` �
 ## Подложки как общие ассеты
 
 NGRc/MBTiles принадлежат общему app-private каталогу, проект содержит только `shared_underlay_id`. Удаление проекта защищает legacy подложки и снимает ссылки; composition sync не управляет ассетами. Closed workspace unlink не создаёт новый `MapBase`. См. [полный контракт](shared-underlays.md).
+
+Объединение дубликатов в закрытых проектах синхронизирует raster-формат ссылки
+с выбранным payload; имя, видимость, пределы масштаба и место слоя в проекте
+сохраняются. Прерванный redirect продолжает оставшиеся ссылки при следующем проходе.
+
+Новый импорт принимает штатный архив с `Mapnik.json` и JPEG/PNG/WebP-тайлами
+под `Mapnik/` без подготовки файла. Ошибка импорта удаляет только создаваемый
+слой; удаление его native-представления диспетчеризуется в main thread.
+Кнопка переноса из старого Debug проверяет реальное наличие exporter и при
+его отсутствии предлагает обновление до подтверждения передачи подложек.

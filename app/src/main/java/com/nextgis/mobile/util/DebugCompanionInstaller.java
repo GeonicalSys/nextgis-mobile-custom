@@ -1,12 +1,14 @@
 package com.nextgis.mobile.util;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -22,6 +24,7 @@ import com.nextgis.mobile.activity.ProjectSettingsActivity;
 import org.json.JSONObject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.lang.ref.WeakReference;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +35,10 @@ import okhttp3.*;
 public final class DebugCompanionInstaller {
     private static final ExecutorService IO = Executors.newSingleThreadExecutor();
     private static final AtomicBoolean BUSY = new AtomicBoolean();
+    private static final int REQUEST_PERMISSION = 6413, REQUEST_INSTALL = 6414;
+    // Main-thread guards span window-focus events between progress, permission and installer UI.
+    private static WeakReference<Dialog> visibleDialog = new WeakReference<>(null);
+    private static WeakReference<Activity> externalOwner = new WeakReference<>(null);
     private static final OkHttpClient HTTP = new OkHttpClient.Builder().followRedirects(false)
             .followSslRedirects(false).connectTimeout(30, TimeUnit.SECONDS).readTimeout(5, TimeUnit.MINUTES).build();
     private DebugCompanionInstaller() { }
@@ -39,18 +46,25 @@ public final class DebugCompanionInstaller {
         return context.getSharedPreferences("debug_companion_install", Context.MODE_PRIVATE);
     }
     public static boolean hasExporter(Context context) {
-        return LegacyUnderlayMigrationContract.isTrustedDebugSourceInstalled(context)
-                && LegacyUnderlayMigrationContract.createExportIntent().resolveActivity(context.getPackageManager()) != null;
+        if (!LegacyUnderlayMigrationContract.isTrustedDebugSourceInstalled(context)) return false;
+        // Intent.resolveActivity() returns an explicit ComponentName without checking installation.
+        // Ask PackageManager so older Debug builds without this Activity actually require updating.
+        ResolveInfo exporter = context.getPackageManager().resolveActivity(
+                LegacyUnderlayMigrationContract.createExportIntent(), 0);
+        return exporter != null && exporter.activityInfo != null
+                && exporter.activityInfo.enabled && exporter.activityInfo.exported
+                && exporter.activityInfo.applicationInfo != null
+                && exporter.activityInfo.applicationInfo.enabled;
     }
     public static boolean needsUpdate(Context context) {
         return LegacyUnderlayMigrationContract.isGeonicalTarget(context)
                 && LegacyUnderlayMigrationContract.isTrustedDebugSourceInstalled(context) && !hasExporter(context);
     }
     public static boolean offer(Activity activity, boolean fromProject) {
-        if (!needsUpdate(activity) || BUSY.get() || AppUpdateManager.isBusyOrPending(activity)) return false;
-        new AlertDialog.Builder(activity).setTitle(R.string.companion_title).setMessage(R.string.companion_offer)
+        if (!needsUpdate(activity) || BUSY.get() || hasActiveUi(activity) || AppUpdateManager.isBusyOrPending(activity)) return false;
+        show(activity, new AlertDialog.Builder(activity).setTitle(R.string.companion_title).setMessage(R.string.companion_offer)
                 .setNegativeButton(R.string.companion_later, null)
-                .setPositiveButton(R.string.companion_update, (dialog, which) -> download(activity, fromProject)).show();
+                .setPositiveButton(R.string.companion_update, (dialog, which) -> download(activity, fromProject)).create());
         return true;
     }
     private static void download(Activity activity, boolean fromProject) {
@@ -75,12 +89,8 @@ public final class DebugCompanionInstaller {
                 validate(context, manifest, apk);
                 if (!state(context).edit().putString("manifest", manifest.json.toString()).putString("phase", "ready")
                         .putString("project", uid).commit()) throw new IOException("Cannot persist companion continuation");
-                activity.runOnUiThread(() -> {
-                    dismiss(progress);
-                    if (usable(activity)) install(activity, manifest, apk);
-                });
+                finishValidation(activity, progress, manifest, apk);
             } catch (Exception error) { fail(activity, progress, error); }
-            finally { BUSY.set(false); }
         });
     }
     /** Call after self-update continuation, only from an unobscured resumed screen. */
@@ -89,7 +99,7 @@ public final class DebugCompanionInstaller {
         SharedPreferences pending = state(activity);
         String json = pending.getString("manifest", null);
         if (json == null) return false;
-        if (BUSY.get()) return true;
+        if (BUSY.get() || hasActiveUi(activity)) return true;
         try {
             DebugCompanionPolicy.Manifest manifest = new DebugCompanionPolicy.Manifest(new JSONObject(json), Build.VERSION.SDK_INT);
             PackageInfo installed = installed(activity);
@@ -124,34 +134,55 @@ public final class DebugCompanionInstaller {
                 try {
                     File apk = cached(activity, manifest);
                     validate(activity, manifest, apk);
-                    activity.runOnUiThread(() -> { dismiss(progress); if (usable(activity)) install(activity, manifest, apk); });
+                    finishValidation(activity, progress, manifest, apk);
                 } catch (Exception error) { clear(activity); fail(activity, progress, error); }
-                finally { BUSY.set(false); }
             });
         } catch (Exception error) { clear(activity); fail(activity, null, error); }
         return true;
     }
+    /** Release the external-UI guard only when Settings/Package Installer actually returns. */
+    public static boolean onActivityResult(Activity activity, int requestCode, Runnable confirmTransfer) {
+        if (requestCode != REQUEST_PERMISSION && requestCode != REQUEST_INSTALL) return false;
+        externalOwner.clear();
+        activity.getWindow().getDecorView().post(() -> {
+            if (usable(activity) && activity.hasWindowFocus() && !AppUpdateManager.isBusyOrPending(activity))
+                resume(activity, confirmTransfer);
+        });
+        return true;
+    }
+    private static void finishValidation(Activity activity, ProgressDialog progress,
+                                         DebugCompanionPolicy.Manifest manifest, File apk) {
+        activity.runOnUiThread(() -> {
+            try {
+                dismiss(progress);
+                if (usable(activity)) install(activity, manifest, apk);
+            } finally { BUSY.set(false); }
+        });
+    }
     private static void install(Activity activity, DebugCompanionPolicy.Manifest manifest, File apk) {
         if (Build.VERSION.SDK_INT >= 26 && !activity.getPackageManager().canRequestPackageInstalls()) {
-            new AlertDialog.Builder(activity).setTitle(R.string.update_install_permission_title)
+            show(activity, new AlertDialog.Builder(activity).setTitle(R.string.update_install_permission_title)
                     .setMessage(R.string.update_install_permission_message)
                     .setNegativeButton(android.R.string.cancel, (d, w) -> clear(activity))
                     .setOnCancelListener(d -> clear(activity))
                     .setPositiveButton(R.string.update_open_settings, (d, w) -> {
                         try {
                             phase(activity, "permission");
-                            activity.startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
-                                    Uri.parse("package:" + activity.getPackageName())));
-                        } catch (Exception e) { clear(activity); fail(activity, null, e); }
-                    }).show();
+                            externalOwner = new WeakReference<>(activity);
+                            activity.startActivityForResult(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                    Uri.parse("package:" + activity.getPackageName())), REQUEST_PERMISSION);
+                        } catch (Exception e) { externalOwner.clear(); clear(activity); fail(activity, null, e); }
+                    }).create());
             return;
         }
         try {
             phase(activity, "installing");
             Uri uri = FileProvider.getUriForFile(activity, activity.getPackageName() + ".easypicker.provider", apk);
-            activity.startActivity(new Intent(Intent.ACTION_INSTALL_PACKAGE).setData(uri)
-                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION));
-        } catch (Exception e) { clear(activity); fail(activity, null, e); }
+            externalOwner = new WeakReference<>(activity);
+            activity.startActivityForResult(new Intent(Intent.ACTION_INSTALL_PACKAGE).setData(uri)
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    .putExtra(Intent.EXTRA_RETURN_RESULT, true), REQUEST_INSTALL);
+        } catch (Exception e) { externalOwner.clear(); clear(activity); fail(activity, null, e); }
     }
     private static PackageInfo installed(Context context) throws PackageManager.NameNotFoundException {
         return context.getPackageManager().getPackageInfo(DebugCompanionPolicy.PACKAGE, flags());
@@ -209,19 +240,31 @@ public final class DebugCompanionInstaller {
         if (!state(context).edit().putString("phase", value).commit()) throw new IOException("Cannot persist companion phase");
     }
     private static void clear(Context context) { state(context).edit().clear().commit(); }
+    private static boolean hasActiveUi(Activity activity) {
+        Dialog dialog = visibleDialog.get();
+        return externalOwner.get() == activity || (dialog != null && dialog.isShowing()
+                && dialog.getOwnerActivity() != null && usable(dialog.getOwnerActivity()));
+    }
+    private static void show(Activity activity, Dialog dialog) {
+        dialog.setOwnerActivity(activity);
+        visibleDialog = new WeakReference<>(dialog);
+        dialog.show();
+    }
     private static ProgressDialog progress(Activity activity) {
         ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setTitle(R.string.companion_title); dialog.setMessage(activity.getString(R.string.companion_loading));
-        dialog.setIndeterminate(true); dialog.setCancelable(false); dialog.show(); return dialog;
+        dialog.setIndeterminate(true); dialog.setCancelable(false); show(activity, dialog); return dialog;
     }
     private static boolean usable(Activity activity) { return !activity.isFinishing() && !activity.isDestroyed(); }
     private static void dismiss(ProgressDialog progress) { if (progress != null && progress.isShowing()) progress.dismiss(); }
     private static void fail(Activity activity, ProgressDialog progress, Exception error) {
         HyperLog.w(Constants.TAG, "Debug companion update failed", error);
         activity.runOnUiThread(() -> {
-            dismiss(progress);
-            if (usable(activity)) new AlertDialog.Builder(activity).setTitle(R.string.companion_title)
-                    .setMessage(R.string.companion_failed).setPositiveButton(android.R.string.ok, null).show();
+            try {
+                dismiss(progress);
+                if (usable(activity)) show(activity, new AlertDialog.Builder(activity).setTitle(R.string.companion_title)
+                        .setMessage(R.string.companion_failed).setPositiveButton(android.R.string.ok, null).create());
+            } finally { BUSY.set(false); }
         });
     }
 }

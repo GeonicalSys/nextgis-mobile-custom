@@ -124,10 +124,6 @@ public class SettingsFragment
             case SettingsConstantsUI.ACTION_PREFS_GENERAL:
                 //addPreferencesFromResource(R.xml.preferences_general);
                 setPreferencesFromResource(R.xml.preferences_general, null);
-                findPreference("shared_underlays").setOnPreferenceClickListener(preference -> {
-                    startActivity(new Intent(getActivity(), com.nextgis.mobile.activity.UnderlayCatalogActivity.class));
-                    return true;
-                });
 
                 final ListPreference theme =
                         (ListPreference) findPreference(SettingsConstantsUI.KEY_PREF_THEME);

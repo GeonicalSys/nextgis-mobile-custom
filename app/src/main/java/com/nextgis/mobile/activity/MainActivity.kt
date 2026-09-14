@@ -1115,6 +1115,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         //http://stackoverflow.com/questions/10114324/show-dialogfragment-from-onactivityresult
         //http://stackoverflow.com/questions/16265733/failure-delivering-result-onactivityforresult/18345899
         super.onActivityResult(requestCode, resultCode, data)
+        if (DebugCompanionInstaller.onActivityResult(this, requestCode, null)) return
 
         when (requestCode) {
 

@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -12,9 +12,11 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
     responsibility: Match GPX URI MIME, anonymous MIME lookup and share filename while retaining canonical FileProvider root and grant checks.
   - path: app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
-    responsibility: Browse shared assets, attach, rename and confirm deletion with affected projects.
+    responsibility: Browse shared assets, attach, rename and confirm deletion with affected projects; AppTheme.UnderlayCatalog and an explicit Toolbar above the list respect system bar and display cutout insets in both modes.
+  - path: app/src/main/res/layout/activity_underlay_catalog.xml
+    responsibility: Keep catalog toolbar, progress, empty state and scrolling assets in a vertical layout below system insets.
   - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
-    responsibility: Separate trusted Debug installer and durable permission/project continuation.
+    responsibility: Separate trusted Debug installer, actual PackageManager exporter availability and enabled/exported checks, durable permission/project continuation, and focus-safe dialog/external-result guards shared by MainActivity and ProjectSettingsActivity.
   - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionPolicy.java
     responsibility: Pure manifest, URL, version and signing identity rules for the Debug companion.
   - path: app/build.gradle
@@ -28,7 +30,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     responsibility: Main navigation and toolbar state for explicit map rotation/location recovery, ordered in-process track Start/Stop intent shared with TrackerService, local GeoJSON/KML/GPX file routing, photo-overlay default migration, ordered walk/manual-geometry/form crash-recovery hub, direct NGW resource URL resolution, name-only project picker with sync/fill/track switch protection, backup sharing UI and updater continuation on activity resume.
   - path: app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
-    responsibility: Settings navigation, including the dedicated project screen, and updater continuation after Android special install permission returns to a manual update check.
+    responsibility: Settings navigation with Project and Underlay storage as adjacent top-level entries, and updater continuation after Android special install permission returns to a manual update check.
   - path: app/src/main/res/xml/preferences_tracks.xml
     responsibility: Track settings UI, including enabled-by-default fixed ten-second background recording heartbeat shared with walk recording, gated by fresh usable location delivery rather than coordinate movement, audible through the alarm stream independently of notification volume and replaced by vibration when alarm audio is muted.
   - path: app/src/main/java/com/nextgis/mobile/util/AppUpdatePackageInfoPolicy.java
@@ -76,7 +78,7 @@ public_contracts:
     symbol: MapFragment implements MaplibreMapInteraction
     path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     consumers: [maplib, maplibui]
-settings_refs: [feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, background_recording_sound, check_updates, sw_track_service, apk_version_update, updater-pending-install, sync_recovery_journal, shared_underlays, debug_companion_install, shared_underlay_migration, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
+settings_refs: [feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, background_recording_sound, check_updates, sw_track_service, apk_version_update, updater-pending-install, sync_recovery_journal, com.nextgis.mobile.PREFS_UNDERLAYS, debug_companion_install, shared_underlay_migration, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
 storage_contracts:
   - id: updater-pending-install
     path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
