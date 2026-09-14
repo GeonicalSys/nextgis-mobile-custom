@@ -35,6 +35,7 @@ class StakeoutController(
         val relativeBearingDegrees: Float = 0f,
         val absoluteBearingDegrees: Float = 0f,
         val magneticBearingDegrees: Float? = null,
+        /** Effective declination shown in the widget: WMM D plus persisted correction C. */
         val declinationDegrees: Float = 0f,
         val accuracyMeters: Double? = null,
         val usesDeviceCompass: Boolean = false,
@@ -279,7 +280,7 @@ class StakeoutController(
                 },
                 absoluteBearingDegrees = absoluteBearing,
                 magneticBearingDegrees = magneticBearing,
-                declinationDegrees = declination,
+                declinationDegrees = effectiveDeclination,
                 accuracyMeters = location?.takeIf { it.hasAccuracy() }
                     ?.accuracy
                     ?.toDouble(),

@@ -20,7 +20,7 @@ import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.UnderlayFiles;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
 import com.nextgis.mobile.R;
-import com.nextgis.mobile.activity.ProjectSettingsActivity;
+import com.nextgis.mobile.activity.UnderlayCatalogActivity;
 import org.json.JSONObject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -108,7 +108,7 @@ public final class DebugCompanionInstaller {
                 CollectorProjectRegistry.ProjectInfo project = CollectorProjectRegistry.getActiveProject(activity);
                 boolean resumeTransfer = !uid.isEmpty() && project != null && uid.equals(project.getProjectUid());
                 if (resumeTransfer && confirmTransfer == null) {
-                    activity.startActivity(new Intent(activity, ProjectSettingsActivity.class));
+                    activity.startActivity(new Intent(activity, UnderlayCatalogActivity.class));
                 } else {
                     clear(activity);
                     if (resumeTransfer) confirmTransfer.run();

@@ -4,7 +4,7 @@
     <string name="companion_later">Not now</string>
     <string name="companion_update">Update Debug</string>
     <string name="companion_loading">Downloading and checking the Debug update…</string>
-    <string name="companion_ready">Debug is updated. You can transfer underlays in project settings.</string>
-    <string name="companion_not_installed">Debug was not updated. You can try again in project settings.</string>
+    <string name="companion_ready">Debug is updated. You can transfer underlays in Underlay storage.</string>
+    <string name="companion_not_installed">Debug was not updated. You can try again in Underlay storage.</string>
     <string name="companion_failed">Could not update Debug. Check your connection and try again. The installed app and its data are unchanged.</string>
 </resources>

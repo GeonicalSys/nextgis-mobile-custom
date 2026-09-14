@@ -329,8 +329,6 @@
     <string name="azimuth_select_target">Укажите точку назначения на карте</string>
     <string name="azimuth_select_start">Укажите точку А на карте</string>
     <string name="azimuth_select_end">Укажите точку Б на карте</string>
-    <string name="azimuth_adjust_points">Перетащите А или Б для корректировки. Коснитесь карты для новой точки А</string>
-    <string name="azimuth_adjust_target">Перетащите точку назначения для корректировки</string>
     <string name="azimuth_magnetic_format">Магнитный азимут:\n%1$s°</string>
     <string name="azimuth_declination_format">Склонение: %1$s°</string>
     <string name="azimuth_undefined">Магнитный азимут:\n—</string>
@@ -344,7 +342,6 @@
     <string name="azimuth_correction_invalid">Введите число от −180 до 180</string>
     <string name="azimuth_correction_help">Добавляется к расчётному склонению. Восток положителен. Для сброса введите 0.</string>
     <string name="azimuth_correction_preference_summary">%1$s°</string>
-    <string name="project_import_debug_underlays">Перенести подложки из Debug</string>
     <string name="legacy_underlay_import_confirmation">В текущий проект «%1$s» будут перенесены только локальные подложки. Проекты Веб-ГИС, учётные записи и пароли не переносятся. Продолжить?</string>
     <string name="legacy_underlay_import_confirm">Перенести подложки</string>
     <string name="legacy_underlay_import_unavailable">Установленная версия Debug не поддерживает перенос подложек</string>

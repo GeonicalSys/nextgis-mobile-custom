@@ -28,6 +28,7 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
+  - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
 ---
 
 # Collector projects, composition sync и backups
@@ -142,7 +143,8 @@ Collector-проекта: загруженный список проекта ж�
 оставались только account/remote resource и синхронизированные конфиги. Поэтому
 миграция не сопоставляет старую карту с Web GIS/Collector-проектом автоматически.
 Пользователь сначала создаёт либо импортирует правильный проект в Geonical,
-делает его активным и только затем запускает «Перенести подложки из Debug».
+делает его активным и только затем в «Хранилище подложек» запускает
+«Импортировать из старого приложения».
 
 Между разными application ID Android не разрешает прямое чтение private storage.
 Совместимое обновление Debug экспортирует только локальные TMS-подложки через

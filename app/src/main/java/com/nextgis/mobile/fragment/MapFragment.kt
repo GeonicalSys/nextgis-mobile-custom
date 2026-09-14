@@ -5239,9 +5239,13 @@ public class MapFragment
                 System.currentTimeMillis()
             ).declination
             val correction = StakeoutSettings.loadCorrection(mPreferences)
+            val effectiveDeclination = MagneticAzimuthCalculator.effectiveDeclination(
+                declination,
+                correction
+            )
             val magneticBearing = MagneticAzimuthCalculator.fromTrueBearing(
                 result.bearingDegrees,
-                MagneticAzimuthCalculator.effectiveDeclination(declination, correction),
+                effectiveDeclination,
                 result.distanceMeters
             )
             azimuthStaticTrueBearing = magneticBearing?.let {
@@ -5249,12 +5253,10 @@ public class MapFragment
             }
             renderAzimuthDistance(result.distanceMeters)
             renderMagneticAzimuth(magneticBearing)
-            val declinationText = getString(
+            mStakeoutDetails?.text = getString(
                 R.string.azimuth_declination_format,
-                formatAngle(declination.toDouble())
+                formatAngle(effectiveDeclination.toDouble())
             )
-            mStakeoutDetails?.text =
-                "$declinationText\n${getString(R.string.azimuth_adjust_points)}"
             mStakeoutDetails?.visibility = View.VISIBLE
             mStakeoutSound?.visibility = View.GONE
             updateStaticAzimuthArrowForMapBearing()
@@ -5481,9 +5483,6 @@ public class MapFragment
             R.string.azimuth_declination_format,
             formatAngle(state.declinationDegrees.toDouble())
         )
-        if (mode == MODE_AZIMUTH_CURRENT) {
-            details += getString(R.string.azimuth_adjust_target)
-        }
         mStakeoutDetails?.text = details.joinToString(" · ")
         mStakeoutDetails?.visibility = if (details.isEmpty()) View.GONE else View.VISIBLE
         mStakeoutDirection?.rotation = if (state.magneticBearingDegrees == null) {

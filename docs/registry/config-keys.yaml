@@ -17,7 +17,7 @@ preferences:
     type: app_private_shared_preferences
     user_configurable: false
     source: app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
-    purpose: Verified companion manifest, permission/install phase and originating project UID; separate from self-update state, resumed after the external Activity result or process recreation rather than intermediate dialog focus
+    purpose: Verified companion manifest, permission/install phase and originating project UID; separate from self-update state, resumed after the external Activity result or process recreation rather than intermediate dialog focus; completed companion install returns to Underlay storage for the same project
   shared_underlay_migration:
     owner: maplibui
     type: app_private_shared_preferences
@@ -29,7 +29,7 @@ preferences:
     type: preference_action
     user_configurable: true
     source: app/src/main/res/xml/preference_headers.xml
-    purpose: Open shared underlay management directly from the top-level Settings list next to Project
+    purpose: Open shared underlay management directly from the top-level Settings list next to Project; Geonical may also start Debug underlay import from that catalog
   sync_recovery_journal:
     owner: app
     type: app_private_shared_preferences
@@ -123,7 +123,7 @@ preferences:
     default: "0"
     source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
     ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат) and the live/static azimuth widget
-    purpose: East-positive offset added to WMM2025 declination while converting true bearing to magnetic azimuth; persists until the user changes or resets it to 0
+    purpose: East-positive offset added to WMM2025 declination while converting true bearing to magnetic azimuth; persists until the user changes or resets it to 0; the widget declination line shows D+C
   check_updates:
     owner: app
     type: boolean

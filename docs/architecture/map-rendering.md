@@ -298,6 +298,7 @@ related_code:
     sync файла и атомарное переименование; неполный stage удаляется, исходная
     Debug-подложка остаётся на месте. Provenance в `config.json` делает повторный
     запуск идемпотентным, а имя, видимость и взаимный порядок подложек сохраняются.
+    Пользователь запускает этот перенос из «Хранилище подложек», а не с экрана проекта.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
