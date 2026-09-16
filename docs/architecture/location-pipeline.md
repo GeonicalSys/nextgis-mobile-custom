@@ -6,6 +6,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/ExternalGnssSession.java
+  - maplibui/src/main/java/com/nextgis/maplibui/service/ExternalGnssService.java
+  - maplib/src/main/java/com/nextgis/maplib/util/DiagnosticLog.java
   - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
@@ -39,12 +41,20 @@ GPS-подписка запрашивает 1 секунду и 0 метров, 
 задаёт high accuracy, минимальный интервал и нулевую задержку батчинга; на API
 26–30 используется совместимый LocationManager request.
 
-На время хотя бы одной записи источник удерживает `PARTIAL_WAKE_LOCK` независимо
-от настройки звука. Последний recorder освобождает его; открытая карта сама по
-себе такой lock не удерживает. Сервисы работают как foreground service типа
-location. Это обеспечивает обработку GPS и акселерометра при выключенном экране,
-но не позволяет обещать хорошее спутниковое измерение внутри здания. Старый
-хороший accuracy не подставляется вместо ухудшившегося нового.
+На время хотя бы одной записи **или** активной внешней NMEA-сессии источник
+удерживает `PARTIAL_WAKE_LOCK` независимо от настройки звука. Последний
+recorder и выключение внешнего GNSS освобождают его; открытая карта системного
+GPS сама по себе такой lock не удерживает. Пока `gnss_input=external` и выбран
+endpoint, `ExternalGnssSession` не зависит от слушателей карты: сворачивание и
+сон не закрывают BT/USB/TCP. `ExternalGnssService` держит процесс как
+foreground `location|connectedDevice` с тихим уведомлением. Сервисы записи
+работают как foreground service типа location. Это обеспечивает обработку GPS и
+акселерометра при выключенном экране, но не позволяет обещать хорошее
+спутниковое измерение внутри здания. Старый хороший accuracy не подставляется
+вместо ухудшившегося нового.
+
+Опция `verbose_log` пишет в HyperLog каждое GNSS/NMEA измерение и причину
+`onLocationUnavailable`; по умолчанию координаты в лог не попадают.
 
 ## Карта
 

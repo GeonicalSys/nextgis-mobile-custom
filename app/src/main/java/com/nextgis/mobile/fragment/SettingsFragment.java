@@ -1014,6 +1014,7 @@ public class SettingsFragment
         editor.remove(KEY_PREF_SHOW_SCALE_RULER);
         editor.remove(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
         editor.remove(KEY_PREF_SD_CARD_NAME);
+        editor.remove(SettingsConstants.KEY_PREF_VERBOSE_LOG);
 
         File defaultPath = activity.getExternalFilesDir(KEY_PREF_MAP);
         if (defaultPath == null) {

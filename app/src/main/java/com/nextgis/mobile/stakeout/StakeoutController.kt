@@ -16,6 +16,9 @@ import android.os.SystemClock
 import com.nextgis.maplib.api.GpsEventListener
 import com.nextgis.maplib.datasource.GeoGeometry
 import com.nextgis.maplib.location.GpsEventSource
+import com.nextgis.maplib.util.DiagnosticLog
+import com.nextgis.maplib.util.LocationDiagnosticFormat
+import com.nextgis.maplib.util.LocationFixPolicy
 import com.nextgis.maplib.util.StakeoutGuidancePolicy
 import com.nextgis.maplib.util.StakeoutGeometryTarget
 
@@ -54,7 +57,7 @@ class StakeoutController(
             val now = SystemClock.elapsedRealtime()
             if (!hasFreshFix(now)) {
                 if (!waitingForFix) {
-                    waitingForFix = true
+                    setWaitingForFix(true)
                     audioCue?.stop()
                     publishLatestState()
                 }
@@ -166,7 +169,7 @@ class StakeoutController(
 
         val now = SystemClock.elapsedRealtime()
         if (!hasFreshFix(now)) {
-            waitingForFix = true
+            setWaitingForFix(true)
             latestBand = StakeoutGuidancePolicy.Band.SILENT
             audioCue?.stop()
             publishLatestState()
@@ -175,7 +178,7 @@ class StakeoutController(
 
         val result = target?.calculate(location.longitude, location.latitude) ?: return
         latestResult = result
-        waitingForFix = false
+        setWaitingForFix(false)
         val oldBand = latestBand
         latestBand = policy?.evaluate(
             result.distanceMeters,
@@ -318,13 +321,39 @@ class StakeoutController(
 
     private fun hasFreshFix(nowElapsedMillis: Long): Boolean {
         val location = latestLocation ?: return false
-        val fixElapsedMillis = location.elapsedRealtimeNanos / 1_000_000L
-        val age = if (fixElapsedMillis > 0L) {
-            nowElapsedMillis - fixElapsedMillis
-        } else {
-            System.currentTimeMillis() - location.time
+        if (location.elapsedRealtimeNanos > 0L) {
+            return LocationFixPolicy.isFresh(
+                location.elapsedRealtimeNanos,
+                nowElapsedMillis * 1_000_000L,
+                MAX_FIX_AGE_MILLIS
+            )
         }
-        return age in 0..MAX_FIX_AGE_MILLIS
+        val age = System.currentTimeMillis() - location.time
+        return age >= -LocationFixPolicy.FUTURE_TOLERANCE_MS && age <= MAX_FIX_AGE_MILLIS
+    }
+
+    private fun setWaitingForFix(value: Boolean) {
+        if (waitingForFix == value) return
+        waitingForFix = value
+        if (DiagnosticLog.isVerbose()) {
+            val location = latestLocation
+            val ageMs = if (location == null) {
+                -1L
+            } else {
+                LocationFixPolicy.ageMs(
+                    location.elapsedRealtimeNanos,
+                    SystemClock.elapsedRealtimeNanos()
+                )
+            }
+            DiagnosticLog.v(
+                LocationDiagnosticFormat.stakeoutWaiting(
+                    value,
+                    ageMs,
+                    location?.provider ?: "none",
+                    location?.accuracy ?: -1f
+                )
+            )
+        }
     }
 
     private fun normalize(value: Float): Float {

@@ -80,6 +80,14 @@
             android:singleLineTitle="false"
             android:title="@string/extended_logs"
             />
+        <CheckBoxPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="verbose_log"
+            android:singleLineTitle="false"
+            android:title="@string/verbose_gnss_log"
+            android:summary="@string/verbose_gnss_log_summary"
+            />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/compass_title"

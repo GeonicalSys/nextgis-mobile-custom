@@ -526,7 +526,8 @@ invariants:
     statement: >
       GpsEventSource owns one GNSS acquisition stream across screen and service lifecycles.
       Attaching/detaching a map never unregisters active recording GPS or resets its filter.
-      The final recorder owns release of the shared partial wake lock; sound off does not
+      The final recorder owns release of the shared partial wake lock unless an
+      external NMEA session still needs it; sound off does not
       disable background acquisition. Sensor evidence expires and cannot alone freeze a vehicle.
       A refined stop replaces only the last owned vertex, retaining track arrival time;
       it never appends distance for an improving stationary position. Handset handling alone
@@ -547,7 +548,9 @@ invariants:
       not replace a fresh receiver fix that carries hdop or diffStatus extras.
       An in-app external NMEA session (`gnss_input=external`) does not subscribe to the
       phone GPS provider or Mock Location; Bluetooth Classic/LE, USB and TCP/IP streams
-      are parsed as GGA/GST/GSA/RMC independently of receiver brand.
+      are parsed as GGA/GST/GSA/RMC independently of receiver brand. While an endpoint
+      is configured, the session and a connected-device foreground service stay alive
+      without map listeners; Home and sleep do not close the transport.
       Recording uses GNSS chip, mock GPS with receiver extras or native NMEA, finite coordinates,
       positive accuracy at most 50 metres and valid monotonic measurement time.
       Mock and native NMEA vertices skip pedestrian smoothing and are sampled no coarser than 2 s / 1 m. Live batches retain chronological

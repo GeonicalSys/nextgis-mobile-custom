@@ -22,12 +22,19 @@
 package com.nextgis.mobile.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.hypertrack.hyperlog.HyperLog;
+import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.util.HyperLogCrashHandler;
 
 public final class Logger {
+    public static boolean isExportEnabled(SharedPreferences preferences) {
+        return preferences.getBoolean(AppSettingsConstants.KEY_PREF_SAVE_LOG, true)
+                || preferences.getBoolean(SettingsConstants.KEY_PREF_VERBOSE_LOG, false);
+    }
+
     public static void initialize(Context context) {
         HyperLog.initialize(context);
         HyperLog.setLogLevel(Log.VERBOSE);

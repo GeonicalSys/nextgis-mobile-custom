@@ -218,6 +218,8 @@
     <string name="select_layer_to_restore">Select layer to restore</string>
     <string name="other">Other</string>
     <string name="extended_logs">Extended logs</string>
+    <string name="verbose_gnss_log">Verbose GNSS logging</string>
+    <string name="verbose_gnss_log_summary">Write every GPS and NMEA measurement to the log, including coordinates. Diagnostics only.</string>
     <string name="share_log">Share log</string>
     <string name="clear_log">Clear log</string>
     <string name="clear_log_message">Delete saved logs so the next exported log only contains new events?</string>

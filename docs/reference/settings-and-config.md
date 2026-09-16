@@ -68,6 +68,10 @@ related_code:
 - Backups: `layer_backup_max_gb` (Общие → Другое, default 5 GB) caps `LayerBackups/`;
   каждый ZIP хранит таблицы слоя и только локальные файлы вложений, без
   скачивания server-only payload по метаданным.
+- Логи: `save_log` (Общие → Другое, «Логирование», default true) включает файл
+  HyperLog и пункт «Поделиться логом». `verbose_log` (там же, «Расширенное
+  логирование», default false) пишет каждое измерение GPS/NMEA, включая
+  координаты; только для диагностики.
 - Collector: project registry JSON, project metadata, composition state.
 - Layer config: `feature_label_field`, `mobile_render_mode`, `render_mode`,
   `layer_origin`, `mobile`.

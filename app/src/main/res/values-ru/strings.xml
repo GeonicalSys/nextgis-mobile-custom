@@ -216,6 +216,8 @@
     <string name="select_layer_to_restore">Выберите слой</string>
     <string name="other">Другое</string>
     <string name="extended_logs">Логирование</string>
+    <string name="verbose_gnss_log">Расширенное логирование</string>
+    <string name="verbose_gnss_log_summary">Каждое измерение GPS и NMEA в лог, включая координаты. Только для диагностики.</string>
     <string name="share_log">Отправить лог</string>
     <string name="clear_log">Очистить лог</string>
     <string name="clear_log_message">Удалить сохраненные логи, чтобы следующий экспорт содержал только новые события?</string>

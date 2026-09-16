@@ -49,6 +49,13 @@ preferences:
     default: '9001'
     source: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
     purpose: TCP port of the receiver NMEA stream.
+  verbose_log:
+    owner: app
+    type: boolean
+    default: false
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_general.xml
+    purpose: Opt-in HyperLog dump of every GNSS/NMEA measurement including coordinates; diagnostics only.
   tracks_location_source:
     owner: app
     type: string

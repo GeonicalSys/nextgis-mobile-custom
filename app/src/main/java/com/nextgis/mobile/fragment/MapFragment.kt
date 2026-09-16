@@ -100,6 +100,7 @@ import com.nextgis.maplib.map.MaplibreMapInteraction
 import com.nextgis.maplib.map.VectorLayer
 import com.hypertrack.hyperlog.HyperLog
 import com.nextgis.maplib.util.Constants
+import com.nextgis.maplib.util.DiagnosticLog
 import com.nextgis.maplib.util.Constants.MESSAGE_INTENT_RELOAD
 import com.nextgis.maplib.util.Constants.MESSAGE_INTENT_STYLING
 import com.nextgis.maplib.util.FileUtil
@@ -4668,6 +4669,7 @@ public class MapFragment
     }
 
     override fun onLocationUnavailable() {
+        DiagnosticLog.v("MapFragment onLocationUnavailable")
         mCurrentCenter = null
         mapDrawableOrNull?.clearLocation()
         if (mode == MODE_AZIMUTH_CURRENT) {
