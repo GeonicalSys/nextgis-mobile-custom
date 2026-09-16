@@ -12,6 +12,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
   - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
   - maplib/src/main/java/com/nextgis/maplib/util/DistrictFilterUtil.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
@@ -297,6 +299,12 @@ stage/backup/marker, а при прерывании восстанавливае
 Configuration sync и feature-data sync — разные контракты. `SYNC_NONE` для
 данных не должен автоматически запрещать безопасное чтение конфигурации,
 необходимое для отображения/форм, если конкретный flow это поддерживает.
+После обновления config слой сравнивает локальный `COUNT(*)` с отфильтрованным
+серверным числом объектов (тот же `fld_district__like`, что при импорте). Если
+на сервере больше 0 объектов и числа не совпадают, локальная таблица
+пересобирается полным untracked snapshot. Если сервер вернул 0 или count не
+удалось получить, локальные объекты не удаляются. Это не инкремент: совпадение
+числа при замене состава reload не вызывает.
 
 Для project-managed NGW-слоя возможность создания и изменения объектов задаёт
 галочка `editable` у элемента Collector-проекта вместе с разрешённым исходящим

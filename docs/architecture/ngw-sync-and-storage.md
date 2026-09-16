@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-09-15
+last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -9,6 +9,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/Table.java
   - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
   - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
@@ -246,6 +248,13 @@ features продолжают транзакцию. HyperLog записывае�
 индексов таких объектов без координат и атрибутов. При parse/IO/SQLite/OOM транзакция
 откатывается, marker синхронизации остаётся для повтора, а временный файл
 удаляется. Выключенный слой не строит полный GeoJSON snapshot до включения.
+
+Слои с `SYNC_NONE` не входят в обычный feature-sync. После config refresh
+сравнивается локальный SQLite `COUNT(*)` с `GET /api/resource/{id}/feature_count`
+при том же `mServerWhere` (для района — `filtered_count`, не resource-meta
+`total_count`). Если на сервере больше 0 объектов и числа не совпадают, слой
+пересобирается тем же потоковым snapshot. Серверный 0 или ошибка count локальные
+данные не трогает.
 
 ## Несовпадение схемы и тяжёлый rebuild
 

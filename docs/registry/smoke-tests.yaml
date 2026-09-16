@@ -306,7 +306,7 @@ tests:
     type: device
     scope: [maplib, maplibui]
     steps: [Set an NGW layer to SYNC_NONE, Change supported server configuration, Run the relevant refresh flow]
-    expected: Feature data is not synced while supported configuration behavior remains correct.
+    expected: Feature data is not incrementally synced. Configuration still refreshes. If the filtered server feature count is greater than zero and differs from the local row count, the layer is replaced by a full snapshot; a server count of zero or a failed count request leaves local features unchanged.
   SMOKE-MULTI-ACCOUNT-SYNC:
     type: device
     scope: [app, maplib, maplibui]
