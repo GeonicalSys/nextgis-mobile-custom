@@ -10,6 +10,11 @@ related_code:
 
 ## 2026-09-16
 
+- Подготовлен выпуск Lisa/Belka `3.1.2.20` / `versionCode 214` и Lisa Debug
+  `3.1.2.20` / `versionCode 215`. В выпуск входят внешний GNSS без GPS Connector,
+  GPS без сети, «Загрузить проект» и фильтр района по вхождению. Root закрепляет
+  Merge Commit maplib PR #27 `b698466` и maplibui PR #17 `c9cea108`.
+
 - Collector-фильтр `district` ищет вхождение ключа проекта в список имён через
   запятую (`karel_west, olonec`), а не точное равенство всей строки. Запрос NGW
   — `fld_district__like=%value%` с экранированием SQL LIKE.
