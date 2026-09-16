@@ -1,11 +1,13 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-09-15
+last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
+  - maplib/src/main/java/com/nextgis/maplib/util/ExternalGnssFixPolicy.java
   - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
@@ -44,18 +46,23 @@ location. Это обеспечивает обработку GPS и акселе
 
 ## Карта
 
-Карта показывает свежую позицию GPS либо Wi-Fi/сотовой сети. Старая настройка
+Карта показывает свежую позицию GPS (чип телефона или mock внешнего GNSS)
+либо, если GPS нет или старше 8 секунд, Wi‑Fi/сотовой сети. Свежий GPS любой
+точности не заменяется «более точной» сетью. Пока жив mock, чип телефона
+игнорируется; заглушка GPS Connector без extras (`hAcc=47`) не сменяет фикс
+с `hdop`/`diffStatus`. Старая настройка
 `location_source` мигрирует в `3`, `tracks_location_source` — в `1`; переключатели
 источников становятся пояснениями. Approximate location достаточно для карты;
-для записи требуется fine location и спутниковый `GPS_PROVIDER`. Google Play
+для записи требуется fine location и спутниковый `GPS_PROVIDER` (включая mock
+приёмника). Google Play
 Services не добавляются. Доступность сетевой позиции зависит от системного
 Network Provider, разрешений и условий связи.
 
 Свежесть определяется временем измерения `elapsedRealtimeNanos`, которое
 учитывает выключенный экран, а не временем прихода callback и не часами UTC.
 После 8 секунд без пригодных измерений маркер и круг скрываются, даже если новых
-callbacks нет. Более свежий на 2 секунды Network fix заменяет стареющий GPS;
-при близком времени точный GPS имеет приоритет. На resume и после загрузки style
+callbacks нет. Свежий GPS всегда выбран при живой сети; network появляется только
+как запас. На resume и после загрузки style
 экран получает текущий snapshot. Координата камеры и прежний `mCurrentCenter`
 не являются запасным местоположением.
 
@@ -76,9 +83,12 @@ callbacks нет. Более свежий на 2 секунды Network fix за
 
 ## Проверка движения
 
-Поток записи принимает только GNSS, конечные корректные координаты, положительную
-accuracy до 50 м и корректное время. Mock, Network и повреждённые speed/accuracy
-не записываются. Для выноса остаётся отдельная подписка на исходные GNSS/mock
+Поток записи принимает GNSS чипа или mock GPS с extras приёмника, конечные
+корректные координаты, положительную accuracy до 50 м и корректное время.
+Network, заглушка mock без extras и повреждённые speed/accuracy не записываются.
+Координаты внешнего GNSS идут в трек/обход без пешеходного smoother; прореживание
+для mock не грубее 2 с и 1 м (если пользовательские интервалы уже чаще — они
+сохраняются). Для выноса остаётся отдельная подписка на исходные GNSS/mock
 измерения: пешеходное сглаживание не затрагивает его точные пороги.
 
 В локальных метрах работает модель положения и скорости с фильтром Калмана,

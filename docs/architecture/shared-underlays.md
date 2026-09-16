@@ -1,9 +1,10 @@
 ---
 title: Общее хранилище подложек и обновление Debug перед переносом
 type: architecture
-last_verified: 2026-09-14
+last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
+  - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java
   - maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
@@ -46,10 +47,15 @@ fsync и rename staging. Новый MBTiles проверяется и сохра
 содержимого, его идентичность — SHA-256 базы. Новый пункт импорта поддерживает
 также один MBTiles внутри ZIP, без временного распакованного файла.
 
-Обычный ZIP-TMS, онлайн-OSM/QMS/NGW и их кэши не входят в каталог. Старый
-универсальный импорт локальных файлов сохранён. Новые пункты «Новая подложка
-из файла» и «Подложка из хранилища» добавляют подложку сразу над OSM; повторное
-подключение того же ассета в один проект не создаёт второй слой.
+Обычный ZIP-TMS, онлайн-OSM/QMS/NGW и их кэши не входят в каталог. «Новая
+подложка из файла» и «Открыть локальный» для NGRc, raster MBTiles и ZIP с
+одним MBTiles или NGRc-конфигурацией (`config.json`/`Mapnik.json`) идут в
+`shared_underlays` одним классификатором. ZIP, который оказался NGRc, больше
+не распаковывается в проектный `layer_*`. Обычный ZIP-TMS в «Открыть локальный»
+по-прежнему распаковывается в проект; dedicated picker его отклоняет. Новые
+пункты «Новая подложка из файла» и «Подложка из хранилища» добавляют подложку
+сразу над OSM; повторное подключение того же ассета в один проект не создаёт
+второй слой.
 
 ## Перенос существующих подложек
 

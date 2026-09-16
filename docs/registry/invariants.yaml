@@ -7,6 +7,7 @@ invariants:
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
       - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java
+      - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
       - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
     verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-SHARED-UNDERLAYS]
@@ -539,11 +540,14 @@ invariants:
       may remain application/gpx+xml for chooser filtering. FileProvider getType, including
       anonymous lookup, uses text/xml so MimeTypeMap clients do not append .bin or
       stringify a missing GPX mapping as .null; they may append .xml.
-      Current display may use GPS or Network, including approximate permission; monotonic
-      age above 8 seconds clears the marker and metric accuracy circle without waiting for
-      another callback. Resume never substitutes camera or a screen-off coordinate.
-      Recording uses only non-mock GNSS with finite coordinates, positive accuracy at most
-      50 metres and valid monotonic measurement time. Live batches retain chronological
+      Current display uses a fresh GPS fix (chip or mock, any accuracy) and falls
+      back to Network only when GPS is missing or older than 8 seconds; a coarse GPS
+      fix is never replaced by a more accurate Wi-Fi/cell estimate. A live mock GNSS
+      stream displaces the phone chip. GPS Connector's no-extras 47 m placeholder does
+      not replace a fresh receiver fix that carries hdop or diffStatus extras.
+      Recording uses GNSS chip or mock GPS with receiver extras, finite coordinates,
+      positive accuracy at most 50 metres and valid monotonic measurement time.
+      Mock vertices skip pedestrian smoothing and are sampled no coarser than 2 s / 1 m. Live batches retain chronological
       session measurements without treating receipt time as current location or sound health.
       Robust adaptive smoothing and stationary anchoring precede the sequence validator;
       movement through 160 km/h remains supported with no manual pedestrian/vehicle profile.
@@ -565,6 +569,9 @@ invariants:
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java
       - maplib/src/test/java/com/nextgis/maplib/util/LocationTrackFilterCoreTest.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/util/ExternalGnssFixPolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiterCore.java
       - maplib/src/test/java/com/nextgis/maplib/util/LocationProviderArbiterCoreTest.java

@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-14
+last_verified: 2026-09-16
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -355,7 +355,10 @@ heading, а не за фиксированным углом. Иконка stand/
 
 ## Общий payload офлайн-подложек
 
-Новые NGRc преобразуются непосредственно в raster MBTiles общего каталога. MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
+Новые NGRc преобразуются непосредственно в raster MBTiles общего каталога. Тот
+же путь используют «Новая подложка из файла» и «Открыть локальный» после
+классификации файла (NGRc, MBTiles, ZIP с NGRc-конфигом или одним MBTiles).
+MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
 
 При dedup дерева NGRc с готовым MBTiles ссылка меняет `tms_type` вместе с ID:
 MapLibre выбирает `mbtiles://` по формату целевого payload. Старые `levels`

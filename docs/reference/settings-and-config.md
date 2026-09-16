@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-09-14
+last_verified: 2026-09-16
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
@@ -110,10 +110,10 @@ host/path требует новой подписанной сборки. Вет�
 
 ## Источники и интервалы GPS
 
-Карта автоматически использует GPS и Network; запись трека и обхода — только
-GNSS. Старые переключатели источников мигрируют в пояснения. Интервалы времени
+Карта использует свежий GPS (чип или mock) и Network только если GPS нет;
+запись трека и обхода — GNSS чипа или mock приёмника. Старые переключатели источников мигрируют в пояснения. Интервалы времени
 и расстояния задают сохранение точек после фильтра, а в разделе местоположения
-относятся к обходу. Карте достаточно approximate permission; записи требуется
+относятся к обходу. Для mock прореживание не грубее 2 с и 1 м. Карте достаточно approximate permission; записи требуется
 fine permission. См. [GPS pipeline](../architecture/location-pipeline.md).
 
 `walkedit_temp` дополнительно хранит UUID обхода, путь активной карты, полную WKT,

@@ -1,10 +1,11 @@
 ---
 title: Подготовка NGW Collector-проекта
 type: runbook
-last_verified: 2026-08-20
+last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerOriginMetadata.java
+  - maplib/src/main/java/com/nextgis/maplib/util/DistrictFilterUtil.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
 ---
@@ -17,9 +18,15 @@ related_code:
 
 ## Ресурс проекта
 
-1. Создайте/выберите NGW-ресурс типа `collector_project` и добавьте в него нужные vector/PostGIS
+1. На корневой группе каталога Лисы в Веб ГИС задайте `keyname=lisa` (тот же
+   ключ для приложений Lisa и Belka). Проекты Collector кладите в эту группу
+   или во вложенные группы.
+2. Создайте/выберите NGW-ресурс типа `collector_project` и добавьте в него нужные vector/PostGIS
    слои в требуемом порядке.
-2. Для фильтрации по району задайте на проекте `resmeta.items.district`.
+2. Для фильтрации по району задайте на проекте `resmeta.items.district` —
+   одно латинское имя (`olonec`). Поле `district` у объектов — список через
+   запятую с пробелом; приложение ищет вхождение этого ключа, в том числе в
+   значениях вроде `karel_west, olonec`.
 3. Тяжёлые `.ngrc` растры импортируйте отдельно: они не входят в composition sync.
 4. Не используйте имя проекта как identity. Приложение формирует стабильный `project_uid` из
    account и remote project id и хранит registry в `map/collector_projects/`.
@@ -31,7 +38,9 @@ related_code:
 - Для project-managed слоя включайте галочку редактирования именно у элемента
   Collector-проекта. Для display-only элемента отключите эту галочку и
   исходящую синхронизацию; config sync при `SYNC_NONE` остаётся отдельным
-  разрешённым потоком.
+  разрешённым потоком и при расхождении отфильтрованного числа объектов
+  (сервер > 0) пересобирает слой snapshot, не стирая локальные данные при
+  серверном нуле.
 - Общий `is_editable` в mobile config управляет обычными/вручную
   импортированными слоями и не заменяет галочку элемента Collector.
 - Для тяжёлого read-only polygon/multipolygon или простого точечного слоя можно
@@ -55,6 +64,8 @@ Project workspace хранит `collector_project` с `project_uid`, account, re
 ## Проверка после импорта
 
 - проект появился в registry и открывается в отдельном workspace;
+- «Загрузить проект» находит каталог `lisa` и предлагает те же Collector-проекты,
+  что лежат в этой группе;
 - порядок project-managed слоёв совпадает с NGW composition;
 - «Мои треки» находится наверху списка слоёв;
 - создание объекта предлагает только элементы Collector с включённым

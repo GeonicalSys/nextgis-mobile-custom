@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-09-14
+last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -11,10 +11,15 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
   - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
+  - maplib/src/main/java/com/nextgis/maplib/util/DistrictFilterUtil.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalog.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
-  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
@@ -37,7 +42,7 @@ related_code:
 
 ```text
 NGW Collector resource
-  → SelectNGWResourceActivity/Dialog
+  → Add layer «Загрузить проект» (keyname lisa) или SelectNGWResourceActivity/Dialog
   → CollectorProjectMetadata (maplib)
   → CollectorProjectRegistry (maplibui)
   → isolated workspace + map
@@ -45,6 +50,12 @@ NGW Collector resource
   → composition sync / removal policy
   → project switch in MainActivity
 ```
+
+Первый пункт меню добавления слоя «Загрузить проект» ищет в Веб ГИС группу с
+`keyname=lisa` (общий ключ для Lisa и Belka) и показывает `collector_project`
+внутри неё, включая вложенные группы. Импорт дальше тот же, что у ручного
+выбора Collector в дереве NGW. Пункт «Добавить слой NGW по URL» скрыт, код
+сохранён.
 
 `Connection.NGWResourceTypeCollector` — обязательный тип ресурса форка.
 Collector project идентифицируется стабильным `project_uid`, построенным из
@@ -94,7 +105,9 @@ import и composition sync создают raster styles через один
   операции через `LayerContentProvider` каждый раз разрешают текущую карту приложения и не
   используют экземпляр, оставшийся от ранее открытого проекта.
 - Project metadata хранит identity, district, composition sync state и время
-  последней проверки.
+  последней проверки. `resmeta.items.district` — ключ одного района; поле
+  `district` у объектов может перечислять несколько имён через `, `, и фильтр
+  ищет вхождение ключа (`fld_district__like`), а не равенство всей строки.
 - Ручные NGW-слои должны маршрутизироваться в активный проект предсказуемо.
 - Переключение проекта сначала сохраняет текущую карту, затем активирует другую.
 - Общий process-wide coordinator удерживает active project identity на всё время
@@ -294,6 +307,12 @@ stage/backup/marker, а при прерывании восстанавливае
 Configuration sync и feature-data sync — разные контракты. `SYNC_NONE` для
 данных не должен автоматически запрещать безопасное чтение конфигурации,
 необходимое для отображения/форм, если конкретный flow это поддерживает.
+После обновления config слой сравнивает локальный `COUNT(*)` с отфильтрованным
+серверным числом объектов (тот же `fld_district__like`, что при импорте). Если
+на сервере больше 0 объектов и числа не совпадают, локальная таблица
+пересобирается полным untracked snapshot. Если сервер вернул 0 или count не
+удалось получить, локальные объекты не удаляются. Это не инкремент: совпадение
+числа при замене состава reload не вызывает.
 
 Для project-managed NGW-слоя возможность создания и изменения объектов задаёт
 галочка `editable` у элемента Collector-проекта вместе с разрешённым исходящим
@@ -364,7 +383,8 @@ destructive composition apply. После импорта в её `config.json` �
   fail-closed блокировку при change/attachment хотя бы в одной копии;
 - два rebuild одной неизменной сломанной схемы за сутки, блокировка третьего,
   ручной сброс защиты и сохранение старого слоя при неуспешной staged-загрузке;
-- district filter и form/render configuration;
+- district filter: проект `olonec` загружает `karel_west, olonec` и не загружает
+  объект только с `karel_west`; form/render configuration;
 - проект с vector, `qgis_vector_style` и `qgis_raster_style`: все элементы
   появляются в исходном смешанном порядке, style tiles используют account
   authentication, а стили не предлагаются для создания объектов;
