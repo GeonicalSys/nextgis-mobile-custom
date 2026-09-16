@@ -125,6 +125,7 @@ import com.nextgis.mobile.util.AppUpdateManager
 import com.nextgis.mobile.util.DebugCompanionInstaller
 import com.nextgis.maplibui.service.LayerFillService
 import com.nextgis.mobile.util.AppSettingsConstants
+import com.nextgis.mobile.util.Logger
 import com.nextgis.mobile.util.SDCardUtils
 import org.json.JSONObject
 import java.io.BufferedOutputStream
@@ -1817,7 +1818,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         else if (mapFragment!!.isEditMode) showEditToolbar()
 
         val log = menu.findItem(R.id.menu_share_log)
-        log?.setVisible(mPreferences.getBoolean("save_log", true))
+        log?.setVisible(Logger.isExportEnabled(mPreferences))
         updateMapRotationMenuItem(menu.findItem(R.id.menu_map_rotation))
 
         return super.onPrepareOptionsMenu(menu)

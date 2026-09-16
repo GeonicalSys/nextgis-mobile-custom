@@ -1,7 +1,7 @@
 ---
 title: Матрица совместимости
 type: reference
-last_verified: 2026-09-15
+last_verified: 2026-09-16
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -13,8 +13,8 @@ related_code:
 
 | Связка | Статус |
 |---|---|
-| app `3.1.2.19` ↔ maplib `3.1.2.19` (release) | Подготовленный Lisa/Belka Release |
-| app `3.1.2.19` ↔ maplib `3.1.2.19` (debug) | Подготовленный Lisa Debug |
+| app `3.1.2.20` ↔ maplib `3.1.2.20` (release) | Подготовленный Lisa/Belka Release |
+| app `3.1.2.20` ↔ maplib `3.1.2.20` (debug) | Подготовленный Lisa Debug |
 | app ↔ maplibui pointer из root | Проверять совместной сборкой |
 | maplibui ↔ maplib pointer из root | Публичный API проверять compile + smoke |
 | Android API 26–36 | Gradle declaration; device coverage зависит от выполненной матрицы |

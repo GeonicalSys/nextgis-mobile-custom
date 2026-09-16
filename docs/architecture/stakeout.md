@@ -1,7 +1,7 @@
 ---
 title: Магнитный азимут, расстояние и вынос координат
 type: architecture
-last_verified: 2026-09-14
+last_verified: 2026-09-16
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
@@ -142,7 +142,11 @@ lease с `minDistance=0` и `minTime=250 мс`; последний release во�
 Явная остановка выноса, смена карты/проекта или уничтожение экрана останавливают service,
 убирают уведомление и освобождают wake lock, GPS lease, датчик и аудиоресурсы. Service имеет
 `START_NOT_STICKY`: после process death звуковой режим сам не стартует. Fix старше 3 секунд
-переводит виджет в «Ожидание GPS» после возврата и полностью глушит звук.
+на системном GPS переводит виджет в «Ожидание GPS» после возврата и полностью глушит звук.
+Для native NMEA тот же порог, что у курсора и нижней панели: 8 секунд, чтобы 5-секундный
+GGA не считался потерей фикса.
+Слегка будущий GNSS timestamp (до 1 с, как у `LocationFixPolicy`) не считается
+потерей фикса.
 
 Измерение A→B не запрашивает GPS, не запускает foreground service и не использует
 звуковые пороги. После выбора B обе точки можно корректировать перетаскиванием,

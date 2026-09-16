@@ -106,7 +106,7 @@ public class MainApplication extends GISApplication
         }
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (mSharedPreferences.getBoolean("save_log", true)) {
+        if (Logger.isExportEnabled(mSharedPreferences)) {
             Logger.initialize(this);
         }
 

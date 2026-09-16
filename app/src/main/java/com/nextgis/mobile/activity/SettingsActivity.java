@@ -159,7 +159,7 @@ public class SettingsActivity
     protected void onDestroy() {
         super.onDestroy();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getBoolean("save_log", true)) {
+        if (Logger.isExportEnabled(preferences)) {
             Logger.initialize(this);
         }
     }

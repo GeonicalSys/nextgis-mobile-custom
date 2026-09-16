@@ -20,8 +20,8 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.19` / `versionCode` 213; Lisa Debug
-`3.1.2.19` / `versionCode` 214. Сверено с официальным приложением `3.2.0` и с
+Состояние форка: Lisa/Belka Release `3.1.2.20` / `versionCode` 214; Lisa Debug
+`3.1.2.20` / `versionCode` 215. Сверено с официальным приложением `3.2.0` и с
 головами официальных библиотек на 14 сентября 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
 [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
@@ -47,6 +47,11 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 (шаринг GPX) и maplib PR #25
 [`02a9fa4`](https://github.com/GeonicalSys/android_maplib/commit/02a9fa4af1625948b2b5bfe81317acb91245b122)
 (диагностическая версия `3.1.2.19`).
+Выпуск `3.1.2.20` закрепляет Merge Commit maplib PR #27
+[`b698466`](https://github.com/GeonicalSys/android_maplib/commit/b69846662e5a9d2b9f6e56e053f605c4c5bcfb70)
+(внешний NMEA GNSS) и maplibui PR #17
+[`c9cea108`](https://github.com/GeonicalSys/android_maplibui/commit/c9cea108131e7e51e2b3270024a5c284ab691019)
+(foreground GNSS service).
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -60,7 +65,7 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
-Форк `3.1.2.19` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+Форк `3.1.2.20` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
 и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
@@ -1039,11 +1044,17 @@ Start после уже сохранённого Stop отбрасывается
 в держателе. Устойчивое уточнение стоянки исправляет одну собственную вершину
 без добавления ложного пути. Сырые cadence/accuracy и число GPS-перерегистраций
 фиксируются в GPS health для проверки реального фона на устройстве. На карте
-доступна позиция GPS (чип или mock) с кругом точности; сеть Wi‑Fi/соты — только
-если GPS нет или старше 8 с, и никогда вместо живого грубого GNSS. Старый экранный
-кэш не выдаётся за текущие координаты. В запись попадает GNSS чипа или mock
-приёмника (extras `hdop`/`diffStatus`); заглушка 47 м без extras и сеть не пишутся.
-Mock не сглаживается пешеходным фильтром и прореживается не грубее 2 с / 1 м.
+доступна позиция GPS (чип, mock или native NMEA) с кругом точности; сеть Wi‑Fi/соты — только
+если GPS нет или старше 8 с, и никогда вместо живого грубого GNSS. При внешнем NMEA
+Network не запрашивается, а сам NMEA-фикс не отбрасывается как чип. Старый экранный
+кэш не выдаётся за текущие координаты. HUD внешнего GNSS справа от компаса, с короткими
+подписями качества. В запись попадает GNSS чипа, mock
+приёмника (extras `hdop`/`diffStatus`) или native NMEA; заглушка 47 м без extras и сеть не пишутся.
+Mock и native NMEA не сглаживаются пешеходным фильтром и прореживаются не грубее 2 с / 1 м.
+Внешний GNSS читается приложением по Bluetooth Classic/LE, USB или TCP/IP без Mock Location.
+Пока выбран внешний приёмник, соединение не рвётся при сворачивании карты: процесс
+удерживает foreground-сервис connected-device и wake lock. Диагностический
+`verbose_log` пишет GNSS/NMEA в локальный HyperLog только по явному чекбоксу.
 
 Адаптивный фильтр сглаживает шум, удерживает остановку и отбрасывает одиночные
 выбросы, учитывая скорость, точность и изменение курса автомобиля. Профиль
@@ -1314,4 +1325,4 @@ Sentry оставлен для production crashes, но сбор interaction bre
 exporter старого доверенного Debug проверяется по установленной Activity,
 поэтому запуск и хранилище подложек показывают предложение обновления.
 
-Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #25 `02a9fa4` (содержит конус #24) и maplibui #15 `cc19ef66`; выпуск Lisa/Belka `3.1.2.19` / `213`, Debug `3.1.2.19` / `214`.
+Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #27 `b698466` и maplibui #17 `c9cea108`; выпуск Lisa/Belka `3.1.2.20` / `214`, Debug `3.1.2.20` / `215`.

@@ -4,6 +4,10 @@ type: architecture
 last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+  - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
+  - maplib/src/main/java/com/nextgis/maplib/gnss/ExternalGnssSession.java
+  - maplibui/src/main/java/com/nextgis/maplibui/service/ExternalGnssService.java
+  - maplib/src/main/java/com/nextgis/maplib/util/DiagnosticLog.java
   - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
@@ -26,7 +30,8 @@ related_code:
 `GpsEventSource` принадлежит Application. Экран, трек и обход подписываются на
 один источник; снятие подписки экрана не останавливает активную запись. Основная
 GPS-подписка запрашивает 1 секунду и 0 метров, lease выноса — 250 мс. При открытой
-карте дополнительно запрашивается Network Provider с интервалом 2 секунды.
+карте и системном GNSS дополнительно запрашивается Network Provider с интервалом
+2 секунды; при `gnss_input=external` Network не подписывается.
 Сервисы не открывают собственные location-подписки; контроль звука получает
 проверенные точки до прореживания.
 
@@ -37,24 +42,38 @@ GPS-подписка запрашивает 1 секунду и 0 метров, 
 задаёт high accuracy, минимальный интервал и нулевую задержку батчинга; на API
 26–30 используется совместимый LocationManager request.
 
-На время хотя бы одной записи источник удерживает `PARTIAL_WAKE_LOCK` независимо
-от настройки звука. Последний recorder освобождает его; открытая карта сама по
-себе такой lock не удерживает. Сервисы работают как foreground service типа
-location. Это обеспечивает обработку GPS и акселерометра при выключенном экране,
-но не позволяет обещать хорошее спутниковое измерение внутри здания. Старый
-хороший accuracy не подставляется вместо ухудшившегося нового.
+На время хотя бы одной записи **или** активной внешней NMEA-сессии источник
+удерживает `PARTIAL_WAKE_LOCK` независимо от настройки звука. Последний
+recorder и выключение внешнего GNSS освобождают его; открытая карта системного
+GPS сама по себе такой lock не удерживает. Пока `gnss_input=external` и выбран
+endpoint, `ExternalGnssSession` не зависит от слушателей карты: сворачивание и
+сон не закрывают BT/USB/TCP. `ExternalGnssService` держит процесс как
+foreground `location|connectedDevice` с тихим уведомлением. Сервисы записи
+работают как foreground service типа location. Это обеспечивает обработку GPS и
+акселерометра при выключенном экране, но не позволяет обещать хорошее
+спутниковое измерение внутри здания. Старый хороший accuracy не подставляется
+вместо ухудшившегося нового.
+
+Опция `verbose_log` пишет в HyperLog каждое GNSS/NMEA измерение и причину
+`onLocationUnavailable`; по умолчанию координаты в лог не попадают.
 
 ## Карта
 
-Карта показывает свежую позицию GPS (чип телефона или mock внешнего GNSS)
-либо, если GPS нет или старше 8 секунд, Wi‑Fi/сотовой сети. Свежий GPS любой
-точности не заменяется «более точной» сетью. Пока жив mock, чип телефона
-игнорируется; заглушка GPS Connector без extras (`hAcc=47`) не сменяет фикс
-с `hdop`/`diffStatus`. Старая настройка
-`location_source` мигрирует в `3`, `tracks_location_source` — в `1`; переключатели
-источников становятся пояснениями. Approximate location достаточно для карты;
-для записи требуется fine location и спутниковый `GPS_PROVIDER` (включая mock
-приёмника). Google Play
+Карта показывает свежую позицию GPS (чип телефона, mock внешнего GNSS или
+native NMEA внешнего приёмника)
+либо, если GPS нет или старше 8 секунд, Wi‑Fi/сотовой сети — но не при
+`gnss_input=external`. Свежий GPS любой
+точности не заменяется «более точной» сетью. Пока жив mock или native NMEA, чип телефона
+игнорируется; native NMEA не считается чипом и не отбрасывается правилом
+`dropChipWhileMock`. Заглушка GPS Connector без extras (`hAcc=47`) не сменяет фикс
+с `hdop`/`diffStatus`. HUD внешнего GNSS стоит справа от компаса у верхнего края
+рабочей области карты и показывает короткие подписи качества (фикс / плав / авто). Настройка `gnss_input` выбирает системный GNSS Android
+или внешний приёмник (Bluetooth Classic/LE, USB, TCP/IP). Старая настройка
+`location_source` мигрирует в `3`, `tracks_location_source` — в `1`; прежние переключатели
+источников остаются пояснениями. Approximate location достаточно для карты;
+для записи системного GNSS требуется fine location и спутниковый `GPS_PROVIDER` (включая mock
+приёмника). Native NMEA не использует Mock Location и не требует включённого
+системного GPS. Google Play
 Services не добавляются. Доступность сетевой позиции зависит от системного
 Network Provider, разрешений и условий связи.
 
@@ -83,12 +102,13 @@ callbacks нет. Свежий GPS всегда выбран при живой �
 
 ## Проверка движения
 
-Поток записи принимает GNSS чипа или mock GPS с extras приёмника, конечные
+Поток записи принимает GNSS чипа, mock GPS с extras приёмника или native NMEA
+с `nativeNmea` extras, конечные
 корректные координаты, положительную accuracy до 50 м и корректное время.
 Network, заглушка mock без extras и повреждённые speed/accuracy не записываются.
 Координаты внешнего GNSS идут в трек/обход без пешеходного smoother; прореживание
-для mock не грубее 2 с и 1 м (если пользовательские интервалы уже чаще — они
-сохраняются). Для выноса остаётся отдельная подписка на исходные GNSS/mock
+для mock и native NMEA не грубее 2 с и 1 м (если пользовательские интервалы уже чаще — они
+сохраняются). Для выноса остаётся отдельная подписка на исходные GNSS/mock/NMEA
 измерения: пешеходное сглаживание не затрагивает его точные пороги.
 
 В локальных метрах работает модель положения и скорости с фильтром Калмана,

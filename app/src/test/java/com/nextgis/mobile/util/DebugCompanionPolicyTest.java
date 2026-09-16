@@ -9,37 +9,37 @@ import static org.junit.Assert.*;
 public class DebugCompanionPolicyTest {
     private JSONObject manifest() throws Exception {
         return new JSONObject().put("schemaVersion", 1).put("applicationId", DebugCompanionPolicy.PACKAGE)
-                .put("flavor", "debug").put("channel", "debug").put("versionCode", 214).put("versionName", "3.1.2.19")
+                .put("flavor", "debug").put("channel", "debug").put("versionCode", 215).put("versionName", "3.1.2.20")
                 .put("apkSize", 1000).put("apkSha256", String.join("", Collections.nCopies(64, "a")))
                 .put("signingCertificateSha256", DebugCompanionPolicy.CERTIFICATE).put("minSdk", 26).put("targetSdk", 36)
                 .put("publishedAt", "2026-09-13T00:00:00Z")
-                .put("apkUrl", "https://apps-geonical.ru/lisa-mobile/debug/releases/214/debug.apk");
+                .put("apkUrl", "https://apps-geonical.ru/lisa-mobile/debug/releases/215/debug.apk");
     }
     @Test public void acceptsOnlyDebugPackageChannelFlavorAndPinnedCertificate() throws Exception {
-        assertEquals(214, new DebugCompanionPolicy.Manifest(manifest(), 36).code);
+        assertEquals(215, new DebugCompanionPolicy.Manifest(manifest(), 36).code);
         for (String key : new String[]{"applicationId", "flavor", "channel", "signingCertificateSha256"}) {
             try { new DebugCompanionPolicy.Manifest(manifest().put(key, "lisa"), 36); fail(key); } catch (IOException expected) { }
         }
     }
     @Test public void rejectsUnsafeOrWrongReleaseUrls() throws Exception {
-        for (String url : new String[]{"http://apps-geonical.ru/lisa-mobile/debug/releases/214/debug.apk",
-                "https://apps-geonical.ru/lisa-mobile/lisa/releases/214/debug.apk",
-                "https://apps-geonical.ru/lisa-mobile/debug/releases/213/debug.apk",
-                "https://apps-geonical.ru/lisa-mobile/debug/releases/214/../214/debug.apk",
-                "https://apps-geonical.ru/lisa-mobile/debug/releases/214/%2e%2e/a.apk",
-                "https://apps-geonical.ru/lisa-mobile/debug/releases/214/debug.apk?next=other",
-                "https://other.example/lisa-mobile/debug/releases/214/debug.apk"}) {
+        for (String url : new String[]{"http://apps-geonical.ru/lisa-mobile/debug/releases/215/debug.apk",
+                "https://apps-geonical.ru/lisa-mobile/lisa/releases/215/debug.apk",
+                "https://apps-geonical.ru/lisa-mobile/debug/releases/214/debug.apk",
+                "https://apps-geonical.ru/lisa-mobile/debug/releases/215/../215/debug.apk",
+                "https://apps-geonical.ru/lisa-mobile/debug/releases/215/%2e%2e/a.apk",
+                "https://apps-geonical.ru/lisa-mobile/debug/releases/215/debug.apk?next=other",
+                "https://other.example/lisa-mobile/debug/releases/215/debug.apk"}) {
             try { new DebugCompanionPolicy.Manifest(manifest().put("apkUrl", url), 36); fail(url); } catch (IOException expected) { }
         }
     }
     @Test public void checksInstalledAndArchiveSignersAndRequiresUpgrade() throws Exception {
         DebugCompanionPolicy.Manifest m = new DebugCompanionPolicy.Manifest(manifest(), 36);
         java.util.Set<String> trusted = Collections.singleton(DebugCompanionPolicy.CERTIFICATE);
-        DebugCompanionPolicy.validateApk(m, DebugCompanionPolicy.PACKAGE, "debug", 214, "3.1.2.19", 213, trusted, trusted);
+        DebugCompanionPolicy.validateApk(m, DebugCompanionPolicy.PACKAGE, "debug", 215, "3.1.2.20", 214, trusted, trusted);
         for (int variant = 0; variant < 4; variant++) {
             try {
-                DebugCompanionPolicy.validateApk(m, DebugCompanionPolicy.PACKAGE, "debug", 214,
-                        variant == 0 ? "different" : "3.1.2.19", variant == 1 ? 214 : 213,
+                DebugCompanionPolicy.validateApk(m, DebugCompanionPolicy.PACKAGE, "debug", 215,
+                        variant == 0 ? "different" : "3.1.2.20", variant == 1 ? 215 : 214,
                         variant == 2 ? Collections.emptySet() : trusted, variant == 3 ? Collections.emptySet() : trusted);
                 fail();
             } catch (IOException expected) { }

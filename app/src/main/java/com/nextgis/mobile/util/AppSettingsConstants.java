@@ -39,6 +39,7 @@ public interface AppSettingsConstants
     String KEY_PREF_SHOW_INFO     = "map_show_info";
     String KEY_PREF_APP_VERSION   = "app_version";
     String KEY_PREF_SHOW_SYNC     = "show_sync";
+    String KEY_PREF_SAVE_LOG      = "save_log";
     String KEY_PREF_UPDATE_CHECK  = "check_updates";
     String KEY_PREF_LAYER_BACKUP_MAX_GB = "layer_backup_max_gb";
     String KEY_PREF_PHOTO_OVERLAY_DEFAULTS_MIGRATED = "photo_overlay_defaults_enabled_v1";
