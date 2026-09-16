@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 related_code:
   - app/build.gradle
   - app/src/main
@@ -1052,6 +1052,8 @@ Network не запрашивается, а сам NMEA-фикс не отбра
 приёмника (extras `hdop`/`diffStatus`) или native NMEA; заглушка 47 м без extras и сеть не пишутся.
 Mock и native NMEA не сглаживаются пешеходным фильтром и прореживаются не грубее 2 с / 1 м.
 Внешний GNSS читается приложением по Bluetooth Classic/LE, USB или TCP/IP без Mock Location.
+PiGoLite/ComNav по BLE по умолчанию отдаёт CNB, не `$GGA`: приложение запрашивает
+NMEA/`BESTPOSA` и не режет двоичный поток по переводам строк.
 Пока выбран внешний приёмник, соединение не рвётся при сворачивании карты: процесс
 удерживает foreground-сервис connected-device и wake lock. Диагностический
 `verbose_log` пишет GNSS/NMEA в локальный HyperLog только по явному чекбоксу.

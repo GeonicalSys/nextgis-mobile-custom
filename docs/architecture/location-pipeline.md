@@ -1,11 +1,13 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/ExternalGnssSession.java
+  - maplib/src/main/java/com/nextgis/maplib/gnss/BluetoothLeTransport.java
+  - maplib/src/main/java/com/nextgis/maplib/gnss/ComNavAsciiCommands.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/ExternalGnssService.java
   - maplib/src/main/java/com/nextgis/maplib/util/DiagnosticLog.java
   - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
@@ -73,7 +75,11 @@ native NMEA внешнего приёмника)
 источников остаются пояснениями. Approximate location достаточно для карты;
 для записи системного GNSS требуется fine location и спутниковый `GPS_PROVIDER` (включая mock
 приёмника). Native NMEA не использует Mock Location и не требует включённого
-системного GPS. Google Play
+системного GPS. Приёмники ComNav/PiGoLite по умолчанию шлют двоичный CNB
+(`AA 44 12`), а не `$GGA`: кадрирование игнорирует бинарь, а после BLE/SPP
+connect приложение один раз пишет `unlogall` и `log gpgga/gst/gsa/rmc/bestposa`,
+если ещё нет ASCII. `#BESTPOSA` принимается как запасной фикс (фикс/плав/авто).
+Чистый NMEA-поток этих команд не получает. Google Play
 Services не добавляются. Доступность сетевой позиции зависит от системного
 Network Provider, разрешений и условий связи.
 

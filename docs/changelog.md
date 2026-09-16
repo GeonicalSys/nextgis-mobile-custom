@@ -1,12 +1,18 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-09-17
+
+- Внешний GNSS: двоичный ComNav CNB (PiGoLite `AA 44 12`) не разбирается как NMEA.
+  После BLE-подключения сессия пишет `unlogall` и запрашивает GGA/GST/GSA/RMC и
+  `#BESTPOSA`; живой `$GGA` этих команд не получает.
 
 ## 2026-09-16
 
