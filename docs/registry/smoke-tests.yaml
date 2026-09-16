@@ -404,7 +404,7 @@ tests:
       - Revoke and restore fine permission, restart the process, and verify durable track intent and walk draft
       - Check the circle at several latitudes, zooms and camera tilts, after cold style load and hot layer add
       - Enable background sound, stand still, mute notification volume and then alarm volume, and lose GNSS
-      - Compare battery use and run stakeout with the original external GNSS/mock receiver
+      - With GPS Connector / external mock GNSS: accuracy follows HDOP extras, does not pulse 47 m, does not jump to Network; track/walk vertices use receiver coordinates no coarser than 2 s / 1 m
     expected: >
       The map shows only a current source with an honest accuracy radius and clears both marker
       and circle on expiry. No network fix, camera anchor, cached final snap or unrecorded preview

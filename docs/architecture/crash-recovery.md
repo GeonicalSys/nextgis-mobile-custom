@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-09-13
+last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -34,7 +34,7 @@ lost.
 |---------|----------|
 | Point durability | Each sampled, validated GNSS point is inserted immediately; the bounded filter and sampling tail is flushed before explicit Save |
 | GPS validation | Shared `LocationTrackFilter` retains valid movement through 160 km/h, rejects invalid/old/inaccurate fixes and isolated material spikes, and drains its delayed two-fix buffer on stop or before a long-gap segment reset |
-| Provider ownership | Application-owned GpsEventSource; GPS/Network for display, GNSS only for track/walk recording |
+| Provider ownership | Application-owned GpsEventSource; GPS (chip or mock) for display with Network only as GPS-absent fallback; GNSS chip or mock receiver extras for track/walk recording |
 | GPS gaps | Database v6 persists trackpoints.segment; gaps survive map reload and GPX export. Walk stores gps_paused and requires explicit reconnection |
 | Recording flag | Durable preference `track_recording_enabled` is set on start and cleared **only** by the menu action «Stop track» / «Завершить запись трека» |
 | Process ordering | `TrackerService` runs in the default application process. The toolbar Start lifecycle therefore executes before a later toolbar Stop, and both sides observe one in-process preference state; a stale delayed Start is rejected if the durable flag is already off |

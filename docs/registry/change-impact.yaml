@@ -290,6 +290,7 @@ triggers:
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometryInsertion.java
       - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/util/ExternalGnssFixPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
       - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java
