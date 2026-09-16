@@ -293,6 +293,8 @@ triggers:
       - maplib/src/main/java/com/nextgis/maplib/util/ExternalGnssFixPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
       - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaLineBuffer.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/CnbFrameBuffer.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/CnbBestPos.java
       - maplib/src/main/java/com/nextgis/maplib/gnss/ComNavAsciiCommands.java
       - maplib/src/main/java/com/nextgis/maplib/gnss/BluetoothLeTransport.java
       - maplib/src/main/java/com/nextgis/maplib/gnss/ExternalGnssSession.java

@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -86,7 +86,7 @@ OpenGL backend вместо Vulkan-default artifact.
   пригодных измерений. Resume читает snapshot общего источника записи, без
   возврата к координате выключения экрана. Трек и обход сохраняют GNSS чипа, mock приёмника или native NMEA;
   чип сглаживается с учётом остановок, пешеходов и автомобилей до 160 км/ч, mock и NMEA — как есть, не грубее 2 с / 1 м.
-  Внешний GNSS читается из NMEA (Bluetooth Classic/LE, USB, TCP/IP) без Mock Location; HUD справа от компаса показывает фикс/плав/авто.
+  Внешний GNSS читается из NMEA или ComNav BESTPOSB (Bluetooth Classic/LE, USB, TCP/IP) без Mock Location; HUD справа от компаса показывает фикс/плав/авто.
   Пока приёмник выбран, соединение переживает Home и выключенный экран.
   Общие → «Расширенное логирование» пишет GNSS/NMEA в HyperLog, включая координаты.
   Пропуски GPS разделяют трек на сегменты, а обход требует явного продолжения.
