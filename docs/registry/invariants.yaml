@@ -547,8 +547,10 @@ invariants:
       stream displaces the phone chip. GPS Connector's no-extras 47 m placeholder does
       not replace a fresh receiver fix that carries hdop or diffStatus extras.
       An in-app external NMEA session (`gnss_input=external`) does not subscribe to the
-      phone GPS provider or Mock Location; Bluetooth Classic/LE, USB and TCP/IP streams
-      are parsed as GGA/GST/GSA/RMC independently of receiver brand. While an endpoint
+      phone GPS provider, Network provider or Mock Location; Bluetooth Classic/LE, USB and TCP/IP streams
+      are parsed as GGA/GST/GSA/RMC independently of receiver brand. Native NMEA is not
+      dropped as phone-chip while a previous receiver fix is still fresh.
+      While an endpoint
       is configured, the session and a connected-device foreground service stay alive
       without map listeners; Home and sleep do not close the transport.
       Recording uses GNSS chip, mock GPS with receiver extras or native NMEA, finite coordinates,

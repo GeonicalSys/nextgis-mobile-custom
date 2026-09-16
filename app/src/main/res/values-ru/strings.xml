@@ -82,7 +82,11 @@
     <string name="gnss_hud_connecting">Подключение…</string>
     <string name="gnss_hud_no_device">Выберите приёмник в настройках</string>
     <string name="gnss_hud_no_fix">Нет фикса</string>
-    <string name="gnss_hud_sats_hdop">%1$d спут.    HDOP %2$s</string>
+    <string name="gnss_hud_quality_fix">фикс</string>
+    <string name="gnss_hud_quality_float">флот</string>
+    <string name="gnss_hud_quality_auto">авто</string>
+    <string name="gnss_hud_quality_dgps">DGPS</string>
+    <string name="gnss_hud_sats_hdop">%1$d  HDOP %2$s</string>
     <string name="location">Местоположение</string>
     <string name="tracks_reload">Перезапустите запись для применения изменений</string>
     <string name="pref_min_time">Минимальное время обновления</string>

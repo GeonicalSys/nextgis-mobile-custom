@@ -19,6 +19,7 @@ import com.nextgis.maplib.location.GpsEventSource
 import com.nextgis.maplib.util.DiagnosticLog
 import com.nextgis.maplib.util.LocationDiagnosticFormat
 import com.nextgis.maplib.util.LocationFixPolicy
+import com.nextgis.maplib.util.LocationTrackFilter
 import com.nextgis.maplib.util.StakeoutGuidancePolicy
 import com.nextgis.maplib.util.StakeoutGeometryTarget
 
@@ -321,15 +322,20 @@ class StakeoutController(
 
     private fun hasFreshFix(nowElapsedMillis: Long): Boolean {
         val location = latestLocation ?: return false
+        val maxAge = if (LocationTrackFilter.isNativeNmea(location)) {
+            LocationFixPolicy.FRESHNESS_MS
+        } else {
+            MAX_FIX_AGE_MILLIS
+        }
         if (location.elapsedRealtimeNanos > 0L) {
             return LocationFixPolicy.isFresh(
                 location.elapsedRealtimeNanos,
                 nowElapsedMillis * 1_000_000L,
-                MAX_FIX_AGE_MILLIS
+                maxAge
             )
         }
         val age = System.currentTimeMillis() - location.time
-        return age >= -LocationFixPolicy.FUTURE_TOLERANCE_MS && age <= MAX_FIX_AGE_MILLIS
+        return age >= -LocationFixPolicy.FUTURE_TOLERANCE_MS && age <= maxAge
     }
 
     private fun setWaitingForFix(value: Boolean) {

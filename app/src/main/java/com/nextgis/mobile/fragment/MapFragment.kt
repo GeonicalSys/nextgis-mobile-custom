@@ -4864,9 +4864,20 @@ public class MapFragment
             2 -> Color.parseColor("#80CBC4")
             else -> Color.WHITE
         })
-        qualityView.text = if (accuracy.isEmpty()) fix.qualityLabel() else "${fix.qualityLabel()}    $accuracy"
+        val quality = gnssHudQualityLabel(fix.quality)
+        qualityView.text = if (accuracy.isEmpty()) quality else "$quality $accuracy"
         val hdop = if (GnssFix.isFinite(fix.hdop)) String.format(java.util.Locale.US, "%.1f", fix.hdop) else "—"
         detailView.text = getString(R.string.gnss_hud_sats_hdop, fix.satellites, hdop)
+    }
+
+    private fun gnssHudQualityLabel(quality: Int): String {
+        val id = when (quality) {
+            4 -> R.string.gnss_hud_quality_fix
+            5 -> R.string.gnss_hud_quality_float
+            2 -> R.string.gnss_hud_quality_dgps
+            else -> R.string.gnss_hud_quality_auto
+        }
+        return getString(id)
     }
 
     private fun formatGnssAccuracy(accuracyM: Float): String {

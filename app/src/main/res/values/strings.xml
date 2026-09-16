@@ -82,7 +82,11 @@
     <string name="gnss_hud_connecting">Connecting…</string>
     <string name="gnss_hud_no_device">Choose a receiver in Settings</string>
     <string name="gnss_hud_no_fix">No fix</string>
-    <string name="gnss_hud_sats_hdop">%1$d sats    HDOP %2$s</string>
+    <string name="gnss_hud_quality_fix">Fix</string>
+    <string name="gnss_hud_quality_float">Float</string>
+    <string name="gnss_hud_quality_auto">Auto</string>
+    <string name="gnss_hud_quality_dgps">DGPS</string>
+    <string name="gnss_hud_sats_hdop">%1$d  HDOP %2$s</string>
     <string name="location">Location</string>
     <string name="track_restore">Restore current track after reboot</string>
     <string name="background_recording_sound">Background recording sound</string>
