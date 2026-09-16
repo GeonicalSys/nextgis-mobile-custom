@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-08-26
+last_verified: 2026-09-16
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -62,7 +62,10 @@ QGIS-инструменты могут создавать, оформлять и
 - тип ресурса и дерево ссылок Collector;
 - schema полей, права `data.read`/`data.write` и sync direction;
 - стили, формы, composition и lifecycle управляемых слоёв;
-- различие между server-managed ресурсом и локальной immutable `.ngrc`-подложкой.
+- различие между server-managed ресурсом и локальной immutable `.ngrc`-подложкой;
+- поле `district` у объектов — список `basic.districts.name` через запятую с
+  пробелом; `resmeta.items.district` Collector-проекта — один ключ, который
+  Android ищет как вхождение (`fld_district__like`), а не как равенство строки.
 
 В publisher-режиме `vector_only` управляемые `sync_ngw` слои могут содержать
 служебное `idqgs BIGINT`. Оно связывает web-объект с первичным `id` PostgreSQL для

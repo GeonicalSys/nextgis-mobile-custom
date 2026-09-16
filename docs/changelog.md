@@ -1,12 +1,18 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-09-15
+last_verified: 2026-09-16
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-09-16
+
+- Collector-фильтр `district` ищет вхождение ключа проекта в список имён через
+  запятую (`karel_west, olonec`), а не точное равенство всей строки. Запрос NGW
+  — `fld_district__like=%value%` с экранированием SQL LIKE.
 
 ## 2026-09-15
 

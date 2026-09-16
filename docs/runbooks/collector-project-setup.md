@@ -1,10 +1,11 @@
 ---
 title: Подготовка NGW Collector-проекта
 type: runbook
-last_verified: 2026-08-20
+last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerOriginMetadata.java
+  - maplib/src/main/java/com/nextgis/maplib/util/DistrictFilterUtil.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
 ---
@@ -19,7 +20,10 @@ related_code:
 
 1. Создайте/выберите NGW-ресурс типа `collector_project` и добавьте в него нужные vector/PostGIS
    слои в требуемом порядке.
-2. Для фильтрации по району задайте на проекте `resmeta.items.district`.
+2. Для фильтрации по району задайте на проекте `resmeta.items.district` —
+   одно латинское имя (`olonec`). Поле `district` у объектов — список через
+   запятую с пробелом; приложение ищет вхождение этого ключа, в том числе в
+   значениях вроде `karel_west, olonec`.
 3. Тяжёлые `.ngrc` растры импортируйте отдельно: они не входят в composition sync.
 4. Не используйте имя проекта как identity. Приложение формирует стабильный `project_uid` из
    account и remote project id и хранит registry в `map/collector_projects/`.

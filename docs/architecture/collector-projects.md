@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-09-14
+last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -11,6 +11,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
   - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java
+  - maplib/src/main/java/com/nextgis/maplib/util/DistrictFilterUtil.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
@@ -94,7 +95,9 @@ import и composition sync создают raster styles через один
   операции через `LayerContentProvider` каждый раз разрешают текущую карту приложения и не
   используют экземпляр, оставшийся от ранее открытого проекта.
 - Project metadata хранит identity, district, composition sync state и время
-  последней проверки.
+  последней проверки. `resmeta.items.district` — ключ одного района; поле
+  `district` у объектов может перечислять несколько имён через `, `, и фильтр
+  ищет вхождение ключа (`fld_district__like`), а не равенство всей строки.
 - Ручные NGW-слои должны маршрутизироваться в активный проект предсказуемо.
 - Переключение проекта сначала сохраняет текущую карту, затем активирует другую.
 - Общий process-wide coordinator удерживает active project identity на всё время
@@ -364,7 +367,8 @@ destructive composition apply. После импорта в её `config.json` �
   fail-closed блокировку при change/attachment хотя бы в одной копии;
 - два rebuild одной неизменной сломанной схемы за сутки, блокировка третьего,
   ручной сброс защиты и сохранение старого слоя при неуспешной staged-загрузке;
-- district filter и form/render configuration;
+- district filter: проект `olonec` загружает `karel_west, olonec` и не загружает
+  объект только с `karel_west`; form/render configuration;
 - проект с vector, `qgis_vector_style` и `qgis_raster_style`: все элементы
   появляются в исходном смешанном порядке, style tiles используют account
   authentication, а стили не предлагаются для создания объектов;
