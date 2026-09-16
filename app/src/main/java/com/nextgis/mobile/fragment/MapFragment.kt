@@ -34,6 +34,7 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.location.Location
@@ -86,6 +87,8 @@ import com.nextgis.maplib.datasource.GeoMultiPoint
 import com.nextgis.maplib.datasource.GeoMultiPolygon
 import com.nextgis.maplib.datasource.GeoPoint
 import com.nextgis.maplib.datasource.GeoPolygon
+import com.nextgis.maplib.gnss.ExternalGnssSession
+import com.nextgis.maplib.gnss.GnssFix
 import com.nextgis.maplib.location.GpsEventSource
 import com.nextgis.maplib.map.Layer
 import com.nextgis.maplib.map.LayerIdentifyPolicy
@@ -256,6 +259,9 @@ public class MapFragment
     protected var mStatusLongitude: TextView? = null
     protected var mZoom: TextView? = null
     protected var mStatusPanel: FrameLayout? = null
+    private var gnssHud: View? = null
+    private var gnssHudQuality: TextView? = null
+    private var gnssHudDetail: TextView? = null
     protected var mScaleRulerLayout: LinearLayout? = null
     protected var mScaleRulerText: TextView? = null
     private var mStakeoutPanel: View? = null
@@ -485,6 +491,10 @@ public class MapFragment
         mivZoomOut?.setOnClickListener(this)
 
         mStatusPanel = view.findViewById(R.id.fl_status_panel)
+        gnssHud = view.findViewById(R.id.gnss_hud)
+        gnssHudQuality = view.findViewById(R.id.gnss_hud_quality)
+        gnssHudDetail = view.findViewById(R.id.gnss_hud_detail)
+        bindGnssHud()
         mCenterCross = view.findViewById(R.id.iv_center_cross)
         mScaleRuler = view.findViewById(R.id.iv_ruler)
         mScaleRulerText = view.findViewById(R.id.tv_ruler)
@@ -4664,6 +4674,7 @@ public class MapFragment
             mapDrawableOrNull?.showAzimuthMeasurement(null, azimuthTargetPoint?.toMapLibrePoint(), false, true)
         }
         fillStatusPanel(null)
+        bindGnssHud()
     }
 
     fun updateLastLocation() {
@@ -4801,6 +4812,71 @@ public class MapFragment
 
 
     override fun onGpsStatusChanged(event: Int) {
+    }
+
+    override fun onExternalGnssFix(fix: GnssFix) {
+        fillGnssHud(fix, mGpsEventSource?.externalGnssStatus)
+    }
+
+    override fun onExternalGnssStatus(status: String) {
+        fillGnssHud(mGpsEventSource?.lastExternalFix, status)
+    }
+
+    private fun bindGnssHud() {
+        fillGnssHud(mGpsEventSource?.lastExternalFix, mGpsEventSource?.externalGnssStatus)
+    }
+
+    private fun fillGnssHud(fix: GnssFix?, status: String?) {
+        val hud = gnssHud ?: return
+        val qualityView = gnssHudQuality ?: return
+        val detailView = gnssHudDetail ?: return
+        if (mGpsEventSource?.isExternalInput != true) {
+            hud.visibility = View.GONE
+            return
+        }
+        hud.visibility = View.VISIBLE
+        when (status) {
+            ExternalGnssSession.STATUS_NO_DEVICE -> {
+                qualityView.setTextColor(Color.WHITE)
+                qualityView.setText(R.string.gnss_hud_no_device)
+                detailView.text = ""
+                return
+            }
+            ExternalGnssSession.STATUS_CONNECTING, ExternalGnssSession.STATUS_IDLE -> {
+                qualityView.setTextColor(Color.WHITE)
+                qualityView.setText(R.string.gnss_hud_connecting)
+                detailView.text = ""
+                return
+            }
+        }
+        if (fix == null || !fix.hasFix()) {
+            qualityView.setTextColor(Color.parseColor("#FFCC80"))
+            qualityView.setText(R.string.gnss_hud_no_fix)
+            detailView.text = ""
+            return
+        }
+        val accuracy = formatGnssAccuracy(fix.horizontalAccuracyM())
+        qualityView.setTextColor(when (fix.quality) {
+            4 -> Color.parseColor("#81C784")
+            5 -> Color.parseColor("#FFF176")
+            2 -> Color.parseColor("#80CBC4")
+            else -> Color.WHITE
+        })
+        qualityView.text = if (accuracy.isEmpty()) fix.qualityLabel() else "${fix.qualityLabel()}    $accuracy"
+        val hdop = if (GnssFix.isFinite(fix.hdop)) String.format(java.util.Locale.US, "%.1f", fix.hdop) else "—"
+        detailView.text = getString(R.string.gnss_hud_sats_hdop, fix.satellites, hdop)
+    }
+
+    private fun formatGnssAccuracy(accuracyM: Float): String {
+        if (!GnssFix.isFinite(accuracyM) || accuracyM <= 0f) {
+            return ""
+        }
+        return if (accuracyM < 1f) {
+            String.format(java.util.Locale.getDefault(), "%.0f cm", accuracyM * 100f)
+        } else {
+            String.format(java.util.Locale.getDefault(), "%.1f %s", accuracyM,
+                getString(com.nextgis.maplib.R.string.unit_meter))
+        }
     }
 
 

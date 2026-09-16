@@ -34,6 +34,23 @@
         android:singleLineTitle="false"
         />
 
+    <ListPreference
+        app:iconSpaceReserved="false"
+        android:defaultValue="system"
+        android:entries="@array/gnss_input_entries"
+        android:entryValues="@array/gnss_input_values"
+        android:key="gnss_input"
+        android:title="@string/gnss_input_title"
+        android:singleLineTitle="false"
+        />
+
+    <Preference
+        app:iconSpaceReserved="false"
+        android:key="gnss_device"
+        android:title="@string/gnss_external_title"
+        android:summary="@string/gnss_external_summary"
+        />
+
     <Preference
         app:iconSpaceReserved="false"
         android:selectable="false"

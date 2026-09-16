@@ -110,11 +110,12 @@ host/path требует новой подписанной сборки. Вет�
 
 ## Источники и интервалы GPS
 
-Карта использует свежий GPS (чип или mock) и Network только если GPS нет;
-запись трека и обхода — GNSS чипа или mock приёмника. Старые переключатели источников мигрируют в пояснения. Интервалы времени
+Карта использует свежий GPS (чип, mock или native NMEA) и Network только если GPS нет;
+запись трека и обхода — GNSS чипа, mock приёмника или native NMEA. `gnss_input`
+выбирает системный GNSS или внешний приёмник. Старые переключатели источников мигрируют в пояснения. Интервалы времени
 и расстояния задают сохранение точек после фильтра, а в разделе местоположения
-относятся к обходу. Для mock прореживание не грубее 2 с и 1 м. Карте достаточно approximate permission; записи требуется
-fine permission. См. [GPS pipeline](../architecture/location-pipeline.md).
+относятся к обходу. Для mock и native NMEA прореживание не грубее 2 с и 1 м. Карте достаточно approximate permission; записи системного GNSS требуется
+fine permission. Native NMEA не требует Mock Location. См. [GPS pipeline](../architecture/location-pipeline.md).
 
 `walkedit_temp` дополнительно хранит UUID обхода, путь активной карты, полную WKT,
 фазу RECORDING/FINISHING/FINISHED, ревизию и UUID/этап/слой/инструмент создаваемой

@@ -65,6 +65,7 @@ import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.FileUtil;
 import com.nextgis.maplib.util.HttpResponse;
 import com.nextgis.maplib.util.NetworkUtil;
+import com.nextgis.maplib.gnss.GnssInputPrefs;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.fragment.NGPreferenceSettingsFragment;
@@ -73,6 +74,7 @@ import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.mobile.BuildConfig;
 import com.nextgis.mobile.MainApplication;
 import com.nextgis.mobile.R;
+import com.nextgis.mobile.activity.ExternalGnssActivity;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppConstants;
 import com.nextgis.mobile.util.AppSettingsConstants;
@@ -194,6 +196,9 @@ public class SettingsFragment
                 final ListPreference lpLocationAccuracy =
                         (ListPreference) findPreference(SettingsConstants.KEY_PREF_LOCATION_SOURCE);
                 initializeLocationAccuracy(lpLocationAccuracy, false);
+                initializeGnssInput(
+                        (ListPreference) findPreference(SettingsConstants.KEY_PREF_GNSS_INPUT),
+                        findPreference(SettingsConstants.KEY_PREF_GNSS_DEVICE));
 
                 final ListPreference minTimeLoc = (ListPreference) findPreference(
                         SettingsConstants.KEY_PREF_LOCATION_MIN_TIME);
@@ -676,6 +681,44 @@ public class SettingsFragment
         listPreference.setEnabled(false);
     }
 
+    private void initializeGnssInput(final ListPreference input, final Preference device) {
+        if (input != null) {
+            input.setOnPreferenceChangeListener((preference, newValue) -> {
+                String value = String.valueOf(newValue);
+                preference.setSummary(GnssInputPrefs.VALUE_EXTERNAL.equals(value)
+                        ? getString(R.string.gnss_input_external)
+                        : getString(R.string.gnss_input_system));
+                if (device != null) {
+                    device.setEnabled(GnssInputPrefs.VALUE_EXTERNAL.equals(value));
+                }
+                if (getContext() != null) {
+                    sectionWork(getContext(), false);
+                }
+                return true;
+            });
+            String current = input.getValue();
+            if (current == null) {
+                current = GnssInputPrefs.VALUE_SYSTEM;
+            }
+            input.setSummary(GnssInputPrefs.VALUE_EXTERNAL.equals(current)
+                    ? getString(R.string.gnss_input_external)
+                    : getString(R.string.gnss_input_system));
+            if (device != null) {
+                device.setEnabled(GnssInputPrefs.VALUE_EXTERNAL.equals(current));
+            }
+        }
+        if (device != null) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(device.getContext());
+            String name = GnssInputPrefs.deviceName(prefs);
+            device.setSummary(name == null || name.isEmpty()
+                    ? getString(R.string.gnss_external_summary) : name);
+            device.setOnPreferenceClickListener(preference -> {
+                startActivity(new android.content.Intent(getActivity(), ExternalGnssActivity.class));
+                return true;
+            });
+        }
+    }
+
     public static void initializeUid(CheckBoxPreference preference) {
         // async check
         // registered = true - enabled = true; keep state
@@ -947,6 +990,12 @@ public class SettingsFragment
         editor.remove(SettingsConstantsUI.KEY_PREF_COORD_FORMAT);
         editor.remove(KEY_PREF_SHOW_ZOOM_CONTROLS);
         editor.remove(SettingsConstants.KEY_PREF_LOCATION_SOURCE);
+        editor.remove(SettingsConstants.KEY_PREF_GNSS_INPUT);
+        editor.remove(SettingsConstants.KEY_PREF_GNSS_TRANSPORT);
+        editor.remove(SettingsConstants.KEY_PREF_GNSS_DEVICE_ID);
+        editor.remove(SettingsConstants.KEY_PREF_GNSS_DEVICE_NAME);
+        editor.remove(SettingsConstants.KEY_PREF_GNSS_TCP_HOST);
+        editor.remove(SettingsConstants.KEY_PREF_GNSS_TCP_PORT);
         editor.remove(SettingsConstants.KEY_PREF_LOCATION_MIN_TIME);
         editor.remove(SettingsConstants.KEY_PREF_LOCATION_MIN_DISTANCE);
         editor.remove(SettingsConstants.KEY_PREF_LOCATION_ACCURATE_COUNT);

@@ -540,14 +540,17 @@ invariants:
       may remain application/gpx+xml for chooser filtering. FileProvider getType, including
       anonymous lookup, uses text/xml so MimeTypeMap clients do not append .bin or
       stringify a missing GPX mapping as .null; they may append .xml.
-      Current display uses a fresh GPS fix (chip or mock, any accuracy) and falls
+      Current display uses a fresh GPS fix (chip, mock or native NMEA, any accuracy) and falls
       back to Network only when GPS is missing or older than 8 seconds; a coarse GPS
       fix is never replaced by a more accurate Wi-Fi/cell estimate. A live mock GNSS
       stream displaces the phone chip. GPS Connector's no-extras 47 m placeholder does
       not replace a fresh receiver fix that carries hdop or diffStatus extras.
-      Recording uses GNSS chip or mock GPS with receiver extras, finite coordinates,
+      An in-app external NMEA session (`gnss_input=external`) does not subscribe to the
+      phone GPS provider or Mock Location; Bluetooth Classic/LE, USB and TCP/IP streams
+      are parsed as GGA/GST/GSA/RMC independently of receiver brand.
+      Recording uses GNSS chip, mock GPS with receiver extras or native NMEA, finite coordinates,
       positive accuracy at most 50 metres and valid monotonic measurement time.
-      Mock vertices skip pedestrian smoothing and are sampled no coarser than 2 s / 1 m. Live batches retain chronological
+      Mock and native NMEA vertices skip pedestrian smoothing and are sampled no coarser than 2 s / 1 m. Live batches retain chronological
       session measurements without treating receipt time as current location or sound health.
       Robust adaptive smoothing and stationary anchoring precede the sequence validator;
       movement through 160 km/h remains supported with no manual pedestrian/vehicle profile.
@@ -571,6 +574,9 @@ invariants:
       - maplib/src/test/java/com/nextgis/maplib/util/LocationTrackFilterCoreTest.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/util/ExternalGnssFixPolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/ExternalGnssSession.java
+      - maplib/src/main/java/com/nextgis/maplib/location/AccurateLocationTaker.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiter.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationProviderArbiterCore.java

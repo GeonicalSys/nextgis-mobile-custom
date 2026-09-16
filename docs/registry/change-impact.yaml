@@ -291,6 +291,11 @@ triggers:
       - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/util/ExternalGnssFixPolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/ExternalGnssSession.java
+      - maplib/src/main/java/com/nextgis/maplib/location/AccurateLocationTaker.java
+      - app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
+      - app/src/main/res/layout/fragment_map.xml
       - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
       - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java

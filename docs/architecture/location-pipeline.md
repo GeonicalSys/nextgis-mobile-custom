@@ -4,6 +4,8 @@ type: architecture
 last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+  - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
+  - maplib/src/main/java/com/nextgis/maplib/gnss/ExternalGnssSession.java
   - maplib/src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
@@ -46,15 +48,18 @@ location. Это обеспечивает обработку GPS и акселе
 
 ## Карта
 
-Карта показывает свежую позицию GPS (чип телефона или mock внешнего GNSS)
+Карта показывает свежую позицию GPS (чип телефона, mock внешнего GNSS или
+native NMEA внешнего приёмника)
 либо, если GPS нет или старше 8 секунд, Wi‑Fi/сотовой сети. Свежий GPS любой
-точности не заменяется «более точной» сетью. Пока жив mock, чип телефона
+точности не заменяется «более точной» сетью. Пока жив mock или native NMEA, чип телефона
 игнорируется; заглушка GPS Connector без extras (`hAcc=47`) не сменяет фикс
-с `hdop`/`diffStatus`. Старая настройка
-`location_source` мигрирует в `3`, `tracks_location_source` — в `1`; переключатели
-источников становятся пояснениями. Approximate location достаточно для карты;
-для записи требуется fine location и спутниковый `GPS_PROVIDER` (включая mock
-приёмника). Google Play
+с `hdop`/`diffStatus`. Настройка `gnss_input` выбирает системный GNSS Android
+или внешний приёмник (Bluetooth Classic/LE, USB, TCP/IP). Старая настройка
+`location_source` мигрирует в `3`, `tracks_location_source` — в `1`; прежние переключатели
+источников остаются пояснениями. Approximate location достаточно для карты;
+для записи системного GNSS требуется fine location и спутниковый `GPS_PROVIDER` (включая mock
+приёмника). Native NMEA не использует Mock Location и не требует включённого
+системного GPS. Google Play
 Services не добавляются. Доступность сетевой позиции зависит от системного
 Network Provider, разрешений и условий связи.
 
@@ -83,12 +88,13 @@ callbacks нет. Свежий GPS всегда выбран при живой �
 
 ## Проверка движения
 
-Поток записи принимает GNSS чипа или mock GPS с extras приёмника, конечные
+Поток записи принимает GNSS чипа, mock GPS с extras приёмника или native NMEA
+с `nativeNmea` extras, конечные
 корректные координаты, положительную accuracy до 50 м и корректное время.
 Network, заглушка mock без extras и повреждённые speed/accuracy не записываются.
 Координаты внешнего GNSS идут в трек/обход без пешеходного smoother; прореживание
-для mock не грубее 2 с и 1 м (если пользовательские интервалы уже чаще — они
-сохраняются). Для выноса остаётся отдельная подписка на исходные GNSS/mock
+для mock и native NMEA не грубее 2 с и 1 м (если пользовательские интервалы уже чаще — они
+сохраняются). Для выноса остаётся отдельная подписка на исходные GNSS/mock/NMEA
 измерения: пешеходное сглаживание не затрагивает его точные пороги.
 
 В локальных метрах работает модель положения и скорости с фильтром Калмана,

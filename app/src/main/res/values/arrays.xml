@@ -28,6 +28,14 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+    <string-array name="gnss_input_values" translatable="false">
+        <item>system</item>
+        <item>external</item>
+    </string-array>
+    <string-array name="gnss_input_entries">
+        <item>@string/gnss_input_system</item>
+        <item>@string/gnss_input_external</item>
+    </string-array>
     <string-array name="map_bg_val" translatable="false">
         <item>light</item>
         <item>neutral</item>

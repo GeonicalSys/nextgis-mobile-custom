@@ -6,6 +6,49 @@ preferences:
     default: '3'
     source: maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
     purpose: Retired user switch; migrated to GPS-first display with Network only when GPS is absent or stale, shown as a non-editable explanation.
+  gnss_input:
+    owner: app
+    type: string
+    default: system
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_location.xml
+    purpose: Choose Android system GNSS or an in-app external NMEA receiver (Bluetooth Classic/LE, USB, TCP/IP) without Mock Location.
+  gnss_device:
+    owner: app
+    type: preference_action
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_location.xml
+    purpose: Open the external GNSS device picker for Bluetooth Classic/LE, USB or TCP/IP.
+  gnss_transport:
+    owner: app
+    type: string
+    default: bluetooth_classic
+    source: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
+    purpose: Selected external GNSS transport when gnss_input is external.
+  gnss_device_id:
+    owner: app
+    type: string
+    default: ''
+    source: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
+    purpose: Saved Bluetooth address, USB device key or TCP host:port for the external NMEA session.
+  gnss_device_name:
+    owner: app
+    type: string
+    default: ''
+    source: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
+    purpose: Human-readable receiver name shown in settings; not used for matching.
+  gnss_tcp_host:
+    owner: app
+    type: string
+    default: ''
+    source: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
+    purpose: Host of a raw NMEA TCP stream from the receiver, not an NTRIP caster.
+  gnss_tcp_port:
+    owner: app
+    type: string
+    default: '9001'
+    source: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
+    purpose: TCP port of the receiver NMEA stream.
   tracks_location_source:
     owner: app
     type: string

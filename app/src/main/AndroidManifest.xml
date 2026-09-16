@@ -26,8 +26,16 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="s" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <!--         <uses-permission android:name="android.permission.CAMERA"/> -->
     <uses-feature
@@ -38,6 +46,12 @@
         android:required="false" />
     <uses-feature
         android:name="android.hardware.wifi"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
         android:required="false" />
     <!--
         <uses-feature
@@ -83,7 +97,7 @@
             android:name=".stakeout.StakeoutForegroundService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location" />
+            android:foregroundServiceType="location|connectedDevice" />
 
         <meta-data
             android:name="io.sentry.dsn"
@@ -130,6 +144,10 @@
             android:theme="@style/AppTheme"
 
             />
+        <activity
+            android:name=".activity.ExternalGnssActivity"
+            android:label="@string/gnss_external_title"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.ProjectSettingsActivity"
             android:label="@string/project_settings"
