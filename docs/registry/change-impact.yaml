@@ -402,6 +402,8 @@ triggers:
       - maplib/src/main/java/com/nextgis/maplib/util/NGWUtil.java
       - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java
       - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalog.java
+      - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
@@ -414,8 +416,10 @@ triggers:
       - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/res/menu/add_layer.xml
       - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
       - app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt
     owners: [maplib, maplibui, app]

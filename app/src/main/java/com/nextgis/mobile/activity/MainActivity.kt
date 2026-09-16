@@ -87,12 +87,14 @@ import com.nextgis.maplib.util.NGWUtil
 import com.nextgis.maplib.util.NGWResourceUrl
 import com.nextgis.maplib.util.NetworkUtil
 import com.nextgis.maplib.util.SettingsConstants
+import com.nextgis.maplib.util.SharedUnderlayKind
 import com.nextgis.maplibui.GISApplication
 import com.nextgis.maplibui.activity.NGActivity
 import com.nextgis.maplibui.api.IChooseLayerResult
 import com.nextgis.maplibui.api.IVectorLayerUI
 import com.nextgis.maplibui.fragment.BottomToolbar
 import com.nextgis.maplibui.fragment.LayerFillProgressDialogFragment
+import com.nextgis.maplibui.mapui.LayerFactoryUI
 import com.nextgis.maplibui.mapui.TrackLayerUI.CODE_TRACK_LIST
 import com.nextgis.maplibui.mapui.SyncAccountWorker
 import com.nextgis.maplibui.overlay.EditLayerOverlay
@@ -109,6 +111,7 @@ import com.nextgis.maplibui.util.CollectorProjectRegistry
 import com.nextgis.maplibui.util.FeatureFormDraftStore
 import com.nextgis.maplibui.util.LayerBackupManager
 import com.nextgis.maplibui.util.LayerUtil
+import com.nextgis.maplibui.util.LoadLisaCollectorProject
 import com.nextgis.maplibui.util.NGIDUtils
 import com.nextgis.maplibui.util.NGWResourceImportHelper
 import com.nextgis.maplibui.util.ProjectOperationCoordinator
@@ -1121,17 +1124,16 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
             6410 -> if (resultCode == RESULT_OK) {
                 val uri = data?.data ?: return
-                val name = FileUtil.getFileNameByUri(this, uri, "").lowercase(Locale.ROOT)
-                if (name.endsWith(".ngrc") || name.endsWith(".mbtiles") || name.endsWith(".zip")) {
-                    val fill = Intent(this, LayerFillService::class.java).apply {
-                        action = LayerFillService.ACTION_ADD_TASK
-                        putExtra(LayerFillService.KEY_URI, uri)
-                        putExtra(LayerFillService.KEY_NAME, FileUtil.getFileNameByUri(this@MainActivity, uri, "").substringBeforeLast('.'))
-                        putExtra(LayerFillService.KEY_INPUT_TYPE, LayerFillService.TMS_LAYER)
-                        putExtra(LayerFillService.KEY_LAYER_GROUP_ID, (application as IGISApplication).map.id)
-                        if (!name.endsWith(".ngrc")) putExtra(LayerFillService.KEY_TMS_TYPE, com.nextgis.maplib.util.GeoConstants.TMSTYPE_MBTILES_RASTER)
-                    }
-                    LayerFillProgressDialogFragment.startFill(fill)
+                val kind = SharedUnderlayKind.classify(this, uri)
+                if (kind == SharedUnderlayKind.NGRC || kind == SharedUnderlayKind.MBTILES) {
+                    val layerName = FileUtil.getFileNameByUri(this, uri, "").substringBeforeLast('.')
+                    LayerFactoryUI.startSharedUnderlayImport(
+                        this,
+                        (application as IGISApplication).map,
+                        uri,
+                        kind,
+                        layerName
+                    )
                 } else Toast.makeText(this, R.string.underlay_file_required, Toast.LENGTH_LONG).show()
             }
 
@@ -1480,6 +1482,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         if (null != mapFragment) {
             mapFragment!!.addNGWLayer()
         }
+    }
+
+    fun loadCollectorProject() {
+        LoadLisaCollectorProject.start(this)
     }
 
 

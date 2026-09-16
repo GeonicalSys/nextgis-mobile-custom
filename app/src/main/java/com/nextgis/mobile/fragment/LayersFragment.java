@@ -864,6 +864,10 @@ public class LayersFragment
     public boolean onMenuItemClick(MenuItem menuItem) {
         IGISApplication application = (IGISApplication) getActivity().getApplication();
         switch (menuItem.getItemId()) {
+            case R.id.menu_load_collector_project:
+                application.sendEvent(GA_LAYER, GA_CREATE, GA_NGW);
+                ((MainActivity) getActivity()).loadCollectorProject();
+                return true;
             case R.id.menu_new:
                 application.sendEvent(GA_LAYER, GA_CREATE, GA_LOCAL);
                 Intent intentNewLayer = new Intent(getActivity(), CreateVectorLayerActivity.class);

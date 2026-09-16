@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-09-15
+last_verified: 2026-09-16
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -28,7 +28,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
     responsibility: Main-process initialization and logging; create or adopt and activate the initial local project before GISApplication opens its first map, schedule same-workspace recovery for an interrupted account sync, except that a pre-registry Debug workspace is kept in place for explicit underlay streaming; create editable local vector layers and keep default OSM at internal index zero plus tracks at the top of the reversed layer list for every workspace.
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    responsibility: Main navigation and toolbar state for explicit map rotation/location recovery, ordered in-process track Start/Stop intent shared with TrackerService, local GeoJSON/KML/GPX file routing, photo-overlay default migration, ordered walk/manual-geometry/form crash-recovery hub, direct NGW resource URL resolution, name-only project picker with sync/fill/track switch protection, backup sharing UI and updater continuation on activity resume.
+    responsibility: Main navigation and toolbar state for explicit map rotation/location recovery, ordered in-process track Start/Stop intent shared with TrackerService, local GeoJSON/KML/GPX file routing, shared-underlay import from Open local and New underlay from file, photo-overlay default migration, ordered walk/manual-geometry/form crash-recovery hub, direct NGW resource URL resolution, Load project from the lisa catalog, name-only project picker with sync/fill/track switch protection, backup sharing UI and updater continuation on activity resume.
   - path: app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
     responsibility: Settings navigation with Project and Underlay storage as adjacent top-level entries, and updater continuation after Android special install permission returns to a manual update check.
   - path: app/src/main/res/xml/preferences_tracks.xml
@@ -67,8 +67,8 @@ key_components:
     responsibility: Calculate offline magnetic declination from the official WMM2025 coefficients for the 2025-2030 model interval.
   - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
     responsibility: Full-scale limited low-pitched non-overlapping damped wooden-tap PCM cues with 3x digital gain and a distinct double-tap in-tolerance pattern.
-  - path: app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
-    responsibility: Layer drawer and sync controls, including reconciliation of the animation with adapter-owned process sync state after lifecycle-sensitive broadcasts.
+  - path: app/src/main/res/menu/add_layer.xml
+    responsibility: Add-layer popup; Load project is first, Add NGW layer by URL stays hidden with its handler intact.
   - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
     responsibility: Branch-specific Lisa Mobile manifest, trusted versioned URL, integrity, identity, Android 9-10 archive-certificate fallback without weakening SHA-256 matching, and process-death-safe continuation after Android install permission.
   - path: app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java

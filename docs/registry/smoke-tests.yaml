@@ -11,6 +11,7 @@ tests:
       - Import an unmodified standard archive with Mapnik.json and Mapnik/z/x/y.jpg; compare all tile bytes and repeat without duplication. Reject a missing/ambiguous config with a live map and verify worker cleanup does not crash MapLibre.
       - Verify one MBTiles payload and no extracted tree; repeat import in the same and another project without payload growth.
       - Import raster MBTiles and ZIP containing one MBTiles; reject vector data and ordinary ZIP-TMS in the dedicated picker.
+      - Open local with the same NGRc or raster MBTiles fixture as New underlay from file; the asset appears in Underlay storage and can be attached to another project.
       - Remove a project layer, undo, delete a project and reset settings; verify shared payload remains.
       - Delete in catalog after confirming all project names; reopen nested closed projects and verify only matching links disappeared.
       - On Geonical with trusted Debug installed, Underlay storage shows Import from the old app; the layer picker and Project settings do not. Without an active project the action reports that there is no project and does not start Debug export.
@@ -172,6 +173,7 @@ tests:
       - Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, an editable field vector whose initial visible is false, a MultiPolygon feature with a real hole and a second polygon member, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors
       - Add one server layer containing 15 MultiPolygon features and about 140000 positions, with one feature near 60000 positions and hundreds of polygon members
       - Reset all settings and import the Collector resource while interacting with the progress UI
+      - From Add layer choose Load project, confirm the lisa catalog lists the same Collector projects, and import one
       - Verify every layer has a distinct local storage path and the large layer has exactly 15 local features
       - Verify the ordinary MultiPolygon retains both members and exactly one hole
       - Enable the read-only Point layer only in the local layer drawer without changing server config or running sync
@@ -550,7 +552,7 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps: [Add a public vector resource URL without a pre-existing account, Add a raster resource URL from an existing account, Add a QGIS style URL, Open a vector resource without data.write permission]
-    expected: Guest account is created only for the validated public server, vector and raster appear through the normal reload flow, style resolves to its parent layer, and the no-write vector is read-only and pull-only.
+    expected: Guest account is created only for the validated public server, vector and raster appear through the normal reload flow, style resolves to its parent layer, and the no-write vector is read-only and pull-only. The Add NGW layer by URL menu item stays hidden; the handler remains.
   SMOKE-NGW-IMPORT-BACK:
     type: device
     scope: [app, maplibui]

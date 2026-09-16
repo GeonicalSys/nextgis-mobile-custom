@@ -16,8 +16,10 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalog.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java
-  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
@@ -40,7 +42,7 @@ related_code:
 
 ```text
 NGW Collector resource
-  → SelectNGWResourceActivity/Dialog
+  → Add layer «Загрузить проект» (keyname lisa) или SelectNGWResourceActivity/Dialog
   → CollectorProjectMetadata (maplib)
   → CollectorProjectRegistry (maplibui)
   → isolated workspace + map
@@ -48,6 +50,12 @@ NGW Collector resource
   → composition sync / removal policy
   → project switch in MainActivity
 ```
+
+Первый пункт меню добавления слоя «Загрузить проект» ищет в Веб ГИС группу с
+`keyname=lisa` (общий ключ для Lisa и Belka) и показывает `collector_project`
+внутри неё, включая вложенные группы. Импорт дальше тот же, что у ручного
+выбора Collector в дереве NGW. Пункт «Добавить слой NGW по URL» скрыт, код
+сохранён.
 
 `Connection.NGWResourceTypeCollector` — обязательный тип ресурса форка.
 Collector project идентифицируется стабильным `project_uid`, построенным из

@@ -8,6 +8,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java
 ---
 
 # Экосистема ЛИСА — desktop, плагины и Android
@@ -67,7 +68,9 @@ QGIS-инструменты могут создавать, оформлять и
   пробелом; `resmeta.items.district` Collector-проекта — один ключ, который
   Android ищет как вхождение (`fld_district__like`), а не как равенство строки;
   несинхронизируемые слои (`SYNC_NONE`) сверяют отфильтрованный count и при
-  расхождении (сервер > 0) пересобирают слой.
+  расхождении (сервер > 0) пересобирают слой;
+- корневая группа каталога полевых проектов имеет `keyname=lisa` (Lisa и Belka);
+  Android показывает Collector-проекты внутри этой группы пунктом «Загрузить проект».
 
 В publisher-режиме `vector_only` управляемые `sync_ngw` слои могут содержать
 служебное `idqgs BIGINT`. Оно связывает web-объект с первичным `id` PostgreSQL для

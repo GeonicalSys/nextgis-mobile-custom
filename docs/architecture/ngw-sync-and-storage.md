@@ -60,7 +60,8 @@ raster добавляет через `LayerGroup` и запрашивает ст
 read-only и с направлением sync только server-to-device. Это правило действует и
 для обычного ручного выбора NGW-ресурса, если permission payload был загружен.
 
-ID контракта: `INV-NGW-URL-IMPORT`.
+ID контракта: `INV-NGW-URL-IMPORT`. Пункт меню «Добавить слой NGW по URL» скрыт;
+код разбора URL и импорта сохранён.
 
 ## Идентичность Android account
 

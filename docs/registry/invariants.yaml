@@ -7,6 +7,7 @@ invariants:
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
       - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java
+      - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
       - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
     verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-SHARED-UNDERLAYS]

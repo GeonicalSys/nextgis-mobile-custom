@@ -22,6 +22,10 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/menu_load_collector_project"
+        android:title="@string/lisa_catalog_load_project"/>
+
+    <item
         android:id="@+id/menu_new"
         android:title="@string/create_layer"/>
 
@@ -34,7 +38,8 @@
 
     <item
         android:id="@+id/menu_add_by_url"
-        android:title="@string/action_add_by_url"/>
+        android:title="@string/action_add_by_url"
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_add_remote"
