@@ -548,7 +548,11 @@ invariants:
       not replace a fresh receiver fix that carries hdop or diffStatus extras.
       An in-app external NMEA session (`gnss_input=external`) does not subscribe to the
       phone GPS provider, Network provider or Mock Location; Bluetooth Classic/LE, USB and TCP/IP streams
-      are parsed as GGA/GST/GSA/RMC independently of receiver brand. Native NMEA is not
+      are parsed as GGA/GST/GSA/RMC independently of receiver brand, plus ComNav BESTPOSA
+      and CNB BESTPOSB (message 42). Factory ComNav CNB (AA 44 12) is framed with CRC;
+      $/# inside binary is not an NMEA start. The session does not send unlogall; optional
+      GGA/GST/GSA/RMC logs are one 20-byte command at a time unless ASCII is already flowing.
+      Native NMEA is not
       dropped as phone-chip while a previous receiver fix is still fresh.
       While an endpoint
       is configured, the session and a connected-device foreground service stay alive
@@ -580,6 +584,11 @@ invariants:
       - maplib/src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/util/ExternalGnssFixPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaLineBuffer.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/CnbFrameBuffer.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/CnbBestPos.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/ComNavAsciiCommands.java
+      - maplib/src/main/java/com/nextgis/maplib/gnss/BluetoothLeTransport.java
       - maplib/src/main/java/com/nextgis/maplib/gnss/ExternalGnssSession.java
       - maplib/src/main/java/com/nextgis/maplib/location/AccurateLocationTaker.java
       - maplib/src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java

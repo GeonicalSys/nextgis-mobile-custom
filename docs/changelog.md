@@ -1,12 +1,19 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-09-17
+
+- Внешний GNSS: PiGoLite/ComNav отдаёт CNB BESTPOSB (сообщение 42) — это основной
+  фикс. `unlogall` не пишется; опциональные `log gpgga/gst/gsa/rmc` идут по одной
+  команде ≤20 байт. `$`/`#` внутри бинаря не разбираются как NMEA. Root закрепляет
+  Merge Commit maplib PR #28 `7c1294e`.
 
 ## 2026-09-16
 
