@@ -84,11 +84,12 @@ public class SyncService extends NGWSyncService {
             public void onReceive(Context context, Intent intent) {
                 String action = intent != null ? intent.getAction() : null;
                 if (SyncAdapter.SYNC_START.equals(action)) {
-                    startSyncForeground();
+                    if (NGWSyncService.isSyncStarted()) startSyncForeground();
                 } else if (SyncAdapter.SYNC_FINISH.equals(action)
                         || SyncAdapter.SYNC_CANCELED.equals(action)
                         || SyncAdapter.SYNC_CHANGES.equals(action)) {
-                    stopForeground(true);
+                    // A rejected parallel attempt or delayed broadcast cannot stop an active worker.
+                    if (!NGWSyncService.isSyncStarted()) stopForeground(true);
                 }
             }
         };

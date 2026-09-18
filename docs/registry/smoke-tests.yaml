@@ -1,5 +1,31 @@
 schema_version: 1
 tests:
+  SMOKE-NGW-SYNC-RECOVERY:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Stall snapshot HTTP headers and body, including HTTP to HTTPS redirect; cancel sync and reject a second concurrent sync
+      - During a large snapshot keep GPS active, open the layer menu and refresh current and completed tracks; switch or recreate the map after the worker finishes
+      - Cancel or kill the process during a large snapshot SQLite apply, restart in the same project and then try another project
+      - Keep pending local edits and attachments, simulate backup failure and low disk space, and inspect database integrity after recovery
+      - Repeat SYNC_NONE with one invalid geometry missing locally and another with an old local row; repair the server geometry without changing count; test the one-hour expiry and confirmed long-press recheck
+    expected: >
+      Finite network waits and bounded retries; UI badge and GPS track refresh never wait on SQLite on the main thread. Track requests coalesce and stale workspace/view/style results are discarded.
+      A rejected worker cannot stop another worker's spinner or foreground service; project lease
+      remains until the real worker exits. No partial snapshot commit or loss of pending edits;
+      recovery stays in the owning workspace. Only committed fully explained count mismatches are
+      suppressed within scope and TTL; changed scope/count and explicit recheck fetch again.
+  SMOKE-NGW-SELECTOR-RESTORE:
+    type: device
+    scope: [app, maplibui]
+    steps:
+      - Load a large NGW resource tree, choose layers from multiple branches, rotate and background the Activity and Dialog
+      - Recreate the process, fail the restore network call, retry and then close the screen during another restore
+      - Inspect saved-state Parcel size and reopen add-layer and export selectors
+    expected: >
+      No Parcelable resource tree or credentials in state or launch Intent. Current remote path
+      and selected flags restore asynchronously with new process-local IDs; incomplete restoration
+      cannot import, saved selection survives retry, and destroyed screens receive no dialog.
   SMOKE-SHARED-UNDERLAYS:
     type: device
     scope: [app, maplib, maplibui]

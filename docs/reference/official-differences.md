@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-09-17
+last_verified: 2026-09-18
 related_code:
   - app/build.gradle
   - app/src/main
@@ -20,8 +20,8 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.20` / `versionCode` 214; Lisa Debug
-`3.1.2.20` / `versionCode` 215. Сверено с официальным приложением `3.2.0` и с
+Состояние форка: Lisa/Belka Release `3.1.2.21` / `versionCode` 215; Lisa Debug
+`3.1.2.21` / `versionCode` 216. Сверено с официальным приложением `3.2.0` и с
 головами официальных библиотек на 14 сентября 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
 [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
@@ -52,6 +52,11 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 (внешний NMEA GNSS) и maplibui PR #17
 [`c9cea108`](https://github.com/GeonicalSys/android_maplibui/commit/c9cea108131e7e51e2b3270024a5c284ab691019)
 (foreground GNSS service).
+Выпуск `3.1.2.21` закрепляет Merge Commit maplib PR #29
+[`18e7e00`](https://github.com/GeonicalSys/android_maplib/commit/18e7e0090bb3bff627978e5a22456eec39e99647)
+(sync timeouts, coalesced track reads, linear field comparison) и maplibui PR #18
+[`53f9fc9a`](https://github.com/GeonicalSys/android_maplibui/commit/53f9fc9a37d379f5d0c1935f1aed6ba2c0c0e2e6)
+(компактное восстановление NGW selector).
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -63,9 +68,22 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 канонические GitHub repositories. Release tag и feature-коммиты MBTiles
 рассматриваются отдельно от приведённых baseline hashes форка.
 
+Для доработки sync/ANR все четыре HEAD повторно сверены через `git ls-remote`
+18 сентября 2026 года: hashes выше не изменились. Прочитанные official
+`NGWVectorLayer.getConnection` по-прежнему не задаёт timeouts, а
+`SelectNGWResourceActivity.onSaveInstanceState` сериализует `Connections` целиком.
+В рабочей доработке форка добавлены timeouts и interrupt-checks snapshot,
+worker-owned sync state, фоновая badge-проверка SQLite, компактное async restore
+NGW selector и ограниченный checkpoint объяснённых пропусков геометрии.
+После воспроизведённого Debug ANR добавлены coalesced фоновые snapshots треков
+и линейный проход по полям в `Feature.equalsData`; official всё ещё выполняет
+вложенные indexed schema scans. GPS callback использует durable recording flag
+вместо SQLite. Выпуск `3.1.2.21` включает эти исправления;
+[фактические проверки и ограничения](sync-hang-verification.md).
+
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
-Форк `3.1.2.20` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
+Форк `3.1.2.21` явно использует `android-sdk-opengl:13.0.2` в `app`, `maplibui`
 и `maplib`, чтобы карта запускалась на устройствах без совместимого Vulkan.
 
 Сравнение консервативное: если возможность уже есть хотя бы в актуальной ветке
@@ -1328,4 +1346,4 @@ Sentry оставлен для production crashes, но сбор interaction bre
 exporter старого доверенного Debug проверяется по установленной Activity,
 поэтому запуск и хранилище подложек показывают предложение обновления.
 
-Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #27 `b698466` и maplibui #17 `c9cea108`; выпуск Lisa/Belka `3.1.2.20` / `214`, Debug `3.1.2.20` / `215`.
+Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #29 `18e7e00` и maplibui #18 `53f9fc9a`; выпуск Lisa/Belka `3.1.2.21` / `215`, Debug `3.1.2.21` / `216`.

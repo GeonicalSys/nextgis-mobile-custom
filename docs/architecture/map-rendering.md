@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-16
+last_verified: 2026-09-18
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -41,6 +41,16 @@ related_code:
   MapLibre backend для конечного APK.
 
 ## Контракты
+
+Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
+читает записи/сегменты в общей фоновой очереди, по одной активной и одной
+отложенной задаче каждого вида. Чтение привязано к SQLite исходного workspace,
+не к текущему ContentProvider и не к mutable cache `TrackLayer`. Main thread
+только устанавливает готовый GeoJSON, проверив identity карты, view и style.
+Ошибка чтения сохраняет предыдущую отрисовку; устаревший результат отбрасывается.
+Завершённые видимые треки остаются отдельно от незавершённых, сегменты не
+соединяются, start/end flags не возвращаются. Full style build остаётся отдельным
+существующим фоновым сценарием.
 
 1. В `LayerGroup` индекс `0` означает низ стека. Дефолтный OSM/Mapnik существует
    в каждой карте, включая Collector workspace, и нормализуется в эту позицию

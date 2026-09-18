@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -39,6 +39,11 @@ related_code:
 # Collector projects, composition sync и backups
 
 ## Поток импорта
+
+Восстановление Activity/Dialog выбора ресурсов хранит компактные remote identities,
+а не Parcelable-дерево; повторная загрузка и восстановление флагов выполняются
+в фоне до разрешения импорта. Контракт и ограничения:
+[восстановление выбора ресурсов](ngw-sync-and-storage.md#восстановление-выбора-ресурсов).
 
 ```text
 NGW Collector resource

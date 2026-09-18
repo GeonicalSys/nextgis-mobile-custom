@@ -111,6 +111,10 @@ public class OfflineSyncIntentService extends IntentService {
     }
 
     public static boolean startActionFoo(Context context, String lpath) {
+        return startActionFoo(context, lpath, false);
+    }
+
+    public static boolean startActionFoo(Context context, String lpath, boolean forceRecheck) {
         ProjectOperationCoordinator.Lease operationLease =
                 ProjectOperationCoordinator.tryBegin(
                         context, ProjectOperationCoordinator.Kind.DATA_SYNC);
@@ -125,6 +129,8 @@ public class OfflineSyncIntentService extends IntentService {
             intent.putExtra(ACTION_LPATH, lpath);
         }
         intent.putExtra(EXTRA_MANUAL_SYNC, true);
+        intent.putExtra(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED,
+                forceRecheck);
         intent.putExtra(EXTRA_OPERATION_RESERVATION, reservation);
         try {
             ContextCompat.startForegroundService(context, intent);
@@ -162,7 +168,8 @@ public class OfflineSyncIntentService extends IntentService {
                 }
                 boolean manual = intent.getBooleanExtra(EXTRA_MANUAL_SYNC, true);
                 String reservation = intent.getStringExtra(EXTRA_OPERATION_RESERVATION);
-                handleActionFoo(lpath, manual, reservation);
+                handleActionFoo(lpath, manual, reservation, intent.getBooleanExtra(
+                        com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED, false));
             }
         }
     }
@@ -170,7 +177,7 @@ public class OfflineSyncIntentService extends IntentService {
     private void handleActionFoo(
             String lpath,
             boolean manualSync,
-            String operationReservation) {
+            String operationReservation, boolean forceRecheck) {
         ProjectOperationCoordinator.Lease operationLease = operationReservation != null
                 ? PENDING_OPERATION_LEASES.remove(operationReservation) : null;
         if (operationLease == null) {
@@ -220,7 +227,10 @@ public class OfflineSyncIntentService extends IntentService {
             }
             bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, manualSync);
             bundle.putBoolean(EXTRA_PROJECT_OPERATION_ALREADY_HELD, true);
+            bundle.putBoolean(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED,
+                    forceRecheck);
             for (Account account : mAccounts) {
+                if (Thread.currentThread().isInterrupted()) break;
                 try {
                     // SyncResult and SyncAdapter carry per-run state. Reusing either
                     // leaked errors/cancellation from one account into the next one.

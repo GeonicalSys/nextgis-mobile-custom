@@ -1,7 +1,7 @@
 ---
 title: Магнитный азимут, расстояние и вынос координат
 type: architecture
-last_verified: 2026-09-16
+last_verified: 2026-09-18
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
@@ -35,6 +35,11 @@ MapLibre-overlay измерения. `app` владеет lifecycle режимо
 `maplibui` не участвует.
 
 ## Геометрический контракт
+
+Частый GPS callback карты больше не читает SQLite для обновления трека:
+использует durable recording flag и фоновый snapshot. Это устраняет ожидание
+sync-транзакции в этом callback; геодезические расчёты, compass/audio и частота
+lease выноса не изменены. См. [контракт координат](location-pipeline.md).
 
 - `Point`/`MultiPoint`: ближайшая точка объекта.
 - `LineString`/`MultiLineString`: ближайшая точка любого сегмента.

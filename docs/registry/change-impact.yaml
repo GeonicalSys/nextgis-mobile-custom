@@ -491,6 +491,13 @@ triggers:
     strict_docs: true
   - id: ACCOUNT-SYNC-SCHEDULING
     paths:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/Feature.java
+      - maplib/src/main/java/com/nextgis/maplib/util/CoalescingRefresh.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NgwSync*.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NgwSnapshotCheckpoint.java
+      - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NgwResourceSelectionState.java
+      - app/src/main/java/com/nextgis/mobile/datasource/SyncService.java
       - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
       - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
       - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
@@ -511,7 +518,7 @@ triggers:
       - app/docs/manifest.yaml
       - maplib/docs/manifest.yaml
       - maplibui/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LAYER-SYNC-SETTINGS]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LAYER-SYNC-SETTINGS, SMOKE-NGW-SYNC-RECOVERY, SMOKE-NGW-SELECTOR-RESTORE]
     strict_docs: true
   - id: BACKUP-AND-DESTRUCTIVE-LAYER-CHANGE
     paths:

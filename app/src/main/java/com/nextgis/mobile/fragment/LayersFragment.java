@@ -127,6 +127,13 @@ public class LayersFragment
     private static final String PREF_PENDING_SYNC_ERROR = "pending_sync_error";
     private static final int SYNC_ERROR_MESSAGE_MAX = 200;
     private static final long SYNC_STATE_RECONCILE_DELAY_MS = 1500L;
+    private static final java.util.concurrent.ExecutorService BADGE_EXECUTOR =
+            java.util.concurrent.Executors.newSingleThreadExecutor();
+    private final android.os.Handler mBadgeHandler =
+            new android.os.Handler(android.os.Looper.getMainLooper());
+    private java.util.concurrent.Future<?> mBadgeQuery;
+    private int mBadgeGeneration;
+    private boolean mBadgeRefreshPending;
 
     ObjectAnimator rotation;
 
@@ -298,6 +305,13 @@ public class LayersFragment
                 mSyncButton.setVisibility(View.VISIBLE);
                 mSyncButton.setEnabled(true);
                 mSyncButton.setOnClickListener(this);
+                mSyncButton.setOnLongClickListener(view -> {
+                    new AlertDialog.Builder(requireContext())
+                            .setMessage(R.string.sync_recheck_skipped_prompt)
+                            .setPositiveButton(android.R.string.ok, (dialog, which) -> startManualSync(true))
+                            .setNegativeButton(android.R.string.cancel, null).show();
+                    return true;
+                });
             }
             if (null != mInfoText) {
                 mInfoText.setVisibility(View.VISIBLE);
@@ -619,19 +633,37 @@ public class LayersFragment
             mSyncPendingBadge.setVisibility(View.GONE);
             return;
         }
-        boolean pending = false;
-        try {
-            if (getActivity() != null) {
-                IGISApplication app = (IGISApplication) getActivity().getApplication();
-                MapBase map = app != null ? app.getMap() : null;
-                if (map instanceof LayerGroup) {
-                    pending = ((LayerGroup) map).isChanges();
-                }
-            }
-        } catch (RuntimeException ex) {
-            HyperLog.w(Constants.TAG, "refreshPendingChangesBadge: " + ex.getMessage(), ex);
+        if (mBadgeQuery != null) {
+            mBadgeRefreshPending = true;
+            return;
         }
-        mSyncPendingBadge.setVisibility(pending ? View.VISIBLE : View.GONE);
+        if (getActivity() == null) return;
+        IGISApplication app = (IGISApplication) getActivity().getApplication();
+        MapBase map = app.getMap();
+        int generation = ++mBadgeGeneration;
+        WeakReference<LayersFragment> owner = new WeakReference<>(this);
+        android.os.Handler handler = mBadgeHandler;
+        mBadgeQuery = BADGE_EXECUTOR.submit(() -> {
+            boolean pending = false;
+            try {
+                pending = map instanceof LayerGroup && ((LayerGroup) map).isChanges();
+            } catch (RuntimeException ex) {
+                HyperLog.w(Constants.TAG, "Pending sync badge query failed", ex);
+            }
+            boolean result = pending;
+            handler.post(() -> {
+                LayersFragment fragment = owner.get();
+                if (fragment == null || fragment.mBadgeGeneration != generation) return;
+                fragment.mBadgeQuery = null;
+                if (fragment.isAdded() && fragment.mSyncPendingBadge != null && app.getMap() == map) {
+                    fragment.mSyncPendingBadge.setVisibility(result ? View.VISIBLE : View.GONE);
+                }
+                if (fragment.mBadgeRefreshPending) {
+                    fragment.mBadgeRefreshPending = false;
+                    fragment.refreshPendingChangesBadge();
+                }
+            });
+        });
     }
 
     private void storePendingSyncError(String error) {
@@ -714,6 +746,10 @@ public class LayersFragment
 
     /** Same path as tapping the drawer sync button (without the OS auto-sync prompt). */
     protected void startManualSync() {
+        startManualSync(false);
+    }
+
+    protected void startManualSync(boolean forceRecheck) {
         Context context = getContext();
         if (context == null) {
             return;
@@ -732,7 +768,7 @@ public class LayersFragment
 
         if (offlineSync || !NGIDUtils.NGID_MY.equals(base)) {
             HyperLog.v(Constants.TAG, "startManualSync: on-premise sync");
-            if (!OfflineSyncIntentService.startActionFoo(context)) {
+            if (!OfflineSyncIntentService.startActionFoo(context, null, forceRecheck)) {
                 Toast.makeText(context, R.string.project_operation_wait, LENGTH_LONG).show();
             }
         } else {
@@ -747,7 +783,7 @@ public class LayersFragment
                     if (!prefs.getBoolean(KEY_PREF_OFFLINE_SYNC_ON, false)) {
                         prefs.edit().putBoolean(KEY_PREF_OFFLINE_SYNC_ON, true).apply();
                     }
-                    if (!OfflineSyncIntentService.startActionFoo(ctx)) {
+                    if (!OfflineSyncIntentService.startActionFoo(ctx, null, forceRecheck)) {
                         Toast.makeText(ctx, R.string.project_operation_wait, LENGTH_LONG).show();
                     }
                 }
@@ -760,6 +796,8 @@ public class LayersFragment
                 Bundle settingsBundle = new Bundle();
                 settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                 settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                settingsBundle.putBoolean(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED,
+                        forceRecheck);
                 ContentResolver.setIsSyncable(account, AUTHORITY, 1);
                 Log.d("SSYNC", "LayersFragment requestSync account=" + account.name
                         + " authority=" + AUTHORITY + " isSyncable="
@@ -926,11 +964,11 @@ public class LayersFragment
                     }
                 }
 
-                refreshSyncButtonAnimateState(false);
+                refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
                 updateInfo();
                 refreshPendingChangesBadge();
             } else {
-                refreshSyncButtonAnimateState(false);
+                refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
                 updateInfo();
                 refreshPendingChangesBadge();
             }
@@ -939,6 +977,10 @@ public class LayersFragment
 
     @Override
     public void onDestroyView() {
+        ++mBadgeGeneration;
+        if (mBadgeQuery != null) mBadgeQuery.cancel(true);
+        mBadgeQuery = null;
+        mBadgeRefreshPending = false;
         refreshSyncButtonAnimateState(false);
         super.onDestroyView();
 

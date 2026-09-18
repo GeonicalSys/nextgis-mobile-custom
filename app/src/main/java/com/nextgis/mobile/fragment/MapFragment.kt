@@ -4612,7 +4612,8 @@ public class MapFragment
             )
         }
 
-        if (TrackerService.hasUnfinishedTracks(context)) {
+        // Never query SQLite from the GPS/main-thread callback: a sync transaction may own it.
+        if (context?.let { TrackerService.isTrackRecordingEnabled(it) } == true) {
             mapDrawable.reloadCurrentTrackToMap()
         }
 

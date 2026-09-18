@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sync_recheck_skipped_prompt">Check previously skipped objects again? Large layers may need to be downloaded again.</string>
+</resources>
