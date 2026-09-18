@@ -1,15 +1,33 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-09-17
+last_verified: 2026-09-18
 related_code:
   - docs
 ---
 
 # История документационной системы
 
+## 2026-09-18
+
+- Подготовлен выпуск Lisa/Belka `3.1.2.21` / `versionCode 215` и Lisa Debug
+  `3.1.2.21` / `versionCode 216`. В выпуск входят восстановление после зависаний
+  sync, compact NGW selector и PiGoLite CNB BESTPOSB. Root закрепляет Merge
+  Commit maplib PR #29 `18e7e00` и maplibui PR #18 `53f9fc9a`.
+
+- На Samsung Android 16 воспроизведён ANR Debug: GPS callback ждал SQLite во
+  время snapshot comparison. Убрана SQL-проверка из callback, incremental
+  отрисовка треков перенесена в coalesced worker с workspace/view/style guard;
+  сравнение широких linked field schemas не выполняет вложенные indexed scans.
+  Результаты и незакрытые device gates: `reference/sync-hang-verification.md`.
+
 ## 2026-09-17
 
+- Подготовлена доработка зависаний sync: finite snapshot HTTP timeouts,
+  кооперативная отмена, диагностические стадии, worker-owned активность,
+  фоновый pending badge, сохранение SQLite journal, часовой checkpoint
+  объяснённых invalid-geometry пропусков и компактное восстановление NGW selector.
+  Добавлены device gates для ANR/process death; выпуск и device-проверки не заявлены.
 - Внешний GNSS: PiGoLite/ComNav отдаёт CNB BESTPOSB (сообщение 42) — это основной
   фикс. `unlogall` не пишется; опциональные `log gpgga/gst/gsa/rmc` идут по одной
   команде ≤20 байт. `$`/`#` внутри бинаря не разбираются как NMEA. Root закрепляет

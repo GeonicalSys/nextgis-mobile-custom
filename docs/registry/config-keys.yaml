@@ -200,6 +200,7 @@ preferences:
       Durable flag that track recording is on; cleared only by explicit Stop track menu.
       BootLoader and MainActivity auto-resume TrackerService when true. Toolbar and service
       read it in the default application process so a delayed Start cannot overtake Stop.
+      Map GPS callbacks use this flag to request asynchronous track rendering without a main-thread SQLite unfinished-track query.
   background_recording_sound:
     owner: maplibui
     type: boolean

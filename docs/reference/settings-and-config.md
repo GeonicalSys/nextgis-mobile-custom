@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-09-16
+last_verified: 2026-09-18
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
@@ -20,6 +20,11 @@ related_code:
 [`../registry/config-keys.yaml`](../registry/config-keys.yaml).
 
 ## Правила
+
+Существующий `track_recording_enabled` также разрешает фоновое обновление
+текущего трека из GPS callback карты. Нового preference нет; default `false`,
+восстановление записи и явный Stop сохраняются, SQLite на GPS/main thread не
+используется для определения этого состояния.
 
 - Key/default в constants, XML и runtime fallback должны совпадать.
 - Новый preference получает owner, type, default, UI/source и migration note.

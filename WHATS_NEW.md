@@ -4,6 +4,12 @@
 в [`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md), история merge —
 в [`docs/history/upstream/`](docs/history/upstream/README.md).
 
+## 3.1.2.21 — 2026-09-18
+
+- Синхронизация с Веб ГИС меньше зависает и не стопорит GPS.
+- Выбор слоёв из Веб ГИС не теряется при повороте экрана.
+- Приёмник PiGoLite отдаёт координаты без GPS Connector.
+
 ## 3.1.2.20 — 2026-09-16
 
 - Внешний GNSS в приложении: Bluetooth, USB или сеть, без GPS Connector.

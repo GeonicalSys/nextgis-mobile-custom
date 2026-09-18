@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-09-16
+last_verified: 2026-09-18
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -35,6 +35,13 @@ related_code:
 
 ## Ответственность
 
+Подтверждённый device ANR 17.09: GPS/main thread ждал SQLite, пока sync worker
+сравнивал `Feature.equalsData` внутри snapshot-транзакции. GPS-проверка состояния
+теперь использует durable flag; обе incremental перерисовки треков читают БД в
+фоне. Сравнение атрибутов строит временный name→index за линейный проход по
+полям, сохраняя перестановки, первый duplicate name и прежние null/number/date
+правила. Это не отменяет атомарную транзакцию и backup gate.
+
 - `maplib` содержит NGW protocol, layer model, sync decisions и локальное GIS
   storage.
 - `maplibui.GISApplication` координирует фоновые fill/rebuild/removal операции и
@@ -63,6 +70,21 @@ read-only и с направлением sync только server-to-device. Э�
 ID контракта: `INV-NGW-URL-IMPORT`. Пункт меню «Добавить слой NGW по URL» скрыт;
 код разбора URL и импорта сохранён.
 
+## Восстановление выбора ресурсов
+
+`SelectNGWResourceActivity` и `SelectNGWResourceDialog` не сериализуют `Connections`
+в saved state; новые launch intents тоже не содержат дерева. Сохраняются имена
+account/server, пути remote ID и только выбранные флаги raster/vector. Credentials
+повторно запрашиваются из AccountManager. `NgwResourceSelectionState` загружает
+необходимые ветви в фоне и сопоставляет новые process-local IDs; отсутствующий
+account/ресурс или ошибка сети не считаются успешным восстановлением. Исходное
+компактное состояние сохраняется во время restore и после ошибки для повтора,
+импорт до успеха заблокирован. Закрытие экрана отменяет restore и закрывает его
+диалог ошибки. Размер состояния не зависит от числа загруженных, но не выбранных
+ресурсов (не является жёстким лимитом для произвольно большого числа выбранных).
+
+Сценарии проверки: `SMOKE-NGW-SELECTOR-RESTORE`.
+
 ## Идентичность Android account
 
 NGW account привязан не только к серверным credentials, но и к системной
@@ -77,8 +99,8 @@ NGW account привязан не только к серверным credentials
 Release ЛИСА/Белка используют `com.nextgis.account.geonical`, debug —
 `com.nextgis.account.debug`. GIS provider аналогично должен совпадать между
 `BuildConfig.providerAuth`, manifest provider и `SyncAdapter.contentAuthority`.
-Выпуск `3.1.2.20` использует production tuple `214` / `3.1.2.20`, а отдельный
-debug — `215` / `3.1.2.20`; application/account/provider identity не
+Выпуск `3.1.2.21` использует production tuple `215` / `3.1.2.21`, а отдельный
+debug — `216` / `3.1.2.21`; application/account/provider identity не
 меняется.
 Library defaults нельзя считать достаточными: app variant обязан перекрывать оба
 account resource keys. Иначе HTTP-аутентификация проходит, но Android отклоняет
@@ -200,6 +222,13 @@ UI, но не является единственным владельцем с�
 `LayersFragment` периодически сверяет её с `NGWSyncService.isSyncStarted()` и
 останавливает устаревший spinner после фактического завершения адаптера.
 
+Состояние хранит владельцев worker-потоков: early finish отклонённого параллельного
+запуска не снимает активность другого потока, а `Service.onCreate` и запоздалые
+broadcast не сбрасывают её. Foreground receiver и анимация используют текущее
+состояние worker. SQLite-проверка локальных правок для badge выполняется в одной
+фоновой очереди с отбрасыванием результата прежней карты/уничтоженного view;
+main thread не ждёт завершения snapshot-транзакции ради этого badge.
+
 Получение изменений векторного слоя сначала делает до трёх коротких HTTP-попыток.
 Если последняя попытка завершилась временной сетевой ошибкой, HTTP `408`/`429`/`5xx`
 или NGW `ExternalDatabaseError`, адаптер не останавливает проход и не повторяет уже
@@ -256,6 +285,38 @@ features продолжают транзакцию. HyperLog записывае�
 `total_count`). Если на сервере больше 0 объектов и числа не совпадают, слой
 пересобирается тем же потоковым snapshot. Серверный 0 или ошибка count локальные
 данные не трогает.
+
+### Тайм-ауты, отмена и объяснённые пропуски
+
+`NGWVectorLayer.getConnection` задаёт 45 с на соединение и 180 с без новых байтов
+до первого `getResponseCode`, в том числе на повторном HTTPS-соединении. При
+ошибке открытия соединение закрывается. Это не общий deadline большого snapshot:
+пока байты поступают, загрузка может продолжаться. Существующее число retry
+ограничено; interrupt не запускает сетевой retry, сохраняется для account adapter
+и проверяется при download, scan, apply, delete, reconcile и перед commit.
+Отмена активного блокирующего HTTP/SQLite вызова не гарантируется мгновенно;
+lease освобождается только после фактического выхода worker.
+
+`DatabaseContext` не выставляет `journal_mode=OFF` и `synchronous=OFF`: используются
+штатные настройки Android SQLite. Backup gate, pending edits, одна транзакция
+и recovery journal остаются обязательными. WAL и разбиение атомарного apply на
+независимые commit в этой доработке не вводятся.
+
+После успешного commit `NgwSnapshotCheckpoint` может сохранить объяснённое
+расхождение: `remote - local == число уникальных невалидных remote ID без локальной
+строки`. Невалидный объект с сохранённой локальной копией в это число не входит.
+Checkpoint действует менее часа только при совпадении layer/workspace path,
+account/server, remote ID, фильтра, CRS/геометрии/полей и обоих count. Отсутствие,
+повреждение, истечение срока, перевод часов назад и явная перепроверка запрещают
+его использование. Это не серверная revision: исправление геометрии при прежнем
+count обнаруживается по истечении срока либо длительным нажатием sync с
+подтверждением. Новое evidence не записывается при rollback/backup failure.
+
+`NgwSyncTrace` пишет attempt UUID, remote ID, этап, elapsedMs и не чаще раза в
+10 с количество обработанных bytes/features, без credentials и feature payload.
+Это диагностические этапы, не обещание завершения к определённому времени.
+Точный источник Android ANR определяется по main-thread stack/bugreport, не по
+одному продолжительному spinner. См. [проверки доработки](../reference/sync-hang-verification.md).
 
 ## Несовпадение схемы и тяжёлый rebuild
 

@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-09-17
+last_verified: 2026-09-18
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -62,6 +62,12 @@ foreground `location|connectedDevice` с тихим уведомлением. С
 `onLocationUnavailable`; по умолчанию координаты в лог не попадают.
 
 ## Карта
+
+`applyLocationFixToMap` не вызывает `hasUnfinishedTracks`: этот SQLite-запрос
+может ждать полную NGW-транзакцию и блокировать главный поток. GPS callback
+использует durable `track_recording_enabled` и запрашивает coalesced background
+snapshot трека в `MapDrawable`; завершение/перезапуск записи сохраняет прежний
+контракт `TrackerService`. Запись координат, GNSS-фильтр и геодезия не меняются.
 
 Карта показывает свежую позицию GPS (чип телефона, mock внешнего GNSS или
 native NMEA внешнего приёмника)
