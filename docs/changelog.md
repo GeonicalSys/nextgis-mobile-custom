@@ -10,6 +10,11 @@ related_code:
 
 ## 2026-09-18
 
+- Камера MapLibre не опускается ниже `7.1`. Для локальных MBTiles подложек
+  два рычага в Настройки → Карта (default on): точный белый становится
+  прозрачным; overzoom только с последнего масштаба пирамиды через sidecar,
+  без перезаписи каталожного оригинала.
+
 - Подготовлен выпуск Lisa/Belka `3.1.2.21` / `versionCode 215` и Lisa Debug
   `3.1.2.21` / `versionCode 216`. В выпуск входят восстановление после зависаний
   sync, compact NGW selector и PiGoLite CNB BESTPOSB. Root закрепляет Merge

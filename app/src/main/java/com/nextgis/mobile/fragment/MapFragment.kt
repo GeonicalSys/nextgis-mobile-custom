@@ -105,6 +105,8 @@ import com.nextgis.maplib.util.Constants.MESSAGE_INTENT_RELOAD
 import com.nextgis.maplib.util.Constants.MESSAGE_INTENT_STYLING
 import com.nextgis.maplib.util.FileUtil
 import com.nextgis.maplib.util.GeoConstants
+import com.nextgis.maplib.util.CameraZoom
+import com.nextgis.maplib.util.SettingsConstants
 import com.nextgis.maplib.util.LocationUtil
 import com.nextgis.maplib.util.MapUtil
 import com.nextgis.maplib.util.MultiPolygonGeometryRepair
@@ -286,6 +288,14 @@ public class MapFragment
                 onDeclinationCorrectionChanged()
             }
         }
+    private val underlayDisplayListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == SettingsConstants.KEY_PREF_WHITE_AS_TRANSPARENT
+                || key == SettingsConstants.KEY_PREF_UNDERLAY_LAST_LEVEL_OVERZOOM
+            ) {
+                loadLayersLite()
+            }
+        }
 
     //, mZoomLevel;
     protected var mScaleRuler: ImageView? = null
@@ -375,6 +385,7 @@ public class MapFragment
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity)
         mPreferences?.registerOnSharedPreferenceChangeListener(declinationCorrectionListener)
+        mPreferences?.registerOnSharedPreferenceChangeListener(underlayDisplayListener)
         mApp = mActivity!!.application as MainApplication
         mVibrator = mActivity!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         mGpsEventSource = mApp!!.gpsEventSource
@@ -446,6 +457,7 @@ public class MapFragment
         } catch (e: ClassCastException) {
             mMapRef.get()!!.minZoom
         }
+        mapZoom = CameraZoom.clamp(mapZoom)
 
         var mapScrollX: Double
         var mapScrollY: Double
@@ -601,6 +613,8 @@ public class MapFragment
         HttpRequestImpl.setOkHttpClient(client)
 
         mapDrawable.maplibreMap = mapboxMap
+
+        mapboxMap.setMinZoomPreference(GeoConstants.CAMERA_MIN_ZOOM.toDouble())
 
         configureMapRotationGestures(mapboxMap, isMapRotationEnabled)
         mapboxMap.uiSettings.isCompassEnabled = false
@@ -2173,6 +2187,7 @@ public class MapFragment
         mStakeoutController?.release()
         mStakeoutController = null
         mPreferences?.unregisterOnSharedPreferenceChangeListener(declinationCorrectionListener)
+        mPreferences?.unregisterOnSharedPreferenceChangeListener(underlayDisplayListener)
         super.onDestroy()
     }
 

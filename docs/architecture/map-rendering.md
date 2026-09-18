@@ -13,6 +13,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
   - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
   - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
+  - maplib/src/main/java/com/nextgis/maplib/util/MbTilesDisplaySidecar.java
+  - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
   - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
@@ -369,6 +371,13 @@ heading, а не за фиксированным углом. Иконка stand/
 же путь используют «Новая подложка из файла» и «Открыть локальный» после
 классификации файла (NGRc, MBTiles, ZIP с NGRc-конфигом или одним MBTiles).
 MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
+
+Камера не опускается ниже `7.1`. Для локальных MBTiles настройки карты
+`map_white_as_transparent` и `map_underlay_last_level_overzoom` (оба default on)
+строят sidecar `map-mbtiles.display.mbtiles`: точный белый становится прозрачным,
+дыры внутри пирамиды — прозрачные тайлы, overzoom только с `metadata.maxzoom`.
+Оригинал каталога не переписывается. `tile_min_zoom`/`tile_max_zoom` — пирамида,
+не padded `min_level`/`max_level`.
 
 При dedup дерева NGRc с готовым MBTiles ссылка меняет `tms_type` вместе с ID:
 MapLibre выбирает `mbtiles://` по формату целевого payload. Старые `levels`

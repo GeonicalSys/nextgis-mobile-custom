@@ -158,6 +158,22 @@
         android:title="@string/map_bg"
         android:singleLineTitle="false"
         />
+
+    <CheckBoxPreference
+        app:iconSpaceReserved="false"
+        android:defaultValue="true"
+        android:key="map_white_as_transparent"
+        android:summary="@string/map_white_as_transparent_summary"
+        android:title="@string/map_white_as_transparent"
+        android:singleLineTitle="false"/>
+
+    <CheckBoxPreference
+        app:iconSpaceReserved="false"
+        android:defaultValue="true"
+        android:key="map_underlay_last_level_overzoom"
+        android:summary="@string/map_underlay_last_level_overzoom_summary"
+        android:title="@string/map_underlay_last_level_overzoom"
+        android:singleLineTitle="false"/>
     <!--bui/blob/master/src/main/res/values/arrays.xml#L107-->
 
     <com.nextgis.mobile.util.SelectMapPathPreference

@@ -415,7 +415,7 @@ destructive composition apply. После импорта в её `config.json` �
 
 ## Подложки как общие ассеты
 
-NGRc/MBTiles принадлежат общему app-private каталогу, проект содержит только `shared_underlay_id`. Удаление проекта защищает legacy подложки и снимает ссылки; composition sync не управляет ассетами. Closed workspace unlink не создаёт новый `MapBase`. См. [полный контракт](shared-underlays.md).
+NGRc/MBTiles принадлежат общему app-private каталогу, проект содержит только `shared_underlay_id`. Sidecar отображения не входит в identity ассета. Удаление проекта защищает legacy подложки и снимает ссылки; composition sync не управляет ассетами. Closed workspace unlink не создаёт новый `MapBase`. См. [полный контракт](shared-underlays.md).
 
 Объединение дубликатов в закрытых проектах синхронизирует raster-формат ссылки
 с выбранным payload; имя, видимость, пределы масштаба и место слоя в проекте

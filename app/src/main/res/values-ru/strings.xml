@@ -103,6 +103,10 @@
     <string name="photo_overlay_use_object_coords">Использовать координату объекта</string>
     <string name="photo_overlay_show_time">Показывать время съёмки на фото</string>
     <string name="map_bg">Фон карты</string>
+    <string name="map_white_as_transparent">Белый цвет подложек прозрачный</string>
+    <string name="map_white_as_transparent_summary">Абсолютно белые пиксели не закрывают нижнюю подложку</string>
+    <string name="map_underlay_last_level_overzoom">Растягивать только последний масштаб подложки</string>
+    <string name="map_underlay_last_level_overzoom_summary">Дыры внутри пирамиды не заполняются снимком более мелкого зума; при увеличении растягивается только последний сохранённый масштаб</string>
     <string name="map_bg_light">Светлый</string>
     <string name="map_bg_neutral">Нейтральный</string>
     <string name="map_bg_dark">Темный</string>
