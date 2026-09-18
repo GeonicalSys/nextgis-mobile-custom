@@ -110,22 +110,6 @@ preferences:
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
     consumer: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     purpose: Persist camera bearing only while explicit map rotation is enabled
-  map_white_as_transparent:
-    owner: app
-    type: boolean
-    default: true
-    user_configurable: true
-    source: app/src/main/res/xml/preferences_map.xml
-    consumer: maplib/src/main/java/com/nextgis/maplib/util/UnderlayDisplaySettings.java
-    purpose: Punch exact RGB 255,255,255 underlay pixels to alpha so a lower underlay can show through
-  map_underlay_last_level_overzoom:
-    owner: app
-    type: boolean
-    default: true
-    user_configurable: true
-    source: app/src/main/res/xml/preferences_map.xml
-    consumer: maplib/src/main/java/com/nextgis/maplib/util/UnderlayDisplaySettings.java
-    purpose: Stretch only the real MBTiles maxzoom upward; fill in-pyramid gaps with transparent tiles instead of coarser parents
   photo_overlay_enabled:
     owner: app
     type: boolean

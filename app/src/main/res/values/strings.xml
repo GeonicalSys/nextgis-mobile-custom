@@ -106,10 +106,6 @@
     <string name="photo_overlay_use_object_coords">Use object coordinates</string>
     <string name="photo_overlay_show_time">Show capture time on photo</string>
     <string name="map_bg">Map background</string>
-    <string name="map_white_as_transparent">Transparent white on underlays</string>
-    <string name="map_white_as_transparent_summary">Exact white pixels do not cover the underlay below</string>
-    <string name="map_underlay_last_level_overzoom">Stretch only the last underlay zoom</string>
-    <string name="map_underlay_last_level_overzoom_summary">Missing tiles are not filled from a coarser zoom; only the last stored zoom is stretched when zooming in</string>
     <string name="map_bg_light">Light</string>
     <string name="map_bg_neutral">Neutral</string>
     <string name="map_bg_dark">Dark</string>

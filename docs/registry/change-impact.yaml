@@ -1,12 +1,12 @@
 schema_version: 1
 triggers:
   - id: SHARED-UNDERLAY-CATALOG
-    paths: [maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlay*.java, maplib/src/main/java/com/nextgis/maplib/util/NgrcArchive.java, maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java, maplib/src/main/java/com/nextgis/maplib/util/Underlay*.java, maplib/src/main/java/com/nextgis/maplib/map/LocalRasterTileServer.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java, app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt, app/src/main/res/layout/activity_underlay_catalog.xml]
+    paths: [maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlay*.java, maplib/src/main/java/com/nextgis/maplib/util/NgrcArchive.java, maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java, maplib/src/main/java/com/nextgis/maplib/util/Underlay*.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java, app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt, app/src/main/res/layout/activity_underlay_catalog.xml]
     owners: [app, maplib, maplibui]
     read: [docs/architecture/shared-underlays.md, docs/architecture/collector-projects.md, docs/architecture/map-rendering.md]
-    invariants: [INV-SHARED-UNDERLAYS, INV-NGRC-PRESERVE, INV-LAYER-ORDER, INV-UNDERLAY-DISPLAY]
+    invariants: [INV-SHARED-UNDERLAYS, INV-NGRC-PRESERVE, INV-LAYER-ORDER]
     must_update_docs: [docs/architecture/shared-underlays.md, docs/architecture/collector-projects.md, docs/architecture/map-rendering.md, docs/registry/config-keys.yaml]
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-APP-RELEASES, SMOKE-SHARED-UNDERLAYS, SMOKE-UNDERLAY-DISPLAY]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-APP-RELEASES, SMOKE-SHARED-UNDERLAYS]
     strict_docs: true
   - id: DEBUG-COMPANION-INSTALLER
     paths: [app/src/main/java/com/nextgis/mobile/util/DebugCompanion*.java, app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt]
@@ -119,7 +119,6 @@ triggers:
       - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
       - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
       - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
-      - maplib/src/main/java/com/nextgis/maplib/map/LocalRasterTileServer.java
       - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
       - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
@@ -142,7 +141,6 @@ triggers:
     must_update_docs:
       - docs/architecture/map-rendering.md
       - docs/architecture/location-pipeline.md
-      - docs/architecture/shared-underlays.md
       - docs/reference/settings-and-config.md
       - maplib/docs/manifest.yaml
       - app/docs/README.md

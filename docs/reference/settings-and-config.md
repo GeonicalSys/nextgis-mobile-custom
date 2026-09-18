@@ -9,7 +9,6 @@ related_code:
   - app/src/main/res/xml/preferences_map.xml
   - app/src/main/res/xml/preferences_tracks.xml
   - app/src/main/AndroidManifest.xml
-  - maplib/src/main/java/com/nextgis/maplib/util/SettingsConstants.java
   - maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
@@ -43,9 +42,8 @@ related_code:
   MapLibre keeps pinch and rotate detectors concurrent and uses a `0.5°` rotate
   threshold so immediate simultaneous two-finger contact is responsive.
   The camera floor is `7.5`; enabled raster underlays are visible from zoom `7`.
-  Map settings `map_white_as_transparent=true` and
-  `map_underlay_last_level_overzoom=true` apply to local MBTiles underlays
-  through an on-demand loopback tile server; the catalog original is not rewritten.
+  The `light` map background is solid white (`#FFFFFF`). Raster sources are
+  rendered directly without display-side tile transformations.
 - Фото-вложения: `photo_overlay_enabled=true` и
   `photo_overlay_use_object_coords=true` включены по умолчанию. Миграция
   `photo_overlay_defaults_enabled_v1` один раз включает оба ключа на уже

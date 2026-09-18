@@ -151,18 +151,15 @@ tests:
       azimuth remains unchanged. Pinch, zoom buttons, restore and fit-bounds cannot go below 7.5.
   SMOKE-UNDERLAY-DISPLAY:
     type: device
-    scope: [app, maplib]
+    scope: [app, maplib, maplibui]
     steps:
       - Cold-open a map, pinch and zoom-out until the camera stops; confirm zoom is at least 7.5
-      - Attach two overlapping local MBTiles underlays (one with white or missing edge tiles)
-      - With both Map settings on, pan the overlap at a zoom below each layer's last pyramid level and above it
-      - Turn off transparent white, then last-level overzoom, and confirm the previous covering/stretch returns
+      - Enable a raster underlay and confirm it remains available at zoom 7.5; disable it and confirm it remains hidden
+      - Select the Light map background and inspect an uncovered map area
     expected: >
-      Camera floor is 7.5 and each enabled raster underlay has style minzoom 7. Exact white pixels
-      and in-pyramid gaps of the upper underlay do not
-      cover the lower one; zooming past the stored maxzoom stretches only that last level.
-      Startup creates no full MBTiles copy, catalog bytes stay unchanged, and obsolete display
-      copies are removed. Turning both switches off restores opaque-white and parent fallback.
+      Camera floor is 7.5 and each enabled raster underlay has style minzoom 7.
+      Visibility remains authoritative, raster sources use their direct URLs without a display
+      proxy or tile transformation, and the Light background is exactly #FFFFFF.
   SMOKE-NGRC-ORDER:
     type: device
     scope: [maplib, maplibui]

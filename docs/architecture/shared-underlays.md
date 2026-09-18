@@ -1,13 +1,12 @@
 ---
 title: Общее хранилище подложек и обновление Debug перед переносом
 type: architecture
-last_verified: 2026-09-18
+last_verified: 2026-09-16
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java
   - maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java
-  - maplib/src/main/java/com/nextgis/maplib/map/LocalRasterTileServer.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
   - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
@@ -45,11 +44,7 @@ comment. При совпадении с готовым ассетом конве
 вычисляет bounds/minzoom/maxzoom, слой сохраняет прежний запас видимости ±2
 уровня и provenance NGRc. Перед публикацией выполняются `MbTilesInfo.inspect`,
 fsync и rename staging. Новый MBTiles проверяется и сохраняется без изменения
-содержимого, его идентичность — SHA-256 базы. Прозрачный белый, прозрачные дырки
-и ограниченный underzoom выполняются по запросу видимого тайла через локальный
-raster server, без sidecar и без изменения этого хеша. При первом открытии новая
-реализация удаляет только устаревшие производные `map-mbtiles.display.mbtiles*`.
-Новый пункт импорта поддерживает
+содержимого, его идентичность — SHA-256 базы. Новый пункт импорта поддерживает
 также один MBTiles внутри ZIP, без временного распакованного файла.
 
 Обычный ZIP-TMS, онлайн-OSM/QMS/NGW и их кэши не входят в каталог. «Новая

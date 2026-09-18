@@ -225,28 +225,23 @@ invariants:
       - docs/reference/settings-and-config.md
       - docs/reference/official-differences.md
   INV-UNDERLAY-DISPLAY:
-    title: Local underlay display does not rewrite catalog payloads
-    owners: [maplib, app]
+    title: Raster underlay zoom and map background stay deterministic
+    owners: [maplib, maplibui, app]
     statement: >
       Every enabled raster underlay is available from zoom 7; layer visibility
-      remains authoritative. Exact white and last-level-only overzoom default to
-      on for local MBTiles. A loopback server transforms only requested tiles,
-      returns transparent tiles for in-pyramid gaps and bounds underzoom work;
-      it never copies or rewrites the catalog payload. Source metadata is read
-      without a full SQLite quick_check during map startup.
+      remains authoritative. Local raster sources are rendered directly without
+      a proxy or display-side tile transformation. The light map background is
+      solid white (#FFFFFF).
     related_code:
-      - maplib/src/main/java/com/nextgis/maplib/map/LocalRasterTileServer.java
-      - maplib/src/main/java/com/nextgis/maplib/util/UnderlayDisplaySettings.java
-      - maplib/src/main/java/com/nextgis/maplib/util/UnderlayRasterZoomPolicy.java
-      - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
-      - app/src/main/res/xml/preferences_map.xml
+      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/util/GeoConstants.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
     verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-UNDERLAY-DISPLAY]
     must_update_docs:
-      - docs/architecture/shared-underlays.md
       - docs/architecture/map-rendering.md
       - docs/reference/settings-and-config.md
       - docs/reference/official-differences.md
-      - docs/registry/config-keys.yaml
   INV-COLLECTOR-RESOURCE:
     title: Collector resources remain selectable and importable
     owners: [maplib, maplibui]
