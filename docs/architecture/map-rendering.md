@@ -13,6 +13,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
   - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
   - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
+  - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
   - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
@@ -369,6 +370,11 @@ heading, а не за фиксированным углом. Иконка stand/
 же путь используют «Новая подложка из файла» и «Открыть локальный» после
 классификации файла (NGRc, MBTiles, ZIP с NGRc-конфигом или одним MBTiles).
 MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
+
+Камера не опускается ниже `7.5`. Любая включённая raster-подложка доступна с
+zoom `7`; выключенный слой остаётся выключенным. Raster-источники подключаются
+напрямую, без proxy, производных копий и преобразования тайлов. В режиме фона
+карты «Светлый» MapLibre использует сплошной цвет `#FFFFFF`.
 
 При dedup дерева NGRc с готовым MBTiles ссылка меняет `tms_type` вместе с ID:
 MapLibre выбирает `mbtiles://` по формату целевого payload. Старые `levels`

@@ -210,12 +210,34 @@ invariants:
       The location action always resets north, raises zoom to at
       least 12 without zooming out, and when no current fix exists centers on the first
       layer with a valid finite extent at zoom 12 regardless of extent size.
+      The MapLibre camera cannot go below 7.5 (pinch, buttons, restore and fit bounds).
+      Layer DEFAULT_MIN_ZOOM remains 0.
     related_code:
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
       - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
       - app/src/main/res/menu/main.xml
+      - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
+      - maplib/src/main/java/com/nextgis/maplib/util/GeoConstants.java
     verify_smoke: [SMOKE-MAP-CAMERA-CONTROLS]
+    must_update_docs:
+      - docs/architecture/map-rendering.md
+      - docs/reference/settings-and-config.md
+      - docs/reference/official-differences.md
+  INV-UNDERLAY-DISPLAY:
+    title: Raster underlay zoom and map background stay deterministic
+    owners: [maplib, maplibui, app]
+    statement: >
+      Every enabled raster underlay is available from zoom 7; layer visibility
+      remains authoritative. Local raster sources are rendered directly without
+      a proxy or display-side tile transformation. The light map background is
+      solid white (#FFFFFF).
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/util/GeoConstants.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-UNDERLAY-DISPLAY]
     must_update_docs:
       - docs/architecture/map-rendering.md
       - docs/reference/settings-and-config.md

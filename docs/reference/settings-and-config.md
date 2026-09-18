@@ -41,6 +41,9 @@ related_code:
   state is controlled by the toolbar button next to location. When enabled,
   MapLibre keeps pinch and rotate detectors concurrent and uses a `0.5°` rotate
   threshold so immediate simultaneous two-finger contact is responsive.
+  The camera floor is `7.5`; enabled raster underlays are visible from zoom `7`.
+  The `light` map background is solid white (`#FFFFFF`). Raster sources are
+  rendered directly without display-side tile transformations.
 - Фото-вложения: `photo_overlay_enabled=true` и
   `photo_overlay_use_object_coords=true` включены по умолчанию. Миграция
   `photo_overlay_defaults_enabled_v1` один раз включает оба ключа на уже

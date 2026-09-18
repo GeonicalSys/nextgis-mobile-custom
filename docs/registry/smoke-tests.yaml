@@ -148,7 +148,18 @@ tests:
       zooms out while enforcing zoom 12, missing location centers on the first valid layer at zoom
       12 regardless of extent size, an empty project reports no location, and the stakeout
       arrow fallback stays screen-correct at non-zero map bearings while the numeric magnetic
-      azimuth remains unchanged.
+      azimuth remains unchanged. Pinch, zoom buttons, restore and fit-bounds cannot go below 7.5.
+  SMOKE-UNDERLAY-DISPLAY:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - Cold-open a map, pinch and zoom-out until the camera stops; confirm zoom is at least 7.5
+      - Enable a raster underlay and confirm it remains available at zoom 7.5; disable it and confirm it remains hidden
+      - Select the Light map background and inspect an uncovered map area
+    expected: >
+      Camera floor is 7.5 and each enabled raster underlay has style minzoom 7.
+      Visibility remains authoritative, raster sources use their direct URLs without a display
+      proxy or tile transformation, and the Light background is exactly #FFFFFF.
   SMOKE-NGRC-ORDER:
     type: device
     scope: [maplib, maplibui]
