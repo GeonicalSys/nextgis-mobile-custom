@@ -210,7 +210,7 @@ invariants:
       The location action always resets north, raises zoom to at
       least 12 without zooming out, and when no current fix exists centers on the first
       layer with a valid finite extent at zoom 12 regardless of extent size.
-      The MapLibre camera cannot go below 7.1 (pinch, buttons, restore and fit bounds).
+      The MapLibre camera cannot go below 7.5 (pinch, buttons, restore and fit bounds).
       Layer DEFAULT_MIN_ZOOM remains 0.
     related_code:
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -228,18 +228,17 @@ invariants:
     title: Local underlay display does not rewrite catalog payloads
     owners: [maplib, app]
     statement: >
-      Exact white underlay pixels and last-level-only overzoom are Map settings
-      defaulting to on. They render through a sidecar MBTiles file next to the
-      payload; catalog original bytes and NGRc archive identity stay unchanged.
-      Pyramid min/max come from MBTiles metadata or MAX(tiles), not padded
-      min_level/max_level. Missing tiles inside the pyramid become transparent
-      so a coarser parent is not stretched; zooms above tile max stretch only
-      that last level.
+      Every enabled raster underlay is available from zoom 7; layer visibility
+      remains authoritative. Exact white and last-level-only overzoom default to
+      on for local MBTiles. A loopback server transforms only requested tiles,
+      returns transparent tiles for in-pyramid gaps and bounds underzoom work;
+      it never copies or rewrites the catalog payload. Source metadata is read
+      without a full SQLite quick_check during map startup.
     related_code:
-      - maplib/src/main/java/com/nextgis/maplib/util/MbTilesDisplaySidecar.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalRasterTileServer.java
       - maplib/src/main/java/com/nextgis/maplib/util/UnderlayDisplaySettings.java
       - maplib/src/main/java/com/nextgis/maplib/util/UnderlayRasterZoomPolicy.java
-      - maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
       - app/src/main/res/xml/preferences_map.xml
     verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-UNDERLAY-DISPLAY]
     must_update_docs:

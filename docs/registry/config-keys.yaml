@@ -365,11 +365,6 @@ storage:
     location_name: LayerBackups
     source: maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
     purpose: ZIP archives of editable layer tables plus attachment files physically present on this device before destructive ops; server-only payloads are not downloaded; quota via layer_backup_max_gb
-  underlay-display-sidecar:
-    owner: maplib
-    location_name: map-mbtiles.display.mbtiles
-    source: maplib/src/main/java/com/nextgis/maplib/util/MbTilesDisplaySidecar.java
-    purpose: Derived display MBTiles beside the catalog original for exact-white chroma-key and last-level holes; not part of asset identity
 layer_json:
   feature_label_field:
     owner: maplib
@@ -406,13 +401,3 @@ layer_json:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
     purpose: Debug source package, stable source-layer key and migration timestamp used to make cross-package underlay retries duplicate-safe
-  tile_min_zoom:
-    owner: maplib
-    source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
-    type: int
-    purpose: Real MBTiles pyramid minimum zoom from metadata or MIN(tiles); not padded min_level
-  tile_max_zoom:
-    owner: maplib
-    source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
-    type: int
-    purpose: Real MBTiles pyramid maximum zoom from metadata or MAX(tiles); not padded max_level

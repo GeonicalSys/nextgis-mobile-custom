@@ -1,7 +1,7 @@
 schema_version: 1
 triggers:
   - id: SHARED-UNDERLAY-CATALOG
-    paths: [maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlay*.java, maplib/src/main/java/com/nextgis/maplib/util/NgrcArchive.java, maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java, maplib/src/main/java/com/nextgis/maplib/util/Underlay*.java, maplib/src/main/java/com/nextgis/maplib/util/MbTilesDisplaySidecar.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java, app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt, app/src/main/res/layout/activity_underlay_catalog.xml]
+    paths: [maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlay*.java, maplib/src/main/java/com/nextgis/maplib/util/NgrcArchive.java, maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java, maplib/src/main/java/com/nextgis/maplib/util/Underlay*.java, maplib/src/main/java/com/nextgis/maplib/map/LocalRasterTileServer.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java, app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt, app/src/main/res/layout/activity_underlay_catalog.xml]
     owners: [app, maplib, maplibui]
     read: [docs/architecture/shared-underlays.md, docs/architecture/collector-projects.md, docs/architecture/map-rendering.md]
     invariants: [INV-SHARED-UNDERLAYS, INV-NGRC-PRESERVE, INV-LAYER-ORDER, INV-UNDERLAY-DISPLAY]
@@ -119,7 +119,7 @@ triggers:
       - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
       - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
       - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
-      - maplib/src/main/java/com/nextgis/maplib/util/MbTilesDisplaySidecar.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalRasterTileServer.java
       - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
       - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java

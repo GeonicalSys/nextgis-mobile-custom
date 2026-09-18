@@ -13,7 +13,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
   - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
   - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
-  - maplib/src/main/java/com/nextgis/maplib/util/MbTilesDisplaySidecar.java
+  - maplib/src/main/java/com/nextgis/maplib/map/LocalRasterTileServer.java
   - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
   - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
@@ -372,12 +372,13 @@ heading, а не за фиксированным углом. Иконка stand/
 классификации файла (NGRc, MBTiles, ZIP с NGRc-конфигом или одним MBTiles).
 MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
 
-Камера не опускается ниже `7.1`. Для локальных MBTiles настройки карты
+Камера не опускается ниже `7.5`. Любая включённая raster-подложка доступна с
+zoom `7`; выключенный слой остаётся выключенным. Для локальных MBTiles настройки
 `map_white_as_transparent` и `map_underlay_last_level_overzoom` (оба default on)
-строят sidecar `map-mbtiles.display.mbtiles`: точный белый становится прозрачным,
-дыры внутри пирамиды — прозрачные тайлы, overzoom только с `metadata.maxzoom`.
-Оригинал каталога не переписывается. `tile_min_zoom`/`tile_max_zoom` — пирамида,
-не padded `min_level`/`max_level`.
+обслуживает process-local `LocalRasterTileServer` на `127.0.0.1`: он читает и
+преобразует только запрошенные MapLibre тайлы, точный белый отдаёт как alpha,
+дыры внутри пирамиды — прозрачным PNG, а небольшой underzoom собирает из дочерних
+тайлов. Полные sidecar-копии MBTiles запрещены; оригинал каталога не меняется.
 
 При dedup дерева NGRc с готовым MBTiles ссылка меняет `tms_type` вместе с ID:
 MapLibre выбирает `mbtiles://` по формату целевого payload. Старые `levels`

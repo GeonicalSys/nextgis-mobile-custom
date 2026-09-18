@@ -148,20 +148,21 @@ tests:
       zooms out while enforcing zoom 12, missing location centers on the first valid layer at zoom
       12 regardless of extent size, an empty project reports no location, and the stakeout
       arrow fallback stays screen-correct at non-zero map bearings while the numeric magnetic
-      azimuth remains unchanged. Pinch, zoom buttons, restore and fit-bounds cannot go below 7.1.
+      azimuth remains unchanged. Pinch, zoom buttons, restore and fit-bounds cannot go below 7.5.
   SMOKE-UNDERLAY-DISPLAY:
     type: device
     scope: [app, maplib]
     steps:
-      - Cold-open a map, pinch and zoom-out until the camera stops; confirm zoom is at least 7.1
+      - Cold-open a map, pinch and zoom-out until the camera stops; confirm zoom is at least 7.5
       - Attach two overlapping local MBTiles underlays (one with white or missing edge tiles)
       - With both Map settings on, pan the overlap at a zoom below each layer's last pyramid level and above it
       - Turn off transparent white, then last-level overzoom, and confirm the previous covering/stretch returns
     expected: >
-      Camera floor is 7.1. Exact white pixels and in-pyramid gaps of the upper underlay do not
+      Camera floor is 7.5 and each enabled raster underlay has style minzoom 7. Exact white pixels
+      and in-pyramid gaps of the upper underlay do not
       cover the lower one; zooming past the stored maxzoom stretches only that last level.
-      Catalog original MBTiles bytes stay unchanged. Turning both switches off restores the
-      previous opaque-white and parent-overzoom behaviour.
+      Startup creates no full MBTiles copy, catalog bytes stay unchanged, and obsolete display
+      copies are removed. Turning both switches off restores opaque-white and parent fallback.
   SMOKE-NGRC-ORDER:
     type: device
     scope: [maplib, maplibui]
