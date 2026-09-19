@@ -85,6 +85,9 @@ NGW selector и ограниченный checkpoint объяснённых пр�
 `android_maplib/MapDrawable.updateMapBackground`: светлый режим по-прежнему
 использует `bk_tile_light` как повторяемый `background-pattern`. Форк задаёт
 для него сплошной `background-color: #FFFFFF`.
+Официальный `android_maplib/MPLFeaturesUtils.convertToPointFeatures` на ту же
+дату усредняет вершины внешних контуров. Форк выбирает внутреннюю точку
+Polygon или одной из частей MultiPolygon с учётом отверстий.
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.

@@ -34,6 +34,10 @@ related_code:
 
 - `MapDrawable` строит и обновляет MapLibre style, sources и layers.
 - `MPLFeaturesUtils` содержит операции style и определение sibling anchors.
+- Для Polygon и MultiPolygon он создаёт отдельный Point source подписи:
+  внутренняя точка берётся с учётом отверстий, у MultiPolygon — на наибольшей
+  пригодной части. Вырожденный контур без внутренней точки не получает подпись.
+  Исходные свойства feature переходят к точке подписи.
 - `VectorLayerRenderCache` ускоряет подготовку векторных слоёв при cold start.
 - `LayerFillService` загружает и вставляет импортированные слои в `LayerGroup`.
 - `ReorderedLayerView` синхронизирует порядок UI и модели.
@@ -337,7 +341,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 - не подтверждается ли асинхронный reload раньше `setMapLayersLoaded()` после
   проверки фактических MapLibre sources/layers.
 
-Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
+Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-POLYGON-LABEL-ANCHOR`,
+`SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
 `SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
 `SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`, `SMOKE-GEOMETRY-SKETCH-WORKFLOW`,
 `SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`,
