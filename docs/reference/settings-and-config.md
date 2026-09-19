@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-09-18
+last_verified: 2026-09-20
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
@@ -42,7 +42,9 @@ related_code:
   MapLibre keeps pinch and rotate detectors concurrent and uses a `0.5°` rotate
   threshold so immediate simultaneous two-finger contact is responsive.
   The camera floor is `7.5`; enabled raster underlays are visible from zoom `7`.
-  The `light` map background is solid white (`#FFFFFF`). Raster sources are
+  The `light` map background uses a solid MapLibre background color
+  (`#FFFFFF`) without a repeating pattern, including after switching from
+  neutral or dark. Raster sources are
   rendered directly without display-side tile transformations.
 - Фото-вложения: `photo_overlay_enabled=true` и
   `photo_overlay_use_object_coords=true` включены по умолчанию. Миграция

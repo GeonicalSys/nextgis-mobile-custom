@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-09-18
+last_verified: 2026-09-20
 related_code:
   - app/build.gradle
   - app/src/main
@@ -80,6 +80,11 @@ NGW selector и ограниченный checkpoint объяснённых пр�
 вложенные indexed schema scans. GPS callback использует durable recording flag
 вместо SQLite. Выпуск `3.1.2.21` включает эти исправления;
 [фактические проверки и ограничения](sync-hang-verification.md).
+
+20 сентября 2026 года повторно прочитан официальный
+`android_maplib/MapDrawable.updateMapBackground`: светлый режим по-прежнему
+использует `bk_tile_light` как повторяемый `background-pattern`. Форк задаёт
+для него сплошной `background-color: #FFFFFF`.
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
@@ -883,7 +888,8 @@ accounts, credentials, vectors и tracks не переносятся и целе
 
 Все включённые raster-подложки доступны с zoom `7`; выключенные остаются
 скрытыми. Локальные MBTiles подключаются к MapLibre напрямую, без proxy и
-преобразования тайлов. Режим фона карты «Светлый» использует `#FFFFFF`.
+преобразования тайлов. Режим фона карты «Светлый» использует сплошной
+`#FFFFFF` без повторяемой текстуры.
 
 **Как используется (итог для пользователя).** Render cache и vector tiles
 работают автоматически, без настроек в UI. Пакетный импорт Collector показывает

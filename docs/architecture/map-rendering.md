@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-18
+last_verified: 2026-09-20
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -374,7 +374,10 @@ MapLibre URL и Canvas tile directory разрешаются через `shared_
 Камера не опускается ниже `7.5`. Любая включённая raster-подложка доступна с
 zoom `7`; выключенный слой остаётся выключенным. Raster-источники подключаются
 напрямую, без proxy, производных копий и преобразования тайлов. В режиме фона
-карты «Светлый» MapLibre использует сплошной цвет `#FFFFFF`.
+карты «Светлый» нижний MapLibre `BackgroundLayer` использует
+`background-color: #FFFFFF` без текстуры. При смене режима фона слой
+пересоздаётся, поэтому прежний `background-pattern` не остаётся активным;
+нейтральный и тёмный режимы сохраняют свои узоры.
 
 При dedup дерева NGRc с готовым MBTiles ссылка меняет `tms_type` вместе с ID:
 MapLibre выбирает `mbtiles://` по формату целевого payload. Старые `levels`
