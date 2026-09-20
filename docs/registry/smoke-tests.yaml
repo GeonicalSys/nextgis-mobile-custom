@@ -212,6 +212,13 @@ tests:
     scope: [maplib, maplibui]
     steps: [Reorder mixed vector and raster layers, Finish the gesture, Compare list and map]
     expected: Map and list converge to the same bottom-to-top order.
+  SMOKE-LAYER-VISIBILITY-ICON:
+    type: device
+    scope: [maplibui]
+    steps:
+      - In light and dark themes, open the map layer list with visible and hidden layers
+      - Toggle a layer on and off, then scroll the list to recycle its row
+    expected: Visible layers show a green eye; hidden layers keep their original themed eye icon and color, including after row recycling.
   SMOKE-COLLECTOR-IMPORT:
     type: device
     scope: [app, maplib, maplibui]
