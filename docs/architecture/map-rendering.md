@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-18
+last_verified: 2026-09-20
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -34,6 +34,10 @@ related_code:
 
 - `MapDrawable` строит и обновляет MapLibre style, sources и layers.
 - `MPLFeaturesUtils` содержит операции style и определение sibling anchors.
+- Для Polygon и MultiPolygon он создаёт отдельный Point source подписи:
+  внутренняя точка берётся с учётом отверстий, у MultiPolygon — на наибольшей
+  пригодной части. Вырожденный контур без внутренней точки не получает подпись.
+  Исходные свойства feature переходят к точке подписи.
 - `VectorLayerRenderCache` ускоряет подготовку векторных слоёв при cold start.
 - `LayerFillService` загружает и вставляет импортированные слои в `LayerGroup`.
 - `ReorderedLayerView` синхронизирует порядок UI и модели.
@@ -337,7 +341,8 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 - не подтверждается ли асинхронный reload раньше `setMapLayersLoaded()` после
   проверки фактических MapLibre sources/layers.
 
-Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
+Минимальный regression набор: `SMOKE-MAP-COLD-START`, `SMOKE-POLYGON-LABEL-ANCHOR`,
+`SMOKE-LOCATION-CURSOR-TOP`, `SMOKE-NGRC-ORDER`,
 `SMOKE-NGRC-PRESERVE`, `SMOKE-HOT-RASTER`, `SMOKE-LAYER-REORDER`,
 `SMOKE-COLLECTOR-IMPORT`, `SMOKE-MULTIPOLYGON-REPAIR`, `SMOKE-GEOMETRY-SKETCH-WORKFLOW`,
 `SMOKE-MAP-CAMERA-CONTROLS`, `SMOKE-NGW-LARGE-PULL-CACHE`,
@@ -374,7 +379,10 @@ MapLibre URL и Canvas tile directory разрешаются через `shared_
 Камера не опускается ниже `7.5`. Любая включённая raster-подложка доступна с
 zoom `7`; выключенный слой остаётся выключенным. Raster-источники подключаются
 напрямую, без proxy, производных копий и преобразования тайлов. В режиме фона
-карты «Светлый» MapLibre использует сплошной цвет `#FFFFFF`.
+карты «Светлый» нижний MapLibre `BackgroundLayer` использует
+`background-color: #FFFFFF` без текстуры. При смене режима фона слой
+пересоздаётся, поэтому прежний `background-pattern` не остаётся активным;
+нейтральный и тёмный режимы сохраняют свои узоры.
 
 При dedup дерева NGRc с готовым MBTiles ссылка меняет `tms_type` вместе с ID:
 MapLibre выбирает `mbtiles://` по формату целевого payload. Старые `levels`

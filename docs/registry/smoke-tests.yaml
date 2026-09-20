@@ -96,6 +96,13 @@ tests:
     scope: [app, maplib]
     steps: [Open an existing multi-layer map from a cold process start, Compare visible layers and order with the saved layer list]
     expected: Map renders once with the saved visibility and order and without a crash.
+  SMOKE-POLYGON-LABEL-ANCHOR:
+    type: device
+    scope: [app, maplib]
+    steps:
+      - Open a map with labeled concave Polygon, holed Polygon and disjoint MultiPolygon features
+      - Inspect each label after cold start, zoom changes and a style reload
+    expected: Each label anchor lies in the polygon fill or one MultiPolygon part, never in a hole or the gap between parts.
   SMOKE-MAP-OPENGL-COMPATIBILITY:
     type: device
     scope: [app, maplibui, maplib]
@@ -155,11 +162,13 @@ tests:
     steps:
       - Cold-open a map, pinch and zoom-out until the camera stops; confirm zoom is at least 7.5
       - Enable a raster underlay and confirm it remains available at zoom 7.5; disable it and confirm it remains hidden
-      - Select the Light map background and inspect an uncovered map area
+      - Select the Light map background and inspect an uncovered map area at several zoom levels
+      - Switch to Neutral and back to Light; inspect the same area for gray dots or texture artifacts
     expected: >
       Camera floor is 7.5 and each enabled raster underlay has style minzoom 7.
       Visibility remains authoritative, raster sources use their direct URLs without a display
-      proxy or tile transformation, and the Light background is exactly #FFFFFF.
+      proxy or tile transformation, and the Light background is uniformly
+      #FFFFFF at every checked zoom with no gray dots after mode changes.
   SMOKE-NGRC-ORDER:
     type: device
     scope: [maplib, maplibui]
