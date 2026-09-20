@@ -9,8 +9,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.pm.ServiceInfo;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Context;
 import android.content.PeriodicSync;
 import android.content.SyncResult;
@@ -28,6 +30,7 @@ import com.hypertrack.hyperlog.HyperLog;
 import com.nextgis.maplib.map.CollectorProjectMetadata;
 import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.NgwSyncProgress;
 import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.datasource.SyncAdapter;
 import com.nextgis.mobile.R;
@@ -35,6 +38,7 @@ import com.nextgis.mobile.activity.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,14 +55,55 @@ public class OfflineSyncIntentService extends IntentService {
     private static final String ACTION_OFFSYNC = "com.nextgis.mobile.util.action.OFFSYNC";
     private static final String SYNC_CHANNEL_ID = "manual_sync_fgs";
     private static final int SYNC_NOTIFICATION_ID = 519;
+    private BroadcastReceiver mProgressReceiver;
+    private PendingIntent mSyncContentIntent;
 
 
 
     private static final String ACTION_ACCOUNT_NAME = "com.nextgis.mobile.util.action.ACCOUNTNAME";
     private static final String EXTRA_OPERATION_RESERVATION =
             "com.nextgis.mobile.extra.OPERATION_RESERVATION";
-    private static final ConcurrentHashMap<String, ProjectOperationCoordinator.Lease>
+    private static final class PendingOperation {
+        final ProjectOperationCoordinator.Lease lease;
+        final ProjectOperationCoordinator.CancelRegistration cancelRegistration;
+        final long cancellationGeneration;
+
+        PendingOperation(
+                ProjectOperationCoordinator.Lease lease,
+                ProjectOperationCoordinator.CancelRegistration cancelRegistration,
+                long cancellationGeneration) {
+            this.lease = lease;
+            this.cancelRegistration = cancelRegistration;
+            this.cancellationGeneration = cancellationGeneration;
+        }
+
+        void close() {
+            lease.close();
+            cancelRegistration.close();
+        }
+    }
+
+    private static final ConcurrentHashMap<String, PendingOperation>
             PENDING_OPERATION_LEASES = new ConcurrentHashMap<>();
+    private static final Object CANCEL_LOCK = new Object();
+    private static Thread activeManualWorker;
+    private static long cancellationGeneration;
+
+    private static void requestCancellation() {
+        synchronized (CANCEL_LOCK) {
+            cancellationGeneration++;
+            for (Map.Entry<String, PendingOperation> entry
+                    : PENDING_OPERATION_LEASES.entrySet()) {
+                PendingOperation pending = PENDING_OPERATION_LEASES.remove(entry.getKey());
+                if (pending != null) {
+                    pending.close();
+                }
+            }
+            if (activeManualWorker != null) {
+                activeManualWorker.interrupt();
+            }
+        }
+    }
 
 
     public OfflineSyncIntentService() {
@@ -81,21 +126,12 @@ public class OfflineSyncIntentService extends IntentService {
         }
         Intent open = new Intent(this, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent contentIntent = PendingIntent.getActivity(
+        mSyncContentIntent = PendingIntent.getActivity(
                 this,
                 0,
                 open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, SYNC_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_action_sync)
-                .setContentTitle(getString(com.nextgis.maplib.R.string.synchronization))
-                .setContentText(getString(com.nextgis.maplib.R.string.sync_progress))
-                .setContentIntent(contentIntent)
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .setProgress(0, 0, true)
-                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-                .setPriority(NotificationCompat.PRIORITY_LOW);
+        NotificationCompat.Builder builder = buildSyncNotification(NgwSyncProgress.snapshot());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
                     SYNC_NOTIFICATION_ID,
@@ -103,6 +139,21 @@ public class OfflineSyncIntentService extends IntentService {
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
         } else {
             startForeground(SYNC_NOTIFICATION_ID, builder.build());
+        }
+        mProgressReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent == null || !NgwSyncProgress.SYNC_PROGRESS.equals(intent.getAction())) {
+                    return;
+                }
+                updateSyncNotification(NgwSyncProgress.snapshot());
+            }
+        };
+        IntentFilter progressFilter = new IntentFilter(NgwSyncProgress.SYNC_PROGRESS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mProgressReceiver, progressFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mProgressReceiver, progressFilter);
         }
     }
 
@@ -115,14 +166,31 @@ public class OfflineSyncIntentService extends IntentService {
     }
 
     public static boolean startActionFoo(Context context, String lpath, boolean forceRecheck) {
+        long operationGeneration;
+        synchronized (CANCEL_LOCK) {
+            operationGeneration = cancellationGeneration;
+        }
+        ProjectOperationCoordinator.CancelRegistration cancelRegistration =
+                ProjectOperationCoordinator.registerDataSyncCancelHandler(
+                        OfflineSyncIntentService::requestCancellation);
         ProjectOperationCoordinator.Lease operationLease =
                 ProjectOperationCoordinator.tryBegin(
                         context, ProjectOperationCoordinator.Kind.DATA_SYNC);
         if (operationLease == null) {
+            cancelRegistration.close();
             return false;
         }
         String reservation = UUID.randomUUID().toString();
-        PENDING_OPERATION_LEASES.put(reservation, operationLease);
+        synchronized (CANCEL_LOCK) {
+            if (operationGeneration != cancellationGeneration) {
+                operationLease.close();
+                cancelRegistration.close();
+                return false;
+            }
+            PENDING_OPERATION_LEASES.put(
+                    reservation, new PendingOperation(
+                            operationLease, cancelRegistration, operationGeneration));
+        }
         Intent intent = new Intent(context, OfflineSyncIntentService.class);
         intent.setAction(ACTION_OFFSYNC);
         if (lpath != null) {
@@ -136,8 +204,7 @@ public class OfflineSyncIntentService extends IntentService {
             ContextCompat.startForegroundService(context, intent);
             return true;
         } catch (RuntimeException e) {
-            ProjectOperationCoordinator.Lease pending =
-                    PENDING_OPERATION_LEASES.remove(reservation);
+            PendingOperation pending = PENDING_OPERATION_LEASES.remove(reservation);
             if (pending != null) {
                 pending.close();
             }
@@ -147,8 +214,39 @@ public class OfflineSyncIntentService extends IntentService {
 
     @Override
     public void onDestroy() {
+        if (mProgressReceiver != null) {
+            unregisterReceiver(mProgressReceiver);
+            mProgressReceiver = null;
+        }
         stopForeground(true);
         super.onDestroy();
+    }
+
+    private NotificationCompat.Builder buildSyncNotification(NgwSyncProgress.Snapshot snapshot) {
+        boolean determinate = snapshot != null && snapshot.determinate && snapshot.active;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, SYNC_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_action_sync)
+                .setContentTitle(getString(com.nextgis.maplib.R.string.synchronization))
+                .setContentText(getString(com.nextgis.maplib.R.string.sync_progress))
+                .setContentIntent(mSyncContentIntent)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+                .setPriority(NotificationCompat.PRIORITY_LOW);
+        if (determinate) {
+            builder.setProgress(snapshot.total, snapshot.done, false);
+        } else {
+            builder.setProgress(0, 0, true);
+        }
+        return builder;
+    }
+
+    private void updateSyncNotification(NgwSyncProgress.Snapshot snapshot) {
+        NotificationManager manager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager != null) {
+            manager.notify(SYNC_NOTIFICATION_ID, buildSyncNotification(snapshot).build());
+        }
     }
 
     /** When {@code true}, sync errors are shown to the user (button / toast). */
@@ -178,16 +276,46 @@ public class OfflineSyncIntentService extends IntentService {
             String lpath,
             boolean manualSync,
             String operationReservation, boolean forceRecheck) {
-        ProjectOperationCoordinator.Lease operationLease = operationReservation != null
-                ? PENDING_OPERATION_LEASES.remove(operationReservation) : null;
-        if (operationLease == null) {
-            operationLease = ProjectOperationCoordinator.tryBegin(
-                    this, ProjectOperationCoordinator.Kind.DATA_SYNC);
-        }
-        if (operationLease == null) {
-            HyperLog.v(Constants.TAG,
-                    "OfflineSyncIntentService skipped: project operation in progress");
-            return;
+        ProjectOperationCoordinator.Lease operationLease;
+        ProjectOperationCoordinator.CancelRegistration cancelRegistration;
+        long operationGeneration;
+        synchronized (CANCEL_LOCK) {
+            PendingOperation pending = operationReservation != null
+                    ? PENDING_OPERATION_LEASES.remove(operationReservation)
+                    : null;
+            operationLease = pending != null
+                    ? pending.lease
+                    : operationReservation == null
+                            ? ProjectOperationCoordinator.tryBegin(
+                                    this, ProjectOperationCoordinator.Kind.DATA_SYNC)
+                            : null;
+            cancelRegistration = pending != null
+                    ? pending.cancelRegistration
+                    : operationLease != null
+                            ? ProjectOperationCoordinator.registerDataSyncCancelHandler(
+                                    OfflineSyncIntentService::requestCancellation)
+                            : null;
+            operationGeneration = pending != null
+                    ? pending.cancellationGeneration
+                    : cancellationGeneration;
+            // A missing reservation was canceled before the service began. Never reacquire it.
+            if (operationLease == null) {
+                HyperLog.v(Constants.TAG,
+                        "OfflineSyncIntentService skipped: reservation canceled or project busy");
+                if (operationReservation != null) {
+                    sendBroadcast(new Intent(SyncAdapter.SYNC_CANCELED)
+                            .setPackage(getPackageName()));
+                }
+                return;
+            }
+            if (operationGeneration != cancellationGeneration) {
+                operationLease.close();
+                if (cancelRegistration != null) {
+                    cancelRegistration.close();
+                }
+                return;
+            }
+            activeManualWorker = Thread.currentThread();
         }
         try {
             Log.d("SSYNC", "OfflineSyncIntentService handleActionFoo lpath=" + lpath
@@ -220,6 +348,9 @@ public class OfflineSyncIntentService extends IntentService {
             Log.d("SSYNC", "OfflineSyncIntentService accounts queued=" + mAccounts.size()
                     + " manual=" + manualSync + " lpath=" + lpath);
             prioritizeActiveCollectorAccount(application, mAccounts);
+            if (!mAccounts.isEmpty()) {
+                NgwSyncProgress.beginSession(this, mAccounts.size());
+            }
 
             Bundle bundle = new Bundle();
             if (lpath != null) {
@@ -230,7 +361,8 @@ public class OfflineSyncIntentService extends IntentService {
             bundle.putBoolean(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED,
                     forceRecheck);
             for (Account account : mAccounts) {
-                if (Thread.currentThread().isInterrupted()) break;
+                if (Thread.currentThread().isInterrupted()
+                        || isCancellationRequested(operationGeneration)) break;
                 try {
                     // SyncResult and SyncAdapter carry per-run state. Reusing either
                     // leaked errors/cancellation from one account into the next one.
@@ -257,7 +389,29 @@ public class OfflineSyncIntentService extends IntentService {
             Log.e("SSYNC", "handleActionFoo failed: " + e.getMessage(), e);
             HyperLog.e(Constants.TAG, "OfflineSyncIntentService.handleActionFoo crash: " + e.getMessage(), e);
         } finally {
+            boolean canceled;
+            synchronized (CANCEL_LOCK) {
+                canceled = operationGeneration != cancellationGeneration;
+                activeManualWorker = null;
+            }
             operationLease.close();
+            if (cancelRegistration != null) {
+                cancelRegistration.close();
+            }
+            if (canceled) {
+                NgwSyncProgress.cancel();
+                sendBroadcast(new Intent(SyncAdapter.SYNC_CANCELED).setPackage(getPackageName()));
+            } else {
+                NgwSyncProgress.finishSession();
+            }
+            // IntentService reuses its handler thread for later intents.
+            Thread.interrupted();
+        }
+    }
+
+    private static boolean isCancellationRequested(long operationGeneration) {
+        synchronized (CANCEL_LOCK) {
+            return operationGeneration != cancellationGeneration;
         }
     }
 

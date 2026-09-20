@@ -55,6 +55,7 @@ import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +73,7 @@ import com.nextgis.maplib.map.VectorLayer;
 import com.nextgis.maplib.service.NGWSyncService;
 import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.NgwSyncProgress;
 import com.nextgis.maplib.util.SettingsConstants;
 import android.text.TextUtils;
 import com.nextgis.maplibui.GISApplication;
@@ -81,6 +83,7 @@ import com.nextgis.maplibui.mapui.SyncAccountWorker;
 import com.nextgis.maplibui.util.ControlHelper;
 import com.nextgis.maplibui.util.HyperLogCrashHandler;
 import com.nextgis.maplibui.util.NGIDUtils;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.maplibui.util.UiUtil;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.CreateVectorLayerActivity;
@@ -119,6 +122,7 @@ public class LayersFragment
     protected TextView              mInfoText;
     protected SyncReceiver          mSyncReceiver;
     protected ImageButton           mSyncButton;
+    protected ProgressBar           mSyncProgressRing;
     protected View                  mSyncPendingBadge;
     protected ImageButton           mNewLayer;
     protected List<Account>         mAccounts;
@@ -136,25 +140,31 @@ public class LayersFragment
     private boolean mBadgeRefreshPending;
 
     ObjectAnimator rotation;
+    private boolean mSyncStateReconcileEnabled;
 
     /**
      * Broadcast delivery is lifecycle-sensitive. While the animator is running, reconcile it with
-     * the adapter-owned process state so a missed final broadcast cannot leave an infinite spinner.
+     * the worker and project-lease state so missed broadcasts cannot leave a stale spinner.
      */
     private final Runnable mSyncStateReconcileRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mSyncButton == null || !isAdded()) {
+            if (!mSyncStateReconcileEnabled || mSyncButton == null || !isAdded()) {
                 return;
             }
-            if (!NGWSyncService.isSyncStarted()) {
-                HyperLog.v(Constants.TAG,
-                        "LayersFragment: stopping stale sync animation after state reconciliation");
-                refreshSyncButtonAnimateState(false);
-                updateInfo();
-                refreshPendingChangesBadge();
-                return;
+            boolean active = isSyncActive();
+            boolean animating = rotation != null && rotation.isStarted();
+            refreshSyncProgressRing(active);
+            if (active != animating) {
+                HyperLog.v(Constants.TAG, "LayersFragment: reconciling sync animation active="
+                        + active + " animating=" + animating);
+                refreshSyncButtonAnimateState(active);
+                if (!active) {
+                    updateInfo();
+                    refreshPendingChangesBadge();
+                }
             }
+            mSyncButton.removeCallbacks(this);
             mSyncButton.postDelayed(this, SYNC_STATE_RECONCILE_DELAY_MS);
         }
     };
@@ -261,6 +271,7 @@ public class LayersFragment
         }
 
         mSyncButton = view.findViewById(R.id.sync);
+        mSyncProgressRing = view.findViewById(R.id.sync_progress_ring);
         mSyncPendingBadge = view.findViewById(R.id.sync_pending_badge);
         mNewLayer = view.findViewById(R.id.new_layer);
         mNewLayer.setOnClickListener(this);
@@ -570,24 +581,33 @@ public class LayersFragment
             if (!rotation.isStarted()) {
                 rotation.start();
             }
-            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
-            mSyncButton.postDelayed(
-                    mSyncStateReconcileRunnable, SYNC_STATE_RECONCILE_DELAY_MS);
-
-// old rotation
-//            RotateAnimation rotateAnimation = new RotateAnimation(
-//                    0, 360, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-//            rotateAnimation.setFillAfter(true);
-//            rotateAnimation.setDuration(700);
-//            rotateAnimation.setRepeatCount(500);
-//
-            //mSyncButton.startAnimation(rotateAnimation);
         } else {
-            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
             if (rotation!= null)
                 rotation.cancel();
             mSyncButton.clearAnimation();
         }
+        refreshSyncProgressRing(start);
+    }
+
+    private void refreshSyncProgressRing(boolean start) {
+        if (mSyncProgressRing == null) {
+            return;
+        }
+        if (!start) {
+            mSyncProgressRing.setVisibility(View.GONE);
+            mSyncProgressRing.setProgress(0);
+            return;
+        }
+        NgwSyncProgress.Snapshot snapshot = NgwSyncProgress.snapshot();
+        mSyncProgressRing.setVisibility(View.VISIBLE);
+        mSyncProgressRing.setIndeterminate(false);
+        mSyncProgressRing.setMax(NgwSyncProgress.SCALE);
+        mSyncProgressRing.setProgress(snapshot.determinate ? snapshot.done : 0);
+    }
+
+    private boolean isSyncActive() {
+        return NGWSyncService.isSyncStarted()
+                || ProjectOperationCoordinator.isDataSyncActive();
     }
 
 
@@ -601,13 +621,18 @@ public class LayersFragment
         intentFilter.addAction(SyncAdapter.SYNC_START);
         intentFilter.addAction(SyncAdapter.SYNC_FINISH);
         intentFilter.addAction(SyncAdapter.SYNC_CANCELED);
+        intentFilter.addAction(NgwSyncProgress.SYNC_PROGRESS);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getActivity().registerReceiver(mSyncReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
         } else {
             getActivity().registerReceiver(mSyncReceiver, intentFilter);
         }
 
-        refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
+        refreshSyncButtonAnimateState(isSyncActive());
+        mSyncStateReconcileEnabled = true;
+        mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
+        mSyncButton.postDelayed(
+                mSyncStateReconcileRunnable, SYNC_STATE_RECONCILE_DELAY_MS);
         updateInfo();
         refreshPendingChangesBadge();
         maybeShowPendingSyncFailure();
@@ -617,6 +642,10 @@ public class LayersFragment
     @Override
     public void onPause()
     {
+        mSyncStateReconcileEnabled = false;
+        if (mSyncButton != null) {
+            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
+        }
         refreshSyncButtonAnimateState(false);
         getActivity().unregisterReceiver(mSyncReceiver);
         super.onPause();
@@ -770,40 +799,18 @@ public class LayersFragment
             HyperLog.v(Constants.TAG, "startManualSync: on-premise sync");
             if (!OfflineSyncIntentService.startActionFoo(context, null, forceRecheck)) {
                 Toast.makeText(context, R.string.project_operation_wait, LENGTH_LONG).show();
+            } else {
+                refreshSyncButtonAnimateState(true);
             }
         } else {
-            final Runnable switchRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    Context ctx = getContext();
-                    if (ctx == null) {
-                        return;
-                    }
-                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-                    if (!prefs.getBoolean(KEY_PREF_OFFLINE_SYNC_ON, false)) {
-                        prefs.edit().putBoolean(KEY_PREF_OFFLINE_SYNC_ON, true).apply();
-                    }
-                    if (!OfflineSyncIntentService.startActionFoo(ctx, null, forceRecheck)) {
-                        Toast.makeText(ctx, R.string.project_operation_wait, LENGTH_LONG).show();
-                    }
-                }
-            };
-
-            GISApplication.getInstance().startRunnable(switchRunnable);
-
-            for (Account account : mAccounts) {
-                HyperLog.v(Constants.TAG, "startManualSync: queue for " + account.name);
-                Bundle settingsBundle = new Bundle();
-                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                settingsBundle.putBoolean(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED,
-                        forceRecheck);
-                ContentResolver.setIsSyncable(account, AUTHORITY, 1);
-                Log.d("SSYNC", "LayersFragment requestSync account=" + account.name
-                        + " authority=" + AUTHORITY + " isSyncable="
-                        + ContentResolver.getIsSyncable(account, AUTHORITY)
-                        + " auto=" + ContentResolver.getSyncAutomatically(account, AUTHORITY));
-                ContentResolver.requestSync(account, AUTHORITY, settingsBundle);
+            // A manual tap owns one project lease and one serial account loop. The old cloud path
+            // also queued framework syncs here and then started the same serial service two seconds
+            // later, creating duplicate workers and gaps in the visible sync state.
+            preferences.edit().putBoolean(KEY_PREF_OFFLINE_SYNC_ON, true).apply();
+            if (!OfflineSyncIntentService.startActionFoo(context, null, forceRecheck)) {
+                Toast.makeText(context, R.string.project_operation_wait, LENGTH_LONG).show();
+            } else {
+                refreshSyncButtonAnimateState(true);
             }
         }
         updateInfo();
@@ -954,6 +961,8 @@ public class LayersFragment
         {
             if (intent.getAction().equals(SyncAdapter.SYNC_START)) {
                 refreshSyncButtonAnimateState(true);
+            } else if (NgwSyncProgress.SYNC_PROGRESS.equals(intent.getAction())) {
+                refreshSyncProgressRing(isSyncActive());
             } else if (intent.getAction().equals(SyncAdapter.SYNC_FINISH) || intent.getAction().equals(SyncAdapter.SYNC_CANCELED)) {
                 if (intent.hasExtra(SyncAdapter.EXCEPTION)) {
                     String error = intent.getStringExtra(SyncAdapter.EXCEPTION);
@@ -964,11 +973,11 @@ public class LayersFragment
                     }
                 }
 
-                refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
+                refreshSyncButtonAnimateState(isSyncActive());
                 updateInfo();
                 refreshPendingChangesBadge();
             } else {
-                refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
+                refreshSyncButtonAnimateState(isSyncActive());
                 updateInfo();
                 refreshPendingChangesBadge();
             }
@@ -977,11 +986,16 @@ public class LayersFragment
 
     @Override
     public void onDestroyView() {
+        mSyncStateReconcileEnabled = false;
+        if (mSyncButton != null) {
+            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
+        }
         ++mBadgeGeneration;
         if (mBadgeQuery != null) mBadgeQuery.cancel(true);
         mBadgeQuery = null;
         mBadgeRefreshPending = false;
         refreshSyncButtonAnimateState(false);
+        rotation = null;
         super.onDestroyView();
 
         if (mLayersListView != null) {
@@ -997,6 +1011,7 @@ public class LayersFragment
         mListAdapter = null;
         mLayersListView = null;
         mSyncButton = null;
+        mSyncProgressRing = null;
         mSyncPendingBadge = null;
         if (mDrawerLayout != null) {
             mDrawerLayout.removeCallbacks(mSyncDrawerStateRunnable);

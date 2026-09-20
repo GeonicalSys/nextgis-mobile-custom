@@ -24,6 +24,7 @@ import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.util.CollectorProjectRegistry
 import com.nextgis.maplibui.util.LayerBackupManager
 import com.nextgis.maplibui.util.ProjectOperationCoordinator
+import com.nextgis.maplibui.util.ProjectSyncInterruption
 import com.nextgis.maplibui.util.SchemaRebuildRetryGuard
 import com.nextgis.mobile.R
 import com.nextgis.mobile.util.OfflineSyncIntentService
@@ -134,41 +135,68 @@ class ProjectSettingsActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.collector_projects_empty, Toast.LENGTH_LONG).show()
             return
         }
-        ProjectChooserDialog.show(this, projects) { project ->
-            if (project.isActive(this)) return@show
-            if (!canMutateProject()) return@show
-            if (!CollectorProjectRegistry.activateProject(this, project.projectUid)) {
-                Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
-                return@show
-            }
-            scheduleAutomaticSync(project)
-            openMap()
+        ProjectChooserDialog.show(this, projects, ::activateSelectedProject)
+    }
+
+    private fun activateSelectedProject(project: CollectorProjectRegistry.ProjectInfo) {
+        if (project.isActive(this)) return
+        if (TrackerService.isTrackerServiceRunning(this)) {
+            Toast.makeText(this, R.string.collector_project_switch_tracking, Toast.LENGTH_LONG).show()
+            return
         }
+        if (ProjectSyncInterruption.confirmAndRun(this) { activateSelectedProject(project) }) return
+        if (!canMutateProject()) return
+        if (!CollectorProjectRegistry.activateProject(this, project.projectUid)) {
+            Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
+            return
+        }
+        scheduleAutomaticSync(project)
+        openMap()
     }
 
     private fun createLocalProject() {
+        if (ProjectSyncInterruption.confirmAndRun(this) { createLocalProject() }) return
         if (!canMutateProject()) return
         showNameDialog(R.string.project_create_local, getString(R.string.project_local_default_name)) { name ->
-            val project = CollectorProjectRegistry.createLocalProject(this, name)
-            if (project == null || !CollectorProjectRegistry.activateProject(this, project.projectUid)) {
-                Toast.makeText(this, R.string.project_create_failed, Toast.LENGTH_LONG).show()
+            if (ProjectSyncInterruption.confirmAndRun(this) { createLocalProjectNamed(name) }) {
                 return@showNameDialog
             }
-            (application as GISApplication).map?.save()
-            openMap()
+            createLocalProjectNamed(name)
         }
+    }
+
+    private fun createLocalProjectNamed(name: String) {
+        if (!canMutateProject()) return
+        val project = CollectorProjectRegistry.createAndActivateLocalProject(this, name)
+        if (project == null) {
+            Toast.makeText(this, R.string.project_create_failed, Toast.LENGTH_LONG).show()
+            return
+        }
+        (application as GISApplication).map?.save()
+        openMap()
     }
 
     private fun renameProject() {
         val project = CollectorProjectRegistry.getActiveProject(this) ?: return
+        if (ProjectSyncInterruption.confirmAndRun(this) { renameProject() }) return
         if (!canMutateProject()) return
         showNameDialog(R.string.project_rename, project.name) { name ->
-            val renamed = CollectorProjectRegistry.renameProject(this, project.projectUid, name)
-            if (renamed == null) {
-                Toast.makeText(this, R.string.project_rename_failed, Toast.LENGTH_LONG).show()
-            } else {
-                refresh()
+            if (ProjectSyncInterruption.confirmAndRun(this) {
+                    renameProjectNamed(project.projectUid, name)
+                }) {
+                return@showNameDialog
             }
+            renameProjectNamed(project.projectUid, name)
+        }
+    }
+
+    private fun renameProjectNamed(projectUid: String, name: String) {
+        if (!canMutateProject()) return
+        val renamed = CollectorProjectRegistry.renameProject(this, projectUid, name)
+        if (renamed == null) {
+            Toast.makeText(this, R.string.project_rename_failed, Toast.LENGTH_LONG).show()
+        } else {
+            refresh()
         }
     }
 
@@ -188,6 +216,7 @@ class ProjectSettingsActivity : AppCompatActivity() {
 
     private fun confirmDeleteProject() {
         val project = CollectorProjectRegistry.getActiveProject(this) ?: return
+        if (ProjectSyncInterruption.confirmAndRun(this) { confirmDeleteProject() }) return
         if (!canMutateProject()) return
         val pending = collectLayerState().changedLayerCount
         val message = if (pending > 0) {
@@ -204,6 +233,8 @@ class ProjectSettingsActivity : AppCompatActivity() {
     }
 
     private fun deleteProject(project: CollectorProjectRegistry.ProjectInfo) {
+        if (ProjectSyncInterruption.confirmAndRun(this) { deleteProject(project) }) return
+        if (!canMutateProject()) return
         setBusy(true)
         executor.execute {
             val result = CollectorProjectRegistry.deleteActiveProject(

@@ -798,11 +798,15 @@ invariants:
     owners: [app, maplib, maplibui]
     statement: >
       Manual sync operates only on accounts represented in the active map and owns that workspace
-      from the button press through every sequential account. Periodic sync, layer fill and schema
-      rebuild also own a workspace. Switch/create/rename/delete and duplicate full sync are refused
-      until all owners finish. Collector import reserves the switch before creating or updating its
-      workspace entry; if another owner is active, import leaves the registry unchanged and explains
-      in a modal dialog that synchronization or loading must finish. A dependent fill may reserve only the same workspace while sync is
+      from the button press through every sequential account, without also queueing duplicate
+      framework passes. Periodic sync, layer fill and schema
+      rebuild also own a workspace. During sync, project switch/create/rename/delete and layer or
+      underlay loading warn the user and offer an explicit interruption; the requested action waits
+      until all sync owners finish. Cancellation closes read-only network work immediately, rolls
+      back an interrupted tracked apply, and after an outbound mutation was sent waits for that one
+      request to resolve before another mutation can start. Duplicate full sync remains refused. Collector import reserves
+      the switch before creating or updating its workspace entry; if fill or rebuild is active, import
+      leaves the registry unchanged and explains in a modal dialog that loading must finish. A dependent fill may reserve only the same workspace while sync is
       active, but must wait for sync to release database access before touching SQLite.
       A resumed Collector task also validates its journal project UID against the target group and
       preserves the journal without file or database access while another project is active.
@@ -820,7 +824,7 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    verify_smoke: [SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SCHEMA-REBUILD-GUARD]
+    verify_smoke: [SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-INTERRUPT-ACTION, SMOKE-SCHEMA-REBUILD-GUARD]
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/ngw-sync-and-storage.md
@@ -828,8 +832,9 @@ invariants:
     title: Vector spatial cache remains consistent across sync and main-thread notifications
     owners: [maplib]
     statement: >
-      An incremental NGW pull suppresses per-row insert, update and delete broadcasts and performs
-      one spatial-cache rebuild plus one map reload after the SQLite result is complete. Public
+      An incremental NGW pull suppresses per-row insert, update and delete broadcasts, applies all
+      tracked changes in one rollback-safe SQLite transaction, and performs one spatial-cache rebuild
+      plus one map reload after commit. Public
       GeometryRTree reads and mutations are serialized; a cache rebuild never exposes an envelope
       after unInit and never swallows ConcurrentModificationException while leaving null bounds.
       Vector-layer notifications do not mutate a cache during bulk/rebuild, and a receiver callback

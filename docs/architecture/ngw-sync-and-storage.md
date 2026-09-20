@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-09-18
+last_verified: 2026-09-20
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -12,6 +12,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncIo.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
   - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
@@ -27,6 +29,7 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
   - app/src/main/java/com/nextgis/mobile/datasource/SyncService.java
   - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+  - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
   - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
   - app/src/main/res/xml/syncadapter.xml
 ---
@@ -99,8 +102,8 @@ NGW account привязан не только к серверным credentials
 Release ЛИСА/Белка используют `com.nextgis.account.geonical`, debug —
 `com.nextgis.account.debug`. GIS provider аналогично должен совпадать между
 `BuildConfig.providerAuth`, manifest provider и `SyncAdapter.contentAuthority`.
-Выпуск `3.1.2.21` использует production tuple `215` / `3.1.2.21`, а отдельный
-debug — `216` / `3.1.2.21`; application/account/provider identity не
+Выпуск `3.1.2.22` использует production tuple `216` / `3.1.2.22`, а отдельный
+debug — `217` / `3.1.2.22`; application/account/provider identity не
 меняется.
 Library defaults нельзя считать достаточными: app variant обязан перекрывать оба
 account resource keys. Иначе HTTP-аутентификация проходит, но Android отклоняет
@@ -183,8 +186,10 @@ Android `PeriodicSync` registrations при старте и поддержива
 Ручная синхронизация работает только с текущей `IGISApplication.getMap()`, то
 есть с активным проектом. Она выбирает Android account, для которых в этой карте
 есть NGW-слои, и выполняет их последовательно; закрытые проекты не обходятся.
-Активный Collector account выполняется первым. Для каждого account создаются
-отдельные adapter/result objects, поэтому ошибка одного не переходит в следующий.
+Активный Collector account выполняется первым. Кнопка запускает только этот
+serial foreground pipeline и не ставит параллельно те же account через
+`ContentResolver.requestSync`. Для каждого account создаются отдельные
+adapter/result objects, поэтому ошибка одного не переходит в следующий.
 Полностью молчащее HTTP-чтение ограничено тремя минутами; это inactivity timeout
 и не обрывает большой ответ, пока данные продолжают поступать.
 
@@ -209,18 +214,37 @@ layers группируются по `account + project_uid + remote_id`. Есл
 `ProjectOperationCoordinator` резервирует active workspace ещё при нажатии
 ручной sync и удерживает lease до конца всех account, включая промежутки между
 ними. Поэтому project switch/create/rename/delete не может попасть в окно между
-двумя адаптерами. Периодический adapter также получает lease; второй полный sync
-того же workspace отклоняется. Layer fill и schema rebuild могут заранее
-зарезервировать только тот же workspace, но доступ к SQLite получают строго после
-завершения full sync; это не даёт синхронизации и перезаливке писать в одну БД
-одновременно и одновременно закрывает окно для переключения проекта.
+двумя адаптерами. Если пользователь запускает такое действие, загрузку слоя или
+подложки во время sync, UI предупреждает об активной синхронизации, предлагает
+прервать её и ждёт закрытия всех lease перед продолжением. Gate выполняется
+повторно перед фактической подготовкой Collector workspace, закрывая окно
+длительного выбора ресурса. Cancel handlers принадлежат своим reservations и
+не перезаписывают друг друга. Периодический adapter
+также получает lease; второй полный sync того же workspace отклоняется. Layer fill
+и schema rebuild могут заранее зарезервировать только тот же workspace, но доступ
+к SQLite получают строго после завершения full sync; для них сохраняется модальное
+ожидание без прерывания чужой БД.
 
 Process-wide признак активности обновляет сам `SyncAdapter` перед `SYNC_START`
 и во всех normal/cancel/exception finish-путях. Broadcast остаётся событием для
 UI, но не является единственным владельцем состояния: receiver фрагмента может
-быть снят во время lifecycle-перехода. Пока анимация sync-кнопки запущена,
-`LayersFragment` периодически сверяет её с `NGWSyncService.isSyncStarted()` и
-останавливает устаревший spinner после фактического завершения адаптера.
+быть снят во время lifecycle-перехода. Пока fragment видим, `LayersFragment`
+периодически сверяет анимацию с `NGWSyncService.isSyncStarted()` и
+`ProjectOperationCoordinator.isDataSyncActive()` в обе стороны: запускает
+пропущенный spinner и останавливает устаревший только после фактического
+завершения адаптера и освобождения lease.
+
+Вокруг крутящейся иконки sync `LayersFragment` показывает кольцо без процентов.
+`NgwSyncProgress` считает одну сессию на все account ручного прохода (или один
+периодический account). Вес листа равен `10 + min(число локальных правок, 30)`;
+внутри слоя шкала идёт по отправленным change records и TUS-байтам, затем по
+`Content-Length` полного snapshot и apply объектов. Если остаток неизвестен,
+доля слоя не двигается, пока слой не завершён. Deferred retry не закрывает слой.
+Composition, map reload и LayerFill в кольцо не входят: после последнего слоя
+остаётся резерв около 5% до `finishSession`. Если позже добавилась работа,
+отображаемая доля не откатывается. Broadcast `SYNC_PROGRESS` троттлится; UI
+берёт snapshot и при reconcile. Текста процентов нет; FGS-уведомление может
+повторить ту же determinate-полоску.
 
 Состояние хранит владельцев worker-потоков: early finish отклонённого параллельного
 запуска не снимает активность другого потока, а `Service.onCreate` и запоздалые
@@ -244,11 +268,15 @@ main thread не ждёт завершения snapshot-транзакции р�
 
 ### Инкрементальный pull и пространственный индекс
 
-Инкрементальный pull одного `NGWVectorLayer` является одной bulk-операцией.
+Инкрементальный pull одного `NGWVectorLayer` является одной атомарной
+SQLite-транзакцией и bulk-операцией.
 Вставки, изменения и удаления продолжают выполняться в SQLite с обычной
 проверкой backup/change-table, но не отправляют отдельный Android broadcast на
 каждую строку. После успешного применения всех серверных изменений слой один раз
-перестраивает R-tree из итоговой SQLite и публикует один reload карты.
+перестраивает R-tree из итоговой SQLite и публикует один reload карты. Отмена
+между объектами откатывает весь tracked apply до прежнего состояния. Файловые
+каталоги вложений удалённых объектов очищаются только после commit, чтобы
+rollback не восстановил строку без локальных байтов.
 
 Публичные операции `GeometryRTree` сериализованы. `VectorLayer.notifyInsert`,
 `notifyUpdate` и `notifyDelete` не изменяют индекс во время bulk/rebuild, а
@@ -293,9 +321,13 @@ features продолжают транзакцию. HyperLog записывае�
 ошибке открытия соединение закрывается. Это не общий deadline большого snapshot:
 пока байты поступают, загрузка может продолжаться. Существующее число retry
 ограничено; interrupt не запускает сетевой retry, сохраняется для account adapter
-и проверяется при download, scan, apply, delete, reconcile и перед commit.
-Отмена активного блокирующего HTTP/SQLite вызова не гарантируется мгновенно;
-lease освобождается только после фактического выхода worker.
+и проверяется при download, parse, scan, apply, delete, reconcile и перед commit.
+Явное прерывание меняет generation активных sync-session и закрывает их
+зарегистрированные read-only GET, поэтому зависшее чтение не ждёт 180 секунд.
+POST/PUT/DELETE намеренно не разрывается после отправки: завершается только один
+текущий mutation request, локальная change queue обновляется по подтверждённому
+ответу, а следующий record уже не начинается. UI отдельно сообщает об этом
+безопасном ожидании. SQLite освобождается только после commit/rollback.
 
 `DatabaseContext` не выставляет `journal_mode=OFF` и `synchronous=OFF`: используются
 штатные настройки Android SQLite. Backup gate, pending edits, одна транзакция
@@ -389,6 +421,9 @@ MultiPolygon, но не зависит квадратично от числа в
 - корректность last-sync UI только после успешного результата;
 - остановку sync spinner после normal, cancel и exception finish, включая
   уход/возврат в layer drawer во время синхронизации;
+- кольцо прогресса вокруг иконки: рост на push мелкого слоя, удержание на
+  большом snapshot без Content-Length, пауза deferred retry, скрытие после
+  cancel/finish;
 - post-push refresh и сохранение локальных данных;
 - foreground-service требования Android 14+ и повтор account-pass после
   принудительного убийства процесса;

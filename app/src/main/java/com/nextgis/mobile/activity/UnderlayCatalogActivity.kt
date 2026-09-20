@@ -19,6 +19,7 @@ import com.nextgis.maplib.util.SharedUnderlayStore
 import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.util.CollectorProjectRegistry
 import com.nextgis.maplibui.util.ProjectOperationCoordinator
+import com.nextgis.maplibui.util.ProjectSyncInterruption
 import com.nextgis.maplibui.util.SharedUnderlayProjects
 import com.nextgis.mobile.R
 import com.nextgis.mobile.util.AppUpdateManager
@@ -60,16 +61,23 @@ class UnderlayCatalogActivity : AppCompatActivity() {
         list.emptyView = findViewById(R.id.underlay_catalog_empty)
         list.setOnItemClickListener { _, _, position, _ ->
             val asset = assets[position]
-            if (choose) work {
-                val added = SharedUnderlayProjects.attach(this, asset.id)
-                runOnUiThread {
-                    Toast.makeText(this, if (added) R.string.underlay_attached else R.string.underlay_already_attached, Toast.LENGTH_LONG).show()
-                    setResult(RESULT_OK); finish()
-                }
-            } else actions(asset)
+            if (choose) attachAsset(asset) else actions(asset)
         }
         updateImportVisibility()
+        if (!ProjectSyncInterruption.confirmAndRun(this) { loadCatalog() }) loadCatalog()
+    }
+    private fun loadCatalog() {
         work { SharedUnderlayProjects.prepare(this); refresh() }
+    }
+    private fun attachAsset(asset: SharedUnderlayCatalog.Asset) {
+        if (ProjectSyncInterruption.confirmAndRun(this) { attachAsset(asset) }) return
+        work {
+            val added = SharedUnderlayProjects.attach(this, asset.id)
+            runOnUiThread {
+                Toast.makeText(this, if (added) R.string.underlay_attached else R.string.underlay_already_attached, Toast.LENGTH_LONG).show()
+                setResult(RESULT_OK); finish()
+            }
+        }
     }
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
     override fun onDestroy() { executor.shutdown(); super.onDestroy() }
@@ -105,6 +113,12 @@ class UnderlayCatalogActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.legacy_underlay_import_failed, Toast.LENGTH_LONG).show()
             return
         }
+
+        importLegacySources(sources)
+    }
+
+    private fun importLegacySources(sources: ArrayList<Uri>) {
+        if (ProjectSyncInterruption.confirmAndRun(this) { importLegacySources(sources) }) return
 
         val lease = ProjectOperationCoordinator.tryBegin(
             this, ProjectOperationCoordinator.Kind.UNDERLAY_MIGRATION)
@@ -191,6 +205,7 @@ class UnderlayCatalogActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.project_none_active, Toast.LENGTH_LONG).show()
             return
         }
+        if (ProjectSyncInterruption.confirmAndRun(this) { confirmLegacyUnderlayImport() }) return
         if (!canMutateProject()) return
         if (!DebugCompanionInstaller.hasExporter(this)) {
             DebugCompanionInstaller.offer(this, true)

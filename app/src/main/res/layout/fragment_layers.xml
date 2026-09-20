@@ -50,10 +50,25 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp">
 
+            <ProgressBar
+                android:id="@+id/sync_progress_ring"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                android:indeterminate="false"
+                android:indeterminateOnly="false"
+                android:max="1000"
+                android:progress="0"
+                android:progressDrawable="@drawable/sync_progress_ring"
+                android:visibility="gone"
+                tools:ignore="UnusedAttribute" />
+
             <ImageButton
                 android:id="@+id/sync"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:background="@drawable/ic_action_sync"
                 tools:ignore="ContentDescription" />
 

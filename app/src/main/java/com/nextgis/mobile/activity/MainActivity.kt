@@ -115,6 +115,7 @@ import com.nextgis.maplibui.util.LoadLisaCollectorProject
 import com.nextgis.maplibui.util.NGIDUtils
 import com.nextgis.maplibui.util.NGWResourceImportHelper
 import com.nextgis.maplibui.util.ProjectOperationCoordinator
+import com.nextgis.maplibui.util.ProjectSyncInterruption
 import com.nextgis.maplibui.util.SettingsConstantsUI
 import com.nextgis.maplibui.util.UiUtil
 import com.nextgis.mobile.MainApplication
@@ -922,16 +923,17 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             Toast.makeText(this, R.string.collector_project_switch_tracking, Toast.LENGTH_LONG).show()
             return
         }
-        if (gisApp.isLayerFillServiceBusy || ProjectOperationCoordinator.isBusy()) {
-            Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
-            return
-        }
         if (mapFragment?.isEditMode == true) {
             Toast.makeText(this, R.string.collector_project_switch_edit_mode, Toast.LENGTH_LONG).show()
             return
         }
         if (project.isActive(this)) {
             Toast.makeText(this, R.string.collector_project_already_active, Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (ProjectSyncInterruption.confirmAndRun(this) { switchCollectorProject(project) }) return
+        if (gisApp.isLayerFillServiceBusy || ProjectOperationCoordinator.isBusy()) {
+            Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
             return
         }
 
@@ -1081,8 +1083,14 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
 
-    fun addUnderlayFile() = chooseLocalFile(6410)
-    fun addLocalLayer() = chooseLocalFile(FILE_SELECT_CODE)
+    fun addUnderlayFile() {
+        if (ProjectSyncInterruption.confirmAndRun(this) { addUnderlayFile() }) return
+        chooseLocalFile(6410)
+    }
+    fun addLocalLayer() {
+        if (ProjectSyncInterruption.confirmAndRun(this) { addLocalLayer() }) return
+        chooseLocalFile(FILE_SELECT_CODE)
+    }
     private fun chooseLocalFile(request: Int) {
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
@@ -1480,17 +1488,20 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
 
     fun addNGWLayer() {
+        if (ProjectSyncInterruption.confirmAndRun(this) { addNGWLayer() }) return
         if (null != mapFragment) {
             mapFragment!!.addNGWLayer()
         }
     }
 
     fun loadCollectorProject() {
+        if (ProjectSyncInterruption.confirmAndRun(this) { loadCollectorProject() }) return
         LoadLisaCollectorProject.start(this)
     }
 
 
     fun addRemoteLayer() {
+        if (ProjectSyncInterruption.confirmAndRun(this) { addRemoteLayer() }) return
         if (null != mapFragment) {
             mapFragment!!.addRemoteLayer()
         }
@@ -1656,6 +1667,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     fun addNGWLayerByUrl() {
+        if (ProjectSyncInterruption.confirmAndRun(this) { addNGWLayerByUrl() }) return
         val input = EditText(this).apply {
             hint = getString(R.string.ngw_resource_url_hint)
             inputType = android.text.InputType.TYPE_CLASS_TEXT or
