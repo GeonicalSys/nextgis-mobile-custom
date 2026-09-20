@@ -88,6 +88,7 @@ NGW selector и ограниченный checkpoint объяснённых пр�
 Официальный `android_maplib/MPLFeaturesUtils.convertToPointFeatures` на ту же
 дату усредняет вершины внешних контуров. Форк выбирает внутреннюю точку
 Polygon или одной из частей MultiPolygon с учётом отверстий.
+Приложение закрепляет эти правки Merge Commit maplib PR #31 `63063ae`.
 
 Официальный app по-прежнему подключает
 `org.maplibre.gl:android-sdk:13.0.2`, то есть Vulkan-default backend MapLibre 13.
