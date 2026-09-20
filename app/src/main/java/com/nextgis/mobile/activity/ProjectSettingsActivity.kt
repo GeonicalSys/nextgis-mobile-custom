@@ -24,6 +24,7 @@ import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.util.CollectorProjectRegistry
 import com.nextgis.maplibui.util.LayerBackupManager
 import com.nextgis.maplibui.util.ProjectOperationCoordinator
+import com.nextgis.maplibui.util.ProjectSyncInterruption
 import com.nextgis.maplibui.util.SchemaRebuildRetryGuard
 import com.nextgis.mobile.R
 import com.nextgis.mobile.util.OfflineSyncIntentService
@@ -134,16 +135,23 @@ class ProjectSettingsActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.collector_projects_empty, Toast.LENGTH_LONG).show()
             return
         }
-        ProjectChooserDialog.show(this, projects) { project ->
-            if (project.isActive(this)) return@show
-            if (!canMutateProject()) return@show
-            if (!CollectorProjectRegistry.activateProject(this, project.projectUid)) {
-                Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
-                return@show
-            }
-            scheduleAutomaticSync(project)
-            openMap()
+        ProjectChooserDialog.show(this, projects, ::activateSelectedProject)
+    }
+
+    private fun activateSelectedProject(project: CollectorProjectRegistry.ProjectInfo) {
+        if (project.isActive(this)) return
+        if (TrackerService.isTrackerServiceRunning(this)) {
+            Toast.makeText(this, R.string.collector_project_switch_tracking, Toast.LENGTH_LONG).show()
+            return
         }
+        if (ProjectSyncInterruption.confirmAndRun(this) { activateSelectedProject(project) }) return
+        if (!canMutateProject()) return
+        if (!CollectorProjectRegistry.activateProject(this, project.projectUid)) {
+            Toast.makeText(this, R.string.collector_project_switch_busy, Toast.LENGTH_LONG).show()
+            return
+        }
+        scheduleAutomaticSync(project)
+        openMap()
     }
 
     private fun createLocalProject() {

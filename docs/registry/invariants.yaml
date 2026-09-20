@@ -799,10 +799,11 @@ invariants:
     statement: >
       Manual sync operates only on accounts represented in the active map and owns that workspace
       from the button press through every sequential account. Periodic sync, layer fill and schema
-      rebuild also own a workspace. Switch/create/rename/delete and duplicate full sync are refused
-      until all owners finish. Collector import reserves the switch before creating or updating its
-      workspace entry; if another owner is active, import leaves the registry unchanged and explains
-      in a modal dialog that synchronization or loading must finish. A dependent fill may reserve only the same workspace while sync is
+      rebuild also own a workspace. During sync, project switch/create/rename/delete and layer or
+      underlay loading warn the user and offer an explicit interruption; the requested action waits
+      until all sync owners finish. Duplicate full sync remains refused. Collector import reserves
+      the switch before creating or updating its workspace entry; if fill or rebuild is active, import
+      leaves the registry unchanged and explains in a modal dialog that loading must finish. A dependent fill may reserve only the same workspace while sync is
       active, but must wait for sync to release database access before touching SQLite.
       A resumed Collector task also validates its journal project UID against the target group and
       preserves the journal without file or database access while another project is active.

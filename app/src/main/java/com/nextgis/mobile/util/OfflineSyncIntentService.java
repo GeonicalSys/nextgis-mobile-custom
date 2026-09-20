@@ -35,6 +35,7 @@ import com.nextgis.mobile.activity.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -59,6 +60,26 @@ public class OfflineSyncIntentService extends IntentService {
             "com.nextgis.mobile.extra.OPERATION_RESERVATION";
     private static final ConcurrentHashMap<String, ProjectOperationCoordinator.Lease>
             PENDING_OPERATION_LEASES = new ConcurrentHashMap<>();
+    private static final Object CANCEL_LOCK = new Object();
+    private static Thread activeManualWorker;
+    private static boolean cancelRequested;
+
+    private static void requestCancellation() {
+        synchronized (CANCEL_LOCK) {
+            cancelRequested = true;
+            for (Map.Entry<String, ProjectOperationCoordinator.Lease> entry
+                    : PENDING_OPERATION_LEASES.entrySet()) {
+                ProjectOperationCoordinator.Lease lease =
+                        PENDING_OPERATION_LEASES.remove(entry.getKey());
+                if (lease != null) {
+                    lease.close();
+                }
+            }
+            if (activeManualWorker != null) {
+                activeManualWorker.interrupt();
+            }
+        }
+    }
 
 
     public OfflineSyncIntentService() {
@@ -115,14 +136,20 @@ public class OfflineSyncIntentService extends IntentService {
     }
 
     public static boolean startActionFoo(Context context, String lpath, boolean forceRecheck) {
+        ProjectOperationCoordinator.setDataSyncCancelHandler(
+                OfflineSyncIntentService::requestCancellation);
         ProjectOperationCoordinator.Lease operationLease =
                 ProjectOperationCoordinator.tryBegin(
                         context, ProjectOperationCoordinator.Kind.DATA_SYNC);
         if (operationLease == null) {
+            ProjectOperationCoordinator.setDataSyncCancelHandler(null);
             return false;
         }
         String reservation = UUID.randomUUID().toString();
-        PENDING_OPERATION_LEASES.put(reservation, operationLease);
+        synchronized (CANCEL_LOCK) {
+            cancelRequested = false;
+            PENDING_OPERATION_LEASES.put(reservation, operationLease);
+        }
         Intent intent = new Intent(context, OfflineSyncIntentService.class);
         intent.setAction(ACTION_OFFSYNC);
         if (lpath != null) {
@@ -141,6 +168,7 @@ public class OfflineSyncIntentService extends IntentService {
             if (pending != null) {
                 pending.close();
             }
+            ProjectOperationCoordinator.setDataSyncCancelHandler(null);
             throw e;
         }
     }
@@ -178,16 +206,23 @@ public class OfflineSyncIntentService extends IntentService {
             String lpath,
             boolean manualSync,
             String operationReservation, boolean forceRecheck) {
-        ProjectOperationCoordinator.Lease operationLease = operationReservation != null
-                ? PENDING_OPERATION_LEASES.remove(operationReservation) : null;
-        if (operationLease == null) {
-            operationLease = ProjectOperationCoordinator.tryBegin(
-                    this, ProjectOperationCoordinator.Kind.DATA_SYNC);
-        }
-        if (operationLease == null) {
-            HyperLog.v(Constants.TAG,
-                    "OfflineSyncIntentService skipped: project operation in progress");
-            return;
+        ProjectOperationCoordinator.Lease operationLease;
+        synchronized (CANCEL_LOCK) {
+            operationLease = operationReservation != null
+                    ? PENDING_OPERATION_LEASES.remove(operationReservation)
+                    : ProjectOperationCoordinator.tryBegin(
+                            this, ProjectOperationCoordinator.Kind.DATA_SYNC);
+            // A missing reservation was canceled before the service began. Never reacquire it.
+            if (operationLease == null) {
+                HyperLog.v(Constants.TAG,
+                        "OfflineSyncIntentService skipped: reservation canceled or project busy");
+                return;
+            }
+            if (cancelRequested) {
+                operationLease.close();
+                return;
+            }
+            activeManualWorker = Thread.currentThread();
         }
         try {
             Log.d("SSYNC", "OfflineSyncIntentService handleActionFoo lpath=" + lpath
@@ -230,7 +265,7 @@ public class OfflineSyncIntentService extends IntentService {
             bundle.putBoolean(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED,
                     forceRecheck);
             for (Account account : mAccounts) {
-                if (Thread.currentThread().isInterrupted()) break;
+                if (Thread.currentThread().isInterrupted() || isCancellationRequested()) break;
                 try {
                     // SyncResult and SyncAdapter carry per-run state. Reusing either
                     // leaked errors/cancellation from one account into the next one.
@@ -257,7 +292,25 @@ public class OfflineSyncIntentService extends IntentService {
             Log.e("SSYNC", "handleActionFoo failed: " + e.getMessage(), e);
             HyperLog.e(Constants.TAG, "OfflineSyncIntentService.handleActionFoo crash: " + e.getMessage(), e);
         } finally {
+            boolean canceled;
+            synchronized (CANCEL_LOCK) {
+                canceled = cancelRequested;
+                activeManualWorker = null;
+                cancelRequested = false;
+            }
             operationLease.close();
+            ProjectOperationCoordinator.setDataSyncCancelHandler(null);
+            if (canceled) {
+                sendBroadcast(new Intent(SyncAdapter.SYNC_CANCELED).setPackage(getPackageName()));
+            }
+            // IntentService reuses its handler thread for later intents.
+            Thread.interrupted();
+        }
+    }
+
+    private static boolean isCancellationRequested() {
+        synchronized (CANCEL_LOCK) {
+            return cancelRequested;
         }
     }
 

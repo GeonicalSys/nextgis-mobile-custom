@@ -81,6 +81,7 @@ import com.nextgis.maplibui.mapui.SyncAccountWorker;
 import com.nextgis.maplibui.util.ControlHelper;
 import com.nextgis.maplibui.util.HyperLogCrashHandler;
 import com.nextgis.maplibui.util.NGIDUtils;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.maplibui.util.UiUtil;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.CreateVectorLayerActivity;
@@ -139,7 +140,7 @@ public class LayersFragment
 
     /**
      * Broadcast delivery is lifecycle-sensitive. While the animator is running, reconcile it with
-     * the adapter-owned process state so a missed final broadcast cannot leave an infinite spinner.
+     * the worker and project-lease state so missed broadcasts cannot leave a stale spinner.
      */
     private final Runnable mSyncStateReconcileRunnable = new Runnable() {
         @Override
@@ -147,7 +148,7 @@ public class LayersFragment
             if (mSyncButton == null || !isAdded()) {
                 return;
             }
-            if (!NGWSyncService.isSyncStarted()) {
+            if (!isSyncActive()) {
                 HyperLog.v(Constants.TAG,
                         "LayersFragment: stopping stale sync animation after state reconciliation");
                 refreshSyncButtonAnimateState(false);
@@ -590,6 +591,11 @@ public class LayersFragment
         }
     }
 
+    private boolean isSyncActive() {
+        return NGWSyncService.isSyncStarted()
+                || ProjectOperationCoordinator.isDataSyncActive();
+    }
+
 
     @Override
     public void onResume()
@@ -607,7 +613,7 @@ public class LayersFragment
             getActivity().registerReceiver(mSyncReceiver, intentFilter);
         }
 
-        refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
+        refreshSyncButtonAnimateState(isSyncActive());
         updateInfo();
         refreshPendingChangesBadge();
         maybeShowPendingSyncFailure();
@@ -770,6 +776,8 @@ public class LayersFragment
             HyperLog.v(Constants.TAG, "startManualSync: on-premise sync");
             if (!OfflineSyncIntentService.startActionFoo(context, null, forceRecheck)) {
                 Toast.makeText(context, R.string.project_operation_wait, LENGTH_LONG).show();
+            } else {
+                refreshSyncButtonAnimateState(true);
             }
         } else {
             final Runnable switchRunnable = new Runnable() {
@@ -785,6 +793,8 @@ public class LayersFragment
                     }
                     if (!OfflineSyncIntentService.startActionFoo(ctx, null, forceRecheck)) {
                         Toast.makeText(ctx, R.string.project_operation_wait, LENGTH_LONG).show();
+                    } else {
+                        refreshSyncButtonAnimateState(true);
                     }
                 }
             };
@@ -964,11 +974,11 @@ public class LayersFragment
                     }
                 }
 
-                refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
+                refreshSyncButtonAnimateState(isSyncActive());
                 updateInfo();
                 refreshPendingChangesBadge();
             } else {
-                refreshSyncButtonAnimateState(NGWSyncService.isSyncStarted());
+                refreshSyncButtonAnimateState(isSyncActive());
                 updateInfo();
                 refreshPendingChangesBadge();
             }

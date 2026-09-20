@@ -296,13 +296,13 @@ tests:
   SMOKE-COLLECTOR-SWITCH:
     type: device
     scope: [app, maplibui]
-    steps: [Prepare project A with saved tracks and project B without tracks, Verify the picker rows contain only project names, Open the track list in A, Switch A to B to A without killing the process, Open the track list and inspect the map after each switch, Start manual sync and try switching immediately and between sequential accounts, Verify that switching is refused while a track is actively recording]
-    expected: Map paths, metadata, layers and track history always come from the active project; A restores its tracks, B remains empty, the picker exposes no account/id/district text, and neither sync nor active recording can cross the project boundary.
+    steps: [Prepare project A with saved tracks and project B without tracks, Verify the picker rows contain only project names, Open the track list in A, Switch A to B to A without killing the process, Open the track list and inspect the map after each switch, Start manual sync and try switching immediately and between sequential accounts, choose the sync interruption action and verify the switch continues after the lease closes, Verify that switching is refused while a track is actively recording]
+    expected: Map paths, metadata, layers and track history always come from the active project; A restores its tracks, B remains empty, the picker exposes no account/id/district text, sync interruption is explicit and waits for lease release, and active recording cannot cross the project boundary.
   SMOKE-PROJECT-MANAGEMENT:
     type: device
     scope: [app, maplibui]
     steps: [Reset application data and launch once, verify Local project is already active and add one local feature, import and switch to a Web GIS project then return to Local project, upgrade an installation that has a legacy default map with one local layer and verify it appears once as Local project while the previously active valid project stays active, Open Settings then Project and verify Web GIS name/account/id/district, Create an empty local project, add one local feature, rename the project, switch away and back, start synchronization and attempt to import another Collector project, delete the local project, delete a Web GIS project with one unsynchronized NGW layer, simulate a backup failure, then delete the last remaining project]
-    expected: A clean install opens inside a registered Local project and legacy standalone data is copied once without deleting its source; local projects contain their own OSM/tracks/data; aliases persist and stay unique; import during synchronization shows a readable modal request to wait and creates no project entry; successful delete reports success, removes only the device workspace and never Web GIS/account data; unsynchronized NGW data is backed up and backup failure cancels deletion; deleting the last project opens a new empty local fallback.
+    expected: A clean install opens inside a registered Local project and legacy standalone data is copied once without deleting its source; local projects contain their own OSM/tracks/data; aliases persist and stay unique; import during synchronization warns and offers interruption before creating the project entry; successful delete reports success, removes only the device workspace and never Web GIS/account data; unsynchronized NGW data is backed up and backup failure cancels deletion; deleting the last project opens a new empty local fallback.
   SMOKE-SCHEMA-REBUILD-GUARD:
     type: device
     scope: [app, maplib, maplibui]
@@ -362,11 +362,16 @@ tests:
     scope: [maplib, maplibui]
     steps: [Set an NGW layer to SYNC_NONE, Change supported server configuration, Run the relevant refresh flow]
     expected: Feature data is not incrementally synced. Configuration still refreshes. If the filtered server feature count is greater than zero and differs from the local row count, the layer is replaced by a full snapshot; a server count of zero or a failed count request leaves local features unchanged.
+  SMOKE-SYNC-INTERRUPT-ACTION:
+    type: device
+    scope: [app, maplibui]
+    steps: [Start a slow multi-account synchronization, open layer loading, underlay catalog or project selection, verify the warning offers cancel/continue, confirm interruption, wait for the foreground worker and leases to stop, then complete the requested action]
+    expected: The spinner remains active until the worker and every data-sync lease finish; cancellation is delivered to pending or active manual work, the next action starts only after release, and no partial project or layer mutation is left behind.
   SMOKE-MULTI-ACCOUNT-SYNC:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Prepare two stored projects and an active map whose Collector account is not first in Android account order, make another account used by the active map unavailable, add a detectable server change only to the inactive project, run manual sync twice rapidly, leave and return to the layer drawer while sync finishes, verify the sync icon stops, restart and inspect enabled account schedules]
-    expected: Only accounts with NGW layers in the active map run, its Collector account runs first, the inactive project change is not pulled, another active-map account error has a separate result, the second full sync is refused, the spinner stops even if the final broadcast was missed, and enabled schedules are restored without duplicate work.
+    steps: [Prepare two stored projects and an active map whose Collector account is not first in Android account order, make another account used by the active map unavailable, add a detectable server change only to the inactive project, run manual sync twice rapidly, leave and return to the layer drawer while sync finishes, verify the sync icon remains active through every sequential account, try a project switch and choose interruption, verify the action starts after cancellation, restart and inspect enabled account schedules]
+    expected: Only accounts with NGW layers in the active map run, its Collector account runs first, the inactive project change is not pulled, another active-map account error has a separate result, the second full sync is refused, the spinner remains active until the final lease release even if a broadcast is missed, interruption is explicit, and enabled schedules are restored without duplicate work.
   SMOKE-NGW-LARGE-PULL-CACHE:
     type: device
     scope: [app, maplib]
