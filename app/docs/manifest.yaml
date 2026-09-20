@@ -22,7 +22,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionPolicy.java
     responsibility: Pure manifest, URL, version and signing identity rules for the Debug companion.
   - path: app/build.gradle
-    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.21/215 versus Lisa Debug 3.1.2.21/216 version contract, and signing configuration.
+    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.22/216 versus Lisa Debug 3.1.2.22/217 version contract, and signing configuration.
   - path: app/src/lisa/res/values/launcher_icon.xml
     responsibility: Lisa launcher, intro and about icon binding to density-specific ic_launcher_lisa resources without changing Belka branding.
   - path: app/src/belka/res/values/launcher_icon.xml

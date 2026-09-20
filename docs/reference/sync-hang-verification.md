@@ -83,6 +83,6 @@ Android Parcel. JVM JSON-тест не заменяет эти lifecycle/SQLite/
 
 ## Доставка
 
-Изменения владельцев входят в выпуск `3.1.2.21`: maplib Merge Commit #29,
-maplibui Merge Commit #18, затем pin remote merge commits в app. Device gates
+Изменения владельцев входят в выпуск `3.1.2.22`: maplib Merge Commit #32,
+maplibui Merge Commit #20, затем pin remote merge commits в app. Device gates
 ниже остаются открытыми. Publishing repository и desktop/QGIS код не изменяются.
