@@ -142,7 +142,6 @@ public class OfflineSyncIntentService extends IntentService {
                 ProjectOperationCoordinator.tryBegin(
                         context, ProjectOperationCoordinator.Kind.DATA_SYNC);
         if (operationLease == null) {
-            ProjectOperationCoordinator.setDataSyncCancelHandler(null);
             return false;
         }
         String reservation = UUID.randomUUID().toString();
