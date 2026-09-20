@@ -58,21 +58,40 @@ public class OfflineSyncIntentService extends IntentService {
     private static final String ACTION_ACCOUNT_NAME = "com.nextgis.mobile.util.action.ACCOUNTNAME";
     private static final String EXTRA_OPERATION_RESERVATION =
             "com.nextgis.mobile.extra.OPERATION_RESERVATION";
-    private static final ConcurrentHashMap<String, ProjectOperationCoordinator.Lease>
+    private static final class PendingOperation {
+        final ProjectOperationCoordinator.Lease lease;
+        final ProjectOperationCoordinator.CancelRegistration cancelRegistration;
+        final long cancellationGeneration;
+
+        PendingOperation(
+                ProjectOperationCoordinator.Lease lease,
+                ProjectOperationCoordinator.CancelRegistration cancelRegistration,
+                long cancellationGeneration) {
+            this.lease = lease;
+            this.cancelRegistration = cancelRegistration;
+            this.cancellationGeneration = cancellationGeneration;
+        }
+
+        void close() {
+            lease.close();
+            cancelRegistration.close();
+        }
+    }
+
+    private static final ConcurrentHashMap<String, PendingOperation>
             PENDING_OPERATION_LEASES = new ConcurrentHashMap<>();
     private static final Object CANCEL_LOCK = new Object();
     private static Thread activeManualWorker;
-    private static boolean cancelRequested;
+    private static long cancellationGeneration;
 
     private static void requestCancellation() {
         synchronized (CANCEL_LOCK) {
-            cancelRequested = true;
-            for (Map.Entry<String, ProjectOperationCoordinator.Lease> entry
+            cancellationGeneration++;
+            for (Map.Entry<String, PendingOperation> entry
                     : PENDING_OPERATION_LEASES.entrySet()) {
-                ProjectOperationCoordinator.Lease lease =
-                        PENDING_OPERATION_LEASES.remove(entry.getKey());
-                if (lease != null) {
-                    lease.close();
+                PendingOperation pending = PENDING_OPERATION_LEASES.remove(entry.getKey());
+                if (pending != null) {
+                    pending.close();
                 }
             }
             if (activeManualWorker != null) {
@@ -136,18 +155,30 @@ public class OfflineSyncIntentService extends IntentService {
     }
 
     public static boolean startActionFoo(Context context, String lpath, boolean forceRecheck) {
-        ProjectOperationCoordinator.setDataSyncCancelHandler(
-                OfflineSyncIntentService::requestCancellation);
+        long operationGeneration;
+        synchronized (CANCEL_LOCK) {
+            operationGeneration = cancellationGeneration;
+        }
+        ProjectOperationCoordinator.CancelRegistration cancelRegistration =
+                ProjectOperationCoordinator.registerDataSyncCancelHandler(
+                        OfflineSyncIntentService::requestCancellation);
         ProjectOperationCoordinator.Lease operationLease =
                 ProjectOperationCoordinator.tryBegin(
                         context, ProjectOperationCoordinator.Kind.DATA_SYNC);
         if (operationLease == null) {
+            cancelRegistration.close();
             return false;
         }
         String reservation = UUID.randomUUID().toString();
         synchronized (CANCEL_LOCK) {
-            cancelRequested = false;
-            PENDING_OPERATION_LEASES.put(reservation, operationLease);
+            if (operationGeneration != cancellationGeneration) {
+                operationLease.close();
+                cancelRegistration.close();
+                return false;
+            }
+            PENDING_OPERATION_LEASES.put(
+                    reservation, new PendingOperation(
+                            operationLease, cancelRegistration, operationGeneration));
         }
         Intent intent = new Intent(context, OfflineSyncIntentService.class);
         intent.setAction(ACTION_OFFSYNC);
@@ -162,12 +193,10 @@ public class OfflineSyncIntentService extends IntentService {
             ContextCompat.startForegroundService(context, intent);
             return true;
         } catch (RuntimeException e) {
-            ProjectOperationCoordinator.Lease pending =
-                    PENDING_OPERATION_LEASES.remove(reservation);
+            PendingOperation pending = PENDING_OPERATION_LEASES.remove(reservation);
             if (pending != null) {
                 pending.close();
             }
-            ProjectOperationCoordinator.setDataSyncCancelHandler(null);
             throw e;
         }
     }
@@ -206,19 +235,42 @@ public class OfflineSyncIntentService extends IntentService {
             boolean manualSync,
             String operationReservation, boolean forceRecheck) {
         ProjectOperationCoordinator.Lease operationLease;
+        ProjectOperationCoordinator.CancelRegistration cancelRegistration;
+        long operationGeneration;
         synchronized (CANCEL_LOCK) {
-            operationLease = operationReservation != null
+            PendingOperation pending = operationReservation != null
                     ? PENDING_OPERATION_LEASES.remove(operationReservation)
-                    : ProjectOperationCoordinator.tryBegin(
-                            this, ProjectOperationCoordinator.Kind.DATA_SYNC);
+                    : null;
+            operationLease = pending != null
+                    ? pending.lease
+                    : operationReservation == null
+                            ? ProjectOperationCoordinator.tryBegin(
+                                    this, ProjectOperationCoordinator.Kind.DATA_SYNC)
+                            : null;
+            cancelRegistration = pending != null
+                    ? pending.cancelRegistration
+                    : operationLease != null
+                            ? ProjectOperationCoordinator.registerDataSyncCancelHandler(
+                                    OfflineSyncIntentService::requestCancellation)
+                            : null;
+            operationGeneration = pending != null
+                    ? pending.cancellationGeneration
+                    : cancellationGeneration;
             // A missing reservation was canceled before the service began. Never reacquire it.
             if (operationLease == null) {
                 HyperLog.v(Constants.TAG,
                         "OfflineSyncIntentService skipped: reservation canceled or project busy");
+                if (operationReservation != null) {
+                    sendBroadcast(new Intent(SyncAdapter.SYNC_CANCELED)
+                            .setPackage(getPackageName()));
+                }
                 return;
             }
-            if (cancelRequested) {
+            if (operationGeneration != cancellationGeneration) {
                 operationLease.close();
+                if (cancelRegistration != null) {
+                    cancelRegistration.close();
+                }
                 return;
             }
             activeManualWorker = Thread.currentThread();
@@ -264,7 +316,8 @@ public class OfflineSyncIntentService extends IntentService {
             bundle.putBoolean(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED,
                     forceRecheck);
             for (Account account : mAccounts) {
-                if (Thread.currentThread().isInterrupted() || isCancellationRequested()) break;
+                if (Thread.currentThread().isInterrupted()
+                        || isCancellationRequested(operationGeneration)) break;
                 try {
                     // SyncResult and SyncAdapter carry per-run state. Reusing either
                     // leaked errors/cancellation from one account into the next one.
@@ -293,12 +346,13 @@ public class OfflineSyncIntentService extends IntentService {
         } finally {
             boolean canceled;
             synchronized (CANCEL_LOCK) {
-                canceled = cancelRequested;
+                canceled = operationGeneration != cancellationGeneration;
                 activeManualWorker = null;
-                cancelRequested = false;
             }
             operationLease.close();
-            ProjectOperationCoordinator.setDataSyncCancelHandler(null);
+            if (cancelRegistration != null) {
+                cancelRegistration.close();
+            }
             if (canceled) {
                 sendBroadcast(new Intent(SyncAdapter.SYNC_CANCELED).setPackage(getPackageName()));
             }
@@ -307,9 +361,9 @@ public class OfflineSyncIntentService extends IntentService {
         }
     }
 
-    private static boolean isCancellationRequested() {
+    private static boolean isCancellationRequested(long operationGeneration) {
         synchronized (CANCEL_LOCK) {
-            return cancelRequested;
+            return operationGeneration != cancellationGeneration;
         }
     }
 

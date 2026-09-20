@@ -137,6 +137,7 @@ public class LayersFragment
     private boolean mBadgeRefreshPending;
 
     ObjectAnimator rotation;
+    private boolean mSyncStateReconcileEnabled;
 
     /**
      * Broadcast delivery is lifecycle-sensitive. While the animator is running, reconcile it with
@@ -145,17 +146,21 @@ public class LayersFragment
     private final Runnable mSyncStateReconcileRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mSyncButton == null || !isAdded()) {
+            if (!mSyncStateReconcileEnabled || mSyncButton == null || !isAdded()) {
                 return;
             }
-            if (!isSyncActive()) {
-                HyperLog.v(Constants.TAG,
-                        "LayersFragment: stopping stale sync animation after state reconciliation");
-                refreshSyncButtonAnimateState(false);
-                updateInfo();
-                refreshPendingChangesBadge();
-                return;
+            boolean active = isSyncActive();
+            boolean animating = rotation != null && rotation.isStarted();
+            if (active != animating) {
+                HyperLog.v(Constants.TAG, "LayersFragment: reconciling sync animation active="
+                        + active + " animating=" + animating);
+                refreshSyncButtonAnimateState(active);
+                if (!active) {
+                    updateInfo();
+                    refreshPendingChangesBadge();
+                }
             }
+            mSyncButton.removeCallbacks(this);
             mSyncButton.postDelayed(this, SYNC_STATE_RECONCILE_DELAY_MS);
         }
     };
@@ -571,9 +576,6 @@ public class LayersFragment
             if (!rotation.isStarted()) {
                 rotation.start();
             }
-            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
-            mSyncButton.postDelayed(
-                    mSyncStateReconcileRunnable, SYNC_STATE_RECONCILE_DELAY_MS);
 
 // old rotation
 //            RotateAnimation rotateAnimation = new RotateAnimation(
@@ -584,7 +586,6 @@ public class LayersFragment
 //
             //mSyncButton.startAnimation(rotateAnimation);
         } else {
-            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
             if (rotation!= null)
                 rotation.cancel();
             mSyncButton.clearAnimation();
@@ -614,6 +615,10 @@ public class LayersFragment
         }
 
         refreshSyncButtonAnimateState(isSyncActive());
+        mSyncStateReconcileEnabled = true;
+        mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
+        mSyncButton.postDelayed(
+                mSyncStateReconcileRunnable, SYNC_STATE_RECONCILE_DELAY_MS);
         updateInfo();
         refreshPendingChangesBadge();
         maybeShowPendingSyncFailure();
@@ -623,6 +628,10 @@ public class LayersFragment
     @Override
     public void onPause()
     {
+        mSyncStateReconcileEnabled = false;
+        if (mSyncButton != null) {
+            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
+        }
         refreshSyncButtonAnimateState(false);
         getActivity().unregisterReceiver(mSyncReceiver);
         super.onPause();
@@ -780,40 +789,14 @@ public class LayersFragment
                 refreshSyncButtonAnimateState(true);
             }
         } else {
-            final Runnable switchRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    Context ctx = getContext();
-                    if (ctx == null) {
-                        return;
-                    }
-                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-                    if (!prefs.getBoolean(KEY_PREF_OFFLINE_SYNC_ON, false)) {
-                        prefs.edit().putBoolean(KEY_PREF_OFFLINE_SYNC_ON, true).apply();
-                    }
-                    if (!OfflineSyncIntentService.startActionFoo(ctx, null, forceRecheck)) {
-                        Toast.makeText(ctx, R.string.project_operation_wait, LENGTH_LONG).show();
-                    } else {
-                        refreshSyncButtonAnimateState(true);
-                    }
-                }
-            };
-
-            GISApplication.getInstance().startRunnable(switchRunnable);
-
-            for (Account account : mAccounts) {
-                HyperLog.v(Constants.TAG, "startManualSync: queue for " + account.name);
-                Bundle settingsBundle = new Bundle();
-                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                settingsBundle.putBoolean(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED,
-                        forceRecheck);
-                ContentResolver.setIsSyncable(account, AUTHORITY, 1);
-                Log.d("SSYNC", "LayersFragment requestSync account=" + account.name
-                        + " authority=" + AUTHORITY + " isSyncable="
-                        + ContentResolver.getIsSyncable(account, AUTHORITY)
-                        + " auto=" + ContentResolver.getSyncAutomatically(account, AUTHORITY));
-                ContentResolver.requestSync(account, AUTHORITY, settingsBundle);
+            // A manual tap owns one project lease and one serial account loop. The old cloud path
+            // also queued framework syncs here and then started the same serial service two seconds
+            // later, creating duplicate workers and gaps in the visible sync state.
+            preferences.edit().putBoolean(KEY_PREF_OFFLINE_SYNC_ON, true).apply();
+            if (!OfflineSyncIntentService.startActionFoo(context, null, forceRecheck)) {
+                Toast.makeText(context, R.string.project_operation_wait, LENGTH_LONG).show();
+            } else {
+                refreshSyncButtonAnimateState(true);
             }
         }
         updateInfo();
@@ -987,11 +970,16 @@ public class LayersFragment
 
     @Override
     public void onDestroyView() {
+        mSyncStateReconcileEnabled = false;
+        if (mSyncButton != null) {
+            mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
+        }
         ++mBadgeGeneration;
         if (mBadgeQuery != null) mBadgeQuery.cancel(true);
         mBadgeQuery = null;
         mBadgeRefreshPending = false;
         refreshSyncButtonAnimateState(false);
+        rotation = null;
         super.onDestroyView();
 
         if (mLayersListView != null) {

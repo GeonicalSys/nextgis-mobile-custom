@@ -88,6 +88,9 @@ Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
     поэтому `computeCollectorOrderedInsertIndex()` учитывает и vector, и raster
     NGW layers; remote id стиля отвечает за tile identity, parent resource id —
     только за extent.
+    Перед фактической подготовкой workspace import повторно проверяет active
+    sync; layer/raster hot-add не начинается, пока отменённый worker и его
+    database lease не завершили commit либо rollback.
 11. Первый `MapDrawable` основного процесса всегда открывается внутри
     зарегистрированного проекта. На чистой установке до загрузки карты создаётся
     и активируется «Локальный проект»; при обновлении прежняя штатная

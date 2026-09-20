@@ -364,14 +364,14 @@ tests:
     expected: Feature data is not incrementally synced. Configuration still refreshes. If the filtered server feature count is greater than zero and differs from the local row count, the layer is replaced by a full snapshot; a server count of zero or a failed count request leaves local features unchanged.
   SMOKE-SYNC-INTERRUPT-ACTION:
     type: device
-    scope: [app, maplibui]
-    steps: [Start a slow multi-account synchronization, open layer loading, underlay catalog or project selection, verify the warning offers cancel/continue, confirm interruption, wait for the foreground worker and leases to stop, then complete the requested action]
-    expected: The spinner remains active until the worker and every data-sync lease finish; cancellation is delivered to pending or active manual work, the next action starts only after release, and no partial project or layer mutation is left behind.
+    scope: [app, maplib, maplibui]
+    steps: [Start a slow multi-account synchronization with a stalled GET, open layer loading, underlay catalog or project create/rename/delete, verify the warning offers cancel/continue, confirm interruption and measure cancel-to-worker-stop, repeat while one outbound edit is awaiting its response, then complete the requested action]
+    expected: A stalled read and tracked apply stop within a few seconds and rollback without partial rows; an already-sent mutation is the only request allowed to finish and its local change record follows the confirmed result; the spinner remains active until every data-sync lease finishes and the next action starts only after release.
   SMOKE-MULTI-ACCOUNT-SYNC:
     type: device
     scope: [app, maplib, maplibui]
     steps: [Prepare two stored projects and an active map whose Collector account is not first in Android account order, make another account used by the active map unavailable, add a detectable server change only to the inactive project, run manual sync twice rapidly, leave and return to the layer drawer while sync finishes, verify the sync icon remains active through every sequential account, try a project switch and choose interruption, verify the action starts after cancellation, restart and inspect enabled account schedules]
-    expected: Only accounts with NGW layers in the active map run, its Collector account runs first, the inactive project change is not pulled, another active-map account error has a separate result, the second full sync is refused, the spinner remains active until the final lease release even if a broadcast is missed, interruption is explicit, and enabled schedules are restored without duplicate work.
+    expected: Only one serial manual pipeline runs accounts with NGW layers in the active map, its Collector account runs first, the inactive project change is not pulled, another active-map account error has a separate result, the second full sync is refused, the spinner starts and stops from worker plus lease state even if either broadcast is missed, interruption is explicit, and enabled schedules are restored without duplicate work.
   SMOKE-NGW-LARGE-PULL-CACHE:
     type: device
     scope: [app, maplib]
