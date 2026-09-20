@@ -9,8 +9,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.pm.ServiceInfo;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Context;
 import android.content.PeriodicSync;
 import android.content.SyncResult;
@@ -28,6 +30,7 @@ import com.hypertrack.hyperlog.HyperLog;
 import com.nextgis.maplib.map.CollectorProjectMetadata;
 import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.NgwSyncProgress;
 import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.datasource.SyncAdapter;
 import com.nextgis.mobile.R;
@@ -52,6 +55,8 @@ public class OfflineSyncIntentService extends IntentService {
     private static final String ACTION_OFFSYNC = "com.nextgis.mobile.util.action.OFFSYNC";
     private static final String SYNC_CHANNEL_ID = "manual_sync_fgs";
     private static final int SYNC_NOTIFICATION_ID = 519;
+    private BroadcastReceiver mProgressReceiver;
+    private PendingIntent mSyncContentIntent;
 
 
 
@@ -121,21 +126,12 @@ public class OfflineSyncIntentService extends IntentService {
         }
         Intent open = new Intent(this, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent contentIntent = PendingIntent.getActivity(
+        mSyncContentIntent = PendingIntent.getActivity(
                 this,
                 0,
                 open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, SYNC_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_action_sync)
-                .setContentTitle(getString(com.nextgis.maplib.R.string.synchronization))
-                .setContentText(getString(com.nextgis.maplib.R.string.sync_progress))
-                .setContentIntent(contentIntent)
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .setProgress(0, 0, true)
-                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-                .setPriority(NotificationCompat.PRIORITY_LOW);
+        NotificationCompat.Builder builder = buildSyncNotification(NgwSyncProgress.snapshot());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
                     SYNC_NOTIFICATION_ID,
@@ -143,6 +139,21 @@ public class OfflineSyncIntentService extends IntentService {
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
         } else {
             startForeground(SYNC_NOTIFICATION_ID, builder.build());
+        }
+        mProgressReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent == null || !NgwSyncProgress.SYNC_PROGRESS.equals(intent.getAction())) {
+                    return;
+                }
+                updateSyncNotification(NgwSyncProgress.snapshot());
+            }
+        };
+        IntentFilter progressFilter = new IntentFilter(NgwSyncProgress.SYNC_PROGRESS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mProgressReceiver, progressFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mProgressReceiver, progressFilter);
         }
     }
 
@@ -203,8 +214,39 @@ public class OfflineSyncIntentService extends IntentService {
 
     @Override
     public void onDestroy() {
+        if (mProgressReceiver != null) {
+            unregisterReceiver(mProgressReceiver);
+            mProgressReceiver = null;
+        }
         stopForeground(true);
         super.onDestroy();
+    }
+
+    private NotificationCompat.Builder buildSyncNotification(NgwSyncProgress.Snapshot snapshot) {
+        boolean determinate = snapshot != null && snapshot.determinate && snapshot.active;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, SYNC_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_action_sync)
+                .setContentTitle(getString(com.nextgis.maplib.R.string.synchronization))
+                .setContentText(getString(com.nextgis.maplib.R.string.sync_progress))
+                .setContentIntent(mSyncContentIntent)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+                .setPriority(NotificationCompat.PRIORITY_LOW);
+        if (determinate) {
+            builder.setProgress(snapshot.total, snapshot.done, false);
+        } else {
+            builder.setProgress(0, 0, true);
+        }
+        return builder;
+    }
+
+    private void updateSyncNotification(NgwSyncProgress.Snapshot snapshot) {
+        NotificationManager manager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager != null) {
+            manager.notify(SYNC_NOTIFICATION_ID, buildSyncNotification(snapshot).build());
+        }
     }
 
     /** When {@code true}, sync errors are shown to the user (button / toast). */
@@ -306,6 +348,9 @@ public class OfflineSyncIntentService extends IntentService {
             Log.d("SSYNC", "OfflineSyncIntentService accounts queued=" + mAccounts.size()
                     + " manual=" + manualSync + " lpath=" + lpath);
             prioritizeActiveCollectorAccount(application, mAccounts);
+            if (!mAccounts.isEmpty()) {
+                NgwSyncProgress.beginSession(this, mAccounts.size());
+            }
 
             Bundle bundle = new Bundle();
             if (lpath != null) {
@@ -354,7 +399,10 @@ public class OfflineSyncIntentService extends IntentService {
                 cancelRegistration.close();
             }
             if (canceled) {
+                NgwSyncProgress.cancel();
                 sendBroadcast(new Intent(SyncAdapter.SYNC_CANCELED).setPackage(getPackageName()));
+            } else {
+                NgwSyncProgress.finishSession();
             }
             // IntentService reuses its handler thread for later intents.
             Thread.interrupted();

@@ -143,7 +143,8 @@ OpenGL backend вместо Vulkan-default artifact.
   только app-marked unpublished layer stages; legacy unmarked каталоги остаются;
 - индикатор синхронизации всё время видимого lifecycle двусторонне сверяется с
   worker/lease state: запускается либо останавливается даже при пропущенном
-  start/finish broadcast;
+  start/finish broadcast; вокруг иконки кольцо без процентов отражает взвешенные
+  слои и реальные фазы push/download/apply, скрывается вместе со spinner;
 - проверка несинхронизированных правок для точки на sync-кнопке выполняется
   последовательно в фоне, а результат старой карты или уничтоженного view
   отбрасывается. Чужой early finish не останавливает spinner/foreground worker;
@@ -316,7 +317,8 @@ OpenGL backend вместо Vulkan-default artifact.
   `MainApplication.ensureBaseOsmLayerAtBottom()` и индекс `0` активной карты.
 - Sync завершён в журнале, но иконка продолжает вращаться: проверить
   `NGWSyncService.isSyncStarted()` и reconciliation в `LayersFragment`; состояние
-  адаптера не должно зависеть от доставки broadcast.
+  адаптера не должно зависеть от доставки broadcast. Кольцо прогресса читает
+  `NgwSyncProgress.snapshot()` и не показывает проценты.
 - Полевые точки выбираются, но появились только после restart: проверить
   completion post-fill reload и `MapLibre post-load verification`; pending-флаг
   очищается только из `MapFragment.setMapLayersLoaded()`.

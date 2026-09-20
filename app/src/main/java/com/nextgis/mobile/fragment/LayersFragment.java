@@ -55,6 +55,7 @@ import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +73,7 @@ import com.nextgis.maplib.map.VectorLayer;
 import com.nextgis.maplib.service.NGWSyncService;
 import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.NgwSyncProgress;
 import com.nextgis.maplib.util.SettingsConstants;
 import android.text.TextUtils;
 import com.nextgis.maplibui.GISApplication;
@@ -120,6 +122,7 @@ public class LayersFragment
     protected TextView              mInfoText;
     protected SyncReceiver          mSyncReceiver;
     protected ImageButton           mSyncButton;
+    protected ProgressBar           mSyncProgressRing;
     protected View                  mSyncPendingBadge;
     protected ImageButton           mNewLayer;
     protected List<Account>         mAccounts;
@@ -151,6 +154,7 @@ public class LayersFragment
             }
             boolean active = isSyncActive();
             boolean animating = rotation != null && rotation.isStarted();
+            refreshSyncProgressRing(active);
             if (active != animating) {
                 HyperLog.v(Constants.TAG, "LayersFragment: reconciling sync animation active="
                         + active + " animating=" + animating);
@@ -267,6 +271,7 @@ public class LayersFragment
         }
 
         mSyncButton = view.findViewById(R.id.sync);
+        mSyncProgressRing = view.findViewById(R.id.sync_progress_ring);
         mSyncPendingBadge = view.findViewById(R.id.sync_pending_badge);
         mNewLayer = view.findViewById(R.id.new_layer);
         mNewLayer.setOnClickListener(this);
@@ -576,20 +581,28 @@ public class LayersFragment
             if (!rotation.isStarted()) {
                 rotation.start();
             }
-
-// old rotation
-//            RotateAnimation rotateAnimation = new RotateAnimation(
-//                    0, 360, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-//            rotateAnimation.setFillAfter(true);
-//            rotateAnimation.setDuration(700);
-//            rotateAnimation.setRepeatCount(500);
-//
-            //mSyncButton.startAnimation(rotateAnimation);
         } else {
             if (rotation!= null)
                 rotation.cancel();
             mSyncButton.clearAnimation();
         }
+        refreshSyncProgressRing(start);
+    }
+
+    private void refreshSyncProgressRing(boolean start) {
+        if (mSyncProgressRing == null) {
+            return;
+        }
+        if (!start) {
+            mSyncProgressRing.setVisibility(View.GONE);
+            mSyncProgressRing.setProgress(0);
+            return;
+        }
+        NgwSyncProgress.Snapshot snapshot = NgwSyncProgress.snapshot();
+        mSyncProgressRing.setVisibility(View.VISIBLE);
+        mSyncProgressRing.setIndeterminate(false);
+        mSyncProgressRing.setMax(NgwSyncProgress.SCALE);
+        mSyncProgressRing.setProgress(snapshot.determinate ? snapshot.done : 0);
     }
 
     private boolean isSyncActive() {
@@ -608,6 +621,7 @@ public class LayersFragment
         intentFilter.addAction(SyncAdapter.SYNC_START);
         intentFilter.addAction(SyncAdapter.SYNC_FINISH);
         intentFilter.addAction(SyncAdapter.SYNC_CANCELED);
+        intentFilter.addAction(NgwSyncProgress.SYNC_PROGRESS);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getActivity().registerReceiver(mSyncReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
         } else {
@@ -947,6 +961,8 @@ public class LayersFragment
         {
             if (intent.getAction().equals(SyncAdapter.SYNC_START)) {
                 refreshSyncButtonAnimateState(true);
+            } else if (NgwSyncProgress.SYNC_PROGRESS.equals(intent.getAction())) {
+                refreshSyncProgressRing(isSyncActive());
             } else if (intent.getAction().equals(SyncAdapter.SYNC_FINISH) || intent.getAction().equals(SyncAdapter.SYNC_CANCELED)) {
                 if (intent.hasExtra(SyncAdapter.EXCEPTION)) {
                     String error = intent.getStringExtra(SyncAdapter.EXCEPTION);
@@ -995,6 +1011,7 @@ public class LayersFragment
         mListAdapter = null;
         mLayersListView = null;
         mSyncButton = null;
+        mSyncProgressRing = null;
         mSyncPendingBadge = null;
         if (mDrawerLayout != null) {
             mDrawerLayout.removeCallbacks(mSyncDrawerStateRunnable);

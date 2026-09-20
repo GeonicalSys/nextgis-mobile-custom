@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-09-18
+last_verified: 2026-09-20
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -12,6 +12,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java
   - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncIo.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
   - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
@@ -27,6 +29,7 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
   - app/src/main/java/com/nextgis/mobile/datasource/SyncService.java
   - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+  - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
   - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
   - app/src/main/res/xml/syncadapter.xml
 ---
@@ -231,6 +234,18 @@ UI, но не является единственным владельцем с�
 пропущенный spinner и останавливает устаревший только после фактического
 завершения адаптера и освобождения lease.
 
+Вокруг крутящейся иконки sync `LayersFragment` показывает кольцо без процентов.
+`NgwSyncProgress` считает одну сессию на все account ручного прохода (или один
+периодический account). Вес листа равен `10 + min(число локальных правок, 30)`;
+внутри слоя шкала идёт по отправленным change records и TUS-байтам, затем по
+`Content-Length` полного snapshot и apply объектов. Если остаток неизвестен,
+доля слоя не двигается, пока слой не завершён. Deferred retry не закрывает слой.
+Composition, map reload и LayerFill в кольцо не входят: после последнего слоя
+остаётся резерв около 5% до `finishSession`. Если позже добавилась работа,
+отображаемая доля не откатывается. Broadcast `SYNC_PROGRESS` троттлится; UI
+берёт snapshot и при reconcile. Текста процентов нет; FGS-уведомление может
+повторить ту же determinate-полоску.
+
 Состояние хранит владельцев worker-потоков: early finish отклонённого параллельного
 запуска не снимает активность другого потока, а `Service.onCreate` и запоздалые
 broadcast не сбрасывают её. Foreground receiver и анимация используют текущее
@@ -406,6 +421,9 @@ MultiPolygon, но не зависит квадратично от числа в
 - корректность last-sync UI только после успешного результата;
 - остановку sync spinner после normal, cancel и exception finish, включая
   уход/возврат в layer drawer во время синхронизации;
+- кольцо прогресса вокруг иконки: рост на push мелкого слоя, удержание на
+  большом snapshot без Content-Length, пауза deferred retry, скрытие после
+  cancel/finish;
 - post-push refresh и сохранение локальных данных;
 - foreground-service требования Android 14+ и повтор account-pass после
   принудительного убийства процесса;

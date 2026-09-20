@@ -41,6 +41,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.nextgis.maplib.service.NGWSyncService;
 import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.NgwSyncProgress;
 import com.nextgis.maplibui.util.NotificationHelper;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
@@ -84,7 +85,9 @@ public class SyncService extends NGWSyncService {
             public void onReceive(Context context, Intent intent) {
                 String action = intent != null ? intent.getAction() : null;
                 if (SyncAdapter.SYNC_START.equals(action)) {
-                    if (NGWSyncService.isSyncStarted()) startSyncForeground();
+                    if (NGWSyncService.isSyncStarted()) startSyncForeground(NgwSyncProgress.snapshot());
+                } else if (NgwSyncProgress.SYNC_PROGRESS.equals(action)) {
+                    if (NGWSyncService.isSyncStarted()) startSyncForeground(NgwSyncProgress.snapshot());
                 } else if (SyncAdapter.SYNC_FINISH.equals(action)
                         || SyncAdapter.SYNC_CANCELED.equals(action)
                         || SyncAdapter.SYNC_CHANGES.equals(action)) {
@@ -98,6 +101,7 @@ public class SyncService extends NGWSyncService {
         foregroundFilter.addAction(SyncAdapter.SYNC_FINISH);
         foregroundFilter.addAction(SyncAdapter.SYNC_CANCELED);
         foregroundFilter.addAction(SyncAdapter.SYNC_CHANGES);
+        foregroundFilter.addAction(NgwSyncProgress.SYNC_PROGRESS);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(
                     mForegroundReceiver,
@@ -109,6 +113,10 @@ public class SyncService extends NGWSyncService {
     }
 
     private void startSyncForeground() {
+        startSyncForeground(NgwSyncProgress.snapshot());
+    }
+
+    private void startSyncForeground(NgwSyncProgress.Snapshot snapshot) {
         Intent open = new Intent(this, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
@@ -116,6 +124,7 @@ public class SyncService extends NGWSyncService {
                 0,
                 open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        boolean determinate = snapshot != null && snapshot.determinate && snapshot.active;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 this, FOREGROUND_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_action_sync)
@@ -124,9 +133,13 @@ public class SyncService extends NGWSyncService {
                 .setContentIntent(contentIntent)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
-                .setProgress(0, 0, true)
                 .setCategory(NotificationCompat.CATEGORY_PROGRESS)
                 .setPriority(NotificationCompat.PRIORITY_LOW);
+        if (determinate) {
+            builder.setProgress(snapshot.total, snapshot.done, false);
+        } else {
+            builder.setProgress(0, 0, true);
+        }
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 startForeground(
