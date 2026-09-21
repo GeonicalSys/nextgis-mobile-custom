@@ -199,6 +199,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         PreferenceManager.setDefaultValues(this, R.xml.preferences_location, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_tracks, false)
         migratePhotoOverlayDefaults()
+        migrateKeepScreenOnDefault()
 
         if (!mPreferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false)) {
             startActivity(Intent(this, IntroActivity::class.java))
@@ -332,6 +333,23 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 SettingsConstantsUI.DEFAULT_PHOTO_OVERLAY_USE_OBJECT
             )
             .putBoolean(AppSettingsConstants.KEY_PREF_PHOTO_OVERLAY_DEFAULTS_MIGRATED, true)
+            .apply()
+    }
+
+    private fun migrateKeepScreenOnDefault() {
+        if (mPreferences.getBoolean(
+                AppSettingsConstants.KEY_PREF_KEEP_SCREEN_ON_DEFAULT_MIGRATED,
+                false
+            )
+        ) {
+            return
+        }
+        mPreferences.edit()
+            .putBoolean(
+                SettingsConstantsUI.KEY_PREF_KEEPSCREENON,
+                SettingsConstantsUI.DEFAULT_KEEPSCREENON
+            )
+            .putBoolean(AppSettingsConstants.KEY_PREF_KEEP_SCREEN_ON_DEFAULT_MIGRATED, true)
             .apply()
     }
 

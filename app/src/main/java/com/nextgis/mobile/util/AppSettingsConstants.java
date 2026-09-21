@@ -43,6 +43,7 @@ public interface AppSettingsConstants
     String KEY_PREF_UPDATE_CHECK  = "check_updates";
     String KEY_PREF_LAYER_BACKUP_MAX_GB = "layer_backup_max_gb";
     String KEY_PREF_PHOTO_OVERLAY_DEFAULTS_MIGRATED = "photo_overlay_defaults_enabled_v1";
+    String KEY_PREF_KEEP_SCREEN_ON_DEFAULT_MIGRATED = "keep_screen_on_default_enabled_v1";
 
     /**
      * Preference keys - in UI

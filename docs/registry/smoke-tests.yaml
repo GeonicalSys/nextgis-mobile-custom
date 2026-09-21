@@ -22,10 +22,12 @@ tests:
       - Load a large NGW resource tree, choose layers from multiple branches, rotate and background the Activity and Dialog
       - Recreate the process, fail the restore network call, retry and then close the screen during another restore
       - Inspect saved-state Parcel size and reopen add-layer and export selectors
+      - Open Add from Web GIS on a group with a long layer or folder name and confirm the name wraps instead of truncating while the checkbox stays tappable
     expected: >
       No Parcelable resource tree or credentials in state or launch Intent. Current remote path
       and selected flags restore asynchronously with new process-local IDs; incomplete restoration
       cannot import, saved selection survives retry, and destroyed screens receive no dialog.
+      Long layer and folder names wrap onto additional lines instead of being truncated.
   SMOKE-SHARED-UNDERLAYS:
     type: device
     scope: [app, maplib, maplibui]
@@ -226,7 +228,7 @@ tests:
       - Prepare a Collector project with at least 13 layers including a read-only simple Point layer whose initial visible is false, an editable field vector whose initial visible is false, a MultiPolygon feature with a real hole and a second polygon member, editable enabled only for field vectors, and supported qgis_vector_style and qgis_raster_style items between vectors
       - Add one server layer containing 15 MultiPolygon features and about 140000 positions, with one feature near 60000 positions and hundreds of polygon members
       - Reset all settings and import the Collector resource while interacting with the progress UI
-      - From Add layer choose Load project, confirm the lisa catalog lists the same Collector projects, and import one
+      - From Add layer choose Load project, confirm the lisa catalog lists the same Collector projects as a radio list with dividers that scrolls when it is taller than the screen, select one and press Load
       - Verify every layer has a distinct local storage path and the large layer has exactly 15 local features
       - Verify the ordinary MultiPolygon retains both members and exactly one hole
       - Enable the read-only Point layer only in the local layer drawer without changing server config or running sync
@@ -246,6 +248,8 @@ tests:
       stays on top, default OSM stays at internal index zero without visibility reset, and only
       Collector vectors with editable plus outbound sync are offered for object creation regardless
       of visibility; selecting a hidden eligible vector makes it visibly persist before editing.
+      Load project shows a radio list with dividers, scrolls when it is taller than the screen,
+      and starts import only after Load.
   SMOKE-LAYER-SYNC-SETTINGS:
     type: device
     scope: [app, maplib, maplibui]
@@ -497,7 +501,7 @@ tests:
         - Mute and unmute the widget, rotate portrait/landscape, lock the screen and press Home for several minutes, then resume and stop the mode
       - Repeat with GPS loss/stale fixes, a network fallback, a mock-GPS receiver application, Bluetooth active and a non-normal Android audio mode
         - Export the debug log and verify it does not contain stakeout coordinates or extended mock Location samples
-      - Open map settings after upgrading an existing install, verify both photo-coordinate options are initially enabled, disable them, restart and verify the explicit choice persists
+      - Open map settings after upgrading an existing install, verify Keep map screen on and both photo-coordinate options are initially enabled, disable them, restart and verify the explicit choice persists
       - Run a 4–8 hour field session and assess sound fatigue, battery use and CPU temperature
     expected: >
       The widget contains direction, WGS84 distance, numeric WMM2025 magnetic azimuth,

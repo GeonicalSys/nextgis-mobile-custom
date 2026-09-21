@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-09-17
+last_verified: 2026-09-21
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -58,7 +58,9 @@ NGW Collector resource
 
 Первый пункт меню добавления слоя «Загрузить проект» ищет в Веб ГИС группу с
 `keyname=lisa` (общий ключ для Lisa и Belka) и показывает `collector_project`
-внутри неё, включая вложенные группы. Импорт дальше тот же, что у ручного
+внутри неё, включая вложенные группы, отдельными строками с radio, разделителями
+и прокруткой, если список длиннее экрана. Загрузка начинается по кнопке
+«Загрузить». Импорт дальше тот же, что у ручного
 выбора Collector в дереве NGW. Пункт «Добавить слой NGW по URL» скрыт, код
 сохранён.
 
