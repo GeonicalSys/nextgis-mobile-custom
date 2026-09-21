@@ -26,7 +26,9 @@ OpenGL backend вместо Vulkan-default artifact.
 - прямой импорт raster MBTiles и явный перенос локальных TMS-подложек из
   установленного старого Lisa Debug в активный Geonical-проект; bridge проверяет
   оба package/signing certificate, не переносит project/account/vector/track
-  data и не удаляет источник;
+  data и не удаляет источник; перенос показывает текущий объём/тайлы, допускает
+  явную отмену и после inactivity timeout один раз повторяет зависший source,
+  не оставляя sync заблокированным;
 - сохранение отрисовки карты после возврата из настроек/другого приложения,
   выключения экрана и пересоздания view: `MapFragment` передаёт MapLibre полный
   lifecycle, освобождает старый native renderer и запрашивает repaint при resume;
@@ -192,6 +194,9 @@ OpenGL backend вместо Vulkan-default artifact.
 - Export provider отдаёт только перечисленные локальные TMS-подложки через
   read-only content URI; accounts, credentials, registry, vector layers, tracks
   и feature data не входят в контракт.
+- Cross-package stream может быть отменён пользователем или watchdog после
+  отсутствия новых байтов; это завершает worker и освобождает lease до следующей
+  операции с проектом.
 - `lisa` и `belka` — отдельные product flavors.
 - `app`, `maplibui` и `maplib` должны разрешать один MapLibre backend:
   `org.maplibre.gl:android-sdk-opengl:13.0.2`; generic `android-sdk` версии 13

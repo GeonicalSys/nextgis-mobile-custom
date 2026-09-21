@@ -375,6 +375,14 @@
     <string name="legacy_underlay_import_failed">Не удалось перенести подложки</string>
     <string name="legacy_underlay_import_done">Перенос завершён. Новых: %1$d; уже были перенесены: %2$d</string>
     <string name="legacy_underlay_import_partial">Перенесено подложек: %1$d из %2$d</string>
+    <string name="legacy_underlay_import_progress">Перенос подложки %1$d из %2$d · %3$s</string>
+    <string name="legacy_underlay_import_progress_tiles">Перенос подложки %1$d из %2$d · %3$s · тайлов: %4$d</string>
+    <string name="legacy_underlay_import_retrying">Старое приложение перестало отвечать. Повторяем перенос подложки %1$d из %2$d…</string>
+    <string name="legacy_underlay_import_cancel">Отменить перенос</string>
+    <string name="legacy_underlay_import_canceling">Отменяем перенос…</string>
+    <string name="legacy_underlay_import_canceled">Перенос подложек отменён</string>
+    <string name="legacy_underlay_import_stalled">Старое приложение перестало передавать подложку. Повторите перенос.</string>
+    <string name="legacy_underlay_import_in_progress">Перенос подложек уже выполняется</string>
     <string name="legacy_underlay_export_title">Перенос локальных подложек</string>
     <string name="legacy_underlay_export_confirmation">Разрешить приложению Geonical прочитать локальные подложки: %1$d? Данные проектов и учётных записей переданы не будут.</string>
     <string name="legacy_underlay_export_empty">Локальных подложек для переноса нет</string>

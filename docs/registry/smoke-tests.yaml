@@ -195,15 +195,19 @@ tests:
       - Update Debug in place with the same debug signing certificate and verify its legacy default map opens without a recursive project copy
       - Install the signed Geonical release, manually import and select the intended current Web GIS or local project
       - Open Underlay storage, start Import from the old app and approve the request in Debug
-      - Interrupt one transfer, repeat it, then complete all underlays and cold-open the Geonical project
-      - Run project composition/data sync and verify Debug still retains its original workspace
+      - On Honor 400 / Android 16 transfer a large underlay; verify the status keeps updating bytes or tiles and a second tap reports that this same transfer is active rather than referring ambiguously to synchronization
+      - Stall the producer pipe long enough to cross the inactivity deadline; verify one automatic retry, a bounded failure after the second stall, partial-stage cleanup and an enabled sync button
+      - Start again, press Cancel transfer and leave the Activity during another attempt; verify each path stops I/O and releases UNDERLAY_MIGRATION
+      - Complete all underlays, cold-open the Geonical project, run project composition/data sync and verify the progress ring works and Debug still retains its original workspace
     expected: >
       Only local raster underlays enter the selected Geonical project; project/account/vector/track
       data do not cross. Extracted tiles stream directly into one raster MBTiles file per underlay
       without a second extracted tree or per-tile fsync, TMS/OSM rows render in the same locations,
       names/visibility/relative order are preserved above OSM, an interrupted partial database is
-      ignored and removed, a retry creates no duplicate completed layer, sync retains the imported
-      underlays, and the complete Debug source remains available for rollback.
+      ignored and removed, a retry creates no duplicate completed layer, visible progress distinguishes
+      a long transfer from a stalled pipe, cancellation/stall never leaves a project-operation lease,
+      sync retains the imported underlays and its progress ring remains usable, and the complete Debug
+      source remains available for rollback.
   SMOKE-HOT-RASTER:
     type: device
     scope: [app, maplib, maplibui]

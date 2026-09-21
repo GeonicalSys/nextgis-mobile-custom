@@ -394,11 +394,16 @@ invariants:
       signing certificate. Extracted z/x/y tiles are converted directly into one validated raster
       MBTiles database with bounded SQLite transactions, one durable file sync and an atomic final
       rename; source data is retained and a persistent source key makes retries duplicate-safe.
+      Stream progress updates the operation heartbeat. User cancellation or an inactivity timeout
+      closes the active descriptor, removes the partial stage and releases UNDERLAY_MIGRATION only
+      after I/O exits; one stalled source retry is allowed, but no transfer may block later sync
+      indefinitely.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - app/src/main/java/com/nextgis/mobile/activity/LegacyUnderlayExportActivity.java
       - app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java
       - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java
+      - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java
       - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
       - maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java

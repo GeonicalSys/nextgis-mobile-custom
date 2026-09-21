@@ -1,7 +1,7 @@
 ---
 title: Общее хранилище подложек и обновление Debug перед переносом
 type: architecture
-last_verified: 2026-09-16
+last_verified: 2026-09-21
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java
@@ -99,6 +99,16 @@ MapLibre и Canvas разрешают путь через shared ID, без кл
 `mPath`. Debug exporter также разрешает payload через каталог. Debug importer
 пишет поток сразу в каталог Geonical, затем подключает ассет к выбранному проекту;
 source-key alias обеспечивает повторное использование при повторе переноса.
+
+Cross-package pipe ограничен inactivity watchdog: учитывается отсутствие новых
+байтов, а не полная длительность большого переноса. Каждый read обновляет
+project-operation heartbeat и видимый пользователю объём/число тайлов. Если
+старый Debug перестал передавать данные, descriptor и `CancellationSignal`
+закрываются, partial stage удаляется и source один раз безопасно открывается
+заново. Повторный stall завершает попытку с понятным сообщением и освобождает
+`UNDERLAY_MIGRATION`, поэтому перенос не может бессрочно блокировать sync.
+Пользователь может явно отменить перенос; закрытие Activity использует тот же
+путь отмены и ждёт выхода I/O перед освобождением lease.
 
 ## Удаление
 

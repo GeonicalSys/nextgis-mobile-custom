@@ -375,6 +375,14 @@
     <string name="legacy_underlay_import_failed">The underlays could not be transferred</string>
     <string name="legacy_underlay_import_done">Transfer complete. New: %1$d; already transferred: %2$d</string>
     <string name="legacy_underlay_import_partial">Transferred %1$d of %2$d underlays</string>
+    <string name="legacy_underlay_import_progress">Transferring underlay %1$d of %2$d · %3$s</string>
+    <string name="legacy_underlay_import_progress_tiles">Transferring underlay %1$d of %2$d · %3$s · tiles: %4$d</string>
+    <string name="legacy_underlay_import_retrying">The old app stopped responding. Retrying underlay %1$d of %2$d…</string>
+    <string name="legacy_underlay_import_cancel">Cancel transfer</string>
+    <string name="legacy_underlay_import_canceling">Canceling transfer…</string>
+    <string name="legacy_underlay_import_canceled">Underlay transfer canceled</string>
+    <string name="legacy_underlay_import_stalled">The old app stopped sending underlay data. Try the transfer again.</string>
+    <string name="legacy_underlay_import_in_progress">Underlay transfer is already in progress</string>
     <string name="legacy_underlay_export_title">Transfer local underlays</string>
     <string name="legacy_underlay_export_confirmation">Allow Geonical to read %1$d local underlay(s)? Project and account data will not be shared.</string>
     <string name="legacy_underlay_export_empty">There are no local underlays to transfer</string>

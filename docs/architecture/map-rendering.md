@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-20
+last_verified: 2026-09-21
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -321,6 +321,8 @@ Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
     sync файла и атомарное переименование; неполный stage удаляется, исходная
     Debug-подложка остаётся на месте. Provenance в `config.json` делает повторный
     запуск идемпотентным, а имя, видимость и взаимный порядок подложек сохраняются.
+    Inactivity watchdog и явная отмена закрывают cross-package descriptor до
+    cleanup и не позволяют transfer lease блокировать последующий sync.
     Пользователь запускает этот перенос из «Хранилище подложек», а не с экрана проекта.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
