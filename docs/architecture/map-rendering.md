@@ -321,9 +321,12 @@ Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
     sync файла и атомарное переименование; неполный stage удаляется, исходная
     Debug-подложка остаётся на месте. Provenance в `config.json` делает повторный
     запуск идемпотентным, а имя, видимость и взаимный порядок подложек сохраняются.
-    Inactivity watchdog и явная отмена закрывают cross-package descriptor до
-    cleanup и не позволяют transfer lease блокировать последующий sync.
-    Пользователь запускает этот перенос из «Хранилище подложек», а не с экрана проекта.
+    Inactivity watchdog, явная отмена и подтверждённый выход с экрана хранилища
+    закрывают cross-package descriptor до cleanup и не позволяют transfer lease
+    блокировать последующий sync. Pre-registry Debug сохраняет исходную карту и
+    папки тайлов до явного экспорта: фоновая shared-catalog migration там не
+    запускается. Пользователь запускает этот перенос из «Хранилище подложек»,
+    а не с экрана проекта.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,

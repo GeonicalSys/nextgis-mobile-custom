@@ -470,9 +470,12 @@ triggers:
   - id: LEGACY-UNDERLAY-MIGRATION
     paths:
       - app/src/main/java/com/nextgis/mobile/activity/LegacyUnderlayExportActivity.java
+      - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java
       - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java
       - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java
+      - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
       - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
     owners: [app, maplib, maplibui]
@@ -484,6 +487,7 @@ triggers:
     must_update_docs:
       - docs/architecture/collector-projects.md
       - docs/architecture/map-rendering.md
+      - docs/architecture/shared-underlays.md
       - docs/reference/flavors-and-versioning.md
       - docs/reference/official-differences.md
       - app/docs/manifest.yaml

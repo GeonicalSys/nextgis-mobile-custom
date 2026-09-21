@@ -9,6 +9,9 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
   - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
+  - app/src/main/java/com/nextgis/mobile/MainApplication.java
+  - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java
+  - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java
   - app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
 ---
 
@@ -77,6 +80,11 @@ rename между носителями сохраняется legacy-путь; �
 вычисляются в рабочем потоке. До этого размер помечен как неизвестный. Готовый
 проход отмечен `shared_underlay_migration.complete_v1`; открытие старого слоя
 и экран каталога остаются идемпотентными независимо от маркера.
+Для pre-registry `com.nextgis.mobile.debug` одно состояние
+`deferLegacyDebugWorkspace` пропускает и начальный local project, и этот
+фоновый проход: исходная карта и папки тайлов остаются rollback/source до
+явного экспорта. Debug с уже существующим project registry и production
+Geonical по-прежнему планируют обычную shared-underlay migration.
 
 Известные NGRc хеши объединяются сразу. Старые MBTiles с одинаковым вычисленным
 хешем объединяются через redirect journal и смену ссылок во всех картах. Для
@@ -107,8 +115,12 @@ project-operation heartbeat и видимый пользователю объё�
 закрываются, partial stage удаляется и source один раз безопасно открывается
 заново. Повторный stall завершает попытку с понятным сообщением и освобождает
 `UNDERLAY_MIGRATION`, поэтому перенос не может бессрочно блокировать sync.
-Пользователь может явно отменить перенос; закрытие Activity использует тот же
-путь отмены и ждёт выхода I/O перед освобождением lease.
+Пользователь может явно отменить перенос. Toolbar Back и системный Back во
+время активного переноса спрашивают «Перенос подложек ещё выполняется. Выйти
+и отменить?»; отказ оставляет поток работающим, подтверждение вызывает тот же
+путь отмены и `finish()`. `onDestroy()` по-прежнему аварийно отменяет transfer
+при system/process teardown, но пользовательский выход больше не отменяет его
+молча.
 
 ## Удаление
 

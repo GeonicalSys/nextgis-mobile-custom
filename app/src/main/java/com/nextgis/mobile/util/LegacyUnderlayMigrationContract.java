@@ -105,10 +105,25 @@ public final class LegacyUnderlayMigrationContract {
      * stream it to Geonical.
      */
     public static boolean shouldDeferDebugProjectBootstrap(Context context) {
-        if (!isDebugSource(context)
-                || !CollectorProjectRegistry.listProjects(context).isEmpty()) {
+        if (context == null) {
             return false;
         }
+        return shouldDeferLegacyDebugWorkspace(
+                isDebugSource(context),
+                !CollectorProjectRegistry.listProjects(context).isEmpty(),
+                hasLegacyMapFile(context));
+    }
+
+    public static boolean shouldDeferLegacyDebugWorkspace(
+            boolean isDebugPackage, boolean hasRegisteredProjects, boolean hasLegacyMapFile) {
+        return isDebugPackage && !hasRegisteredProjects && hasLegacyMapFile;
+    }
+
+    public static boolean shouldScheduleSharedCatalogMigration(boolean deferLegacyDebugWorkspace) {
+        return !deferLegacyDebugWorkspace;
+    }
+
+    static boolean hasLegacyMapFile(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         File defaultRoot = context.getExternalFilesDir(SettingsConstants.KEY_PREF_MAP);
         if (defaultRoot == null) {

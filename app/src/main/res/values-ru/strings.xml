@@ -383,6 +383,9 @@
     <string name="legacy_underlay_import_canceled">Перенос подложек отменён</string>
     <string name="legacy_underlay_import_stalled">Старое приложение перестало передавать подложку. Повторите перенос.</string>
     <string name="legacy_underlay_import_in_progress">Перенос подложек уже выполняется</string>
+    <string name="legacy_underlay_import_exit_message">Перенос подложек ещё выполняется. Выйти и отменить?</string>
+    <string name="legacy_underlay_import_exit_stay">Продолжить перенос</string>
+    <string name="legacy_underlay_import_exit_leave">Выйти и отменить</string>
     <string name="legacy_underlay_export_title">Перенос локальных подложек</string>
     <string name="legacy_underlay_export_confirmation">Разрешить приложению Geonical прочитать локальные подложки: %1$d? Данные проектов и учётных записей переданы не будут.</string>
     <string name="legacy_underlay_export_empty">Локальных подложек для переноса нет</string>

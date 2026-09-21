@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import android.text.format.Formatter
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -26,6 +27,7 @@ import com.nextgis.mobile.util.AppUpdateManager
 import com.nextgis.mobile.util.DebugCompanionInstaller
 import com.nextgis.mobile.util.LegacyUnderlayImporter
 import com.nextgis.mobile.util.LegacyUnderlayMigrationContract
+import com.nextgis.mobile.util.LegacyUnderlayTransferPolicy
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -46,6 +48,7 @@ class UnderlayCatalogActivity : AppCompatActivity() {
     @Volatile private var transferStartState: AtomicInteger? = null
     @Volatile private var transferLease: ProjectOperationCoordinator.Lease? = null
     @Volatile private var transferWorkerThread: Thread? = null
+    private var exitConfirmDialog: AlertDialog? = null
     private val choose get() = intent.getBooleanExtra("choose", false)
 
     override fun onCreate(state: Bundle?) {
@@ -62,6 +65,11 @@ class UnderlayCatalogActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(com.nextgis.maplibui.R.id.main_toolbar))
         title = getString(if (choose) R.string.underlay_from_catalog else R.string.underlay_catalog)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requestExit()
+            }
+        })
         progress = findViewById(R.id.underlay_catalog_progress)
         importButton = findViewById(R.id.underlay_import_from_old_app)
         importButton.setOnClickListener { confirmLegacyUnderlayImport() }
@@ -95,11 +103,12 @@ class UnderlayCatalogActivity : AppCompatActivity() {
         }
     }
     override fun onSupportNavigateUp(): Boolean {
-        cancelActiveTransfer()
-        finish()
+        requestExit()
         return true
     }
     override fun onDestroy() {
+        exitConfirmDialog?.dismiss()
+        exitConfirmDialog = null
         cancelActiveTransfer()
         executor.shutdownNow()
         super.onDestroy()
@@ -368,6 +377,28 @@ class UnderlayCatalogActivity : AppCompatActivity() {
             transferLease = null
             transferStartState = null
         }
+    }
+    private fun requestExit() {
+        if (LegacyUnderlayTransferPolicy.shouldFinishWithoutTransferExitPrompt(transferActive)) {
+            finish()
+            return
+        }
+        val dialogShowing = exitConfirmDialog?.isShowing == true
+        if (!LegacyUnderlayTransferPolicy.shouldShowTransferExitDialog(transferActive, dialogShowing)) {
+            if (dialogShowing) {
+                exitConfirmDialog?.dismiss()
+            }
+            return
+        }
+        exitConfirmDialog = AlertDialog.Builder(this)
+            .setMessage(R.string.legacy_underlay_import_exit_message)
+            .setNegativeButton(R.string.legacy_underlay_import_exit_stay, null)
+            .setPositiveButton(R.string.legacy_underlay_import_exit_leave) { _, _ ->
+                cancelActiveTransfer()
+                finish()
+            }
+            .setOnDismissListener { exitConfirmDialog = null }
+            .show()
     }
     private fun work(action: () -> Unit) {
         val lease = ProjectOperationCoordinator.tryBegin(this, ProjectOperationCoordinator.Kind.UNDERLAY_MIGRATION)

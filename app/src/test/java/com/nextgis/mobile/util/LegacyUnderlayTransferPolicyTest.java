@@ -37,4 +37,22 @@ public class LegacyUnderlayTransferPolicyTest {
     public void timeoutMustBePositive() {
         new LegacyUnderlayTransferPolicy(0L, 1);
     }
+
+    @Test
+    public void idleCatalogExitDoesNotPrompt() {
+        assertTrue(LegacyUnderlayTransferPolicy.shouldFinishWithoutTransferExitPrompt(false));
+        assertFalse(LegacyUnderlayTransferPolicy.shouldShowTransferExitDialog(false, false));
+        assertFalse(LegacyUnderlayTransferPolicy.shouldShowTransferExitDialog(false, true));
+    }
+
+    @Test
+    public void activeTransferRequiresExitConfirmation() {
+        assertFalse(LegacyUnderlayTransferPolicy.shouldFinishWithoutTransferExitPrompt(true));
+        assertTrue(LegacyUnderlayTransferPolicy.shouldShowTransferExitDialog(true, false));
+    }
+
+    @Test
+    public void exitConfirmationIsNotShownTwice() {
+        assertFalse(LegacyUnderlayTransferPolicy.shouldShowTransferExitDialog(true, true));
+    }
 }

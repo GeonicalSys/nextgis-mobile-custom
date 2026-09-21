@@ -1,7 +1,7 @@
 package com.nextgis.mobile.util;
 
-/** Pure policy for detecting an inactive legacy-underlay stream and bounding retries. */
-final class LegacyUnderlayTransferPolicy {
+/** Pure policy for inactive streams, retry bounds and transfer-exit confirmation. */
+public final class LegacyUnderlayTransferPolicy {
     static final long DEFAULT_INACTIVITY_TIMEOUT_MS = 90_000L;
     static final int DEFAULT_MAX_STALL_RETRIES = 1;
 
@@ -29,5 +29,14 @@ final class LegacyUnderlayTransferPolicy {
 
     boolean canRetry(int completedStallRetries) {
         return completedStallRetries < maxStallRetries;
+    }
+
+    public static boolean shouldFinishWithoutTransferExitPrompt(boolean transferActive) {
+        return !transferActive;
+    }
+
+    public static boolean shouldShowTransferExitDialog(
+            boolean transferActive, boolean dialogAlreadyShowing) {
+        return transferActive && !dialogAlreadyShowing;
     }
 }

@@ -27,8 +27,9 @@ OpenGL backend вместо Vulkan-default artifact.
   установленного старого Lisa Debug в активный Geonical-проект; bridge проверяет
   оба package/signing certificate, не переносит project/account/vector/track
   data и не удаляет источник; перенос показывает текущий объём/тайлы, допускает
-  явную отмену и после inactivity timeout один раз повторяет зависший source,
-  не оставляя sync заблокированным;
+  явную отмену и подтверждённый выход, а после inactivity timeout один раз
+  повторяет зависший source, не оставляя sync заблокированным; обновлённый
+  pre-registry Debug не преобразует исходные папки до экспорта;
 - сохранение отрисовки карты после возврата из настроек/другого приложения,
   выключения экрана и пересоздания view: `MapFragment` передаёт MapLibre полный
   lifecycle, освобождает старый native renderer и запрашивает repaint при resume;
