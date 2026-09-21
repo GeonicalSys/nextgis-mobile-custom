@@ -39,7 +39,7 @@ tests:
       - Import an unmodified standard archive with Mapnik.json and Mapnik/z/x/y.jpg; compare all tile bytes and repeat without duplication. Reject a missing/ambiguous config with a live map and verify worker cleanup does not crash MapLibre.
       - Verify one MBTiles payload and no extracted tree; repeat import in the same and another project without payload growth.
       - Import raster MBTiles and ZIP containing one MBTiles; reject vector data and ordinary ZIP-TMS in the dedicated picker.
-      - Open local with the same NGRc or raster MBTiles fixture as New underlay from file; the asset appears in Underlay storage and can be attached to another project.
+      - Open local with the same NGRc or raster MBTiles fixture as New underlay from file; the fill dialog shows the file name rather than a SAF id such as msf:308, and the progress bar advances; the asset appears in Underlay storage and can be attached to another project.
       - Remove a project layer, undo, delete a project and reset settings; verify shared payload remains.
       - Delete in catalog after confirming all project names; reopen nested closed projects and verify only matching links disappeared.
       - On Geonical with trusted Debug installed, Underlay storage shows Import from the old app; the layer picker and Project settings do not. Without an active project the action reports that there is no project and does not start Debug export.

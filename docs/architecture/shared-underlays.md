@@ -6,8 +6,11 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgrcArchive.java
+  - maplib/src/main/java/com/nextgis/maplib/util/FileUtil.java
   - maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
+  - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
   - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java
@@ -58,7 +61,10 @@ fsync и rename staging. Новый MBTiles проверяется и сохра
 по-прежнему распаковывается в проект; dedicated picker его отклоняет. Новые
 пункты «Новая подложка из файла» и «Подложка из хранилища» добавляют подложку
 сразу над OSM; повторное подключение того же ассета в один проект не создаёт
-второй слой.
+второй слой. Диалог загрузки показывает человеческое имя файла (не SAF id
+вида `msf:308`) и движущуюся полосу: для NGRc — число тайлов, для MBTiles —
+объём, если Android отдаёт размер. Системный выбор файла (`ACTION_OPEN_DOCUMENT`)
+не заменяется своим экраном.
 
 ## Перенос существующих подложек
 

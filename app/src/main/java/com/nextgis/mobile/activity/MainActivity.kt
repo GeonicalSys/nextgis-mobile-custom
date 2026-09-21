@@ -1153,7 +1153,9 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 val uri = data?.data ?: return
                 val kind = SharedUnderlayKind.classify(this, uri)
                 if (kind == SharedUnderlayKind.NGRC || kind == SharedUnderlayKind.MBTILES) {
-                    val layerName = FileUtil.getFileNameByUri(this, uri, "").substringBeforeLast('.')
+                    val layerName = FileUtil.getFileNameByUri(
+                        this, uri, getString(R.string.underlay_from_file)
+                    ).substringBeforeLast('.')
                     LayerFactoryUI.startSharedUnderlayImport(
                         this,
                         (application as IGISApplication).map,

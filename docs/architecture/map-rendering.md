@@ -382,7 +382,8 @@ heading, а не за фиксированным углом. Иконка stand/
 Новые NGRc преобразуются непосредственно в raster MBTiles общего каталога. Тот
 же путь используют «Новая подложка из файла» и «Открыть локальный» после
 классификации файла (NGRc, MBTiles, ZIP с NGRc-конфигом или одним MBTiles).
-MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
+Диалог fill показывает имя файла, а не идентификатор документа, и прогресс
+конвертации. MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
 
 Камера не опускается ниже `7.5`. Любая включённая raster-подложка доступна с
 zoom `7`; выключенный слой остаётся выключенным. Raster-источники подключаются
