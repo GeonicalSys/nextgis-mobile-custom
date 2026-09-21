@@ -23,12 +23,17 @@ object ProjectChooserDialog {
             setPadding((16 * density).toInt(), (8 * density).toInt(),
                 (16 * density).toInt(), (8 * density).toInt())
         }
+        val rows = arrayOfNulls<CheckedTextView>(projects.size)
+        val selected = intArrayOf(projects.indexOfFirst { it.isActive(context) })
         val dialog = AlertDialog.Builder(context)
             .setTitle(R.string.collector_project_switch)
             .setView(ScrollView(context).apply { addView(container) })
+            .setPositiveButton(R.string.collector_project_open, null)
             .setNegativeButton(android.R.string.cancel, null)
             .create()
 
+        val selectable = TypedValue()
+        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, selectable, true)
         projects.forEachIndexed { index, project ->
             val row = CheckedTextView(context).apply {
                 text = project.name
@@ -37,16 +42,19 @@ object ProjectChooserDialog {
                 minHeight = (60 * density).toInt()
                 setPadding((18 * density).toInt(), 0, (18 * density).toInt(), 0)
                 setCheckMarkDrawable(android.R.drawable.btn_radio)
-                isChecked = project.isActive(context)
-                val outValue = TypedValue()
-                context.theme.resolveAttribute(
-                    android.R.attr.selectableItemBackground, outValue, true)
-                setBackgroundResource(outValue.resourceId)
+                isChecked = index == selected[0]
+                setBackgroundResource(selectable.resourceId)
                 setOnClickListener {
-                    dialog.dismiss()
-                    onSelected(project)
+                    val previous = selected[0]
+                    if (previous in rows.indices) {
+                        rows[previous]?.isChecked = false
+                    }
+                    selected[0] = index
+                    isChecked = true
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = true
                 }
             }
+            rows[index] = row
             container.addView(row, LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -58,6 +66,18 @@ object ProjectChooserDialog {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     (1 * density).coerceAtLeast(1f).toInt()
                 ))
+            }
+        }
+        dialog.setOnShowListener {
+            val open = dialog.getButton(AlertDialog.BUTTON_POSITIVE) ?: return@setOnShowListener
+            open.isEnabled = selected[0] >= 0
+            open.setOnClickListener {
+                val index = selected[0]
+                if (index !in projects.indices) {
+                    return@setOnClickListener
+                }
+                dialog.dismiss()
+                onSelected(projects[index])
             }
         }
         dialog.show()

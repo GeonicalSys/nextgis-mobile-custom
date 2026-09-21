@@ -32,6 +32,7 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+  - app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt
   - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
   - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
 ---
@@ -388,6 +389,7 @@ destructive composition apply. После импорта в её `config.json` �
   workspace без удаления server resource, без ложного сообщения об ошибке и с
   созданием fallback после удаления последнего;
 - picker содержит только имена, а account/id/district доступны в «Настройки → Проект»;
+  нажатие на строку выбирает radio, смена карты — по «Открыть», «Отмена» оставляет текущий проект;
 - проект с сохранёнными треками → проект без треков → обратно: список, карта и новая запись
   используют базу текущего проекта без принудительного перезапуска приложения;
 - обновить старый Debug APK сборкой с тем же signing certificate, выбрать

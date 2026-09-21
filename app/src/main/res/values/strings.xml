@@ -236,6 +236,7 @@
     <string name="layer_backups_clear_error">Could not clear layer backups</string>
     <string name="collector_projects">Collector projects</string>
     <string name="collector_project_switch">Switch project</string>
+    <string name="collector_project_open">Open</string>
     <string name="collector_projects_empty">No imported Collector projects</string>
     <string name="collector_project_workspace_list_item">%1$s\naccount: %2$s | id: %3$d | district: %4$s</string>
     <string name="collector_project_already_active">This Collector project is already active</string>

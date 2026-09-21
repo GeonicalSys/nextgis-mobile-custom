@@ -285,6 +285,7 @@
 
 
     <string name="collector_project_switch">Сменить проект</string>
+    <string name="collector_project_open">Открыть</string>
     <string name="collector_project_workspace_list_item">%1$s\nаккаунт: %2$s | id: %3$d | district: %4$s</string>
     <string name="collector_project_already_active">Этот проект Collector уже активен</string>
     <string name="collector_project_switch_busy">Дождитесь окончания синхронизации или загрузки данных перед сменой проекта</string>
