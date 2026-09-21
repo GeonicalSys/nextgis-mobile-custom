@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-20
+last_verified: 2026-09-21
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -321,7 +321,12 @@ Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
     sync файла и атомарное переименование; неполный stage удаляется, исходная
     Debug-подложка остаётся на месте. Provenance в `config.json` делает повторный
     запуск идемпотентным, а имя, видимость и взаимный порядок подложек сохраняются.
-    Пользователь запускает этот перенос из «Хранилище подложек», а не с экрана проекта.
+    Inactivity watchdog, явная отмена и подтверждённый выход с экрана хранилища
+    закрывают cross-package descriptor до cleanup и не позволяют transfer lease
+    блокировать последующий sync. Pre-registry Debug сохраняет исходную карту и
+    папки тайлов до явного экспорта: фоновая shared-catalog migration там не
+    запускается. Пользователь запускает этот перенос из «Хранилище подложек»,
+    а не с экрана проекта.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
@@ -377,7 +382,8 @@ heading, а не за фиксированным углом. Иконка stand/
 Новые NGRc преобразуются непосредственно в raster MBTiles общего каталога. Тот
 же путь используют «Новая подложка из файла» и «Открыть локальный» после
 классификации файла (NGRc, MBTiles, ZIP с NGRc-конфигом или одним MBTiles).
-MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
+Диалог fill показывает имя файла, а не идентификатор документа, и прогресс
+конвертации. MapLibre URL и Canvas tile directory разрешаются через `shared_underlay_id`, legacy слои сохраняют fallback. Слой подключается над OSM, hot-add и visibility остаются проектными. Хранилище, Y-flip, bounds и recovery описаны в [shared-underlays](shared-underlays.md).
 
 Камера не опускается ниже `7.5`. Любая включённая raster-подложка доступна с
 zoom `7`; выключенный слой остаётся выключенным. Raster-источники подключаются

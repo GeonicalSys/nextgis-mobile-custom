@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-09-20
+last_verified: 2026-09-21
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -57,7 +57,7 @@ production APK не может обновить пакет Debug и не пол�
 
 ## Версия
 
-- Подготовленный выпуск: Lisa/Belka Release `3.1.2.22` / `versionCode 216`,
+- Подготовленный выпуск: Lisa/Belka Release `3.1.2.23` / `versionCode 217`,
   Lisa Debug использует `3.1.2.22` / `versionCode 217`; maplib сообщает соответствующее
   variant-specific значение.
 - `versionName = <upstream-base>.<fork-patch>`.
@@ -98,6 +98,14 @@ Repository branches: Lisa Release — `lisa`, Belka Release — `belka`, Lisa De
 ## Отдельный установщик Debug
 
 Production Geonical может обновить доверенный установленный Debug перед переносом подложек. DebugCompanionInstaller не использует flavor self-updater: разрешены только debug package/channel, pinned/current Debug signer и APK с exporter. Lisa Debug и Belka не показывают это предложение. Перенос запускается из хранилища подложек, а не с экрана «Проект». Версии этой задачей не изменяются; серверный канал и continuation описаны в [контракте](../architecture/shared-underlays.md).
+
+Geonical читает granted URI через отменяемый descriptor. Отсутствие новых
+байтов ограничено inactivity timeout с одним retry; пользовательская отмена,
+подтверждённый выход из хранилища и timeout завершают I/O до освобождения
+project-operation lease. Обновлённый pre-registry Debug не запускает фоновую
+shared-catalog migration, чтобы исходные папки оставались источником экспорта.
+Это target-side поведение совместимо с уже опубликованным Debug exporter и не
+требует смены stream schema либо версии.
 
 Готовность установленного Debug определяется реальным enabled/exported exporter
 из `PackageManager`, а не только номером версии либо явным ComponentName.

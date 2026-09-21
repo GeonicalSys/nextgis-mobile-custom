@@ -1,14 +1,20 @@
 ---
 title: Общее хранилище подложек и обновление Debug перед переносом
 type: architecture
-last_verified: 2026-09-16
+last_verified: 2026-09-21
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgrcArchive.java
+  - maplib/src/main/java/com/nextgis/maplib/util/FileUtil.java
   - maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java
+  - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
   - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
+  - app/src/main/java/com/nextgis/mobile/MainApplication.java
+  - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java
+  - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java
   - app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
 ---
 
@@ -55,7 +61,10 @@ fsync и rename staging. Новый MBTiles проверяется и сохра
 по-прежнему распаковывается в проект; dedicated picker его отклоняет. Новые
 пункты «Новая подложка из файла» и «Подложка из хранилища» добавляют подложку
 сразу над OSM; повторное подключение того же ассета в один проект не создаёт
-второй слой.
+второй слой. Диалог загрузки показывает человеческое имя файла (не SAF id
+вида `msf:308`) и движущуюся полосу: для NGRc — число тайлов, для MBTiles —
+объём, если Android отдаёт размер. Системный выбор файла (`ACTION_OPEN_DOCUMENT`)
+не заменяется своим экраном.
 
 ## Перенос существующих подложек
 
@@ -77,6 +86,11 @@ rename между носителями сохраняется legacy-путь; �
 вычисляются в рабочем потоке. До этого размер помечен как неизвестный. Готовый
 проход отмечен `shared_underlay_migration.complete_v1`; открытие старого слоя
 и экран каталога остаются идемпотентными независимо от маркера.
+Для pre-registry `com.nextgis.mobile.debug` одно состояние
+`deferLegacyDebugWorkspace` пропускает и начальный local project, и этот
+фоновый проход: исходная карта и папки тайлов остаются rollback/source до
+явного экспорта. Debug с уже существующим project registry и production
+Geonical по-прежнему планируют обычную shared-underlay migration.
 
 Известные NGRc хеши объединяются сразу. Старые MBTiles с одинаковым вычисленным
 хешем объединяются через redirect journal и смену ссылок во всех картах. Для
@@ -99,6 +113,20 @@ MapLibre и Canvas разрешают путь через shared ID, без кл
 `mPath`. Debug exporter также разрешает payload через каталог. Debug importer
 пишет поток сразу в каталог Geonical, затем подключает ассет к выбранному проекту;
 source-key alias обеспечивает повторное использование при повторе переноса.
+
+Cross-package pipe ограничен inactivity watchdog: учитывается отсутствие новых
+байтов, а не полная длительность большого переноса. Каждый read обновляет
+project-operation heartbeat и видимый пользователю объём/число тайлов. Если
+старый Debug перестал передавать данные, descriptor и `CancellationSignal`
+закрываются, partial stage удаляется и source один раз безопасно открывается
+заново. Повторный stall завершает попытку с понятным сообщением и освобождает
+`UNDERLAY_MIGRATION`, поэтому перенос не может бессрочно блокировать sync.
+Пользователь может явно отменить перенос. Toolbar Back и системный Back во
+время активного переноса спрашивают «Перенос подложек ещё выполняется. Выйти
+и отменить?»; отказ оставляет поток работающим, подтверждение вызывает тот же
+путь отмены и `finish()`. `onDestroy()` по-прежнему аварийно отменяет transfer
+при system/process teardown, но пользовательский выход больше не отменяет его
+молча.
 
 ## Удаление
 

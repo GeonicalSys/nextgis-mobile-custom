@@ -120,8 +120,9 @@ public class MainApplication extends GISApplication
             catch (java.io.IOException e) { HyperLog.w(TAG, "Underlay recovery deferred", e); }
         }
 
-        if (isDefaultApplicationProcess()
-                && !LegacyUnderlayMigrationContract.shouldDeferDebugProjectBootstrap(this)) {
+        final boolean deferLegacyDebugWorkspace =
+                LegacyUnderlayMigrationContract.shouldDeferDebugProjectBootstrap(this);
+        if (isDefaultApplicationProcess() && !deferLegacyDebugWorkspace) {
             try {
                 CollectorProjectRegistry.ensureInitialLocalProject(
                         this, getString(R.string.project_local_default_name));
@@ -154,7 +155,10 @@ public class MainApplication extends GISApplication
         NGWUtil.UUID = TrackerService.getUid(this);
 
         if (isDefaultApplicationProcess()) {
-            com.nextgis.maplibui.util.SharedUnderlayProjects.scheduleMigration(this);
+            if (LegacyUnderlayMigrationContract.shouldScheduleSharedCatalogMigration(
+                    deferLegacyDebugWorkspace)) {
+                com.nextgis.maplibui.util.SharedUnderlayProjects.scheduleMigration(this);
+            }
             new Handler(Looper.getMainLooper()).postDelayed(
                     () -> SyncRecoveryJournal.schedulePendingIfNeeded(this),
                     3_000L);

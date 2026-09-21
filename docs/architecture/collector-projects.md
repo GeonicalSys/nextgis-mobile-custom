@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-09-17
+last_verified: 2026-09-21
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -32,6 +32,7 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+  - app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt
   - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
   - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
 ---
@@ -58,7 +59,9 @@ NGW Collector resource
 
 Первый пункт меню добавления слоя «Загрузить проект» ищет в Веб ГИС группу с
 `keyname=lisa` (общий ключ для Lisa и Belka) и показывает `collector_project`
-внутри неё, включая вложенные группы. Импорт дальше тот же, что у ручного
+внутри неё, включая вложенные группы, отдельными строками с radio, разделителями
+и прокруткой, если список длиннее экрана. Загрузка начинается по кнопке
+«Загрузить». Импорт дальше тот же, что у ручного
 выбора Collector в дереве NGW. Пункт «Добавить слой NGW по URL» скрыт, код
 сохранён.
 
@@ -186,7 +189,15 @@ Geonical caller. Проекты, registry, accounts, credentials, vector layers,
 слой получает source
 provenance; повторный запуск пропускает уже перенесённую подложку. Порядок,
 видимость и имя сохраняются, а подложки вставляются над OSM активного проекта.
-Этот bridge не заменяет ручной выбор правильного проекта.
+Обновлённый pre-registry Debug не создаёт local project и не запускает
+фоновую shared-catalog migration, чтобы source-папки не преобразовались до
+экспорта. Во время stream экран показывает source index, объём и число тайлов.
+Явная отмена, подтверждённый выход с экрана хранилища или отсутствие новых
+байтов закрывают descriptor и только после выхода I/O освобождают
+`UNDERLAY_MIGRATION`; stalled source повторяется один раз. Toolbar и системный
+Back во время переноса спрашивают подтверждение; отказ оставляет поток
+работающим. Таким образом незавершённый перенос не может бессрочно блокировать
+data sync. Этот bridge не заменяет ручной выбор правильного проекта.
 
 Пользователь может создать пустой `LOCAL` workspace, переименовать локальное
 отображаемое имя любого проекта и удалить активную локальную копию. Удаление не
@@ -378,6 +389,7 @@ destructive composition apply. После импорта в её `config.json` �
   workspace без удаления server resource, без ложного сообщения об ошибке и с
   созданием fallback после удаления последнего;
 - picker содержит только имена, а account/id/district доступны в «Настройки → Проект»;
+  нажатие на строку выбирает radio, смена карты — по «Открыть», «Отмена» оставляет текущий проект;
 - проект с сохранёнными треками → проект без треков → обратно: список, карта и новая запись
   используют базу текущего проекта без принудительного перезапуска приложения;
 - обновить старый Debug APK сборкой с тем же signing certificate, выбрать
@@ -424,7 +436,7 @@ destructive composition apply. После импорта в её `config.json` �
 
 ## Подложки как общие ассеты
 
-NGRc/MBTiles принадлежат общему app-private каталогу, проект содержит только `shared_underlay_id`. Удаление проекта защищает legacy подложки и снимает ссылки; composition sync не управляет ассетами. Closed workspace unlink не создаёт новый `MapBase`. См. [полный контракт](shared-underlays.md).
+NGRc/MBTiles принадлежат общему app-private каталогу, проект содержит только `shared_underlay_id`. Импорт из файла показывает человеческое имя и прогресс конвертации, не SAF document id. Удаление проекта защищает legacy подложки и снимает ссылки; composition sync не управляет ассетами. Closed workspace unlink не создаёт новый `MapBase`. См. [полный контракт](shared-underlays.md).
 
 Объединение дубликатов в закрытых проектах синхронизирует raster-формат ссылки
 с выбранным payload; имя, видимость, пределы масштаба и место слоя в проекте

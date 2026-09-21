@@ -1,9 +1,10 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-09-20
+last_verified: 2026-09-21
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
+  - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
   - app/src/main/res/xml/preferences_general.xml
   - app/src/main/res/xml/preferences_map.xml
@@ -12,6 +13,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/SettingsConstantsUI.java
+  - maplibui/src/main/java/com/nextgis/maplibui/mapui/MapViewBase.java
 ---
 
 # Настройки и конфигурационные ключи
@@ -50,6 +53,9 @@ related_code:
   `photo_overlay_use_object_coords=true` включены по умолчанию. Миграция
   `photo_overlay_defaults_enabled_v1` один раз включает оба ключа на уже
   установленной версии; после этого ручной выбор пользователя сохраняется.
+- Карта: `keep_screen_on=true` держит экран включённым, пока открыта карта.
+  Миграция `keep_screen_on_default_enabled_v1` один раз включает ключ на уже
+  установленной версии; после этого ручное выключение сохраняется.
 - Tracking/location: интервалы, distance, foreground service toggles и
   `background_recording_sound=true`. Последний ключ включает короткое звуковое
   подтверждение по фиксированному расписанию раз в 10 секунд, когда UI приложения

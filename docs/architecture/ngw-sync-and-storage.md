@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-09-20
+last_verified: 2026-09-21
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -102,7 +102,7 @@ NGW account привязан не только к серверным credentials
 Release ЛИСА/Белка используют `com.nextgis.account.geonical`, debug —
 `com.nextgis.account.debug`. GIS provider аналогично должен совпадать между
 `BuildConfig.providerAuth`, manifest provider и `SyncAdapter.contentAuthority`.
-Выпуск `3.1.2.22` использует production tuple `216` / `3.1.2.22`, а отдельный
+Выпуск `3.1.2.23` использует production tuple `217` / `3.1.2.23`, а отдельный
 debug — `217` / `3.1.2.22`; application/account/provider identity не
 меняется.
 Library defaults нельзя считать достаточными: app variant обязан перекрывать оба

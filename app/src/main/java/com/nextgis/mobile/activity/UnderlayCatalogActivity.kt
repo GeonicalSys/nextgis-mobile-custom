@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import android.text.format.Formatter
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -26,7 +27,9 @@ import com.nextgis.mobile.util.AppUpdateManager
 import com.nextgis.mobile.util.DebugCompanionInstaller
 import com.nextgis.mobile.util.LegacyUnderlayImporter
 import com.nextgis.mobile.util.LegacyUnderlayMigrationContract
+import com.nextgis.mobile.util.LegacyUnderlayTransferPolicy
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 
 class UnderlayCatalogActivity : AppCompatActivity() {
     companion object {
@@ -37,7 +40,15 @@ class UnderlayCatalogActivity : AppCompatActivity() {
     private lateinit var list: ListView
     private lateinit var progress: ProgressBar
     private lateinit var importButton: Button
+    private lateinit var transferStatus: TextView
+    private lateinit var transferCancel: Button
     private var assets = emptyList<SharedUnderlayCatalog.Asset>()
+    @Volatile private var transferControl: LegacyUnderlayImporter.TransferControl? = null
+    @Volatile private var transferActive = false
+    @Volatile private var transferStartState: AtomicInteger? = null
+    @Volatile private var transferLease: ProjectOperationCoordinator.Lease? = null
+    @Volatile private var transferWorkerThread: Thread? = null
+    private var exitConfirmDialog: AlertDialog? = null
     private val choose get() = intent.getBooleanExtra("choose", false)
 
     override fun onCreate(state: Bundle?) {
@@ -54,9 +65,21 @@ class UnderlayCatalogActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(com.nextgis.maplibui.R.id.main_toolbar))
         title = getString(if (choose) R.string.underlay_from_catalog else R.string.underlay_catalog)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requestExit()
+            }
+        })
         progress = findViewById(R.id.underlay_catalog_progress)
         importButton = findViewById(R.id.underlay_import_from_old_app)
         importButton.setOnClickListener { confirmLegacyUnderlayImport() }
+        transferStatus = findViewById(R.id.underlay_transfer_status)
+        transferCancel = findViewById(R.id.underlay_transfer_cancel)
+        transferCancel.setOnClickListener {
+            transferCancel.isEnabled = false
+            transferStatus.setText(R.string.legacy_underlay_import_canceling)
+            cancelActiveTransfer()
+        }
         list = findViewById(R.id.underlay_catalog_list)
         list.emptyView = findViewById(R.id.underlay_catalog_empty)
         list.setOnItemClickListener { _, _, position, _ ->
@@ -79,8 +102,17 @@ class UnderlayCatalogActivity : AppCompatActivity() {
             }
         }
     }
-    override fun onSupportNavigateUp(): Boolean { finish(); return true }
-    override fun onDestroy() { executor.shutdown(); super.onDestroy() }
+    override fun onSupportNavigateUp(): Boolean {
+        requestExit()
+        return true
+    }
+    override fun onDestroy() {
+        exitConfirmDialog?.dismiss()
+        exitConfirmDialog = null
+        cancelActiveTransfer()
+        executor.shutdownNow()
+        super.onDestroy()
+    }
 
     override fun onResume() {
         super.onResume()
@@ -118,6 +150,12 @@ class UnderlayCatalogActivity : AppCompatActivity() {
     }
 
     private fun importLegacySources(sources: ArrayList<Uri>) {
+        if (transferActive) {
+            Toast.makeText(
+                this, R.string.legacy_underlay_import_in_progress, Toast.LENGTH_LONG
+            ).show()
+            return
+        }
         if (ProjectSyncInterruption.confirmAndRun(this) { importLegacySources(sources) }) return
 
         val lease = ProjectOperationCoordinator.tryBegin(
@@ -126,28 +164,51 @@ class UnderlayCatalogActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.project_operation_wait, Toast.LENGTH_LONG).show()
             return
         }
-        setBusy(true)
+        val control = LegacyUnderlayImporter.TransferControl()
+        val startState = AtomicInteger(0)
+        transferControl = control
+        transferStartState = startState
+        transferLease = lease
+        transferActive = true
+        setTransferBusy(true)
         executor.execute {
+            if (!startState.compareAndSet(0, 1)) return@execute
+            transferWorkerThread = Thread.currentThread()
             val result = try {
-                LegacyUnderlayImporter.importAll(this, sources, lease)
+                LegacyUnderlayImporter.importAll(this, sources, lease, control) {
+                    transferProgress ->
+                    updateTransferProgress(transferProgress)
+                }
             } finally {
                 lease.close()
+                startState.set(2)
+                transferLease = null
+                transferStartState = null
+                transferWorkerThread = null
+                Thread.interrupted()
             }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
-                setBusy(false)
-                val message = if (result.isComplete) {
-                    getString(
-                        R.string.legacy_underlay_import_done,
-                        result.imported,
-                        result.skipped
-                    )
-                } else {
-                    getString(
-                        R.string.legacy_underlay_import_partial,
-                        result.imported,
-                        result.total
-                    )
+                transferActive = false
+                transferControl = null
+                setTransferBusy(false)
+                val message = when {
+                    result.canceled ->
+                        getString(R.string.legacy_underlay_import_canceled)
+                    result.stalled && result.failed > 0 ->
+                        getString(R.string.legacy_underlay_import_stalled)
+                    result.isComplete ->
+                        getString(
+                            R.string.legacy_underlay_import_done,
+                            result.imported,
+                            result.skipped
+                        )
+                    else ->
+                        getString(
+                            R.string.legacy_underlay_import_partial,
+                            result.imported,
+                            result.total
+                        )
                 }
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 refresh()
@@ -200,6 +261,12 @@ class UnderlayCatalogActivity : AppCompatActivity() {
     }
     private fun confirmLegacyUnderlayImport() {
         if (choose) return
+        if (transferActive) {
+            Toast.makeText(
+                this, R.string.legacy_underlay_import_in_progress, Toast.LENGTH_LONG
+            ).show()
+            return
+        }
         val project = CollectorProjectRegistry.getActiveProject(this)
         if (project == null) {
             Toast.makeText(this, R.string.project_none_active, Toast.LENGTH_LONG).show()
@@ -246,7 +313,15 @@ class UnderlayCatalogActivity : AppCompatActivity() {
             return false
         }
         if (ProjectOperationCoordinator.isBusy()) {
-            Toast.makeText(this, R.string.project_operation_wait, Toast.LENGTH_LONG).show()
+            val message = if (
+                ProjectOperationCoordinator.snapshot().oldestKind ==
+                    ProjectOperationCoordinator.Kind.UNDERLAY_MIGRATION
+            ) {
+                R.string.legacy_underlay_import_in_progress
+            } else {
+                R.string.project_operation_wait
+            }
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             return false
         }
         return true
@@ -255,6 +330,75 @@ class UnderlayCatalogActivity : AppCompatActivity() {
         list.isEnabled = !busy
         importButton.isEnabled = !busy
         progress.visibility = if (busy) View.VISIBLE else View.GONE
+    }
+    private fun setTransferBusy(busy: Boolean) {
+        setBusy(busy)
+        transferStatus.visibility = if (busy) View.VISIBLE else View.GONE
+        transferCancel.visibility = if (busy) View.VISIBLE else View.GONE
+        transferCancel.isEnabled = busy
+        if (!busy) transferStatus.text = ""
+    }
+    private fun updateTransferProgress(value: LegacyUnderlayImporter.Progress) {
+        runOnUiThread {
+            if (isFinishing || isDestroyed || !transferActive) return@runOnUiThread
+            if (value.retrying && value.bytesRead == 0L) {
+                transferStatus.text = getString(
+                    R.string.legacy_underlay_import_retrying,
+                    value.sourceIndex,
+                    value.sourceCount
+                )
+                return@runOnUiThread
+            }
+            val size = Formatter.formatFileSize(this, value.bytesRead)
+            transferStatus.text = if (value.tilesRead > 0L) {
+                getString(
+                    R.string.legacy_underlay_import_progress_tiles,
+                    value.sourceIndex,
+                    value.sourceCount,
+                    size,
+                    value.tilesRead
+                )
+            } else {
+                getString(
+                    R.string.legacy_underlay_import_progress,
+                    value.sourceIndex,
+                    value.sourceCount,
+                    size
+                )
+            }
+        }
+    }
+    private fun cancelActiveTransfer() {
+        transferControl?.cancel()
+        transferWorkerThread?.interrupt()
+        val state = transferStartState
+        if (state != null && state.compareAndSet(0, 2)) {
+            transferLease?.close()
+            transferLease = null
+            transferStartState = null
+        }
+    }
+    private fun requestExit() {
+        if (LegacyUnderlayTransferPolicy.shouldFinishWithoutTransferExitPrompt(transferActive)) {
+            finish()
+            return
+        }
+        val dialogShowing = exitConfirmDialog?.isShowing == true
+        if (!LegacyUnderlayTransferPolicy.shouldShowTransferExitDialog(transferActive, dialogShowing)) {
+            if (dialogShowing) {
+                exitConfirmDialog?.dismiss()
+            }
+            return
+        }
+        exitConfirmDialog = AlertDialog.Builder(this)
+            .setMessage(R.string.legacy_underlay_import_exit_message)
+            .setNegativeButton(R.string.legacy_underlay_import_exit_stay, null)
+            .setPositiveButton(R.string.legacy_underlay_import_exit_leave) { _, _ ->
+                cancelActiveTransfer()
+                finish()
+            }
+            .setOnDismissListener { exitConfirmDialog = null }
+            .show()
     }
     private fun work(action: () -> Unit) {
         val lease = ProjectOperationCoordinator.tryBegin(this, ProjectOperationCoordinator.Kind.UNDERLAY_MIGRATION)
