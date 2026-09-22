@@ -20,7 +20,7 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.25` / `versionCode` 219; Lisa Debug
+Состояние форка: Lisa/Belka Release `3.1.2.26` / `versionCode` 220; Lisa Debug
 `3.1.2.22` / `versionCode` 217. Сверено с официальным приложением `3.2.0` и с
 головами официальных библиотек на 14 сентября 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
@@ -78,6 +78,11 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 (диагностическая версия `3.1.2.25`) и maplibui PR #23
 [`6dadbd7a`](https://github.com/GeonicalSys/android_maplibui/commit/6dadbd7a91745ba5e21dcbdbb2d71e22308540ec)
 (меню во время записи показывает завершение трека, а не «не записывается»).
+Выпуск `3.1.2.26` закрепляет Merge Commit maplib PR #36
+[`f9ab155`](https://github.com/GeonicalSys/android_maplib/commit/f9ab1550cffb41088fbb4f8970f964b422f533ce)
+(диагностическая версия `3.1.2.26`) и maplibui PR #24
+[`d79f2e98`](https://github.com/GeonicalSys/android_maplibui/commit/d79f2e98c4afd42967c68920e0a936733f378779)
+(кнопка трека, отказ старта без системной геопозиции и аварийный сброс обхода).
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -1440,4 +1445,4 @@ Sentry оставлен для production crashes, но сбор interaction bre
 exporter старого доверенного Debug проверяется по установленной Activity,
 поэтому запуск и хранилище подложек показывают предложение обновления.
 
-Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #35 `08df9be` и maplibui #23 `6dadbd7a`; выпуск Lisa/Belka `3.1.2.25` / `219`, Debug `3.1.2.22` / `217`.
+Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #36 `f9ab155` и maplibui #24 `d79f2e98`; выпуск Lisa/Belka `3.1.2.26` / `220`, Debug `3.1.2.22` / `217`.
