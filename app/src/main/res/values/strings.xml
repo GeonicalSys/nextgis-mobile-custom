@@ -159,9 +159,9 @@
     <string name="permissions">Permissions</string>
 
     <string name="location_permissions">NextGIS Mobile requires location permission to show your location on the map.</string>
-    <string name="account_permissions">NextGIS Mobile needs access to contacts to create and manage Web GIS Accounts further used for syncronization purposes.</string>
+    <string name="account_permissions">Allow access to device accounts so Web GIS sign-in and synchronization can work. The app does not read your contacts.</string>
+    <string name="permission_open_settings">Open app settings</string>
     <string name="memory_permissions">NextGIS Mobile uses media files access to create attachments (like photos) to map features.</string>
-    <string name="push_permissions">NextGIS Mobile uses notifications to inform about data syncing data activities.</string>
 
     <string name="action_support">Support</string>
     <string name="app_support">Please send us questions, bug-reports and new features suggestions. Commercial support is available.</string>

@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-09-21
+last_verified: 2026-09-22
 related_code:
   - app/build.gradle
   - app/src/main
@@ -20,7 +20,7 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.23` / `versionCode` 217; Lisa Debug
+Состояние форка: Lisa/Belka Release `3.1.2.24` / `versionCode` 218; Lisa Debug
 `3.1.2.22` / `versionCode` 217. Сверено с официальным приложением `3.2.0` и с
 головами официальных библиотек на 14 сентября 2026 года. В частности, учтён
 официальный выпуск `3.2.0`
@@ -67,6 +67,12 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 (имя и прогресс импорта подложки из файла) и maplibui PR #21
 [`5fb72ee8`](https://github.com/GeonicalSys/android_maplibui/commit/5fb72ee8159ec22fb87d3c1dfef09f8d0d96b163)
 (список загрузки проекта, перенос длинных имён Веб ГИС и имя NGRc-подложки).
+Выпуск `3.1.2.24` закрепляет Merge Commit maplib PR #34
+[`5100feb`](https://github.com/GeonicalSys/android_maplib/commit/5100feb6caf89e09629eebbeae6933ddb364c47c)
+(диагностическая версия `3.1.2.24`) и maplibui PR #22
+[`dffe7079`](https://github.com/GeonicalSys/android_maplibui/commit/dffe70790db66cfbe2c174495f9524d644485ab3)
+(запись трека и обхода только location foreground service и явное сообщение,
+если запись не стартовала).
 
 - GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);
 - NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);
@@ -77,6 +83,11 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 Все четыре official HEAD повторно проверены 14 сентября 2026 года через
 канонические GitHub repositories. Release tag и feature-коммиты MBTiles
 рассматриваются отдельно от приведённых baseline hashes форка.
+22 сентября повторно проверены HEAD официального приложения `482f26f` и
+`android_maplibui` `8b89a9a` перед изменением foreground-записи и проверки
+разрешений; это исправление не меняет перечисленные базовые отличия форка.
+Проверка разрешений на входе не включает уведомления: их запрос остаётся
+контекстным при включении функции в настройках.
 
 Для доработки sync/ANR все четыре HEAD повторно сверены через `git ls-remote`
 18 сентября 2026 года: hashes выше не изменились. Прочитанные official
@@ -1412,4 +1423,4 @@ Sentry оставлен для production crashes, но сбор interaction bre
 exporter старого доверенного Debug проверяется по установленной Activity,
 поэтому запуск и хранилище подложек показывают предложение обновления.
 
-Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #33 `d6fde46` и maplibui #21 `5fb72ee8`; выпуск Lisa/Belka `3.1.2.23` / `217`, Debug `3.1.2.22` / `217`.
+Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #34 `5100feb` и maplibui #22 `dffe7079`; выпуск Lisa/Belka `3.1.2.24` / `218`, Debug `3.1.2.22` / `217`.

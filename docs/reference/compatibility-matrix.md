@@ -1,7 +1,7 @@
 ---
 title: Матрица совместимости
 type: reference
-last_verified: 2026-09-21
+last_verified: 2026-09-22
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -13,7 +13,7 @@ related_code:
 
 | Связка | Статус |
 |---|---|
-| app `3.1.2.23` ↔ maplib `3.1.2.23` (release) | Подготовленный Lisa/Belka Release |
+| app `3.1.2.24` ↔ maplib `3.1.2.24` (release) | Подготовленный Lisa/Belka Release |
 | app `3.1.2.22` ↔ maplib `3.1.2.22` (debug) | Подготовленный Lisa Debug |
 | app ↔ maplibui pointer из root | Проверять совместной сборкой |
 | maplibui ↔ maplib pointer из root | Публичный API проверять compile + smoke |

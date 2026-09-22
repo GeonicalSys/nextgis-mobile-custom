@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-09-21
+last_verified: 2026-09-22
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -27,7 +27,14 @@ related_code:
 Существующий `track_recording_enabled` также разрешает фоновое обновление
 текущего трека из GPS callback карты. Нового preference нет; default `false`,
 восстановление записи и явный Stop сохраняются, SQLite на GPS/main thread не
-используется для определения этого состояния.
+используется для определения этого состояния. Этот флаг означает намерение,
+а не факт успешного запуска: меню показывает активную запись только после
+подтверждения foreground service и созданной строки трека. Маркеры
+`permission_requested_*` позволяют при повторном отказе предложить системные
+настройки приложения вместо бесполезного повторного Android prompt.
+`POST_NOTIFICATIONS` не входит в эту обязательную цепочку и не проверяется
+при запуске карты или возврате в неё. Разрешение запрашивается только при
+включении функции уведомлений в настройках.
 
 - Key/default в constants, XML и runtime fallback должны совпадать.
 - Новый preference получает owner, type, default, UI/source и migration note.
