@@ -73,6 +73,13 @@
             android:iconSpaceReserved="false"
             android:singleLineTitle="false"
             />
+        <Preference
+            app:iconSpaceReserved="false"
+            android:key="reset_stuck_walk"
+            android:title="@string/walk_emergency_reset"
+            android:summary="@string/walk_emergency_reset_summary"
+            android:singleLineTitle="false"
+            />
         <CheckBoxPreference
             app:iconSpaceReserved="false"
             android:defaultValue="true"

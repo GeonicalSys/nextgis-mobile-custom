@@ -130,6 +130,7 @@ import com.nextgis.maplibui.util.WalkSessionStore
 import com.nextgis.maplibui.util.FeatureFormDraftStore
 import com.nextgis.maplibui.util.LayerUtil
 import com.nextgis.maplibui.util.WalkSessionPolicy
+import com.nextgis.maplibui.util.WalkSessionRecoveryPolicy
 import com.nextgis.maplibui.view.WalkRecordingPanel
 import com.nextgis.maplibui.util.ConstantsUI
 import com.nextgis.maplibui.util.ControlHelper
@@ -141,6 +142,7 @@ import com.nextgis.mobile.R
 import com.nextgis.mobile.activity.MainActivity
 import com.nextgis.mobile.util.AppConstants
 import com.nextgis.mobile.util.AppSettingsConstants
+import com.nextgis.mobile.util.WalkEmergencyReset
 import com.nextgis.mobile.stakeout.StakeoutController
 import com.nextgis.mobile.stakeout.StakeoutSettings
 import com.nextgis.mobile.stakeout.MagneticAzimuthCalculator
@@ -250,6 +252,7 @@ public class MapFragment
     protected var mivZoomOut: FloatingActionButton? = null
     protected var mRuler: FloatingActionButton? = null
     protected var mAzimuth: FloatingActionButton? = null
+    private var trackStatusButton: FloatingActionButton? = null
     protected var mAddNewGeometry: FloatingActionButton? = null
     protected var mAddPointButton: FloatingActionButton? = null
 
@@ -483,6 +486,9 @@ public class MapFragment
         mRuler?.setOnClickListener(this)
         mAzimuth = view.findViewById(R.id.action_azimuth)
         mAzimuth?.setOnClickListener(this)
+        trackStatusButton = view.findViewById(R.id.action_track_status)
+        trackStatusButton?.setOnClickListener { mActivity?.toggleTrackRecordingFromMap() }
+        refreshTrackStatusButton()
 
         val addGeometryByWalk = view.findViewById<View>(R.id.add_geometry_by_walk)
         addGeometryByWalk.setOnClickListener(this)
@@ -533,6 +539,31 @@ public class MapFragment
         drawScaleRuler()
 
         return view
+    }
+
+    fun refreshTrackStatusButton() {
+        val ctx = context ?: return
+        val button = trackStatusButton ?: return
+        val state = TrackerService.getRecordingState(ctx)
+        val icon = if (state == TrackerService.RecordingState.RECORDING)
+            com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec
+        else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
+        val title = when (state) {
+            TrackerService.RecordingState.STOPPED -> com.nextgis.maplibui.R.string.track_start
+            TrackerService.RecordingState.STARTING -> com.nextgis.maplibui.R.string.track_pending
+            TrackerService.RecordingState.RECORDING -> com.nextgis.maplibui.R.string.track_stop
+            TrackerService.RecordingState.ERROR -> com.nextgis.maplibui.R.string.track_error
+        }
+        val color = when (state) {
+            TrackerService.RecordingState.STOPPED -> R.color.track_state_stopped
+            TrackerService.RecordingState.STARTING -> R.color.track_state_starting
+            TrackerService.RecordingState.RECORDING -> R.color.track_state_recording
+            TrackerService.RecordingState.ERROR -> R.color.track_state_error
+        }
+        button.setIcon(icon)
+        button.setColorNormal(ContextCompat.getColor(ctx, color))
+        button.contentDescription = getString(title)
+        button.setTitle(getString(title))
     }
 
     override fun changeProgress(show: Boolean) {
@@ -2605,18 +2636,54 @@ public class MapFragment
         return adopted
     }
 
-    fun hasInterruptedWalkDraft(): Boolean {
+    fun reconcileWalkSessionAtStartup(): WalkSessionRecoveryPolicy.Action {
+        val ctx = context ?: return WalkSessionRecoveryPolicy.Action.KEEP
+        val session = WalkSessionStore.load(ctx)
+        if (session == null) {
+            return if (WalkEditService.hasValidDraft(ctx)
+                && (mode != MODE_EDIT_BY_WALK || !WalkEditService.isServiceRunning(ctx)))
+                WalkSessionRecoveryPolicy.Action.OFFER_CONTINUE_OR_DISCARD
+            else WalkSessionRecoveryPolicy.Action.KEEP
+        }
+        val action = WalkSessionRecoveryPolicy.decide(
+            WalkSessionStore.isCurrentMap(ctx, session),
+            WalkEditService.isSessionRunning(session.id),
+            session.isPointActive,
+            session.phase,
+            session.revision,
+            session.updatedAt
+        )
+        when (action) {
+            WalkSessionRecoveryPolicy.Action.DISCARD_UNCONFIRMED -> {
+                if (WalkSessionStore.clearUnconfirmedStart(ctx, session.id)) {
+                    HyperLog.w(Constants.TAG, "WalkRecovery cleared unconfirmed start")
+                    pointSessionId = null
+                    walkPanel?.refresh()
+                    if (mode == MODE_EDIT_BY_WALK) setNewMode(MODE_NORMAL)
+                } else {
+                    return if (WalkSessionStore.isCurrentMap(ctx, session))
+                        WalkSessionRecoveryPolicy.Action.OFFER_CONTINUE_OR_DISCARD
+                    else WalkSessionRecoveryPolicy.Action.OFFER_FOREIGN_MAP_RESET
+                }
+            }
+            WalkSessionRecoveryPolicy.Action.FINALIZE_FINISHING -> {
+                WalkSessionStore.setPhase(ctx, session.id, WalkSessionPolicy.Phase.FINISHED)
+                walkPanel?.refresh()
+            }
+            else -> Unit
+        }
+        return action
+    }
+
+    fun emergencyDiscardWalkState(): Boolean {
         val ctx = context ?: return false
-        // Independent sessions expose their actual service/GPS state in the panel.
-        // A point form, camera or cold map renderer is not a recording interruption.
-        if (WalkSessionStore.load(ctx) != null) return false
-        if (!WalkEditService.hasValidDraft(ctx))
-            return false
-        /*
-         * START_STICKY can restart the service before MainActivity resumes.  That is still an
-         * interrupted UI session when no walk editor is attached, and must go through the hub.
-         */
-        return mode != MODE_EDIT_BY_WALK || !WalkEditService.isServiceRunning(ctx)
+        val discarded = WalkEmergencyReset.reset(ctx)
+        pointSessionId = null
+        walkInterruptPromptShown = false
+        crashRecoveryWalkDialogShown = false
+        walkPanel?.refresh()
+        if (mode == MODE_EDIT_BY_WALK) setNewMode(MODE_NORMAL)
+        return discarded
     }
 
     /** Pause a sticky service that has no attached walk editor while the hub awaits a decision. */
@@ -3218,6 +3285,7 @@ public class MapFragment
         changeProgress(progressStyling)
 
         walkPanel?.refresh()
+        refreshTrackStatusButton()
         checkWalkServiceWatchdog()
 
 

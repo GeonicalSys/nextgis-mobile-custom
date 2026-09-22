@@ -82,6 +82,7 @@ import com.nextgis.mobile.util.AppUpdateManager;
 import com.nextgis.mobile.util.CustomPreference;
 import com.nextgis.mobile.util.IntEditTextPreference;
 import com.nextgis.mobile.util.SelectMapPathPreference;
+import com.nextgis.mobile.util.WalkEmergencyReset;
 import com.nextgis.mobile.stakeout.StakeoutSettings;
 
 import org.json.JSONArray;
@@ -133,6 +134,8 @@ public class SettingsFragment
                 final Preference reset =
                         findPreference(SettingsConstantsUI.KEY_PREF_RESET_SETTINGS);
                 initializeReset(getActivity(), reset);
+                final Preference resetWalk = findPreference(WalkEmergencyReset.KEY_PREFERENCE);
+                initializeWalkEmergencyReset(getActivity(), resetWalk);
                 final Preference notify =
                         findPreference(SettingsConstantsUI.KEY_PREF_SHOW_SYNC);
                 initializeNotification(getActivity(), notify);
@@ -390,6 +393,40 @@ public class SettingsFragment
                 }
             });
         }
+    }
+
+    public static void initializeWalkEmergencyReset(
+            final Activity activity, final Preference preference) {
+        if (activity == null || preference == null) return;
+        boolean active = WalkEmergencyReset.hasState(activity);
+        preference.setEnabled(active);
+        preference.setSummary(active
+                ? com.nextgis.maplibui.R.string.walk_emergency_reset_summary
+                : com.nextgis.maplibui.R.string.walk_emergency_reset_empty);
+        preference.setOnPreferenceClickListener(clicked -> {
+            if (!WalkEmergencyReset.hasState(activity)) {
+                clicked.setEnabled(false);
+                clicked.setSummary(com.nextgis.maplibui.R.string.walk_emergency_reset_empty);
+                return true;
+            }
+            new AlertDialog.Builder(activity)
+                    .setTitle(com.nextgis.maplibui.R.string.walk_emergency_reset)
+                    .setMessage(com.nextgis.maplibui.R.string.walk_emergency_reset_confirm)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(com.nextgis.maplibui.R.string.walk_emergency_reset,
+                            (dialog, which) -> {
+                                if (WalkEmergencyReset.reset(activity)) {
+                                    Toast.makeText(activity,
+                                            com.nextgis.maplibui.R.string.walk_emergency_reset_done,
+                                            Toast.LENGTH_LONG).show();
+                                }
+                                clicked.setEnabled(false);
+                                clicked.setSummary(
+                                        com.nextgis.maplibui.R.string.walk_emergency_reset_empty);
+                            })
+                    .show();
+            return true;
+        });
     }
 
 

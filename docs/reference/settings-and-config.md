@@ -152,6 +152,11 @@ fine permission. Native NMEA не требует Mock Location. См. [GPS pipel
 durable checkpoint до запуска Activity. Точные имена ключей определены в
 `WalkSessionStore`, сценарии — в [crash recovery](../architecture/crash-recovery.md).
 
+Пункт «Сбросить зависший обход» в общих настройках — действие, а не сохраняемая
+настройка. Он активен только при наличии состояния обхода и после подтверждения
+удаляет `walkedit_temp` и принадлежащий этому обходу checkpoint формы. Другие
+черновики, проекты, слои, объекты и учётные записи не сбрасываются.
+
 ## Хранилище подложек
 
 В общих настройках `shared_underlays` открывает каталог с использованием по проектам. Удаление payload требует подтверждения списка проектов; обычное удаление слоя означает только «Убрать из проекта». Сброс настроек не удаляет каталог. Внутренние `shared_underlay_id`, `shared_underlay_migration` и `debug_companion_install` описаны в [контракте](../architecture/shared-underlays.md).
