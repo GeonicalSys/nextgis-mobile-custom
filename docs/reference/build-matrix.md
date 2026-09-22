@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-09-21
+last_verified: 2026-09-22
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -21,11 +21,11 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `217` |
-| App versionName (release) | `3.1.2.23` |
+| App versionCode (release) | `218` |
+| App versionName (release) | `3.1.2.24` |
 | App versionCode (debug) | `217` |
 | App versionName (debug) | `3.1.2.22` |
-| maplib VERSION_NAME (release) | `3.1.2.23` |
+| maplib VERSION_NAME (release) | `3.1.2.24` |
 | maplib VERSION_NAME (debug) | `3.1.2.22` |
 | MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |

@@ -10,6 +10,9 @@ related_code:
 
 ## 2026-09-22
 
+- Подготовлен выпуск Lisa/Belka `3.1.2.24` / `versionCode 218`. Lisa Debug
+  остаётся `3.1.2.22` / `versionCode 217`. Root закрепляет Merge Commit maplib
+  PR #34 `5100feb` и maplibui PR #22 `dffe7079`.
 - По логу отказа Android 14/target 36 запись трека и обход объявляют и запускают
   только location foreground service. Отказ запуска трека теперь виден в меню и
   сопровождается предупреждением, без выдачи намерения за реальную запись.
