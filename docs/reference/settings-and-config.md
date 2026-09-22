@@ -32,6 +32,9 @@ related_code:
 подтверждения foreground service и созданной строки трека. Маркеры
 `permission_requested_*` позволяют при повторном отказе предложить системные
 настройки приложения вместо бесполезного повторного Android prompt.
+`POST_NOTIFICATIONS` не входит в эту обязательную цепочку и не проверяется
+при запуске карты или возврате в неё. Разрешение запрашивается только при
+включении функции уведомлений в настройках.
 
 - Key/default в constants, XML и runtime fallback должны совпадать.
 - Новый preference получает owner, type, default, UI/source и migration note.

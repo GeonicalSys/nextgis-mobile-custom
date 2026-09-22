@@ -160,7 +160,6 @@
     <string name="account_permissions">Разрешите доступ к учётным записям устройства для входа и синхронизации Веб-ГИС. Приложение не читает контакты.</string>
     <string name="permission_open_settings">Открыть настройки приложения</string>
     <string name="memory_permissions">NextGIS Mobile использует доступ к медиафайлам для прикрепления вложений (например фото) к объектам карты.</string>
-    <string name="push_permissions">NextGIS Mobile использует уведомления для информирования о действиях по синхронизации данных.</string>
 
 
     <string name="track_restore">Продолжать трек после перезагрузки</string>

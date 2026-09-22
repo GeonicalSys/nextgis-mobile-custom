@@ -267,25 +267,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             if (!isFinishing && !isDestroyed) processAllPermisions(PERMISSIONS_REQUEST_ZERO)
         }, 1500)
 
-        //        if (!hasLocationPermissions()) {
-//            List<String> permslist = new ArrayList<>();
-//            permslist.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-//            permslist.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        /*            permslist.add(Manifest.permission.GET_ACCOUNTS);
-        * /            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
-        * /                permslist.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        * /
-        * /            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2)
-        * /                permslist.add(Manifest.permission.POST_NOTIFICATIONS); */
-//
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    requestPermissions(R.string.permissions, R.string.location_permissions, PERMISSIONS_REQUEST_LOC, permslist.toArray(new String[permslist.size()])); // list.toArray(new Foo[list.size()])
-//                }
-//            }, 5000);
-//
-//        }
         NGIDUtils.get(this) { response ->
             if (response.isOk) {
                 var support = getExternalFilesDir(null)
@@ -429,15 +410,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             return
         }
         if (startlevel == PERMISSIONS_REQUEST_MEMORY) {
-            if (!hasNotifyPermissions()) {
-                val permslist: MutableList<String> = ArrayList()
-                permslist.add(Manifest.permission.POST_NOTIFICATIONS)
-                requestPermissions(
-                    this, R.string.permissions, R.string.push_permissions, PERMISSIONS_REQUEST_PUSH,
-                    -1,
-                    *permslist.toTypedArray<String>()
-                ) // list.toArray(new Foo[list.size()])
-            }
+            // Notifications are optional and requested only for notification features.
+            return
         }
     }
 
@@ -454,11 +428,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     protected fun hasSDCARDWritePermissions(): Boolean {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        else true
-    }
-
-    protected fun hasNotifyPermissions(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) isPermissionGranted(Manifest.permission.POST_NOTIFICATIONS)
         else true
     }
 
@@ -484,11 +453,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
             PERMISSIONS_REQUEST_ACCOUNT -> processAllPermisions(PERMISSIONS_REQUEST_ACCOUNT)
             PERMISSIONS_REQUEST_MEMORY -> processAllPermisions(PERMISSIONS_REQUEST_MEMORY)
-            PERMISSIONS_REQUEST_PUSH -> {
-                // Notification permission alone must not enable sync notifications;
-                // that remains the user toggle KEY_PREF_SHOW_SYNC (default false).
-            }
-
             LOCATION_BACKGROUND_REQUEST -> {
                 if (mTrackItem != null)
                     controlTrack(mTrackItem)
@@ -1998,7 +1962,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         protected const val PERMISSIONS_REQUEST_LOC: Int = 1
         protected const val PERMISSIONS_REQUEST_ACCOUNT: Int = 2
         protected const val PERMISSIONS_REQUEST_MEMORY: Int = 3
-        protected const val PERMISSIONS_REQUEST_PUSH: Int = 4
 
         protected const val PERMISSIONS_REQUEST_LOC_SILENT: Int = 6
         const val LOCATION_BACKGROUND_REQUEST: Int = 5

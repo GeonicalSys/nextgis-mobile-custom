@@ -456,6 +456,7 @@ tests:
       - Simulate a foreground permission or SQLite insert failure; verify an immediate warning, a non-recording menu label and no fabricated GPS points
       - Fail one trackpoint insert after recording started, then restore storage; verify warning and non-recording menu until the next successful point, without deleting earlier points
       - Deny device-account access while location is granted, restart, then deny twice and return from app settings; verify the account request is not skipped and granted permission is rechecked
+      - Deny POST_NOTIFICATIONS and reopen the map; verify startup and settings-return permission checks do not ask for notifications, while opting into sync notifications in Settings can request them
       - Start a track on the visible map, turn the screen off, move, then reopen where GNSS is unavailable
       - Verify current Network position and its metric accuracy circle; block all sources and wait over eight seconds
       - Grant approximate location only; verify map fallback and that track/walk cannot record Network
