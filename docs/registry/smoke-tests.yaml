@@ -336,6 +336,8 @@ tests:
     steps:
       - Start track recording, Force Stop or reboot, reopen app
       - Start walk digitizing a line, swipe the app away while editing geometry, reopen it even if Android has already restarted WalkEditService
+      - Simulate a walk owner at initial revision with no persisted snapshot and no running service, then reopen the app
+      - Leave a persisted walk owned by another project, switch projects, reopen, choose emergency reset, and verify General settings offers the same reset while state exists
       - On a cold start press walk Continue immediately, before map layers or edit sources finish loading
       - Draw a polygon manually, append it by walk from a middle node, swipe the app away, choose Continue, receive more GPS fixes, then Stop the walk
       - After restoring the walk, verify no second manual-geometry recovery prompt is offered for the same sketch
@@ -365,7 +367,9 @@ tests:
       Save persists and returns to the correct layer without depending on the pre-crash map
       selection or crashing; the newly inserted geometry appears on the map without an app
       restart, and Discard clears the draft. Saving a new point with unchanged
-      defaults never creates or re-offers an attribute-form draft.
+      defaults never creates or re-offers an attribute-form draft. An unacknowledged empty
+      walk start is removed silently; a real foreign-map owner is never hidden and its
+      confirmed emergency reset clears only walk-owned transient state.
   SMOKE-SYNC-OFF-CONFIG:
     type: device
     scope: [maplib, maplibui]
@@ -452,6 +456,8 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
+      - Turn Android system location off and tap the walking-person track button under the ruler; verify the Location settings prompt and no tracker service or new track row
+      - Turn system location on, tap the same button to start and stop, and verify its starting/recording/stopped colors and labels without opening another screen
       - On Android 14+ deny Bluetooth permissions, grant fine location and start a track; confirm a new track row and notification before the menu says recording
       - Simulate a foreground permission or SQLite insert failure; verify an immediate warning, a non-recording menu label and no fabricated GPS points
       - Fail one trackpoint insert after recording started, then restore storage; verify warning and non-recording menu until the next successful point, without deleting earlier points
@@ -483,7 +489,9 @@ tests:
       - With native External GNSS selected, Home/screen-off for 30 s then reopen: HUD must not flash connecting; verbose log must not record External GNSS closed on onPause
       - During stakeout on a live receiver fix, the widget must not flash Waiting for GPS solely because the GNSS timestamp is slightly in the future or because GGA repeats every 5 s
     expected: >
-      The map shows only a current source with an honest accuracy radius and clears both marker
+      System location off blocks an interactive start before durable recording intent changes;
+      the map button only toggles Start/Stop and reflects confirmed recorder state. The map
+      shows only a current source with an honest accuracy radius and clears both marker
       and circle on expiry. No network fix, camera anchor, cached final snap or unrecorded preview
       enters geometry. Walking and legal vehicle movement retain turns without stationary drift
       or isolated large jumps. GPS gaps remain separate map/Canvas/GPX segments; walk pause and

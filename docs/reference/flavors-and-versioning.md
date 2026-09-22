@@ -57,7 +57,7 @@ production APK не может обновить пакет Debug и не пол�
 
 ## Версия
 
-- Подготовленный выпуск: Lisa/Belka Release `3.1.2.25` / `versionCode 219`,
+- Подготовленный выпуск: Lisa/Belka Release `3.1.2.26` / `versionCode 220`,
   Lisa Debug использует `3.1.2.22` / `versionCode 217`; maplib сообщает соответствующее
   variant-specific значение.
 - `versionName = <upstream-base>.<fork-patch>`.

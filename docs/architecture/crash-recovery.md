@@ -36,7 +36,8 @@ lost.
 | GPS validation | Shared `LocationTrackFilter` retains valid movement through 160 km/h, rejects invalid/old/inaccurate fixes and isolated material spikes, and drains its delayed two-fix buffer on stop or before a long-gap segment reset |
 | Provider ownership | Application-owned GpsEventSource; GPS (chip, mock or native NMEA) for display with Network only as GPS-absent fallback; GNSS chip, mock receiver extras or native NMEA for track/walk recording |
 | GPS gaps | Database v6 persists trackpoints.segment; gaps survive map reload and GPX export. Walk stores gps_paused and requires explicit reconnection |
-| Recording flag | Durable preference `track_recording_enabled` is intent, not proof of an active service or track row. The menu shows a non-recording state until confirmed and during point-write failure; a successful later insert restores the active indication. Explicit Stop clears intent, while a foreground/SQLite failure warns without deleting unfinished data. |
+| Recording flag | Durable preference `track_recording_enabled` is intent, not proof of an active service or track row. The menu and the walking-person button under the ruler distinguish Start, Starting, Recording and Error; neither shows a false active state before service confirmation. Explicit Stop clears intent, while a foreground/SQLite failure warns without deleting unfinished data. |
+| System location | Interactive Start is rejected before changing durable intent when Android system location is off. The app explains the requirement and opens Location settings; the service repeats the check to close lifecycle races. |
 | Process ordering | `TrackerService` runs in the default application process. The toolbar Start lifecycle therefore executes before a later toolbar Stop, and both sides observe one in-process preference state; a stale delayed Start is rejected if the durable flag is already off |
 | After reboot / cold start | `BootLoader` and `MainActivity` call `TrackerService.ensureRecordingRunningIfEnabled()` — silent auto-start, no dialog |
 | Continuity of track id | Not required. Closing unfinished tracks and starting a new id after a crash is allowed; previous points remain in SQLite / on the map |
@@ -68,6 +69,8 @@ Resume, Finish, Show and Discard actions. A second walk cannot start.
 | Finish | A matching command changes RECORDING to FINISHING; the service flushes its validated tail, persists full geometry and acknowledges FINISHED before the UI opens manual editing/form. No new point can begin during this transition |
 | Final save | The walk draft is retained through validation/form errors and cleared after successful feature Save; cancelling final editing keeps the finished draft available |
 | Unexpected end | Service death keeps the private geometry. Sticky recovery with existing vertices pauses insertion; the panel offers explicit Resume/Discard. FINISHING recovers as FINISHED, never as a new recording |
+| Startup reconciliation | A RECORDING owner at initial revision with no service, point lock or persisted snapshot is an unacknowledged start and is removed silently. A stopped owner with a real snapshot is offered Continue/Discard. A session belonging to another map is never hidden: startup offers an emergency reset. |
+| Emergency reset | General settings expose a confirmed reset that releases a point lock, stops the matching service and removes only `walkedit_temp` plus a walk-owned form checkpoint. Projects, layers, features, accounts and unrelated drafts are untouched. |
 | Owner validation | Commands carry the session UUID and check map identity, phase and point lock. Old notification intents cannot control a later walk |
 | Layer/project protection | The active walk and point layers (and containing groups) are reserved against removal/rebuild. Project-changing operations are deferred while a session owns geometry |
 | Legacy draft | The previous part-only journal is reconstructed using its owning feature, adopted once into the full-geometry store, and shown through the panel; a live legacy service adopts the UUID without resetting GNSS |
@@ -78,6 +81,7 @@ not stop the recorder when its view is destroyed. No pending raw location is
 used to extend the preview or final geometry.
 
 Key types: `WalkEditService`, `WalkSessionStore`, `WalkSessionPolicy`,
+`WalkSessionRecoveryPolicy`,
 `WalkGeometrySnapshot`, `WalkRecordingPanel`, `MapFragment`, `MapDrawable`.
 
 ## Manual geometry editing (vertices / taps)
@@ -130,8 +134,11 @@ Order after map resume:
 
 1. Track auto-start if its durable recording flag is enabled.
 2. An owned point/final-walk form checkpoint takes precedence over a duplicate geometry handoff checkpoint.
-3. Legacy interrupted walk reconstruction, then manual geometry/form recovery as applicable.
-4. A point owner without a recoverable geometry/form offers explicit Continue/Discard; chooser recreation does not silently release the lock.
+3. Reconcile the durable walk owner: silently remove an unacknowledged empty start,
+   finalize an interrupted FINISHING transition, offer Continue/Discard for a real
+   stopped draft, or offer emergency reset when its map is not active.
+4. Legacy interrupted walk reconstruction, then manual geometry/form recovery as applicable.
+5. A point owner without a recoverable geometry/form offers explicit Continue/Discard; chooser recreation does not silently release the lock.
 
 The independent walk is displayed by its panel and passive map source. A point
 draft can coexist with that walk; two editors for the same transferred sketch

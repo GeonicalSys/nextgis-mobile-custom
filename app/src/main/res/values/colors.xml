@@ -25,4 +25,8 @@
     <color name="intro_indigo">#9900CF</color>
     <color name="intro_blue">#073F9E</color>
     <color name="intro_red">#FF5A58</color>
+    <color name="track_state_stopped">#757575</color>
+    <color name="track_state_starting">#EF6C00</color>
+    <color name="track_state_recording">#2E7D32</color>
+    <color name="track_state_error">#C62828</color>
 </resources>

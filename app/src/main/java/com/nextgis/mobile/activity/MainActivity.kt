@@ -163,6 +163,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     protected var mBackPressed: Long = 0
     protected var mTrackItem: MenuItem? = null
+    private var mapTrackTogglePending = false
     private val ngwUrlExecutor = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "NGWResourceUrl").apply { isDaemon = true }
     }
@@ -454,11 +455,21 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             PERMISSIONS_REQUEST_ACCOUNT -> processAllPermisions(PERMISSIONS_REQUEST_ACCOUNT)
             PERMISSIONS_REQUEST_MEMORY -> processAllPermisions(PERMISSIONS_REQUEST_MEMORY)
             LOCATION_BACKGROUND_REQUEST -> {
-                if (mTrackItem != null)
-                    controlTrack(mTrackItem)
-                if (mTrackItem == null)
-                    checkBatteryOptimize()
+                val locationReady = com.nextgis.maplib.util.PermissionUtil
+                    .hasLocationPermissions(this)
+                val backgroundReady = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
+                    com.nextgis.maplib.util.PermissionUtil.hasBackgroundLocationPermissions(this)
+                if (locationReady && backgroundReady) {
+                    if (mTrackItem != null || mapTrackTogglePending)
+                        controlTrack(mTrackItem)
+                    else
+                        checkBatteryOptimize()
+                } else if (locationReady) {
+                    askBackgroundPerm(mTrackItem)
+                    return
+                }
                 mTrackItem = null
+                mapTrackTogglePending = false
             }
 
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -520,10 +531,16 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
 
     private fun controlTrack(item: MenuItem?) {
-        if (item != null) {
-            val iconAndTitle = TrackerService.start_stop_tracking_GetIconWithTitle(this)
+        val iconAndTitle = TrackerService.start_stop_tracking_GetIconWithTitle(this)
+        if (item != null)
             setTrackItem(item, iconAndTitle.second, iconAndTitle.first)
-        }
+        mapFragment?.refreshTrackStatusButton()
+        invalidateOptionsMenu()
+    }
+
+    fun toggleTrackRecordingFromMap() {
+        mapTrackTogglePending = true
+        askBackgroundPerm(null)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -610,6 +627,22 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     public fun askBackgroundPerm(item: MenuItem?) {
+        if (!TrackerService.isSystemLocationEnabled(this)) {
+            mapTrackTogglePending = false
+            mTrackItem = null
+            mapFragment?.refreshTrackStatusButton()
+            android.app.AlertDialog.Builder(this)
+                .setTitle(com.nextgis.maplibui.R.string.recording_location_disabled_title)
+                .setMessage(com.nextgis.maplibui.R.string.recording_location_disabled_message)
+                .setPositiveButton(com.nextgis.maplibui.R.string.action_settings) { _, _ ->
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+            return
+        }
+        if (item != null) mTrackItem = item
+        val toggleTrack = item != null || mapTrackTogglePending
         TrackerService.showBackgroundDialog(this, object : BackgroundPermissionCallback {
             override fun beforeAndroid10(hasBackgroundPermission: Boolean) {
                 if (!hasBackgroundPermission) {
@@ -627,9 +660,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                         *permissions
                     )
                 } else {
-                    controlTrack(item)
-                    if (item == null) // byWalk
+                    if (toggleTrack) controlTrack(item)
+                    else
                         checkBatteryOptimize()
+                    mTrackItem = null
+                    mapTrackTogglePending = false
                 }
             }
 
@@ -639,9 +674,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                     mTrackItem = item
                     requestbackgroundLocationPermissions()
                 } else {
-                    controlTrack(item)
-                    if (item == null) // byWalk
+                    if (toggleTrack) controlTrack(item)
+                    else
                         checkBatteryOptimize()
+                    mTrackItem = null
+                    mapTrackTogglePending = false
                 }
             }
 
@@ -651,10 +688,18 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                     mTrackItem = item
                     requestbackgroundLocationPermissions()
                 } else {
-                    controlTrack(item)
-                    if (item == null) // byWalk
+                    if (toggleTrack) controlTrack(item)
+                    else
                         checkBatteryOptimize()
+                    mTrackItem = null
+                    mapTrackTogglePending = false
                 }
+            }
+
+            override fun onCancelled() {
+                mTrackItem = null
+                mapTrackTogglePending = false
+                mapFragment?.refreshTrackStatusButton()
             }
         })
     }
@@ -775,27 +820,54 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
         val map = mapFragment ?: return
         HyperLog.v(Constants.TAG, "CrashRecovery hub check started")
-        if (map.hasInterruptedWalkDraft()) {
-            crashRecoveryOffered = true
-            map.crashRecoveryWalkDialogShown = true
-            map.pauseInterruptedWalkForRecovery()
-            HyperLog.v(Constants.TAG, "CrashRecovery offering walk draft")
-            AlertDialog.Builder(this)
-                .setTitle(com.nextgis.maplibui.R.string.walkedit_interrupted_title)
-                .setMessage(com.nextgis.maplibui.R.string.walkedit_interrupted_message)
-                .setPositiveButton(com.nextgis.maplibui.R.string.walkedit_continue) { _, _ ->
-                    HyperLog.v(Constants.TAG, "CrashRecovery walk Continue selected")
-                    map.resumeWalkFromDraft()
-                    maybeOfferManualGeometryDraftRecovery()
-                }
-                .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
-                    HyperLog.v(Constants.TAG, "CrashRecovery walk Discard selected")
-                    map.discardWalkDraft()
-                    maybeOfferManualGeometryDraftRecovery()
-                }
-                .setCancelable(false)
-                .show()
-            return
+        when (map.reconcileWalkSessionAtStartup()) {
+            com.nextgis.maplibui.util.WalkSessionRecoveryPolicy.Action.DISCARD_UNCONFIRMED -> {
+                HyperLog.v(Constants.TAG, "CrashRecovery removed unconfirmed walk start")
+                maybeOfferManualGeometryDraftRecovery()
+                return
+            }
+            com.nextgis.maplibui.util.WalkSessionRecoveryPolicy.Action.FINALIZE_FINISHING -> {
+                HyperLog.v(Constants.TAG, "CrashRecovery finalized interrupted walk finish")
+                maybeOfferManualGeometryDraftRecovery()
+                return
+            }
+            com.nextgis.maplibui.util.WalkSessionRecoveryPolicy.Action.OFFER_FOREIGN_MAP_RESET -> {
+                crashRecoveryOffered = true
+                AlertDialog.Builder(this)
+                    .setTitle(com.nextgis.maplibui.R.string.walk_emergency_reset)
+                    .setMessage(com.nextgis.maplibui.R.string.walk_foreign_map_message)
+                    .setPositiveButton(com.nextgis.maplibui.R.string.walk_emergency_reset) { _, _ ->
+                        map.emergencyDiscardWalkState()
+                        maybeOfferManualGeometryDraftRecovery()
+                    }
+                    .setNegativeButton(com.nextgis.maplibui.R.string.walk_keep, null)
+                    .setCancelable(false)
+                    .show()
+                return
+            }
+            com.nextgis.maplibui.util.WalkSessionRecoveryPolicy.Action.OFFER_CONTINUE_OR_DISCARD -> {
+                crashRecoveryOffered = true
+                map.crashRecoveryWalkDialogShown = true
+                map.pauseInterruptedWalkForRecovery()
+                HyperLog.v(Constants.TAG, "CrashRecovery offering walk draft")
+                AlertDialog.Builder(this)
+                    .setTitle(com.nextgis.maplibui.R.string.walkedit_interrupted_title)
+                    .setMessage(com.nextgis.maplibui.R.string.walkedit_interrupted_message)
+                    .setPositiveButton(com.nextgis.maplibui.R.string.walkedit_continue) { _, _ ->
+                        HyperLog.v(Constants.TAG, "CrashRecovery walk Continue selected")
+                        map.resumeWalkFromDraft()
+                        maybeOfferManualGeometryDraftRecovery()
+                    }
+                    .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
+                        HyperLog.v(Constants.TAG, "CrashRecovery walk Discard selected")
+                        map.discardWalkDraft()
+                        maybeOfferManualGeometryDraftRecovery()
+                    }
+                    .setCancelable(false)
+                    .show()
+                return
+            }
+            com.nextgis.maplibui.util.WalkSessionRecoveryPolicy.Action.KEEP -> Unit
         }
         maybeOfferManualGeometryDraftRecovery()
     }
@@ -1565,6 +1637,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 if (tAction == VALUE_TRACK_START || tAction == VALUE_TRACK_STOP
                     || tAction == VALUE_TRACK_FAILED || tAction == VALUE_TRACK_SAVE_FAILED)
                     invalidateOptionsMenu()
+                mapFragment?.refreshTrackStatusButton()
 
                 val batteryOK =  intent.getBooleanExtra(KEY_BATTERY, true)
 
@@ -1824,15 +1897,17 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         if (null != mLayersFragment && !mLayersFragment!!.isDrawerOpen) {
-            val recording = TrackerService.isTrackRecordingActive()
-            val pending = !recording && TrackerService.isTrackRecordingEnabled(this)
-            val title =
-                if (recording) com.nextgis.maplibui.R.string.track_stop
-                else if (pending) com.nextgis.maplibui.R.string.track_pending
-                else com.nextgis.maplibui.R.string.track_start
+            val state = TrackerService.getRecordingState(this)
+            val title = when (state) {
+                TrackerService.RecordingState.STOPPED -> com.nextgis.maplibui.R.string.track_start
+                TrackerService.RecordingState.STARTING -> com.nextgis.maplibui.R.string.track_pending
+                TrackerService.RecordingState.RECORDING -> com.nextgis.maplibui.R.string.track_stop
+                TrackerService.RecordingState.ERROR -> com.nextgis.maplibui.R.string.track_error
+            }
             val icon =
-                if (recording) com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
+                if (state == TrackerService.RecordingState.RECORDING) com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
             setTrackItem(menu.findItem(R.id.menu_track), title, icon)
+            mapFragment?.refreshTrackStatusButton()
         }
 
         if (mapFragment!!.isRulerMeasuring) showRulerToolbar()

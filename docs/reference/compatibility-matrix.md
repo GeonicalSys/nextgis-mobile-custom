@@ -13,7 +13,7 @@ related_code:
 
 | Связка | Статус |
 |---|---|
-| app `3.1.2.25` ↔ maplib `3.1.2.25` (release) | Подготовленный Lisa/Belka Release |
+| app `3.1.2.26` ↔ maplib `3.1.2.26` (release) | Подготовленный Lisa/Belka Release |
 | app `3.1.2.22` ↔ maplib `3.1.2.22` (debug) | Подготовленный Lisa Debug |
 | app ↔ maplibui pointer из root | Проверять совместной сборкой |
 | maplibui ↔ maplib pointer из root | Публичный API проверять compile + smoke |

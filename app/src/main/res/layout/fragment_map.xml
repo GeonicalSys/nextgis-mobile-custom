@@ -117,6 +117,18 @@
             fab:fab_addButtonPlusIconColor="@android:color/white"
             fab:fab_icon="@drawable/ic_ruler"
             fab:fab_size="mini"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_track_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/track_start"
+            fab:fab_addButtonColorNormal="?attr/colorPrimary"
+            fab:fab_addButtonColorPressed="?attr/colorAccent"
+            fab:fab_addButtonPlusIconColor="@android:color/white"
+            fab:fab_icon="@drawable/ic_action_maps_directions_walk"
+            fab:fab_size="mini"/>
     </LinearLayout>
 
     <FrameLayout
