@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-09-21
+last_verified: 2026-09-22
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -30,7 +30,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
     responsibility: Main-process initialization and logging; honour save_log or verbose_log for HyperLog export; create or adopt and activate the initial local project before GISApplication opens its first map, schedule same-workspace recovery for an interrupted account sync, except that a pre-registry Debug workspace is kept in place for explicit underlay streaming and does not schedule shared-catalog migration; create editable local vector layers and keep default OSM at internal index zero plus tracks at the top of the reversed layer list for every workspace.
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    responsibility: Main navigation and toolbar state for explicit map rotation/location recovery, ordered in-process track Start/Stop intent shared with TrackerService, local GeoJSON/KML/GPX file routing, shared-underlay import from Open local and New underlay from file with a human display name, photo-overlay and keep-screen-on default migration, ordered walk/manual-geometry/form crash-recovery hub, direct NGW resource URL resolution, Load project from the lisa catalog, name-only project picker that opens only after Open next to Cancel, with sync interruption warning/cancel and fill/track switch protection, backup sharing UI and updater continuation on activity resume.
+    responsibility: Main navigation, per-launch and settings-return runtime permission checks, confirmed versus pending track toolbar state and failure warning, map rotation/location recovery, local file and shared-underlay import, default migration, crash-recovery hub, NGW URL/project selection, sync interruption, backup sharing and updater continuation.
   - path: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
     responsibility: Choose Bluetooth Classic/LE, USB or TCP NMEA endpoint and persist gnss_input device keys without Mock Location.
   - path: app/src/main/res/xml/preferences_general.xml
@@ -96,7 +96,7 @@ public_contracts:
     symbol: MapFragment implements MaplibreMapInteraction
     path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     consumers: [maplib, maplibui]
-settings_refs: [feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, keep_screen_on, keep_screen_on_default_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, stakeout_declination_correction, background_recording_sound, check_updates, sw_track_service, apk_version_update, updater-pending-install, sync_recovery_journal, com.nextgis.mobile.PREFS_UNDERLAYS, debug_companion_install, shared_underlay_migration, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
+settings_refs: [feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, keep_screen_on, keep_screen_on_default_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, stakeout_declination_correction, background_recording_sound, permission_requested_marker, check_updates, sw_track_service, apk_version_update, updater-pending-install, sync_recovery_journal, com.nextgis.mobile.PREFS_UNDERLAYS, debug_companion_install, shared_underlay_migration, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
 storage_contracts:
   - id: updater-pending-install
     path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java

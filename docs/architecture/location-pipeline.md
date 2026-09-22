@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-09-18
+last_verified: 2026-09-22
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -53,7 +53,9 @@ GPS сама по себе такой lock не удерживает. Пока `
 endpoint, `ExternalGnssSession` не зависит от слушателей карты: сворачивание и
 сон не закрывают BT/USB/TCP. `ExternalGnssService` держит процесс как
 foreground `location|connectedDevice` с тихим уведомлением. Сервисы записи
-работают как foreground service типа location. Это обеспечивает обработку GPS и
+объявляют и явно запускают только foreground type `location`: иначе Android
+проверяет также предпосылки `connectedDevice` и отвергает запись ещё до
+создания трека или получения точек. Это обеспечивает обработку GPS и
 акселерометра при выключенном экране, но не позволяет обещать хорошее
 спутниковое измерение внутри здания. Старый хороший accuracy не подставляется
 вместо ухудшившегося нового.

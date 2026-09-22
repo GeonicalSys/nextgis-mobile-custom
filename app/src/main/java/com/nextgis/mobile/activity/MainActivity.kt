@@ -105,6 +105,8 @@ import com.nextgis.maplibui.util.ConstantsUI.KEY_BATTERY
 import com.nextgis.maplibui.util.ConstantsUI.KEY_TRACK_ACTION
 import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_POINT
 import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_START
+import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_FAILED
+import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_SAVE_FAILED
 import com.nextgis.maplibui.util.ConstantsUI.VALUE_TRACK_STOP
 import com.nextgis.maplibui.util.ControlHelper
 import com.nextgis.maplibui.util.CollectorProjectRegistry
@@ -169,6 +171,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     private var startupUpdateCheckPending = false
     private var crashRecoveryOffered = false
     private var companionCheckedThisLaunch = false
+    private var recheckPermissionsOnResume = false
     private val startupUpdateCheckRunnable = Runnable {
         if (isFinishing || isDestroyed || !hasWindowFocus() || AppUpdateManager.isBusyOrPending(this)) {
             return@Runnable
@@ -259,9 +262,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
         maybeShowCollectorProjectSelectorOnStartup()
 
-        if (!hasLocationPermissions()) {
-            Handler().postDelayed({ processAllPermisions(PERMISSIONS_REQUEST_ZERO) }, 1500)
-        }
+        // Check the whole permission chain, including Web GIS accounts, on every launch.
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (!isFinishing && !isDestroyed) processAllPermisions(PERMISSIONS_REQUEST_ZERO)
+        }, 1500)
 
         //        if (!hasLocationPermissions()) {
 //            List<String> permslist = new ArrayList<>();
@@ -403,7 +407,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                     R.string.permissions,
                     R.string.account_permissions,
                     PERMISSIONS_REQUEST_ACCOUNT,
-                    -1,
+                    PERMISSIONS_REQUEST_ACCOUNT,
                     *permslist.toTypedArray<String>()
                 ) // list.toArray(new Foo[list.size()])
             } else processAllPermisions(PERMISSIONS_REQUEST_ACCOUNT)
@@ -1584,6 +1588,19 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 if (tAction.equals(VALUE_TRACK_STOP) || tAction.equals(VALUE_TRACK_POINT)){
                     mapFragment?.reloadTracks()
                 }
+                if (tAction == VALUE_TRACK_FAILED) {
+                    Toast.makeText(this@MainActivity,
+                        com.nextgis.maplibui.R.string.track_start_failed,
+                        Toast.LENGTH_LONG).show()
+                }
+                if (tAction == VALUE_TRACK_SAVE_FAILED) {
+                    Toast.makeText(this@MainActivity,
+                        com.nextgis.maplibui.R.string.track_save_failed,
+                        Toast.LENGTH_LONG).show()
+                }
+                if (tAction == VALUE_TRACK_START || tAction == VALUE_TRACK_STOP
+                    || tAction == VALUE_TRACK_FAILED || tAction == VALUE_TRACK_SAVE_FAILED)
+                    invalidateOptionsMenu()
 
                 val batteryOK =  intent.getBooleanExtra(KEY_BATTERY, true)
 
@@ -1635,6 +1652,12 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onResume() {
         super.onResume()
+        if (recheckPermissionsOnResume) {
+            recheckPermissionsOnResume = false
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (!isFinishing && !isDestroyed) processAllPermisions(PERMISSIONS_REQUEST_ZERO)
+            }, 500)
+        }
         if (AppUpdateManager.resumePendingInstallation(this)) {
             companionCheckedThisLaunch = true
             startupUpdateCheckPending = false
@@ -1837,10 +1860,12 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         if (null != mLayersFragment && !mLayersFragment!!.isDrawerOpen) {
-            val recording = TrackerService.isTrackerServiceRunning(this)
-                    || TrackerService.isTrackRecordingEnabled(this)
+            val recording = TrackerService.isTrackRecordingActive()
+            val pending = !recording && TrackerService.isTrackRecordingEnabled(this)
             val title =
-                if (recording) com.nextgis.maplibui.R.string.track_stop else com.nextgis.maplibui.R.string.track_start
+                if (recording) com.nextgis.maplibui.R.string.track_stop
+                else if (pending) com.nextgis.maplibui.R.string.track_pending
+                else com.nextgis.maplibui.R.string.track_start
             val icon =
                 if (recording) com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
             setTrackItem(menu.findItem(R.id.menu_track), title, icon)
@@ -1874,6 +1899,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
 
         super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        recheckPermissionsOnResume = true
     }
 
     override fun onBackPressed() {
@@ -1929,16 +1959,28 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     ) {
         val activity = activity1
         if (true) {
+            val requested = permissions.filterNotNull()
+            val previouslyRequested = requested.any {
+                mPreferences.getBoolean("permission_requested_$it", false)
+            }
+            val openSettings = previouslyRequested && requested.all {
+                !ActivityCompat.shouldShowRequestPermissionRationale(this, it)
+            }
             val builder = AlertDialog.Builder(activity).setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(
-                    com.nextgis.maplibui.R.string.allow
+                    if (openSettings) R.string.permission_open_settings
+                    else com.nextgis.maplibui.R.string.allow
                 ) { dialog: DialogInterface?, which: Int ->
-                    ActivityCompat.requestPermissions(
-                        activity,
-                        permissions,
-                        requestCode
-                    )
+                    if (openSettings) {
+                        val settingsIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.parse("package:$packageName"))
+                        startActivity(settingsIntent)
+                    } else {
+                        requested.forEach { mPreferences.edit()
+                            .putBoolean("permission_requested_$it", true).apply() }
+                        ActivityCompat.requestPermissions(activity, permissions, requestCode)
+                    }
                 }
                 .setNegativeButton(
                     com.nextgis.maplibui.R.string.deny

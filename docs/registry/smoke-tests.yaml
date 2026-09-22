@@ -429,6 +429,8 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
+      - On Android 14+ deny Bluetooth permissions but grant fine location; start a walk using the system GNSS and verify its location-only foreground service and visible panel
+      - Upgrade an installation with a retained failed walk session; inspect the panel, saved vertices and explicit Resume/Finish/Discard without erasing the draft
       - Enable background recording sound and start geometry-by-walk editing
       - Minimize notification volume while alarm volume remains audible, then mute alarm volume
       - Minimize the app, stand still for at least 35 seconds, then walk until several geometry points are saved
@@ -450,6 +452,10 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
+      - On Android 14+ deny Bluetooth permissions, grant fine location and start a track; confirm a new track row and notification before the menu says recording
+      - Simulate a foreground permission or SQLite insert failure; verify an immediate warning, a non-recording menu label and no fabricated GPS points
+      - Fail one trackpoint insert after recording started, then restore storage; verify warning and non-recording menu until the next successful point, without deleting earlier points
+      - Deny device-account access while location is granted, restart, then deny twice and return from app settings; verify the account request is not skipped and granted permission is rechecked
       - Start a track on the visible map, turn the screen off, move, then reopen where GNSS is unavailable
       - Verify current Network position and its metric accuracy circle; block all sources and wait over eight seconds
       - Grant approximate location only; verify map fallback and that track/walk cannot record Network

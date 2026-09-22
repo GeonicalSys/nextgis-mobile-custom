@@ -213,10 +213,16 @@ preferences:
     default: false
     source: maplib/src/main/java/com/nextgis/maplib/util/SettingsConstants.java
     purpose: >
-      Durable flag that track recording is on; cleared only by explicit Stop track menu.
+      Durable user intent for track recording, not confirmation that a service or track row exists; cleared by explicit Stop track menu.
       BootLoader and MainActivity auto-resume TrackerService when true. Toolbar and service
       read it in the default application process so a delayed Start cannot overtake Stop.
       Map GPS callbacks use this flag to request asynchronous track rendering without a main-thread SQLite unfinished-track query.
+  permission_requested_marker:
+    owner: app
+    type: boolean
+    default: false
+    source: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    purpose: Per-permission preference keys permission_requested_<Android permission name> distinguish a first request from a permanently denied request so the next launch offers app settings.
   background_recording_sound:
     owner: maplibui
     type: boolean

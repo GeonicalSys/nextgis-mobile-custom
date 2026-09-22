@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-09-21
+last_verified: 2026-09-22
 related_code:
   - app/build.gradle
   - app/src/main
@@ -77,6 +77,9 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 Все четыре official HEAD повторно проверены 14 сентября 2026 года через
 канонические GitHub repositories. Release tag и feature-коммиты MBTiles
 рассматриваются отдельно от приведённых baseline hashes форка.
+22 сентября повторно проверены HEAD официального приложения `482f26f` и
+`android_maplibui` `8b89a9a` перед изменением foreground-записи и проверки
+разрешений; это исправление не меняет перечисленные базовые отличия форка.
 
 Для доработки sync/ANR все четыре HEAD повторно сверены через `git ls-remote`
 18 сентября 2026 года: hashes выше не изменились. Прочитанные official
