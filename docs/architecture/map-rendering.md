@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-21
+last_verified: 2026-09-23
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -304,6 +304,14 @@ Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
     иначе copy-конструкторы теряют корневой CRS и передают метры как lon/lat.
     Полная и облегчённая загрузка style восстанавливают cached preview.
     Смена экземпляра MapDrawable также требует повторной привязки снимка.
+    `MapFragment` слушает `WALKEDIT_CHANGE` напрямую во время resume и перечитывает
+    снимок при возврате на экран: preview не зависит от наличия панели.
+    Все phone/landscape/tablet layouts включают один `layout_map_content` с
+    обязательными кнопкой трека и панелью обхода. `MapControlRail` пересчитывает
+    число строк по доступной высоте при каждом measure, в том числе при повороте
+    без пересоздания Activity, и переносит инструменты в столбцы справа налево.
+    Меню создания раскрывается влево в отдельной нижней строке; панель обхода
+    находится выше этой строки и слева от инструментов.
     Редактор точки владеет своими selected/vertex sources, не забирая линию
     обхода. Панель обхода сохраняется при обычном режиме карты; все её команды
     блокируются от выбора слоя точки до успешного Save либо явного Cancel.

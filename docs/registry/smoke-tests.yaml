@@ -145,6 +145,9 @@ tests:
     type: device
     scope: app
     steps:
+      - On phone and tablet cold-start portrait and landscape, then rotate an open map; verify track and walk controls exist and every right-edge tool is individually clickable as columns reflow
+      - Expand and collapse the creation menu, repeat with enlarged display size and a bottom panel; verify tools and walk Finish remain unobstructed
+      - Start a polygon walk, rotate and background/resume, verify preview, finish and save; repeat with an existing durable session after updating without clearing data
       - Cold-open a project and verify two-finger rotation does nothing until the toolbar rotation button is pressed
       - Enable rotation, place two fingers simultaneously and twist immediately without a hold; repeat while pinching and with sequential finger placement
       - Enable rotation, rotate to several bearings, recreate the activity and verify the enabled state and bearing are restored

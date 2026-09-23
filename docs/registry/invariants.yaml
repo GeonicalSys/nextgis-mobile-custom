@@ -212,11 +212,17 @@ invariants:
       layer with a valid finite extent at zoom 12 regardless of extent size.
       The MapLibre camera cannot go below 7.5 (pinch, buttons, restore and fit bounds).
       Layer DEFAULT_MIN_ZOOM remains 0.
+      Phone, landscape and tablet map layouts include the same content with a track
+      toggle and walk panel. Right-edge tools reflow into columns using actual view
+      height, including orientation changes without Activity recreation. The creation
+      menu has its own bottom row and cannot overlap the tools or walk controls.
     related_code:
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
       - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
       - app/src/main/res/menu/main.xml
+      - app/src/main/java/com/nextgis/mobile/view/MapControlRail.java
+      - app/src/main/res/layout/layout_map_content.xml
       - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
       - maplib/src/main/java/com/nextgis/maplib/util/GeoConstants.java
     verify_smoke: [SMOKE-MAP-CAMERA-CONTROLS]

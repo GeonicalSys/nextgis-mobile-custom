@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-09-22
+last_verified: 2026-09-23
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -83,6 +83,13 @@ used to extend the preview or final geometry.
 Key types: `WalkEditService`, `WalkSessionStore`, `WalkSessionPolicy`,
 `WalkSessionRecoveryPolicy`,
 `WalkGeometrySnapshot`, `WalkRecordingPanel`, `MapFragment`, `MapDrawable`.
+
+Phone, landscape and tablet resources include the same map content and mandatory
+walk panel. `MapFragment` also listens directly to `WALKEDIT_CHANGE` while resumed
+and reloads the current-map snapshot on resume, so preview does not depend on the
+panel callback. Reflowing tools cannot cover walk controls. This UI repair neither
+resets nor migrates recorded geometry: an existing current-map session is shown
+from the same durable store after updating the application.
 
 ## Manual geometry editing (vertices / taps)
 

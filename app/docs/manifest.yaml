@@ -2,13 +2,21 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-09-22
+last_verified: 2026-09-23
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/res/layout/layout_map_content.xml
+    responsibility: Shared phone, landscape and tablet map content with mandatory track toggle and walk panel, a separate horizontal creation row and tools at the right edge.
+  - path: app/src/main/java/com/nextgis/mobile/view/MapControlRail.java
+    responsibility: Measure actual available height on every layout and reflow map controls into adjacent right-aligned columns without overlapping the creation row or walk panel.
+  - path: app/src/main/java/com/nextgis/mobile/view/MapControlGrid.java
+    responsibility: Pure row-count policy covered by dimension and density boundary tests.
+  - path: app/src/test/java/com/nextgis/mobile/view/MapLayoutContractTest.java
+    responsibility: Require all phone, landscape and tablet wrappers to include the same complete map content and preserve the separate action row.
   - path: app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
     responsibility: Run one serial manual-sync pipeline, reconcile sync animation and the determinate progress ring in both directions against worker-owned state and the process-wide data-sync lease throughout the visible lifecycle, query pending changes off the main thread with lifecycle and map guards, and confirm explicit rechecking of skipped server geometries on long press.
   - path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java

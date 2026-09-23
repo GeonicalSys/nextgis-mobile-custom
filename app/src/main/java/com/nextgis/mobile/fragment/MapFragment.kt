@@ -486,7 +486,7 @@ public class MapFragment
         mRuler?.setOnClickListener(this)
         mAzimuth = view.findViewById(R.id.action_azimuth)
         mAzimuth?.setOnClickListener(this)
-        trackStatusButton = view.findViewById(R.id.action_track_status)
+        trackStatusButton = requireNotNull(view.findViewById(R.id.action_track_status))
         trackStatusButton?.setOnClickListener { mActivity?.toggleTrackRecordingFromMap() }
         refreshTrackStatusButton()
 
@@ -991,28 +991,40 @@ public class MapFragment
     private var pendingWalkFinishId: String? = null
     private var walkPreviewKey: String? = null
     private var walkPreviewMap: MapDrawable? = null
+    private val walkSessionReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            refreshWalkSessionPreview()
+        }
+    }
+
+    private fun refreshWalkSessionPreview() {
+        val ctx = context ?: return
+        val session = WalkSessionStore.load(ctx)?.takeIf { WalkSessionStore.isCurrentMap(ctx, it) }
+        val key = session?.let { "${it.id}:${it.revision}:$finishedWalkEditId" }
+        val map = mMapRef.get()?.map
+        if (map != null && (key != walkPreviewKey || map !== walkPreviewMap)) {
+            walkPreviewKey = key
+            walkPreviewMap = map
+            map.showWalkPreview(
+                if (session != null && session.id != finishedWalkEditId) session.geometry() else null
+            )
+        }
+        if (session?.phase == WalkSessionPolicy.Phase.FINISHED && pendingWalkFinishId == session.id) {
+            pendingWalkFinishId = null
+            view?.post { openFinishedWalk(session) }
+        }
+        mScaleRulerLayout?.visibility = if (session == null && mode == MODE_NORMAL
+            && mPreferences?.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER, false) == true
+        ) View.VISIBLE else View.GONE
+    }
 
     private fun attachWalkPanel(root: View) {
         pointSessionId = WalkSessionStore.load(requireContext())?.pointId?.takeIf { it.isNotEmpty() }
-        walkPanel = root.findViewById(R.id.walk_recording_panel)
+        walkPanel = requireNotNull(root.findViewById(R.id.walk_recording_panel))
         walkPanel?.setListener(object : WalkRecordingPanel.Listener {
             override fun onSessionChanged(session: WalkSessionStore.Snapshot?) {
-                val key = session?.let { "${it.id}:${it.revision}:$finishedWalkEditId" }
-                val map = mMapRef.get()?.map
-                if (map != null && (key != walkPreviewKey || map !== walkPreviewMap)) {
-                    walkPreviewKey = key
-                    walkPreviewMap = map
-                    map.showWalkPreview(
-                        if (session != null && session.id != finishedWalkEditId) session.geometry() else null
-                    )
-                }
-                if (session?.phase == WalkSessionPolicy.Phase.FINISHED && pendingWalkFinishId == session.id) {
-                    pendingWalkFinishId = null
-                    root.post { openFinishedWalk(session) }
-                }
-                mScaleRulerLayout?.visibility = if (session == null && mode == MODE_NORMAL
-                    && mPreferences?.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER, false) == true
-                ) View.VISIBLE else View.GONE
+                // The map also observes service broadcasts directly; panel visibility is not an owner.
+                refreshWalkSessionPreview()
             }
 
             override fun onFinishWalk(session: WalkSessionStore.Snapshot) {
@@ -2155,6 +2167,8 @@ public class MapFragment
         HyperLog.v(Constants.TAG, "MapFragment.onDestroyView")
         walkPanel?.setListener(null)
         walkPanel = null
+        trackStatusButton = null
+        walkPreviewMap = null
         mapLibreHostResumed = false
         stopMapLibreRenderRecovery()
         mapLibreLayersAppliedForCurrentView = false
@@ -3105,6 +3119,7 @@ public class MapFragment
 
         mActivity?.unregisterReceiver(mMessageStyling)
         mActivity?.unregisterReceiver(mMessageReload)
+        mActivity?.unregisterReceiver(walkSessionReceiver)
 
         awaitingMapLibreFrameAfterResume = false
         mapLibreHostResumed = false
@@ -3281,6 +3296,9 @@ public class MapFragment
         }
 
         val ctx = context ?: return
+        ContextCompat.registerReceiver(ctx, walkSessionReceiver,
+            IntentFilter(WalkEditService.WALKEDIT_CHANGE), ContextCompat.RECEIVER_NOT_EXPORTED)
+        refreshWalkSessionPreview()
         val progressStyling = (ctx.applicationContext as IGISApplication).getingStyleInProgress
         changeProgress(progressStyling)
 
