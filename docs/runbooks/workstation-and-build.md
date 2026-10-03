@@ -1,7 +1,7 @@
 ---
 title: Настройка рабочего места и сборка
 type: runbook
-last_verified: 2026-07-19
+last_verified: 2026-10-03
 related_code:
   - gradle/wrapper/gradle-wrapper.properties
   - build.gradle
@@ -44,3 +44,17 @@ resources, manifest, flavors или Gradle требуют проверки об�
 | Ошибка Sentry config | локальный `sentry.properties`, отсутствие реального секрета в git |
 | Flavor resource collision | `productFlavors` и `buildTypes` в `app/build.gradle` |
 | Только один бренд собирается | выполнить обе Lisa/Belka release tasks |
+
+## Эмулятор для regression suite
+
+На Windows необходим работающий гипервизор: emulator -accel-check должен
+подтвердить WHPX. После включения Windows Hypervisor Platform может потребоваться
+перезагрузка ОС. Для аудита используется отдельный data directory, read-only AVD,
+port5556, SwiftShader, no-snapshot и no-window; исходный AVD не изменяется.
+Команды adb адресуются только emulator-5556; подключённый телефон не затрагивается.
+
+После установки Lisa Debug/test APK запустить `AUTO-RELIABILITY-NATIVE`; сначала
+разрешить storage/location/notifications и включить системную location. Suite
+использует свои local layers, SQLite triggers и localhost sign-in, без настоящего
+аккаунта/NGW. Runtime и ограничения фиксируются в
+[отчёте аудита](../reference/mobile-reliability-audit.md).

@@ -214,6 +214,18 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         startupUpdateCheckPending = savedInstanceState == null
 
         setContentView(R.layout.activity_main)
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (finishFragment() || mapFragment?.handleBackPress() == true) return
+                val now = android.os.SystemClock.elapsedRealtime()
+                if (mBackPressed != 0L && mBackPressed + 2000 > now) {
+                    isEnabled = false
+                    try { onBackPressedDispatcher.onBackPressed() }
+                    finally { isEnabled = true }
+                } else Toast.makeText(this@MainActivity, R.string.press_aback_again, Toast.LENGTH_SHORT).show()
+                mBackPressed = now
+            }
+        })
         mMessageReceiver = MessageReceiver()
 
         mTrackReceiver = TrackStartStopReceiver()
@@ -1943,15 +1955,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     override fun onStop() {
         super.onStop()
         recheckPermissionsOnResume = true
-    }
-
-    override fun onBackPressed() {
-        if (finishFragment()) return
-
-        if (mBackPressed + 2000 > System.currentTimeMillis()) super.onBackPressed()
-        else Toast.makeText(this, R.string.press_aback_again, Toast.LENGTH_SHORT).show()
-
-        mBackPressed = System.currentTimeMillis()
     }
 
     override fun onLocationChanged(location: Location) {

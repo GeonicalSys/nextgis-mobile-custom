@@ -323,7 +323,20 @@ public class AttributesFragment
                 webView.setBackgroundColor(Color.TRANSPARENT);
             }
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                try {
+                    Uri uri = Uri.parse(url);
+                    if (!("https".equalsIgnoreCase(uri.getScheme())
+                            || "http".equalsIgnoreCase(uri.getScheme())) || uri.getHost() == null)
+                        throw new IllegalArgumentException("Unsupported attribute link");
+                    view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                } catch (android.content.ActivityNotFoundException | SecurityException
+                         | IllegalArgumentException error) {
+                    android.util.Log.w(com.nextgis.maplib.util.Constants.TAG,
+                            "Cannot open attribute link", error);
+                    android.widget.Toast.makeText(view.getContext(),
+                            com.nextgis.maplibui.R.string.attribute_link_unavailable,
+                            android.widget.Toast.LENGTH_LONG).show();
+                }
                 return true;
             }
         });

@@ -1,7 +1,7 @@
 ---
 title: Ручные проверки на Android-устройстве
 type: runbook
-last_verified: 2026-09-23
+last_verified: 2026-10-03
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -209,3 +209,20 @@ related_code:
 process death, полным/lite style reload, landscape/крупным шрифтом, реальной
 прогулкой и длительным выключением экрана. Звук на телефоне пользователя не
 включать без снятия его явного ограничения.
+
+## Аудит надёжности PR45 — 2026-10-03
+
+Автоматизированные native checks на API36 описаны в
+[отчёте](../reference/mobile-reliability-audit.md); это не полная полевая приёмка.
+Перед выпуском выполнить `SMOKE-RELIABILITY-FAILURES`, `SMOKE-TOOL-TAP` и
+`SMOKE-NGID-AND-RESOURCE-ICONS`, затем прежнюю матрицу phone/tablet/rotation.
+Проверить реальные пальцевые tap со смещением, drawing всех editable geometry
+типов, ruler/azimuth, long press/pinch, выбор/сброс/Back и read-only слой.
+Проверить overflow action activation, 48dp targets, большие шрифты/display size,
+landscape, split screen, edge-to-edge insets, walk Finish/Discard.
+
+Отдельно проверить process kill/reboot во время очереди трека и Save формы,
+rotation/camera/predictive Back с несохранённой подписью/фото, реальные low disk
+и revoke location, Android dataSync timeout/cancellation и восстановление на
+копии проекта. Для длинного обхода повторить benchmark на целевом телефоне;
+50,000-node snapshot остаётся заметной синхронной работой.

@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-23
+last_verified: 2026-10-03
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -415,3 +415,25 @@ MapLibre выбирает `mbtiles://` по формату целевого payl
 синхронным. Ошибка распознавания NGRc не должна превращаться в падение native
 карты во время cleanup. Штатный `Mapnik.json` и пути JPEG/PNG/WebP обрабатываются
 тем же потоковым импортом, без изменения географической схемы тайлов.
+
+## Выбор объекта, допуск тапа и тесная панель
+
+Выбор editable feature сразу включает его action mode, сохраняя highlighting
+и предлагая форму/удаление/геометрию. Это не изменяет вершины автоматически.
+Read-only feature показывает просмотр; сброс выбора завершает action mode и
+освобождает layer lock. AndroidX Back закрывает активные инструменты/выбор до
+обычного выхода с карты.
+
+`MapTapGesture` на down фиксирует точку/время; maximum travel, включая историю
+MOVE и возвращающийся drag, должен укладываться в max(12dp, system touch slop),
+а время — быть короче system long-press timeout. Cancel, второй палец и UP без
+DOWN не создают точку. В режиме placement host повышает MapLibre move threshold
+до того же допуска, чтобы микросдвиг не сдвигал камеру; normal mode возвращает
+исходный threshold. Правило общее для drawing, ruler и azimuth. Перетаскивание
+вершин/азимутных endpoints использует прежние обработчики.
+
+`MapControlRail` рассчитывает вместимость по обеим сторонам доступного прямоугольника,
+сохраняет 48dp touch targets и переносит непоместившиеся действия в overflow;
+пункт вызывает исходный control click. Состояние/visibility исходных кнопок
+сохраняется. Физический планшет, display size/font scale, split screen и системные
+insets ещё требуют [device smoke](../runbooks/device-smoke-tests.md).

@@ -108,6 +108,7 @@
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_ruler"
+            android:contentDescription="@string/map_measure_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_addButtonColorNormal="?attr/colorPrimary"
@@ -129,6 +130,7 @@
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_zoom_in"
+            android:contentDescription="@string/map_zoom_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_addButtonColorNormal="?attr/colorPrimary"
@@ -139,6 +141,7 @@
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_zoom_out"
+            android:contentDescription="@string/map_zoom_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_addButtonColorNormal="?attr/colorPrimary"

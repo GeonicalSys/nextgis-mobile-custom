@@ -4,6 +4,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MapControlGridTest {
+    @Test public void narrowWindowReservesOneSlotForOverflow() {
+        assertEquals(3, MapControlGrid.capacity(56, 184, 56, 56, 8));
+        assertEquals(2, MapControlGrid.capacity(120, 80, 56, 56, 8));
+        assertEquals(0, MapControlGrid.capacity(55, 80, 56, 56, 8));
+        assertEquals(0, MapControlGrid.capacity(120, 55, 56, 56, 8));
+    }
     @Test public void portraitKeepsAllToolsInOneColumn() {
         assertEquals(5, MapControlGrid.rows(5, 600, 56, 8));
     }

@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-09-22
+last_verified: 2026-10-03
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -373,3 +373,19 @@ unit tests; maplibui Debug, ЛИСА Debug/Release и БЕЛКА Release соб�
 SHA-256 `a94b98af61f79fe68c46b5a74b4b2980b8c275194071472e7f18d060eae0ef34`,
 совпадающий с локальной QA-сборкой. Документационный validator и все 7 его тестов
 также прошли. Временный instrumentation package удалён.
+
+## Повторная запись после ошибки SQLite
+
+GNSS/filter/sampling rules remain unchanged. Accepted track points first enter
+`PendingTrackPoints` inside the owning map directory, then drain serially into
+`TrackLayer` with UUID deduplication. Queue capacity2048 and a high-water pause
+bound memory; recovery starts a new segment after a gap. Stop persists its intent,
+flushes the filter tail and closes unfinished sessions only after drain succeeds.
+Failures keep points and session open for retry rather than confirming a false Stop.
+Stationary correction does not overtake queued/in-flight inserts.
+
+Walk checkpoint failures are visible in its panel and notification. Corrupt or
+negative sampling preferences fall back to existing 2s/5m defaults. WKT/snapshot
+traversal is linear without changing geometry or closing-ring rules. Durability
+limits and native fault checks are in [crash recovery](crash-recovery.md) and
+[the audit](../reference/mobile-reliability-audit.md).

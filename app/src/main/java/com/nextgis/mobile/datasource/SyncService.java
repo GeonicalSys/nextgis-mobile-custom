@@ -54,6 +54,7 @@ public class SyncService extends NGWSyncService {
     private static final String FOREGROUND_CHANNEL_ID = "account_sync_fgs";
     protected MessageReceiver mMessageReceiver;
     private BroadcastReceiver mForegroundReceiver;
+    private boolean mForegroundBlocked;
 
     @Override
     public void onCreate(){
@@ -117,6 +118,7 @@ public class SyncService extends NGWSyncService {
     }
 
     private void startSyncForeground(NgwSyncProgress.Snapshot snapshot) {
+        if (mForegroundBlocked) return;
         Intent open = new Intent(this, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
@@ -151,6 +153,22 @@ public class SyncService extends NGWSyncService {
             }
         } catch (RuntimeException exception) {
             HyperLog.w(Constants.TAG, "SyncService: could not enter foreground", exception);
+            cancelTimedOutWork();
+        }
+    }
+
+    @Override public void onTimeout(int startId, int foregroundServiceType) {
+        HyperLog.w(Constants.TAG, "Account data sync reached foreground time limit");
+        cancelTimedOutWork();
+    }
+
+    private void cancelTimedOutWork() {
+        mForegroundBlocked = true;
+        try { com.nextgis.maplibui.util.ProjectOperationCoordinator.requestDataSyncCancellation(this); }
+        catch (RuntimeException error) { HyperLog.w(Constants.TAG, "Account sync cancellation failed", error); }
+        finally {
+            NgwSyncProgress.cancel();
+            try { stopForeground(true); } finally { stopSelf(); }
         }
     }
 

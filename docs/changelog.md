@@ -1,12 +1,21 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-09-23
+last_verified: 2026-10-03
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-03
+
+- Аудит PR45: documented recoverable form Save, owning-map feature/outbox
+  transactions, track retry/Stop, backup format2, auth snapshots, internal service
+  timeout/export contracts, selection/tap/rail behavior and NextGIS ID input.
+- Обновлены local packs/registries, build verification/CI contract и свежий
+  official comparison. Добавлен отчёт с actual tests, benchmark, delivery gates
+  и явными непроверенными device/recovery scenarios. Release/publication не выполнены.
 
 ## 2026-09-23
 

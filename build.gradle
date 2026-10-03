@@ -48,6 +48,18 @@ buildscript {
 
 allprojects {
     repositories {
+        // The immutable Hyperlog build contains the same AAR as the former snapshot. JitPack's
+        // old, dependency-free POM names master-SNAPSHOT, so use artifact metadata for this module.
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'PinnedHyperlog'
+                    url = 'https://jitpack.io'
+                    metadataSources { artifact() }
+                }
+            }
+            filter { includeModule('com.github.barsrb', 'hyperlog-android') }
+        }
         mavenCentral()
         maven { url "https://www.jitpack.io" }
         google()

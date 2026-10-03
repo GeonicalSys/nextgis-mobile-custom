@@ -1,5 +1,38 @@
 schema_version: 1
 tests:
+  AUTO-RELIABILITY-NATIVE:
+    type: automatic
+    scope: [app, maplib, maplibui]
+    command: .\gradlew.bat :app:connectedLisaDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.nextgis.mobile.reliability
+    expected: >
+      Native isolated SQLite, photo retry, track queue and Stop, signature, selector icon,
+      NGID wire input, selection, rail bounds, ruler/azimuth gestures and walk checkpoint tests pass.
+  SMOKE-RELIABILITY-FAILURES:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - On an isolated copy fail feature/outbox and photo/signature writes; Save, Back, camera, rotate and recover before retry.
+      - Fail track insert during recording and Stop, then restore storage; kill process and reboot with an unwritten tail in the same and another project.
+      - Fail backup, mutate a layer after backup and attempt final deletion; check Undo and preserved rows/photos.
+      - Trigger dataSync timeout, cancellation and permission revoke; verify worker exit and lease release without ANR or data deletion.
+      - Export LayerBackup and complete administrator recovery only on a copy following incident-and-rollback.
+    expected: Failed Save/Stop cannot report completion or discard pending work; retry is ordered and idempotent; backup and project gates remain fail-closed.
+  SMOKE-TOOL-TAP:
+    type: device
+    scope: [app, maplib]
+    steps:
+      - In drawing all editable geometry types, ruler and both azimuth modes, tap with small drift on several screen densities.
+      - Drag beyond threshold then return, long press, cancel and pinch; compare normal camera pan and endpoint/vertex drag.
+      - Select editable and read-only objects from different layers; clear by empty-map tap, toolbar and Back.
+      - Activate overflow actions on phone, tablet, landscape, split screen and increased display/font sizes.
+    expected: One short micro-drift tap creates one point without camera shift; deliberate gestures create none; actions are immediate only for editable selection and clear with selection.
+  SMOKE-NGID-AND-RESOURCE-ICONS:
+    type: device
+    scope: [app, maplibui]
+    steps:
+      - On intro and NGID login screens, enter mixed-case username and email with surrounding spaces; verify identifier lowercase and password unchanged using a test account.
+      - Open Web GIS import where the first resource is a group, then navigate up and recycle account/add/group rows by scrolling.
+    expected: Email-or-username hint and keyboard are correct; first/up/recycled group rows always use folder icon and retain their existing import actions.
   SMOKE-NGW-SYNC-RECOVERY:
     type: device
     scope: [app, maplib, maplibui]
