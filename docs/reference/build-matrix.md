@@ -89,7 +89,10 @@ Standalone consumer библиотек обязан повторить эту ar
 и metadata. Первичный набор создан из проверяемой локальной сборки: это baseline
 первого доверия, не независимая проверка происхождения каждого артефакта.
 Linux aapt2 classifier дополнительно сверен по artifact и опубликованному
-checksum Google Maven для CI. Robolectric SDK downloads имеют отдельный механизм и не охватываются Gradle XML.
+checksum Google Maven для CI. Чистый Linux build также потребовал parent POM
+Guava33.4.8-jre: он добавлен после сверки с опубликованным checksum Maven Central;
+бинарные зависимости и версии не менялись. Robolectric SDK downloads имеют
+отдельный механизм и не охватываются Gradle XML.
 Обычная проверка выполняется без --write-verification-metadata; новые checksum
 добавляются только после проверки конкретного источника/изменения зависимости.
 

@@ -12,6 +12,8 @@ related_code:
 
 - Чистый Linux CI выявил удалённый SDK tools package и несовместимый с JDK21
   MaxPermSize: setup packages и tracked JVM args исправлены без смены toolchain.
+  Недостающий parent POM Guava33.4.8-jre закреплён после сверки с checksum
+  Maven Central без смены бинарных зависимостей и ослабления verification.
 
 - Аудит PR45: documented recoverable form Save, owning-map feature/outbox
   transactions, track retry/Stop, backup format2, auth snapshots, internal service
