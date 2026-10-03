@@ -2,6 +2,7 @@ name: Android reliability
 
 on:
   push:
+    branches: [my-maplibre]
   pull_request:
   workflow_dispatch:
 
@@ -26,6 +27,8 @@ jobs:
           java-version: '21'
           cache: gradle
       - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
       - name: Prepare SDK configuration
         run: |
           printf 'sdk.dir=%s\n' "$ANDROID_HOME" > local.properties
