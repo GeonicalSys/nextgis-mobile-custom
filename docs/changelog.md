@@ -10,6 +10,9 @@ related_code:
 
 ## 2026-10-03
 
+- Чистый Linux CI выявил удалённый SDK tools package и несовместимый с JDK21
+  MaxPermSize: setup packages и tracked JVM args исправлены без смены toolchain.
+
 - Аудит PR45: documented recoverable form Save, owning-map feature/outbox
   transactions, track retry/Stop, backup format2, auth snapshots, internal service
   timeout/export contracts, selection/tap/rail behavior and NextGIS ID input.

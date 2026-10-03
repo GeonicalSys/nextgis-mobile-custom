@@ -97,7 +97,11 @@ checksum Google Maven для CI. Robolectric SDK downloads имеют отдел
 maplibui/debug APK, обе release source sets и native API36 suite. CI использует
 `-PciReliabilityChecks=true`: только при отсутствующем sentry.properties допускает
 пустой DSN для тестов. Обычные builds сохраняют обязательный private config;
-секреты не публикуются. Workflow не собирает/не публикует release APK.
+секреты не публикуются. SDK setup явно запрашивает platform-tools, не удалённый
+legacy tools package. PR запускает regression один раз, push — только на
+my-maplibre. Удалён устаревший MaxPermSize JVM flag, мешавший чистому JDK21
+запустить Gradle daemon; local user properties ранее скрывали эту ошибку.
+Workflow не собирает/не публикует release APK.
 
 До merge library PRs release APK/version matrix заблокированы closure contract.
 В этом аудите выполнены обе release Kotlin/Java compilation, debug APK,517 units

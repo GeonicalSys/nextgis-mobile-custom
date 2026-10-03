@@ -75,7 +75,7 @@ SwiftShader, JDK21 Android Studio JBR, Gradle9.3.1/AGP9.1.0. Исходный AV
 | Lisa и Belka Release Kotlin/Java compilation |PASS; release APK не собраны |
 | Повторная Gradle сборка без write-verification-metadata |PASS, strict checksums active |
 | Docs validator/tests и git diff check |PASS: validator,7 docs tests, enforced changed-path check и diff whitespace check |
-| Новый GitHub Android workflow |Проверяется после push; локальная Windows проверка не является Linux CI результатом |
+| Новый GitHub Android workflow |Первые runs выявили legacy SDK tools package и MaxPermSize JVM flag; setup исправлен, повторный run ожидается. Windows pass не является Linux CI pass |
 
 Native suite использует isolated test layers, real SQLite triggers, real form menu
 Save, real TrackerService Stop и localhost server; не авторизует настоящий NGW
