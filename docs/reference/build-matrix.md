@@ -107,6 +107,7 @@ my-maplibre. Удалён устаревший MaxPermSize JVM flag, мешав�
 Workflow не собирает/не публикует release APK.
 
 До merge library PRs release APK/version matrix заблокированы closure contract.
-В этом аудите выполнены обе release Kotlin/Java compilation, debug APK,517 units
-и native fault/UI checks. Это не подтверждение готовности релиза; подробности в
+В этом аудите на Windows и в чистой Linux CI выполнены обе release Kotlin/Java
+compilation, debug APK,517 units и28 native API36 fault/UI checks. Это не
+подтверждение готовности релиза; точный успешный run и runtime versions в
 [отчёте](mobile-reliability-audit.md).

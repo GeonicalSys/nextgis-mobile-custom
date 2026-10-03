@@ -65,17 +65,20 @@ SwiftShader, JDK21 Android Studio JBR, Gradle9.3.1/AGP9.1.0. Исходный AV
 После включения WHPX и перезагрузки emulator работает, ещё одна перезагрузка
 для выполненных проверок не нужна.
 
+Linux CI: GitHub hosted Ubuntu, Temurin21.0.12+1, Gradle9.3.1/AGP9.1.0,
+Android Emulator37.2.12.0 / API36 google_apis x86_64 / KVM / SwiftShader.
+
 | Проверка | Результат |
 |---|---|
 | maplib units, включая real SQLite Robolectric API26/36 |394 tests;0 failures/errors/skipped |
 | maplibui units |82 tests;0 failures/errors/skipped |
 | app Lisa Debug units |41 tests;0 failures/errors/skipped |
-| Общая native suite на финальном коде |28 tests PASS,36.575s |
+| Общая native suite на финальном коде |28 tests PASS: Windows36.575s, Linux CI89.144s;0 failures/errors/skipped |
 | maplibui assemble / Lisa Debug app + AndroidTest APK |PASS |
 | Lisa и Belka Release Kotlin/Java compilation |PASS; release APK не собраны |
 | Повторная Gradle сборка без write-verification-metadata |PASS, strict checksums active |
 | Docs validator/tests и git diff check |PASS: validator,7 docs tests, enforced changed-path check и diff whitespace check |
-| Новый GitHub Android workflow |Первые runs выявили legacy SDK tools package, MaxPermSize JVM flag и отсутствующий checksum parent POM Guava; setup и verification исправлены, повторный run ожидается. Windows pass не является Linux CI pass |
+| Новый GitHub Android workflow |PASS: [run37140933263](https://github.com/GeonicalSys/nextgis-mobile-custom/actions/runs/37140933263), app4764810:517 units, debug APKs, обе release source sets и28 native API36 tests; strict dependency verification active |
 
 Native suite использует isolated test layers, real SQLite triggers, real form menu
 Save, real TrackerService Stop и localhost server; не авторизует настоящий NGW

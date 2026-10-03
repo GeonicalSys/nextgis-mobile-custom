@@ -14,6 +14,8 @@ related_code:
   MaxPermSize: setup packages и tracked JVM args исправлены без смены toolchain.
   Недостающий parent POM Guava33.4.8-jre закреплён после сверки с checksum
   Maven Central без смены бинарных зависимостей и ослабления verification.
+  Linux CI фактически прошла517 unit и28 native API36 tests, debug APKs и обе
+  release source sets; точный run/commit/runtime записаны в audit/build reference.
 
 - Аудит PR45: documented recoverable form Save, owning-map feature/outbox
   transactions, track retry/Stop, backup format2, auth snapshots, internal service
