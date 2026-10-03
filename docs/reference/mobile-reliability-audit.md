@@ -1,7 +1,7 @@
 ---
 title: Аудит надёжности мобильного приложения — PR45
 type: reference
-last_verified: 2026-10-03
+last_verified: 2026-10-04
 related_code:
   - app/src/androidTest/java/com/nextgis/mobile/reliability/FeaturePersistenceTest.java
   - app/src/androidTest/java/com/nextgis/mobile/reliability/FormSaveRecoveryTest.java
@@ -21,7 +21,33 @@ related_code:
 записанного трека, затем устойчивость lifecycle и удобство инструментов.
 Код изменён с разрешения пользователя после первоначального read-only аудита.
 В app новая ветка/PR не создаётся; отдельные owners maplib/maplibui требуют
-связанных Draft PR. Версии, NGW schema, flavors и sampling/filter правила не подняты.
+связанных Draft PR. Сам аудит не менял версии, NGW schema, flavors и sampling/filter правила.
+Следующий запрос пользователя готовит production `3.1.2.27` / `221`; release APK
+и publication instructions требуют закрытия PR37/25/45 и APK version matrix.
+
+## Дополнение: Pigo Lite/Lite Plus, 2026-10-04
+
+В двух полевых журналах 17–23 сентября найдено 26 BLE-сеансов с notify `3A22`,
+но `rx=none`; все 104 отправки initialization commands отклонены. Встроенный
+приёмник даёт CNB BESTPOSB, обычного NMEA в архиве нет. Протокол проверен по
+официальному PiSatel 1.0.9.0 (`BleDeviceManager`, `NewMockService`): отдельный
+write `3A21` в service `3A20`, запуск `log bestposb`. Добавлен только этот
+профиль и additive log, без `unlogall`/смены поправок/радио/config save.
+
+Ошибки подписки/записи и permission revocation больше не выдаются за готовый
+transport; фрагменты последовательны, write timeout 5 с. Старые callbacks не
+закрывают новую сессию. HUD перестаёт показывать прежнее качество при обрыве
+или 8 с тишины. В архиве есть и реальные autonomous `q=1`, и FLOAT/FIX, поэтому
+переименовывать «Авто» в «FLOAT» без данных приёмника нельзя. PiMock start/stop
+не имеют timestamp в журнале: последовательность действий установлена лишь
+частично. Пользовательские координаты/адреса в Git не внесены.
+
+Добавлены 57 регрессий GNSS/BLE, новые Robolectric сценарии выполнены на
+API 26/36. Итог локально: **574 unit tests** (451/82/41), 0 failures/errors/skips;
+**28 native tests** API36/WHPX, 41.54 с. Lisa/Belka release Kotlin/Java source
+sets с подготовленной 3.1.2.27/221 компилируются; Debug сохраняет 3.1.2.22/217.
+Linux CI этой итерации проверяется отдельно. Физического Pigo/PiRat здесь нет;
+нужен cold-start smoke без PiMock, обрыв и повторное соединение.
 
 ## Находки и исправления
 
@@ -144,13 +170,14 @@ open Android PR не обнаружено.
 | Требование/owner | PR/base | Включение/порядок |
 |---|---|---|
 | Исходная планшетная панель/app |#45 → my-maplibre |94c5f93 — предок текущего app tip |
-| SQLite/outbox/track spool/tap/auth/WKT/maplib |[maplib37](https://github.com/GeonicalSys/android_maplib/pull/37) → master, `db7dfc67d74ae4cf27070f15fc9f47b3247c23c6` |1. Опубликован Draft head, app gitlink совпадает; требуется Merge Commit |
-| Form/Tracker/backup/services/NGID/icons/maplibui |[maplibui25](https://github.com/GeonicalSys/android_maplibui/pull/25) → master, `780eb95eddc3092b9d18f21789b7d49bf4d1e85e` |2. Опубликован Draft head, app gitlink совпадает; зависит от maplib37, требуется Merge Commit |
-| App integration/selection/rail/Back/CI/docs |#45 → my-maplibre |3. Draft pins должны указывать на опубликованные commits обоих library PR |
+| SQLite/outbox/track spool/tap/auth/WKT/Pigo/version/maplib |[maplib37](https://github.com/GeonicalSys/android_maplib/pull/37) → master, `040c3cd0a342f8f6c467bc303c819670857e32dd` |1. Опубликован Draft head, app gitlink совпадает; исходный `db7dfc6` — проверенный предок; требуется Merge Commit |
+| Form/Tracker/backup/services/NGID/icons/integration docs/maplibui |[maplibui25](https://github.com/GeonicalSys/android_maplibui/pull/25) → master, `4cb67b136cd04a49bc4b7d79389a77065d9aab3b` |2. Опубликован Draft head, app gitlink совпадает; исходный `780eb95e` — проверенный предок; зависит от maplib37, требуется Merge Commit |
+| App integration/selection/rail/Back/CI/docs/version221 |#45 → my-maplibre |3. Draft pins указывают на опубликованные commits обоих library PR; перед Squash нужны fetched remote merge SHA |
 | easyPicker/publisher/desktop |Без изменений |Не создают новых зависимостей |
 
 Точные app commit и remote checks записаны в body [app45](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/45).
 Опубликованные codex branches сверены: app45, maplib37 и maplibui25; иных
 требующих включения открытых Android PR не обнаружено на момент доставки.
 Pin на незамерженный library head — reviewable integration, **не завершённый
-release dependency**. Merge, APK publication и version bump этим task не выполнены.
+release dependency**. Production version подготовлена `3.1.2.27` / `221`;
+merge, release APK/version matrix и publication ещё не выполнены.

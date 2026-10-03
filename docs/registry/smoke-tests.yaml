@@ -523,6 +523,7 @@ tests:
       - With GPS Connector / external mock GNSS: accuracy follows HDOP extras, does not pulse 47 m, does not jump to Network; track/walk vertices use receiver coordinates no coarser than 2 s / 1 m
       - With native External GNSS (Bluetooth Classic NMEA, no mock): HUD shows RTK quality/sats/HDOP, map accuracy follows GST, chip and network are not mixed, successive GGA are not dropped as chip, track/walk use receiver coordinates no coarser than 2 s / 1 m
       - With native External GNSS selected, Home/screen-off for 30 s then reopen: HUD must not flash connecting; verbose log must not record External GNSS closed on onPause
+      - With Pigo Lite/Lite Plus and PiRat UHF, fully stop PiMock and power-cycle the receiver; connect from Lisa over BLE and verify fresh coordinates, actual FIX/FLOAT/Auto quality, eight-second quality expiry on data loss and reconnection without PiMock; diagnostic UART must pair 3A20/3A21/3A22 and initialization must not alter correction or radio settings
       - During stakeout on a live receiver fix, the widget must not flash Waiting for GPS solely because the GNSS timestamp is slightly in the future or because GGA repeats every 5 s
     expected: >
       System location off blocks an interactive start before durable recording intent changes;

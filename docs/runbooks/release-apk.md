@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-09-22
+last_verified: 2026-10-03
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -17,9 +17,9 @@ related_code:
 
 ## Версия
 
-Проверяемый выпуск `3.1.2.26`: production `versionCode 220`, Lisa Debug —
+Подготавливаемый выпуск `3.1.2.27`: production `versionCode 221`, Lisa Debug —
 `3.1.2.22` / `versionCode 217`; диагностический release
-`maplib.VERSION_NAME 3.1.2.26`, debug — `3.1.2.22`.
+`maplib.VERSION_NAME 3.1.2.27`, debug — `3.1.2.22`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.
@@ -40,6 +40,13 @@ related_code:
    notes, если пользователь не запросил иное.
 
 ## Обязательная сборка и проверка версии
+
+Перед release APK/version matrix и выдачей команд публикации закрыть цепочку
+maplib PR37 (Merge Commit) → maplibui PR25 (Merge Commit) → app PR45 (Squash).
+После library merges app закрепляет именно fetched remote merge commits; после
+app merge повторно сверяются remote tip и все строки delivery matrix. До этого
+подготовка version constants не означает готовность APK. Публикация оператором
+выполняется отдельно после dry-run.
 
 ```powershell
 Set-Location C:\dev\lisa\android_projects\android_gisapp

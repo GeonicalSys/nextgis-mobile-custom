@@ -47,6 +47,10 @@ related_code:
 
 ## Контракты
 
+Подготовка production `3.1.2.27` / `221` меняет version metadata, сохраняя общий
+OpenGL backend MapLibre13.0.2. Release APK/version matrix выполняются после
+merge library dependencies и проверки их точного включения в app.
+
 Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
 читает записи/сегменты в общей фоновой очереди, по одной активной и одной
 отложенной задаче каждого вида. Чтение привязано к SQLite исходного workspace,

@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-03
+last_verified: 2026-10-04
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -42,6 +42,7 @@ lost.
 | After reboot / cold start | `BootLoader` and `MainActivity` call `TrackerService.ensureRecordingRunningIfEnabled()` — silent auto-start, no dialog |
 | Continuity of track id | Not required. Closing unfinished tracks and starting a new id after a crash is allowed; previous points remain in SQLite / on the map |
 | Forbidden stop | Reboot, process death, and legacy `track_restore=false` must not stop recording while the durable flag is set |
+| External receiver state | GATT subscription/write failure or Bluetooth permission revocation closes the transport without a callback crash. Late callbacks cannot affect a replacement session. Quality expires after eight seconds of silence and cannot retain an old FIX/FLOAT/Auto status |
 | Background sound | With `background_recording_sound=true`, the shared validated GNSS stream before decimation distinguishes stationary coordinates from missing delivery. While the UI is hidden/screen off and usable fixes remain fresh, the GPS session owns a partial wake lock independently of the sound setting and keeps a short alarm-stream heartbeat on a fixed 10-second cadence independent of point inserts. Notification volume does not suppress it; if the alarm stream is muted or has zero volume, a short vibration replaces the heartbeat. An observed persistence failure uses a distinct tone or double vibration at most once per minute. Missing fresh fixes, a killed process or revoked permission silence the feedback and remain the user-visible warning |
 | Permission revoked | If Android removes coarse/fine location while recording, a sticky restart must not call `startForeground()` for the forbidden location FGS. The service stops with `START_NOT_STICKY`, retains `track_recording_enabled`, and can resume after permission returns without crashing the app |
 

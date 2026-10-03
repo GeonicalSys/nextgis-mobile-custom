@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-03
+last_verified: 2026-10-04
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -30,7 +30,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionPolicy.java
     responsibility: Pure manifest, URL, version and signing identity rules for the Debug companion.
   - path: app/build.gradle
-    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, production 3.1.2.26/220 versus Lisa Debug 3.1.2.22/217 version contract, and signing configuration.
+    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.0.2 OpenGL backend, pending production 3.1.2.27/221 versus Lisa Debug 3.1.2.22/217 version contract, and signing configuration.
   - path: app/src/lisa/res/values/launcher_icon.xml
     responsibility: Lisa launcher, intro and about icon binding to density-specific ic_launcher_lisa resources without changing Belka branding.
   - path: app/src/belka/res/values/launcher_icon.xml
@@ -40,7 +40,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     responsibility: Main navigation, per-launch and settings-return runtime permission checks for location, device accounts and legacy storage (notification permission is optional and requested only in Settings), system-location-gated track/walk start, confirmed versus pending track toolbar/map-button state and failure warning, map rotation/location recovery, local file and shared-underlay import, default migration, walk-state reconciliation and crash-recovery hub, NGW URL/project selection, sync interruption, backup sharing and updater continuation.
   - path: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
-    responsibility: Choose Bluetooth Classic/LE, USB or TCP NMEA endpoint and persist gnss_input device keys without Mock Location.
+    responsibility: Choose Bluetooth Classic/LE, USB or TCP endpoint and persist gnss_input keys without Mock Location; identified ComNav/Pigo BLE uses the native paired UART/BESTPOSB session and expires stale HUD quality.
   - path: app/src/main/res/xml/preferences_general.xml
     responsibility: General settings including save_log file export, opt-in verbose_log GNSS dumps and a confirmed walk-only emergency reset action.
   - path: app/src/main/java/com/nextgis/mobile/util/WalkEmergencyReset.java

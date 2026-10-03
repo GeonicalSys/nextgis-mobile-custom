@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-03
+last_verified: 2026-10-04
 related_code:
   - app/build.gradle
   - app/src/main
@@ -20,7 +20,7 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.26` / `versionCode` 220; Lisa Debug
+Подготовленные исходники форка: Lisa/Belka Release `3.1.2.27` / `versionCode` 221; Lisa Debug
 `3.1.2.22` / `versionCode` 217. Сверено с официальным приложением `3.2.0` и с
 головами официальных repositories на 3 октября 2026 года: app
 `482f26f30abea1468ebfefaa45092d86f921d68b`, maplib
@@ -1182,7 +1182,12 @@ Mock и native NMEA не сглаживаются пешеходным филь�
 Внешний GNSS читается приложением по Bluetooth Classic/LE, USB или TCP/IP без Mock Location.
 PiGoLite/ComNav по BLE по умолчанию отдаёт CNB, не `$GGA`: координаты берутся
 из BESTPOSB (сообщение 42). `unlogall` не отправляется. ASCII GGA — дополнение,
-не условие фикса.
+не условие фикса. BLE UART Pigo `3A20` имеет write `3A21` / notify `3A22`;
+тихая сессия добавляет только BESTPOSB, без `unlogall` и смены поправок.
+Подписка и фрагменты write подтверждаются; ошибки и таймаут восстанавливают
+соединение. Старые callbacks игнорируются, качество HUD сбрасывается при обрыве
+или 8 с тишины. Профиль и failure paths проверены на API 26/36;
+физический Pigo/PiRat smoke остаётся непроверенным.
 Пока выбран внешний приёмник, соединение не рвётся при сворачивании карты: процесс
 удерживает foreground-сервис connected-device и wake lock. Диагностический
 `verbose_log` пишет GNSS/NMEA в локальный HyperLog только по явному чекбоксу.

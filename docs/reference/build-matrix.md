@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-03
+last_verified: 2026-10-04
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -13,6 +13,10 @@ related_code:
 
 # Матрица сборки и версий
 
+Исходники подготовлены для production `3.1.2.27` / `221`. Release APK/version
+matrix заблокированы открытыми PR37/25/45 до закрытия всей цепочки и проверки
+remote library merge pins. Результат APK matrix после merge записывается в PR45.
+
 | Компонент | Текущее значение |
 |---|---|
 | Gradle wrapper | `9.3.1` |
@@ -21,11 +25,11 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `220` |
-| App versionName (release) | `3.1.2.26` |
+| App versionCode (release) | `221` |
+| App versionName (release) | `3.1.2.27` |
 | App versionCode (debug) | `217` |
 | App versionName (debug) | `3.1.2.22` |
-| maplib VERSION_NAME (release) | `3.1.2.26` |
+| maplib VERSION_NAME (release) | `3.1.2.27` |
 | maplib VERSION_NAME (debug) | `3.1.2.22` |
 | MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |
@@ -76,6 +80,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version
 вручную проверяются launcher, intro и about каждого бренда.
 
 ## Проверки надёжности и воспроизводимость
+
+Дополнение 2026-10-04: Pigo BLE/GATT/session regressions проверены на API 26/36.
+Локально прошли 574 unit tests (451 maplib, 82 maplibui, 41 app), 28 native
+API36/WHPX checks и Lisa/Belka release Kotlin/Java source compilation. Это
+не release APK matrix; её запуск требует закрытия library/app цепочки.
 
 JDK21 обязателен. Gradle wrapper distributionSha256Sum фиксирует проверенный
 дистрибутив9.3.1. Hyperlog master-SNAPSHOT заменён **теми же байтами AAR** из

@@ -648,6 +648,11 @@ invariants:
       and CNB BESTPOSB (message 42). Factory ComNav CNB (AA 44 12) is framed with CRC;
       $/# inside binary is not an NMEA start. The session does not send unlogall; optional
       GGA/GST/GSA/RMC logs are one 20-byte command at a time unless ASCII is already flowing.
+      Identified ComNav/Pigo BLE pairs service 3A20, write 3A21 and notify 3A22;
+      it adds BESTPOSB only to a silent stream, never changing correction inputs
+      or selecting unrelated writable GATT characteristics. CCCD/write failure and
+      permission revocation do not crash callbacks. Late callbacks cannot affect
+      a replacement session; HUD quality expires after eight seconds of silence.
       Native NMEA is not
       dropped as phone-chip while a previous receiver fix is still fresh.
       While an endpoint

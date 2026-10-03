@@ -17,7 +17,7 @@ preferences:
     default: system
     user_configurable: true
     source: app/src/main/res/xml/preferences_location.xml
-    purpose: Choose Android system GNSS or an in-app external NMEA receiver (Bluetooth Classic/LE, USB, TCP/IP) without Mock Location.
+    purpose: Choose Android system GNSS or a native external receiver (Bluetooth Classic/LE, USB, TCP/IP) without Mock Location; identified ComNav/Pigo BLE uses paired 3A20 UART and additive BESTPOSB initialization without altering correction inputs.
   gnss_device:
     owner: app
     type: preference_action
@@ -277,7 +277,7 @@ manifest_metadata:
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Bind installed and downloaded APK to lisa or belka update channel
+    purpose: Bind installed and downloaded APK to the explicit lisa, belka or debug channel independently of version or filename; the pending production 3.1.2.27/221 bump retains channel identities.
   io.sentry.traces.user-interaction.enable:
     owner: app
     source: app/src/main/AndroidManifest.xml

@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-03
+last_verified: 2026-10-04
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -16,6 +16,14 @@ Launcher и экраны intro/about получают иконку через fl
 стилей лежат в `src/main/assets/marker_icons/*.png`; имя файла без расширения —
 id изображения в MapLibre. Карта использует MapLibre Android `13.0.2` с явным
 OpenGL backend вместо Vulkan-default artifact.
+
+Для production `3.1.2.27` подготовлены сопряжённые app/maplib metadata;
+APK version matrix выполняется после закрытия library/app PRs. Lisa Debug
+сохраняет самостоятельный version contract.
+
+Внешний Pigo по BLE использует собственную пару UART-каналов и может получать
+BESTPOSB без предварительного запуска PiMock. HUD сбрасывает старое качество
+через 8 секунд без данных. Холодный старт Pigo/PiRat требует физического smoke.
 
 ## Основные сценарии
 

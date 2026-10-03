@@ -1,14 +1,30 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-03
+last_verified: 2026-10-04
 related_code:
   - docs
 ---
 
 # История документационной системы
 
+## 2026-10-04
+
+- По полевым логам Pigo найден отсутствующий write channel; официальный
+  PiSatel подтверждает service 3A20 / write 3A21 / notify 3A22. Добавлена
+  адресная BLE-поддержка и additive BESTPOSB для тихого приёмника; частота
+  живого потока, УКВ/поправки/сохранённые настройки не меняются.
+- Исправлены GATT subscription/write failure paths, последовательность
+  фрагментов, timeout, stale callbacks и expiry качества. Локально прошли
+  574 unit и 28 native API36 tests; обе production source sets компилируются.
+  Холодный физический Pigo/PiRat smoke ещё не выполнен; release APK pending closure.
+
 ## 2026-10-03
+
+- Подготовлены production constants `3.1.2.27` / `221`, сопряжённая maplib
+  diagnostic version, независимые ожидания APK matrix и CI basename.
+  Debug остаётся `3.1.2.22` / `217`. Release APK/version matrix и выдача команд
+  публикации требуют closure открытых library/app PRs; публикация не выполнялась.
 
 - Чистый Linux CI выявил удалённый SDK tools package и несовместимый с JDK21
   MaxPermSize: setup packages и tracked JVM args исправлены без смены toolchain.
