@@ -1,12 +1,62 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-09-22
+last_verified: 2026-10-04
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-04
+
+- По разрешению пользователя завершены Merge Commit maplib37 (`1d81e8a`) и
+  maplibui25 (`675c16b1`), app45 закрепляет fetched remote merge commits.
+  Git ancestry и совпадение trees подтверждают включение всех predecessors;
+  иных требующих включения PR/codex heads в пяти Android owners нет. Official
+  upstream heads проверены повторно и не изменились. Linux CI f580bd8 прошла
+  574 unit и28 native tests; перед release matrix остаётся app Squash/fetch.
+- По полевым логам Pigo найден отсутствующий write channel; официальный
+  PiSatel подтверждает service 3A20 / write 3A21 / notify 3A22. Добавлена
+  адресная BLE-поддержка и additive BESTPOSB для тихого приёмника; частота
+  живого потока, УКВ/поправки/сохранённые настройки не меняются.
+- Исправлены GATT subscription/write failure paths, последовательность
+  фрагментов, timeout, stale callbacks и expiry качества. Локально прошли
+  574 unit и 28 native API36 tests; обе production source sets компилируются.
+  Холодный физический Pigo/PiRat smoke ещё не выполнен; release APK pending closure.
+
+## 2026-10-03
+
+- Подготовлены production constants `3.1.2.27` / `221`, сопряжённая maplib
+  diagnostic version, независимые ожидания APK matrix и CI basename.
+  Debug остаётся `3.1.2.22` / `217`. Release APK/version matrix и выдача команд
+  публикации требуют closure открытых library/app PRs; публикация не выполнялась.
+
+- Чистый Linux CI выявил удалённый SDK tools package и несовместимый с JDK21
+  MaxPermSize: setup packages и tracked JVM args исправлены без смены toolchain.
+  Недостающий parent POM Guava33.4.8-jre закреплён после сверки с checksum
+  Maven Central без смены бинарных зависимостей и ослабления verification.
+  Linux CI фактически прошла517 unit и28 native API36 tests, debug APKs и обе
+  release source sets; точный run/commit/runtime записаны в audit/build reference.
+
+- Аудит PR45: documented recoverable form Save, owning-map feature/outbox
+  transactions, track retry/Stop, backup format2, auth snapshots, internal service
+  timeout/export contracts, selection/tap/rail behavior and NextGIS ID input.
+- Обновлены local packs/registries, build verification/CI contract и свежий
+  official comparison. Добавлен отчёт с actual tests, benchmark, delivery gates
+  и явными непроверенными device/recovery scenarios. Release/publication не выполнены.
+
+## 2026-09-23
+
+- Объединены phone/landscape/tablet resources карты: кнопка трека и панель
+  обхода больше не отсутствуют на планшете или при холодном landscape-start.
+- Инструменты справа автоматически переносятся в соседние столбцы по высоте
+  view; меню создания раскрывается в отдельной нижней строке и не перекрывает
+  инструменты. Учтён поворот без пересоздания Activity.
+- Preview обхода подписан непосредственно на сервисные события и resume,
+  независимо от panel callbacks; формат и содержимое saved sessions не меняются.
+- Добавлены unit-регрессии XML-контракта и расчёта столбцов, обновлены app pack,
+  map rendering/crash recovery, invariant и device-smoke матрица.
 
 ## 2026-09-22
 

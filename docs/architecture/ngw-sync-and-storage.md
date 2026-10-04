@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-09-22
+last_verified: 2026-10-03
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -102,7 +102,7 @@ NGW account привязан не только к серверным credentials
 Release ЛИСА/Белка используют `com.nextgis.account.geonical`, debug —
 `com.nextgis.account.debug`. GIS provider аналогично должен совпадать между
 `BuildConfig.providerAuth`, manifest provider и `SyncAdapter.contentAuthority`.
-Выпуск `3.1.2.26` использует production tuple `220` / `3.1.2.26`, а отдельный
+Подготовленный выпуск `3.1.2.27` использует production tuple `221` / `3.1.2.27`, а отдельный
 debug — `217` / `3.1.2.22`; application/account/provider identity не
 меняется.
 Library defaults нельзя считать достаточными: app variant обязан перекрывать оба
@@ -117,7 +117,7 @@ ID контракта: `INV-NGW-ACCOUNT-IDENTITY`.
 
 ## Безопасная мутация данных
 
-Для editable NGW vector layers действует fail-closed gate
+Для NGW vector layers с сохраняемыми локальными данными действует fail-closed gate
 `INV-BACKUP-BEFORE-DESTRUCTION`: без успешного backup разрушительная операция
 не выполняется.
 
@@ -156,7 +156,8 @@ Backup содержит данные слоя (features/changes/attachments), ф
 (по умолчанию 5 ГБ, настройки Общие → Другое). При превышении удаляются самые
 старые ZIP.
 
-Non-editable Collector слои и raster-style tile cache не требуют data backup.
+Read-only состояние NGW vector слоя не отменяет backup его имеющихся данных.
+Воссоздаваемый raster-style tile cache не требует data backup.
 
 ## Вложения после push
 
@@ -448,3 +449,39 @@ MultiPolygon, но не зависит квадратично от числа в
 Связанные tests: `NgwPullDecisionTest`, `NGWUtilFeaturesUrlTest`,
 `NgwResmetaUtilTest`, `LayerConfigUtilTest`, `NgwSyncRetryPolicyTest`,
 `NetworkUtilTransientNgwTest`.
+
+## Локальный commit, backup и реквизиты
+
+Feature CRUD и его outbox используют одну owning-map SQLite транзакцию;
+`LayerDatabaseTransaction` откладывает уведомления и физическое удаление файлов
+до commit. Неудачный вложенный вызов делает managed outer transaction неуспешной,
+даже если вызывающий код перехватил ошибку. Raw внешняя транзакция сама отвечает
+за финальное обновление UI: промежуточные callback не публикуются.
+Строгие запросы FeatureChanges не превращают ошибку базы в пустой outbox.
+Совместимые legacy UI wrappers при ошибке чтения считают изменения имеющимися.
+`FeatureSaveJournal` — отдельная локальная таблица UUID/id без изменения NGW
+protocol/schema. Form retry использует UUID и карту; перенос server feature id
+переносит соответствующий journal owner.
+
+ZIP format2 хранит owning map_path, features/changes/attachments row dumps и
+локальные attachment files. JSON rows пишутся последовательно из согласованного
+SQLite snapshot; отсутствие обязательной features table — ошибка. Уникальный
+.partial архив проверяется на обязательные entries и CRC, затем публикуется
+уникальным ZIP. Quota применяется к завершённым архивам. Формы/config проекта
+в такой backup не включаются; автоматического restore нет. См.
+[восстановление на копии](../runbooks/incident-and-rollback.md).
+
+Ручное удаление слоя выполняет backup на worker, оставляет слой доступным для
+Undo и при окончательном подтверждении вновь проверяет owning map, parent,
+резервирование формы/обхода и generation данных. Поздняя правка отменяет
+удаление. Ошибка DROP откатывает все таблицы слоя и сохраняет папку.
+Удаление NGW-вложений записывает outbox до удаления photo/metadata; при ошибке
+outbox оба файла остаются. File cleanup после commit не является атомарным с DB:
+ошибка очистки сохраняет файл для диагностики и не отменяет committed outbox.
+
+`AuthInterceptorNG` публикует неизменяемые snapshots реквизитов; точное совпадение
+origin/resource/server prefix предотвращает отправку пароля другому хосту или
+ресурсу1 вместо10. Project switch и смена аккаунта обновляют/удаляют owning entries.
+NextGIS ID нормализует только login/email; Web GIS passwords и identifiers
+сохраняют свои прежние правила. В resource tree folder/up icon назначается на
+каждую bind независимо от того, была ли строка раньше кнопкой добавления аккаунта.

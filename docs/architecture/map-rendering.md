@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-09-21
+last_verified: 2026-10-03
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -46,6 +46,10 @@ related_code:
   MapLibre backend для конечного APK.
 
 ## Контракты
+
+Подготовка production `3.1.2.27` / `221` меняет version metadata, сохраняя общий
+OpenGL backend MapLibre13.0.2. Release APK/version matrix выполняются после
+merge library dependencies и проверки их точного включения в app.
 
 Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
 читает записи/сегменты в общей фоновой очереди, по одной активной и одной
@@ -304,6 +308,14 @@ Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
     иначе copy-конструкторы теряют корневой CRS и передают метры как lon/lat.
     Полная и облегчённая загрузка style восстанавливают cached preview.
     Смена экземпляра MapDrawable также требует повторной привязки снимка.
+    `MapFragment` слушает `WALKEDIT_CHANGE` напрямую во время resume и перечитывает
+    снимок при возврате на экран: preview не зависит от наличия панели.
+    Все phone/landscape/tablet layouts включают один `layout_map_content` с
+    обязательными кнопкой трека и панелью обхода. `MapControlRail` пересчитывает
+    число строк по доступной высоте при каждом measure, в том числе при повороте
+    без пересоздания Activity, и переносит инструменты в столбцы справа налево.
+    Меню создания раскрывается влево в отдельной нижней строке; панель обхода
+    находится выше этой строки и слева от инструментов.
     Редактор точки владеет своими selected/vertex sources, не забирая линию
     обхода. Панель обхода сохраняется при обычном режиме карты; все её команды
     блокируются от выбора слоя точки до успешного Save либо явного Cancel.
@@ -407,3 +419,25 @@ MapLibre выбирает `mbtiles://` по формату целевого payl
 синхронным. Ошибка распознавания NGRc не должна превращаться в падение native
 карты во время cleanup. Штатный `Mapnik.json` и пути JPEG/PNG/WebP обрабатываются
 тем же потоковым импортом, без изменения географической схемы тайлов.
+
+## Выбор объекта, допуск тапа и тесная панель
+
+Выбор editable feature сразу включает его action mode, сохраняя highlighting
+и предлагая форму/удаление/геометрию. Это не изменяет вершины автоматически.
+Read-only feature показывает просмотр; сброс выбора завершает action mode и
+освобождает layer lock. AndroidX Back закрывает активные инструменты/выбор до
+обычного выхода с карты.
+
+`MapTapGesture` на down фиксирует точку/время; maximum travel, включая историю
+MOVE и возвращающийся drag, должен укладываться в max(12dp, system touch slop),
+а время — быть короче system long-press timeout. Cancel, второй палец и UP без
+DOWN не создают точку. В режиме placement host повышает MapLibre move threshold
+до того же допуска, чтобы микросдвиг не сдвигал камеру; normal mode возвращает
+исходный threshold. Правило общее для drawing, ruler и azimuth. Перетаскивание
+вершин/азимутных endpoints использует прежние обработчики.
+
+`MapControlRail` рассчитывает вместимость по обеим сторонам доступного прямоугольника,
+сохраняет 48dp touch targets и переносит непоместившиеся действия в overflow;
+пункт вызывает исходный control click. Состояние/visibility исходных кнопок
+сохраняется. Физический планшет, display size/font scale, split screen и системные
+insets ещё требуют [device smoke](../runbooks/device-smoke-tests.md).

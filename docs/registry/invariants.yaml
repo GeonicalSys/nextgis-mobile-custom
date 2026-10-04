@@ -1,5 +1,63 @@
 schema_version: 1
 invariants:
+  INV-LOCAL-WRITE-COMMIT:
+    title: Local features and sync records share one owning-map commit
+    owners: [maplib, maplibui]
+    statement: >
+      Feature writes and strict outbox mutations use the owning layer database in one transaction.
+      Read failure cannot mean an empty outbox. Notifications, mutation generation and feature or
+      NGW attachment file deletion publish only after commit. UUID operation journals reconcile
+      lost insert replies; form or attachment failure retains the draft and assigned id for retry.
+      Files and SQLite form a recoverable workflow, not one atomic cross-store transaction.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/LayerDatabaseTransaction.java
+      - maplib/src/main/java/com/nextgis/maplib/util/FeatureSaveJournal.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-RELIABILITY-FAILURES]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/crash-recovery.md]
+  INV-TRACK-RETRY:
+    title: Failed track writes and Stop retain the owning-map tail
+    owners: [maplib, maplibui, app]
+    statement: >
+      Sampled points enter a bounded ordered owning-map queue before idempotent UUID SQLite insert.
+      A failed write retains the point; pending files are removed only after commit. Stop intent,
+      track row and recording flag survive until the full tail drains and session closure commits.
+      Corrupt checkpoints block silent recovery. Disk-full RAM fallback cannot survive process death
+      until durable persistence succeeds; this limit must remain explicit.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/PendingTrackPoints.java
+      - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-RELIABILITY-FAILURES, SMOKE-GPS-RECORDING]
+    must_update_docs: [docs/architecture/crash-recovery.md, docs/architecture/location-pipeline.md]
+  INV-TOOL-TAP-TOLERANCE:
+    title: Tool placement accepts short micro-drift without swallowing deliberate gestures
+    owners: [maplib, app]
+    statement: >
+      Drawing, ruler and azimuth placement share max(12dp, system touch slop), one short single-finger
+      down/up pair and matching MapLibre pan threshold. Long press, cancellation, multi-finger and
+      any larger excursion including return to the start cannot place a point. Normal camera mode
+      restores its original pan threshold. Editable selection immediately shows feature actions;
+      clearing it terminates action mode, while read-only selection remains view-only.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/MapTapGesture.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-TOOL-TAP]
+    must_update_docs: [docs/architecture/map-rendering.md, docs/runbooks/device-smoke-tests.md]
+  INV-NGID-LOGIN:
+    title: NextGIS ID accepts normalized email or username without changing password
+    owners: [maplibui]
+    statement: >
+      NGID login screens request email or username, avoid keyboard capitalization and submit the
+      trimmed identifier in Locale.ROOT lowercase. Password is passed unchanged. Web GIS account
+      input keeps its separate existing rules.
+    related_code:
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NGIDLoginName.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/NGIDUtils.java
+    verify_smoke: [AUTO-MAPLIBUI-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-NGID-AND-RESOURCE-ICONS]
+    must_update_docs: [maplibui/docs/README.md, docs/reference/official-differences.md]
   INV-SHARED-UNDERLAYS:
     title: Shared offline payloads outlive project links
     owners: [maplib, maplibui, app]
@@ -212,11 +270,17 @@ invariants:
       layer with a valid finite extent at zoom 12 regardless of extent size.
       The MapLibre camera cannot go below 7.5 (pinch, buttons, restore and fit bounds).
       Layer DEFAULT_MIN_ZOOM remains 0.
+      Phone, landscape and tablet map layouts include the same content with a track
+      toggle and walk panel. Right-edge tools reflow into columns using actual view
+      height, including orientation changes without Activity recreation. The creation
+      menu has its own bottom row and cannot overlap the tools or walk controls.
     related_code:
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
       - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
       - app/src/main/res/menu/main.xml
+      - app/src/main/java/com/nextgis/mobile/view/MapControlRail.java
+      - app/src/main/res/layout/layout_map_content.xml
       - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
       - maplib/src/main/java/com/nextgis/maplib/util/GeoConstants.java
     verify_smoke: [SMOKE-MAP-CAMERA-CONTROLS]
@@ -422,15 +486,15 @@ invariants:
     title: Required backup gates destructive layer mutation
     owners: [maplibui, maplib]
     statement: >
-      For editable NGW vector layers, a successful data backup is required before any destructive
+      For NGW vector layers with retained local data, a successful data backup is required before any destructive
       mutation — remote sync delete/overwrite, schema rebuild, Collector vector-layer removal,
       duplicate-layer repair, manual layer delete, manual feature delete, or active project workspace
       delete. Schema rebuild must retain the old layer until its staged replacement is saved in the
       same map commit that removes old references. Backup must include every attachment file that is
       physically present in the layer directory, while server-only attachment metadata remains in the
       attachment table and must never trigger a network download during backup. If backup fails, local
-      feature data must remain unchanged and the user must see an alert with the failure reason. Non-editable Collector
-      layers and recreatable raster-style tile caches are not data-backup operations. LayerBackups/
+      feature data must remain unchanged and the user must see an alert with the failure reason. Current read-only status does not bypass the gate for existing vector data;
+      recreatable raster-style tile caches are not data-backup operations. LayerBackups/
       is capped by preference layer_backup_max_gb (default 5); oldest ZIP archives are deleted when
       the limit is exceeded. After a successful attachment push, the local file stays under the
       server attach id and FeatureAttachments is updated so identification works without a second sync.
@@ -584,6 +648,11 @@ invariants:
       and CNB BESTPOSB (message 42). Factory ComNav CNB (AA 44 12) is framed with CRC;
       $/# inside binary is not an NMEA start. The session does not send unlogall; optional
       GGA/GST/GSA/RMC logs are one 20-byte command at a time unless ASCII is already flowing.
+      Identified ComNav/Pigo BLE pairs service 3A20, write 3A21 and notify 3A22;
+      it adds BESTPOSB only to a silent stream, never changing correction inputs
+      or selecting unrelated writable GATT characteristics. CCCD/write failure and
+      permission revocation do not crash callbacks. Late callbacks cannot affect
+      a replacement session; HUD quality expires after eight seconds of silence.
       Native NMEA is not
       dropped as phone-chip while a previous receiver fix is still fresh.
       While an endpoint

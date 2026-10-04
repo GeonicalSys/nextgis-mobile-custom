@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-09-22
+last_verified: 2026-10-04
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -135,6 +135,12 @@ preference `layer_label` и переносится в JSON после перво
 host/path требует новой подписанной сборки. Ветка выбирается из build variant и
 проверяется повторно по metadata загруженного APK.
 
+Внешний Pigo Lite/Lite Plus по BLE не требует Mock Location и предварительного
+запуска PiMock. Профиль ComNav `3A20` использует отдельные write/read каналы;
+тихой сессии добавляется только BESTPOSB. Поправки/УКВ и сохранённая конфигурация
+не меняются. HUD показывает решение приёмника, которое исчезает через 8 с без
+данных, а не факт соединения или работающего foreground service.
+
 ## Источники и интервалы GPS
 
 Карта использует свежий GPS (чип, mock или native NMEA) и Network только если GPS нет;
@@ -160,3 +166,14 @@ durable checkpoint до запуска Activity. Точные имена клю�
 ## Хранилище подложек
 
 В общих настройках `shared_underlays` открывает каталог с использованием по проектам. Удаление payload требует подтверждения списка проектов; обычное удаление слоя означает только «Убрать из проекта». Сброс настроек не удаляет каталог. Внутренние `shared_underlay_id`, `shared_underlay_migration` и `debug_companion_install` описаны в [контракте](../architecture/shared-underlays.md).
+
+## Служебные ключи надёжности
+
+`tracks_temp` хранит owning track_uri, track_map и pending_stop; последний
+переживает ошибку Stop и снимается только после выгрузки очереди/закрытия сессии.
+`feature_form_draft` остаётся совместимым v1 JSON, дополненным map path и UUID
+операции. Sign snapshot хранит размеры холста и штрихи. `pending-track-points`
+и `feature-save-journal` — локальные storage contracts, не пользовательские
+настройки и не server schema. Их повреждение нельзя лечить автоматическим
+удалением. `ciReliabilityChecks` — opt-in Gradle property для проверки без
+private Sentry DSN; в обычной сборке требования config остаются прежними.

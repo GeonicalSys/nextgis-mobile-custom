@@ -1,0 +1,78 @@
+name: Android reliability
+
+on:
+  push:
+    branches: [my-maplibre]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-reliability-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Prepare SDK configuration
+        run: |
+          printf 'sdk.dir=%s\n' "$ANDROID_HOME" > local.properties
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+          chmod +x gradlew
+      - name: Unit tests, debug APKs and both release source sets
+        run: >-
+          ./gradlew -PciReliabilityChecks=true --console=plain
+          :maplib:testDebugUnitTest :maplibui:testDebugUnitTest :app:testLisaDebugUnitTest
+          :maplibui:assembleDebug :app:assembleLisaDebug :app:assembleLisaDebugAndroidTest
+          :app:compileLisaReleaseKotlin :app:compileLisaReleaseJavaWithJavac
+          :app:compileBelkaReleaseKotlin :app:compileBelkaReleaseJavaWithJavac
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Native SQLite, track Stop, map tools and login regression
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-snapshot -gpu swiftshader_indirect -no-boot-anim
+          script: |
+            adb install -r app/build/outputs/apk/lisa/debug/ngmobile-3.1.2.27-lisa-debug.apk
+            adb shell appops set com.nextgis.mobile.debug MANAGE_EXTERNAL_STORAGE allow
+            adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
+            adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
+            adb shell pm grant com.nextgis.mobile.debug android.permission.POST_NOTIFICATIONS
+            adb shell cmd location set-location-enabled true
+            adb shell svc wifi disable
+            ./gradlew -PciReliabilityChecks=true :app:connectedLisaDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.nextgis.mobile.reliability --console=plain
+      - name: Store test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-reliability-reports
+          path: |
+            app/build/reports/tests
+            app/build/reports/androidTests
+            app/build/outputs/androidTest-results
+            maplib/build/reports/tests
+            maplibui/build/reports/tests
+          if-no-files-found: ignore

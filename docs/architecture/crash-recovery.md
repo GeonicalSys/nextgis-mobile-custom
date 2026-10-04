@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-09-22
+last_verified: 2026-10-04
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -32,16 +32,17 @@ lost.
 
 | Concern | Behavior |
 |---------|----------|
-| Point durability | Each sampled, validated GNSS point is inserted immediately; the bounded filter and sampling tail is flushed before explicit Save |
+| Point durability | Each sampled, validated GNSS point is queued in owning-map AtomicFile storage before a serial idempotent SQLite insert; filter/sampling tails are flushed before Stop. Pending files are acknowledged only after database commit |
 | GPS validation | Shared `LocationTrackFilter` retains valid movement through 160 km/h, rejects invalid/old/inaccurate fixes and isolated material spikes, and drains its delayed two-fix buffer on stop or before a long-gap segment reset |
 | Provider ownership | Application-owned GpsEventSource; GPS (chip, mock or native NMEA) for display with Network only as GPS-absent fallback; GNSS chip, mock receiver extras or native NMEA for track/walk recording |
 | GPS gaps | Database v6 persists trackpoints.segment; gaps survive map reload and GPX export. Walk stores gps_paused and requires explicit reconnection |
-| Recording flag | Durable preference `track_recording_enabled` is intent, not proof of an active service or track row. The menu and the walking-person button under the ruler distinguish Start, Starting, Recording and Error; neither shows a false active state before service confirmation. Explicit Stop clears intent, while a foreground/SQLite failure warns without deleting unfinished data. |
+| Recording flag | Durable preference `track_recording_enabled` is intent, not proof of an active service or track row. The menu and the walking-person button under the ruler distinguish Start, Starting, Recording and Error; neither shows a false active state before service confirmation. Explicit Stop persists pending_stop and clears recording intent only after all queued points and track closure are committed. A foreground/SQLite failure keeps the queue and warns without deleting unfinished data. |
 | System location | Interactive Start is rejected before changing durable intent when Android system location is off. The app explains the requirement and opens Location settings; the service repeats the check to close lifecycle races. |
 | Process ordering | `TrackerService` runs in the default application process. The toolbar Start lifecycle therefore executes before a later toolbar Stop, and both sides observe one in-process preference state; a stale delayed Start is rejected if the durable flag is already off |
 | After reboot / cold start | `BootLoader` and `MainActivity` call `TrackerService.ensureRecordingRunningIfEnabled()` — silent auto-start, no dialog |
 | Continuity of track id | Not required. Closing unfinished tracks and starting a new id after a crash is allowed; previous points remain in SQLite / on the map |
 | Forbidden stop | Reboot, process death, and legacy `track_restore=false` must not stop recording while the durable flag is set |
+| External receiver state | GATT subscription/write failure or Bluetooth permission revocation closes the transport without a callback crash. Late callbacks cannot affect a replacement session. Quality expires after eight seconds of silence and cannot retain an old FIX/FLOAT/Auto status |
 | Background sound | With `background_recording_sound=true`, the shared validated GNSS stream before decimation distinguishes stationary coordinates from missing delivery. While the UI is hidden/screen off and usable fixes remain fresh, the GPS session owns a partial wake lock independently of the sound setting and keeps a short alarm-stream heartbeat on a fixed 10-second cadence independent of point inserts. Notification volume does not suppress it; if the alarm stream is muted or has zero volume, a short vibration replaces the heartbeat. An observed persistence failure uses a distinct tone or double vibration at most once per minute. Missing fresh fixes, a killed process or revoked permission silence the feedback and remain the user-visible warning |
 | Permission revoked | If Android removes coarse/fine location while recording, a sticky restart must not call `startForeground()` for the forbidden location FGS. The service stops with `START_NOT_STICKY`, retains `track_recording_enabled`, and can resume after permission returns without crashing the app |
 
@@ -84,6 +85,13 @@ Key types: `WalkEditService`, `WalkSessionStore`, `WalkSessionPolicy`,
 `WalkSessionRecoveryPolicy`,
 `WalkGeometrySnapshot`, `WalkRecordingPanel`, `MapFragment`, `MapDrawable`.
 
+Phone, landscape and tablet resources include the same map content and mandatory
+walk panel. `MapFragment` also listens directly to `WALKEDIT_CHANGE` while resumed
+and reloads the current-map snapshot on resume, so preview does not depend on the
+panel callback. Reflowing tools cannot cover walk controls. This UI repair neither
+resets nor migrates recorded geometry: an existing current-map session is shown
+from the same durable store after updating the application.
+
 ## Manual geometry editing (vertices / taps)
 
 | Concern | Behavior |
@@ -119,8 +127,8 @@ Key types: `GeometryEditDraftStore`, `MapFragment.persistManualGeometryDraft`,
 | Concern | Behavior |
 |---------|----------|
 | Draft store | `FeatureFormDraftStore` (`feature_form_draft` prefs, JSON) |
-| Contents | Layer/feature ids, geometry WKT, control `saveState` snapshot, pending photo paths, form/meta paths, optional point/walk session UUIDs |
-| Write | Session-owned point/final-walk forms get an initial durable checkpoint before Activity launch; `ModifyAttributesActivity.onPause` then persists control/photo state |
+| Contents | Map path, operation UUID, layer/feature ids, geometry WKT, typed control state including signature strokes, pending photo paths, form/meta paths and optional point/walk session UUIDs |
+| Write | Session-owned point/final-walk forms checkpoint before launch; all editable forms checkpoint every three seconds, onPause, before Save and after assigning feature id. Unchanged snapshots avoid another disk write |
 | Clear | Successful Save, Discard in form dialog, Discard in recovery hub. Save/Discard marks the Activity terminal before `finish()`, so the following `onPause()` cannot recreate the draft |
 | Restore | Recovery hub → `LayerUtil.showEditFormFromDraft` with `apply_form_draft` |
 | Validation | A draft for an existing feature is offered only while that feature row still exists; typed control values retain their Bundle type |
@@ -155,3 +163,30 @@ Geometry coordinates, field values, photo paths, and credentials are not logged.
 - Mandatory same track id after crash
 - Cloud sync of drafts / restore from LayerBackup ZIP
 - Persisting the complete manual-geometry undo/redo history (the latest geometry is persisted)
+
+## Failure boundaries
+
+The form Save worker checkpoints before database work and after assigning a new id.
+Its UUID resolves through `FeatureSaveJournal`; retry after a lost reply returns the
+same row. A failed photo or edited signature keeps the form and checkpoint, including
+the assigned id. SQLite rows/outbox are atomic; database and filesystem are a
+recoverable workflow, not one cross-store transaction. Backup and all destructive
+layer actions reserve form/walk owners. Back uses AndroidX callbacks and preserves
+Save/Discard confirmation; an in-flight Save blocks another Save or Back. A destroyed/finishing Activity refuses
+old-worker UI capture or terminal draft clearing; its UUID checkpoint stays recoverable.
+
+`PendingTrackPoints` has capacity2048 and pauses acquisition near capacity until
+drain succeeds. UUID point records prevent duplication after committed writes with
+lost acknowledgements. A corrupt spool file is retained and blocks silent recovery.
+On disk failure the live process retains the queue in RAM and reports failure;
+process death before a durable write cannot preserve RAM-only points. Stop/split
+retain the owning map, pending_stop and recording flag until the tail is committed.
+A revoked location permission can defer a cold pending-Stop retry until permission
+returns. New spool instances/retry are tested; actual reboot/process-kill and OS
+permission transitions still require device smoke.
+
+Walk checkpoint exceptions produce a plain panel/notification warning; a later
+successful checkpoint clears it. Failed final persistence cannot hand off geometry.
+Sequential linked-list traversal preserves WKT and cuts long-walk checkpoint cost;
+large snapshots still run synchronously and may stall the main thread. See the
+[measured results and remaining checks](../reference/mobile-reliability-audit.md).

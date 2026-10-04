@@ -486,7 +486,7 @@ public class MapFragment
         mRuler?.setOnClickListener(this)
         mAzimuth = view.findViewById(R.id.action_azimuth)
         mAzimuth?.setOnClickListener(this)
-        trackStatusButton = view.findViewById(R.id.action_track_status)
+        trackStatusButton = requireNotNull(view.findViewById(R.id.action_track_status))
         trackStatusButton?.setOnClickListener { mActivity?.toggleTrackRecordingFromMap() }
         refreshTrackStatusButton()
 
@@ -991,28 +991,40 @@ public class MapFragment
     private var pendingWalkFinishId: String? = null
     private var walkPreviewKey: String? = null
     private var walkPreviewMap: MapDrawable? = null
+    private val walkSessionReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            refreshWalkSessionPreview()
+        }
+    }
+
+    private fun refreshWalkSessionPreview() {
+        val ctx = context ?: return
+        val session = WalkSessionStore.load(ctx)?.takeIf { WalkSessionStore.isCurrentMap(ctx, it) }
+        val key = session?.let { "${it.id}:${it.revision}:$finishedWalkEditId" }
+        val map = mMapRef.get()?.map
+        if (map != null && (key != walkPreviewKey || map !== walkPreviewMap)) {
+            walkPreviewKey = key
+            walkPreviewMap = map
+            map.showWalkPreview(
+                if (session != null && session.id != finishedWalkEditId) session.geometry() else null
+            )
+        }
+        if (session?.phase == WalkSessionPolicy.Phase.FINISHED && pendingWalkFinishId == session.id) {
+            pendingWalkFinishId = null
+            view?.post { openFinishedWalk(session) }
+        }
+        mScaleRulerLayout?.visibility = if (session == null && mode == MODE_NORMAL
+            && mPreferences?.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER, false) == true
+        ) View.VISIBLE else View.GONE
+    }
 
     private fun attachWalkPanel(root: View) {
         pointSessionId = WalkSessionStore.load(requireContext())?.pointId?.takeIf { it.isNotEmpty() }
-        walkPanel = root.findViewById(R.id.walk_recording_panel)
+        walkPanel = requireNotNull(root.findViewById(R.id.walk_recording_panel))
         walkPanel?.setListener(object : WalkRecordingPanel.Listener {
             override fun onSessionChanged(session: WalkSessionStore.Snapshot?) {
-                val key = session?.let { "${it.id}:${it.revision}:$finishedWalkEditId" }
-                val map = mMapRef.get()?.map
-                if (map != null && (key != walkPreviewKey || map !== walkPreviewMap)) {
-                    walkPreviewKey = key
-                    walkPreviewMap = map
-                    map.showWalkPreview(
-                        if (session != null && session.id != finishedWalkEditId) session.geometry() else null
-                    )
-                }
-                if (session?.phase == WalkSessionPolicy.Phase.FINISHED && pendingWalkFinishId == session.id) {
-                    pendingWalkFinishId = null
-                    root.post { openFinishedWalk(session) }
-                }
-                mScaleRulerLayout?.visibility = if (session == null && mode == MODE_NORMAL
-                    && mPreferences?.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER, false) == true
-                ) View.VISIBLE else View.GONE
+                // The map also observes service broadcasts directly; panel visibility is not an owner.
+                refreshWalkSessionPreview()
             }
 
             override fun onFinishWalk(session: WalkSessionStore.Snapshot) {
@@ -1669,7 +1681,12 @@ public class MapFragment
     private fun isMapAzimuthMode(value: Int): Boolean =
         value == MODE_AZIMUTH_CURRENT || value == MODE_AZIMUTH_POINTS
 
-    fun setNewMode(mode: Int, vararg readOnly: Boolean) {
+    fun setNewMode(requestedMode: Int, vararg readOnly: Boolean) {
+        val mode = if ((requestedMode == MODE_SELECT_FOR_VIEW || requestedMode == MODE_SELECT_ACTION)
+            && mSelectedLayer != null
+            && (editLayerOverlay?.selectedFeatureId ?: Constants.NOT_FOUND.toLong())
+                != Constants.NOT_FOUND.toLong())
+            selectedFeatureMode(mSelectedLayer!!) else requestedMode
         if (mode == MODE_EDIT_BY_WALK) {
             if (editLayerOverlay?.startIndependentWalk() == true) {
                 clearManualGeometryDraft("walk-ownership-transferred")
@@ -1736,13 +1753,18 @@ public class MapFragment
             MODE_NORMAL -> {
                 if (mSelectedLayer != null) mSelectedLayer!!.isLocked = false
 
+                editLayerOverlay?.showAllFeatures()
+                mMapRef.get()?.map?.let { map ->
+                    if (map.editingObject != null) map.cancelFeatureEdit(false)
+                }
                 mSelectedLayer = null
+                editLayerOverlay?.setSelectedFeature(null)
+                editLayerOverlay?.setSelectedLayer(null)
                 toolbar.visibility = View.GONE
                 showMainButton()
                 showRulerButton()
                 showAzimuthButton()
                 if (mStatusPanelMode != 0) mStatusPanel!!.visibility = View.VISIBLE
-                editLayerOverlay!!.showAllFeatures()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_NONE
                 if (!preserveRulerHistoryDuringModeRestore)
                     undoRedoOverlay!!.clearHistory()
@@ -1844,8 +1866,6 @@ public class MapFragment
                 toolbar.title = null
                 toolbar.menu.clear()
                 toolbar.inflateMenu(R.menu.select_action_view)
-                toolbar.menu.findItem(R.id.menu_feature_edit)?.isVisible =
-                    mSelectedLayer!!.isEditingAllowed
                 toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
 
                 mFinishListener = View.OnClickListener { setNewMode(MODE_NORMAL) }
@@ -1859,7 +1879,6 @@ public class MapFragment
                                 MODE_INFO,
                                 true
                             )
-                            R.id.menu_feature_edit -> startLayerEditMode()
                             R.id.menu_feature_stakeout -> startStakeout()
                         }
                         true
@@ -2066,6 +2085,17 @@ public class MapFragment
         }
     }
 
+    /** System Back follows the same exit path as the map toolbar. */
+    fun handleBackPress(): Boolean {
+        return when (mode) {
+            MODE_EDIT, MODE_EDIT_BY_WALK -> { requestCancelEdits(); true }
+            MODE_SELECT_ACTION, MODE_SELECT_FOR_VIEW, MODE_STAKEOUT,
+            MODE_AZIMUTH_CURRENT, MODE_AZIMUTH_POINTS -> { setNewMode(MODE_NORMAL); true }
+            MODE_INFO -> { mFinishListener?.onClick(null); true }
+            else -> false
+        }
+    }
+
     protected fun defineMenuItems() {
         if (mode == MODE_NORMAL || mode == MODE_INFO || isLiveStakeoutMode(mode)
             || mode == MODE_AZIMUTH_POINTS
@@ -2155,6 +2185,8 @@ public class MapFragment
         HyperLog.v(Constants.TAG, "MapFragment.onDestroyView")
         walkPanel?.setListener(null)
         walkPanel = null
+        trackStatusButton = null
+        walkPreviewMap = null
         mapLibreHostResumed = false
         stopMapLibreRenderRecovery()
         mapLibreLayersAppliedForCurrentView = false
@@ -3105,6 +3137,7 @@ public class MapFragment
 
         mActivity?.unregisterReceiver(mMessageStyling)
         mActivity?.unregisterReceiver(mMessageReload)
+        mActivity?.unregisterReceiver(walkSessionReceiver)
 
         awaitingMapLibreFrameAfterResume = false
         mapLibreHostResumed = false
@@ -3281,6 +3314,9 @@ public class MapFragment
         }
 
         val ctx = context ?: return
+        ContextCompat.registerReceiver(ctx, walkSessionReceiver,
+            IntentFilter(WalkEditService.WALKEDIT_CHANGE), ContextCompat.RECEIVER_NOT_EXPORTED)
+        refreshWalkSessionPreview()
         val progressStyling = (ctx.applicationContext as IGISApplication).getingStyleInProgress
         changeProgress(progressStyling)
 
@@ -3874,6 +3910,9 @@ public class MapFragment
         return true
     }
 
+    override fun isTapPlacementActive(): Boolean = mode == MODE_EDIT
+            || mRulerOverlay?.isMeasuring == true || isMapAzimuthMode(mode)
+
     fun onLongPressFromMaplibre(clickeEnelope: GeoEnvelope, clickPoint : PointF): Boolean {
 
         if (!(mode == MODE_NORMAL || mode == MODE_SELECT_ACTION) || mRulerOverlay!!.isMeasuring) {
@@ -3972,8 +4011,7 @@ public class MapFragment
                 editLayerOverlay!!.setSelectedFeature(selectedSingleFeatureId)
                 mMapRef.get()!!.map!!.startFeatureSelectionForView(mSelectedLayer, originalFeatureForSelect)
                 defineMenuItems()
-                if (mode != MODE_SELECT_ACTION)
-                    setNewMode(MODE_SELECT_ACTION)
+                setNewMode(selectedFeatureMode(mSelectedLayer!!))
             }
 
 
@@ -4209,6 +4247,10 @@ public class MapFragment
 
     override fun onSingleTapUp(event: MotionEvent) {
         if (mRulerOverlay!!.isMeasuring) return
+        if (mode == MODE_NORMAL || mode == MODE_SELECT_FOR_VIEW || mode == MODE_SELECT_ACTION) {
+            onSingleTapUpFromMaplibre(event.x, event.y)
+            return
+        }
         when (mode) {
             MODE_EDIT -> {
                 if (editLayerOverlay!!.selectGeometryInScreenCoordinates(
@@ -4316,13 +4358,11 @@ public class MapFragment
                         selectedGeometry.add(geometry)
                         selectedFeatures.add(feature)
 
-                        mMapRef.get()!!.map!!.startFeatureSelectionForView(mSelectedLayer, feature)
-
                         i++
                     }
                 }
 
-                if (mSelectedLayers.size == 0 && mode == MODE_SELECT_FOR_VIEW) {
+                if (mSelectedLayers.size == 0 && (mode == MODE_SELECT_FOR_VIEW || mode == MODE_SELECT_ACTION)) {
                     // need select none
                     setNewMode(MODE_NORMAL)
                 } else {
@@ -4343,7 +4383,8 @@ public class MapFragment
                             selectedSingleFeatureId
                         )
 
-                        setNewMode(MODE_SELECT_FOR_VIEW)
+                        if (mSelectedLayer != null) setNewMode(selectedFeatureMode(mSelectedLayer!!))
+                        else setNewMode(MODE_NORMAL)
                         //showOverlayPoint(event);
                     }
                 }
@@ -4472,11 +4513,6 @@ public class MapFragment
                 val selectedFeatures: MutableList<Feature> = ArrayList()
 
 
-             if (mode == MODE_SELECT_ACTION && selectedLayer != null){
-                 layers = mutableListOf<ILayer>()
-                 layers.add(selectedLayer)
-             }
-
                 layersLoop@ for (layer in layers) {
                     //if (!layer.isValid) continue
 
@@ -4521,12 +4557,11 @@ public class MapFragment
                             i++
                             continue
                         }
-                        mSelectedLayer = layer
                         i++
                     }
                 }
 
-                if (mSelectedLayers.size == 0 && mode == MODE_SELECT_FOR_VIEW) {
+                if (mSelectedLayers.size == 0 && (mode == MODE_SELECT_FOR_VIEW || mode == MODE_SELECT_ACTION)) {
                     // need select none
                     setNewMode(MODE_NORMAL)
                 } else {
@@ -4601,14 +4636,12 @@ public class MapFragment
         if (geometry != null)
             editLayerOverlay!!.setSelectedFeature(selectedSingleFeatureId)
 
-        if (editMode) {
-            if (mode != MODE_SELECT_ACTION)
-                setNewMode(MODE_SELECT_ACTION)
-        } else {
-            if (mode != MODE_SELECT_ACTION)
-                setNewMode(MODE_SELECT_FOR_VIEW)
-
+        val layer = mSelectedLayer
+        if (layer == null || geometry == null || selectedSingleFeatureId == Constants.NOT_FOUND.toLong()) {
+            setNewMode(MODE_NORMAL)
+            return
         }
+        setNewMode(selectedFeatureMode(layer))
         //showOverlayPoint(event);
         /*
         * final ILayer  ilayerd, Integer layerGeoType,
@@ -4624,6 +4657,11 @@ public class MapFragment
                     originalSelectedFeature)
             defineMenuItems()
         }
+    }
+
+    private fun selectedFeatureMode(layer: VectorLayer): Int {
+        return if (layer.isEditingAllowed && mApp?.isLayerReservedForWalk(layer.id) != true)
+            MODE_SELECT_ACTION else MODE_SELECT_FOR_VIEW
     }
 
 

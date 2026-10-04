@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-09-22
+last_verified: 2026-10-04
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -62,6 +62,31 @@ foreground `location|connectedDevice` с тихим уведомлением. С
 
 Опция `verbose_log` пишет в HyperLog каждое GNSS/NMEA измерение и причину
 `onLocationUnavailable`; по умолчанию координаты в лог не попадают.
+
+## Pigo по Bluetooth LE
+
+Для идентифицированного ComNav/Pigo UART service `3A20` выбираются отдельные
+write `3A21` и notify `3A22`. Профиль сверён с `BleDeviceManager` официального
+PiSatel 1.0.9.0 из [инструкции производителя](https://wiki.pidt.net/books/pigopidata/page/bystryi-start-moy).
+Nordic UART и HM-10 сохраняют свои пары; случайная writable-характеристика
+другого service не используется. Подключение подтверждается после успешной
+записи CCCD; indication использует соответствующее значение. Фрагменты команды
+отправляются по очереди через completion callback, включая WRITE_NO_RESPONSE.
+Ошибка или отсутствие callback больше пяти секунд запускает штатный reconnect.
+Отзыв Bluetooth permission в discovery/subscription/write не вызывает crash.
+
+Если после подтверждённого подключения Pigo не отдаёт позицию, сессия добавляет
+`log bestposb ontime 1` через write channel: без `unlogall`, смены
+УКВ/NTRIP/режима или сохранения настроек. Если BESTPOSB уже идёт, его частота
+не меняется; чистый NMEA-поток не получает binary initialization. При минимальном
+ATT payload 20 байт команда доставляется последовательными фрагментами.
+
+Поздний open/data/close от предыдущего transport не изменяет новый сеанс.
+При отключении и после восьми секунд тишины качество становится «Нет фикса»;
+старые «Авто»/«Плав»/«Фикс» не остаются в HUD. Повреждённая NMEA-строка
+не продлевает прежнее качество. BESTPOSB quality `1` означает автономное
+решение; наличие поправок не подменяет его на FLOAT/FIX. Профиль, GATT failures
+и session lifecycle проверяются на API 26/36; физический Pigo/PiRat требует smoke.
 
 ## Карта
 
@@ -373,3 +398,19 @@ unit tests; maplibui Debug, ЛИСА Debug/Release и БЕЛКА Release соб�
 SHA-256 `a94b98af61f79fe68c46b5a74b4b2980b8c275194071472e7f18d060eae0ef34`,
 совпадающий с локальной QA-сборкой. Документационный validator и все 7 его тестов
 также прошли. Временный instrumentation package удалён.
+
+## Повторная запись после ошибки SQLite
+
+GNSS/filter/sampling rules remain unchanged. Accepted track points first enter
+`PendingTrackPoints` inside the owning map directory, then drain serially into
+`TrackLayer` with UUID deduplication. Queue capacity2048 and a high-water pause
+bound memory; recovery starts a new segment after a gap. Stop persists its intent,
+flushes the filter tail and closes unfinished sessions only after drain succeeds.
+Failures keep points and session open for retry rather than confirming a false Stop.
+Stationary correction does not overtake queued/in-flight inserts.
+
+Walk checkpoint failures are visible in its panel and notification. Corrupt or
+negative sampling preferences fall back to existing 2s/5m defaults. WKT/snapshot
+traversal is linear without changing geometry or closing-ring rules. Durability
+limits and native fault checks are in [crash recovery](crash-recovery.md) and
+[the audit](../reference/mobile-reliability-audit.md).

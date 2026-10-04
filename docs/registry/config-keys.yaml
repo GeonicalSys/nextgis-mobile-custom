@@ -1,5 +1,10 @@
 schema_version: 1
 preferences:
+  tracks_temp:
+    owner: maplibui
+    type: shared_preferences_file
+    source: maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+    purpose: Owning track_uri, track_map and pending_stop retain Stop intent until the ordered queue and session closure commit.
   location_source:
     owner: app
     type: string
@@ -12,7 +17,7 @@ preferences:
     default: system
     user_configurable: true
     source: app/src/main/res/xml/preferences_location.xml
-    purpose: Choose Android system GNSS or an in-app external NMEA receiver (Bluetooth Classic/LE, USB, TCP/IP) without Mock Location.
+    purpose: Choose Android system GNSS or a native external receiver (Bluetooth Classic/LE, USB, TCP/IP) without Mock Location; identified ComNav/Pigo BLE uses paired 3A20 UART and additive BESTPOSB initialization without altering correction inputs.
   gnss_device:
     owner: app
     type: preference_action
@@ -250,7 +255,7 @@ preferences:
     owner: maplibui
     type: shared_preferences_file
     source: maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
-    purpose: JSON snapshot of unfinished attribute form (fields, geometry, pending photos, optional point/walk owner UUIDs); owned handoff is committed before Activity launch
+    purpose: Compatible v1 typed form snapshot with map/operation UUID, assigned feature id, geometry, fields/sign strokes, photos and point/walk owners; periodic, pre-Save and post-id checkpoints survive retry
   geometry_edit_draft:
     owner: maplibui
     type: shared_preferences_file
@@ -272,7 +277,7 @@ manifest_metadata:
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Bind installed and downloaded APK to lisa or belka update channel
+    purpose: Bind installed and downloaded APK to the explicit lisa, belka or debug channel independently of version or filename; the pending production 3.1.2.27/221 bump retains channel identities.
   io.sentry.traces.user-interaction.enable:
     owner: app
     source: app/src/main/AndroidManifest.xml
@@ -313,12 +318,17 @@ variant_resources:
     source: app/build.gradle
     purpose: Variant-specific SyncAdapter account type; must equal nextgis_accounts_auth and MainApplication runtime type
 build_inputs:
+  ciReliabilityChecks:
+    owner: app
+    source: app/build.gradle
+    optional: true
+    purpose: Explicit Gradle property permits empty Sentry DSN only when private sentry.properties is absent during CI reliability checks.
   sentry.properties:
     owner: app
     source: sentry.properties
     secret_values_forbidden: true
     optional: true
-    purpose: Local Sentry Gradle configuration
+    purpose: Private Sentry Gradle configuration required by normal builds; optional only with explicit ciReliabilityChecks=true when the file is absent
   local.properties:
     owner: root
     source: local.properties
@@ -333,6 +343,16 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  feature-save-journal:
+    owner: maplib
+    location_name: ngm_feature_save_journal in owning layers.db
+    source: maplib/src/main/java/com/nextgis/maplib/util/FeatureSaveJournal.java
+    purpose: Local layer-operation UUID to row-id mapping reconciles lost feature/attachment insert replies; no NGW schema change.
+  pending-track-points:
+    owner: maplib
+    location_name: pending-track-points directory inside owning map workspace
+    source: maplib/src/main/java/com/nextgis/maplib/util/PendingTrackPoints.java
+    purpose: Capacity2048 ordered UUID AtomicFile JSON queue; corrupt entries retained; acknowledged only after idempotent SQLite insert.
   updater-pending-install:
     owner: app
     location_name: app_update_state SharedPreferences

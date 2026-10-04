@@ -57,6 +57,7 @@ public class OfflineSyncIntentService extends IntentService {
     private static final int SYNC_NOTIFICATION_ID = 519;
     private BroadcastReceiver mProgressReceiver;
     private PendingIntent mSyncContentIntent;
+    private volatile boolean mForegroundBlocked;
 
 
 
@@ -132,6 +133,7 @@ public class OfflineSyncIntentService extends IntentService {
                 open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Builder builder = buildSyncNotification(NgwSyncProgress.snapshot());
+        try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
                     SYNC_NOTIFICATION_ID,
@@ -139,6 +141,10 @@ public class OfflineSyncIntentService extends IntentService {
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
         } else {
             startForeground(SYNC_NOTIFICATION_ID, builder.build());
+        }
+        } catch (RuntimeException error) {
+            HyperLog.w(Constants.TAG, "Manual sync foreground start rejected", error);
+            cancelTimedOutWork();
         }
         mProgressReceiver = new BroadcastReceiver() {
             @Override
@@ -242,6 +248,7 @@ public class OfflineSyncIntentService extends IntentService {
     }
 
     private void updateSyncNotification(NgwSyncProgress.Snapshot snapshot) {
+        if (mForegroundBlocked) return;
         NotificationManager manager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
@@ -257,6 +264,15 @@ public class OfflineSyncIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        if (mForegroundBlocked) {
+            if (intent != null) {
+                String reservation = intent.getStringExtra(EXTRA_OPERATION_RESERVATION);
+                PendingOperation pending = reservation == null ? null
+                        : PENDING_OPERATION_LEASES.remove(reservation);
+                if (pending != null) pending.close();
+            }
+            return;
+        }
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_OFFSYNC.equals(action)) {
@@ -269,6 +285,21 @@ public class OfflineSyncIntentService extends IntentService {
                 handleActionFoo(lpath, manual, reservation, intent.getBooleanExtra(
                         com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED, false));
             }
+        }
+    }
+
+    @Override public void onTimeout(int startId, int foregroundServiceType) {
+        HyperLog.w(Constants.TAG, "Manual data sync reached foreground time limit");
+        cancelTimedOutWork();
+    }
+
+    private void cancelTimedOutWork() {
+        mForegroundBlocked = true;
+        try { ProjectOperationCoordinator.requestDataSyncCancellation(this); }
+        catch (RuntimeException error) { HyperLog.w(Constants.TAG, "Manual sync cancellation failed", error); }
+        finally {
+            NgwSyncProgress.cancel();
+            try { stopForeground(true); } finally { stopSelf(); }
         }
     }
 

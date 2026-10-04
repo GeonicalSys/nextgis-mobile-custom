@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-09-22
+last_verified: 2026-10-04
 related_code:
   - app/build.gradle
   - app/src/main
@@ -20,9 +20,14 @@ related_code:
 
 ## Основа сравнения
 
-Состояние форка: Lisa/Belka Release `3.1.2.26` / `versionCode` 220; Lisa Debug
+Подготовленные исходники форка: Lisa/Belka Release `3.1.2.27` / `versionCode` 221; Lisa Debug
 `3.1.2.22` / `versionCode` 217. Сверено с официальным приложением `3.2.0` и с
-головами официальных библиотек на 14 сентября 2026 года. В частности, учтён
+головами официальных repositories, повторно проверенными 4 октября 2026 года: app
+`482f26f30abea1468ebfefaa45092d86f921d68b`, maplib
+`f260631d4f4c2c7ea4ccaa8c0d28311507e30040`, maplibui
+`90cf6769aed0a5aa835b142977b9d31f89270e82`. Проверка выполнена через
+GitHub API по pinned SHA, так как configured upstream remote в этом checkout
+отсутствует. В частности, учтён
 официальный выпуск `3.2.0`
 [`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),
 в котором объявлена поддержка raster MBTiles:
@@ -98,6 +103,13 @@ maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/7
 разрешений; это исправление не меняет перечисленные базовые отличия форка.
 Проверка разрешений на входе не включает уведомления: их запрос остаётся
 контекстным при включении функции в настройках.
+
+23 сентября повторно сверены official app HEAD `482f26f` и maplibui HEAD
+`90cf676`; official map layout не содержит fork-кнопку трека и независимую
+панель обхода. В форке все конфигурации карты теперь используют единый layout:
+инструменты переносятся в соседние столбцы справа при недостатке высоты,
+меню создания имеет отдельную нижнюю строку, а preview обхода получает события
+сервиса независимо от панели. Исправление не меняет формат сохранённых сессий.
 
 Для доработки sync/ANR все четыре HEAD повторно сверены через `git ls-remote`
 18 сентября 2026 года: hashes выше не изменились. Прочитанные official
@@ -1170,7 +1182,12 @@ Mock и native NMEA не сглаживаются пешеходным филь�
 Внешний GNSS читается приложением по Bluetooth Classic/LE, USB или TCP/IP без Mock Location.
 PiGoLite/ComNav по BLE по умолчанию отдаёт CNB, не `$GGA`: координаты берутся
 из BESTPOSB (сообщение 42). `unlogall` не отправляется. ASCII GGA — дополнение,
-не условие фикса.
+не условие фикса. BLE UART Pigo `3A20` имеет write `3A21` / notify `3A22`;
+тихая сессия добавляет только BESTPOSB, без `unlogall` и смены поправок.
+Подписка и фрагменты write подтверждаются; ошибки и таймаут восстанавливают
+соединение. Старые callbacks игнорируются, качество HUD сбрасывается при обрыве
+или 8 с тишины. Профиль и failure paths проверены на API 26/36;
+физический Pigo/PiRat smoke остаётся непроверенным.
 Пока выбран внешний приёмник, соединение не рвётся при сворачивании карты: процесс
 удерживает foreground-сервис connected-device и wake lock. Диагностический
 `verbose_log` пишет GNSS/NMEA в локальный HyperLog только по явному чекбоксу.
@@ -1446,3 +1463,33 @@ exporter старого доверенного Debug проверяется по
 поэтому запуск и хранилище подложек показывают предложение обновления.
 
 Official HEAD четырёх репозиториев повторно прочитаны через git ls-remote 2026-09-14 и совпали с перечисленными выше e098196 / 21578af / a426e0a / 36ba558. Новых upstream реализаций этих сценариев относительно ранее изученных исходников не появилось. Root закрепляет maplib #36 `f9ab155` и maplibui #24 `d79f2e98`; выпуск Lisa/Belka `3.1.2.26` / `220`, Debug `3.1.2.22` / `217`.
+
+## Дополнения аудита надёжности PR45
+
+Сверены актуальные official NGIDUtils, NGWResourcesListAdapter,
+ModifyAttributesActivity, TrackerService, FeatureChanges и app MainActivity.
+В [official NGIDUtils](https://github.com/nextgis/android_maplibui/blob/90cf6769aed0a5aa835b142977b9d31f89270e82/src/main/java/com/nextgis/maplibui/util/NGIDUtils.java)
+getToken передаёт login без нормализации; форк принимает email/username и
+приводит только identifier к Locale.ROOT lowercase.
+В [official selector](https://github.com/nextgis/android_maplibui/blob/90cf6769aed0a5aa835b142977b9d31f89270e82/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java)
+folder icon назначается внутри создания view; форк назначает его при каждой bind,
+включая recycled account/add row.
+
+[Official form](https://github.com/nextgis/android_maplibui/blob/90cf6769aed0a5aa835b142977b9d31f89270e82/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java)
+по-прежнему сохраняет feature и вызывает attachment/sign обработку в исходном
+UI workflow; fork worker проверяет ошибки, удерживает durable checkpoint/UUID и
+повторяет частичное Save без дубликата.
+[Official tracker](https://github.com/nextgis/android_maplibui/blob/90cf6769aed0a5aa835b142977b9d31f89270e82/src/main/java/com/nextgis/maplibui/service/TrackerService.java)
+ловит ошибку point insert без такой durable retry queue.
+[Official FeatureChanges](https://github.com/nextgis/android_maplib/blob/f260631d4f4c2c7ea4ccaa8c0d28311507e30040/src/main/java/com/nextgis/maplib/util/FeatureChanges.java)
+сохраняет legacy глобальную database routing и catch/read defaults; fork добавляет
+строгие owning-DB overloads и atomic feature/outbox writes.
+
+Immediate editable selection, density-aware tap tolerance, width-bounded rail,
+AndroidX Back, guarded URL launch и service timeout fixes описаны в
+[отчёте](mobile-reliability-audit.md). Это проверка затронутых путей по текущим
+heads, не новый полный upstream merge и не утверждение уникальности всех
+AndroidX/timeout решений. Production исходники подготовлены для3.1.2.27/221,
+Debug сохраняет3.1.2.22/217. Library PR37/25 слиты; root закрепляет fetched
+remote merge commits1d81e8a/675c16b1. Проверенные official heads совпали с
+перечисленными в основе сравнения; нового upstream merge здесь не выполнялось.

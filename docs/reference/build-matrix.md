@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-09-22
+last_verified: 2026-10-04
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -13,6 +13,11 @@ related_code:
 
 # Матрица сборки и версий
 
+Исходники подготовлены для production `3.1.2.27` / `221`. Библиотеки PR37/25
+слиты через Merge Commit и закреплены по fetched remote SHA: maplib `1d81e8a`,
+maplibui `675c16b1`. Release APK/version matrix запускаются после Squash app45
+и проверки remote content/pins. Результат APK matrix записывается в PR45.
+
 | Компонент | Текущее значение |
 |---|---|
 | Gradle wrapper | `9.3.1` |
@@ -21,11 +26,11 @@ related_code:
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `220` |
-| App versionName (release) | `3.1.2.26` |
+| App versionCode (release) | `221` |
+| App versionName (release) | `3.1.2.27` |
 | App versionCode (debug) | `217` |
 | App versionName (debug) | `3.1.2.22` |
-| maplib VERSION_NAME (release) | `3.1.2.26` |
+| maplib VERSION_NAME (release) | `3.1.2.27` |
 | maplib VERSION_NAME (debug) | `3.1.2.22` |
 | MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |
@@ -51,9 +56,9 @@ MapLibre `13.0.2` подключается во всех трёх consuming-мо
 13 использует Vulkan и не входит в production runtime: на устройствах без
 совместимого Vulkan-драйвера он завершает процесс при открытии карты.
 
-На API 26–28 MapLibre view использует `TextureView`, чтобы старый Android не
-оставлял полноэкранный чёрный `SurfaceView` после background/sleep. API 29–36
-сохраняют более производительный `SurfaceView`; backend в обоих случаях OpenGL.
+Все API26–36 используют `SurfaceView` с восстановлением EGL и коротким render
+burst после возвращения. API26–28 не включают tile prefetch. Постоянные ограничения
+5/30FPS и прежняя TextureView ветка удалены; backend остаётся OpenGL.
 
 ## Основные задачи
 
@@ -74,3 +79,48 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version
 через `aapt`, а также debug/release `maplib.BuildConfig.VERSION_NAME`.
 При изменении flavor resources дополнительно собираются обе release-flavors и
 вручную проверяются launcher, intro и about каждого бренда.
+
+## Проверки надёжности и воспроизводимость
+
+Дополнение 2026-10-04: Pigo BLE/GATT/session regressions проверены на API 26/36.
+Локально прошли 574 unit tests (451 maplib, 82 maplibui, 41 app), 28 native
+API36/WHPX checks и Lisa/Belka release Kotlin/Java source compilation. То же
+содержимое прошло Linux CI f580bd8: 574 units, 28 native checks, без пропусков
+или ошибок. После library merges подтверждено совпадение Git trees с этими
+протестированными source heads. Это не release APK matrix; её запуск следует
+за app merge и повторной проверкой всей цепочки.
+
+JDK21 обязателен. Gradle wrapper distributionSha256Sum фиксирует проверенный
+дистрибутив9.3.1. Hyperlog master-SNAPSHOT заменён **теми же байтами AAR** из
+`com.github.barsrb:hyperlog-android:master-0.0.10-g855ebf8-12@aar` (JitPack build
+commit855ebf83b373cade434939f5279bf6b138f753af). Root exclusiveContent repository
+использует artifact-only metadata: старый POM сам объявляет master-SNAPSHOT.
+SHA256 AAR: `6d05f3da6b5d6bd05bb14c416c6d68ea47f2115c39b31121409cf96adc20c996`.
+Standalone consumer библиотек обязан повторить эту artifact-only настройку.
+
+`gradle/verification-metadata.xml` фиксирует SHA256 разрешённых Gradle artifacts
+и metadata. Первичный набор создан из проверяемой локальной сборки: это baseline
+первого доверия, не независимая проверка происхождения каждого артефакта.
+Linux aapt2 classifier дополнительно сверен по artifact и опубликованному
+checksum Google Maven для CI. Чистый Linux build также потребовал parent POM
+Guava33.4.8-jre: он добавлен после сверки с опубликованным checksum Maven Central;
+бинарные зависимости и версии не менялись. Robolectric SDK downloads имеют
+отдельный механизм и не охватываются Gradle XML.
+Обычная проверка выполняется без --write-verification-metadata; новые checksum
+добавляются только после проверки конкретного источника/изменения зависимости.
+
+`.github/workflows/android-reliability.yml` запускает unit suites трёх owners,
+maplibui/debug APK, обе release source sets и native API36 suite. CI использует
+`-PciReliabilityChecks=true`: только при отсутствующем sentry.properties допускает
+пустой DSN для тестов. Обычные builds сохраняют обязательный private config;
+секреты не публикуются. SDK setup явно запрашивает platform-tools, не удалённый
+legacy tools package. PR запускает regression один раз, push — только на
+my-maplibre. Удалён устаревший MaxPermSize JVM flag, мешавший чистому JDK21
+запустить Gradle daemon; local user properties ранее скрывали эту ошибку.
+Workflow не собирает/не публикует release APK.
+
+Library dependency closure завершена; приложение закрепляет оба remote merge
+commits. На Windows и в чистой Linux CI выполнены обе release Kotlin/Java
+compilation, debug APK,574 units и28 native API36 fault/UI checks. Release
+APK проверяются отдельно после app merge; точный успешный run, delivery matrix
+и runtime versions в [отчёте](mobile-reliability-audit.md).

@@ -1,5 +1,38 @@
 schema_version: 1
 tests:
+  AUTO-RELIABILITY-NATIVE:
+    type: automatic
+    scope: [app, maplib, maplibui]
+    command: .\gradlew.bat :app:connectedLisaDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.nextgis.mobile.reliability
+    expected: >
+      Native isolated SQLite, photo retry, track queue and Stop, signature, selector icon,
+      NGID wire input, selection, rail bounds, ruler/azimuth gestures and walk checkpoint tests pass.
+  SMOKE-RELIABILITY-FAILURES:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - On an isolated copy fail feature/outbox and photo/signature writes; Save, Back, camera, rotate and recover before retry.
+      - Fail track insert during recording and Stop, then restore storage; kill process and reboot with an unwritten tail in the same and another project.
+      - Fail backup, mutate a layer after backup and attempt final deletion; check Undo and preserved rows/photos.
+      - Trigger dataSync timeout, cancellation and permission revoke; verify worker exit and lease release without ANR or data deletion.
+      - Export LayerBackup and complete administrator recovery only on a copy following incident-and-rollback.
+    expected: Failed Save/Stop cannot report completion or discard pending work; retry is ordered and idempotent; backup and project gates remain fail-closed.
+  SMOKE-TOOL-TAP:
+    type: device
+    scope: [app, maplib]
+    steps:
+      - In drawing all editable geometry types, ruler and both azimuth modes, tap with small drift on several screen densities.
+      - Drag beyond threshold then return, long press, cancel and pinch; compare normal camera pan and endpoint/vertex drag.
+      - Select editable and read-only objects from different layers; clear by empty-map tap, toolbar and Back.
+      - Activate overflow actions on phone, tablet, landscape, split screen and increased display/font sizes.
+    expected: One short micro-drift tap creates one point without camera shift; deliberate gestures create none; actions are immediate only for editable selection and clear with selection.
+  SMOKE-NGID-AND-RESOURCE-ICONS:
+    type: device
+    scope: [app, maplibui]
+    steps:
+      - On intro and NGID login screens, enter mixed-case username and email with surrounding spaces; verify identifier lowercase and password unchanged using a test account.
+      - Open Web GIS import where the first resource is a group, then navigate up and recycle account/add/group rows by scrolling.
+    expected: Email-or-username hint and keyboard are correct; first/up/recycled group rows always use folder icon and retain their existing import actions.
   SMOKE-NGW-SYNC-RECOVERY:
     type: device
     scope: [app, maplib, maplibui]
@@ -145,6 +178,9 @@ tests:
     type: device
     scope: app
     steps:
+      - On phone and tablet cold-start portrait and landscape, then rotate an open map; verify track and walk controls exist and every right-edge tool is individually clickable as columns reflow
+      - Expand and collapse the creation menu, repeat with enlarged display size and a bottom panel; verify tools and walk Finish remain unobstructed
+      - Start a polygon walk, rotate and background/resume, verify preview, finish and save; repeat with an existing durable session after updating without clearing data
       - Cold-open a project and verify two-finger rotation does nothing until the toolbar rotation button is pressed
       - Enable rotation, place two fingers simultaneously and twist immediately without a hold; repeat while pinching and with sequential finger placement
       - Enable rotation, rotate to several bearings, recreate the activity and verify the enabled state and bearing are restored
@@ -487,6 +523,7 @@ tests:
       - With GPS Connector / external mock GNSS: accuracy follows HDOP extras, does not pulse 47 m, does not jump to Network; track/walk vertices use receiver coordinates no coarser than 2 s / 1 m
       - With native External GNSS (Bluetooth Classic NMEA, no mock): HUD shows RTK quality/sats/HDOP, map accuracy follows GST, chip and network are not mixed, successive GGA are not dropped as chip, track/walk use receiver coordinates no coarser than 2 s / 1 m
       - With native External GNSS selected, Home/screen-off for 30 s then reopen: HUD must not flash connecting; verbose log must not record External GNSS closed on onPause
+      - With Pigo Lite/Lite Plus and PiRat UHF, fully stop PiMock and power-cycle the receiver; connect from Lisa over BLE and verify fresh coordinates, actual FIX/FLOAT/Auto quality, eight-second quality expiry on data loss and reconnection without PiMock; diagnostic UART must pair 3A20/3A21/3A22 and initialization must not alter correction or radio settings
       - During stakeout on a live receiver fix, the widget must not flash Waiting for GPS solely because the GNSS timestamp is slightly in the future or because GGA repeats every 5 s
     expected: >
       System location off blocks an interactive start before durable recording intent changes;
