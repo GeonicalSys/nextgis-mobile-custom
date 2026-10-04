@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-03
+last_verified: 2026-10-04
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -47,6 +47,12 @@ maplib PR37 (Merge Commit) → maplibui PR25 (Merge Commit) → app PR45 (Squash
 app merge повторно сверяются remote tip и все строки delivery matrix. До этого
 подготовка version constants не означает готовность APK. Публикация оператором
 выполняется отдельно после dry-run.
+
+4 октября PR37 и PR25 слиты и проверены по ancestry/tree; app закрепляет
+maplib `1d81e8ab9d29b32ba892bbaa6b47f1ca69c25932` и maplibui
+`675c16b1f7604b3c0cb50b59a432fb66d9db1a20`. Ни один pin не указывает на
+незамерженный library head. Перед actual version matrix остаётся Squash app45
+и проверка fetched remote app tip.
 
 ```powershell
 Set-Location C:\dev\lisa\android_projects\android_gisapp

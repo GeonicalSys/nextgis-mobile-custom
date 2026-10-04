@@ -10,6 +10,12 @@ related_code:
 
 ## 2026-10-04
 
+- По разрешению пользователя завершены Merge Commit maplib37 (`1d81e8a`) и
+  maplibui25 (`675c16b1`), app45 закрепляет fetched remote merge commits.
+  Git ancestry и совпадение trees подтверждают включение всех predecessors;
+  иных требующих включения PR/codex heads в пяти Android owners нет. Official
+  upstream heads проверены повторно и не изменились. Linux CI f580bd8 прошла
+  574 unit и28 native tests; перед release matrix остаётся app Squash/fetch.
 - По полевым логам Pigo найден отсутствующий write channel; официальный
   PiSatel подтверждает service 3A20 / write 3A21 / notify 3A22. Добавлена
   адресная BLE-поддержка и additive BESTPOSB для тихого приёмника; частота

@@ -46,7 +46,9 @@ transport; фрагменты последовательны, write timeout 5 с
 API 26/36. Итог локально: **574 unit tests** (451/82/41), 0 failures/errors/skips;
 **28 native tests** API36/WHPX, 41.54 с. Lisa/Belka release Kotlin/Java source
 sets с подготовленной 3.1.2.27/221 компилируются; Debug сохраняет 3.1.2.22/217.
-Linux CI этой итерации проверяется отдельно. Физического Pigo/PiRat здесь нет;
+Linux CI `f580bd8` прошла: 574 unit tests и 28 native checks, 79.522 с;
+0 failures/errors/skips, [run37158891993](https://github.com/GeonicalSys/nextgis-mobile-custom/actions/runs/37158891993).
+Физического Pigo/PiRat здесь нет;
 нужен cold-start smoke без PiMock, обрыв и повторное соединение.
 
 ## Находки и исправления
@@ -96,15 +98,15 @@ Android Emulator37.2.12.0 / API36 google_apis x86_64 / KVM / SwiftShader.
 
 | Проверка | Результат |
 |---|---|
-| maplib units, включая real SQLite Robolectric API26/36 |394 tests;0 failures/errors/skipped |
+| maplib units, включая real SQLite Robolectric API26/36 и Pigo |451 tests;0 failures/errors/skipped |
 | maplibui units |82 tests;0 failures/errors/skipped |
 | app Lisa Debug units |41 tests;0 failures/errors/skipped |
-| Общая native suite на финальном коде |28 tests PASS: Windows36.575s, Linux CI89.144s;0 failures/errors/skipped |
+| Общая native suite |28 tests PASS: Windows41.54s, Linux CI текущего f580bd8 79.522s;0 failures/errors/skipped |
 | maplibui assemble / Lisa Debug app + AndroidTest APK |PASS |
 | Lisa и Belka Release Kotlin/Java compilation |PASS; release APK не собраны |
 | Повторная Gradle сборка без write-verification-metadata |PASS, strict checksums active |
 | Docs validator/tests и git diff check |PASS: validator,7 docs tests, enforced changed-path check и diff whitespace check |
-| Новый GitHub Android workflow |PASS: [run37140933263](https://github.com/GeonicalSys/nextgis-mobile-custom/actions/runs/37140933263), app4764810:517 units, debug APKs, обе release source sets и28 native API36 tests; strict dependency verification active |
+| GitHub Android workflow |PASS: [run37158891993](https://github.com/GeonicalSys/nextgis-mobile-custom/actions/runs/37158891993), appf580bd8:574 units, debug APKs, обе release source sets и28 native API36 tests; strict dependency verification active |
 
 Native suite использует isolated test layers, real SQLite triggers, real form menu
 Save, real TrackerService Stop и localhost server; не авторизует настоящий NGW
@@ -147,8 +149,8 @@ LinkedList индексировался внутри циклов, давая к
    проверить worker termination, retained recovery journals и project leases.
 4. Выполнить [ручное восстановление ZIP на копии](../runbooks/incident-and-rollback.md),
    затем нагрузочные backup/long-walk checks на целевом телефоне.
-5. После review и Merge Commit maplib → maplibui закрепить удалённые merge SHA
-   в app45; повторить closure audit и required release/version matrix до выпуска.
+5. Library Merge Commit и remote pins подтверждены; завершить app45 через Squash,
+   повторить closure audit и required release/version matrix до выпуска.
 
 Оставшиеся границы: RAM-only точки при полной невозможности записи не переживут
 process death; revoked location может отложить cold pending Stop; filesystem
@@ -161,23 +163,24 @@ ZIP restore остаются отдельными путями проверки.
 ## Доставка и зависимости
 
 База app — my-maplibre6b47ce6 (merged app44); исходный app45 содержит94c5f93.
-Базовые merged library pins: maplibf9ab155 (#36), maplibuid79f2e98 (#24),
-easyPickerf91abdf. Перед доставкой fetched preflight: root/easyPicker/publisher
-clean; dirty app/maplib/maplibui состоят из текущих изменений этой задачи,
-0 ahead/behind. GitHub identitygeoglyth, app45 собственный Draft; посторонних
-open Android PR не обнаружено.
+Базовые library pins: maplibf9ab155 (#36), maplibuid79f2e98 (#24), easyPickerf91abdf.
+4 октября пользователь разрешил слияние37→25→45. После fetch библиотеки37/25
+подтверждены MERGED; их remote merge commits закреплены в app. Preflight Android
+owners не выявил посторонних изменений или отставания; две посторонние desktop
+правки сохранены. GitHub identitygeoglyth; иных открытых Android PR и опубликованных
+codex heads, требующих включения, не обнаружено.
 
 | Требование/owner | PR/base | Включение/порядок |
 |---|---|---|
 | Исходная планшетная панель/app |#45 → my-maplibre |94c5f93 — предок текущего app tip |
-| SQLite/outbox/track spool/tap/auth/WKT/Pigo/version/maplib |[maplib37](https://github.com/GeonicalSys/android_maplib/pull/37) → master, `040c3cd0a342f8f6c467bc303c819670857e32dd` |1. Опубликован Draft head, app gitlink совпадает; исходный `db7dfc6` — проверенный предок; требуется Merge Commit |
-| Form/Tracker/backup/services/NGID/icons/integration docs/maplibui |[maplibui25](https://github.com/GeonicalSys/android_maplibui/pull/25) → master, `4cb67b136cd04a49bc4b7d79389a77065d9aab3b` |2. Опубликован Draft head, app gitlink совпадает; исходный `780eb95e` — проверенный предок; зависит от maplib37, требуется Merge Commit |
-| App integration/selection/rail/Back/CI/docs/version221 |#45 → my-maplibre |3. Draft pins указывают на опубликованные commits обоих library PR; перед Squash нужны fetched remote merge SHA |
+| SQLite/outbox/track spool/tap/auth/WKT/Pigo/version/maplib |[maplib37](https://github.com/GeonicalSys/android_maplib/pull/37) → master, merge `1d81e8ab9d29b32ba892bbaa6b47f1ca69c25932` |1. MERGED; source040c3cd и исходныйdb7dfc6 — проверенные предки; tree совпадает с протестированным source; app gitlink равен fetched remote merge |
+| Form/Tracker/backup/services/NGID/icons/integration docs/maplibui |[maplibui25](https://github.com/GeonicalSys/android_maplibui/pull/25) → master, merge `675c16b1f7604b3c0cb50b59a432fb66d9db1a20` |2. MERGED после37; source4cb67b1 и исходный780eb95e — проверенные предки; tree совпадает с протестированным source; app gitlink равен fetched remote merge |
+| App integration/selection/rail/Back/CI/docs/version221 |#45 → my-maplibre |3. Pins обоих merged libraries обновлены; Squash после CI, затем fetch/content comparison и APK version matrix |
 | easyPicker/publisher/desktop |Без изменений |Не создают новых зависимостей |
 
 Точные app commit и remote checks записаны в body [app45](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/45).
 Опубликованные codex branches сверены: app45, maplib37 и maplibui25; иных
 требующих включения открытых Android PR не обнаружено на момент доставки.
-Pin на незамерженный library head — reviewable integration, **не завершённый
-release dependency**. Production version подготовлена `3.1.2.27` / `221`;
-merge, release APK/version matrix и publication ещё не выполнены.
+Незавершённых library dependencies нет. Production version подготовлена
+`3.1.2.27` / `221`; app Squash и release APK/version matrix выполняются после
+проверки этой интеграции. Публикация пользователем будет отдельным действием.

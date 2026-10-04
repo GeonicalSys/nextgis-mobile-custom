@@ -13,9 +13,10 @@ related_code:
 
 # Матрица сборки и версий
 
-Исходники подготовлены для production `3.1.2.27` / `221`. Release APK/version
-matrix заблокированы открытыми PR37/25/45 до закрытия всей цепочки и проверки
-remote library merge pins. Результат APK matrix после merge записывается в PR45.
+Исходники подготовлены для production `3.1.2.27` / `221`. Библиотеки PR37/25
+слиты через Merge Commit и закреплены по fetched remote SHA: maplib `1d81e8a`,
+maplibui `675c16b1`. Release APK/version matrix запускаются после Squash app45
+и проверки remote content/pins. Результат APK matrix записывается в PR45.
 
 | Компонент | Текущее значение |
 |---|---|
@@ -83,8 +84,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version
 
 Дополнение 2026-10-04: Pigo BLE/GATT/session regressions проверены на API 26/36.
 Локально прошли 574 unit tests (451 maplib, 82 maplibui, 41 app), 28 native
-API36/WHPX checks и Lisa/Belka release Kotlin/Java source compilation. Это
-не release APK matrix; её запуск требует закрытия library/app цепочки.
+API36/WHPX checks и Lisa/Belka release Kotlin/Java source compilation. То же
+содержимое прошло Linux CI f580bd8: 574 units, 28 native checks, без пропусков
+или ошибок. После library merges подтверждено совпадение Git trees с этими
+протестированными source heads. Это не release APK matrix; её запуск следует
+за app merge и повторной проверкой всей цепочки.
 
 JDK21 обязателен. Gradle wrapper distributionSha256Sum фиксирует проверенный
 дистрибутив9.3.1. Hyperlog master-SNAPSHOT заменён **теми же байтами AAR** из
@@ -115,8 +119,8 @@ my-maplibre. Удалён устаревший MaxPermSize JVM flag, мешав�
 запустить Gradle daemon; local user properties ранее скрывали эту ошибку.
 Workflow не собирает/не публикует release APK.
 
-До merge library PRs release APK/version matrix заблокированы closure contract.
-В этом аудите на Windows и в чистой Linux CI выполнены обе release Kotlin/Java
-compilation, debug APK,517 units и28 native API36 fault/UI checks. Это не
-подтверждение готовности релиза; точный успешный run и runtime versions в
-[отчёте](mobile-reliability-audit.md).
+Library dependency closure завершена; приложение закрепляет оба remote merge
+commits. На Windows и в чистой Linux CI выполнены обе release Kotlin/Java
+compilation, debug APK,574 units и28 native API36 fault/UI checks. Release
+APK проверяются отдельно после app merge; точный успешный run, delivery matrix
+и runtime versions в [отчёте](mobile-reliability-audit.md).

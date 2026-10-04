@@ -22,7 +22,7 @@ related_code:
 
 Подготовленные исходники форка: Lisa/Belka Release `3.1.2.27` / `versionCode` 221; Lisa Debug
 `3.1.2.22` / `versionCode` 217. Сверено с официальным приложением `3.2.0` и с
-головами официальных repositories на 3 октября 2026 года: app
+головами официальных repositories, повторно проверенными 4 октября 2026 года: app
 `482f26f30abea1468ebfefaa45092d86f921d68b`, maplib
 `f260631d4f4c2c7ea4ccaa8c0d28311507e30040`, maplibui
 `90cf6769aed0a5aa835b142977b9d31f89270e82`. Проверка выполнена через
@@ -1489,5 +1489,7 @@ Immediate editable selection, density-aware tap tolerance, width-bounded rail,
 AndroidX Back, guarded URL launch и service timeout fixes описаны в
 [отчёте](mobile-reliability-audit.md). Это проверка затронутых путей по текущим
 heads, не новый полный upstream merge и не утверждение уникальности всех
-AndroidX/timeout решений. Версии не подняты; library PRs должны быть merged и
-remote merge commits закреплены в app перед выпуском.
+AndroidX/timeout решений. Production исходники подготовлены для3.1.2.27/221,
+Debug сохраняет3.1.2.22/217. Library PR37/25 слиты; root закрепляет fetched
+remote merge commits1d81e8a/675c16b1. Проверенные official heads совпали с
+перечисленными в основе сравнения; нового upstream merge здесь не выполнялось.
