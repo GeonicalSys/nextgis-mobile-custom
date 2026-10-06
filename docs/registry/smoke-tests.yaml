@@ -492,6 +492,8 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
+      - Enable Battery Saver with screen-off GPS policy 1, 2 or 4; manual Start must warn with Battery settings and Record anyway, even with Doze exemption or its old prompt suppressed; settings alone must not create a track
+      - During a track enable Battery Saver while the screen is off, verify the ongoing notification warning, then disable it and verify GPS resumes in the same recording; Stop remains available; native external GNSS and foreground-only policy 3 must not show the system GPS warning
       - Discover two BLE receivers named PiGo Lite at different signal levels; verify separate rows, numerical dBm and stronger signal closer to zero, then walk closer and repeat discovery
       - Repeat with paired Classic receivers; unknown or non-discoverable devices show Signal not measured, never zero or a prior scan value; selecting one stores only its original id/name
       - During scan switch transport, leave the screen and start another scan; late callbacks must not restore obsolete rows; USB/TCP must not show Bluetooth signal

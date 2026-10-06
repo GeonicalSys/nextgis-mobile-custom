@@ -9,6 +9,8 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/location/TrackPowerWarning.kt
+    responsibility: Warn before manual track Start and on active-session Resume or power policy change; offer Battery Saver settings or explicit continuation without conflating Doze exemption or starting from settings.
   - path: app/src/main/java/com/nextgis/mobile/view/GnssDeviceAdapter.java
     responsibility: Render receiver names and measured or unknown Bluetooth RSSI on separate lines, clearing recycled signal rows for USB endpoints.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackRecordingModesTest.java

@@ -63,6 +63,45 @@ foreground `location|connectedDevice` с тихим уведомлением. С
 Опция `verbose_log` пишет в HyperLog каждое GNSS/NMEA измерение и причину
 `onLocationUnavailable`; по умолчанию координаты в лог не попадают.
 
+## Энергосбережение и выключенный экран — 2026-10-06
+
+`PARTIAL_WAKE_LOCK` и foreground service не отменяют глобальную политику GPS
+в Battery Saver. `LocationPowerPolicy` проверяет `getLocationPowerSaveMode()`:
+режимы 1/2/4 отключают или ограничивают GPS при выключенном экране; 0/3 не
+требуют такого предупреждения для location foreground service. На API 26–27
+включённый Battery Saver даёт предупреждение о возможном прерывании, поскольку
+точная политика недоступна. Native external GNSS не получает предупреждение
+об отключении системного GPS; Mock Location через GPS_PROVIDER получает.
+
+До ручного Start приложение предлагает настройки батареи или явное продолжение.
+Возврат из настроек сам запись не запускает. Во время записи TrackerService
+слушает изменение энергосбережения и источника GNSS: обновляет постоянное
+уведомление и сообщает открытому экрану. Resume повторно проверяет ограничение.
+Старое «не спрашивать» для Doze не скрывает новое предупреждение. Ни предупреждение,
+ни смена режима питания не закрывают трек и не удаляют его точки; Stop доступен.
+
+Полевые логи Release 3.1.2.27 и Debug 3.1.2.23 от 6 октября показывают живой
+сервис и wake lock, неизменную GPS-подписку и прекращение сырых fixes после
+screen-off; пользователь подтвердил включённое энергосбережение. Сам mode в
+старых логах отсутствует: конкретную OEM-политику из них доказать нельзя.
+Новая строка GPS health содержит powerSave, locationPowerSaveMode, batteryExempt
+и deviceIdle. Основание: [Android PowerManager](https://developer.android.com/reference/android/os/PowerManager#getLocationPowerSaveMode()).
+
+Native `TrackPowerWarningTest` проверяет настоящий LocationManager test provider,
+screen-off, политику Battery Saver, уведомление и сохранение точек в SQLite;
+прямой вызов callback сервиса для этого сценария не используется. Проверка на
+физическом телефоне пользователя и расход батареи остаются отдельным smoke.
+
+Локальная проверка API 36 прошла: 5 точек до сна, 13 после screen-off без
+Battery Saver, 14 после его включения (успела одна переходная точка), 22 после
+выключения Battery Saver при всё ещё погашенном экране. Track id сохранился,
+GPS subscription не перерегистрировалась. Второй native тест проверил текст
+диалога, переход в настройки без Start и явное продолжение при скрытом старом
+Doze prompt. JVM: maplib 458, maplibui 87, app 41 — без ошибок; оба release
+source set скомпилированы, debug QA APK собран без bump/publication.
+Полный локальный native reliability suite: 36/36, включая оба новых power
+сценария, режимы записи, Stop recovery, SQLite и обход.
+
 ## Pigo по Bluetooth LE
 
 ### Выбор приёмника по уровню Bluetooth-сигнала

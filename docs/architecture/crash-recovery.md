@@ -30,6 +30,11 @@ lost.
 
 ## Track recording
 
+Battery Saver restrictions do not mean the service died: screen-off GPS delivery
+can stop with a live foreground service and wake lock. The power warning is
+recomputed on service start and Activity Resume, never persisted as recording
+intent or used to close a track. Existing segment and durable Stop rules apply.
+
 | Concern | Behavior |
 |---------|----------|
 | Recording mode | `track_recording_mode` is checkpointed before permissions/start and retained across process death, reboot and split. Missing/unknown values retain mixed recording. Pedestrian speed rejection occurs before sampling/queueing, closes the accepted tail and resumes in a new persisted segment; Stop cannot flush rejected vehicle fixes. See location pipeline for threshold and fallback. |

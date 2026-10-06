@@ -1,5 +1,11 @@
 schema_version: 1
 preferences:
+  battery_dont_show_pref:
+    owner: app
+    type: boolean
+    default: false
+    source: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    purpose: Suppress only the legacy Doze exemption prompt; never suppress a current Battery Saver restriction on screen-off system GPS.
   tracks_temp:
     owner: maplibui
     type: shared_preferences_file

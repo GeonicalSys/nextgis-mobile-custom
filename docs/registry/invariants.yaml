@@ -625,6 +625,10 @@ invariants:
       The final recorder owns release of the shared partial wake lock unless an
       external NMEA session still needs it; sound off does not
       disable background acquisition. Sensor evidence expires and cannot alone freeze a vehicle.
+      Global Battery Saver may still suppress screen-off GPS; check the actual location
+      power policy independently of Doze exemption, warn before manual Start and monitor
+      the active service notification. Do not mislabel native external GNSS or the
+      foreground-only power policy as disabled GPS, and never close a track due to this warning.
       A refined stop replaces only the last owned vertex, retaining track arrival time;
       it never appends distance for an improving stationary position. Handset handling alone
       cannot confirm departure; direction, combined accuracy and trustworthy velocity or a

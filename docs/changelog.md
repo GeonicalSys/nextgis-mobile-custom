@@ -10,6 +10,14 @@ related_code:
 
 ## 2026-10-06
 
+- После полевых логов Release/Debug добавлен контроль Battery Saver: отдельная
+  проверка screen-off GPS policy до Start, переход в настройки батареи,
+  динамическое предупреждение foreground-уведомления и повторная проверка Resume.
+  Doze exemption не подменяет эту проверку; native external GNSS исключён.
+  GPS health дополнен фактической политикой питания. Добавлен native сценарий
+  LocationManager → screen-off → Battery Saver → SQLite без прямой инъекции
+  в callback сервиса. Версии APK не менялись.
+
 - По запросу пользователя подготовлен debug-only выпуск `3.1.2.23` / `218`:
   app/maplib debug constants и независимый oracle APK matrix обновлены;
   production остаётся `3.1.2.27` / `221`. Публикуется только канал debug.
