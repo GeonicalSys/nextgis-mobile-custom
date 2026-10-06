@@ -1,12 +1,28 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-04
+last_verified: 2026-10-06
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-06
+
+- Добавлены два режима кнопки трека, сохранение режима при восстановлении и
+  track-only порог 30 км/ч с разрывом сегмента. Обновлены GNSS/recovery/storage
+  contracts, config/invariants/smoke registry и локальные packs app/maplibui/maplib.
+  Активный значок — оранжевый человек с увеличенной красной точкой.
+  Official app/maplib/maplibui heads повторно проверены и не изменились.
+  Release-сборка и публикация требуют закрытия связанных library PRs и repin
+  их удалённых merge commits; текущая задача готовит Draft PRs без выпуска.
+- Проверки: JDK 21 / Gradle 9.3.1, 579 unit tests (451 maplib, 87 maplibui,
+  41 app), 5 native API 36/WHPX tests, debug APK, maplibui assembleDebug,
+  Lisa/Belka Release Kotlin/Java compilation и docs validator + 7 tests прошли.
+  На read-only эмуляторе проверены dropdown, запуск пешеходного режима и
+  активная иконка. Debug использует зелёный primary; production primary остаётся
+  оранжевым. Физический маршрут/фон, планшет, GPX и обе release APK ещё не проверены.
 
 ## 2026-10-04
 

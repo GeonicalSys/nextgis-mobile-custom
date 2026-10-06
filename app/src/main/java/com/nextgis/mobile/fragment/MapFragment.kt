@@ -487,7 +487,7 @@ public class MapFragment
         mAzimuth = view.findViewById(R.id.action_azimuth)
         mAzimuth?.setOnClickListener(this)
         trackStatusButton = requireNotNull(view.findViewById(R.id.action_track_status))
-        trackStatusButton?.setOnClickListener { mActivity?.toggleTrackRecordingFromMap() }
+        trackStatusButton?.setOnClickListener { mActivity?.toggleTrackRecordingFromMap(it) }
         refreshTrackStatusButton()
 
         val addGeometryByWalk = view.findViewById<View>(R.id.add_geometry_by_walk)
@@ -546,10 +546,10 @@ public class MapFragment
         val button = trackStatusButton ?: return
         val state = TrackerService.getRecordingState(ctx)
         val icon = if (state == TrackerService.RecordingState.RECORDING)
-            com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec
+            com.nextgis.maplibui.R.drawable.ic_track_recording
         else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
         val title = when (state) {
-            TrackerService.RecordingState.STOPPED -> com.nextgis.maplibui.R.string.track_start
+            TrackerService.RecordingState.STOPPED -> com.nextgis.maplibui.R.string.track_mode_choose
             TrackerService.RecordingState.STARTING -> com.nextgis.maplibui.R.string.track_pending
             TrackerService.RecordingState.RECORDING -> com.nextgis.maplibui.R.string.track_stop
             TrackerService.RecordingState.ERROR -> com.nextgis.maplibui.R.string.track_error
@@ -562,8 +562,15 @@ public class MapFragment
         }
         button.setIcon(icon)
         button.setColorNormal(ContextCompat.getColor(ctx, color))
-        button.contentDescription = getString(title)
-        button.setTitle(getString(title))
+        val description = if (state == TrackerService.RecordingState.RECORDING) {
+            val mode = if (TrackerService.getRecordingMode(ctx) ==
+                com.nextgis.maplibui.util.TrackRecordingMode.PEDESTRIAN)
+                com.nextgis.maplibui.R.string.track_mode_pedestrian
+            else com.nextgis.maplibui.R.string.track_mode_walk_drive
+            getString(com.nextgis.maplibui.R.string.track_mode_active, getString(mode))
+        } else getString(title)
+        button.contentDescription = description
+        button.setTitle(description)
     }
 
     override fun changeProgress(show: Boolean) {

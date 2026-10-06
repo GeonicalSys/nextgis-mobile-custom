@@ -6,6 +6,8 @@ edges:
     scope: implementation
     purpose: UI, NGW import, sync orchestration and GISApplication base
     contracts:
+      - maplibui/src/main/java/com/nextgis/maplibui/util/TrackRecordingMode.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
       - maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java
       - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java

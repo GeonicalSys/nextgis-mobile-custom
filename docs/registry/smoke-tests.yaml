@@ -492,8 +492,12 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
-      - Turn Android system location off and tap the walking-person track button under the ruler; verify the Location settings prompt and no tracker service or new track row
-      - Turn system location on, tap the same button to start and stop, and verify its starting/recording/stopped colors and labels without opening another screen
+      - Tap the track button while stopped; verify Pedestrian and Pedestrian + car entries with icons, dismissal by Back/outside tap and correct placement on phone, landscape, tablet and rail overflow
+      - Turn Android system location off and choose a track mode; verify the Location settings prompt and no tracker service or new track row
+      - Turn system location on, choose each mode and stop with one tap; verify the orange person, larger red dot and confirmed recording label
+      - In pedestrian mode feed walking, exactly 30 km/h, faster than 30 km/h and walking again; verify skipped fast points, automatic resume and separate persisted segments on map and GPX
+      - Repeat with missing receiver speed, GNSS loss, process restart and Stop while driving; verify selected mode recovery and no rejected sampler tail; mixed mode retains car points
+      - Turn system location off or revoke permission while recording and press the track button; verify Stop rather than the mode menu or a new permission prompt
       - On Android 14+ deny Bluetooth permissions, grant fine location and start a track; confirm a new track row and notification before the menu says recording
       - Simulate a foreground permission or SQLite insert failure; verify an immediate warning, a non-recording menu label and no fabricated GPS points
       - Fail one trackpoint insert after recording started, then restore storage; verify warning and non-recording menu until the next successful point, without deleting earlier points
@@ -527,7 +531,9 @@ tests:
       - During stakeout on a live receiver fix, the widget must not flash Waiting for GPS solely because the GNSS timestamp is slightly in the future or because GGA repeats every 5 s
     expected: >
       System location off blocks an interactive start before durable recording intent changes;
-      the map button only toggles Start/Stop and reflects confirmed recorder state. The map
+      the stopped button offers two modes and the active button stops immediately.
+      Pedestrian mode excludes speed above 30 km/h and resumes in a separate segment;
+      mixed mode retains validated vehicle movement. The map
       shows only a current source with an honest accuracy radius and clears both marker
       and circle on expiry. No network fix, camera anchor, cached final snap or unrecorded preview
       enters geometry. Walking and legal vehicle movement retain turns without stationary drift

@@ -61,6 +61,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -100,6 +101,7 @@ import com.nextgis.maplibui.mapui.SyncAccountWorker
 import com.nextgis.maplibui.overlay.EditLayerOverlay
 import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.service.TrackerService.BackgroundPermissionCallback
+import com.nextgis.maplibui.util.TrackRecordingMode
 import com.nextgis.maplibui.util.ConstantsUI
 import com.nextgis.maplibui.util.ConstantsUI.KEY_BATTERY
 import com.nextgis.maplibui.util.ConstantsUI.KEY_TRACK_ACTION
@@ -164,6 +166,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     protected var mBackPressed: Long = 0
     protected var mTrackItem: MenuItem? = null
     private var mapTrackTogglePending = false
+    private var trackModeMenu: PopupMenu? = null
     private val ngwUrlExecutor = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "NGWResourceUrl").apply { isDaemon = true }
     }
@@ -550,9 +553,40 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         invalidateOptionsMenu()
     }
 
-    fun toggleTrackRecordingFromMap() {
-        mapTrackTogglePending = true
-        askBackgroundPerm(null)
+    fun toggleTrackRecordingFromMap(anchor: View) {
+        trackModeMenu?.let {
+            it.dismiss()
+            return
+        }
+        if (TrackerService.hasRecordingSession(this)) {
+            // Stop must work even after location is disabled or permission is revoked.
+            controlTrack(null)
+            return
+        }
+        if (mapTrackTogglePending) return
+        val menu = PopupMenu(this, anchor)
+        trackModeMenu = menu
+        menu.setOnDismissListener { trackModeMenu = null }
+        menu.setForceShowIcon(true)
+        val pedestrian = menu.menu.add(com.nextgis.maplibui.R.string.track_mode_pedestrian)
+            .setIcon(com.nextgis.maplibui.R.drawable.ic_track_pedestrian)
+        menu.menu.add(com.nextgis.maplibui.R.string.track_mode_walk_drive)
+            .setIcon(com.nextgis.maplibui.R.drawable.ic_track_walk_drive)
+        menu.setOnMenuItemClickListener { item ->
+            if (!TrackerService.hasRecordingSession(this) && !mapTrackTogglePending) {
+                val mode = if (item === pedestrian) TrackRecordingMode.PEDESTRIAN
+                    else TrackRecordingMode.WALK_AND_DRIVE
+                if (TrackerService.selectRecordingMode(this, mode)) {
+                    mapTrackTogglePending = true
+                    askBackgroundPerm(null)
+                } else {
+                    Toast.makeText(this, com.nextgis.maplibui.R.string.track_start_failed,
+                        Toast.LENGTH_LONG).show()
+                }
+            }
+            true
+        }
+        menu.show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -593,7 +627,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             }
 
             R.id.menu_track -> {
-                askBackgroundPerm(item)
+                toggleTrackRecordingFromMap(findViewById<View>(R.id.menu_track)
+                    ?: mToolbar ?: window.decorView)
                 return true
             }
 
@@ -639,6 +674,12 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     public fun askBackgroundPerm(item: MenuItem?) {
+        if ((item != null || mapTrackTogglePending) && TrackerService.hasRecordingSession(this)) {
+            controlTrack(item)
+            mTrackItem = null
+            mapTrackTogglePending = false
+            return
+        }
         if (!TrackerService.isSystemLocationEnabled(this)) {
             mapTrackTogglePending = false
             mTrackItem = null
@@ -1911,13 +1952,13 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         if (null != mLayersFragment && !mLayersFragment!!.isDrawerOpen) {
             val state = TrackerService.getRecordingState(this)
             val title = when (state) {
-                TrackerService.RecordingState.STOPPED -> com.nextgis.maplibui.R.string.track_start
+                TrackerService.RecordingState.STOPPED -> com.nextgis.maplibui.R.string.track_mode_choose
                 TrackerService.RecordingState.STARTING -> com.nextgis.maplibui.R.string.track_pending
                 TrackerService.RecordingState.RECORDING -> com.nextgis.maplibui.R.string.track_stop
                 TrackerService.RecordingState.ERROR -> com.nextgis.maplibui.R.string.track_error
             }
             val icon =
-                if (state == TrackerService.RecordingState.RECORDING) com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk_rec else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
+                if (state == TrackerService.RecordingState.RECORDING) com.nextgis.maplibui.R.drawable.ic_track_recording else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
             setTrackItem(menu.findItem(R.id.menu_track), title, icon)
             mapFragment?.refreshTrackStatusButton()
         }
@@ -1933,7 +1974,13 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
 
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        trackModeMenu?.dismiss()
+        super.onConfigurationChanged(newConfig)
+    }
+
     override fun onPause() {
+        trackModeMenu?.dismiss()
         try {
             if (mMessageReceiver != null) {
                 unregisterReceiver(mMessageReceiver)

@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-04
+last_verified: 2026-10-06
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -23,6 +23,11 @@ related_code:
 [`../registry/config-keys.yaml`](../registry/config-keys.yaml).
 
 ## Правила
+
+Режим трека выбирается в выпадающем меню кнопки записи и сохраняется как
+`track_recording_mode` перед запросом разрешений. Значения и миграция описаны
+в registry; порог, разрывы и восстановление — в
+[контракте GPS](../architecture/location-pipeline.md#режим-записи-трека).
 
 Существующий `track_recording_enabled` также разрешает фоновое обновление
 текущего трека из GPS callback карты. Нового preference нет; default `false`,

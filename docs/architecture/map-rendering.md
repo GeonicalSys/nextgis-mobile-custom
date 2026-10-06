@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-03
+last_verified: 2026-10-06
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -311,7 +311,10 @@ Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
     `MapFragment` слушает `WALKEDIT_CHANGE` напрямую во время resume и перечитывает
     снимок при возврате на экран: preview не зависит от наличия панели.
     Все phone/landscape/tablet layouts включают один `layout_map_content` с
-    обязательными кнопкой трека и панелью обхода. `MapControlRail` пересчитывает
+    обязательными кнопкой трека и панелью обхода. Кнопка трека открывает
+    «Пешеход»/«Пешеход + машина», а при активной записи сразу завершает её.
+    Активный значок — оранжевый человек с увеличенной красной точкой на белом фоне.
+    `MapControlRail` пересчитывает
     число строк по доступной высоте при каждом measure, в том числе при повороте
     без пересоздания Activity, и переносит инструменты в столбцы справа налево.
     Меню создания раскрывается влево в отдельной нижней строке; панель обхода
