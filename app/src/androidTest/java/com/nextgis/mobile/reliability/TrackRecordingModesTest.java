@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import com.nextgis.maplib.gnss.GnssInputPrefs;
 import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.map.TrackLayer;
 import com.nextgis.maplib.util.SettingsConstants;
@@ -62,7 +63,9 @@ public class TrackRecordingModesTest {
         assertFalse(temp.contains("track_uri"));
         String[] keys = {AppSettingsConstants.KEY_PREF_INTRO, SettingsConstants.KEY_PREF_TRACKS_MIN_TIME,
                 SettingsConstants.KEY_PREF_TRACKS_MIN_DISTANCE, TrackerService.KEY_RECORDING_MODE,
-                SettingsConstants.KEY_PREF_TRACK_RECORDING_ENABLED, "track_recording_failure"};
+                SettingsConstants.KEY_PREF_TRACK_RECORDING_ENABLED, "track_recording_failure",
+                SettingsConstants.KEY_PREF_GNSS_INPUT, SettingsConstants.KEY_PREF_GNSS_TRANSPORT,
+                SettingsConstants.KEY_PREF_GNSS_DEVICE_ID};
         Map<String, ?> original = prefs.getAll();
         assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true)
                 .putString(SettingsConstants.KEY_PREF_TRACKS_MIN_TIME, "0")
@@ -76,6 +79,13 @@ public class TrackRecordingModesTest {
             SQLiteDatabase db = map.getDatabase(false);
             assertNotNull(layer);
             scenario.onActivity(activity -> {
+                // A receiver without an endpoint stops system/provider traffic before Start.
+                // Otherwise a slow UI dispatch can let emulator fixes enter the sampler and
+                // advance its clock before this test injects its supposedly first fix.
+                assertTrue(prefs.edit()
+                        .putString(SettingsConstants.KEY_PREF_GNSS_INPUT, GnssInputPrefs.VALUE_EXTERNAL)
+                        .putString(SettingsConstants.KEY_PREF_GNSS_TRANSPORT, GnssInputPrefs.TRANSPORT_USB)
+                        .putString(SettingsConstants.KEY_PREF_GNSS_DEVICE_ID, "").commit());
                 assertTrue(TrackerService.selectRecordingMode(activity, mode));
                 TrackerService.start_stop_tracking_GetIconWithTitle(activity);
             });
@@ -91,14 +101,14 @@ public class TrackRecordingModesTest {
             serviceField.setAccessible(true);
             TrackerService service = (TrackerService) serviceField.get(null);
             assertNotNull(service);
-            long firstNanos = SystemClock.elapsedRealtimeNanos();
-            long firstTime = System.currentTimeMillis();
             double[] offsets = {0, .00001, .00021, .00041, .00042, .00043};
             float[] speeds = {1, 1, 22, 22, 1, 1};
             scenario.onActivity(activity -> {
                 // Isolate service persistence from emulator/provider traffic. The upstream
                 // GNSS validator is tested separately; these represent its ordered output.
                 app.getGpsEventSource().removeRecordingListener(service);
+                long firstNanos = SystemClock.elapsedRealtimeNanos();
+                long firstTime = System.currentTimeMillis();
                 for (int i = 0; i < (stopDriving ? 4 : offsets.length); i++) {
                     Location location = new Location("gps");
                     location.setLatitude(55 + offsets[i]);
@@ -147,7 +157,8 @@ public class TrackRecordingModesTest {
                 else if (value instanceof String) restore.putString(key, (String) value);
                 else restore.remove(key);
             }
-            assertTrue(restore.commit());
+            InstrumentationRegistry.getInstrumentation().runOnMainSync(
+                    () -> assertTrue(restore.commit()));
         }
     }
 }
