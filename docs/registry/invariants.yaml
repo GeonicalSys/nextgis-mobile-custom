@@ -663,7 +663,9 @@ invariants:
       Mock and native NMEA vertices skip pedestrian smoothing and are sampled no coarser than 2 s / 1 m. Live batches retain chronological
       session measurements without treating receipt time as current location or sound health.
       Robust adaptive smoothing and stationary anchoring precede the sequence validator;
-      movement through 160 km/h remains supported with no manual pedestrian/vehicle profile.
+      movement through 160 km/h remains supported by the shared source and mixed track mode.
+      Track-only pedestrian mode skips speeds above 30 km/h before sampling and resumes in
+      a new persisted segment; neither the cursor nor walk digitizing uses that speed cap.
       Sampling occurs after validation and retains turns. No raw start, preview or closing
       location may bypass filtering. GPS loss creates persistent track segments, preserved
       by MapLibre, Canvas and GPX; walk persists gps_paused and requires explicit reconnection.

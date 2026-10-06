@@ -1,12 +1,48 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-04
+last_verified: 2026-10-06
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-06
+
+- По запросу пользователя подготовлен debug-only выпуск `3.1.2.23` / `218`:
+  app/maplib debug constants и независимый oracle APK matrix обновлены;
+  production остаётся `3.1.2.27` / `221`. Публикуется только канал debug.
+  План и проверка включения всех изменений: `reference/debug-3.1.2.23-delivery.md`.
+  По явному разрешению объединены maplib38 (`1b1f4e8`) и maplibui26 (`159f0bcf`),
+  ancestry/tree проверены, app закрепляет fetched remote merge commits.
+  CI выявил гонку native track fixture с реальными GPS callback эмулятора:
+  fixture отключает системный источник до Start через внешний GNSS без endpoint
+  и задаёт времена точек внутри main-thread injection; проверки числа точек,
+  сегментов и автомобильных скоростей сохранены.
+
+- В ту же задачу добавлен Bluetooth RSSI при выборе внешнего GNSS: BLE и
+  discovery сопряжённых Classic, отдельные строки одинаковых имён, явный
+  неизвестный сигнал и освобождение поиска при закрытии/смене транспорта.
+  Обновлены app/maplib packs, location pipeline, official differences,
+  dependencies и физический smoke. RSSI не меняет id/name и не хранится в prefs.
+
+- Добавлены два режима кнопки трека, сохранение режима при восстановлении и
+  track-only порог 30 км/ч с разрывом сегмента. Обновлены GNSS/recovery/storage
+  contracts, config/invariants/smoke registry и локальные packs app/maplibui/maplib.
+  Активный значок — оранжевый человек с увеличенной красной точкой.
+  Official app/maplib/maplibui heads повторно проверены и не изменились.
+  Release-сборка и публикация требуют закрытия связанных library PRs и repin
+  их удалённых merge commits; текущая задача готовит Draft PRs без выпуска.
+- Проверки: JDK 21 / Gradle 9.3.1, 583 unit tests (455 maplib, 87 maplibui,
+  41 app), 7 native API 36/WHPX tests, debug APK, maplibui assembleDebug,
+  Lisa/Belka Release Kotlin/Java compilation и docs validator + 7 tests прошли.
+  На read-only эмуляторе проверены dropdown, запуск пешеходного режима,
+  активная иконка, восстановление режима после force-stop/relaunch и Stop одним
+  нажатием. Native-тесты проверяют разные RSSI одинаковых имён и recycling строк
+  Bluetooth/USB. Debug использует зелёный primary; production primary остаётся
+  оранжевым. Физический маршрут/фон, два PiGo/Bluetooth Classic, планшет, GPX и
+  обе release APK ещё не проверены.
 
 ## 2026-10-04
 

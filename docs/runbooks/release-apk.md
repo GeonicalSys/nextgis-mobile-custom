@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-04
+last_verified: 2026-10-06
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -18,8 +18,8 @@ related_code:
 ## Версия
 
 Подготавливаемый выпуск `3.1.2.27`: production `versionCode 221`, Lisa Debug —
-`3.1.2.22` / `versionCode 217`; диагностический release
-`maplib.VERSION_NAME 3.1.2.27`, debug — `3.1.2.22`.
+`3.1.2.23` / `versionCode 218`; диагностический release
+`maplib.VERSION_NAME 3.1.2.27`, debug — `3.1.2.23`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.
@@ -41,18 +41,13 @@ related_code:
 
 ## Обязательная сборка и проверка версии
 
-Перед release APK/version matrix и выдачей команд публикации закрыть цепочку
-maplib PR37 (Merge Commit) → maplibui PR25 (Merge Commit) → app PR45 (Squash).
-После library merges app закрепляет именно fetched remote merge commits; после
-app merge повторно сверяются remote tip и все строки delivery matrix. До этого
-подготовка version constants не означает готовность APK. Публикация оператором
-выполняется отдельно после dry-run.
-
-4 октября PR37 и PR25 слиты и проверены по ancestry/tree; app закрепляет
-maplib `1d81e8ab9d29b32ba892bbaa6b47f1ca69c25932` и maplibui
-`675c16b1f7604b3c0cb50b59a432fb66d9db1a20`. Ни один pin не указывает на
-незамерженный library head. Перед actual version matrix остаётся Squash app45
-и проверка fetched remote app tip.
+Для текущего debug-only выпуска закрыть цепочку maplib PR38 (Merge Commit) →
+maplibui PR26 (Merge Commit) → app PR46 (Squash). Предыдущие PR37/25/45 уже
+входят в baseline `5686d8c`. После library merges app закрепляет именно fetched
+remote merge commits; после app merge сверяются remote tip, tree и все строки
+[delivery matrix](../reference/debug-3.1.2.23-delivery.md). Затем обязательны
+APK version matrix и publisher dry-run. Пользователь разрешил публикацию только
+debug; собранные для проверки Lisa/Belka Release не публикуются.
 
 ```powershell
 Set-Location C:\dev\lisa\android_projects\android_gisapp

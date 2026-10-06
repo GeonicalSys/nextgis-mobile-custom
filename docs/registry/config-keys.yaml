@@ -222,6 +222,18 @@ preferences:
       BootLoader and MainActivity auto-resume TrackerService when true. Toolbar and service
       read it in the default application process so a delayed Start cannot overtake Stop.
       Map GPS callbacks use this flag to request asynchronous track rendering without a main-thread SQLite unfinished-track query.
+  track_recording_mode:
+    owner: maplibui
+    type: string
+    default: walk_and_drive
+    source: maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+    ui: Track button dropdown (Pedestrian / Pedestrian + car)
+    purpose: >
+      Checkpointed before interactive start; pedestrian skips speeds above 30 km/h before
+      sampling and resumes in a new persisted segment. walk_and_drive keeps shared GNSS
+      validation without the pedestrian cap. Missing or unknown values preserve legacy
+      mixed recording. The selected mode survives process death and cannot change while
+      recording or a pending Stop is active. No database migration or walk policy change.
   permission_requested_marker:
     owner: app
     type: boolean

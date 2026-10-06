@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-03
+last_verified: 2026-10-06
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -37,6 +37,12 @@ related_code:
 # NGW sync, локальное хранение и восстановление
 
 ## Ответственность
+
+Режим трека хранится в `track_recording_mode`, без миграции БД. Пропуски
+быстрого движения в режиме «Пешеход» используют существующий
+`trackpoints.segment`; очередь принимает только разрешённые режимом точки.
+Правила сохранения хвоста и восстановления описаны в
+[контракте GPS](location-pipeline.md#режим-записи-трека).
 
 Подтверждённый device ANR 17.09: GPS/main thread ждал SQLite, пока sync worker
 сравнивал `Feature.equalsData` внутри snapshot-транзакции. GPS-проверка состояния
@@ -103,7 +109,7 @@ Release ЛИСА/Белка используют `com.nextgis.account.geonical`,
 `com.nextgis.account.debug`. GIS provider аналогично должен совпадать между
 `BuildConfig.providerAuth`, manifest provider и `SyncAdapter.contentAuthority`.
 Подготовленный выпуск `3.1.2.27` использует production tuple `221` / `3.1.2.27`, а отдельный
-debug — `217` / `3.1.2.22`; application/account/provider identity не
+debug — `218` / `3.1.2.23`; application/account/provider identity не
 меняется.
 Library defaults нельзя считать достаточными: app variant обязан перекрывать оба
 account resource keys. Иначе HTTP-аутентификация проходит, но Android отклоняет

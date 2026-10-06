@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-04
+last_verified: 2026-10-06
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -32,6 +32,7 @@ lost.
 
 | Concern | Behavior |
 |---------|----------|
+| Recording mode | `track_recording_mode` is checkpointed before permissions/start and retained across process death, reboot and split. Missing/unknown values retain mixed recording. Pedestrian speed rejection occurs before sampling/queueing, closes the accepted tail and resumes in a new persisted segment; Stop cannot flush rejected vehicle fixes. See location pipeline for threshold and fallback. |
 | Point durability | Each sampled, validated GNSS point is queued in owning-map AtomicFile storage before a serial idempotent SQLite insert; filter/sampling tails are flushed before Stop. Pending files are acknowledged only after database commit |
 | GPS validation | Shared `LocationTrackFilter` retains valid movement through 160 km/h, rejects invalid/old/inaccurate fixes and isolated material spikes, and drains its delayed two-fix buffer on stop or before a long-gap segment reset |
 | Provider ownership | Application-owned GpsEventSource; GPS (chip, mock or native NMEA) for display with Network only as GPS-absent fallback; GNSS chip, mock receiver extras or native NMEA for track/walk recording |

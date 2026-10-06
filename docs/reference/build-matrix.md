@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-04
+last_verified: 2026-10-06
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -13,10 +13,10 @@ related_code:
 
 # Матрица сборки и версий
 
-Исходники подготовлены для production `3.1.2.27` / `221`. Библиотеки PR37/25
-слиты через Merge Commit и закреплены по fetched remote SHA: maplib `1d81e8a`,
-maplibui `675c16b1`. Release APK/version matrix запускаются после Squash app45
-и проверки remote content/pins. Результат APK matrix записывается в PR45.
+Подготовлен debug-only выпуск `3.1.2.23` / `218`; production остаётся
+`3.1.2.27` / `221`. APK matrix запускается после Merge Commit библиотек
+PR38/26, repin их fetched remote merge commits и Squash app46. Состав и порядок:
+[delivery matrix](debug-3.1.2.23-delivery.md). Результаты записываются в PR46.
 
 | Компонент | Текущее значение |
 |---|---|
@@ -28,10 +28,10 @@ maplibui `675c16b1`. Release APK/version matrix запускаются посл�
 | minSdk | `26` |
 | App versionCode (release) | `221` |
 | App versionName (release) | `3.1.2.27` |
-| App versionCode (debug) | `217` |
-| App versionName (debug) | `3.1.2.22` |
+| App versionCode (debug) | `218` |
+| App versionName (debug) | `3.1.2.23` |
 | maplib VERSION_NAME (release) | `3.1.2.27` |
-| maplib VERSION_NAME (debug) | `3.1.2.22` |
+| maplib VERSION_NAME (debug) | `3.1.2.23` |
 | MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |
 | OkHttp | `5.3.2` |
