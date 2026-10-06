@@ -17,6 +17,9 @@ related_code:
   GPS health дополнен фактической политикой питания. Добавлен native сценарий
   LocationManager → screen-off → Battery Saver → SQLite без прямой инъекции
   в callback сервиса. Версии APK не менялись.
+  В CI устранена гонка настройки питания эмулятора: test fixture ждёт,
+  пока PowerManager подтвердит unplugged/Battery Saver, вместо предположения,
+  что последовательные shell-команды уже применены. Рабочая логика не менялась.
 
 - По запросу пользователя подготовлен debug-only выпуск `3.1.2.23` / `218`:
   app/maplib debug constants и независимый oracle APK matrix обновлены;

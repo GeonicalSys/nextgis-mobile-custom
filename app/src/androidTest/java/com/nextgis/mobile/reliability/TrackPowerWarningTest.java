@@ -54,6 +54,30 @@ public class TrackPowerWarningTest {
         assertTrue(message, condition.getAsBoolean());
     }
 
+    private static void unplugBattery() throws Exception {
+        shell("cmd battery set level 50");
+        shell("cmd battery unplug");
+        // BatteryService sends its update asynchronously. A following set-mode can be
+        // ignored while PowerManager still considers the emulator plugged in.
+        long deadline = SystemClock.elapsedRealtime() + 20000;
+        while (SystemClock.elapsedRealtime() < deadline) {
+            if (shell("dumpsys power").contains("mIsPowered=false")) return;
+            Thread.sleep(100);
+        }
+        fail("PowerManager did not acknowledge unplugged test battery");
+    }
+
+    private static void enableSaver(Context app) throws Exception {
+        PowerManager power = app.getSystemService(PowerManager.class);
+        long deadline = SystemClock.elapsedRealtime() + 20000;
+        do {
+            shell("cmd power set-mode 1");
+            if (power.isPowerSaveMode() && power.getLocationPowerSaveMode() == 1) return;
+            Thread.sleep(200);
+        } while (SystemClock.elapsedRealtime() < deadline);
+        fail("Cannot configure test Battery Saver: " + LocationPowerPolicy.diagnostics(app));
+    }
+
     private void emit(LocationManager manager, int count) throws Exception {
         for (int i = 0; i < count; i++) {
             Location fix = new Location(LocationManager.GPS_PROVIDER);
@@ -109,7 +133,7 @@ public class TrackPowerWarningTest {
         TrackLayer layer = null;
         boolean providerAdded = false;
         try {
-            shell("cmd battery unplug");
+            unplugBattery();
             shell("cmd power set-mode 0");
             shell("settings put global battery_saver_constants location_mode=1");
             shell("input keyevent KEYCODE_WAKEUP");
@@ -141,7 +165,7 @@ public class TrackPowerWarningTest {
                 emit(manager, 8);
                 assertTrue("Screen-off points persist without Battery Saver", points(db, id) > beforeSleep + 2);
                 long beforeSaver = points(db, id);
-                shell("cmd power set-mode 1");
+                enableSaver(app);
                 await("Screen-off GPS policy enabled", () -> power.isPowerSaveMode()
                         && power.getLocationPowerSaveMode() == 1 && LocationPowerPolicy.shouldWarn(app));
                 await("Background notification warns", () -> notificationWarns(app));
@@ -204,9 +228,9 @@ public class TrackPowerWarningTest {
         android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
                 new android.content.IntentFilter(android.provider.Settings.ACTION_BATTERY_SAVER_SETTINGS), null, true);
         try {
-            shell("cmd battery unplug");
+            unplugBattery();
             shell("settings put global battery_saver_constants location_mode=1");
-            shell("cmd power set-mode 1");
+            enableSaver(app);
             shell("input keyevent KEYCODE_WAKEUP");
             shell("wm dismiss-keyguard");
             assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true)
