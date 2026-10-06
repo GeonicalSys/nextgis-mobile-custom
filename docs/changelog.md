@@ -14,6 +14,8 @@ related_code:
   app/maplib debug constants и независимый oracle APK matrix обновлены;
   production остаётся `3.1.2.27` / `221`. Публикуется только канал debug.
   План и проверка включения всех изменений: `reference/debug-3.1.2.23-delivery.md`.
+  По явному разрешению объединены maplib38 (`1b1f4e8`) и maplibui26 (`159f0bcf`),
+  ancestry/tree проверены, app закрепляет fetched remote merge commits.
 
 - В ту же задачу добавлен Bluetooth RSSI при выборе внешнего GNSS: BLE и
   discovery сопряжённых Classic, отдельные строки одинаковых имён, явный

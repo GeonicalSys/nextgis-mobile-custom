@@ -1503,6 +1503,6 @@ AndroidX Back, guarded URL launch и service timeout fixes описаны в
 [отчёте](mobile-reliability-audit.md). Это проверка затронутых путей по текущим
 heads, не новый полный upstream merge и не утверждение уникальности всех
 AndroidX/timeout решений. Production исходники подготовлены для3.1.2.27/221,
-Debug подготовлен для3.1.2.23/218. Library PR37/25 слиты; root закрепляет fetched
-remote merge commits1d81e8a/675c16b1. Проверенные official heads совпали с
+Debug подготовлен для3.1.2.23/218. Library PR38/26 слиты; root закрепляет fetched
+remote merge commits1b1f4e8/159f0bcf. Проверенные official heads совпали с
 перечисленными в основе сравнения; нового upstream merge здесь не выполнялось.

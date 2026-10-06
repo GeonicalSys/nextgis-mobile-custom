@@ -39,6 +39,14 @@ APK version matrix → publisher dry-run → публикация только d
 
 ## Проверки до выпуска
 
+Library PR38 и PR26 объединены Merge Commit по явному разрешению пользователя.
+После fetch получены maplib `1b1f4e87edd037185ca94a06e1340d0be24d5c1d` и
+maplibui `159f0bcf8bae3e40db12ad07da5ed7b2fc07c2d9`. Проверены ancestry
+`bb33760`/`fab7933a` и полное равенство trees с соответствующими task heads.
+Приложение закрепляет именно эти удалённые merge commits; версия maplib debug
+включена в `bb33760`. Далее остаются app46 CI/Squash, remote-tree проверка и
+APK matrix; итоговые результаты доступны в app46.
+
 Feature commit 8c96d05 прошёл CI: 583 unit и 34 native API36 tests. Версия
 требует повторного CI и фактической APK matrix после закрытия зависимостей.
 Физический PiGo/Classic, маршрут со screen-off, планшет/landscape, GPX и
