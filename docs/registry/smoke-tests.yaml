@@ -492,6 +492,9 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
+      - Discover two BLE receivers named PiGo Lite at different signal levels; verify separate rows, numerical dBm and stronger signal closer to zero, then walk closer and repeat discovery
+      - Repeat with paired Classic receivers; unknown or non-discoverable devices show Signal not measured, never zero or a prior scan value; selecting one stores only its original id/name
+      - During scan switch transport, leave the screen and start another scan; late callbacks must not restore obsolete rows; USB/TCP must not show Bluetooth signal
       - Tap the track button while stopped; verify Pedestrian and Pedestrian + car entries with icons, dismissal by Back/outside tap and correct placement on phone, landscape, tablet and rail overflow
       - Turn Android system location off and choose a track mode; verify the Location settings prompt and no tracker service or new track row
       - Turn system location on, choose each mode and stop with one tap; verify the orange person, larger red dot and confirmed recording label

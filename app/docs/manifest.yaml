@@ -9,6 +9,8 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/view/GnssDeviceAdapter.java
+    responsibility: Render receiver names and measured or unknown Bluetooth RSSI on separate lines, clearing recycled signal rows for USB endpoints.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackRecordingModesTest.java
     responsibility: Exercise the real foreground track service and SQLite for pedestrian drive gaps, missing speed, Stop during driving and mixed recording on an isolated Android emulator.
   - path: app/src/main/res/layout/layout_map_content.xml
@@ -42,7 +44,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     responsibility: Main navigation, per-launch and settings-return runtime permission checks for location, device accounts and legacy storage (notification permission is optional and requested only in Settings), track-mode dropdown with durable pedestrian/mixed selection, one-tap Stop without a location-permission gate, system-location-gated track/walk start, confirmed versus pending track toolbar/map-button state and failure warning, map rotation/location recovery, local file and shared-underlay import, default migration, walk-state reconciliation and crash-recovery hub, NGW URL/project selection, sync interruption, backup sharing and updater continuation.
   - path: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
-    responsibility: Choose Bluetooth Classic/LE, USB or TCP endpoint and persist gnss_input keys without Mock Location; identified ComNav/Pigo BLE uses the native paired UART/BESTPOSB session and expires stale HUD quality.
+    responsibility: Choose Bluetooth Classic/LE, USB or TCP endpoint and persist gnss_input keys without Mock Location; show scan RSSI for duplicate-name Bluetooth receivers, request discovery permissions and release scans on pause/select/transport switch; identified ComNav/Pigo BLE uses the native paired UART/BESTPOSB session and expires stale HUD quality.
   - path: app/src/main/res/xml/preferences_general.xml
     responsibility: General settings including save_log file export, opt-in verbose_log GNSS dumps and a confirmed walk-only emergency reset action.
   - path: app/src/main/java/com/nextgis/mobile/util/WalkEmergencyReset.java

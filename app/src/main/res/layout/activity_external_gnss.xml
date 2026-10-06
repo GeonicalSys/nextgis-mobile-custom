@@ -84,6 +84,14 @@
             android:layout_marginTop="12dp"
             android:text="@string/gnss_find_devices" />
 
+        <TextView
+            android:id="@+id/gnss_signal_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/gnss_signal_hint"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
         <ListView
             android:id="@+id/gnss_device_list"
             android:layout_width="match_parent"

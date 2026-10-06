@@ -65,6 +65,32 @@ foreground `location|connectedDevice` с тихим уведомлением. С
 
 ## Pigo по Bluetooth LE
 
+### Выбор приёмника по уровню Bluetooth-сигнала
+
+«Найти устройства» показывает под именем Bluetooth-приёмника последнее RSSI
+в дБм. Чем ближе отрицательное значение к нулю, тем сильнее сигнал, например
+−45 дБм сильнее −80 дБм. Это уровень радиосигнала телефона до приёмника,
+а не спутниковое качество GNSS и не измеренное расстояние.
+
+BLE получает RSSI из `ScanResult`, Classic — из `ACTION_FOUND/EXTRA_RSSI`
+для уже сопряжённых устройств. До измерения и при недоступном значении
+показывается «Сигнал не измерен». Один поиск длится до 12 секунд; повторный
+поиск сбрасывает предыдущие измерения. Устройство идентифицируется по
+transport/address, поэтому два PiGo Lite с одинаковым именем не объединяются.
+Обновления сигнала сохраняют порядок строк. Выбор сохраняет прежние id/name,
+без RSSI; USB/TCP не получают вымышленный уровень сигнала.
+
+Закрытие экрана, смена транспорта, новый поиск и выбор приёмника останавливают
+поиск и отсекают старые callbacks. На Android 12+ требуются Bluetooth Scan/Connect,
+на Android 8–11 — разрешение точной геопозиции для discovery. Сопряжённый Classic
+приёмник, который не отвечает на inquiry, остаётся в списке без измерения.
+
+Источники Android API:
+[BLE RSSI](https://developer.android.com/reference/android/bluetooth/le/ScanResult#getRssi()),
+[Classic RSSI](https://developer.android.com/reference/android/bluetooth/BluetoothDevice#EXTRA_RSSI).
+
+### Сессия Pigo
+
 Для идентифицированного ComNav/Pigo UART service `3A20` выбираются отдельные
 write `3A21` и notify `3A22`. Профиль сверён с `BleDeviceManager` официального
 PiSatel 1.0.9.0 из [инструкции производителя](https://wiki.pidt.net/books/pigopidata/page/bystryi-start-moy).

@@ -24,6 +24,7 @@ import com.nextgis.maplib.gnss.GnssDeviceScanner;
 import com.nextgis.maplib.gnss.GnssInputPrefs;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.mobile.R;
+import com.nextgis.mobile.view.GnssDeviceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class ExternalGnssActivity extends AppCompatActivity {
         host = findViewById(R.id.gnss_tcp_host);
         port = findViewById(R.id.gnss_tcp_port);
         ListView list = findViewById(R.id.gnss_device_list);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, devices);
+        adapter = new GnssDeviceAdapter(this, devices);
         list.setAdapter(adapter);
         list.setOnItemClickListener((parent, view, position, id) -> select(devices.get(position)));
 
@@ -88,10 +89,19 @@ public class ExternalGnssActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override protected void onPause() {
+        scanner.stopBleScan();
+        super.onPause();
+    }
+
     private void showTransportUi() {
         boolean tcp = GnssInputPrefs.TRANSPORT_TCP.equals(currentTransport());
         tcpFields.setVisibility(tcp ? View.VISIBLE : View.GONE);
         findButton.setVisibility(tcp ? View.GONE : View.VISIBLE);
+        findViewById(R.id.gnss_signal_hint).setVisibility(
+                GnssInputPrefs.TRANSPORT_BLUETOOTH_CLASSIC.equals(currentTransport())
+                        || GnssInputPrefs.TRANSPORT_BLUETOOTH_LE.equals(currentTransport())
+                        ? View.VISIBLE : View.GONE);
     }
 
     private String currentTransport() {
@@ -133,13 +143,14 @@ public class ExternalGnssActivity extends AppCompatActivity {
             }
         }
         refreshList();
-        if (GnssInputPrefs.TRANSPORT_BLUETOOTH_LE.equals(transport)) {
-            scanner.startBleScan(found -> runOnUiThread(() -> {
+        GnssDeviceScanner.BleListener listener = found -> runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed() || !transport.equals(currentTransport())) return;
                 devices.clear();
                 devices.addAll(found);
                 adapter.notifyDataSetChanged();
-            }));
-        }
+            });
+        if (GnssInputPrefs.TRANSPORT_BLUETOOTH_LE.equals(transport)) scanner.startBleScan(listener);
+        else if (GnssInputPrefs.TRANSPORT_BLUETOOTH_CLASSIC.equals(transport)) scanner.startClassicScan(listener);
     }
 
     private void refreshList() {
@@ -159,6 +170,7 @@ public class ExternalGnssActivity extends AppCompatActivity {
     }
 
     private void select(GnssDevice device) {
+        scanner.stopBleScan();
         prefs.edit()
                 .putString(SettingsConstants.KEY_PREF_GNSS_TRANSPORT, device.transport)
                 .putString(SettingsConstants.KEY_PREF_GNSS_DEVICE_ID, device.id)
@@ -187,7 +199,11 @@ public class ExternalGnssActivity extends AppCompatActivity {
 
     private boolean ensureBluetoothPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            return true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) return true;
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_BLUETOOTH);
+            return false;
         }
         List<String> missing = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
@@ -210,6 +226,7 @@ public class ExternalGnssActivity extends AppCompatActivity {
             @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_BLUETOOTH) {
+            if (grantResults.length == 0) return;
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, R.string.gnss_bluetooth_permission, Toast.LENGTH_SHORT).show();

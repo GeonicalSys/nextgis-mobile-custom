@@ -73,6 +73,9 @@
     <string name="gnss_transport_usb">USB</string>
     <string name="gnss_transport_tcp">TCP/IP</string>
     <string name="gnss_find_devices">Найти устройства</string>
+    <string name="gnss_signal_dbm">Сигнал: %1$d дБм</string>
+    <string name="gnss_signal_unknown">Сигнал не измерен</string>
+    <string name="gnss_signal_hint">Чем ближе значение к нулю, тем сильнее сигнал: −45 дБм сильнее −80 дБм. Для обновления повторите поиск.</string>
     <string name="gnss_no_devices">Устройства не найдены</string>
     <string name="gnss_tcp_host">Адрес</string>
     <string name="gnss_tcp_port">Порт</string>

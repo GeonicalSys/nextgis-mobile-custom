@@ -73,6 +73,9 @@
     <string name="gnss_transport_usb">USB</string>
     <string name="gnss_transport_tcp">TCP/IP</string>
     <string name="gnss_find_devices">Find devices</string>
+    <string name="gnss_signal_dbm">Signal: %1$d dBm</string>
+    <string name="gnss_signal_unknown">Signal not measured</string>
+    <string name="gnss_signal_hint">A value closer to zero means a stronger signal: −45 dBm is stronger than −80 dBm. Find devices again to refresh.</string>
     <string name="gnss_no_devices">No devices found</string>
     <string name="gnss_tcp_host">Host</string>
     <string name="gnss_tcp_port">Port</string>

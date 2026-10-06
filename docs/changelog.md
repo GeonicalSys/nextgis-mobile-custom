@@ -10,6 +10,12 @@ related_code:
 
 ## 2026-10-06
 
+- В ту же задачу добавлен Bluetooth RSSI при выборе внешнего GNSS: BLE и
+  discovery сопряжённых Classic, отдельные строки одинаковых имён, явный
+  неизвестный сигнал и освобождение поиска при закрытии/смене транспорта.
+  Обновлены app/maplib packs, location pipeline, official differences,
+  dependencies и физический smoke. RSSI не меняет id/name и не хранится в prefs.
+
 - Добавлены два режима кнопки трека, сохранение режима при восстановлении и
   track-only порог 30 км/ч с разрывом сегмента. Обновлены GNSS/recovery/storage
   contracts, config/invariants/smoke registry и локальные packs app/maplibui/maplib.
@@ -17,12 +23,15 @@ related_code:
   Official app/maplib/maplibui heads повторно проверены и не изменились.
   Release-сборка и публикация требуют закрытия связанных library PRs и repin
   их удалённых merge commits; текущая задача готовит Draft PRs без выпуска.
-- Проверки: JDK 21 / Gradle 9.3.1, 579 unit tests (451 maplib, 87 maplibui,
-  41 app), 5 native API 36/WHPX tests, debug APK, maplibui assembleDebug,
+- Проверки: JDK 21 / Gradle 9.3.1, 583 unit tests (455 maplib, 87 maplibui,
+  41 app), 7 native API 36/WHPX tests, debug APK, maplibui assembleDebug,
   Lisa/Belka Release Kotlin/Java compilation и docs validator + 7 tests прошли.
-  На read-only эмуляторе проверены dropdown, запуск пешеходного режима и
-  активная иконка. Debug использует зелёный primary; production primary остаётся
-  оранжевым. Физический маршрут/фон, планшет, GPX и обе release APK ещё не проверены.
+  На read-only эмуляторе проверены dropdown, запуск пешеходного режима,
+  активная иконка, восстановление режима после force-stop/relaunch и Stop одним
+  нажатием. Native-тесты проверяют разные RSSI одинаковых имён и recycling строк
+  Bluetooth/USB. Debug использует зелёный primary; production primary остаётся
+  оранжевым. Физический маршрут/фон, два PiGo/Bluetooth Classic, планшет, GPX и
+  обе release APK ещё не проверены.
 
 ## 2026-10-04
 
