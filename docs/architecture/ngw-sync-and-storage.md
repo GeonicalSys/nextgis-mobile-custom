@@ -109,7 +109,7 @@ Release ЛИСА/Белка используют `com.nextgis.account.geonical`,
 `com.nextgis.account.debug`. GIS provider аналогично должен совпадать между
 `BuildConfig.providerAuth`, manifest provider и `SyncAdapter.contentAuthority`.
 Подготовленный выпуск `3.1.2.27` использует production tuple `221` / `3.1.2.27`, а отдельный
-debug — `217` / `3.1.2.22`; application/account/provider identity не
+debug — `218` / `3.1.2.23`; application/account/provider identity не
 меняется.
 Library defaults нельзя считать достаточными: app variant обязан перекрывать оба
 account resource keys. Иначе HTTP-аутентификация проходит, но Android отклоняет
