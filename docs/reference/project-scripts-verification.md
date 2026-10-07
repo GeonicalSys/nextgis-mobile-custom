@@ -78,6 +78,9 @@ Application guard: isolated UID не имеет права на getHistoricalPro
 Qt5 smoke: widgets уничтожаются до `exitQgis`, итоговый process exit — 0.
 Первый общий JVM прогон выявил нестабильный cleanup существующего underlay-теста;
 его повтор и итоговый полный maplib прогон успешны. Эти отказы не скрыты как pass.
+Push CI после docs-only library pins отдельно потребовал обновления
+`official-differences.md`; пропуск исправлен без изменения runtime. Проверка
+полного PR diff до этого уже проходила, но не подменяет проверку каждого push.
 
 ## Живая WebGIS-проверка
 
