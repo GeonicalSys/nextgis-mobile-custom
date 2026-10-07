@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-09-21
+last_verified: 2026-10-07
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -328,6 +328,11 @@ stage/backup/marker, а при прерывании восстанавливае
 пара. Неполный remote snapshot вообще не применяется к локальной композиции.
 
 ## Config и feature data
+
+Обязательность полей приходит из feature_layer.fields[].required самого слоя,
+независимо от хэша NGFP. Её переключение обновляет локальные metadata без refill
+и действует offline после успешной синхронизации настроек. Проверка формы
+перед Save описана в [NGW sync and storage](ngw-sync-and-storage.md#обязательность-полей).
 
 Configuration sync и feature-data sync — разные контракты. `SYNC_NONE` для
 данных не должен автоматически запрещать безопасное чтение конфигурации,

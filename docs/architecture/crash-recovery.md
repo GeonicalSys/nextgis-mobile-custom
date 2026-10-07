@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -17,6 +17,14 @@ related_code:
 ---
 
 # Crash recovery and durable drafts
+
+Проверка обязательных полей выполняется после checkpoint формы и до изменения
+строки/вложений. Незавершённый обязательный атрибут не запрещает durable draft,
+ротацию или восстановление фотографии/геометрии. После исправления Save
+использует прежний owner/operation UUID и штатное завершение; Save/Discard
+по-прежнему не позволяют onPause() восстановить уже удалённый черновик.
+Точные правила заполнения — в
+[NGW sync and storage](ngw-sync-and-storage.md#обязательность-полей).
 
 This document describes how the app protects unfinished user work across process
 death, Force Stop, and reboot.

@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - app/build.gradle
   - app/src/main
@@ -188,6 +188,21 @@ official master всё ещё пропускает список через `remo
 продуктовых отличий ниже.
 
 ## Возможности, которые могут быть полезны upstream
+
+### Обязательные атрибуты NGW в мобильных формах
+
+Форк сохраняет штатный feature_layer.fields[].required и проверяет его
+offline перед Save стандартной/NGFP формы. Заглушка «Нет значения» считается
+пустотой, «не применимо» допускается; проверяются неактивные вкладки и зависимые
+списки, а незавершённый ввод остаётся в черновике. Флаг и подписи обновляются
+без пересоздания локальных объектов.
+
+7 октября 2026 проверены official HEAD: app 482f26f30abea1468ebfefaa45092d86f921d68b,
+maplib f260631d4f4c2c7ea4ccaa8c0d28311507e30040, maplibui
+90cf6769aed0a5aa835b142977b9d31f89270e82. В official Field, NGWUtil и
+ModifyAttributesActivity нет поддержки флага required и этой проверки.
+Реализация сохраняет формат NGFP и значение last; детали контракта —
+[NGW sync and storage](../architecture/ngw-sync-and-storage.md#обязательность-полей).
 
 ### Полный lifecycle MapLibre MapView
 

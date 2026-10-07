@@ -1,12 +1,23 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-07
+
+- Добавлены правила штатного NGW required: локальное JSON/Parcel-хранение,
+  metadata-only refresh без refill, общий Save gate для стандартных/NGFP форм,
+  заглушка «Нет значения», допустимое «не применимо» и сохранение черновиков.
+  Обновлены packs трёх owners, crash/sync/Collector docs, registries и текущие
+  official differences; native сценарии используют синтетические формы.
+  Доработка по указанию пользователя продолжает существующую ветку
+  codex/track-power-warning; Merge Commit библиотек предшествует финальному
+  pin root и выпуску APK.
 
 ## 2026-10-06
 

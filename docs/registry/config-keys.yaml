@@ -361,6 +361,11 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  ngw-field-required:
+    owner: maplib
+    location_name: fields[].required in the local layer config JSON
+    source: maplib/src/main/java/com/nextgis/maplib/datasource/Field.java
+    purpose: Cache authoritative feature_layer.fields[].required for offline form validation; absent means false, changes refresh metadata without SQLite rebuild.
   feature-save-journal:
     owner: maplib
     location_name: ngm_feature_save_journal in owning layers.db

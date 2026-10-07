@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  SMOKE-REQUIRED-FIELDS:
+    type: automatic
+    scope: [app, maplib, maplibui]
+    command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.RequiredFieldsTest"
+    expected: Standard and NGFP forms reject required whitespace/placeholders before insert/update and Back Save; inactive tabs, dependent selectors, draft geometry/photos and omitted existing values are handled without data loss; optional placeholders and not-applicable save.
   AUTO-RELIABILITY-NATIVE:
     type: automatic
     scope: [app, maplib, maplibui]
