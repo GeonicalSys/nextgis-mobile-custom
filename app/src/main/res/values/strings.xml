@@ -398,4 +398,9 @@
     <string name="location_sources_recording">GPS only; approximate positions are not recorded</string>
     <string name="location_sources_automatic">Automatic: GPS, Wi-Fi and cellular networks</string>
     <string name="walk_sampling_settings">Walk recording: point spacing</string>
+    <string name="sync_scope_title">Synchronization</string>
+    <string name="sync_all_projects">Synchronize all projects</string>
+    <string name="sync_all_projects_summary">Manual and scheduled synchronization includes every downloaded project. When off, only the open project is synchronized.</string>
+    <string name="project_sync_incomplete_title">Synchronization incomplete</string>
+    <string name="project_sync_incomplete">Could not finish synchronization for: %1$s. Changes are kept on the device. Try again later.</string>
 </resources>

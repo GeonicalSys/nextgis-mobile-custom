@@ -134,3 +134,6 @@ boundaries:
     local_docs:
       - docs/architecture/lisa-ecosystem.md
     verify: [AUTO-DOCS-VALIDATE]
+
+# Consumer-only: split legacy cascade captions prefer NGFP fields[].display_name over layer alias.
+# Multi-project sync changes local execution/storage ownership; NGW/desktop package formats are unchanged.

@@ -91,12 +91,19 @@ preferences:
     user_configurable: true
     source: app/src/main/res/xml/preference_headers.xml
     purpose: Open shared underlay management directly from the top-level Settings list next to Project; Geonical may also start Debug underlay import from that catalog
+  sync_all_projects:
+    owner: app
+    type: boolean
+    default: true
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_general.xml
+    purpose: Scope manual and per-account scheduled sync to all downloaded projects; false limits new runs to the open project, while exact pending recovery and layer-specific commands retain their owner
   sync_recovery_journal:
     owner: app
     type: app_private_shared_preferences
     user_configurable: false
     source: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
-    purpose: Mark one interrupted account sync with its active workspace so process restart requests an idempotent recovery pass without crossing project or flavor identity
+    purpose: Atomically persist pending_v2 project/account pairs before the queue begins; acknowledge only after scoped children finish and resolve recovery identities through the registry across active-project changes
   map_show_loc:
     owner: app
     type: boolean
@@ -398,7 +405,7 @@ storage:
     purpose: One-time creation of the initial local project and non-destructive adoption of a legacy standalone map before the first MapDrawable opens
   collector-import-journal:
     owner: maplibui
-    location_name: collector_import_journal SharedPreferences
+    location_name: collector_import_journal_<SHA256 canonical map path> SharedPreferences; UID-gated migration from legacy collector_import_journal
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
   collector-form-transaction:
     owner: maplibui

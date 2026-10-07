@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -18,6 +18,12 @@ related_code:
 ---
 
 # Настройки и конфигурационные ключи
+
+sync_all_projects — «Синхронизировать все проекты» в общих настройках,
+по умолчанию true. Определяет охват ручного и scheduled account запуска:
+все загруженные проекты либо только открытый. Не меняет период/включение
+подключений, отдельную команду слоя и owner уже записанной recovery pair.
+Действия пользователя: [руководство синхронизации](../guides/project-synchronization-user-guide.md).
 
 Предупреждение об энергосбережении GPS читает системный PowerManager и текущий
 `gnss_input`; отдельной настройки «не показывать» нет. Старое

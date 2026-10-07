@@ -73,6 +73,13 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle bundle, String authority, ContentProviderClient contentProviderClient, SyncResult syncResult) {
 
+        if (com.nextgis.maplib.util.SyncWorkspaceSession.current() == null) {
+            com.nextgis.mobile.util.ProjectSyncRunner.run(getContext(),
+                    java.util.Collections.singletonList(account), bundle, authority,
+                    contentProviderClient, syncResult);
+            return;
+        }
+
 //        Log.e("RRFRSH", "SyncAdapter datasource - onPerformSync for " + account.name);
 
         Log.d("SSYNC", "SyncAdapter/datasource  onPerformSync account - " + account.name);
@@ -90,10 +97,9 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
             return;
         }
 
-        boolean recoveryJournalStarted = false;
-        boolean recoveryJournalComplete = false;
         try {
             if(!AccountUtil.isUserExists(getContext())) {
+                syncResult.stats.numAuthExceptions++;
                 HyperLog.v(Constants.TAG, "onPerformSync for" + account.name + " exit cos !AccountUtil.isUserExists");
                 String alertMessage = getContext().getString(com.nextgis.maplibui.R.string.sync_need_login);
                 String alertTitle = getContext().getString(com.nextgis.maplibui.R.string.sync_off_title);
@@ -105,11 +111,6 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
                 sendSyncFinishBroadcast();
                 return;
             }
-
-            boolean manualSync = bundle != null
-                    && bundle.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false);
-            recoveryJournalStarted = SyncRecoveryJournal.begin(
-                    getContext(), account.name, manualSync);
 
             IGISApplication gisApp = (IGISApplication) getContext().getApplicationContext();
             if (!gisApp.repairProjectIntegrityBeforeSync(account.name)) {
@@ -126,7 +127,6 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
             }
 
             if (!super.isSomeToSync(account)) {
-                recoveryJournalComplete = true;
                 sendSyncFinishBroadcast();
                 return;
             }
@@ -158,11 +158,7 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
                 sendNotification(getContext(), SYNC_CHANGES, mError);
             else
                 sendNotification(getContext(), SYNC_FINISH, null);
-            recoveryJournalComplete = !isCanceled() && !syncResult.hasError();
         } finally {
-            if (recoveryJournalStarted && recoveryJournalComplete) {
-                SyncRecoveryJournal.complete(getContext(), account.name);
-            }
             if (operationLease != null) {
                 operationLease.close();
             }
@@ -172,6 +168,7 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
     }
 
     private void sendSyncFinishBroadcast() {
+        if (com.nextgis.maplib.util.SyncWorkspaceSession.current() != null) return;
         NGWSyncService.markSyncFinished();
         Intent finish = new Intent(SYNC_FINISH);
         finish.setPackage(getContext().getPackageName());
@@ -183,6 +180,7 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
             String notificationType,
             String message)
     {
+        if (com.nextgis.maplib.util.SyncWorkspaceSession.current() != null) return;
         if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SYNC, false))
             return;
 
@@ -228,6 +226,8 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
 
             case SYNC_CHANGES:
                 // Sync failures are shown in-app (dialog), never as notifications.
+                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE))
+                        .cancel(NOTIFICATION_ID);
                 return;
         }
 

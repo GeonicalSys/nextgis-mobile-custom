@@ -11,6 +11,11 @@ related_code:
 
 # Каталог кастомизаций форка
 
+Общая синхронизация загруженных проектов: ProjectSyncRunner в app,
+SyncWorkspaceSession в maplib и scoped fill/rebuild/journals в maplibui.
+Настройка включена по умолчанию; контракт — [sync/storage](../architecture/ngw-sync-and-storage.md),
+пользовательские действия — [руководство](../guides/project-synchronization-user-guide.md).
+
 Это компактная карта отличий GeonicalSystem от официального NextGIS Mobile. Код и
 машиночитаемые registry-файлы остаются источниками истины; документ помогает быстро найти
 владельца поведения и обязательные проверки. Полный прежний монолит сохранён в истории git до

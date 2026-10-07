@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  SMOKE-ALL-PROJECT-SYNC:
+    type: automatic
+    scope: [app, maplib, maplibui]
+    command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.util.ProjectSyncRunnerTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
+    expected: Isolated emulator only; default/manual/scheduled/off scope, equal layer names, retained draft, per-project failure continuation, exact recovery, cancellation and real background LayerFillService write all preserve their owning database. Pending pair and Collector journals remain separate across accounts and project paths.
   SMOKE-CONDITIONAL-REQUIRED:
     type: automatic
     scope: [app, maplib, maplibui]

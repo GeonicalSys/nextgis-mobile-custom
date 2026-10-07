@@ -11,6 +11,8 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+  - maplib/src/main/java/com/nextgis/maplib/map/MapEventSource.java
+  - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
   - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
   - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
   - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
@@ -451,3 +453,18 @@ insets ещё требуют [device smoke](../runbooks/device-smoke-tests.md).
 в GISApplication/MainApplication выполняются до их обычной инициализации.
 Основной процесс и OpenGL/MapLibre contract сохранены; QuickJS — отдельная
 native-библиотека, не второй renderer. [Контракт](project-scripts.md).
+
+## Синхронизация закрытых проектов
+
+`ProjectSyncRunner` открывает фоновые карты с `activate=false`: они не заменяют
+карту экрана и не создают MapLibre renderer. У каждого `MapEventSource` свой
+main-thread handler; создание фонового экземпляра не перехватывает события
+открытой карты. Фоновые add/delete и завершение импорта обновляют модель и
+SQLite своего проекта без reload, выбора объектов или edit overlays на экране.
+Отложенные callbacks сохраняют владельца через `SyncWorkspaceSession`;
+уведомление векторного кэша применяется до закрытия фоновой базы.
+
+Регрессия проверяется provider-тестами с одинаковыми именами слоёв в двух
+проектах и `SMOKE-ALL-PROJECT-SYNC` с открытым черновиком. Ручные сценарии
+отрисовки, инструментов и тяжёлого сетевого pull остаются отдельными проверками
+из [device smoke](../runbooks/device-smoke-tests.md).

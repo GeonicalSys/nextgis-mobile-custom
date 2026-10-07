@@ -219,3 +219,18 @@ versioned API. Добавлять постепенно. Не объявлять 
 работающими. Формат общий с desktop stand_project; source-only ZIP, отдельный UID,
 ограниченные grants и pinned draft version обязательны. Старые пакеты не удалять
 как кеш без решения по черновикам. Порядок merge: maplib → maplibui → app → desktop.
+
+## Общая синхронизация проектов
+
+Читать consuming root docs/architecture/ngw-sync-and-storage.md и
+docs/guides/project-synchronization-user-guide.md. sync_all_projects по умолчанию true;
+ручной и scheduled account запуск используют ProjectSyncRunner. Не переключать
+mMap/active prefs ради фонового проекта. Владельца переносить через
+SyncWorkspaceSession во все async callbacks, service tickets и provider URI;
+untagged UI URI всегда относится к активной карте, expired token не имеет fallback.
+Очередь держит глобальный lease до завершения дочерних работ и mutating HTTP.
+Полный pending project/account план сохраняется до первого прохода; Collector
+journals разделены по canonical map path. Проверять cancellation, equal layer/group
+IDs, сохранность draft и реальный fill на изолированном эмуляторе.
+Подписи разделённых double_combobox брать из meta.fields keyname/display_name,
+затем layer alias; field key используется только при отсутствии обоих.

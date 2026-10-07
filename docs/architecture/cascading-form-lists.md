@@ -12,7 +12,8 @@ related_code:
 
 Механизм встроен в APK: `maplib` разбирает данные и граф связей, `maplibui`
 управляет обычными независимыми `combobox`. `CascadingFormElements` разворачивает
-старый `double_combobox` в два `combobox` с подписями из field aliases, только
+старый `double_combobox` в два `combobox` с подписями из NGFP meta.json.fields (keyname → display_name), с fallback
+к непустому layer field alias и затем field key, только
 если граф управляет обоими полями. Штатный pair без графа остаётся совместимым.
 Преобразование работает и на верхнем уровне, и во вложенных Tabs, не меняет
 исходный JSON, имена полей, значения или pin черновика. Каждый selector имеет

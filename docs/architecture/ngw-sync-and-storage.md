@@ -31,6 +31,8 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
   - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
   - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
+  - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+  - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
   - app/src/main/res/xml/syncadapter.xml
 ---
 
@@ -237,36 +239,72 @@ Android `PeriodicSync` registrations при старте и поддержива
 экрана одновременно включает account и ставит ближайший запуск; отключение
 отменяет его unique work.
 
-Ручная синхронизация работает только с текущей `IGISApplication.getMap()`, то
-есть с активным проектом. Она выбирает Android account, для которых в этой карте
-есть NGW-слои, и выполняет их последовательно; закрытые проекты не обходятся.
-Активный Collector account выполняется первым. Кнопка запускает только этот
-serial foreground pipeline и не ставит параллельно те же account через
-`ContentResolver.requestSync`. Для каждого account создаются отдельные
-adapter/result objects, поэтому ошибка одного не переходит в следующий.
-Полностью молчащее HTTP-чтение ограничено тремя минутами; это inactivity timeout
-и не обрывает большой ответ, пока данные продолжают поступать.
+Ручной и автоматический запуск используют один ProjectSyncRunner. Настройка
+sync_all_projects по умолчанию true: обходятся все загруженные Web GIS/local
+projects из CollectorProjectRegistry и текущая карта, без повторения одной базы.
+При false выполняется только открытый проект. Запуск для конкретного слоя всегда
+ограничен открытым проектом. Ручной запуск берёт все Android accounts; автоматический
+tick обходит проекты только для своего account, сохраняя его включение и период.
+Accounts/project passes выполняются последовательно с отдельными SyncResult;
+ошибка одной пары не останавливает остальные. Активный Collector account
+сохраняет приоритет при ручном запуске. Кнопка не ставит дублирующие framework jobs.
 
-Перед feature sync приложение выполняет repair активного проекта. Managed NGW
-layers группируются по `account + project_uid + remote_id`. Если одна identity
-представлена несколькими копиями без локальных правок и вложений, выбирается
-полная опубликованная таблица, остальные копии обязательно архивируются,
-удаляются из композиции одним сохранением карты и лишь затем физически очищаются.
-Если хотя бы в одной копии есть несинхронизированные данные либо backup не
-создан, sync прекращается с обычным понятным сообщением и ничего не удаляет.
+Карта закрытого проекта открывается MapDrawable(..., activate=false) без renderer.
+SyncWorkspaceSession временно предоставляет её только своему потоку через
+MapBase.getInstance/GISApplication.getMap. MapBase.getActiveInstance, mMap и
+preferences выбранного проекта не меняются. Следовательно, открытая карта,
+форма и её pinned draft продолжают принадлежать прежнему проекту.
 
-Начатый account-pass отмечается app-private durable journal. Чистое завершение
-снимает marker; process death оставляет его, и следующий запуск запрашивает один
-идемпотентный проход только для того же account и active workspace. Ручной и
-системный sync работают как `dataSync` foreground service на тяжёлой части
-прохода. Это повышает вероятность завершения при screen off, но не заменяет
-транзакции, backup gate и journal.
+Каждая отложенная операция формы, composition apply, schema rebuild и LayerFillService
+сохраняет владельца через Session.capture/post/execute/start. Service intent несёт
+opaque live token и delivery ticket; ContentProvider URI — sync_workspace token.
+Неверный/просроченный token не имеет fallback к активной базе. Untagged UI URI
+всегда обслуживает открытый проект, даже на scoped потоке. Вложения используют
+такой же owning URI. Изменения spatial cache фоновой карты применяются синхронно
+после commit, до закрытия её базы; уведомления другой карты не обновляют UI.
+
+Один DATA_SYNC lease охватывает всю очередь. Зависимые fill/rebuild резервируются
+со своим session token и ждут разрешения awaitChildren после синхронного прохода.
+Unrelated fill и второй full sync отклоняются. Следующий проект начинается только
+после завершения всех callbacks, service tickets и mutating requests. Недоставленный
+service ticket истекает через 60 секунд, закрывает reservation, оставляет пару pending;
+поздняя доставка не обращается к базе. При отмене закрываются чтения и сохраняется
+исходная cancellation generation во всех дочерних задачах. Уже отправленная запись
+дожидается результата; закрывать её базу или освобождать lease по таймеру запрещено.
+
+Перед feature sync выполняется backup-gated integrity repair именно owning проекта:
+managed layers группируются по account + project_uid + remote_id. Копии без
+локальных правок сначала резервируются и сводятся к одной копии одним map commit;
+edited-дубликаты блокируют проход без удаления.
+
+SyncRecoveryJournal.pending_v2 атомарно сохраняет весь план project/account до
+первого прохода, без credentials/feature data. Только завершённая пара снимается;
+ошибка, отмена или process death оставляет её для идемпотентного повтора. При старте
+идентичности разрешаются по текущему реестру, а не по переданному пути. Удалённые
+project/account исключаются; отключённый auto account автоматически не запускается.
+Recovery явно записанной пары сохраняется при смене открытого проекта и при
+отключении общего охвата. Legacy marker мигрирует только к совпадающему owner.
+
+CollectorImportJournal имеет отдельные preferences на SHA-256 canonical map path.
+Ранее общий journal мигрирует только при совпадении project UID. Общие runtime
+поля GISApplication переключаются на main thread в сериализованной границе проекта;
+durable journals при этом не очищаются, callbacks проверяют owning path.
+Незавершённый импорт восстанавливается до нового composition batch, а исчерпание
+repair waves в фоновой сессии оставляет journal для следующей попытки. Schema retry
+guard и form/walk reservations также используют owning project, включая одинаковые
+числовые layer/group/remote IDs в разных базах.
+
+Ручной и системный sync сохраняют dataSync foreground execution. Это повышает
+вероятность завершения при выключенном экране; расписание Android не гарантирует
+точное время запуска. Пользовательские действия описаны в
+[руководстве синхронизации](../guides/project-synchronization-user-guide.md).
+
 Завершение bound `NGWSyncService` не ждёт worker на Android main thread:
 незавершённый проход фиксируется journal и повторяется после запуска, вместо
 прежнего блокирующего ожидания, которое само могло вызвать ANR.
 
 `ProjectOperationCoordinator` резервирует active workspace ещё при нажатии
-ручной sync и удерживает lease до конца всех account, включая промежутки между
+ручной sync и удерживает lease до конца всех project/account, включая промежутки между
 ними. Поэтому project switch/create/rename/delete не может попасть в окно между
 двумя адаптерами. Если пользователь запускает такое действие, загрузку слоя или
 подложки во время sync, UI предупреждает об активной синхронизации, предлагает
@@ -275,9 +313,9 @@ layers группируются по `account + project_uid + remote_id`. Есл
 длительного выбора ресурса. Cancel handlers принадлежат своим reservations и
 не перезаписывают друг друга. Периодический adapter
 также получает lease; второй полный sync того же workspace отклоняется. Layer fill
-и schema rebuild могут заранее зарезервировать только тот же workspace, но доступ
-к SQLite получают строго после завершения full sync; для них сохраняется модальное
-ожидание без прерывания чужой БД.
+и schema rebuild в scoped очереди сохраняют session token и получают доступ к SQLite
+только в фазе ожидания собственных зависимых операций. Legacy unscoped clients
+сохраняют ожидание освобождения full-sync lease.
 
 Process-wide признак активности обновляет сам `SyncAdapter` перед `SYNC_START`
 и во всех normal/cancel/exception finish-путях. Broadcast остаётся событием для

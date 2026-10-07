@@ -286,6 +286,25 @@ public class CascadingFormsTest {
             s.onActivity(a -> assertEquals("Alex",a.getCascadingLists().value("eployee1")));
         }
     }
+    @Test public void separatedPairsUseFormAliasesInsteadOfTechnicalLayerNames() throws Exception {
+        try (Fixture f = new Fixture(true)) {
+            JSONObject meta = new JSONObject(new String(Files.readAllBytes(f.meta.toPath()), java.nio.charset.StandardCharsets.UTF_8));
+            meta.put("fields", new JSONArray()
+                    .put(new JSONObject().put("keyname", "jobtitle1").put("display_name", "Должность 1"))
+                    .put(new JSONObject().put("keyname", "eployee1").put("display_name", "Работник 1")));
+            write(f.meta, meta.toString());
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                s.onActivity(a -> {
+                    for (String[] field : new String[][]{{"jobtitle1", "Должность 1"}, {"eployee1", "Работник 1"}}) {
+                        View view = spinner(a, field[0]);
+                        android.view.ViewGroup parent = (android.view.ViewGroup)view.getParent();
+                        android.widget.TextView caption = (android.widget.TextView)parent.getChildAt(parent.indexOfChild(view) - 1);
+                        assertEquals(field[1] + " *", caption.getText().toString());
+                    }
+                });
+            }
+        }
+    }
     @Test public void swipesWorkAcrossSelectorsCheckboxCommentsAndBlankSpace() throws Exception {
         try(Fixture f=new Fixture(false)) {
             navigationForm(f);

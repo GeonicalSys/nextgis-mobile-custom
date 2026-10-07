@@ -462,7 +462,7 @@ invariants:
     owners: [maplib, maplibui]
     statement: >
       Reject incomplete remote snapshots, persist unfinished batches with their project UID, and
-      after process death requeue only missing or broken layers once that exact project is active.
+      after process death requeue only missing or broken layers in that exact active or scoped background map.
       Every unpublished layer directory is app-marked before data access; recovery may delete only
       marked unreferenced stages and their owning-workspace tables, while referenced stages and every
       unmarked legacy directory remain. Server Polygon/MultiPolygon validation must avoid the legacy
@@ -921,7 +921,7 @@ invariants:
   INV-SYNC-ACCOUNT-ISOLATION:
     title: One NGW account failure does not suppress another account
     owners: [app, maplib, maplibui]
-    statement: Keep account sync results isolated, prioritize the active Collector account for manual serial sync, restore each enabled account schedule after restart, and durably request an interrupted account pass only for the same active workspace. Pending local edits are sent before a large pull; a failed push prevents remote apply for that layer.
+    statement: Keep account sync results isolated, prioritize the active Collector account for manual serial sync, restore each enabled account schedule after restart, and durably request each interrupted project/account pair only for its registered owning workspace, even when another project is open. Pending local edits are sent before a large pull; a failed push prevents remote apply for that layer.
     related_code:
       - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
       - maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java
@@ -934,19 +934,17 @@ invariants:
     title: Active project identity is stable during database background work
     owners: [app, maplib, maplibui]
     statement: >
-      Manual sync operates only on accounts represented in the active map and owns that workspace
-      from the button press through every sequential account, without also queueing duplicate
-      framework passes. Periodic sync, layer fill and schema
-      rebuild also own a workspace. During sync, project switch/create/rename/delete and layer or
-      underlay loading warn the user and offer an explicit interruption; the requested action waits
-      until all sync owners finish. Cancellation closes read-only network work immediately, rolls
-      back an interrupted tracked apply, and after an outbound mutation was sent waits for that one
-      request to resolve before another mutation can start. Duplicate full sync remains refused. Collector import reserves
-      the switch before creating or updating its workspace entry; if fill or rebuild is active, import
-      leaves the registry unchanged and explains in a modal dialog that loading must finish. A dependent fill may reserve only the same workspace while sync is
-      active, but must wait for sync to release database access before touching SQLite.
-      A resumed Collector task also validates its journal project UID against the target group and
-      preserves the journal without file or database access while another project is active.
+      Manual and per-account scheduled sync share a serial project queue; sync_all_projects defaults
+      to true and false limits new full runs to the open map. A layer-specific run stays in the open map.
+      The queue holds one DATA_SYNC lease throughout every project, account and async child without
+      changing active preferences, MapBase active identity or drafts. Background maps use scoped lookup,
+      opaque provider/service tokens and tracked callbacks; expired tokens cannot fall back to the UI database.
+      Only session-owned fill/rebuild stages may join a scoped queue and touch SQLite in its dependent phase.
+      Switch/create/rename/delete and unrelated imports wait for all owners, and duplicate full sync is refused.
+      Cancellation stops reads and rolls back interrupted apply while awaiting unresolved outbound writes
+      and children before releasing their database. The complete durable pair plan survives process death
+      and each successful pair is acknowledged separately. Collector journals are path-partitioned;
+      legacy migration, runtime state, schema guards and draft reservations validate the owning project.
       An unchanged schema mismatch is circuit-broken after two attempts in 24 hours, with at least
       ten minutes between attempts, and LayerFillService timeout must preserve the durable import journal.
     related_code:

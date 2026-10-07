@@ -233,3 +233,16 @@ large snapshots still run synchronously and may stall the main thread. See the
 в owning layer/form_rules. Обновление meta не меняет восстановленный черновик;
 повреждение снимка блокирует запись и сохраняет pin и значения. Пустой pin
 закрепляет отсутствие условий. [Контракт](conditional-form-rules.md).
+
+## Project sync recovery
+
+ProjectSyncRunner persists every planned project/account pair before starting.
+Successful pairs are acknowledged independently after all scoped async children
+and service deliveries finish. Recovery matches the registry identity even when
+another map is open; an extra never supplies a trusted database path.
+Collector import journals are partitioned by canonical project path and migrate
+the legacy marker only to its matching UID. Cancellation retains pending work
+and does not close a database with an unresolved write or queued child.
+
+See [sync/storage](ngw-sync-and-storage.md) and the
+[user guide](../guides/project-synchronization-user-guide.md).

@@ -23,6 +23,7 @@ related_code:
 | MapLibre/layer order | [architecture/map-rendering.md](architecture/map-rendering.md) |
 | Map performance | [architecture/map-performance.md](architecture/map-performance.md) |
 | Вынос координат и звуковое наведение | [architecture/stakeout.md](architecture/stakeout.md) |
+| Синхронизация всех проектов для пользователя | [guides/project-synchronization-user-guide.md](guides/project-synchronization-user-guide.md) |
 | Collector/NGW sync | [architecture/collector-projects.md](architecture/collector-projects.md) |
 | Настройка Collector | [runbooks/collector-project-setup.md](runbooks/collector-project-setup.md) |
 | Upstream merge | [runbooks/upstream-sync.md](runbooks/upstream-sync.md) |
