@@ -1,5 +1,21 @@
 schema_version: 1
 invariants:
+  INV-REQUIRED-FIELDS:
+    title: Required form values gate final Save while incomplete drafts remain recoverable
+    owners: [maplib, maplibui, app]
+    statement: >
+      Authoritative NGW required metadata survives import, local config and Parcel; a flag-only
+      change never rebuilds the feature table. Both form types and toolbar/Back Save validate
+      all fields including inactive tabs and dependent values before feature/attachment writes.
+      Null, whitespace and the legacy Нет значения placeholder fail; не применимо, zero and
+      false pass. Optional fields remain unchanged and drafts retain fields, geometry and photos.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/datasource/Field.java
+      - maplib/src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java
+      - maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/RequiredFieldValidation.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, SMOKE-REQUIRED-FIELDS]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/crash-recovery.md]
   INV-LOCAL-WRITE-COMMIT:
     title: Local features and sync records share one owning-map commit
     owners: [maplib, maplibui]
@@ -625,6 +641,10 @@ invariants:
       The final recorder owns release of the shared partial wake lock unless an
       external NMEA session still needs it; sound off does not
       disable background acquisition. Sensor evidence expires and cannot alone freeze a vehicle.
+      Global Battery Saver may still suppress screen-off GPS; check the actual location
+      power policy independently of Doze exemption, warn before manual Start and monitor
+      the active service notification. Do not mislabel native external GNSS or the
+      foreground-only power policy as disabled GPS, and never close a track due to this warning.
       A refined stop replaces only the last owned vertex, retaining track arrival time;
       it never appends distance for an improving stationary position. Handset handling alone
       cannot confirm departure; direction, combined accuracy and trustworthy velocity or a

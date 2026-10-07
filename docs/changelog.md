@@ -1,14 +1,40 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - docs
 ---
 
 # История документационной системы
 
+## 2026-10-07
+
+- После Merge Commit maplib #39 и maplibui #27 приложение закрепляет их удалённые
+  merge commits; описание отличий повторно сверено с официальными HEAD.
+  Обязательные поля и предупреждение GPS сохранены без изменения версий.
+
+- Добавлены правила штатного NGW required: локальное JSON/Parcel-хранение,
+  metadata-only refresh без refill, общий Save gate для стандартных/NGFP форм,
+  заглушка «Нет значения», допустимое «не применимо» и сохранение черновиков.
+  Обновлены packs трёх owners, crash/sync/Collector docs, registries и текущие
+  official differences; native сценарии используют синтетические формы.
+  Доработка по указанию пользователя продолжает существующую ветку
+  codex/track-power-warning; Merge Commit библиотек предшествует финальному
+  pin root и выпуску APK.
+
 ## 2026-10-06
+
+- После полевых логов Release/Debug добавлен контроль Battery Saver: отдельная
+  проверка screen-off GPS policy до Start, переход в настройки батареи,
+  динамическое предупреждение foreground-уведомления и повторная проверка Resume.
+  Doze exemption не подменяет эту проверку; native external GNSS исключён.
+  GPS health дополнен фактической политикой питания. Добавлен native сценарий
+  LocationManager → screen-off → Battery Saver → SQLite без прямой инъекции
+  в callback сервиса. Версии APK не менялись.
+  В CI устранена гонка настройки питания эмулятора: test fixture ждёт,
+  пока PowerManager подтвердит unplugged/Battery Saver, вместо предположения,
+  что последовательные shell-команды уже применены. Рабочая логика не менялась.
 
 - По запросу пользователя подготовлен debug-only выпуск `3.1.2.23` / `218`:
   app/maplib debug constants и независимый oracle APK matrix обновлены;

@@ -546,6 +546,16 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
 
     private fun controlTrack(item: MenuItem?) {
+        if (TrackerService.hasRecordingSession(this)) {
+            performTrackControl(item)
+        } else {
+            trackPowerWarning.confirmStart { performTrackControl(item) }
+        }
+    }
+
+    private val trackPowerWarning by lazy { com.nextgis.mobile.location.TrackPowerWarning(this) }
+
+    private fun performTrackControl(item: MenuItem?) {
         val iconAndTitle = TrackerService.start_stop_tracking_GetIconWithTitle(this)
         if (item != null)
             setTrackItem(item, iconAndTitle.second, iconAndTitle.first)
@@ -758,6 +768,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     public fun checkBatteryOptimize(){
+        // Global Battery Saver's GPS policy is separate from the old Doze exemption dialog.
+        if (com.nextgis.maplib.location.LocationPowerPolicy.shouldWarn(this)) return
         val batteryOK = TrackerService.checkIsBatteryPermOK(this)
         if (!batteryOK) {
 
@@ -1694,7 +1706,9 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
                 val batteryOK =  intent.getBooleanExtra(KEY_BATTERY, true)
 
-                if (!batteryOK) {
+                if (tAction != VALUE_TRACK_POINT) trackPowerWarning.refresh()
+
+                if (!batteryOK && !com.nextgis.maplib.location.LocationPowerPolicy.shouldWarn(this@MainActivity)) {
 
                     val name = getPackageName() + "_preferences"
                     val mSharedPreferences = getSharedPreferences(name, MODE_MULTI_PROCESS)
@@ -1786,6 +1800,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
         // Durable track-recording flag: silently resume after crash/reboot (no dialog).
         TrackerService.ensureRecordingRunningIfEnabled(this)
+        trackPowerWarning.refresh()
 
         maybeOfferCrashRecovery()
         if (SDCardUtils.isSDCardUsedAndExtracted(this)) {
@@ -2098,6 +2113,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     override fun onDestroy() {
+        trackPowerWarning.close()
         HyperLog.v(Constants.TAG, "MainActivity.onDestroy")
         startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
         ngwUrlExecutor.shutdownNow()

@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: REQUIRED-FIELDS
+    paths: [maplib/src/main/java/com/nextgis/maplib/datasource/Field.java, maplib/src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java, maplibui/src/main/java/com/nextgis/maplibui/util/RequiredFieldValidation.java, maplibui/src/main/java/com/nextgis/maplibui/util/RequiredFieldUi.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Tabs.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/DoubleCombobox.java, app/src/androidTest/java/com/nextgis/mobile/reliability/RequiredFieldsTest.java]
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/crash-recovery.md]
+    invariants: [INV-REQUIRED-FIELDS, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/crash-recovery.md, docs/registry/config-keys.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, SMOKE-REQUIRED-FIELDS]
+    strict_docs: true
   - id: LOCAL-WRITE-AND-TRACK-RELIABILITY
     paths: [maplib/src/main/java/com/nextgis/maplib/util/LayerDatabaseTransaction.java, maplib/src/main/java/com/nextgis/maplib/util/FeatureSaveJournal.java, maplib/src/main/java/com/nextgis/maplib/util/PendingTrackPoints.java, maplib/src/main/java/com/nextgis/maplib/util/FeatureChanges.java, maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java, maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java, maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java, maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Sign.java]
     owners: [maplib, maplibui, app]
