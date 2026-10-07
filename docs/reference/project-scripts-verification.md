@@ -17,6 +17,25 @@ pins на fetched remote merge commits и **Squash Merge** → desktop/акти�
 release version/APK matrix. До закрытия цепочки release APK не собирается и
 не публикуется. Текущие submodule pins Draft PR не являются merged dependencies.
 
+## Матрица review и интеграции
+
+Все четыре PR открыты как Draft от `geoglyth`; целевые ветки пока не содержат
+новый механизм. Строки ниже относятся к code commits, последующие docs-only
+коммиты этой же ветки их не заменяют.
+
+| Требование / owner | Code commit | PR / base | Зависимости и присутствие |
+|---|---|---|---|
+| Формат, изолированный runtime и native read API / maplib | `b208231be9ec3d77145fe74d75c42d3767350cb6` | [#40](https://github.com/GeonicalSys/android_maplib/pull/40), `master` | В task tip; Merge Commit первым |
+| Hooks формы, warning/block и pinned draft / maplibui | `6161a796890f9860600e81e8637ce85b627fee51` | [#28](https://github.com/GeonicalSys/android_maplibui/pull/28), `master` | В task tip; зависит от maplib #40; Merge Commit вторым |
+| Audit pilot, Application guard, интеграционные тесты / app | `c1d40646625cb05adb87707178bb00c576b6a244` | [#48](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/48), `my-maplibre` | В task tip; pins равны code commits двух строк выше; после merge заменить на fetched merge commits |
+| Publisher, portable collect/create/clone, UI / desktop | `e7ef358a1a9efb3c9d15e6062e221998a7a6cebb` | [#159](https://github.com/GeonicalSys/lisa/pull/159), `main` | В task tip; общий API v1; активация после app integration |
+
+Ранее согласованные maplib #39, maplibui #27 и app #47 уже слиты; их remote
+результаты `a247a16d`, `57e28a60`, `0b871f71` являются предками этих task tips.
+Новые четыре PR в этой задаче **не сливались**. Перед выпуском повторить fetch,
+инвентаризацию открытых PR/веток и проверку включения по Git; наличие этой
+таблицы не заменяет release closure audit.
+
 ## Автоматические результаты, 2026-10-07
 
 Windows developer clone, JDK 21, AGP 9.1.0 / Gradle 9.3.1, compileSdk 36,
