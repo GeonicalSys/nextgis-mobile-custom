@@ -93,6 +93,10 @@ Plugins, код мобильного клиента — здесь. Не исп�
 
 ## Правила мобильных проектов
 
+Зависимые NGFP-списки произвольной глубины — встроенный декларативный механизм,
+отдельный от scripts: [контракт](architecture/cascading-form-lists.md),
+[выбор сотрудников](guides/cascading-form-lists-user-guide.md).
+
 Перед изменением scripts/Collector delivery/form hooks читать
 [архитектуру](architecture/project-scripts.md) и
 [руководство пользователя](guides/project-scripts-user-guide.md).

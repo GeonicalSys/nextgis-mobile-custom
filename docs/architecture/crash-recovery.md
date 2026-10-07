@@ -150,6 +150,16 @@ Key types: `GeometryEditDraftStore`, `MapFragment.persistManualGeometryDraft`,
 
 No layer insert until the user explicitly Saves.
 
+NGFP [cascading lists](cascading-form-lists.md) store a SHA-256 reference to the
+complete immutable snapshot under the owning layer, selected stable keys,
+managed field names and original values in typed state via `saveAdditionalFormState`.
+Large tables stay out of the Activity Binder parcel. Rotation and durable recovery
+verify the pinned file even after NGFP changes; missing/corrupt snapshots block Save
+and retain the previous selection in the draft. Cleared descendants are
+explicit null values, so retry cannot restore obsolete children from SQLite.
+Cascade membership validation and the common required gate run before writes;
+an invalid selection leaves the recoverable draft intact.
+
 ## Recovery hub (`MainActivity.maybeOfferCrashRecovery`)
 
 Order after map resume:

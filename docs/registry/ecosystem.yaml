@@ -28,6 +28,18 @@ systems:
     docs_url: https://github.com/GeonicalSys/geonical-docs/blob/main/START-HERE.md
     source_of_truth: QGIS plugin sources, desktop workflows, GIS resource publishing and central plugin documentation.
 contracts:
+  - id: ECO-CASCADING-FORM-LISTS
+    from: qgis-plugins
+    to: mobile-app
+    type: server_resource_contract
+    transport: Legacy NGFP ZIP meta.json.lisa_form_dependencies
+    statement: Access synchronizer supplies shared stable-key dictionaries and declarative parent filters; desktop cloning preserves the complete namespace without resource-ID substitution. Native Android filters offline, clears descendants and validates Save while retaining pinned drafts and unchanged historical attributes. Standard two-level controls and audit questions remain compatible.
+    owners: [maplib, maplibui, app]
+    local_docs: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
+    external_docs:
+      - system: qgis-plugins
+        path: geonical-docs/architecture/mobile-client.md
+    verify: [SMOKE-CASCADING-FORM-LISTS, SMOKE-REQUIRED-FIELDS]
   - id: ECO-PROJECT-SCRIPTS
     from: qgis-plugins
     to: mobile-app

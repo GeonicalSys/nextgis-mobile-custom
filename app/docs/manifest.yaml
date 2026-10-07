@@ -9,6 +9,10 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerPendingChangesTest.java
+    responsibility: Exercise real drawer/worker with synthetic SQLite edits, deletion-only outbox, recycled rows and rotation; confirm row and global indicators clear together after acknowledgment.
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
+    responsibility: Real dependent NGFP spinners, both audit branches, SQL NULL clearing, pinned draft/recreation and mismatched-choice Save rejection on synthetic offline SQLite.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectScriptsTest.java
     responsibility: Real isolated Binder, native VM, ownership, local history and NGFP save/draft regression.
   - path: examples/project-scripts/contractor-audit/manifest.json
