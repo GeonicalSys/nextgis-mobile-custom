@@ -55,3 +55,13 @@ mobile проходят через явный NGW/Collector contract или по
 Обновляй README при смене пользовательского поведения или troubleshooting;
 manifest — при смене entry point, key component, contract, setting или smoke.
 Central cross-module docs обновляй в той же root-задаче.
+
+## Project scripts
+
+Владеет ранним Application guard изолированного процесса, pinned native build и тестовым примером contractor-audit. Правила не меняют flavors/версии/accounts. Sentry app-start injection отключён; остальные crash/tracing hooks сохранены.
+
+Перед доработкой читать `../docs/architecture/project-scripts.md` и пользовательское
+руководство. Новый host API добавлять с capability/grants/типами/бюджетами/тестами
+сначала в APK. Не поставлять arbitrary SQL, Java reflection, сеть или GIS-движок
+внешним JS. Старые пакеты сохранять для pin черновиков. Cross-repo schema/API
+обновлять одновременно с stand_project и central registries.

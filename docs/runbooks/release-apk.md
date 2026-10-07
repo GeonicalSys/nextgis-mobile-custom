@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -184,3 +184,12 @@ Prune не меняет `manifest.json` / `latest.apk` и не является 
 ## Debug companion и каталог
 
 При выпуске изменений хранилища сначала закрыть library/app dependency chain, затем публиковать Debug с export Activity: companion отвергает старый APK без exporter, даже при валидном manifest. Сама реализация не разрешает публикацию или bump. Проверить permission-return и отмену установки, неизменность данных и отдельное подтверждение переноса. См. [контракт](../architecture/shared-underlays.md).
+
+## Gate для native правил проекта
+
+При первом выпуске с project scripts проверить pinned NDK/CMake, четыре ABI,
+16 KiB ELF alignment, отдельный UID, Unicode, timeout/OOM и фактический form Save.
+Обязателен closure maplib → maplibui → app с fetched merge-commit pins; до него
+не собирать/не публиковать release APK и не давать команды публикации.
+[Архитектура](../architecture/project-scripts.md),
+[текущая проверка](../reference/project-scripts-verification.md).

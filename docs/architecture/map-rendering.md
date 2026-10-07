@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -444,3 +444,10 @@ DOWN не создают точку. В режиме placement host повыша
 пункт вызывает исходный control click. Состояние/visibility исходных кнопок
 сохраняется. Физический планшет, display size/font scale, split screen и системные
 insets ещё требуют [device smoke](../runbooks/device-smoke-tests.md).
+
+## Изолированный обработчик правил
+
+`ProjectScriptService` не создаёт карту, renderer, GPS и accounts. Ранние guards
+в GISApplication/MainApplication выполняются до их обычной инициализации.
+Основной процесс и OpenGL/MapLibre contract сохранены; QuickJS — отдельная
+native-библиотека, не второй renderer. [Контракт](project-scripts.md).

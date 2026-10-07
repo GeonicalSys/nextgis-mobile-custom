@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -124,3 +124,11 @@ commits. На Windows и в чистой Linux CI выполнены обе rele
 compilation, debug APK,574 units и28 native API36 fault/UI checks. Release
 APK проверяются отдельно после app merge; точный успешный run, delivery matrix
 и runtime versions в [отчёте](mobile-reliability-audit.md).
+
+## Native project-script runtime
+
+Добавлены NDK `28.2.13676358` и CMake `3.22.1` для QuickJS `2026-06-04`.
+CI устанавливает эти pinned SDK packages. Сборка четырёх ABI использует 16 KiB
+ELF alignment. AGP/Kotlin/SDK/версии APK не изменены. Debug/native и обе release
+source sets проверяются до merge; APK release matrix выполняется после закрытия
+библиотечных PR. [Результаты](project-scripts-verification.md).

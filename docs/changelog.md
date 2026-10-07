@@ -10,6 +10,12 @@ related_code:
 
 ## 2026-10-07
 
+- Добавлены project scripts API v1: source-only ZIP/Collector reference, isolated
+  QuickJS, встроенные read-only GIS/date функции, pin формы/черновика и warning/block
+  перед Save. Первый пакет проверяет историю аудитов подрядчика за месяц.
+  Документированы пользовательский workflow, agent ownership, будущие capabilities,
+  desktop publisher/collect/clone и порядок cross-repository интеграции.
+
 - После Merge Commit maplib #39 и maplibui #27 приложение закрепляет их удалённые
   merge commits; описание отличий повторно сверено с официальными HEAD.
   Обязательные поля и предупреждение GPS сохранены без изменения версий.

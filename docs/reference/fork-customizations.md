@@ -1,7 +1,7 @@
 ---
 title: Каталог кастомизаций форка
 type: reference
-last_verified: 2026-08-15
+last_verified: 2026-10-07
 related_code:
   - app
   - maplib
@@ -84,3 +84,11 @@ architecture/reference/runbook, точные зависимости — в `docs
 изменения — в [`../../WHATS_NEW.md`](../../WHATS_NEW.md). В эту таблицу добавляется только новый
 долгоживущий класс кастомизации. Одновременно необходимо проверить, изменилось ли внешнее отличие
 от official, и актуализировать [official-differences.md](official-differences.md).
+
+## Project scripts
+
+Подготовлена дополнительная проверка форм из versioned Collector ZIP: native
+QuickJS/host API, привязки к своим слоям, warnings/blocks и pin черновика.
+[Архитектура](../architecture/project-scripts.md),
+[пользовательское руководство](../guides/project-scripts-user-guide.md).
+Пространственные операции и расчётные таблицы остаются следующими этапами.

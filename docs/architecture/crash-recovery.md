@@ -204,3 +204,12 @@ successful checkpoint clears it. Failed final persistence cannot hand off geomet
 Sequential linked-list traversal preserves WKT and cuts long-walk checkpoint cost;
 large snapshots still run synchronously and may stall the main thread. See the
 [measured results and remaining checks](../reference/mobile-reliability-audit.md).
+
+## Версия правил в черновике
+
+Форма хранит полную `scriptReference` в Bundle и FeatureFormDraftStore. Пустая
+строка закрепляет отсутствие правил; null в старом черновике сохраняет legacy
+поведение. Перед транзакцией Save выполняет закреплённый `before_save`; warning
+можно подтвердить, block/closed-ошибка оставляют форму и черновик. Журнал Save
+восстанавливает уже созданный ID до hook, чтобы retry не считал объект новым.
+Пакеты старых pin автоматически не удаляются. [Контракт](project-scripts.md).

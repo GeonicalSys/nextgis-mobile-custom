@@ -1,7 +1,7 @@
 ---
 title: GeonicalSystem NextGIS Mobile — документация
 type: index
-last_verified: 2026-08-15
+last_verified: 2026-10-07
 related_code:
   - settings.gradle
   - .gitmodules
@@ -49,3 +49,9 @@ related_code:
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\docs-check.ps1 -RunTests
 ```
+
+## Правила мобильных проектов
+
+[Руководство пользователя](guides/project-scripts-user-guide.md),
+[архитектура и API v1](architecture/project-scripts.md),
+[проверки и ограничения поставки](reference/project-scripts-verification.md).

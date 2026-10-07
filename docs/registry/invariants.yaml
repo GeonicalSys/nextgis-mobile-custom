@@ -1,5 +1,18 @@
 schema_version: 1
 invariants:
+  INV-PROJECT-SCRIPTS:
+    title: Project rules execute under an isolated UID through bounded read-only grants
+    owners: [maplib, maplibui, app]
+    statement: >
+      Only verified source-only Collector packages activate. Script contexts receive no Android,
+      SQL, network or write access; every native query revalidates owning account, project,
+      managed origin and fields. Before-save checks precede all feature/outbox/photo writes.
+      Form drafts pin the complete immutable reference; failed updates retain the previous
+      verified package and report incomplete validation. New capabilities are implemented
+      gradually in the APK with type, CRS/unit and resource-budget contracts.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/scripts, maplibui/src/main/java/com/nextgis/maplibui/util/ProjectScriptFormController.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-PROJECT-SCRIPTS]
+    must_update_docs: [docs/architecture/project-scripts.md, docs/guides/project-scripts-user-guide.md]
   INV-REQUIRED-FIELDS:
     title: Required form values gate final Save while incomplete drafts remain recoverable
     owners: [maplib, maplibui, app]

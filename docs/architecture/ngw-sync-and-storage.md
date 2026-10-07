@@ -534,3 +534,12 @@ origin/resource/server prefix предотвращает отправку пар
 NextGIS ID нормализует только login/email; Web GIS passwords и identifiers
 сохраняют свои прежние правила. В resource tree folder/up icon назначается на
 каждую bind независимо от того, была ли строка раньше кнопкой добавления аккаунта.
+
+## Правила проекта и чтение истории
+
+Collector import/composition sync на worker читает только namespaced ссылку
+`mobile_json_config.lisa_project_scripts`, проверяет ZIP/SHA-256 и активирует
+проверенный кеш своей карты. Ошибка обновления оставляет старую версию с явным
+статусом. Broker читает SQLite через owning layer/map и grants manifest; он не
+вызывает NGW, не меняет feature/outbox и не получает Android accounts в sandbox.
+[Формат и ограничения](project-scripts.md).

@@ -28,6 +28,18 @@ systems:
     docs_url: https://github.com/GeonicalSys/geonical-docs/blob/main/START-HERE.md
     source_of_truth: QGIS plugin sources, desktop workflows, GIS resource publishing and central plugin documentation.
 contracts:
+  - id: ECO-PROJECT-SCRIPTS
+    from: qgis-plugins
+    to: mobile-app
+    type: server_resource_contract
+    transport: Source-only ZIP attachment on a native vector_layer plus collector_project.mobile_json_config.lisa_project_scripts
+    statement: stand_project verifies deterministic ZIP and aliases before publication/readback; maplib validates hash/API and caches per project, isolated QuickJS uses APK-hosted bounded capabilities, maplibui pins complete references to forms and drafts. Spatial, table and write APIs are future capabilities, not arbitrary external JS implementations.
+    owners: [maplib, maplibui, app]
+    local_docs: [docs/architecture/project-scripts.md, docs/guides/project-scripts-user-guide.md]
+    external_docs:
+      - system: qgis-plugins
+        path: geonical-docs/guides/mobile-project-scripts.md
+    verify: [SMOKE-PROJECT-SCRIPTS, SMOKE-COLLECTOR-IMPORT]
   - id: ECO-NGW-RESOURCE-EXCHANGE
     from: qgis-plugins
     to: mobile-app

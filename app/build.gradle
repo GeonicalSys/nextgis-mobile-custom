@@ -24,6 +24,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.sentry.android.gradle'
 apply plugin: 'kotlin-android'
+
+// Sentry's injected Application.onCreate probe runs before our isolated-process
+// guard and calls APIs forbidden to an isolated UID. Keep crash reporting and
+// the remaining tracing instrumentation; omit only automatic app-start metrics.
+sentry {
+    tracingInstrumentation {
+        appStart {
+            enabled.set(false)
+        }
+    }
+}
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
@@ -53,6 +64,7 @@ def geonicalSigningConfigured =
 
 android {
     namespace "com.nextgis.mobile"
+    sourceSets.androidTest.assets.srcDir rootProject.file('examples')
 
     buildFeatures {
         buildConfig = true

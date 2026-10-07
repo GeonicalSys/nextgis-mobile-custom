@@ -1,7 +1,7 @@
 ---
 title: С чего начать — GeonicalSystem NextGIS Mobile
 type: guide
-last_verified: 2026-08-15
+last_verified: 2026-10-07
 related_code:
   - app/build.gradle
   - settings.gradle
@@ -90,3 +90,11 @@ Plugins, код мобильного клиента — здесь. Не исп�
 - [`runbooks/collector-project-setup.md`](runbooks/collector-project-setup.md) — настройка Collector.
 - [`architecture/map-performance.md`](architecture/map-performance.md) — состояние и план производительности.
 - [`roadmap/collector.md`](roadmap/collector.md) — только ещё не завершённые Collector-задачи.
+
+## Правила мобильных проектов
+
+Перед изменением scripts/Collector delivery/form hooks читать
+[архитектуру](architecture/project-scripts.md) и
+[руководство пользователя](guides/project-scripts-user-guide.md).
+Native capabilities расширяются в APK постепенно; текущий внешний JS не имеет
+сети, SQL, записи данных и пространственного API.

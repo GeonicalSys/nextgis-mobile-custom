@@ -479,3 +479,10 @@ Smoke должен пройти выдачу разрешения и устан�
 [Результаты аудита и проверки](../../docs/reference/mobile-reliability-audit.md),
 [долговечные формы и трек](../../docs/architecture/crash-recovery.md),
 [матрица сборки и CI](../../docs/reference/build-matrix.md).
+
+## Project scripts
+
+Владеет ранним Application guard изолированного процесса, pinned native build и тестовым примером contractor-audit. Правила не меняют flavors/версии/accounts. Sentry app-start injection отключён; остальные crash/tracing hooks сохранены.
+
+[Архитектура](../../docs/architecture/project-scripts.md),
+[руководство](../../docs/guides/project-scripts-user-guide.md).

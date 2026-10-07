@@ -450,3 +450,30 @@ layer_json:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
     purpose: Debug source package, stable source-layer key and migration timestamp used to make cross-package underlay retries duplicate-safe
+
+project_scripts:
+  lisa_project_scripts:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/scripts/ScriptReference.java
+    purpose: Namespaced Collector mobile_json_config reference with schema/version/SHA-256, carrier attachment identity, layer bindings and open/closed failure policy.
+  scripts_expected:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
+    purpose: Latest server reference, including a failed candidate, scoped to the owning project.
+  scripts_active:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
+    purpose: Last verified reference retained when a candidate update fails.
+  scripts_status:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
+    purpose: ready/update_failed state; absent namespace disables new forms without purging pinned cache.
+  scriptReference:
+    owner: maplibui
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
+    purpose: Complete immutable form/draft reference; empty means explicitly no rules, legacy null remains compatible.
+  project_scripts_cache:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/scripts/ScriptPackageStore.java
+    location_name: Owning project project_scripts/<sha256>.zip
+    purpose: Atomic content-addressed verified packages retained for pinned drafts; no global cache or automatic old-version deletion.
