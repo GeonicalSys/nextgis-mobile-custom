@@ -451,6 +451,16 @@ layer_json:
     source: maplib/src/main/java/com/nextgis/maplib/map/TMSLayer.java
     purpose: Debug source package, stable source-layer key and migration timestamp used to make cross-package underlay retries duplicate-safe
 
+form_rules:
+  lisa_form_rules:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java
+    purpose: NGFP meta.json schema_version 1 required targets with bounded scalar/all/any/not conditions; strengthens static required without changing fields or values.
+  lisa_required_pin:
+    owner: maplibui
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java
+    purpose: Verified SHA-256 snapshot in the owning layer form_rules directory, with empty pin preserving absence; no large definitions in Bundle/durable draft.
+
 form_dependencies:
   lisa_form_dependencies:
     owner: maplib

@@ -123,3 +123,8 @@ root pins и Squash app → Squash desktop. Версии APK/плагина в �
 тесты сохранности метаданных и guard Access, тест clone в обоих QGIS runtime.
 Native-сценарии включают определение размером 700000 символов при Bundle меньше
 16 KiB и отказ Save с сохранением выбора при повреждении закреплённого файла.
+
+Штатный default launch передаёт согласованную пару form/meta с numbered
+или пустым legacy-префиксом. Снимки использует общий FormMetadataSnapshot;
+пути, хеши и legacy pins каскадов совместимы. Независимые условия required
+и закрепление вкладок описаны в [контракте формы](conditional-form-rules.md).

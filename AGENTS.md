@@ -191,6 +191,15 @@ registry/docs. Общую карту отличий открывай в
 
 ## Пакеты правил проекта
 
+Для зависимой обязательности читать `docs/architecture/conditional-form-rules.md`
+и `docs/guides/form-behavior-user-guide.md`. Декларативный `lisa_form_rules`
+усиливает статический required, не меняет значения и не исполняет код. Общий
+Save gate обязателен для toolbar и Back Save; условия вычисляются по текущим
+типизированным значениям, включая неактивные вкладки. Сохранять проверенный
+`lisa_required_pin` в owning layer/form_rules и durable draft; ошибка pin
+блокирует запись. В clone запрещён remap всего namespace. Внешние Tabs закреплены
+над полями; свайпы не должны перехватывать ввод, подпись и собственные жесты.
+
 Для зависимых списков сначала читать `docs/architecture/cascading-form-lists.md`
 и пользовательское руководство. Граф/таблицы находятся в NGFP
 `meta.json.lisa_form_dependencies`; фильтрация встроена в APK, без JS/SQL/сети.

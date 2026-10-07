@@ -51,6 +51,7 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 
 | Если меняется | Читать |
 |---|---|
+| NGFP required, зависимые условия или навигация вкладок | `architecture/conditional-form-rules.md`, `guides/form-behavior-user-guide.md` |
 | `MapDrawable`, style/source/layer | `architecture/map-rendering.md`, `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY` |
 | `LayerFillService`, import NGRc/Collector | map rendering + collector docs + `maplibui` pack |
 | локальные GeoJSON/KML/GPX, WGS 84 или редактируемость ручного слоя | `INV-LOCAL-VECTOR-LAYERS`, packs `maplib`, `maplibui` и `app` |

@@ -28,6 +28,18 @@ systems:
     docs_url: https://github.com/GeonicalSys/geonical-docs/blob/main/START-HERE.md
     source_of_truth: QGIS plugin sources, desktop workflows, GIS resource publishing and central plugin documentation.
 contracts:
+  - id: ECO-CONDITIONAL-FORM-RULES
+    from: qgis-plugins
+    to: mobile-app
+    type: server_resource_contract
+    transport: Legacy NGFP ZIP meta.json.lisa_form_rules
+    statement: Native bounded scalar/all/any/not conditions strengthen static required; UI markers and Save share pinned rules, drafts keep verified SHA-256 snapshots, desktop clone preserves literals and field names without resource-ID remap. No PostGIS schema/data write is needed.
+    owners: [maplib, maplibui, app]
+    local_docs: [docs/architecture/conditional-form-rules.md, docs/guides/form-behavior-user-guide.md]
+    external_docs:
+      - system: qgis-plugins
+        path: geonical-docs/architecture/mobile-client.md
+    verify: [SMOKE-CONDITIONAL-REQUIRED, SMOKE-REQUIRED-FIELDS]
   - id: ECO-CASCADING-FORM-LISTS
     from: qgis-plugins
     to: mobile-app
