@@ -58,6 +58,12 @@ Central cross-module docs обновляй в той же root-задаче.
 
 ## Project scripts
 
+NGFP-формы: читать `../docs/architecture/conditional-form-rules.md`. Native
+regression-тесты `CascadingFormsTest` и `ConditionalRequiredFieldsTest` запускаются
+только на изолированном эмуляторе; никогда не запускать suite на рабочем телефоне.
+Проверять публичный запуск формы со связанным meta, вкладки, Save/Back Save,
+pin черновика и отсутствие SQLite-записи при нарушении условий.
+
 Владеет ранним Application guard изолированного процесса, pinned native build и тестовым примером contractor-audit. Правила не меняют flavors/версии/accounts. Sentry app-start injection отключён; остальные crash/tracing hooks сохранены.
 
 Перед доработкой читать `../docs/architecture/project-scripts.md` и пользовательское

@@ -1,5 +1,12 @@
 schema_version: 1
 invariants:
+  INV-CONDITIONAL-REQUIRED:
+    title: Conditional requirements strengthen static required without losing values or draft rules
+    owners: [maplib, maplibui, app]
+    statement: Native bounded NGFP conditions read owning scalar values only; markers and final Save use the same immutable pinned rules. Static required is never relaxed, unavailable/corrupt rules block Save before writes, and draft pins/values survive updates and recovery. Tab navigation never discards control state or consumes signature/photo/text child gestures.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java, maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java]
+    verify_smoke: [SMOKE-CONDITIONAL-REQUIRED, SMOKE-FORM-NAVIGATION, SMOKE-REQUIRED-FIELDS]
+    must_update_docs: [docs/architecture/conditional-form-rules.md, docs/guides/form-behavior-user-guide.md]
   INV-CASCADING-FORM-LISTS:
     title: Native dependent lists preserve parent identity, drafts and historical attributes
     owners: [maplib, maplibui, app]

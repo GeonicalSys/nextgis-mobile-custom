@@ -1,5 +1,15 @@
 schema_version: 1
 tests:
+  SMOKE-CONDITIONAL-REQUIRED:
+    type: automatic
+    scope: [app, maplib, maplibui]
+    command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.ConditionalRequiredFieldsTest"
+    expected: Unchecked checkbox requires the inactive comment before SQLite writes; checked item is optional unless statically required, markers update, immutable pins survive rotation/durable recovery and corrupt/unknown rules block Save retaining the draft.
+  SMOKE-FORM-NAVIGATION:
+    type: automatic
+    scope: [app, maplibui]
+    command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.CascadingFormsTest"
+    expected: Ordinary default-form launch supplies matching metadata, outer tab headers remain visible after vertical scrolling, horizontal flings preserve choices/recreation and signature strokes remain within the signature.
   SMOKE-LAYER-PENDING-INDICATOR:
     type: automatic
     scope: [app, maplibui]

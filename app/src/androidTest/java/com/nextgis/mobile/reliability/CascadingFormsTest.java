@@ -2,10 +2,14 @@ package com.nextgis.mobile.reliability;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.app.Instrumentation;
 import android.os.SystemClock;
 import android.view.View;
+import android.view.MotionEvent;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.Spinner;
+import com.google.android.material.tabs.TabLayout;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -21,10 +25,13 @@ import com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity;
 import com.nextgis.maplibui.activity.ModifyAttributesActivity;
 import com.nextgis.maplibui.api.IControl;
 import com.nextgis.maplibui.mapui.VectorLayerUI;
+import com.nextgis.maplibui.formcontrol.Tabs;
+import com.nextgis.maplibui.formcontrol.Sign;
 import com.nextgis.maplibui.util.CascadingFormController;
 import com.nextgis.maplibui.util.ConstantsUI;
 import com.nextgis.maplibui.util.ControlHelper;
 import com.nextgis.maplibui.util.FeatureFormDraftStore;
+import com.nextgis.maplibui.util.LayerUtil;
 import com.nextgis.maplibui.util.RequiredFieldUi;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -126,6 +133,138 @@ public class CascadingFormsTest {
         }
         @Override public void close() {
             FeatureFormDraftStore.clear(app);assertTrue(layer.delete(false));map.save();form.delete();meta.delete();
+        }
+    }
+    private static void checkDefaultFormLaunch(String prefix) throws Exception {
+        Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();
+        try (Fixture f=new Fixture(false)) {
+            File syncedForm=new File(f.layer.getPath(),prefix+ConstantsUI.FILE_FORM);
+            File syncedMeta=new File(f.layer.getPath(),prefix+"ngfp_meta.json");
+            Files.copy(f.form.toPath(),syncedForm.toPath());
+            Files.copy(f.meta.toPath(),syncedMeta.toPath());
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> host=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                Instrumentation.ActivityMonitor monitor=instrumentation.addMonitor(
+                        FormBuilderModifyAttributesActivity.class.getName(),null,false);
+                FormBuilderModifyAttributesActivity opened=null;
+                try {
+                    host.onActivity(a -> LayerUtil.showEditForm(f.layer,a,Constants.NOT_FOUND,
+                            new GeoPoint(100,200),-1));
+                    opened=(FormBuilderModifyAttributesActivity)instrumentation.waitForMonitorWithTimeout(monitor,20000);
+                    assertNotNull("Default form was not opened",opened);
+                    instrumentation.waitForIdleSync();
+                    FormBuilderModifyAttributesActivity activity=opened;
+                    instrumentation.runOnMainSync(() -> {
+                        assertEquals(syncedForm,activity.getIntent().getSerializableExtra(ConstantsUI.KEY_FORM_PATH));
+                        assertEquals("The matching metadata must reach the actual form launch",syncedMeta,
+                                activity.getIntent().getSerializableExtra(ConstantsUI.KEY_META_PATH));
+                        assertNotNull(activity.getCascadingLists());
+                        assertNull(activity.getCascadingLists().value("contractor"));
+                        assertFalse(spinner(activity,"jobtitle1").isEnabled());
+                    });
+                } finally {
+                    if (opened!=null) {
+                        FormBuilderModifyAttributesActivity activity=opened;
+                        instrumentation.runOnMainSync(activity::finish);
+                        instrumentation.waitForIdleSync();
+                    }
+                    instrumentation.removeMonitor(monitor);
+                }
+            }
+        }
+    }
+    @Test public void defaultFormLaunchLoadsSyncedNumberedMetadata() throws Exception {
+        checkDefaultFormLaunch("933_");
+    }
+    @Test public void defaultFormLaunchLoadsUnprefixedMetadata() throws Exception {
+        checkDefaultFormLaunch("");
+    }
+    private static void navigationForm(Fixture fixture) throws Exception {
+        JSONArray form=new JSONArray(new String(Files.readAllBytes(fixture.form.toPath()),java.nio.charset.StandardCharsets.UTF_8));
+        JSONArray pages=form.getJSONObject(0).getJSONArray("pages");
+        JSONArray first=pages.getJSONObject(0).getJSONArray("elements");
+        for (int i=0;i<40;i++) first.put(new JSONObject().put("type","text_label")
+                .put("attributes",new JSONObject().put("text","Audit item "+i)));
+        pages.put(new JSONObject().put("caption","Next").put("elements",new JSONArray()
+                .put(new JSONObject().put("type","text_label").put("attributes",new JSONObject().put("text","Swipe here")))
+                .put(new JSONObject().put("type","signature").put("attributes",new JSONObject()))));
+        write(fixture.form,form.toString());
+    }
+    private static Tabs tabs(FormBuilderModifyAttributesActivity activity) {
+        android.view.ViewGroup root=activity.findViewById(R.id.controls_list);
+        for (int i=0;i<root.getChildCount();i++) if (root.getChildAt(i) instanceof Tabs) return (Tabs)root.getChildAt(i);
+        throw new AssertionError("Missing tabs");
+    }
+    private static TabLayout header(FormBuilderModifyAttributesActivity activity) {
+        return (TabLayout)((android.view.ViewGroup)activity.findViewById(R.id.form_tabs_header)).getChildAt(0);
+    }
+    private static View signature(View root) {
+        if (root instanceof Sign) return root;
+        if (root instanceof android.view.ViewGroup) {
+            android.view.ViewGroup group=(android.view.ViewGroup)root;
+            for (int i=0;i<group.getChildCount();i++) {View found=signature(group.getChildAt(i));if(found!=null)return found;}
+        }
+        return null;
+    }
+    private static void swipe(ActivityScenario<FormBuilderModifyAttributesActivity> scenario, boolean left,
+                              java.util.function.Function<FormBuilderModifyAttributesActivity,View> target) {
+        float[] points=new float[3];
+        scenario.onActivity(a -> {
+            View view=target.apply(a);int[] location=new int[2];view.getLocationOnScreen(location);
+            assertTrue("Swipe target must have a visible drawing area",view.isShown() && view.getWidth()>0 && view.getHeight()>0);
+            points[0]=location[0]+view.getWidth()*(left?.85f:.15f);
+            points[1]=location[0]+view.getWidth()*(left?.15f:.85f);
+            points[2]=location[1]+view.getHeight()/2f;
+        });
+        Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();
+        long down=SystemClock.uptimeMillis();
+        for (int i=0;i<=12;i++) {
+            int action=i==0?MotionEvent.ACTION_DOWN:i==12?MotionEvent.ACTION_UP:MotionEvent.ACTION_MOVE;
+            MotionEvent event=MotionEvent.obtain(down,SystemClock.uptimeMillis(),action,
+                    points[0]+(points[1]-points[0])*i/12,points[2],0);
+            event.setSource(android.view.InputDevice.SOURCE_TOUCHSCREEN);
+            instrumentation.sendPointerSync(event);event.recycle();SystemClock.sleep(12);
+        }
+        instrumentation.waitForIdleSync();
+    }
+    @Test public void pinnedTabsAndSwipesPreserveChoicesAndRecreation() throws Exception {
+        try (Fixture f=new Fixture(false)) {
+            navigationForm(f);
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                choose(s,"contractor",1);choose(s,"jobtitle1",1);
+                int[] original=new int[2];
+                s.onActivity(a -> {header(a).getLocationOnScreen(original);ScrollView scroll=a.findViewById(R.id.form_scroll);scroll.scrollTo(0,scroll.getChildAt(0).getHeight());});
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                s.onActivity(a -> {
+                    int[] scrolled=new int[2];header(a).getLocationOnScreen(scrolled);
+                    assertEquals(original[1],scrolled[1]);assertTrue(header(a).isShown());
+                    assertTrue(((ScrollView)a.findViewById(R.id.form_scroll)).getScrollY()>0);
+                });
+                swipe(s,true,a -> a.findViewById(R.id.form_scroll));
+                s.onActivity(a -> {assertEquals(1,tabs(a).getValue());assertEquals(0,((ScrollView)a.findViewById(R.id.form_scroll)).getScrollY());});
+                swipe(s,false,a -> ((android.view.ViewGroup)tabs(a).getPageLayouts().get(1)).getChildAt(0));
+                s.onActivity(a -> {assertEquals(0,tabs(a).getValue());assertEquals("Driver",a.getCascadingLists().value("jobtitle1"));});
+                s.onActivity(a -> {ScrollView scroll=a.findViewById(R.id.form_scroll);scroll.scrollTo(0,scroll.getChildAt(0).getHeight());});
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                swipe(s,false,a -> a.findViewById(R.id.form_scroll));
+                s.onActivity(a -> {assertEquals(0,tabs(a).getValue());header(a).getTabAt(1).select();});
+                s.recreate();
+                s.onActivity(a -> {assertEquals(1,tabs(a).getValue());assertTrue(header(a).isShown());assertEquals("Company A",a.getCascadingLists().value("contractor"));});
+            }
+        }
+    }
+    @Test public void signatureStrokeDoesNotSwipeFormTabs() throws Exception {
+        try (Fixture f=new Fixture(false)) {
+            navigationForm(f);
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                s.onActivity(a -> header(a).getTabAt(1).select());
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                swipe(s,false,a -> signature(tabs(a).getPageLayouts().get(1)));
+                s.onActivity(a -> {
+                    assertEquals(1,tabs(a).getValue());android.os.Bundle state=new android.os.Bundle();
+                    ((Sign)signature(tabs(a).getPageLayouts().get(1))).saveState(state);
+                    assertTrue(state.containsKey("signature_strokes"));
+                });
+            }
         }
     }
     @Test public void threeLevelListsAndBothBranchesResetWithoutAutoSelecting() throws Exception {

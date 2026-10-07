@@ -223,3 +223,8 @@ large snapshots still run synchronously and may stall the main thread. See the
 можно подтвердить, block/closed-ошибка оставляют форму и черновик. Журнал Save
 восстанавливает уже созданный ID до hook, чтобы retry не считал объект новым.
 Пакеты старых pin автоматически не удаляются. [Контракт](project-scripts.md).
+
+Декларативная обязательность NGFP отдельно закреплена через `lisa_required_pin`
+в owning layer/form_rules. Обновление meta не меняет восстановленный черновик;
+повреждение снимка блокирует запись и сохраняет pin и значения. Пустой pin
+закрепляет отсутствие условий. [Контракт](conditional-form-rules.md).
