@@ -216,4 +216,41 @@ public class CascadingFormsTest {
             }
         }
     }
+    @Test public void largeDictionaryUsesSmallBundleAndPinnedFileAfterRotation() throws Exception {
+        try (Fixture f=new Fixture(false)) {
+            JSONObject large=definition();
+            large.getJSONObject("tables").getJSONArray("contractors").getJSONObject(0)
+                    .put("notes",new String(new char[700000]).replace('\0','x'));
+            write(f.meta,new JSONObject().put(CascadingLists.META_KEY,large).toString());
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                choose(s,"contractor",1);
+                s.onActivity(a -> {
+                    android.os.Bundle state=new android.os.Bundle();a.getCascadingLists().saveState(state);
+                    assertTrue(state.getString(CascadingFormController.PIN).matches("sha256:[0-9a-f]{64}"));
+                    android.os.Parcel parcel=android.os.Parcel.obtain();
+                    try {parcel.writeBundle(state);assertTrue(parcel.dataSize()<16384);} finally {parcel.recycle();}
+                });
+                write(f.meta,"{}");s.recreate();
+                s.onActivity(a -> assertEquals("Company A",a.getCascadingLists().value("contractor")));
+            }
+        }
+    }
+    @Test public void corruptPinnedFileBlocksSaveAndRetainsOriginalDraftSelection() throws Exception {
+        try (Fixture f=new Fixture(false);
+             ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+            choose(s,"contractor",1);choose(s,"jobtitle1",1);choose(s,"eployee1",1);
+            android.os.Bundle state=new android.os.Bundle();s.onActivity(a -> a.getCascadingLists().saveState(state));
+            String pin=state.getString(CascadingFormController.PIN);
+            write(new File(new File(f.layer.getPath(),"form_dependencies"),pin.substring(7)+".json"),"{}");
+            s.recreate();s.onActivity(CascadingFormsTest::save);
+            await(() -> {
+                android.view.accessibility.AccessibilityNodeInfo root=InstrumentationRegistry.getInstrumentation().getUiAutomation().getRootInActiveWindow();
+                return root!=null&&!root.findAccessibilityNodeInfosByText(f.app.getString(R.string.form_cascade_unavailable)).isEmpty();
+            });
+            assertEquals(0,f.layer.getSqliteTableRowCount());
+            android.os.Bundle draft=FeatureFormDraftStore.controlStateToBundle(FeatureFormDraftStore.load(f.app));
+            assertEquals(pin,draft.getString(CascadingFormController.PIN));
+            assertEquals("Alex",draft.getString(ControlHelper.getSavedStateKey("eployee1")));
+        }
+    }
 }

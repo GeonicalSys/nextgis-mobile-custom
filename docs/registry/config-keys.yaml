@@ -459,7 +459,11 @@ form_dependencies:
   lisa_cascade_pin:
     owner: maplibui
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java
-    purpose: Complete immutable definition in typed Bundle/durable draft; empty pins the absence of this extension.
+    purpose: SHA-256 reference to a verified immutable definition in the owning layer form_dependencies directory; Bundle/draft contains no large table, legacy inline pins remain readable and empty pins the absence of rules.
+  lisa_cascade_fields:
+    owner: maplibui
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java
+    purpose: Managed field names retain only pinned selections if their snapshot is missing/corrupt; other editable draft fields remain independent.
   lisa_cascade_keys:
     owner: maplibui
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java

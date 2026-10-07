@@ -9,7 +9,7 @@ tests:
     type: automatic
     scope: [app, maplib, maplibui]
     command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.CascadingFormsTest"
-    expected: Native NGFP contractor/position/employee lists enforce both parents and clear both branches without auto-selection; cleared existing children become SQL NULL; rotation and durable recovery pin definitions and identities; historical values survive; invalid combinations block SQLite insertion.
+    expected: Native NGFP lists enforce both parents, clear branches with SQL NULL and preserve historical values; rotation/durable recovery verify immutable snapshots, large definitions produce small Bundle parcels, and corrupt snapshots retain selections while blocking Save.
   SMOKE-PROJECT-SCRIPTS:
     type: automatic
     scope: [app, maplib, maplibui]
