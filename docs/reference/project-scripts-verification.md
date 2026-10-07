@@ -10,37 +10,36 @@ related_code:
 
 # Project scripts — проверки и поставка
 
-Реализация подготовлена в matching ветках `codex/mobile-project-scripts` четырёх
-owners: maplib, maplibui, app, desktop `lisa`. Production APK ещё не выпущен.
-Порядок интеграции: maplib **Merge Commit** → maplibui **Merge Commit** → app
-pins на fetched remote merge commits и **Squash Merge** → desktop/активация →
-release version/APK matrix. До закрытия цепочки release APK не собирается и
-не публикуется. Текущие submodule pins Draft PR не являются merged dependencies.
+Реализация принадлежит maplib, maplibui, app и desktop `lisa`. Production APK
+не публикуется. Пользователь 7 октября разрешил слить накопившиеся изменения
+и собрать **Lisa Debug без изменения версии**: `3.1.2.23`, `versionCode 218`.
+Версии production Lisa/Belka остаются `3.1.2.27` / 221. Публикация APK не запрошена.
 
-## Матрица review и интеграции
+## Матрица интеграции, подготовленная перед merge
 
-Все четыре PR открыты как Draft от `geoglyth`; целевые ветки пока не содержат
-новый механизм. Строки ниже относятся к code commits, последующие docs-only
-коммиты этой же ветки их не заменяют.
+Инвентаризация всех owners выполнена после fetch: пять открытых PR, все от
+`geoglyth`, без дочерних PR. Easypicker и publisher не имеют открытых PR или
+неучтённых codex-веток. Отложенных строк нет. В desktop дополнительно входит
+независимый PR #160; он не должен потеряться при интеграции publisher.
 
-| Требование / owner | Code commit | PR / base | Зависимости и присутствие |
+| Требование / owner | Исходный code commit | PR / target | Зависимость и gate |
 |---|---|---|---|
-| Формат, изолированный runtime и native read API / maplib | `b208231be9ec3d77145fe74d75c42d3767350cb6` | [#40](https://github.com/GeonicalSys/android_maplib/pull/40), `master` | В task tip; Merge Commit первым |
-| Hooks формы, warning/block и pinned draft / maplibui | `6161a796890f9860600e81e8637ce85b627fee51` | [#28](https://github.com/GeonicalSys/android_maplibui/pull/28), `master` | В task tip; зависит от maplib #40; Merge Commit вторым |
-| Audit pilot, Application guard, интеграционные тесты / app | `c1d40646625cb05adb87707178bb00c576b6a244` | [#48](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/48), `my-maplibre` | В task tip; текущие review pins перечислены ниже; после merge заменить на fetched merge commits |
-| Publisher, portable collect/create/clone, UI / desktop | `e7ef358a1a9efb3c9d15e6062e221998a7a6cebb` | [#159](https://github.com/GeonicalSys/lisa/pull/159), `main` | В task tip; общий API v1; активация после app integration |
+| Формат, isolated runtime и read API / maplib | `b208231be9ec3d77145fe74d75c42d3767350cb6` | [#40](https://github.com/GeonicalSys/android_maplib/pull/40), `master` | Merge Commit `9b0aa6f1e05592d5e578e86ca0f4983f295eb9a7` уже получен через fetch; исходный tip является предком |
+| Hooks формы, warning/block и draft / maplibui | `6161a796890f9860600e81e8637ce85b627fee51` | [#28](https://github.com/GeonicalSys/android_maplibui/pull/28), `master` | После maplib; Merge Commit `04d61abee1e9dfa1eed245d7b195c6fa18c075f4` уже fetched; исходный tip является предком |
+| Audit pilot, Application guard, tests / app | `c1d40646625cb05adb87707178bb00c576b6a244` | [#48](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/48), `my-maplibre` | Pin двух fetched merge commits выше, Squash; после merge проверить tree/patch включение |
+| Publisher и portable collect/create/clone / desktop | `e7ef358a1a9efb3c9d15e6062e221998a7a6cebb` | [#159](https://github.com/GeonicalSys/lisa/pull/159), `main` | Общий API v1; Squash после app integration; сохранить также #160 |
+| T2 через установленный Chrome / desktop | `4c0d2fc3dc2b6fcefd511919c02a8261d93b25e5` | [#160](https://github.com/GeonicalSys/lisa/pull/160), `main` | Независимый Squash; проверить включение в общий desktop target |
 
-Текущие review pins app: maplib `f9f2d0facebe3763b0b6a120ed8899a52fb555df`,
-maplibui `6ea406bd7e978a54b9b06341383597df09abb4b4`. Это docs-only потомки
-code commits таблицы; runtime не изменён. Удалённые task heads опубликованы,
-но по-прежнему не merged. Манифесты модулей связывают настройки, кеш, draft pin,
-API, инвариант и smoke с центральными реестрами.
+App pins теперь указывают на **удалённые merge commits** библиотек, а не на
+незамерженные review heads. Деревья merged библиотек совпадают с проверенными
+review tips; добавлены только merge parents. Старые maplib #39, maplibui #27
+и app #47 включены по ancestry (`a247a16d`, `57e28a60`, `0b871f71`).
 
-Ранее согласованные maplib #39, maplibui #27 и app #47 уже слиты; их remote
-результаты `a247a16d`, `57e28a60`, `0b871f71` являются предками этих task tips.
-Новые четыре PR в этой задаче **не сливались**. Перед выпуском повторить fetch,
-инвентаризацию открытых PR/веток и проверку включения по Git; наличие этой
-таблицы не заменяет release closure audit.
+Перед готовностью APK повторно fetch всех owners и проверить каждую строку:
+ancestry для библиотек, tree/patch comparison для squash, точные app gitlinks,
+отсутствие ещё открытых обязательных PR. Только после этого собрать debug из
+слитого remote target и прочитать реальную package/version metadata из APK.
+Полная production version matrix остаётся gate отдельного release.
 
 ## Автоматические результаты, 2026-10-07
 
@@ -57,6 +56,7 @@ NDK 28.2.13676358 / CMake 3.22.1. Эмулятор Android 16 / API 36 / x86_64.
 | Belka Release Kotlin + Java compile | passed, без release APK assembly |
 | Native `ProjectScriptsTest` | 7 passed |
 | Native вместе с `RequiredFieldsTest` и `FormSaveRecoveryTest` | 14 passed, 0 failures/errors/skips |
+| Полный Android reliability CI до merge | [run 37617250719](https://github.com/GeonicalSys/nextgis-mobile-custom/actions/runs/37617250719), success; полный reliability package |
 | `llvm-readelf -lW` QuickJS | LOAD alignment `0x4000` у arm64-v8a, armeabi-v7a, x86, x86_64 |
 | Desktop fake-NGW publication/clone/mobile-config tests | 64 passed, включая 9 новых package/delivery тестов |
 | QGIS 3 dialogs | 3.44.14-Solothurn / Qt 5.15.13 / PyQt 5.15.11, passed |
