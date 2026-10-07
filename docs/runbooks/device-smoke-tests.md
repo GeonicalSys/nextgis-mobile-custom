@@ -1,7 +1,7 @@
 ---
 title: Ручные проверки на Android-устройстве
 type: runbook
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -244,3 +244,13 @@ FIX/FLOAT/Auto, затем отключение и повторное подкл
 добавляет BESTPOSB и не меняет УКВ/поправки/сохранённые настройки.
 Автоматизированные GATT/session checks на API 26/36 прошли; этот физический
 cold-start smoke ещё не выполнен.
+
+## Project scripts
+
+На тестовом проекте выбрать подрядчика с замечанием в другом типе аудита за
+последний месяц; проверить выбор, Save/Return, отсутствие повторов после OK,
+новую историю перед Save, rotate/draft pin и быстрые смены выбора. Прервать
+скачивание нового ZIP: старый пакет остаётся, сбой видим. Проверить open/closed
+при недоступном слое, смену аккаунта/карты, UTF-8, loop/OOM и новый hook после
+восстановления sandbox. Не сохранять тестовые объекты в подключённый PostGIS.
+[Результаты](../reference/project-scripts-verification.md).

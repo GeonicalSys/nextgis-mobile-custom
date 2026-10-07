@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "api_version": 1,
+  "id": "contractor-audit",
+  "version": "1.0.0",
+  "capabilities": [
+    "gis.query",
+    "time.monthWindow"
+  ],
+  "layers": {
+    "audit_vyvozka": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    },
+    "audit_roads": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    },
+    "audit_logging": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    },
+    "audit_forestry": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    },
+    "audit_survey": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    },
+    "audit_office": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    },
+    "audit_security": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    },
+    "audit_transport": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    },
+    "audit_fire": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    },
+    "audit_terminal": {
+      "read_fields": [
+        "contractor",
+        "issue",
+        "date_audit"
+      ]
+    }
+  },
+  "hooks": [
+    {
+      "id": "audit_vyvozka-prior-issues",
+      "layer": "audit_vyvozka",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    },
+    {
+      "id": "audit_roads-prior-issues",
+      "layer": "audit_roads",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    },
+    {
+      "id": "audit_logging-prior-issues",
+      "layer": "audit_logging",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    },
+    {
+      "id": "audit_forestry-prior-issues",
+      "layer": "audit_forestry",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    },
+    {
+      "id": "audit_survey-prior-issues",
+      "layer": "audit_survey",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    },
+    {
+      "id": "audit_office-prior-issues",
+      "layer": "audit_office",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    },
+    {
+      "id": "audit_security-prior-issues",
+      "layer": "audit_security",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    },
+    {
+      "id": "audit_transport-prior-issues",
+      "layer": "audit_transport",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    },
+    {
+      "id": "audit_fire-prior-issues",
+      "layer": "audit_fire",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    },
+    {
+      "id": "audit_terminal-prior-issues",
+      "layer": "audit_terminal",
+      "entry": "scripts/prior_audits.js",
+      "events": [
+        "on_open",
+        "on_field_change",
+        "before_save"
+      ],
+      "fields": [
+        "contractor"
+      ]
+    }
+  ]
+}

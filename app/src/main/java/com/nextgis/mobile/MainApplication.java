@@ -96,6 +96,10 @@ public class MainApplication extends GISApplication
 
     @Override
     public void onCreate() {
+        if (com.nextgis.maplib.scripts.ProjectScriptProcess.isSandbox(this)) {
+            super.onCreate();
+            return;
+        }
         // set userAgent info
         try {
             NetworkUtil.setUserAgentPrefix(this, "NextGIS-Mobile/" + BuildConfig.VERSION_NAME,

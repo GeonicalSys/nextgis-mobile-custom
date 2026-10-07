@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-09-16
+last_verified: 2026-10-07
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -164,3 +164,11 @@ version, artifact hash и signing certificate. Совместимость с с�
 
 Не делать вывод о совместимости по plugin mirror, совпадающему имени слоя,
 успешному desktop login или одной только Android-сборке.
+
+## Доставка правил проекта
+
+`stand_project` публикует source-only ZIP во вложение нового native vector_layer
+и ссылку в Collector. Android не читает desktop-диск: `maplib` владеет форматом,
+изолированным QuickJS и native API, `maplibui` — формой, `app` — lifecycle guard.
+[Project scripts](project-scripts.md) и `ECO-PROJECT-SCRIPTS` фиксируют границу.
+GIS/расчётные функции расширяются постепенно в APK, без arbitrary SQL/сети в JS.

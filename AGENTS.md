@@ -188,3 +188,13 @@ registry/docs. Общую карту отличий открывай в
   проверки.
 - Не копируй один контракт в несколько мест: human explanation хранится в
   Markdown, точный ID/связь — в `registry/`, локальная навигация — в manifest.
+
+## Пакеты правил проекта
+
+Перед изменением runtime/publisher/hooks читать `docs/architecture/project-scripts.md`
+и `docs/guides/project-scripts-user-guide.md`. Базовые GIS/расчётные функции и
+нормативные таблицы принадлежат APK, прикладной пакет только вызывает разрешённый
+versioned API. Добавлять постепенно. Не объявлять planned spatial/table/write API
+работающими. Формат общий с desktop stand_project; source-only ZIP, отдельный UID,
+ограниченные grants и pinned draft version обязательны. Старые пакеты не удалять
+как кеш без решения по черновикам. Порядок merge: maplib → maplibui → app → desktop.

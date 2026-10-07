@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -115,3 +115,11 @@ shared-catalog migration, чтобы исходные папки оставал�
 полную проверку capability и подписи перед установкой.
 Продолжение установки привязано к результату внешнего Android-экрана;
 переключение фокуса между собственными диалогами не считается возвратом.
+
+## Project scripts в обоих брендах
+
+Один изолированный runtime используется Lisa/Belka. Он не добавляет account type,
+application ID или версию APK и не читает AccountManager в isolated UID. Версия
+пакета из Collector независима от версии приложения; неподдерживаемый API/capability
+отклоняется. Автоматические Sentry app-start metrics отключены из-за вызова до
+sandbox guard; crash reporting основного приложения сохранён.

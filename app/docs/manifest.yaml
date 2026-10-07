@@ -9,6 +9,8 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
+    responsibility: Skip normal initialization under the isolated script UID.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/RequiredFieldsTest.java
     responsibility: Exercise standard and NGFP required controls, whitespace/default placeholders, inactive tabs, dependent choices, Back Save, retained draft geometry/photos, optional placeholders and existing omitted fields against real SQLite without NGW writes.
   - path: app/src/main/java/com/nextgis/mobile/location/TrackPowerWarning.kt

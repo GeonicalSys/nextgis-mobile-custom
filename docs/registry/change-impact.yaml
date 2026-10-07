@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: PROJECT-SCRIPTS
+    paths: [maplib/src/main/java/com/nextgis/maplib/scripts/**, maplib/src/main/cpp/**, maplib/src/main/aidl/**, maplibui/src/main/java/com/nextgis/maplibui/util/ProjectScript*.java, examples/project-scripts/**]
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/project-scripts.md, docs/guides/project-scripts-user-guide.md]
+    invariants: [INV-PROJECT-SCRIPTS, INV-CRASH-DRAFT-RECOVERY, INV-LOCAL-WRITE-COMMIT]
+    must_update_docs: [docs/architecture/project-scripts.md, docs/guides/project-scripts-user-guide.md, docs/registry/config-keys.yaml, docs/registry/ecosystem.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-PROJECT-SCRIPTS]
+    strict_docs: true
   - id: REQUIRED-FIELDS
     paths: [maplib/src/main/java/com/nextgis/maplib/datasource/Field.java, maplib/src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java, maplibui/src/main/java/com/nextgis/maplibui/util/RequiredFieldValidation.java, maplibui/src/main/java/com/nextgis/maplibui/util/RequiredFieldUi.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Tabs.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/DoubleCombobox.java, app/src/androidTest/java/com/nextgis/mobile/reliability/RequiredFieldsTest.java]
     owners: [maplib, maplibui, app]
