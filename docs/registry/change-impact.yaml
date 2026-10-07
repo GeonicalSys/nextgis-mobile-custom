@@ -1,5 +1,21 @@
 schema_version: 1
 triggers:
+  - id: LAYER-PENDING-INDICATOR
+    paths: [maplibui/src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java, maplibui/src/main/res/layout/row_layer.xml, app/src/androidTest/java/com/nextgis/mobile/reliability/LayerPendingChangesTest.java]
+    owners: [app, maplibui]
+    read: [docs/architecture/ngw-sync-and-storage.md]
+    invariants: [INV-SYNC-ACCOUNT-ISOLATION]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, maplibui/docs/README.md, app/docs/README.md]
+    verify: [AUTO-MAPLIBUI-ASSEMBLE, SMOKE-LAYER-PENDING-INDICATOR]
+    strict_docs: true
+  - id: CASCADING-FORM-LISTS
+    paths: [maplib/src/main/java/com/nextgis/maplib/forms/**, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java, maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java, app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java]
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
+    invariants: [INV-CASCADING-FORM-LISTS, INV-REQUIRED-FIELDS, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md, docs/registry/config-keys.yaml, docs/registry/ecosystem.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-CASCADING-FORM-LISTS, SMOKE-REQUIRED-FIELDS]
+    strict_docs: true
   - id: PROJECT-SCRIPTS
     paths: [maplib/src/main/java/com/nextgis/maplib/scripts/**, maplib/src/main/cpp/**, maplib/src/main/aidl/**, maplibui/src/main/java/com/nextgis/maplibui/util/ProjectScript*.java, examples/project-scripts/**]
     owners: [maplib, maplibui, app]

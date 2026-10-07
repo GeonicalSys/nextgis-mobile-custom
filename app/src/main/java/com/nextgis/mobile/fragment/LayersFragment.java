@@ -397,6 +397,7 @@ public class LayersFragment
         if (mapFragmentForInit == null || mapFragmentForInit.getMMapRef() == null || mapFragmentForInit.getMMapRef().get() == null)
             return;
         mListAdapter = new LayersListAdapter(activityRef.get(), mapFragmentForInit.getMMapRef().get());
+        mListAdapter.setOnLayerDataChangedListener(this::refreshPendingChangesBadge);
         mListAdapter.setDrawer(drawerLayout);
         mListAdapter.setOnPencilClickListener(new View.OnClickListener() {
             @Override
@@ -652,14 +653,10 @@ public class LayersFragment
     }
 
     /**
-     * Dot on the sync button when the map has local NGW/vector edits not yet pushed.
+     * One worker snapshot drives the sync button and the corresponding layer rows.
      */
     protected void refreshPendingChangesBadge() {
         if (mSyncPendingBadge == null) {
-            return;
-        }
-        if (mSyncButton == null || mSyncButton.getVisibility() != View.VISIBLE) {
-            mSyncPendingBadge.setVisibility(View.GONE);
             return;
         }
         if (mBadgeQuery != null) {
@@ -673,19 +670,23 @@ public class LayersFragment
         WeakReference<LayersFragment> owner = new WeakReference<>(this);
         android.os.Handler handler = mBadgeHandler;
         mBadgeQuery = BADGE_EXECUTOR.submit(() -> {
-            boolean pending = false;
+            java.util.Set<Integer> pending = new java.util.HashSet<>();
+            boolean complete = false;
             try {
-                pending = map instanceof LayerGroup && ((LayerGroup) map).isChanges();
+                if (map instanceof LayerGroup) collectPendingLayers((LayerGroup) map, pending);
+                complete = true;
             } catch (RuntimeException ex) {
                 HyperLog.w(Constants.TAG, "Pending sync badge query failed", ex);
             }
-            boolean result = pending;
+            java.util.Set<Integer> result = complete ? pending : null;
             handler.post(() -> {
                 LayersFragment fragment = owner.get();
                 if (fragment == null || fragment.mBadgeGeneration != generation) return;
                 fragment.mBadgeQuery = null;
-                if (fragment.isAdded() && fragment.mSyncPendingBadge != null && app.getMap() == map) {
-                    fragment.mSyncPendingBadge.setVisibility(result ? View.VISIBLE : View.GONE);
+                if (result != null && fragment.isAdded() && fragment.mSyncPendingBadge != null && app.getMap() == map) {
+                    boolean show = fragment.mSyncButton != null && fragment.mSyncButton.getVisibility() == View.VISIBLE;
+                    fragment.mSyncPendingBadge.setVisibility(show && !result.isEmpty() ? View.VISIBLE : View.GONE);
+                    if (fragment.mListAdapter != null) fragment.mListAdapter.setPendingChanges(result);
                 }
                 if (fragment.mBadgeRefreshPending) {
                     fragment.mBadgeRefreshPending = false;
@@ -693,6 +694,17 @@ public class LayersFragment
                 }
             });
         });
+    }
+
+    private static boolean collectPendingLayers(LayerGroup group, java.util.Set<Integer> result) {
+        boolean any = false;
+        for (com.nextgis.maplib.api.ILayer layer : group.getLayers()) {
+            boolean pending = layer instanceof LayerGroup
+                    ? collectPendingLayers((LayerGroup) layer, result)
+                    : layer instanceof VectorLayer && ((VectorLayer) layer).isChanges();
+            if (pending) { result.add(layer.getId()); any = true; }
+        }
+        return any;
     }
 
     private void storePendingSyncError(String error) {
@@ -1003,6 +1015,7 @@ public class LayersFragment
         }
 
         if (mListAdapter != null) {
+            mListAdapter.setOnLayerDataChangedListener(null);
             mListAdapter.setOnLayerEditListener(null);
             mListAdapter.setOnPencilClickListener(null);
 //            mListAdapter.onPause(); // if exists

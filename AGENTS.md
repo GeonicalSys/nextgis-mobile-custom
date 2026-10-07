@@ -191,6 +191,13 @@ registry/docs. Общую карту отличий открывай в
 
 ## Пакеты правил проекта
 
+Для зависимых списков сначала читать `docs/architecture/cascading-form-lists.md`
+и пользовательское руководство. Граф/таблицы находятся в NGFP
+`meta.json.lisa_form_dependencies`; фильтрация встроена в APK, без JS/SQL/сети.
+Сохранять key отдельно от value/label, обе ветви аудита, SQL NULL при очистке,
+pin в Bundle/durable draft и неизменные исторические значения. Локальные ID
+в этом блоке никогда не remap-ить как NGW resource ID.
+
 Перед изменением runtime/publisher/hooks читать `docs/architecture/project-scripts.md`
 и `docs/guides/project-scripts-user-guide.md`. Базовые GIS/расчётные функции и
 нормативные таблицы принадлежат APK, прикладной пакет только вызывает разрешённый

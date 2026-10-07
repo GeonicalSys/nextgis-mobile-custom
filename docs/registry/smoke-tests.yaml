@@ -1,5 +1,15 @@
 schema_version: 1
 tests:
+  SMOKE-LAYER-PENDING-INDICATOR:
+    type: automatic
+    scope: [app, maplibui]
+    command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.LayerPendingChangesTest"
+    expected: Only the owning NGW layer gets a dot from the same worker snapshot as the sync button; recycled rows, rotation and deletion-only outbox preserve the right state; successful acknowledgment clears both indicators.
+  SMOKE-CASCADING-FORM-LISTS:
+    type: automatic
+    scope: [app, maplib, maplibui]
+    command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.CascadingFormsTest"
+    expected: Native NGFP contractor/position/employee lists enforce both parents and clear both branches without auto-selection; cleared existing children become SQL NULL; rotation and durable recovery pin definitions and identities; historical values survive; invalid combinations block SQLite insertion.
   SMOKE-PROJECT-SCRIPTS:
     type: automatic
     scope: [app, maplib, maplibui]

@@ -1,5 +1,19 @@
 schema_version: 1
 invariants:
+  INV-CASCADING-FORM-LISTS:
+    title: Native dependent lists preserve parent identity, drafts and historical attributes
+    owners: [maplib, maplibui, app]
+    statement: >
+      The optional versioned NGFP namespace is declarative offline data. Parent filters
+      compare stable keys with AND semantics in an acyclic graph of arbitrary depth.
+      An explicit parent change clears all descendants and writes SQL NULL; no first
+      item or remembered value is selected. Immutable definitions, selected keys and
+      original values survive rotation and durable recovery. Save rejects invalid new
+      combinations before feature/attachment writes; unchanged historical values survive.
+      Existing forms without the namespace retain their legacy behavior.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-CASCADING-FORM-LISTS, SMOKE-REQUIRED-FIELDS]
+    must_update_docs: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
   INV-PROJECT-SCRIPTS:
     title: Project rules execute under an isolated UID through bounded read-only grants
     owners: [maplib, maplibui, app]
