@@ -105,6 +105,19 @@ remap-ятся. Контракт должен сохраняться при сл
 root pins и Squash app → Squash desktop. Версии APK/плагина в этой задаче не
 поднимаются; выпуск и активация на рабочих ресурсах — отдельное действие.
 
+Для Debug без изменения версии закрыты library PR
+[maplib #41](https://github.com/GeonicalSys/android_maplib/pull/41) и
+[maplibui #29](https://github.com/GeonicalSys/android_maplibui/pull/29).
+Приложение закрепляет fetched remote Merge Commits
+`a16f3fd17c427439a9b385a86bfa064964f34a9b` и
+`2c43fc4fdbef274e3e222a48ddb9a34c5f21b7bd`: исходные проверенные tips являются
+их предками, деревья библиотек совпадают. App
+[PR #49](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/49) направлен
+в `my-maplibre`, desktop
+[PR #163](https://github.com/GeonicalSys/lisa/pull/163) — в `main`.
+Сборка выполняется после обоих Squash Merge и сверки удалённых целевых веток;
+версия Lisa Debug остаётся `3.1.2.23` / `218`. APK и ZIP плагина не публикуются.
+
 Проверки: `CascadingListsTest` (включая цепочку 83 уровней),
 `CascadingFormsTest` (реальные NGFP/SQLite/draft/recreate на изолированном Android),
 тесты сохранности метаданных и guard Access, тест clone в обоих QGIS runtime.
