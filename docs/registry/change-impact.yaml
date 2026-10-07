@@ -17,7 +17,7 @@ triggers:
     verify: [AUTO-MAPLIBUI-ASSEMBLE, SMOKE-LAYER-PENDING-INDICATOR]
     strict_docs: true
   - id: CASCADING-FORM-LISTS
-    paths: [maplib/src/main/java/com/nextgis/maplib/forms/**, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java, maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java, app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java]
+    paths: [maplib/src/main/java/com/nextgis/maplib/forms/**, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormElements.java, maplibui/src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java, maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/DoubleCombobox.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Tabs.java, app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java]
     owners: [maplib, maplibui, app]
     read: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
     invariants: [INV-CASCADING-FORM-LISTS, INV-REQUIRED-FIELDS, INV-CRASH-DRAFT-RECOVERY]

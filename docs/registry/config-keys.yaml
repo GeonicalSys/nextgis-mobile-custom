@@ -465,7 +465,7 @@ form_dependencies:
   lisa_form_dependencies:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java
-    purpose: Optional NGFP meta.json schema_version 1 shared string tables and acyclic field rules with stable keys and AND parent filters; no scripts, SQL, runtime queries or layer schema change.
+    purpose: Optional NGFP meta.json schema_version 1 shared string tables and acyclic field rules with stable keys and AND parent filters; managed legacy pairs render as independent labelled fields without changing the JSON, keys or schema.
   lisa_cascade_pin:
     owner: maplibui
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java

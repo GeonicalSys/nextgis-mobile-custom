@@ -199,6 +199,8 @@ Save gate обязателен для toolbar и Back Save; условия вы�
 `lisa_required_pin` в owning layer/form_rules и durable draft; ошибка pin
 блокирует запись. В clone запрещён remap всего namespace. Внешние Tabs закреплены
 над полями; свайпы не должны перехватывать ввод, подпись и собственные жесты.
+Проверять повторные переходы над включёнными списками, checkbox, коротким
+комментарием и пустой областью, а также vertical scroll и выделение текста.
 
 Для зависимых списков сначала читать `docs/architecture/cascading-form-lists.md`
 и пользовательское руководство. Граф/таблицы находятся в NGFP
@@ -206,6 +208,9 @@ Save gate обязателен для toolbar и Back Save; условия вы�
 Сохранять key отдельно от value/label, обе ветви аудита, SQL NULL при очистке,
 pin в Bundle/durable draft и неизменные исторические значения. Локальные ID
 в этом блоке никогда не remap-ить как NGW resource ID.
+Управляемые legacy double_combobox отображаются отдельными полями через
+CascadingFormElements. Не менять исходный JSON и field keys при этом
+преобразовании; новые формы строить из обычных combobox и общего графа.
 
 Перед изменением runtime/publisher/hooks читать `docs/architecture/project-scripts.md`
 и `docs/guides/project-scripts-user-guide.md`. Базовые GIS/расчётные функции и

@@ -17,8 +17,10 @@ invariants:
       item or remembered value is selected. Immutable definitions, selected keys and
       original values survive rotation and durable recovery. Save rejects invalid new
       combinations before feature/attachment writes; unchanged historical values survive.
+      Managed legacy pairs render as separate labelled full-width fields with touch spacing;
+      this presentation change preserves source JSON, field names and pinned draft keys.
       Existing forms without the namespace retain their legacy behavior.
-    related_code: [maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java]
+    related_code: [maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormElements.java]
     verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-CASCADING-FORM-LISTS, SMOKE-REQUIRED-FIELDS]
     must_update_docs: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
   INV-PROJECT-SCRIPTS:

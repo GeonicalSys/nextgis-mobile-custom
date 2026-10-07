@@ -267,6 +267,91 @@ public class CascadingFormsTest {
             }
         }
     }
+    @Test public void managedLegacyPairsRenderAsSeparateFullWidthFields() throws Exception {
+        try (Fixture f=new Fixture(false);ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+            choose(s,"contractor",1);
+            s.onActivity(a -> {
+                for(String name:new String[]{"jobtitle1","eployee1","jobtitle2","employee2"})
+                    assertTrue("Each cascade field must be a normal independent combobox: "+name,
+                            controls(a).get(name) instanceof com.nextgis.maplibui.formcontrol.Combobox);
+                Spinner role=spinner(a,"jobtitle1"),person=spinner(a,"eployee1");
+                int[] roleAt=new int[2],personAt=new int[2];role.getLocationOnScreen(roleAt);person.getLocationOnScreen(personAt);
+                float density=a.getResources().getDisplayMetrics().density;
+                assertTrue(role.getHeight()>=48*density);assertTrue(person.getHeight()>=48*density);
+                assertTrue("Adjacent controls need a visible gap",personAt[1]-(roleAt[1]+role.getHeight())>=12*density);
+                assertEquals(((View)role.getParent()).getWidth(),role.getWidth());
+                assertEquals(role.getWidth(),person.getWidth());
+            });
+            choose(s,"jobtitle1",1);choose(s,"eployee1",1);s.recreate();
+            s.onActivity(a -> assertEquals("Alex",a.getCascadingLists().value("eployee1")));
+        }
+    }
+    @Test public void swipesWorkAcrossSelectorsCheckboxCommentsAndBlankSpace() throws Exception {
+        try(Fixture f=new Fixture(false)) {
+            navigationForm(f);
+            try(ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                s.onActivity(a -> {
+                    android.widget.LinearLayout page=(android.widget.LinearLayout)tabs(a).getPageLayouts().get(1);
+                    android.widget.CheckBox check=new android.widget.CheckBox(a);check.setText("Check stays unchanged");check.setChecked(true);check.setTag("swipe-check");page.addView(check,1);
+                    android.widget.EditText edit=new android.widget.EditText(a);edit.setText("Retained comment");edit.setSingleLine(false);edit.setMinLines(2);edit.setTag("swipe-comment");page.addView(edit,2);
+                });
+                choose(s,"contractor",1);choose(s,"jobtitle1",1);choose(s,"eployee1",1);
+                for(int i=0;i<5;i++) {
+                    swipe(s,true,a -> spinner(a,"contractor"));
+                    s.onActivity(a -> assertEquals(1,tabs(a).getValue()));
+                    swipe(s,false,a -> tabs(a).findViewWithTag("swipe-check"));
+                    s.onActivity(a -> assertEquals(0,tabs(a).getValue()));
+                    swipe(s,true,a -> spinner(a,"jobtitle1"));
+                    swipe(s,false,a -> tabs(a).findViewWithTag("swipe-comment"));
+                    s.onActivity(a -> assertEquals(0,tabs(a).getValue()));
+                }
+                s.onActivity(a -> header(a).getTabAt(1).select());
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                // The ScrollView centre is below the short page, outside Tabs' own bounds.
+                s.onActivity(a -> ((android.widget.LinearLayout)tabs(a).getPageLayouts().get(1)).removeView(signature(tabs(a).getPageLayouts().get(1))));
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                swipe(s,false,a -> a.findViewById(R.id.form_scroll));
+                s.onActivity(a -> {
+                    assertEquals("Empty area belongs to page navigation too",0,tabs(a).getValue());
+                    View page=tabs(a).getPageLayouts().get(1);
+                    assertTrue(((android.widget.CheckBox)page.findViewWithTag("swipe-check")).isChecked());
+                    assertEquals("Retained comment",((android.widget.EditText)page.findViewWithTag("swipe-comment")).getText().toString());
+                    assertEquals("Alex",a.getCascadingLists().value("eployee1"));
+                });
+            }
+        }
+    }
+    @Test public void verticalScrollAndSelectedCommentKeepTheirOwnGestures() throws Exception {
+        try(Fixture f=new Fixture(false)) {
+            navigationForm(f);
+            try(ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                float[] point=new float[2];
+                s.onActivity(a -> {
+                    View scroll=a.findViewById(R.id.form_scroll);int[] at=new int[2];scroll.getLocationOnScreen(at);
+                    point[0]=at[0]+scroll.getWidth()/2f;point[1]=at[1]+scroll.getHeight()*.8f;
+                });
+                Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();long down=SystemClock.uptimeMillis();
+                for(int i=0;i<=12;i++) {
+                    MotionEvent event=MotionEvent.obtain(down,SystemClock.uptimeMillis(),i==0?MotionEvent.ACTION_DOWN:i==12?MotionEvent.ACTION_UP:MotionEvent.ACTION_MOVE,point[0]+i,point[1]-i*20,0);
+                    event.setSource(android.view.InputDevice.SOURCE_TOUCHSCREEN);instrumentation.sendPointerSync(event);event.recycle();SystemClock.sleep(12);
+                }
+                instrumentation.waitForIdleSync();
+                s.onActivity(a -> {
+                    assertEquals(0,tabs(a).getValue());assertTrue(((ScrollView)a.findViewById(R.id.form_scroll)).getScrollY()>0);
+                    android.widget.LinearLayout page=(android.widget.LinearLayout)tabs(a).getPageLayouts().get(1);
+                    android.widget.EditText edit=new android.widget.EditText(a);edit.setSingleLine(false);edit.setMinLines(2);edit.setText("Selected comment remains");edit.setTag("selected-comment");page.addView(edit,0);
+                    header(a).getTabAt(1).select();
+                });
+                instrumentation.waitForIdleSync();
+                s.onActivity(a -> ((android.widget.EditText)tabs(a).findViewWithTag("selected-comment")).setSelection(0,8));
+                swipe(s,false,a -> tabs(a).findViewWithTag("selected-comment"));
+                s.onActivity(a -> {
+                    assertEquals("Selecting text must not change tabs",1,tabs(a).getValue());
+                    assertEquals("Selected comment remains",((android.widget.EditText)tabs(a).findViewWithTag("selected-comment")).getText().toString());
+                });
+            }
+        }
+    }
     @Test public void threeLevelListsAndBothBranchesResetWithoutAutoSelecting() throws Exception {
         try (Fixture f=new Fixture(false);ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
             s.onActivity(a -> { assertNull(a.getCascadingLists().value("contractor"));assertFalse(spinner(a,"jobtitle1").isEnabled()); });

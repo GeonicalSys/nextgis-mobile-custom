@@ -12,7 +12,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java
     responsibility: Verify dynamic requirements, inactive tabs, toolbar and Back Save, immutable draft pins and corrupt snapshot failures before SQLite writes.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
-    responsibility: Verify public default-form metadata launch, actual dependent controls, pinned tab navigation, native swipes and signature gesture exclusion.
+    responsibility: Verify default-form metadata launch, independent full-width cascade controls and spacing, repeated native swipes over enabled fields and blank space, vertical scroll, text selection and signature exclusion.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerPendingChangesTest.java
     responsibility: Exercise real drawer/worker with synthetic SQLite edits, deletion-only outbox, recycled rows and rotation; confirm row and global indicators clear together after acknowledgment.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java

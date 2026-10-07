@@ -9,7 +9,7 @@ tests:
     type: automatic
     scope: [app, maplibui]
     command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.CascadingFormsTest"
-    expected: Ordinary default-form launch supplies matching metadata, outer tab headers remain visible after vertical scrolling, horizontal flings preserve choices/recreation and signature strokes remain within the signature.
+    expected: Default-form launch supplies matching metadata and outer headers stay visible; repeated swipes over enabled selectors, checkboxes, short comments and blank space preserve data; vertical drags, selected text and signature strokes do not navigate.
   SMOKE-LAYER-PENDING-INDICATOR:
     type: automatic
     scope: [app, maplibui]
@@ -19,7 +19,7 @@ tests:
     type: automatic
     scope: [app, maplib, maplibui]
     command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.CascadingFormsTest"
-    expected: Native NGFP lists enforce both parents, clear branches with SQL NULL and preserve historical values; rotation/durable recovery verify immutable snapshots, large definitions produce small Bundle parcels, and corrupt snapshots retain selections while blocking Save.
+    expected: Native lists render as independent labelled full-width fields with visible gaps, enforce both parents, clear branches with SQL NULL and preserve historical values; rotation/durable recovery verify immutable snapshots, large definitions produce small Bundle parcels, and corrupt snapshots retain selections while blocking Save.
   SMOKE-PROJECT-SCRIPTS:
     type: automatic
     scope: [app, maplib, maplibui]
