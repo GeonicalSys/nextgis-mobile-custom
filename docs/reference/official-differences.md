@@ -25,6 +25,12 @@ related_code:
 
 ## Основа сравнения
 
+Указатели сабмодулей 8 октября 2026 закреплены на merge-коммитах каталогов
+карточек для отчёта: maplib `1fd2b96baa1a1a03d7a01695619cb797054fcc9a`,
+maplibui `e7d1bb98d7598c3f5b03e3f985ed55e3a892ace7`, easypicker
+`d6327f3de7a6d488a18d1896f8c97c60cd28d2a8`. Это служебные инструкции агентам,
+не отличие от официального приложения, поэтому в список ниже не входит.
+
 При закрытии library PRs 8 октября повторно проверены official app master
 `f11d38f77e4caf1b569526c5f620b2ec513c5f9d`, maplib master
 `b8f3e3e6bf4bad56f8ce910c885ea6af1b898998` и maplibui master
