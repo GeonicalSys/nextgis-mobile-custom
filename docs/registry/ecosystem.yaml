@@ -136,4 +136,5 @@ boundaries:
     verify: [AUTO-DOCS-VALIDATE]
 
 # Consumer-only: split legacy cascade captions prefer NGFP fields[].display_name over layer alias.
+# Consumer-only: category creation reads existing local styles and NGFP dictionaries; publisher formats and field schemas are unchanged.
 # Multi-project sync changes local execution/storage ownership; NGW/desktop package formats are unchanged.

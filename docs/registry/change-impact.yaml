@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: FEATURE-TYPE-CREATION
+    paths: [maplibui/src/main/java/com/nextgis/maplibui/dialog/ChooseFeatureTypeDialog.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java, maplibui/src/main/res/layout/row_feature_type.xml]
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/feature-type-creation.md, docs/architecture/cascading-form-lists.md, docs/architecture/crash-recovery.md]
+    invariants: [INV-FEATURE-TYPE-CREATION, INV-CASCADING-FORM-LISTS, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs: [docs/architecture/feature-type-creation.md, docs/guides/form-behavior-user-guide.md, docs/reference/official-differences.md]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-FEATURE-TYPE-CREATION]
+    strict_docs: true
   - id: ERROR-REPORTING
     paths: [app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java, app/src/main/java/com/nextgis/mobile/util/Diagnostics*.java, app/src/main/java/com/nextgis/mobile/util/CustomLogMessageFormat.java, app/src/main/java/com/nextgis/mobile/MainApplication.java, app/src/androidTest/java/com/nextgis/mobile/util/Diagnostics*.java, tools/verify-diagnostic-delivery.ps1]
     owners: [app]

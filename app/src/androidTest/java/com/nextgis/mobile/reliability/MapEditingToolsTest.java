@@ -123,6 +123,112 @@ public class MapEditingToolsTest {
         return ((MaplibreMapInteraction) activity.getMapFragment()).getMode();
     }
 
+    @Test public void layerChoiceOffersCategoryBeforeSketchAndHandsDefaultsToRealForm() throws Exception {
+        scenario.onActivity(activity -> {
+            try {
+                MapDrawable map=(MapDrawable)app.getMap();
+                VectorLayerUI layer=new VectorLayerUI(app,new File(map.getPath(),"type_"+UUID.randomUUID().toString().replace("-","")));
+                layer.setName("Object type test");map.addLayer(layer);layers.add(layer);
+                layer.create(GeoConstants.GTPoint,java.util.Arrays.asList(
+                        new com.nextgis.maplib.datasource.Field(GeoConstants.FTString,"classobj","Class"),
+                        new com.nextgis.maplib.datasource.Field(GeoConstants.FTString,"typeobj","Type")));
+                layer.setIsEditable(true);layer.setVisible(false);
+                org.json.JSONObject parent=new org.json.JSONObject().put("name","field").put("alias","Field points")
+                        .put("values",new org.json.JSONArray().put(new org.json.JSONObject().put("name","tree").put("alias","Tree")));
+                org.json.JSONArray form=new org.json.JSONArray().put(new org.json.JSONObject().put("type","double_combobox")
+                        .put("attributes",new org.json.JSONObject().put("field_level1","classobj").put("field_level2","typeobj")
+                                .put("last",true).put("values",new org.json.JSONArray().put(parent))));
+                java.nio.file.Files.write(new File(layer.getPath(),"form.json").toPath(),form.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                java.nio.file.Files.write(new File(layer.getPath(),"ngfp_meta.json").toPath(),"{}".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                com.nextgis.maplib.display.SimpleMarkerStyle symbol=new com.nextgis.maplib.display.SimpleMarkerStyle();
+                symbol.setColor(android.graphics.Color.RED);
+                com.nextgis.maplib.display.FieldStyleRule rule=new com.nextgis.maplib.display.FieldStyleRule(layer);
+                rule.setKey("typeobj");rule.setStyle("tree",symbol);
+                layer.setRenderer(new com.nextgis.maplib.display.RuleFeatureRenderer(layer,rule,symbol));map.save();
+                activity.getMapFragment().onFinishChooseLayerDialog(MapFragment.EDIT_LAYER,layer,false,false);
+                assertEquals(MapFragment.MODE_NORMAL,mode(activity));
+            } catch(Exception error) { throw new AssertionError(error); }
+        });
+        AtomicBoolean ready=new AtomicBoolean();
+        long deadline=android.os.SystemClock.uptimeMillis()+20000;
+        while(!ready.get() && android.os.SystemClock.uptimeMillis()<deadline) {
+            scenario.onActivity(activity -> {
+                androidx.fragment.app.DialogFragment dialog=(androidx.fragment.app.DialogFragment)activity.getMapFragment()
+                        .getChildFragmentManager().findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                if(dialog==null || dialog.getDialog()==null) return;
+                android.widget.ListView list=((androidx.appcompat.app.AlertDialog)dialog.getDialog()).getListView();
+                ready.set(list!=null && list.getCount()==1 && list.getChildCount()==1);
+            });
+            if(!ready.get())Thread.sleep(40);
+        }
+        assertTrue("Category did not load",ready.get());
+        android.app.Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();
+        android.app.Instrumentation.ActivityMonitor monitor=instrumentation.addMonitor(
+                com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(),null,false);
+        com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity opened=null;
+        try {
+            scenario.onActivity(activity -> {
+                androidx.fragment.app.DialogFragment dialog=(androidx.fragment.app.DialogFragment)activity.getMapFragment()
+                        .getChildFragmentManager().findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                android.widget.ListView list=((androidx.appcompat.app.AlertDialog)dialog.requireDialog()).getListView();
+                android.widget.ImageView symbol=list.getChildAt(0).findViewById(com.nextgis.maplibui.R.id.ivIcon);
+                assertNotNull(symbol.getDrawable());
+                list.performItemClick(list.getChildAt(0),0,0);
+                assertEquals(MapFragment.MODE_EDIT,mode(activity));
+                assertNotNull(activity.getMapFragment().getEditLayerOverlay().getSelectedFeatureGeometry());
+                com.nextgis.maplibui.util.GeometryEditDraftStore.Snapshot draft=
+                        com.nextgis.maplibui.util.GeometryEditDraftStore.load(app);
+                assertNotNull(draft);
+                android.os.Bundle defaults=com.nextgis.maplibui.util.FeatureTypeDefaults.decode(draft.initialValues);
+                assertEquals("field",defaults.getString(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey("classobj")));
+                assertEquals("tree",defaults.getString(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey("typeobj")));
+                assertTrue(layers.get(0).isVisible());
+                assertTrue(activity.getMapFragment().saveEdits());
+            });
+            opened=(com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity)instrumentation.waitForMonitorWithTimeout(monitor,20000);
+            assertNotNull("Attribute form did not open",opened);
+            com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity form=opened;
+            instrumentation.waitForIdleSync();
+            instrumentation.runOnMainSync(() -> {
+                com.nextgis.maplibui.util.FeatureFormDraftStore.Snapshot draft=com.nextgis.maplibui.util.FeatureFormDraftStore.load(app);
+                assertNotNull(draft);
+                android.os.Bundle state=com.nextgis.maplibui.util.FeatureFormDraftStore.controlStateToBundle(draft);
+                assertEquals("tree",state.getString(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey("typeobj")));
+                android.widget.PopupMenu menu=new android.widget.PopupMenu(form,new View(form));
+                form.onOptionsItemSelected(menu.getMenu().add(0,com.nextgis.maplibui.R.id.menu_apply,0,"Save"));
+            });
+            deadline=android.os.SystemClock.uptimeMillis()+20000;
+            while(layers.get(0).getCount()!=1 && android.os.SystemClock.uptimeMillis()<deadline)Thread.sleep(40);
+            assertEquals(1,layers.get(0).getCount());
+            try(android.database.Cursor row=layers.get(0).query(null,null,null,null,null)) {
+                assertTrue(row.moveToFirst());assertEquals("tree",row.getString(row.getColumnIndexOrThrow("typeobj")));
+                assertEquals("field",row.getString(row.getColumnIndexOrThrow("classobj")));
+            }
+            // SQLite commits before the asynchronous Save result returns to the map.
+            // Wait for that result and onPause before checking/cleaning the owning draft.
+            AtomicBoolean finished = new AtomicBoolean();
+            deadline = android.os.SystemClock.uptimeMillis() + 20000;
+            while (!finished.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+                instrumentation.waitForIdleSync();
+                scenario.onActivity(activity -> finished.set(mode(activity) == MapFragment.MODE_NORMAL
+                        && !app.isLayerReservedForWalk(layers.get(0).getId())
+                        && com.nextgis.maplibui.util.FeatureFormDraftStore.load(app) == null
+                        && com.nextgis.maplibui.util.GeometryEditDraftStore.load(app) == null));
+                if (!finished.get()) Thread.sleep(40);
+            }
+            assertTrue("Save did not finish the map session and clear its drafts", finished.get());
+        } finally {
+            if (opened != null && !opened.isFinishing()) {
+                com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity form = opened;
+                instrumentation.runOnMainSync(form::finish);
+            }
+            instrumentation.waitForIdleSync();
+            instrumentation.removeMonitor(monitor);
+            com.nextgis.maplibui.util.FeatureFormDraftStore.clear(app);
+            com.nextgis.maplibui.util.GeometryEditDraftStore.clear(app,"test-complete");
+        }
+    }
+
     @Test public void selectionImmediatelyEnablesToolsAndBackClearsIt() {
         addLayer(0, true);
         scenario.onActivity(activity -> {

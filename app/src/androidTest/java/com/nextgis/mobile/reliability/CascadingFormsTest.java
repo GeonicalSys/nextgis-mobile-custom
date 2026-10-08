@@ -33,6 +33,10 @@ import com.nextgis.maplibui.util.ControlHelper;
 import com.nextgis.maplibui.util.FeatureFormDraftStore;
 import com.nextgis.maplibui.util.LayerUtil;
 import com.nextgis.maplibui.util.RequiredFieldUi;
+import com.nextgis.maplibui.util.FeatureTypeDefaults;
+import com.nextgis.maplib.display.FieldStyleRule;
+import com.nextgis.maplib.display.RuleFeatureRenderer;
+import com.nextgis.maplib.display.SimpleMarkerStyle;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -177,6 +181,117 @@ public class CascadingFormsTest {
     }
     @Test public void defaultFormLaunchLoadsUnprefixedMetadata() throws Exception {
         checkDefaultFormLaunch("");
+    }
+    @Test public void chosenStyleTypePrefillsAncestorsAndSurvivesFormRecovery() throws Exception {
+        try (Fixture f = new Fixture(false)) {
+            Files.copy(f.form.toPath(), new File(f.layer.getPath(), "form.json").toPath());
+            Files.copy(f.meta.toPath(), new File(f.layer.getPath(), "ngfp_meta.json").toPath());
+            FieldStyleRule rules = new FieldStyleRule(f.layer); rules.setKey("eployee1");
+            rules.setKeyIgnoreCase(true); rules.setStyle("BOB", new SimpleMarkerStyle());
+            f.layer.setRenderer(new RuleFeatureRenderer(f.layer, rules, new SimpleMarkerStyle()));
+            java.util.List<FeatureTypeDefaults.Choice> choices = FeatureTypeDefaults.choices(f.layer);
+            assertEquals(1, choices.size());
+            android.os.Bundle initial = choices.get(0).state;
+            assertNotNull(initial);
+            assertEquals("Company B", initial.getString(ControlHelper.getSavedStateKey("contractor")));
+            Intent intent = f.intent(Constants.NOT_FOUND).putExtra(FeatureTypeDefaults.INITIAL_VALUES, initial);
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> scenario = ActivityScenario.launch(intent)) {
+                scenario.onActivity(a -> {
+                    assertEquals("Bob", a.getCascadingLists().value("eployee1"));
+                    assertEquals("Company B", a.getCascadingLists().value("contractor"));
+                    assertEquals("Driver", a.getCascadingLists().value("jobtitle1"));
+                    assertNull(a.getCascadingLists().value("employee2"));
+                });
+                scenario.recreate();
+                scenario.onActivity(a -> assertEquals("Bob", a.getCascadingLists().value("eployee1")));
+                scenario.moveToState(androidx.lifecycle.Lifecycle.State.CREATED);
+            }
+            FeatureFormDraftStore.Snapshot draft = FeatureFormDraftStore.load(f.app);
+            assertNotNull(draft);
+            Intent recovered = f.intent(Constants.NOT_FOUND).putExtra(FeatureFormDraftStore.KEY_APPLY_FORM_DRAFT, true);
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> scenario = ActivityScenario.launch(recovered)) {
+                scenario.onActivity(a -> {
+                    assertEquals("Bob", a.getCascadingLists().value("eployee1"));
+                    assertEquals("Company B", a.getCascadingLists().value("contractor"));
+                    assertTrue(a.getCascadingLists().invalidFields().isEmpty());
+                });
+                choose(scenario, "contractor", 1);
+                scenario.onActivity(a -> assertNull(a.getCascadingLists().value("eployee1")));
+            }
+        }
+    }
+    @Test public void legacyDependentTypeOverridesRememberedParentAndWritesChosenValues() throws Exception {
+        try (Fixture f = new Fixture(false)) {
+            JSONArray parents = new JSONArray();
+            for (String[] pair : new String[][]{{"Company A", "Alex"}, {"Company B", "Bob"}})
+                parents.put(new JSONObject().put("name",pair[0]).put("alias",pair[0]).put("values",new JSONArray()
+                        .put(new JSONObject().put("name",pair[1]).put("alias",pair[1]))));
+            write(f.form,new JSONArray().put(new JSONObject().put("type","double_combobox").put("attributes",new JSONObject()
+                    .put("field_level1","contractor").put("field_level2","eployee1").put("last",true).put("values",parents))).toString());
+            write(f.meta,"{}");
+            Files.copy(f.form.toPath(),new File(f.layer.getPath(),"form.json").toPath());
+            Files.copy(f.meta.toPath(),new File(f.layer.getPath(),"ngfp_meta.json").toPath());
+            f.layer.getPreferences().edit().putString("contractor","Company A").putString("eployee1","Alex").commit();
+            FieldStyleRule rules=new FieldStyleRule(f.layer); rules.setKey("eployee1");
+            rules.setStyle("Bob",new SimpleMarkerStyle());
+            f.layer.setRenderer(new RuleFeatureRenderer(f.layer,rules,new SimpleMarkerStyle()));
+            java.util.List<FeatureTypeDefaults.Choice> choices=FeatureTypeDefaults.choices(f.layer);
+            assertEquals(1,choices.size());
+            Intent intent=f.intent(Constants.NOT_FOUND).putExtra(FeatureTypeDefaults.INITIAL_VALUES,choices.get(0).state);
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> scenario=ActivityScenario.launch(intent)) {
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                scenario.onActivity(a -> {
+                    com.nextgis.maplibui.formcontrol.DoubleComboboxValue selected=
+                            (com.nextgis.maplibui.formcontrol.DoubleComboboxValue)controls(a).get("contractor").getValue();
+                    assertEquals("Company B",selected.mValue); assertEquals("Bob",selected.mSubValue);
+                    save(a);
+                });
+                await(() -> f.layer.getCount()==1);
+            }
+            try (android.database.Cursor row=f.layer.query(null,null,null,null,null)) {
+                assertTrue(row.moveToFirst());
+                assertEquals("Company B",row.getString(row.getColumnIndexOrThrow("contractor")));
+                assertEquals("Bob",row.getString(row.getColumnIndexOrThrow("eployee1")));
+            }
+        }
+    }
+
+    @Test public void typeChooserSurvivesRecreationAndReturnsExplicitSelection() throws Exception {
+        try (Fixture f=new Fixture(false)) {
+            Files.copy(f.form.toPath(),new File(f.layer.getPath(),"form.json").toPath());
+            Files.copy(f.meta.toPath(),new File(f.layer.getPath(),"ngfp_meta.json").toPath());
+            FieldStyleRule rules=new FieldStyleRule(f.layer);rules.setKey("eployee1");rules.setStyle("Bob",new SimpleMarkerStyle());
+            f.layer.setRenderer(new RuleFeatureRenderer(f.layer,rules,new SimpleMarkerStyle()));
+            java.util.concurrent.atomic.AtomicReference<android.os.Bundle> result=new java.util.concurrent.atomic.AtomicReference<>();
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> scenario=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                scenario.onActivity(a -> com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.create(f.layer,f.map.getPath().getAbsolutePath())
+                        .show(a.getSupportFragmentManager(),com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG));
+                scenario.recreate();
+                scenario.onActivity(a -> a.getSupportFragmentManager().setFragmentResultListener(
+                        com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.RESULT,a,(key,bundle)->result.set(bundle)));
+                java.util.concurrent.atomic.AtomicBoolean loaded=new java.util.concurrent.atomic.AtomicBoolean();
+                await(() -> {
+                    scenario.onActivity(a -> {
+                        androidx.fragment.app.DialogFragment fragment=(androidx.fragment.app.DialogFragment)a.getSupportFragmentManager()
+                                .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                        if (fragment==null) return;
+                        android.widget.ListView list=((androidx.appcompat.app.AlertDialog)fragment.requireDialog()).getListView();
+                        loaded.set(list!=null && list.getCount()==1);
+                    });
+                    return loaded.get();
+                });
+                scenario.onActivity(a -> {
+                    androidx.fragment.app.DialogFragment fragment=(androidx.fragment.app.DialogFragment)a.getSupportFragmentManager()
+                            .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                    android.widget.ListView list=((androidx.appcompat.app.AlertDialog)fragment.requireDialog()).getListView();
+                    list.performItemClick(list.getChildAt(0),0,0);
+                });
+                await(() -> result.get()!=null);
+                assertEquals("Bob",result.get().getBundle(FeatureTypeDefaults.INITIAL_VALUES)
+                        .getString(ControlHelper.getSavedStateKey("eployee1")));
+                assertEquals(0,f.layer.getCount());
+            }
+        }
     }
     private static void navigationForm(Fixture fixture) throws Exception {
         JSONArray form=new JSONArray(new String(Files.readAllBytes(fixture.form.toPath()),java.nio.charset.StandardCharsets.UTF_8));
