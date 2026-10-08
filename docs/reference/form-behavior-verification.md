@@ -1,7 +1,7 @@
 ---
 title: Проверка зависимостей, вкладок и обязательности NGFP
 type: reference
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
   - app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java
@@ -9,6 +9,8 @@ related_code:
 ---
 
 # Проверка NGFP — 7 октября 2026
+
+Дополнение от 8 октября: [оформление, видимость и восстановление](../history/form-visibility-verification-2026-10-08.md).
 
 Проверен публичный путь создания объекта через LayerUtil.showEditForm с default
 form: regression сначала воспроизвёл отсутствие KEY_META_PATH для 933_form.json,
