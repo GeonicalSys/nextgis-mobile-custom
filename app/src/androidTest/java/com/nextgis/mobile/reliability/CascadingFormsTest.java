@@ -226,7 +226,11 @@ public class CascadingFormsTest {
             for (String[] pair : new String[][]{{"Company A", "Alex"}, {"Company B", "Bob"}})
                 parents.put(new JSONObject().put("name",pair[0]).put("alias",pair[0]).put("values",new JSONArray()
                         .put(new JSONObject().put("name",pair[1]).put("alias",pair[1]))));
-            write(f.form,new JSONArray().put(new JSONObject().put("type","double_combobox").put("attributes",new JSONObject()
+            write(f.form,new JSONArray()
+                    .put(new JSONObject().put("type","text_label").put("attributes",new JSONObject().put("text","Field points")))
+                    .put(new JSONObject().put("type","combobox").put("attributes",new JSONObject()
+                            .put("field","jobtitle2").put("values",new JSONArray())))
+                    .put(new JSONObject().put("type","double_combobox").put("attributes",new JSONObject()
                     .put("field_level1","contractor").put("field_level2","eployee1").put("last",true).put("values",parents))).toString());
             write(f.meta,"{}");
             Files.copy(f.form.toPath(),new File(f.layer.getPath(),"form.json").toPath());
@@ -251,6 +255,47 @@ public class CascadingFormsTest {
             try (android.database.Cursor row=f.layer.query(null,null,null,null,null)) {
                 assertTrue(row.moveToFirst());
                 assertEquals("Company B",row.getString(row.getColumnIndexOrThrow("contractor")));
+                assertEquals("Bob",row.getString(row.getColumnIndexOrThrow("eployee1")));
+            }
+        }
+    }
+
+    @Test public void ordinaryTypeSelectorInsideMixedTabsPrefillsAndSaves() throws Exception {
+        try (Fixture f = new Fixture(false)) {
+            JSONArray elements = new JSONArray()
+                    .put(new JSONObject().put("type","text_label").put("attributes",new JSONObject().put("text","Field points")))
+                    .put(new JSONObject().put("type","combobox").put("attributes",new JSONObject().put("field","")))
+                    .put(new JSONObject().put("type","combobox").put("attributes",new JSONObject()
+                            .put("field","eployee1").put("last",true).put("values",new JSONArray()
+                                    .put(new JSONObject().put("name","Bob").put("alias","Selected point")))));
+            write(f.form,new JSONArray().put(new JSONObject().put("type","tabs").put("attributes",new JSONObject())
+                    .put("pages",new JSONArray().put(new JSONObject().put("caption","Points").put("elements",elements)))).toString());
+            write(f.meta,"{}");
+            Files.copy(f.form.toPath(),new File(f.layer.getPath(),"form.json").toPath());
+            Files.copy(f.meta.toPath(),new File(f.layer.getPath(),"ngfp_meta.json").toPath());
+            FieldStyleRule rules = new FieldStyleRule(f.layer); rules.setKey("eployee1");
+            rules.setStyle("Bob",new SimpleMarkerStyle());
+            f.layer.setRenderer(new RuleFeatureRenderer(f.layer,rules,new SimpleMarkerStyle()));
+            java.util.List<FeatureTypeDefaults.Choice> choices = FeatureTypeDefaults.choices(f.layer);
+            assertEquals(1,choices.size());
+            assertEquals("Selected point",choices.get(0).label);
+            assertNotNull(choices.get(0).state);
+            assertEquals("Bob",choices.get(0).state.getString(ControlHelper.getSavedStateKey("eployee1")));
+            // The invalid unrelated selector is ignored by the picker; omit it from the opened form.
+            elements.remove(1);
+            write(f.form,new JSONArray().put(new JSONObject().put("type","tabs")
+                    .put("pages",new JSONArray().put(new JSONObject().put("caption","Points").put("elements",elements)))).toString());
+            Intent intent = f.intent(Constants.NOT_FOUND).putExtra(FeatureTypeDefaults.INITIAL_VALUES,choices.get(0).state);
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> scenario = ActivityScenario.launch(intent)) {
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                scenario.onActivity(a -> {
+                    assertEquals("Bob",controls(a).get("eployee1").getValue());
+                    save(a);
+                });
+                await(() -> f.layer.getCount()==1);
+            }
+            try (android.database.Cursor row = f.layer.query(null,null,null,null,null)) {
+                assertTrue(row.moveToFirst());
                 assertEquals("Bob",row.getString(row.getColumnIndexOrThrow("eployee1")));
             }
         }

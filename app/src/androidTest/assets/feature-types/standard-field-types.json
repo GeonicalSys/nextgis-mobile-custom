@@ -1,0 +1,1631 @@
+[
+  {
+    "name": "field_points",
+    "geometry_type": 1,
+    "fields": [
+      {
+        "type": 4,
+        "name": "district",
+        "alias": "участок"
+      },
+      {
+        "type": 4,
+        "name": "typeobj",
+        "alias": "тип объекта"
+      },
+      {
+        "type": 4,
+        "name": "classobj",
+        "alias": "класс объекта"
+      },
+      {
+        "type": 4,
+        "name": "descript",
+        "alias": "описание"
+      },
+      {
+        "type": 4,
+        "name": "label",
+        "alias": "подпись"
+      },
+      {
+        "type": 0,
+        "name": "checkattach",
+        "alias": "кол-во вложений"
+      },
+      {
+        "type": 10,
+        "name": "created_at",
+        "alias": "время создания"
+      },
+      {
+        "type": 4,
+        "name": "created_by",
+        "alias": "кем создан"
+      },
+      {
+        "type": 10,
+        "name": "updated_at",
+        "alias": "время изменения"
+      },
+      {
+        "type": 4,
+        "name": "updated_by",
+        "alias": "кем изменен"
+      }
+    ],
+    "renderer_properties": {
+      "name": "RuleFeatureRenderer",
+      "style": {
+        "width": 1,
+        "color": -65536,
+        "out_color": -16777216,
+        "alpha": 255,
+        "out_alpha": 255,
+        "name": "SimpleMarkerStyle",
+        "type": 2,
+        "size": 6,
+        "text_size": 3,
+        "text_alignment": 0,
+        "text_color": -16777216
+      },
+      "style_rule": {
+        "field": "typeobj",
+        "rules": [
+          {
+            "value": "аншлаг",
+            "style": {
+              "width": 1,
+              "color": -2369280,
+              "out_color": -2503424,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 20,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "billboard",
+              "marker_icon_size": 20,
+              "text_halo_color": -1315904,
+              "text_halo_blur": 1,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "водозабор",
+            "style": {
+              "width": 1,
+              "color": -3023360,
+              "out_color": -2894336,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 30,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "hydrant",
+              "marker_icon_size": 30,
+              "text_halo_color": -395557,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "кв просека",
+            "style": {
+              "width": 1,
+              "color": -789568,
+              "out_color": -3556345,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 20,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "proseka",
+              "marker_icon_size": 20,
+              "marker_icon_ignore_placement": true,
+              "text_halo_color": -526380,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "кв столб",
+            "style": {
+              "width": 1,
+              "color": -4096,
+              "out_color": -726016,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 30,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "kv_stolb",
+              "marker_icon_size": 30,
+              "text_halo_color": -328221,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "место отдыха",
+            "style": {
+              "width": 1,
+              "color": -327936,
+              "out_color": -1387264,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 50,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "camp",
+              "marker_icon_size": 40,
+              "text_halo_color": -263469,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "шлагбаум",
+            "style": {
+              "width": 1,
+              "color": -1184512,
+              "out_color": -1445879,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 40,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "barier",
+              "marker_icon_size": 40,
+              "text_halo_color": -65565,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "вагон",
+            "style": {
+              "width": 1,
+              "color": -1,
+              "out_color": -16770561,
+              "alpha": 198,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 30,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "wagon",
+              "marker_icon_size": 30,
+              "text_halo_color": -4075521,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "мост",
+            "style": {
+              "width": 1,
+              "color": -1,
+              "out_color": -15138561,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 50,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "bridge",
+              "marker_icon_size": 30,
+              "text_halo_color": -1774857,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": false,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "разъезд, разворот",
+            "style": {
+              "width": 1,
+              "color": -1,
+              "out_color": -15269121,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 40,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "road_space",
+              "marker_icon_size": 40,
+              "text_halo_color": -2039574,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "ремонт дороги",
+            "style": {
+              "width": 1,
+              "color": -1,
+              "out_color": -16771585,
+              "alpha": 0,
+              "out_alpha": 0,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 60,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "under-construction",
+              "marker_icon_size": 60,
+              "text_halo_color": -2300172,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "труба",
+            "style": {
+              "width": 2,
+              "color": -1,
+              "out_color": -16769281,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 30,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "marker_icon_image": "pipe",
+              "marker_icon_size": 30,
+              "text_halo_color": -2234128,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "пром_склад",
+            "style": {
+              "width": 2,
+              "color": -1,
+              "out_color": -16773377,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 30,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "marker_icon_image": "storage",
+              "marker_icon_size": 35,
+              "text_halo_color": -2102027,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "биотоп",
+            "style": {
+              "width": 1,
+              "color": -1,
+              "out_color": -64765,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 20,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "biotop",
+              "marker_icon_size": 20,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "прочие",
+            "style": {
+              "width": 2,
+              "color": -1,
+              "out_color": -65536,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 1,
+              "size": 20,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "text_halo_color": -1184275,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "визир",
+            "style": {
+              "width": 1,
+              "color": -1,
+              "out_color": -65536,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 30,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "vizir",
+              "marker_icon_size": 30,
+              "text_halo_color": -2763307,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "дел_столб",
+            "style": {
+              "width": 1,
+              "color": -1,
+              "out_color": -65536,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 20,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "del_stolb",
+              "marker_icon_size": 20,
+              "text_halo_color": -1513240,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "лес_инфо",
+            "style": {
+              "width": 1,
+              "color": -1,
+              "out_color": -65536,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 30,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "info",
+              "marker_icon_size": 30,
+              "text_halo_color": -1381654,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "сыро",
+            "style": {
+              "width": 1,
+              "color": -1,
+              "out_color": -65536,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 20,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "duck2",
+              "marker_icon_size": 20,
+              "text_halo_color": -1513240,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": false,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "поворот",
+            "style": {
+              "width": 1,
+              "color": -15990529,
+              "out_color": -15793967,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 40,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "circle_blur": 1,
+              "marker_icon_image": "turn",
+              "marker_icon_size": 30,
+              "text_halo_color": -3552286,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic",
+              "label_min_zoom": 14
+            }
+          },
+          {
+            "value": "подбор",
+            "style": {
+              "width": 2,
+              "color": -1,
+              "out_color": -16645914,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 30,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "marker_icon_image": "wood_truck",
+              "marker_icon_size": 35,
+              "text_halo_color": -3948569,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic",
+              "label_min_zoom": 14
+            }
+          }
+        ],
+        "other_style": {
+          "width": 1,
+          "color": -65536,
+          "out_color": -16777216,
+          "alpha": 255,
+          "out_alpha": 255,
+          "scale_size_with_zoom": true,
+          "name": "SimpleMarkerStyle",
+          "type": 2,
+          "size": 6,
+          "text_size": 1,
+          "text_alignment": 0,
+          "text_color": -16777216,
+          "value": "label",
+          "text_scale_with_zoom": true,
+          "text_font": "Open Sans Bold Italic",
+          "label_min_zoom": 14
+        }
+      }
+    },
+    "form": [
+      {
+        "type": "text_label",
+        "attributes": {
+          "text": "Тип точечного объекта"
+        }
+      },
+      {
+        "type": "double_combobox",
+        "attributes": {
+          "field_level1": "classobj",
+          "field_level2": "typeobj",
+          "last": false,
+          "values": [
+            {
+              "name": "делянка",
+              "alias": "делянка",
+              "default": false,
+              "values": [
+                {
+                  "name": "дел_столб",
+                  "alias": "дел_столб",
+                  "default": true
+                },
+                {
+                  "name": "сыро",
+                  "alias": "сыро",
+                  "default": false
+                },
+                {
+                  "name": "лес_инфо",
+                  "alias": "лес_инфо",
+                  "default": false
+                },
+                {
+                  "name": "визир",
+                  "alias": "визир",
+                  "default": false
+                },
+                {
+                  "name": "биотоп",
+                  "alias": "биотоп",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "name": "транспорт",
+              "alias": "транспорт",
+              "default": false,
+              "values": [
+                {
+                  "name": "вагон",
+                  "alias": "вагон",
+                  "default": false
+                },
+                {
+                  "name": "мост",
+                  "alias": "мост",
+                  "default": false
+                },
+                {
+                  "name": "поворот",
+                  "alias": "поворот",
+                  "default": false
+                },
+                {
+                  "name": "пром_склад",
+                  "alias": "пром_склад",
+                  "default": false
+                },
+                {
+                  "name": "разъезд, разворот",
+                  "alias": "разъезд, разворот",
+                  "default": false
+                },
+                {
+                  "name": "ремонт дороги",
+                  "alias": "ремонт дороги",
+                  "default": false
+                },
+                {
+                  "name": "труба",
+                  "alias": "труба",
+                  "default": false
+                },
+                {
+                  "name": "подбор",
+                  "alias": "подбор",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "name": "инфраструктура",
+              "alias": "инфраструктура",
+              "default": false,
+              "values": [
+                {
+                  "name": "аншлаг",
+                  "alias": "аншлаг",
+                  "default": false
+                },
+                {
+                  "name": "водозабор",
+                  "alias": "водозабор",
+                  "default": false
+                },
+                {
+                  "name": "кв столб",
+                  "alias": "кв столб",
+                  "default": true
+                },
+                {
+                  "name": "кв просека",
+                  "alias": "кв просека",
+                  "default": false
+                },
+                {
+                  "name": "место отдыха",
+                  "alias": "место отдыха",
+                  "default": false
+                },
+                {
+                  "name": "шлагбаум",
+                  "alias": "шлагбаум",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "name": "прочие",
+              "alias": "прочие",
+              "default": true,
+              "values": [
+                {
+                  "name": "прочие",
+                  "alias": "прочие",
+                  "default": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "text_label",
+        "attributes": {
+          "text": "Подпись (будет показана на карте)"
+        }
+      },
+      {
+        "type": "text_edit",
+        "attributes": {
+          "max_string_count": 10,
+          "field": "label",
+          "last": false,
+          "text": "",
+          "ngid_login": false,
+          "ngw_login": false,
+          "only_figures": false
+        }
+      },
+      {
+        "type": "text_label",
+        "attributes": {
+          "text": "Пояснение"
+        }
+      },
+      {
+        "type": "text_edit",
+        "attributes": {
+          "max_string_count": 4,
+          "field": "descript",
+          "last": false,
+          "text": "",
+          "ngid_login": false,
+          "ngw_login": false,
+          "only_figures": false
+        }
+      },
+      {
+        "type": "photo",
+        "attributes": {
+          "comment": "",
+          "gallery_size": 10
+        }
+      }
+    ],
+    "source_sha256": {
+      "form": "bf2ca6e03170c2c84ba7974762c3d35fe97b3ce3110c9fce1f8e627ef2fa1850",
+      "config": "fe6182f15a12bea5ff67cc42b8c0986e5b79d1dec72780b758f9c39d3e5d8675"
+    }
+  },
+  {
+    "name": "field_lines",
+    "geometry_type": 2,
+    "fields": [
+      {
+        "type": 4,
+        "name": "district",
+        "alias": "участок"
+      },
+      {
+        "type": 4,
+        "name": "classobj",
+        "alias": "класс объекта"
+      },
+      {
+        "type": 4,
+        "name": "typeobj",
+        "alias": "тип объекта"
+      },
+      {
+        "type": 4,
+        "name": "label",
+        "alias": "подпись"
+      },
+      {
+        "type": 4,
+        "name": "descript",
+        "alias": "описание"
+      },
+      {
+        "type": 0,
+        "name": "checkattach",
+        "alias": "кол-во вложений"
+      },
+      {
+        "type": 10,
+        "name": "created_at",
+        "alias": "время создания"
+      },
+      {
+        "type": 4,
+        "name": "created_by",
+        "alias": "кем создан"
+      },
+      {
+        "type": 10,
+        "name": "updated_at",
+        "alias": "время изменения"
+      },
+      {
+        "type": 4,
+        "name": "updated_by",
+        "alias": "кем изменен"
+      }
+    ],
+    "renderer_properties": {
+      "name": "RuleFeatureRenderer",
+      "style": {
+        "width": 3,
+        "color": -16711936,
+        "out_color": -16776961,
+        "alpha": 255,
+        "out_alpha": 255,
+        "name": "SimpleLineStyle",
+        "type": 1,
+        "text_size": 3,
+        "text_color": -16776961
+      },
+      "style_rule": {
+        "field": "typeobj",
+        "rules": [
+          {
+            "value": "ЛЭП, газ",
+            "style": {
+              "width": 5,
+              "color": -26368,
+              "out_color": -16777216,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 3,
+              "text_size": 1,
+              "text_color": -16777216,
+              "line_cap": 2,
+              "value": "label",
+              "text_halo_color": -2763307,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "прочие",
+            "style": {
+              "width": 3,
+              "color": -16777216,
+              "out_color": -2171170,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 4,
+              "text_size": 1,
+              "text_color": -16777216,
+              "value": "label",
+              "text_halo_color": -1447447,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "временный водоток",
+            "style": {
+              "width": 3,
+              "color": -16765697,
+              "out_color": -1,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 4,
+              "text_size": 1,
+              "text_color": -16777216,
+              "line_outline_multiplier": 1.5,
+              "value": "label",
+              "text_halo_color": -1973791,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "кв. просека",
+            "style": {
+              "width": 6,
+              "color": -65536,
+              "out_color": -1250068,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 2,
+              "text_size": 1,
+              "text_color": -16777216,
+              "dash_preset": 2,
+              "value": "label",
+              "text_halo_color": -2039584,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "маг волок",
+            "style": {
+              "width": 4,
+              "color": -16777216,
+              "out_color": -4605511,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 4,
+              "text_size": 1,
+              "text_color": -16777216,
+              "dash_preset": 2,
+              "value": "label",
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "настил",
+            "style": {
+              "width": 6,
+              "color": -7056298,
+              "out_color": -3750202,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 4,
+              "text_size": 1,
+              "text_color": -16777216,
+              "line_outline_multiplier": 2,
+              "value": "label",
+              "text_halo_color": -1973791,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "проезд проект",
+            "style": {
+              "width": 3,
+              "color": -65536,
+              "out_color": -1,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 4,
+              "text_size": 1,
+              "text_color": -16777216,
+              "line_outline_multiplier": 2,
+              "value": "label",
+              "text_halo_color": -2829100,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "проезд существующий",
+            "style": {
+              "width": 3,
+              "color": -1,
+              "out_color": -65536,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 3,
+              "text_size": 1,
+              "text_color": -16777216,
+              "line_outline_multiplier": 2,
+              "value": "label",
+              "text_halo_color": -2302756,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "ремонт дороги",
+            "style": {
+              "width": 5,
+              "color": -1,
+              "out_color": -65536,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 4,
+              "text_size": 1,
+              "text_color": -16777216,
+              "line_outline_multiplier": 2,
+              "value": "label",
+              "text_halo_color": -2565928,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "ручей",
+            "style": {
+              "width": 3,
+              "color": -16765953,
+              "out_color": -1,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 3,
+              "text_size": 1,
+              "text_color": -16777216,
+              "line_outline_multiplier": 2,
+              "value": "label",
+              "text_halo_color": -1447447,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic",
+              "line_label_repeat": false
+            }
+          },
+          {
+            "value": "дорога проект",
+            "style": {
+              "width": 3,
+              "color": -65536,
+              "out_color": -327936,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 4,
+              "text_size": 1,
+              "text_color": -16777216,
+              "value": "label",
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic",
+              "label_min_zoom": 14
+            }
+          },
+          {
+            "value": "дорога существующая",
+            "style": {
+              "width": 4,
+              "color": -2048,
+              "out_color": -16777216,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 3,
+              "text_size": 1,
+              "text_color": -15395563,
+              "value": "label",
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic",
+              "label_min_zoom": 14,
+              "line_label_repeat": false
+            }
+          },
+          {
+            "value": "минполоса",
+            "style": {
+              "width": 2,
+              "color": -1,
+              "out_color": -16777216,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleLineStyle",
+              "type": 4,
+              "text_size": 1,
+              "text_color": -16777216,
+              "value": "label",
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic",
+              "label_min_zoom": 14
+            }
+          }
+        ],
+        "other_style": {
+          "width": 3,
+          "color": -16711936,
+          "out_color": -16776961,
+          "alpha": 255,
+          "out_alpha": 255,
+          "scale_size_with_zoom": true,
+          "name": "SimpleLineStyle",
+          "type": 1,
+          "text_size": 1,
+          "text_color": -16776961,
+          "value": "label",
+          "text_scale_with_zoom": true,
+          "text_font": "Open Sans Bold",
+          "label_min_zoom": 14
+        }
+      }
+    },
+    "form": [
+      {
+        "type": "text_label",
+        "attributes": {
+          "text": "Тип линейного объекта"
+        }
+      },
+      {
+        "type": "double_combobox",
+        "attributes": {
+          "values": [
+            {
+              "name": "Транспорт",
+              "alias": "Транспорт",
+              "default": false,
+              "values": [
+                {
+                  "name": "дорога проект",
+                  "alias": "дорога проект",
+                  "default": false
+                },
+                {
+                  "name": "дорога существующая",
+                  "alias": "дорога существующая",
+                  "default": false
+                },
+                {
+                  "name": "проезд проект",
+                  "alias": "проезд проект",
+                  "default": true
+                },
+                {
+                  "name": "проезд существующий",
+                  "alias": "проезд существующий",
+                  "default": false
+                },
+                {
+                  "name": "ремонт дороги",
+                  "alias": "ремонт дороги",
+                  "default": false
+                },
+                {
+                  "name": "маг волок",
+                  "alias": "маг волок",
+                  "default": false
+                },
+                {
+                  "name": "настил",
+                  "alias": "настил",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "name": "Инфраструктура",
+              "alias": "Инфраструктура",
+              "default": false,
+              "values": [
+                {
+                  "name": "кв. просека",
+                  "alias": "кв. просека",
+                  "default": true
+                },
+                {
+                  "name": "ЛЭП, газ",
+                  "alias": "ЛЭП, газ",
+                  "default": false
+                },
+                {
+                  "name": "минполоса",
+                  "alias": "минполоса",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "name": "Водотоки",
+              "alias": "Водотоки",
+              "default": false,
+              "values": [
+                {
+                  "name": "ручей",
+                  "alias": "ручей",
+                  "default": true
+                },
+                {
+                  "name": "временный водоток",
+                  "alias": "временный водоток",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "name": "Прочие",
+              "alias": "Прочие",
+              "default": true,
+              "values": [
+                {
+                  "name": "прочие",
+                  "alias": "прочие",
+                  "default": true
+                }
+              ]
+            }
+          ],
+          "field_level1": "classobj",
+          "last": false,
+          "field_level2": "typeobj"
+        }
+      },
+      {
+        "type": "text_label",
+        "attributes": {
+          "text": "Подпись (будет показана на карте)"
+        }
+      },
+      {
+        "type": "text_edit",
+        "attributes": {
+          "text": "",
+          "max_string_count": 1,
+          "last": false,
+          "field": "label",
+          "ngid_login": false,
+          "ngw_login": false,
+          "only_figures": false
+        }
+      },
+      {
+        "type": "text_label",
+        "attributes": {
+          "text": "Описание"
+        }
+      },
+      {
+        "type": "text_edit",
+        "attributes": {
+          "text": "",
+          "max_string_count": 4,
+          "last": false,
+          "field": "descript",
+          "ngid_login": false,
+          "ngw_login": false,
+          "only_figures": false
+        }
+      },
+      {
+        "type": "photo",
+        "attributes": {
+          "comment": "",
+          "gallery_size": 10
+        }
+      }
+    ],
+    "source_sha256": {
+      "form": "e17d9ee72b046a29771c0a10b7c58baef3cad7d792ca49386af8042f2ecfcc63",
+      "config": "2ff3fda52e4065ed43ad54e86a942bd22ca5bd933b3c4ef9f764f0582a464e29"
+    }
+  },
+  {
+    "name": "field_polygons",
+    "geometry_type": 6,
+    "fields": [
+      {
+        "type": 4,
+        "name": "district",
+        "alias": "участок"
+      },
+      {
+        "type": 4,
+        "name": "classobj",
+        "alias": "класс объекта"
+      },
+      {
+        "type": 4,
+        "name": "typeobj",
+        "alias": "тип объекта"
+      },
+      {
+        "type": 4,
+        "name": "descript",
+        "alias": "описание"
+      },
+      {
+        "type": 4,
+        "name": "label",
+        "alias": "подпись"
+      },
+      {
+        "type": 0,
+        "name": "checkattach",
+        "alias": "кол-во вложений"
+      },
+      {
+        "type": 10,
+        "name": "created_at",
+        "alias": "время создания"
+      },
+      {
+        "type": 4,
+        "name": "created_by",
+        "alias": "кем создан"
+      },
+      {
+        "type": 10,
+        "name": "updated_at",
+        "alias": "время изменения"
+      },
+      {
+        "type": 4,
+        "name": "updated_by",
+        "alias": "кем изменен"
+      }
+    ],
+    "renderer_properties": {
+      "name": "RuleFeatureRenderer",
+      "style": {
+        "width": 3,
+        "color": -65281,
+        "out_color": -65281,
+        "alpha": 64,
+        "out_alpha": 128,
+        "fill": true,
+        "name": "SimplePolygonStyle",
+        "text_size": 12,
+        "text_color": -16777216
+      },
+      "style_rule": {
+        "field": "typeobj",
+        "rules": [
+          {
+            "value": "НЭП",
+            "style": {
+              "width": 3,
+              "color": -65536,
+              "out_color": -16777216,
+              "alpha": 64,
+              "out_alpha": 128,
+              "scale_size_with_zoom": true,
+              "fill": true,
+              "fill_pattern": 1,
+              "name": "SimplePolygonStyle",
+              "text_size": 1,
+              "text_color": -4980736,
+              "value": "label",
+              "text_halo_color": -1973791,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "прочие",
+            "style": {
+              "width": 3,
+              "color": -16777216,
+              "out_color": -16777216,
+              "alpha": 64,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "fill": true,
+              "name": "SimplePolygonStyle",
+              "text_size": 1,
+              "text_color": -8816263,
+              "value": "label",
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "недоруб",
+            "style": {
+              "width": 3,
+              "color": -20736,
+              "out_color": -16777216,
+              "alpha": 64,
+              "out_alpha": 128,
+              "scale_size_with_zoom": true,
+              "fill": true,
+              "fill_pattern": 1,
+              "name": "SimplePolygonStyle",
+              "text_size": 1,
+              "text_color": -9938176,
+              "value": "label",
+              "text_halo_color": -1907998,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "подготовка почвы",
+            "style": {
+              "width": 3,
+              "color": -5674122,
+              "out_color": -16777216,
+              "alpha": 64,
+              "out_alpha": 128,
+              "scale_size_with_zoom": true,
+              "fill": true,
+              "fill_pattern": 3,
+              "name": "SimplePolygonStyle",
+              "text_size": 1,
+              "text_color": -9043897,
+              "value": "label",
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "подрост",
+            "style": {
+              "width": 3,
+              "color": -16733910,
+              "out_color": -16777216,
+              "alpha": 64,
+              "out_alpha": 128,
+              "scale_size_with_zoom": true,
+              "fill": true,
+              "fill_pattern": 1,
+              "name": "SimplePolygonStyle",
+              "text_size": 1,
+              "text_color": -16747742,
+              "value": "label",
+              "text_halo_color": -1579033,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "склад",
+            "style": {
+              "width": 3,
+              "color": -3145553,
+              "out_color": -16777216,
+              "alpha": 64,
+              "out_alpha": 128,
+              "scale_size_with_zoom": true,
+              "fill": true,
+              "fill_pattern": 2,
+              "name": "SimplePolygonStyle",
+              "text_size": 1,
+              "text_color": -5701468,
+              "value": "label",
+              "text_halo_color": -1315861,
+              "text_scale_with_zoom": true,
+              "text_allow_overlap": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          },
+          {
+            "value": "сырой участок",
+            "style": {
+              "width": 3,
+              "color": -16121601,
+              "out_color": -16515068,
+              "alpha": 64,
+              "out_alpha": 241,
+              "scale_size_with_zoom": true,
+              "fill": true,
+              "name": "SimplePolygonStyle",
+              "text_size": 1,
+              "text_color": -16371502,
+              "value": "label",
+              "text_halo_color": -1447447,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
+          }
+        ],
+        "other_style": {
+          "width": 3,
+          "color": -65281,
+          "out_color": -65281,
+          "alpha": 64,
+          "out_alpha": 128,
+          "scale_size_with_zoom": true,
+          "fill": true,
+          "name": "SimplePolygonStyle",
+          "text_size": 1,
+          "text_color": -16777216,
+          "value": "label",
+          "text_scale_with_zoom": true,
+          "text_allow_overlap": false,
+          "text_font": "Open Sans Bold Italic",
+          "label_min_zoom": 14
+        }
+      }
+    },
+    "form": [
+      {
+        "type": "text_label",
+        "attributes": {
+          "text": "Тип площадного объекта"
+        }
+      },
+      {
+        "type": "double_combobox",
+        "attributes": {
+          "field_level1": "classobj",
+          "field_level2": "typeobj",
+          "last": false,
+          "values": [
+            {
+              "name": "Ограничения",
+              "alias": "Ограничения",
+              "default": false,
+              "values": [
+                {
+                  "name": "НЭП",
+                  "alias": "НЭП",
+                  "default": true
+                },
+                {
+                  "name": "сырой участок",
+                  "alias": "сырой участок",
+                  "default": false
+                },
+                {
+                  "name": "недоруб",
+                  "alias": "недоруб",
+                  "default": false
+                },
+                {
+                  "name": "подрост",
+                  "alias": "подрост",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "name": "Создание",
+              "alias": "Создание",
+              "default": false,
+              "values": [
+                {
+                  "name": "склад",
+                  "alias": "склад",
+                  "default": true
+                },
+                {
+                  "name": "подготовка почвы",
+                  "alias": "подготовка почвы",
+                  "default": false
+                }
+              ]
+            },
+            {
+              "name": "Прочие",
+              "alias": "Прочие",
+              "default": true,
+              "values": [
+                {
+                  "name": "прочие",
+                  "alias": "прочие",
+                  "default": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "text_label",
+        "attributes": {
+          "text": "Подпись для отображения"
+        }
+      },
+      {
+        "type": "text_edit",
+        "attributes": {
+          "max_string_count": 1,
+          "field": "label",
+          "last": false,
+          "text": "",
+          "ngid_login": false,
+          "ngw_login": false,
+          "only_figures": false
+        }
+      },
+      {
+        "type": "text_label",
+        "attributes": {
+          "text": "Описание"
+        }
+      },
+      {
+        "type": "text_edit",
+        "attributes": {
+          "max_string_count": 4,
+          "field": "descript",
+          "last": false,
+          "text": "",
+          "ngid_login": false,
+          "ngw_login": false,
+          "only_figures": false
+        }
+      },
+      {
+        "type": "photo",
+        "attributes": {
+          "comment": "",
+          "gallery_size": 10
+        }
+      }
+    ],
+    "source_sha256": {
+      "form": "120e539f3c85ad6dac097ae24b428f1ebb6fdfa20323e9d1a70d4ad068d4e4be",
+      "config": "44fb9b9d9378f4788596179df9cdf86c7b66a6f65203b2c8c241b6f6332b74ad"
+    }
+  }
+]

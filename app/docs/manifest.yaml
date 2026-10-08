@@ -2,13 +2,15 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-08
+last_verified: 2026-10-09
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java
+    responsibility: Verify all 40 standard point, line and polygon style categories, symbols and canonical class/type defaults, including the actual mixed point form; isolated emulator only.
   - path: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
     responsibility: Initialize error-only Sentry after the isolated UID guard, redact event data and record typed operation stages without reading business data or raw logs.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java

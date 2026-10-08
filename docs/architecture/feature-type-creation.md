@@ -22,6 +22,9 @@ FeatureTypeDefaults использует ту же пару default form/meta, �
 Для legacy double_combobox выбираются точные name ребёнка и его родителя,
 alias служит только подписью. При нескольких родителях показываются разные
 строки с их подписями. Запомненный прошлый выбор не заменяет явный тип.
+Обход смешанной формы сначала отбирает combobox/double_combobox и непустые
+привязки полей, затем нормализует имена. Подписи, вкладки и отсутствие
+field_level2 у обычного combobox не прерывают подготовку категорий.
 
 CascadingLists.initialSelections идёт назад по графу lisa_form_dependencies
 через стабильные parent keys и все AND-фильтры. Повторные строки одного tuple
@@ -49,5 +52,9 @@ LayerUtil сначала сохраняет durable checkpoint с состоян
 CascadingFormsTest для начального выбора, legacy пары, SQLite, recreate,
 durable recovery и асинхронного диалога. MapEditingToolsTest проверяет полный
 путь layer → category → sketch → form → SQLite и возврат на карту без черновиков.
-Физический телефон и реальный проект
-полевых точек требуют отдельного smoke; эмулятор использует synthetic слои.
+StandardFeatureTypesTest использует form/schema/renderer из стандарта
+field_points, field_lines и field_polygons: все 40 категорий имеют символ и
+правильную пару classobj/typeobj; стандартная точечная форма получает выбор.
+В fixtures отсутствуют NGW connection metadata и строки объектов.
+Физический телефон требует отдельного smoke; synthetic suite запускается
+только на изолированном эмуляторе.
