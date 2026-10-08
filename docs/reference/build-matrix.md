@@ -20,10 +20,12 @@ IDs, signing и production APK от этого флага не меняются.
 `BuildConfig.SOURCE_REVISION` фиксирует Git HEAD и dirty marker для багрепортов;
 изменение этого поля не повышает versionName/versionCode.
 
-Подготовлен debug-only выпуск `3.1.2.23` / `218`; production остаётся
-`3.1.2.27` / `221`. APK matrix запускается после Merge Commit библиотек
-PR38/26, repin их fetched remote merge commits и Squash app46. Состав и порядок:
-[delivery matrix](debug-3.1.2.23-delivery.md). Результаты записываются в PR46.
+Production остаётся `3.1.2.27` / `221`, Debug — `3.1.2.23` / `218`.
+Закрытие текущей задачи: Merge Commit maplib #43 → maplibui #31 → app #51
+с fetched remote library pins, затем Squash app и APK version matrix.
+Запрошен только локальный Lisa Release APK, без публикации и повышения версии.
+Состав: [матрица закрытия](../history/mobile-form-sync-delivery-2026-10-08.md).
+Предыдущий debug-only цикл сохранён в [исторической матрице](debug-3.1.2.23-delivery.md).
 
 | Компонент | Текущее значение |
 |---|---|
@@ -96,6 +98,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version
 выполнен после фактического отзыва coarse/fine location. CI повторяет этот
 отдельный проход и проверяет instrumentation output, поскольку код возврата
 `adb` сам по себе не доказывает успех. Разрешения после проверки восстанавливаются.
+После connected suite UTP удаляет app/test packages. Перед отдельным проходом
+workflow повторно устанавливает оба APK и возвращает доступ к тестовому
+хранилищу и уведомлениям; затем отзывает fine/coarse и проверяет результат.
+Без повторной установки весь workflow падал с package not found при успешно
+пройденных 87 native tests (один ожидаемый permission skip).
 Проверка на физическом устройстве Android15 остаётся ручной.
 
 Дополнение 2026-10-04: Pigo BLE/GATT/session regressions проверены на API 26/36.

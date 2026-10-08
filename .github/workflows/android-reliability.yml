@@ -64,6 +64,11 @@ jobs:
             adb shell cmd location set-location-enabled true
             adb shell svc wifi disable
             ./gradlew -PciReliabilityChecks=true :app:connectedLisaDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.nextgis.mobile.reliability --console=plain
+            # UTP removes both packages after connected tests; reinstall for the separate denial probe.
+            adb install -r app/build/outputs/apk/lisa/debug/ngmobile-3.1.2.27-lisa-debug.apk
+            adb install -r app/build/outputs/apk/androidTest/lisa/debug/ngmobile-3.1.2.27-lisa-debug-androidTest.apk
+            adb shell appops set com.nextgis.mobile.debug MANAGE_EXTERNAL_STORAGE allow
+            adb shell pm grant com.nextgis.mobile.debug android.permission.POST_NOTIFICATIONS
             adb shell pm revoke com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
             adb shell pm revoke com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
             adb shell am instrument -w -r -e class com.nextgis.mobile.reliability.StakeoutForegroundServiceTest#deniedLocationStopsGuidanceWithoutCrashOrLeakedGps com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner > build/stakeout-location-denied.log

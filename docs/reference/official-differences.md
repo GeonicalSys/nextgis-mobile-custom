@@ -25,6 +25,17 @@ related_code:
 
 ## Основа сравнения
 
+При закрытии library PRs 8 октября повторно проверены official app master
+`f11d38f77e4caf1b569526c5f620b2ec513c5f9d`, maplib master
+`b8f3e3e6bf4bad56f8ce910c885ea6af1b898998` и maplibui master
+`d9f5241c0e8a4904b6359bba9fae4a56bd62dd33`. Новые library commits относятся
+к Transactions/MOB-339; они не импортируются сменой fork submodule pins.
+Актуальный official SyncAdapter по-прежнему получает карту через
+`MapBase.getInstance()`, а дерево official maplibui не содержит
+ConditionalRequiredController, FormFieldLayout или CascadingFormElements.
+Это поздняя проверка для закрытия #43/#31/#51; ранние pinned проверки ниже
+сохранены с их исходными датами.
+
 Ранее 8 октября 2026 проверены указанные ниже pinned SHA app/maplib/maplibui через
 GitHub API. Для диагностики позднее дополнительно проверен новый official app master
 `f11d38f77e4caf1b569526c5f620b2ec513c5f9d` (commit 8 октября 07:14 UTC).

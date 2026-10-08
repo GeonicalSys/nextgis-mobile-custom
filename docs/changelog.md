@@ -8,6 +8,15 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-08 — Закрытие форм, общей синхронизации и диагностики
+
+- Library #43/#31 слиты Merge Commit; app #51 закрепляет fetched remote commits.
+  Добавлена полная матрица состава, включения и порядка закрытия задачи.
+- Исправлен CI standalone permission probe: UTP удаляет APK после connected
+  suite, поэтому перед отдельным проходом app/test устанавливаются заново.
+- Runbook и build matrix отражают локальную Lisa Release сборку без повышения
+  версии и публикации; уточнена действующая Sentry manifest policy.
+
 ## 2026-10-08 — Багрепорты на собственный сервер
 
 - AppDiagnostics подключает Sentry к GlitchTip после isolated-script guard;
