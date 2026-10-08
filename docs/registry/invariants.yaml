@@ -830,6 +830,25 @@ invariants:
       - maplib/docs/manifest.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml
+  INV-DIAGNOSTIC-DELIVERY:
+    title: Diagnostic events survive offline and temporary server failures
+    owners: [app]
+    statement: >
+      Initialize only after the isolated-script guard and before the delegating local crash
+      handler. Persist bounded SDK envelopes in private files storage before async HTTP;
+      retain offline, 5xx and rate-limited failures, replay through SDK observers and a
+      connected WorkManager job without reinitializing handlers. Event UUID and diagnostic
+      stack/version/device/typed-operation context survive process restart. Never read or
+      attach raw HyperLog, NMEA, GIS attributes/geometry, accounts or photos. Fatal exceptions
+      still delegate to Android and existing draft recovery remains independent.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
+    verify_smoke: [SMOKE-DIAGNOSTIC-DELIVERY, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
+    must_update_docs: [docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md]
   INV-CRASH-DRAFT-RECOVERY:
     title: Crash-safe track resume and geometry/form drafts
     owners: [app, maplibui, maplib]

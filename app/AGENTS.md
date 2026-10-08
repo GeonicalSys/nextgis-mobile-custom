@@ -26,6 +26,19 @@ validation. Если updater отправляет пользователя за 
 Android, он сохраняет только проверенный pending manifest, повторно валидирует
 его после возврата и не требует повторного ручного запуска проверки обновлений.
 
+## Диагностические отчёты
+
+Читать `../docs/architecture/error-reporting.md` и
+`../docs/guides/bug-reports-user-guide.md`. AppDiagnostics запускается после
+isolated-script guard, до HyperLog handler. Не глотать fatal exceptions и не
+переинициализировать SDK ради retry. DiagnosticsTransport сохраняет SDK envelopes
+при offline, 5xx и rate limiting; стандартный AsyncHttpTransport 8.37.1 теряет
+отчёты при HTTP 503. После обновления SDK перепроверять hints/cache/WorkManager.
+Не отправлять raw HyperLog, NMEA, accounts, field values, geometry и фото.
+Новые operation/phase — enum; новые handled captures должны исключать обычную
+offline/cancel ситуацию. Реальные DSN/пароли не коммитить. Delivery test runner
+включается только `-PdiagnosticDeliveryChecks=true`, тесты — на отдельном эмуляторе.
+
 ## Азимут и вынос
 
 Азимут и вынос используют только location foreground service, даже при

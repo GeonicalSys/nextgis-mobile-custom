@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -14,6 +14,16 @@ related_code:
 ---
 
 # Выпуск Lisa и Belka APK
+
+## Конфигурация багрепортов
+
+Обычная локальная сборка читает `sentry.dsn` из игнорируемого `sentry.properties`.
+Это публичный SDK DSN нужного GlitchTip project; административный пароль и auth
+token для отправки ошибок APK не нужны. Не печатать DSN и не добавлять его в Git.
+Проверять host/project установленного приёмника для всех variants. В явном CI
+режиме допускается отсутствие private file и пустой DSN — отчёты отключены.
+`diagnosticDeliveryChecks=true` нужен только test APK, а не production конфигурации.
+Перед обновлением SDK выполнить [delivery checks](../architecture/error-reporting.md).
 
 ## Версия
 

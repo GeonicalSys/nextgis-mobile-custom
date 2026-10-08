@@ -299,6 +299,10 @@ preferences:
       Finish acknowledges the final snapshot; successful feature Save or explicit Discard clears it.
     session_source: maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
 manifest_metadata:
+  io.sentry.auto-init:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Disable provider auto-init; AppDiagnostics initializes after the isolated-script UID guard with explicit delivery and redaction policy.
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
     source: app/src/main/AndroidManifest.xml
@@ -310,7 +314,7 @@ manifest_metadata:
   io.sentry.attach-screenshot:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Attach a screenshot to crash diagnostics
+    purpose: Disable unsupported generic screenshot attachments; useful diagnostics are serialized inside the event.
   io.sentry.attach-view-hierarchy:
     owner: app
     source: app/src/main/AndroidManifest.xml
@@ -318,12 +322,17 @@ manifest_metadata:
   io.sentry.traces.sample-rate:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Sample production performance traces at 0.05
+    purpose: Disable performance traces; the receiver is used for error reports only.
   io.sentry.traces.profiling.sample-rate:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Sample production profiles at 0.05
+    purpose: Disable performance profiles; the receiver is used for error reports only.
 runtime_constants:
+  SOURCE_REVISION:
+    owner: app
+    type: string
+    source: app/build.gradle
+    purpose: BuildConfig Git HEAD plus optional dirty marker, included as diagnostic source_revision without changing the APK version.
   apk_version_update:
     owner: app
     type: https_url
@@ -343,6 +352,11 @@ variant_resources:
     source: app/build.gradle
     purpose: Variant-specific SyncAdapter account type; must equal nextgis_accounts_auth and MainApplication runtime type
 build_inputs:
+  diagnosticDeliveryChecks:
+    owner: app
+    source: app/build.gradle
+    optional: true
+    purpose: Opt-in false-by-default Gradle property selects an emulator-only diagnostic test runner with an explicit synthetic DSN; normal APK configuration is unchanged.
   ciReliabilityChecks:
     owner: app
     source: app/build.gradle
@@ -368,6 +382,10 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  diagnostic-reports:
+    owner: app
+    source: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+    purpose: SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; a unique connected WorkManager job retries without GIS synchronization.
   ngw-field-required:
     owner: maplib
     location_name: fields[].required in the local layer config JSON

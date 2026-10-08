@@ -14,6 +14,17 @@ related_code:
 
 ## Базовая матрица
 
+### Доставка багрепортов
+
+`SMOKE-DIAGNOSTIC-DELIVERY` выполняется только на отдельном Debug эмуляторе
+с test DSN. Проверить offline → fatal → холодный запуск → появление сети,
+затем HTTP 503 → 200 без смены сети через настоящий WorkManager. Fatal phase
+ожидаемо завершает synthetic процесс. Проверять не только опустевший cache,
+но и реальные stack/version/device/operation в test GlitchTip; source_revision
+должен соответствовать APK. Инструкции и границы:
+[доставка](../architecture/error-reporting.md),
+[результаты](../history/error-reporting-verification-2026-10-08.md).
+
 ### Азимут и вынос
 
 `SMOKE-STAKEOUT-PERMISSIONS` запускать на изолированном Android14+ эмуляторе

@@ -8,6 +8,17 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-08 — Багрепорты на собственный сервер
+
+- AppDiagnostics подключает Sentry к GlitchTip после isolated-script guard;
+  event содержит stack/device/version и структурированные стадии работы.
+- DiagnosticsTransport сохраняет SDK envelopes при offline/5xx/rate limits;
+  connected WorkManager retry работает без Activity и GIS sync. Штатный транспорт
+  SDK 8.37.1 удаляет отчёт при HTTP 503, поэтому заменён через ITransportFactory.
+- Добавлены redaction, ограничение повторов handled ошибок, native offline/fatal/
+  restart/server-recovery проверки, пользовательские и агентские инструкции.
+  Версии приложения и библиотек не менялись.
+
 ## 2026-10-08 — Отказ запуска азимута и выноса
 
 - Служба live-измерения использует явный тип `location`, без требования Bluetooth.

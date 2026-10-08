@@ -99,6 +99,7 @@ import com.nextgis.maplib.map.MapDrawable
 import com.nextgis.maplib.map.MaplibreMapInteraction
 import com.nextgis.maplib.map.VectorLayer
 import com.hypertrack.hyperlog.HyperLog
+import com.nextgis.mobile.util.AppDiagnostics
 import com.nextgis.maplib.util.Constants
 import com.nextgis.maplib.util.DiagnosticLog
 import com.nextgis.maplib.util.Constants.MESSAGE_INTENT_RELOAD
@@ -1735,6 +1736,16 @@ public class MapFragment
         }
 
         if (previousMode != mode) {
+            AppDiagnostics.operation(
+                when (mode) {
+                    MODE_AZIMUTH_CURRENT, MODE_AZIMUTH_POINTS -> AppDiagnostics.Operation.AZIMUTH
+                    MODE_STAKEOUT -> AppDiagnostics.Operation.STAKEOUT
+                    MODE_EDIT_BY_WALK -> AppDiagnostics.Operation.WALK
+                    MODE_EDIT -> AppDiagnostics.Operation.GEOMETRY_EDIT
+                    else -> AppDiagnostics.Operation.MAP
+                },
+                AppDiagnostics.Phase.START
+            )
             HyperLog.v(
                 Constants.TAG,
                 "MapFragment mode ${modeName(previousMode)} -> ${modeName(mode)} " +
@@ -5438,6 +5449,7 @@ public class MapFragment
             mStakeoutController?.start(target)
         } catch (exception: RuntimeException) {
             HyperLog.w(Constants.TAG, "Azimuth target initialization failed", exception)
+            AppDiagnostics.report(AppDiagnostics.Operation.AZIMUTH, exception)
             showStakeoutUnavailable()
         }
     }
@@ -5507,6 +5519,7 @@ public class MapFragment
             updateStaticAzimuthArrowForMapBearing()
         } catch (exception: RuntimeException) {
             HyperLog.w(Constants.TAG, "Free-point azimuth calculation failed", exception)
+            AppDiagnostics.report(AppDiagnostics.Operation.AZIMUTH, exception)
             Toast.makeText(context, R.string.stakeout_unavailable, Toast.LENGTH_LONG).show()
         }
     }
@@ -5671,6 +5684,7 @@ public class MapFragment
             setNewMode(MODE_STAKEOUT)
         } catch (exception: RuntimeException) {
             HyperLog.w(Constants.TAG, "Stakeout target initialization failed", exception)
+            AppDiagnostics.report(AppDiagnostics.Operation.STAKEOUT, exception)
             showStakeoutUnavailable()
         }
     }

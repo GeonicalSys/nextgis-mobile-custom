@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: ERROR-REPORTING
+    paths: [app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java, app/src/main/java/com/nextgis/mobile/util/Diagnostics*.java, app/src/main/java/com/nextgis/mobile/util/CustomLogMessageFormat.java, app/src/main/java/com/nextgis/mobile/MainApplication.java, app/src/androidTest/java/com/nextgis/mobile/util/Diagnostics*.java, tools/verify-diagnostic-delivery.ps1]
+    owners: [app]
+    read: [docs/architecture/error-reporting.md, docs/architecture/crash-recovery.md]
+    invariants: [INV-DIAGNOSTIC-DELIVERY, INV-CRASH-DRAFT-RECOVERY, INV-PROJECT-SCRIPTS]
+    must_update_docs: [app/docs/README.md, app/docs/manifest.yaml, docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md, docs/reference/settings-and-config.md, docs/registry/config-keys.yaml, docs/reference/official-differences.md]
+    verify: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, SMOKE-DIAGNOSTIC-DELIVERY]
+    strict_docs: true
   - id: CONDITIONAL-FORM-RULES
     paths: [maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java, maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java, maplibui/src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java, maplibui/src/main/java/com/nextgis/maplibui/util/FormChoiceAdapter.java, app/src/androidTest/java/com/nextgis/mobile/reliability/FormAppearanceTest.java, maplibui/src/main/java/com/nextgis/maplibui/util/FormMetadataSnapshot.java, maplibui/src/main/java/com/nextgis/maplibui/control/FormScrollView.java, maplibui/src/main/res/layout/activity_standard_attributes.xml, maplibui/src/main/java/com/nextgis/maplibui/util/LayerUtil.java, app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java]
     owners: [maplib, maplibui, app]

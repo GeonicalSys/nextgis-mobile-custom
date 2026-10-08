@@ -613,3 +613,11 @@ Collector import/composition sync на worker читает только namespac
 скрытый контейнер не блокирует UI required/cascade gate, но его значение
 сохраняется в контролах, draft и обычном Save. Схема/flag слоя не меняются.
 Default launch передаёт парные numbered или legacy form/meta файлы.
+
+## Диагностика ошибок очереди
+
+ProjectSyncRunner сообщает выбранные неожиданные исключения через AppDiagnostics,
+без account names, project paths и значений объектов. Offline/timeouts/cancel не
+создают handled bug report. Это независимая SDK cache/WorkManager доставка;
+она не использует sync lease, не открывает GIS базу и не меняет pending pairs.
+[Контракт диагностики](error-reporting.md).

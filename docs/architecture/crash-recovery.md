@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -194,6 +194,12 @@ Geometry coordinates, field values, photo paths, and credentials are not logged.
 - Persisting the complete manual-geometry undo/redo history (the latest geometry is persisted)
 
 ## Failure boundaries
+
+Автоматическая [диагностика](error-reporting.md) сохраняет отдельные SDK envelopes
+и не меняет содержимое или время очистки draft journals. HyperLogCrashHandler
+делегирует Sentry и Android; fatal процесс завершается штатно. WorkManager retry
+не открывает GIS базы и не перезапускает SDK/handlers. Контекст отчёта состоит
+из stack/version/device и фиксированных стадий, без значений формы и геометрии.
 
 The form Save worker checkpoints before database work and after assigning a new id.
 Its UUID resolves through `FeatureSaveJournal`; retry after a lost reply returns the

@@ -43,6 +43,20 @@ def productionVersionName = '3.1.2.27'
 def debugVersionCode = 218
 def debugVersionName = '3.1.2.23'
 
+// Error reports must identify the source even when a test APK keeps the same version number.
+def sourceRevision = providers.exec {
+    workingDir rootDir
+    commandLine 'git', 'rev-parse', '--verify', 'HEAD'
+    ignoreExitValue = true
+}.standardOutput.asText.get().trim()
+if (!(sourceRevision ==~ /[0-9a-f]{40}/)) sourceRevision = 'unknown'
+def sourceDirty = providers.exec {
+    workingDir rootDir
+    commandLine 'git', 'status', '--porcelain', '--untracked-files=normal'
+    ignoreExitValue = true
+}.standardOutput.asText.get().trim()
+if (!sourceDirty.isEmpty()) sourceRevision += '+dirty'
+
 def geonicalSigningPropertyNames = [
         'GEONICAL_STORE_FILE',
         'GEONICAL_STORE_PASSWORD',
@@ -93,11 +107,16 @@ android {
         minSdkVersion 26
         compileSdk 36
         targetSdkVersion 36
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        // The opt-in delivery runner uses a synthetic DSN and rejects physical/non-Debug devices.
+        testInstrumentationRunner providers.gradleProperty('diagnosticDeliveryChecks')
+                .getOrElse('false').toBoolean()
+                ? 'com.nextgis.mobile.util.DiagnosticsTestRunner'
+                : 'androidx.test.runner.AndroidJUnitRunner'
         // Fork versioning: docs/reference/build-matrix.md and docs/runbooks/release-apk.md
         versionCode productionVersionCode
         versionName productionVersionName
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
+        buildConfigField "String", "SOURCE_REVISION", "\"${sourceRevision}\""
 
         def props = new Properties()
         file("../local.properties").withInputStream { props.load(it) }

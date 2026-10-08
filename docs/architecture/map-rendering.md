@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,12 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+Изменение режима `MapFragment.setNewMode` записывает только enum операции в
+[диагностическую историю](error-reporting.md): карта, геометрия, обход, азимут
+или вынос. Координаты, имена/атрибуты объектов и provider URI не добавляются.
+Эта запись не меняет gesture handling, camera/style/source lifecycle или порядок
+слоёв; ошибки расчёта передаются отдельно с исходным stack trace.
 
 ## Ownership
 

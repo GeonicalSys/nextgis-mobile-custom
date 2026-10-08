@@ -116,6 +116,13 @@ Battery Saver; приложение не меняет системный реж�
   HyperLog и пункт «Поделиться логом». `verbose_log` (там же, «Расширенное
   логирование», default false) пишет каждое измерение GPS/NMEA, включая
   координаты; только для диагностики.
+- Автоматические отчёты GlitchTip независимы от локального логирования.
+  `sentry.dsn` из игнорируемого `sentry.properties` задаёт приёмник; APK не содержит
+  пароль администратора. `io.sentry.auto-init=false`, screenshots/view hierarchy
+  и performance sampling отключены. SDK queue в private files ограничена 256
+  обычными envelopes; connected WorkManager retry не запускает GIS sync.
+  [Доставка и границы](../architecture/error-reporting.md),
+  [разбор ошибок](../guides/bug-reports-user-guide.md).
 - Collector: project registry JSON, project metadata, composition state.
 - Layer config: `feature_label_field`, `mobile_render_mode`, `render_mode`,
   `layer_origin`, `mobile`.

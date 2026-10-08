@@ -13,6 +13,13 @@ related_code:
 
 # Матрица сборки и версий
 
+Диагностика использует Sentry Android `8.37.1` и WorkManager `2.11.2`, одинаково
+в Debug/Lisa/Belka. `diagnosticDeliveryChecks=true` меняет только instrumentation
+runner test APK для изолированной проверки доставки; версии, application/account
+IDs, signing и production APK от этого флага не меняются.
+`BuildConfig.SOURCE_REVISION` фиксирует Git HEAD и dirty marker для багрепортов;
+изменение этого поля не повышает versionName/versionCode.
+
 Подготовлен debug-only выпуск `3.1.2.23` / `218`; production остаётся
 `3.1.2.27` / `221`. APK matrix запускается после Merge Commit библиотек
 PR38/26, repin их fetched remote merge commits и Squash app46. Состав и порядок:

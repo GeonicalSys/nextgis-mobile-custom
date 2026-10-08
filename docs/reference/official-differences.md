@@ -25,8 +25,11 @@ related_code:
 
 ## Основа сравнения
 
-8 октября 2026 повторно проверены официальные HEAD app/maplib/maplibui через
-GitHub API: они совпали с указанными ниже. Recursive tree official app не содержит
+Ранее 8 октября 2026 проверены указанные ниже pinned SHA app/maplib/maplibui через
+GitHub API. Для диагностики позднее дополнительно проверен новый official app master
+`f11d38f77e4caf1b569526c5f620b2ec513c5f9d` (commit 8 октября 07:14 UTC).
+Его tree/MainApplication/manifest не содержат описанного ниже механизма доставки.
+Recursive tree проверенного official app не содержит
 stakeout/azimuth. В собственном инструменте форка обычное live-измерение использует
 только location service, без Bluetooth-разрешения; отказ Android корректно
 завершает owning session и освобождает GPS/audio, а старый Intent не возобновляет
@@ -1531,10 +1534,16 @@ versionCode/versionName и сертификат подписи APK. APK друг
 
 Google Analytics и автоматическая отправка событий удалены. Подробный HyperLog
 хранится на устройстве и отправляется только явным действием пользователя.
-Sentry оставлен для production crashes, но сбор interaction breadcrumbs и
-иерархии экранов отключён, а performance sampling ограничен. Такой режим даёт
-разработчику crash-диагностику без постоянной продуктовой аналитики поведения
-пользователя.
+Форк отправляет диагностические ошибки в собственный GlitchTip. Отчёт включает
+stack trace, версию/бренд, устройство и фиксированные стадии работы. Private SDK
+envelopes переживают offline/process restart; транспорт сохраняет 5xx/429 вместо
+удаления, connected WorkManager повторяет отправку без Activity и GIS sync.
+Screenshots, иерархия экранов и performance payloads отключены; полный HyperLog,
+атрибуты, геометрия и фото не прикладываются. Новая реализация не меняет fatal
+delegation или восстановление черновиков. В проверенном official app master
+`f11d38f7` такой transport/cache retry policy и фонового задания нет.
+[Контракт](../architecture/error-reporting.md),
+[разбор отчётов](../guides/bug-reports-user-guide.md).
 
 ## Что намеренно не включено
 

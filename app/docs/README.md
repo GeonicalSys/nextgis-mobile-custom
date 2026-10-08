@@ -304,8 +304,11 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   в runtime `MainApplication`, `AccountAuthenticator` и `SyncAdapter`; release
   использует `com.nextgis.account.geonical`, debug — `com.nextgis.account.debug`.
 - Реальные DSN, client secrets и signing credentials не входят в docs.
-- Sentry оставляет crash screenshots, но не собирает interaction breadcrumbs и
-  view hierarchy; traces/profiling в production семплируются с долей `0.05`.
+- GlitchTip получает автоматические error reports со stack/device/version и
+  структурированными стадиями работы. SDK cache сохраняется при offline/5xx;
+  WorkManager повторяет отправку без открытого экрана. Screenshots, view hierarchy
+  и performance payloads отключены. [Доставка](../../docs/architecture/error-reporting.md),
+  [руководство](../../docs/guides/bug-reports-user-guide.md).
 
 ## Диагностика
 

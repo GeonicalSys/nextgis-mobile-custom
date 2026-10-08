@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  SMOKE-DIAGNOSTIC-DELIVERY:
+    type: automatic
+    scope: [app]
+    command: powershell -NoProfile -File tools/verify-diagnostic-delivery.ps1 -TestDsn <private-test-project-dsn>
+    expected: Isolated Debug emulator only. Offline handled and fatal reports survive a process restart and reach the test GlitchTip after network return. Temporary HTTP 503 retains the SDK envelope and WorkManager delivers after recovery without a network change or replacement crash handler. Verify real server stack, device, version and operation separately; fatal phase must terminate its synthetic process.
   SMOKE-STAKEOUT-PERMISSIONS:
     type: automatic
     scope: [app]

@@ -19,6 +19,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.annotation.MainThread
 import com.hypertrack.hyperlog.HyperLog
+import com.nextgis.mobile.util.AppDiagnostics
 import com.nextgis.maplib.util.Constants
 import com.nextgis.mobile.R
 import com.nextgis.mobile.activity.MainActivity
@@ -58,6 +59,7 @@ class StakeoutForegroundService : Service() {
             acquireWakeLock()
         } catch (exception: RuntimeException) {
             HyperLog.w(Constants.TAG, "Stakeout location foreground rejected", exception)
+            AppDiagnostics.report(AppDiagnostics.Operation.STAKEOUT, exception)
             activeSession = null
             releaseWakeLock()
             stopForeground(STOP_FOREGROUND_REMOVE)

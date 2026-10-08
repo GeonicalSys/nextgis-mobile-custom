@@ -121,6 +121,7 @@ public final class ProjectSyncRunner {
         List<String> failedProjects = new ArrayList<>();
         SyncAdapter notifications = new SyncAdapter(context, true);
         long generation = NgwSyncIo.captureGeneration();
+        AppDiagnostics.operation(AppDiagnostics.Operation.SYNC, AppDiagnostics.Phase.START);
         try {
             ProjectOperationCoordinator.requireScopedSyncDependents();
             com.nextgis.maplib.service.NGWSyncService.markSyncStarted();
@@ -167,6 +168,7 @@ public final class ProjectSyncRunner {
                             try {
                                 pass.perform(account, bundle, authority, provider, part);
                             } catch (RuntimeException error) {
+                                AppDiagnostics.report(AppDiagnostics.Operation.SYNC, error);
                                 SyncWorkspaceSession.markFailed(); part.stats.numIoExceptions++;
                                 HyperLog.e(Constants.TAG, "Project account sync failed project=" + target.key(), error);
                             }
@@ -189,6 +191,7 @@ public final class ProjectSyncRunner {
                         result.stats.numIoExceptions++;
                         if (!failedProjects.contains(target.name)) failedProjects.add(target.name);
                         HyperLog.e(Constants.TAG, "Project sync failed project=" + target.key(), error);
+                        AppDiagnostics.report(AppDiagnostics.Operation.SYNC, error);
                     }
                 } finally {
                     if (session != null) {
@@ -205,7 +208,10 @@ public final class ProjectSyncRunner {
         } catch (Exception error) {
             result.stats.numIoExceptions++;
             HyperLog.e(Constants.TAG, "Project sync queue failed", error);
+            AppDiagnostics.report(AppDiagnostics.Operation.SYNC, error);
         } finally {
+            AppDiagnostics.operation(AppDiagnostics.Operation.SYNC,
+                    interrupted ? AppDiagnostics.Phase.CANCELLED : AppDiagnostics.Phase.FINISHED);
             if (ownsProgress) {
                 if (interrupted || generation != NgwSyncIo.captureGeneration()) NgwSyncProgress.cancel();
                 else NgwSyncProgress.finishSession();
