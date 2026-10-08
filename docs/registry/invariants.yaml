@@ -1,5 +1,12 @@
 schema_version: 1
 invariants:
+  INV-FEATURE-TYPE-CREATION:
+    title: Explicit style categories initialize valid parents and survive draft handoff
+    owners: [maplib, maplibui, app]
+    statement: A new object may explicitly choose a concrete local style category before geometry. Legacy and cascading selectors use canonical values and every valid stable-key parent filter; ambiguous tuples remain separate choices. Initial state never overwrites restored control state or existing objects, survives geometry and pre-launch form checkpoints, and never bypasses the normal Save gates.
+    related_code: [maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/util/LayerUtil.java, app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt]
+    verify_smoke: [SMOKE-FEATURE-TYPE-CREATION]
+    must_update_docs: [docs/architecture/feature-type-creation.md, docs/guides/form-behavior-user-guide.md]
   INV-CONDITIONAL-REQUIRED:
     title: Pinned visibility and requirements preserve values and validate visible fields
     owners: [maplib, maplibui, app]

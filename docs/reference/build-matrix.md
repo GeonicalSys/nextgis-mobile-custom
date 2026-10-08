@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-08
+last_verified: 2026-10-09
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -21,10 +21,11 @@ IDs, signing и production APK от этого флага не меняются.
 изменение этого поля не повышает versionName/versionCode.
 
 Production остаётся `3.1.2.27` / `221`, Debug — `3.1.2.23` / `218`.
-Закрытие текущей задачи: Merge Commit maplib #43 → maplibui #31 → app #51
+Закрытие текущей задачи: Merge Commit maplib #45 → maplibui #33 → app #53
 с fetched remote library pins, затем Squash app и APK version matrix.
 Запрошен только локальный Lisa Release APK, без публикации и повышения версии.
-Состав: [матрица закрытия](../history/mobile-form-sync-delivery-2026-10-08.md).
+Состав: [матрица закрытия](../history/feature-type-delivery-2026-10-09.md).
+Предыдущая цепочка форм/sync сохранена в [исторической матрице](../history/mobile-form-sync-delivery-2026-10-08.md).
 Предыдущий debug-only цикл сохранён в [исторической матрице](debug-3.1.2.23-delivery.md).
 
 | Компонент | Текущее значение |

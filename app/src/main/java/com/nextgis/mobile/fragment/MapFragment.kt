@@ -117,6 +117,8 @@ import com.nextgis.maplibui.api.ILayerUI
 import com.nextgis.maplibui.api.IVectorLayerUI
 import com.nextgis.maplibui.api.MapViewEventListener
 import com.nextgis.maplibui.dialog.ChooseLayerDialog
+import com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog
+import com.nextgis.maplibui.util.FeatureTypeDefaults
 import com.nextgis.maplibui.fragment.CompassFragment
 import com.nextgis.maplibui.mapui.MapViewOverlays
 import com.nextgis.maplibui.overlay.CurrentLocationOverlay
@@ -600,6 +602,16 @@ public class MapFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        childFragmentManager.setFragmentResultListener(ChooseFeatureTypeDialog.RESULT, viewLifecycleOwner) { _, result ->
+            if (result.getString("map") != currentMapDraftPath()) return@setFragmentResultListener
+            val defaults = result.getBundle(FeatureTypeDefaults.INITIAL_VALUES)
+            val layer = mApp?.map?.getLayerById(result.getInt("layer")) as? VectorLayer
+            if (defaults == null || layer == null) finishPointCreation()
+            else {
+                newFeatureDefaults = defaults
+                startNewGeometryCreation(layer)
+            }
+        }
 
         val mapViewMaplibre = view.findViewById<MapLibreMapView>(R.id.mapViewMaplibre)
         mapLibreMapView = mapViewMaplibre
@@ -999,6 +1011,7 @@ public class MapFragment
 
     private var walkPanel: WalkRecordingPanel? = null
     private var pointSessionId: String? = null
+    private var newFeatureDefaults: Bundle? = null
     private var finishedWalkEditId: String? = null
     private var pendingWalkFinishId: String? = null
     private var walkPreviewKey: String? = null
@@ -1107,6 +1120,7 @@ public class MapFragment
     private fun finishPointCreation() {
         pointSessionId?.let { context?.let { ctx -> WalkSessionStore.endPoint(ctx, it) } }
         pointSessionId = null
+        newFeatureDefaults = null
         walkPanel?.refresh()
     }
 
@@ -1370,9 +1384,9 @@ public class MapFragment
             if (featureId == Constants.NOT_FOUND.toLong()) {
                 //show attributes edit activity
                 val vectorLayerUI = mSelectedLayer as IVectorLayerUI
-                if (pointSessionId != null || finishedWalkEditId != null) {
+                if (pointSessionId != null || finishedWalkEditId != null || newFeatureDefaults != null) {
                     if (!LayerUtil.showSessionEditForm(mSelectedLayer!!, requireActivity(), featureId,
-                            geometry, finishedWalkEditId)) {
+                            geometry, finishedWalkEditId, newFeatureDefaults)) {
                         editLayerOverlay!!.setHasEdits(true)
                         return false
                     }
@@ -2492,6 +2506,7 @@ public class MapFragment
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putBundle(FeatureTypeDefaults.INITIAL_VALUES, newFeatureDefaults)
         outState.putString("finished_walk_edit_id", finishedWalkEditId)
         mapLibreMapView?.onSaveInstanceState(outState)
         outState.putBoolean(BUNDLE_KEY_IS_MEASURING, mRulerOverlay!!.isMeasuring)
@@ -2531,6 +2546,7 @@ public class MapFragment
         savedInstanceState: Bundle?
     ) {
         super.onViewStateRestored(savedInstanceState)
+        newFeatureDefaults = savedInstanceState?.getBundle(FeatureTypeDefaults.INITIAL_VALUES)
         if (null == savedInstanceState) {
             mode = MODE_NORMAL
         } else {
@@ -2860,6 +2876,8 @@ public class MapFragment
                 editMode = mode
                 geometryWkt = geometry.toWKT(true)
                 this.mapPath = mapPath
+                if (feature.id == Constants.NOT_FOUND.toLong() && newFeatureDefaults != null)
+                    initialValues = FeatureTypeDefaults.encode(newFeatureDefaults)
             }
             GeometryEditDraftStore.save(requireContext(), snapshot, reason)
         } catch (e: RuntimeException) {
@@ -2987,6 +3005,9 @@ public class MapFragment
                 ?: return scheduleManualGeometryResumeRetry("feature-not-ready")
         }
         feature.geometry = geometry
+
+        newFeatureDefaults = if (snapshot.featureId == Constants.NOT_FOUND.toLong())
+            FeatureTypeDefaults.decode(snapshot.initialValues) else null
 
         val mapDrawable = mMapRef.get()?.map
             ?: return scheduleManualGeometryResumeRetry("map-not-ready")
@@ -3501,7 +3522,7 @@ public class MapFragment
                 .show()
         } else if (layers.size == 1) {
             val layer = layers[0] as VectorLayer
-            startNewGeometryCreation(layer)
+            chooseNewFeatureType(layer)
 
             Toast.makeText(
                 mActivity,
@@ -3519,6 +3540,17 @@ public class MapFragment
                 .setTheme(mActivity!!.themeId) //.show(mActivity.getSupportFragmentManager(), "choose_layer");
                 .show(childFragmentManager, ChooseLayerDialog.TAG)
         }
+    }
+
+    private fun chooseNewFeatureType(layer: VectorLayer) {
+        newFeatureDefaults = null
+        if (!FeatureTypeDefaults.hasCategories(layer)) {
+            startNewGeometryCreation(layer)
+            return
+        }
+        if (childFragmentManager.findFragmentByTag(ChooseFeatureTypeDialog.TAG) != null) return
+        ChooseFeatureTypeDialog.create(layer, currentMapDraftPath()!!)
+            .show(childFragmentManager, ChooseFeatureTypeDialog.TAG)
     }
 
     /** Start a new sketch immediately: one centre point/node, then taps add subsequent nodes. */
@@ -3909,7 +3941,7 @@ public class MapFragment
                 launchCurrentPointForm(vectorLayer)
             }
         } else if (code == EDIT_LAYER) {
-            startNewGeometryCreation(vectorLayer)
+            chooseNewFeatureType(vectorLayer)
         } else if (code == ADD_GEOMETRY_BY_WALK) {
             editLayerOverlay!!.newGeometryByWalk()
             if (!applyInitialWalkGeometryAtStartLocation()) return
@@ -5252,7 +5284,8 @@ public class MapFragment
     }
 
     val isDialogShown: Boolean
-        get() = mChooseLayerDialogRef.get() != null && mChooseLayerDialogRef.get()!!.isResumed
+        get() = (mChooseLayerDialogRef.get() != null && mChooseLayerDialogRef.get()!!.isResumed)
+            || childFragmentManager.findFragmentByTag(ChooseFeatureTypeDialog.TAG) != null
 
     protected fun showFullCompass() {
         val fragmentManager = mActivity!!.supportFragmentManager

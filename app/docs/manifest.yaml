@@ -34,7 +34,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerPendingChangesTest.java
     responsibility: Exercise real drawer/worker with synthetic SQLite edits, deletion-only outbox, recycled rows and rotation; confirm row and global indicators clear together after acknowledgment.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
-    responsibility: Real dependent NGFP spinners, both audit branches, SQL NULL clearing, pinned draft/recreation and mismatched-choice Save rejection on synthetic offline SQLite.
+    responsibility: Real dependent NGFP spinners, both audit branches, SQL NULL clearing, pinned draft/recreation, mismatched-choice Save rejection, creation-category parent prefill, legacy pair persistence and asynchronous category-dialog results on synthetic offline SQLite.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectScriptsTest.java
     responsibility: Real isolated Binder, native VM, ownership, local history and NGFP save/draft regression.
   - path: examples/project-scripts/contractor-audit/manifest.json
@@ -144,7 +144,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
     responsibility: Atomically persist pending_v2 project/account pairs before dispatch; acknowledge each only after its children finish and recover its registered owner across active-project changes.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java
-    responsibility: Native editable selection, rail bounds and tool gesture regression.
+    responsibility: Native editable selection, rail bounds, tool gesture regression and the complete layer-category-sketch-form-SQLite creation path, including successful Save returning to the map and clearing drafts.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/FeaturePersistenceTest.java
     responsibility: Native SQLite rollback and unique backup checks.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/FormSaveRecoveryTest.java

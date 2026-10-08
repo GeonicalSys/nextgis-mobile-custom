@@ -328,6 +328,10 @@ manifest_metadata:
     source: app/src/main/AndroidManifest.xml
     purpose: Disable performance profiles; the receiver is used for error reports only.
 runtime_constants:
+  feature_type_initial_values:
+    owner: maplibui
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java
+    purpose: Explicit typed new-feature control state including stable cascade keys and a small verified definition pin; restored Activity or durable draft state takes precedence.
   SOURCE_REVISION:
     owner: app
     type: string

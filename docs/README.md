@@ -1,7 +1,7 @@
 ---
 title: GeonicalSystem NextGIS Mobile — документация
 type: index
-last_verified: 2026-10-07
+last_verified: 2026-10-09
 related_code:
   - settings.gradle
   - .gitmodules
@@ -22,6 +22,7 @@ related_code:
 | Изменение кода | [guides/change-checklist.md](guides/change-checklist.md) |
 | MapLibre/layer order | [architecture/map-rendering.md](architecture/map-rendering.md) |
 | Map performance | [architecture/map-performance.md](architecture/map-performance.md) |
+| Тип нового объекта и зависимые поля | [architecture/feature-type-creation.md](architecture/feature-type-creation.md) и [guides/form-behavior-user-guide.md](guides/form-behavior-user-guide.md) |
 | Вынос координат и звуковое наведение | [architecture/stakeout.md](architecture/stakeout.md) |
 | Синхронизация всех проектов для пользователя | [guides/project-synchronization-user-guide.md](guides/project-synchronization-user-guide.md) |
 | Collector/NGW sync | [architecture/collector-projects.md](architecture/collector-projects.md) |

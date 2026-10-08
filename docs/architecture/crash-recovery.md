@@ -18,6 +18,11 @@ related_code:
 
 # Crash recovery and durable drafts
 
+Explicit [feature type defaults](feature-type-creation.md) survive in the optional
+typed initial_values payload of the geometry v1 journal. Geometry-to-form launch
+checkpoints these fields and stable cascade keys before starting the Activity;
+recovered control state takes precedence over the initial category.
+
 Разворачивание каскадного `double_combobox` в отдельные поля меняет только
 отображение. Saved-state keys и pinned cascade definition прежние; старые
 черновики сохраняют выбор по именам полей. Свайп отменяет касание исходного
