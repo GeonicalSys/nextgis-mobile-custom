@@ -157,7 +157,8 @@ public class MapEditingToolsTest {
                         .getChildFragmentManager().findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
                 if(dialog==null || dialog.getDialog()==null) return;
                 android.widget.ListView list=((androidx.appcompat.app.AlertDialog)dialog.getDialog()).getListView();
-                ready.set(list!=null && list.getCount()==1 && list.getChildCount()==1);
+                ready.set(list!=null && list.getCount()==1 && list.getChildCount()==1
+                        && list.getItemAtPosition(0) instanceof com.nextgis.maplibui.util.FeatureTypeDefaults.Choice);
             });
             if(!ready.get())Thread.sleep(40);
         }

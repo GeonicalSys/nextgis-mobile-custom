@@ -321,7 +321,7 @@ public class CascadingFormsTest {
                                 .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
                         if (fragment==null) return;
                         android.widget.ListView list=((androidx.appcompat.app.AlertDialog)fragment.requireDialog()).getListView();
-                        loaded.set(list!=null && list.getCount()==1);
+                        loaded.set(list!=null && list.getCount()==1 && list.getItemAtPosition(0) instanceof FeatureTypeDefaults.Choice);
                     });
                     return loaded.get();
                 });
@@ -334,6 +334,85 @@ public class CascadingFormsTest {
                 await(() -> result.get()!=null);
                 assertEquals("Bob",result.get().getBundle(FeatureTypeDefaults.INITIAL_VALUES)
                         .getString(ControlHelper.getSavedStateKey("eployee1")));
+                assertEquals(0,f.layer.getCount());
+            }
+        }
+    }
+    @Test public void longTypeChooserKeepsCancelVisibleAndCreatesNoObject() throws Exception {
+        try (Fixture f = new Fixture(false)) {
+            FieldStyleRule rules = new FieldStyleRule(f.layer); rules.setKey("eployee1");
+            for (int i = 0; i < 40; i++) rules.setStyle("Type " + i,new SimpleMarkerStyle());
+            f.layer.setRenderer(new RuleFeatureRenderer(f.layer,rules,new SimpleMarkerStyle()));
+            java.util.concurrent.atomic.AtomicReference<android.os.Bundle> result = new java.util.concurrent.atomic.AtomicReference<>();
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> scenario = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                scenario.onActivity(a -> {
+                    a.getSupportFragmentManager().setFragmentResultListener(
+                            com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.RESULT,a,(key,bundle)->result.set(bundle));
+                    com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.create(f.layer,f.map.getPath().getAbsolutePath())
+                            .show(a.getSupportFragmentManager(),com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                });
+                java.util.concurrent.atomic.AtomicBoolean loaded = new java.util.concurrent.atomic.AtomicBoolean();
+                await(() -> {
+                    scenario.onActivity(a -> {
+                        androidx.fragment.app.DialogFragment fragment = (androidx.fragment.app.DialogFragment)a.getSupportFragmentManager()
+                                .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                        if (fragment == null) return;
+                        android.widget.ListView list = ((androidx.appcompat.app.AlertDialog)fragment.requireDialog()).getListView();
+                        loaded.set(list != null && list.getCount() == 40);
+                    });
+                    return loaded.get();
+                });
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                scenario.onActivity(a -> {
+                    androidx.fragment.app.DialogFragment fragment = (androidx.fragment.app.DialogFragment)a.getSupportFragmentManager()
+                            .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                    View cancel = ((androidx.appcompat.app.AlertDialog)fragment.requireDialog()).getButton(android.content.DialogInterface.BUTTON_NEGATIVE);
+                    android.graphics.Rect visible = new android.graphics.Rect();
+                    assertTrue("Cancel must remain on screen for a long category list",cancel.getGlobalVisibleRect(visible));
+                    assertEquals("Cancel must be fully visible",cancel.getHeight(),visible.height());
+                    cancel.performClick();
+                });
+                await(() -> result.get() != null);
+                assertFalse(result.get().containsKey(FeatureTypeDefaults.INITIAL_VALUES));
+                assertEquals(0,f.layer.getCount());
+            }
+        }
+    }
+    @Test public void unavailableTypeListShowsMessageAndAllowsCancel() throws Exception {
+        try (Fixture f = new Fixture(false)) {
+            write(new File(f.layer.getPath(),"form.json"),"{");
+            write(new File(f.layer.getPath(),"ngfp_meta.json"),"{}");
+            FieldStyleRule rules = new FieldStyleRule(f.layer); rules.setKey("eployee1");
+            rules.setStyle("Bob",new SimpleMarkerStyle());
+            f.layer.setRenderer(new RuleFeatureRenderer(f.layer,rules,new SimpleMarkerStyle()));
+            java.util.concurrent.atomic.AtomicReference<android.os.Bundle> result = new java.util.concurrent.atomic.AtomicReference<>();
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> scenario = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                scenario.onActivity(a -> {
+                    a.getSupportFragmentManager().setFragmentResultListener(
+                            com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.RESULT,a,(key,bundle)->result.set(bundle));
+                    com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.create(f.layer,f.map.getPath().getAbsolutePath())
+                            .show(a.getSupportFragmentManager(),com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                });
+                java.util.concurrent.atomic.AtomicBoolean readable = new java.util.concurrent.atomic.AtomicBoolean();
+                await(() -> {
+                    scenario.onActivity(a -> {
+                        androidx.fragment.app.DialogFragment fragment = (androidx.fragment.app.DialogFragment)a.getSupportFragmentManager()
+                                .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                        if (fragment == null) return;
+                        android.widget.ListView list = ((androidx.appcompat.app.AlertDialog)fragment.requireDialog()).getListView();
+                        java.util.ArrayList<View> messages = new java.util.ArrayList<>();
+                        list.findViewsWithText(messages,a.getString(R.string.feature_type_unavailable),View.FIND_VIEWS_WITH_TEXT);
+                        readable.set(!messages.isEmpty() && messages.get(0).getHeight()>0);
+                    });
+                    return readable.get();
+                });
+                scenario.onActivity(a -> {
+                    androidx.fragment.app.DialogFragment fragment = (androidx.fragment.app.DialogFragment)a.getSupportFragmentManager()
+                            .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                    ((androidx.appcompat.app.AlertDialog)fragment.requireDialog()).getButton(android.content.DialogInterface.BUTTON_NEGATIVE).performClick();
+                });
+                await(() -> result.get()!=null);
+                assertFalse(result.get().containsKey(FeatureTypeDefaults.INITIAL_VALUES));
                 assertEquals(0,f.layer.getCount());
             }
         }
