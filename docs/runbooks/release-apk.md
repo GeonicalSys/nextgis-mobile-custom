@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-08
+last_verified: 2026-10-09
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -52,12 +52,13 @@ token для отправки ошибок APK не нужны. Не печат�
 ## Обязательная сборка и проверка версии
 
 Перед итоговой сборкой закрыть все требуемые PR из delivery matrix. Для текущей
-задачи порядок: maplib #43 (Merge Commit) → maplibui #31 (Merge Commit) → app #51
+задачи порядок: maplib #45 (Merge Commit) → maplibui #33 (Merge Commit) → app #53
 (Squash). После library merges app закрепляет fetched remote merge commits;
 после app merge сверяются remote tip, содержимое и все строки
-[матрицы закрытия](../history/mobile-form-sync-delivery-2026-10-08.md).
-Затем выполнить APK version matrix. Запрос от 8 октября — локальный Lisa Release
+[матрицы закрытия](../history/feature-type-delivery-2026-10-09.md).
+Затем выполнить APK version matrix. Запрос от 9 октября — локальный Lisa Release
 APK без повышения версии и публикации: publisher, включая dry-run, не запускается.
+Предыдущая цепочка форм и sync: [историческая матрица](../history/mobile-form-sync-delivery-2026-10-08.md).
 Предыдущий debug-only цикл: [историческая матрица](../reference/debug-3.1.2.23-delivery.md).
 
 ```powershell
