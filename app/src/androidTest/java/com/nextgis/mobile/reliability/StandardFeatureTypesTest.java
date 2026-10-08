@@ -98,10 +98,11 @@ public class StandardFeatureTypesTest {
     private static void checkPointForm(GISApplication app,VectorLayerUI layer,File form,File meta,Bundle initial) {
         GeoPoint point = new GeoPoint(100,200); point.setCRS(GeoConstants.CRS_WEB_MERCATOR);
         Intent intent = new Intent(app,FormBuilderModifyAttributesActivity.class)
-                .putExtra(ConstantsUI.KEY_LAYER_ID,layer.getId()).putExtra(ConstantsUI.KEY_FEATURE_ID,Constants.NOT_FOUND)
+                .putExtra(ConstantsUI.KEY_LAYER_ID,layer.getId()).putExtra(ConstantsUI.KEY_FEATURE_ID,(long)Constants.NOT_FOUND)
                 .putExtra(ConstantsUI.KEY_GEOMETRY,point).putExtra(ConstantsUI.KEY_FORM_PATH,form)
                 .putExtra(ConstantsUI.KEY_META_PATH,meta).putExtra(FeatureTypeDefaults.INITIAL_VALUES,initial);
         try (ActivityScenario<FormBuilderModifyAttributesActivity> scenario = ActivityScenario.launch(intent)) {
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
             scenario.onActivity(a -> {
                 try {
                     java.lang.reflect.Field fields = com.nextgis.maplibui.activity.ModifyAttributesActivity.class.getDeclaredField("mFields");

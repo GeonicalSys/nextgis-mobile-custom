@@ -51,9 +51,11 @@ token для отправки ошибок APK не нужны. Не печат�
 
 ## Обязательная сборка и проверка версии
 
-Перед итоговой сборкой закрыть все требуемые PR из delivery matrix. Для текущей
+Перед итоговой сборкой закрыть все требуемые PR из delivery matrix. Для исходной
 задачи порядок: maplib #45 (Merge Commit) → maplibui #33 (Merge Commit) → app #53
-(Squash). После library merges app закрепляет fetched remote merge commits;
+(Squash). Исправление пустых списков: maplibui #34 (Merge Commit) → app #54
+(Squash), [матрица исправления](../history/feature-type-empty-lists-2026-10-09.md).
+После library merges app закрепляет fetched remote merge commits;
 после app merge сверяются remote tip, содержимое и все строки
 [матрицы закрытия](../history/feature-type-delivery-2026-10-09.md).
 Затем выполнить APK version matrix. Запрос от 9 октября — локальный Lisa Release
