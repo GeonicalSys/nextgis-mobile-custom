@@ -193,12 +193,19 @@ registry/docs. Общую карту отличий открывай в
 
 Для зависимой обязательности читать `docs/architecture/conditional-form-rules.md`
 и `docs/guides/form-behavior-user-guide.md`. Декларативный `lisa_form_rules`
-усиливает статический required, не меняет значения и не исполняет код. Общий
+в v1 усиливает required; v2 добавляет visible для field/element (lisa_id).
+Скрытое поле не блокирует UI Save, но значение, слой и draft не очищать.
+Видимость и required вычислять по одному pinned снимку и текущим значениям,
+включая скрытые/неактивные вкладки; ошибка bind/version/pin блокирует Save.
+Оформление FormFieldLayout общее для NGFP/обычных форм, подпись выше рамки;
+не возвращать технические key вместо alias и не заменять listeners каскада. Общий
 Save gate обязателен для toolbar и Back Save; условия вычисляются по текущим
 типизированным значениям, включая неактивные вкладки. Сохранять проверенный
 `lisa_required_pin` в owning layer/form_rules и durable draft; ошибка pin
 блокирует запись. В clone запрещён remap всего namespace. Внешние Tabs закреплены
 над полями; свайпы не должны перехватывать ввод, подпись и собственные жесты.
+Проверять повторные переходы над включёнными списками, checkbox, коротким
+комментарием и пустой областью, а также vertical scroll и выделение текста.
 
 Для зависимых списков сначала читать `docs/architecture/cascading-form-lists.md`
 и пользовательское руководство. Граф/таблицы находятся в NGFP
@@ -206,6 +213,9 @@ Save gate обязателен для toolbar и Back Save; условия вы�
 Сохранять key отдельно от value/label, обе ветви аудита, SQL NULL при очистке,
 pin в Bundle/durable draft и неизменные исторические значения. Локальные ID
 в этом блоке никогда не remap-ить как NGW resource ID.
+Управляемые legacy double_combobox отображаются отдельными полями через
+CascadingFormElements. Не менять исходный JSON и field keys при этом
+преобразовании; новые формы строить из обычных combobox и общего графа.
 
 Перед изменением runtime/publisher/hooks читать `docs/architecture/project-scripts.md`
 и `docs/guides/project-scripts-user-guide.md`. Базовые GIS/расчётные функции и
@@ -214,3 +224,18 @@ versioned API. Добавлять постепенно. Не объявлять 
 работающими. Формат общий с desktop stand_project; source-only ZIP, отдельный UID,
 ограниченные grants и pinned draft version обязательны. Старые пакеты не удалять
 как кеш без решения по черновикам. Порядок merge: maplib → maplibui → app → desktop.
+
+## Общая синхронизация проектов
+
+Читать consuming root docs/architecture/ngw-sync-and-storage.md и
+docs/guides/project-synchronization-user-guide.md. sync_all_projects по умолчанию true;
+ручной и scheduled account запуск используют ProjectSyncRunner. Не переключать
+mMap/active prefs ради фонового проекта. Владельца переносить через
+SyncWorkspaceSession во все async callbacks, service tickets и provider URI;
+untagged UI URI всегда относится к активной карте, expired token не имеет fallback.
+Очередь держит глобальный lease до завершения дочерних работ и mutating HTTP.
+Полный pending project/account план сохраняется до первого прохода; Collector
+journals разделены по canonical map path. Проверять cancellation, equal layer/group
+IDs, сохранность draft и реальный fill на изолированном эмуляторе.
+Подписи разделённых double_combobox брать из meta.fields keyname/display_name,
+затем layer alias; field key используется только при отсутствии обоих.

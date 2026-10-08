@@ -205,6 +205,14 @@ public class CascadingFormsTest {
         }
         return null;
     }
+    private static View caption(View root, String text) {
+        if (root instanceof android.widget.TextView && text.contentEquals(((android.widget.TextView)root).getText())) return root;
+        if (root instanceof android.view.ViewGroup) {
+            android.view.ViewGroup group=(android.view.ViewGroup)root;
+            for (int i=0;i<group.getChildCount();i++) { View found=caption(group.getChildAt(i),text); if(found!=null) return found; }
+        }
+        return null;
+    }
     private static void swipe(ActivityScenario<FormBuilderModifyAttributesActivity> scenario, boolean left,
                               java.util.function.Function<FormBuilderModifyAttributesActivity,View> target) {
         float[] points=new float[3];
@@ -241,7 +249,7 @@ public class CascadingFormsTest {
                 });
                 swipe(s,true,a -> a.findViewById(R.id.form_scroll));
                 s.onActivity(a -> {assertEquals(1,tabs(a).getValue());assertEquals(0,((ScrollView)a.findViewById(R.id.form_scroll)).getScrollY());});
-                swipe(s,false,a -> ((android.view.ViewGroup)tabs(a).getPageLayouts().get(1)).getChildAt(0));
+                swipe(s,false,a -> caption(tabs(a).getPageLayouts().get(1),"Swipe here"));
                 s.onActivity(a -> {assertEquals(0,tabs(a).getValue());assertEquals("Driver",a.getCascadingLists().value("jobtitle1"));});
                 s.onActivity(a -> {ScrollView scroll=a.findViewById(R.id.form_scroll);scroll.scrollTo(0,scroll.getChildAt(0).getHeight());});
                 InstrumentationRegistry.getInstrumentation().waitForIdleSync();
@@ -263,6 +271,111 @@ public class CascadingFormsTest {
                     assertEquals(1,tabs(a).getValue());android.os.Bundle state=new android.os.Bundle();
                     ((Sign)signature(tabs(a).getPageLayouts().get(1))).saveState(state);
                     assertTrue(state.containsKey("signature_strokes"));
+                });
+            }
+        }
+    }
+    @Test public void managedLegacyPairsRenderAsSeparateFullWidthFields() throws Exception {
+        try (Fixture f=new Fixture(false);ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+            choose(s,"contractor",1);
+            s.onActivity(a -> {
+                for(String name:new String[]{"jobtitle1","eployee1","jobtitle2","employee2"})
+                    assertTrue("Each cascade field must be a normal independent combobox: "+name,
+                            controls(a).get(name) instanceof com.nextgis.maplibui.formcontrol.Combobox);
+                Spinner role=spinner(a,"jobtitle1"),person=spinner(a,"eployee1");
+                int[] roleAt=new int[2],personAt=new int[2];role.getLocationOnScreen(roleAt);person.getLocationOnScreen(personAt);
+                float density=a.getResources().getDisplayMetrics().density;
+                assertTrue(role.getHeight()>=48*density);assertTrue(person.getHeight()>=48*density);
+                assertTrue("Adjacent controls need a visible gap",personAt[1]-(roleAt[1]+role.getHeight())>=12*density);
+                assertEquals(((View)role.getParent()).getWidth(),role.getWidth());
+                assertEquals(role.getWidth(),person.getWidth());
+            });
+            choose(s,"jobtitle1",1);choose(s,"eployee1",1);s.recreate();
+            s.onActivity(a -> assertEquals("Alex",a.getCascadingLists().value("eployee1")));
+        }
+    }
+    @Test public void separatedPairsUseFormAliasesInsteadOfTechnicalLayerNames() throws Exception {
+        try (Fixture f = new Fixture(true)) {
+            JSONObject meta = new JSONObject(new String(Files.readAllBytes(f.meta.toPath()), java.nio.charset.StandardCharsets.UTF_8));
+            meta.put("fields", new JSONArray()
+                    .put(new JSONObject().put("keyname", "jobtitle1").put("display_name", "Должность 1"))
+                    .put(new JSONObject().put("keyname", "eployee1").put("display_name", "Работник 1")));
+            write(f.meta, meta.toString());
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                s.onActivity(a -> {
+                    for (String[] field : new String[][]{{"jobtitle1", "Должность 1"}, {"eployee1", "Работник 1"}}) {
+                        View view = spinner(a, field[0]);
+                        com.nextgis.maplibui.util.FormFieldLayout.FieldContainer container = com.nextgis.maplibui.util.FormFieldLayout.container(view);
+                        assertNotNull(container);
+                        android.widget.TextView caption = (android.widget.TextView)container.getChildAt(0);
+                        assertEquals(field[1] + " *", caption.getText().toString());
+                    }
+                });
+            }
+        }
+    }
+    @Test public void swipesWorkAcrossSelectorsCheckboxCommentsAndBlankSpace() throws Exception {
+        try(Fixture f=new Fixture(false)) {
+            navigationForm(f);
+            try(ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                s.onActivity(a -> {
+                    android.widget.LinearLayout page=(android.widget.LinearLayout)tabs(a).getPageLayouts().get(1);
+                    android.widget.CheckBox check=new android.widget.CheckBox(a);check.setText("Check stays unchanged");check.setChecked(true);check.setTag("swipe-check");page.addView(check,1);
+                    android.widget.EditText edit=new android.widget.EditText(a);edit.setText("Retained comment");edit.setSingleLine(false);edit.setMinLines(2);edit.setTag("swipe-comment");page.addView(edit,2);
+                });
+                choose(s,"contractor",1);choose(s,"jobtitle1",1);choose(s,"eployee1",1);
+                for(int i=0;i<5;i++) {
+                    swipe(s,true,a -> spinner(a,"contractor"));
+                    s.onActivity(a -> assertEquals(1,tabs(a).getValue()));
+                    swipe(s,false,a -> tabs(a).findViewWithTag("swipe-check"));
+                    s.onActivity(a -> assertEquals(0,tabs(a).getValue()));
+                    swipe(s,true,a -> spinner(a,"jobtitle1"));
+                    swipe(s,false,a -> tabs(a).findViewWithTag("swipe-comment"));
+                    s.onActivity(a -> assertEquals(0,tabs(a).getValue()));
+                }
+                s.onActivity(a -> header(a).getTabAt(1).select());
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                // The ScrollView centre is below the short page, outside Tabs' own bounds.
+                s.onActivity(a -> ((android.widget.LinearLayout)tabs(a).getPageLayouts().get(1)).removeView(signature(tabs(a).getPageLayouts().get(1))));
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                swipe(s,false,a -> a.findViewById(R.id.form_scroll));
+                s.onActivity(a -> {
+                    assertEquals("Empty area belongs to page navigation too",0,tabs(a).getValue());
+                    View page=tabs(a).getPageLayouts().get(1);
+                    assertTrue(((android.widget.CheckBox)page.findViewWithTag("swipe-check")).isChecked());
+                    assertEquals("Retained comment",((android.widget.EditText)page.findViewWithTag("swipe-comment")).getText().toString());
+                    assertEquals("Alex",a.getCascadingLists().value("eployee1"));
+                });
+            }
+        }
+    }
+    @Test public void verticalScrollAndSelectedCommentKeepTheirOwnGestures() throws Exception {
+        try(Fixture f=new Fixture(false)) {
+            navigationForm(f);
+            try(ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                float[] point=new float[2];
+                s.onActivity(a -> {
+                    View scroll=a.findViewById(R.id.form_scroll);int[] at=new int[2];scroll.getLocationOnScreen(at);
+                    point[0]=at[0]+scroll.getWidth()/2f;point[1]=at[1]+scroll.getHeight()*.8f;
+                });
+                Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();long down=SystemClock.uptimeMillis();
+                for(int i=0;i<=12;i++) {
+                    MotionEvent event=MotionEvent.obtain(down,SystemClock.uptimeMillis(),i==0?MotionEvent.ACTION_DOWN:i==12?MotionEvent.ACTION_UP:MotionEvent.ACTION_MOVE,point[0]+i,point[1]-i*20,0);
+                    event.setSource(android.view.InputDevice.SOURCE_TOUCHSCREEN);instrumentation.sendPointerSync(event);event.recycle();SystemClock.sleep(12);
+                }
+                instrumentation.waitForIdleSync();
+                s.onActivity(a -> {
+                    assertEquals(0,tabs(a).getValue());assertTrue(((ScrollView)a.findViewById(R.id.form_scroll)).getScrollY()>0);
+                    android.widget.LinearLayout page=(android.widget.LinearLayout)tabs(a).getPageLayouts().get(1);
+                    android.widget.EditText edit=new android.widget.EditText(a);edit.setSingleLine(false);edit.setMinLines(2);edit.setText("Selected comment remains");edit.setTag("selected-comment");page.addView(edit,0);
+                    header(a).getTabAt(1).select();
+                });
+                instrumentation.waitForIdleSync();
+                s.onActivity(a -> ((android.widget.EditText)tabs(a).findViewWithTag("selected-comment")).setSelection(0,8));
+                swipe(s,false,a -> tabs(a).findViewWithTag("selected-comment"));
+                s.onActivity(a -> {
+                    assertEquals("Selecting text must not change tabs",1,tabs(a).getValue());
+                    assertEquals("Selected comment remains",((android.widget.EditText)tabs(a).findViewWithTag("selected-comment")).getText().toString());
                 });
             }
         }

@@ -1,9 +1,9 @@
 schema_version: 1
 invariants:
   INV-CONDITIONAL-REQUIRED:
-    title: Conditional requirements strengthen static required without losing values or draft rules
+    title: Pinned visibility and requirements preserve values and validate visible fields
     owners: [maplib, maplibui, app]
-    statement: Native bounded NGFP conditions read owning scalar values only; markers and final Save use the same immutable pinned rules. Static required is never relaxed, unavailable/corrupt rules block Save before writes, and draft pins/values survive updates and recovery. Tab navigation never discards control state or consumes signature/photo/text child gestures.
+    statement: Native bounded NGFP conditions read owning scalar values only; markers and final Save use the same immutable pinned rules. V2 visibility hides complete field/element containers and their descendant validation, preserving every value and the original layer required flag; visible static required is never relaxed. Unknown or duplicate targets and unavailable/corrupt rules block Save before writes, and draft pins/values survive updates and recovery. Tab navigation never discards control state or consumes signature/photo/text child gestures.
     related_code: [maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java, maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java]
     verify_smoke: [SMOKE-CONDITIONAL-REQUIRED, SMOKE-FORM-NAVIGATION, SMOKE-REQUIRED-FIELDS]
     must_update_docs: [docs/architecture/conditional-form-rules.md, docs/guides/form-behavior-user-guide.md]
@@ -17,8 +17,10 @@ invariants:
       item or remembered value is selected. Immutable definitions, selected keys and
       original values survive rotation and durable recovery. Save rejects invalid new
       combinations before feature/attachment writes; unchanged historical values survive.
+      Managed legacy pairs render as separate labelled full-width fields with touch spacing;
+      this presentation change preserves source JSON, field names and pinned draft keys.
       Existing forms without the namespace retain their legacy behavior.
-    related_code: [maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java]
+    related_code: [maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormElements.java]
     verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-CASCADING-FORM-LISTS, SMOKE-REQUIRED-FIELDS]
     must_update_docs: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
   INV-PROJECT-SCRIPTS:
@@ -460,7 +462,7 @@ invariants:
     owners: [maplib, maplibui]
     statement: >
       Reject incomplete remote snapshots, persist unfinished batches with their project UID, and
-      after process death requeue only missing or broken layers once that exact project is active.
+      after process death requeue only missing or broken layers in that exact active or scoped background map.
       Every unpublished layer directory is app-marked before data access; recovery may delete only
       marked unreferenced stages and their owning-workspace tables, while referenced stages and every
       unmarked legacy directory remain. Server Polygon/MultiPolygon validation must avoid the legacy
@@ -789,7 +791,11 @@ invariants:
       fresh in-tolerance fixes. Audible bands use a full-scale-limited short damped tap with
       3x digital gain and the final state a double tap, not a sustained high tone. A location foreground service,
       ongoing silent notification and partial wake lock keep GPS and audio active while the
-      screen is off or the UI is paused; explicit stop releases all three. The same
+      screen is off or the UI is paused; explicit stop releases all three. Ordinary
+      guidance uses only the location service type without Bluetooth permission.
+      Synchronous and asynchronous start rejection release the owning GPS/audio resources;
+      stale session starts/stops cannot cancel a newer owner. Unowned redelivery fulfils
+      the foreground-start contract before stopping without restoring GPS/audio. The same
       live lifecycle is available from current location to an arbitrary map point. A
       separate arbitrary point A to point B mode does not acquire GPS/audio resources.
       True initial bearing is converted to numeric magnetic azimuth by subtracting
@@ -815,7 +821,7 @@ invariants:
       - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
       - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
-    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT-PERMISSIONS, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
     must_update_docs:
       - docs/architecture/stakeout.md
       - docs/reference/settings-and-config.md
@@ -824,6 +830,25 @@ invariants:
       - maplib/docs/manifest.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml
+  INV-DIAGNOSTIC-DELIVERY:
+    title: Diagnostic events survive offline and temporary server failures
+    owners: [app]
+    statement: >
+      Initialize only after the isolated-script guard and before the delegating local crash
+      handler. Persist bounded SDK envelopes in private files storage before async HTTP;
+      retain offline, 5xx and rate-limited failures, replay through SDK observers and a
+      connected WorkManager job without reinitializing handlers. Event UUID and diagnostic
+      stack/version/device/typed-operation context survive process restart. Never read or
+      attach raw HyperLog, NMEA, GIS attributes/geometry, accounts or photos. Fatal exceptions
+      still delegate to Android and existing draft recovery remains independent.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
+    verify_smoke: [SMOKE-DIAGNOSTIC-DELIVERY, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
+    must_update_docs: [docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md]
   INV-CRASH-DRAFT-RECOVERY:
     title: Crash-safe track resume and geometry/form drafts
     owners: [app, maplibui, maplib]
@@ -919,7 +944,7 @@ invariants:
   INV-SYNC-ACCOUNT-ISOLATION:
     title: One NGW account failure does not suppress another account
     owners: [app, maplib, maplibui]
-    statement: Keep account sync results isolated, prioritize the active Collector account for manual serial sync, restore each enabled account schedule after restart, and durably request an interrupted account pass only for the same active workspace. Pending local edits are sent before a large pull; a failed push prevents remote apply for that layer.
+    statement: Keep account sync results isolated, prioritize the active Collector account for manual serial sync, restore each enabled account schedule after restart, and durably request each interrupted project/account pair only for its registered owning workspace, even when another project is open. Pending local edits are sent before a large pull; a failed push prevents remote apply for that layer.
     related_code:
       - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
       - maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java
@@ -932,19 +957,17 @@ invariants:
     title: Active project identity is stable during database background work
     owners: [app, maplib, maplibui]
     statement: >
-      Manual sync operates only on accounts represented in the active map and owns that workspace
-      from the button press through every sequential account, without also queueing duplicate
-      framework passes. Periodic sync, layer fill and schema
-      rebuild also own a workspace. During sync, project switch/create/rename/delete and layer or
-      underlay loading warn the user and offer an explicit interruption; the requested action waits
-      until all sync owners finish. Cancellation closes read-only network work immediately, rolls
-      back an interrupted tracked apply, and after an outbound mutation was sent waits for that one
-      request to resolve before another mutation can start. Duplicate full sync remains refused. Collector import reserves
-      the switch before creating or updating its workspace entry; if fill or rebuild is active, import
-      leaves the registry unchanged and explains in a modal dialog that loading must finish. A dependent fill may reserve only the same workspace while sync is
-      active, but must wait for sync to release database access before touching SQLite.
-      A resumed Collector task also validates its journal project UID against the target group and
-      preserves the journal without file or database access while another project is active.
+      Manual and per-account scheduled sync share a serial project queue; sync_all_projects defaults
+      to true and false limits new full runs to the open map. A layer-specific run stays in the open map.
+      The queue holds one DATA_SYNC lease throughout every project, account and async child without
+      changing active preferences, MapBase active identity or drafts. Background maps use scoped lookup,
+      opaque provider/service tokens and tracked callbacks; expired tokens cannot fall back to the UI database.
+      Only session-owned fill/rebuild stages may join a scoped queue and touch SQLite in its dependent phase.
+      Switch/create/rename/delete and unrelated imports wait for all owners, and duplicate full sync is refused.
+      Cancellation stops reads and rolls back interrupted apply while awaiting unresolved outbound writes
+      and children before releasing their database. The complete durable pair plan survives process death
+      and each successful pair is acknowledged separately. Collector journals are path-partitioned;
+      legacy migration, runtime state, schema guards and draft reservations validate the owning project.
       An unchanged schema mismatch is circuit-broken after two attempts in 24 hours, with at least
       ten minutes between attempts, and LayerFillService timeout must preserve the durable import journal.
     related_code:

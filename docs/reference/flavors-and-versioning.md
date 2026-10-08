@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -12,6 +12,11 @@ related_code:
 ---
 
 # Flavors и версионирование форка
+
+GlitchTip reports содержат release/versionCode, environment и тег brand текущего
+variant. `diagnosticDeliveryChecks=true` выбирает отдельный emulator-only runner
+только для test APK; обычные Debug/Lisa/Belka IDs, версии и подпись сохраняются.
+[Контракт диагностики](../architecture/error-reporting.md).
 
 ## Product flavors
 

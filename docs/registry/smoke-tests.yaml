@@ -1,15 +1,35 @@
 schema_version: 1
 tests:
+  SMOKE-DIAGNOSTIC-DELIVERY:
+    type: automatic
+    scope: [app]
+    command: powershell -NoProfile -File tools/verify-diagnostic-delivery.ps1 -TestDsn <private-test-project-dsn>
+    expected: Isolated Debug emulator only. Offline handled and fatal reports survive a process restart and reach the test GlitchTip after network return. Temporary HTTP 503 retains the SDK envelope and WorkManager delivers after recovery without a network change or replacement crash handler. Verify real server stack, device, version and operation separately; fatal phase must terminate its synthetic process.
+  SMOKE-STAKEOUT-PERMISSIONS:
+    type: automatic
+    scope: [app]
+    command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.reliability.StakeoutForegroundServiceTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
+    expected: Isolated Android 14+ emulator only with Bluetooth Connect/Scan denied. With location granted, real location-only service survives background and Stop releases GPS, wake lock and notification; stale requests cannot stop a newer owner. Run deniedLocationStopsGuidanceWithoutCrashOrLeakedGps again with Fine and Coarse revoked to verify asynchronous rejection and retry cleanup. Unowned redelivery does not restore GPS/audio or crash.
+  SMOKE-FORM-APPEARANCE:
+    type: automatic
+    scope: [app, maplibui]
+    command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.reliability.FormAppearanceTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
+    expected: Isolated emulator only; both app themes keep permanent captions distinct from outlined values, long selections wrap, hidden comments occupy no layout space and footer Save uses the same required gate without SQLite writes on failure.
+  SMOKE-ALL-PROJECT-SYNC:
+    type: automatic
+    scope: [app, maplib, maplibui]
+    command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.util.ProjectSyncRunnerTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
+    expected: Isolated emulator only; default/manual/scheduled/off scope, equal layer names, retained draft, per-project failure continuation, exact recovery, cancellation and real background LayerFillService write all preserve their owning database. Pending pair and Collector journals remain separate across accounts and project paths.
   SMOKE-CONDITIONAL-REQUIRED:
     type: automatic
     scope: [app, maplib, maplibui]
     command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.ConditionalRequiredFieldsTest"
-    expected: Unchecked checkbox requires the inactive comment before SQLite writes; checked item is optional unless statically required, markers update, immutable pins survive rotation/durable recovery and corrupt/unknown rules block Save retaining the draft.
+    expected: V1 required remains compatible. V2 hides complete comment or element containers without clearing values; visible-only required, inactive/nested tabs, view-only and pinned headers share rules. Hide/show/rotation/durable recovery retain text; corrupt pins, duplicate IDs and unknown targets block Save before SQLite writes.
   SMOKE-FORM-NAVIGATION:
     type: automatic
     scope: [app, maplibui]
     command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.CascadingFormsTest"
-    expected: Ordinary default-form launch supplies matching metadata, outer tab headers remain visible after vertical scrolling, horizontal flings preserve choices/recreation and signature strokes remain within the signature.
+    expected: Default-form launch supplies matching metadata and outer headers stay visible; repeated swipes over enabled selectors, checkboxes, short comments and blank space preserve data; vertical drags, selected text and signature strokes do not navigate.
   SMOKE-LAYER-PENDING-INDICATOR:
     type: automatic
     scope: [app, maplibui]
@@ -19,7 +39,7 @@ tests:
     type: automatic
     scope: [app, maplib, maplibui]
     command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.CascadingFormsTest"
-    expected: Native NGFP lists enforce both parents, clear branches with SQL NULL and preserve historical values; rotation/durable recovery verify immutable snapshots, large definitions produce small Bundle parcels, and corrupt snapshots retain selections while blocking Save.
+    expected: Native lists render as independent labelled full-width fields with visible gaps, enforce both parents, clear branches with SQL NULL and preserve historical values; rotation/durable recovery verify immutable snapshots, large definitions produce small Bundle parcels, and corrupt snapshots retain selections while blocking Save.
   SMOKE-PROJECT-SCRIPTS:
     type: automatic
     scope: [app, maplib, maplibui]
@@ -583,6 +603,8 @@ tests:
     type: device
     scope: [app, maplib]
     steps:
+      - Deny Bluetooth Connect/Scan while keeping system location permission and repeat live azimuth and stakeout, including Home and Stop
+      - On an isolated emulator revoke both location permissions and verify rejected starts show a plain message, stop live mode and release GPS/audio without crashing
       - Connect the production geodetic receiver path and verify it publishes corrected WGS84 GPS fixes for the pole tip
       - Configure stakeout thresholds 5, 1, 0.5 and 0.1 metres and enable sound
       - Select editable and read-only Point, LineString, Polygon and their Multi variants, then start Слежение

@@ -1,7 +1,7 @@
 ---
 title: Магнитный азимут, расстояние и вынос координат
 type: architecture
-last_verified: 2026-09-18
+last_verified: 2026-10-08
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
@@ -149,6 +149,24 @@ lease с `minDistance=0` и `minTime=250 мс`; последний release во�
 подписан на GPS, сохраняет частый lease и продолжает звуковые подсказки. Компас и обновление
 виджета в фоне останавливаются и восстанавливаются после возврата на карту.
 
+Manifest и явный runtime type службы выноса содержат только `location`.
+Bluetooth/USB/TCP keep-alive внешнего приёмника принадлежит отдельной службе;
+обычное измерение не требует `BLUETOOTH_CONNECT`/`SCAN`. Проверка разрешений
+Android выполняется внутри `onStartCommand`, после возврата из
+`startForegroundService`, поэтому одного try/catch в MapFragment недостаточно.
+Отказ внутри службы снимает уведомление/wake lock и через process-local owning
+session callback завершает controller, GPS lease/listener и звук. UI выходит из
+live-режима и предлагает проверить доступ к местоположению. Синхронный отказ
+старта также полностью откатывает ресурсы.
+
+Каждый старт получает новый process-local session ID. Stop, failure и queued Intent
+старой сессии не останавливают новую; замена цели сохраняет текущий ID. Unowned
+redelivery после process death удовлетворяет foreground-start contract и сразу
+останавливается, не создавая GPS/audio или wake lock: простая остановка до
+`startForeground` на Android 16 сама вызывает `ForegroundServiceDidNotStartInTimeException`.
+Отмена ещё не запущенной службы также ждёт её queued `onStartCommand`; после
+успешного foreground promotion Stop выполняется сразу.
+
 Явная остановка выноса, смена карты/проекта или уничтожение экрана останавливают service,
 убирают уведомление и освобождают wake lock, GPS lease, датчик и аудиоресурсы. Service имеет
 `START_NOT_STICKY`: после process death звуковой режим сам не стартует. Fix старше 3 секунд
@@ -179,6 +197,9 @@ cut/fill, пикетаж и смещения в этот контракт не �
 
 - Автоматически: `AUTO-MAPLIB-UNIT`, WMM2025/перевод азимута и коррекция склонения
   в app unit tests и `AUTO-APP-DEBUG`.
+- `SMOKE-STAKEOUT-PERMISSIONS`: реальный Android 14+ emulator, запрещённый
+  Bluetooth и два режима GPS permissions. Проверить background/Stop, оба
+  отказа старта, cleanup, быстрый restart и stale/unowned Intent.
 - На устройстве: `SMOKE-STAKEOUT` с реальным RTK-приёмником и контрольными
   точками/линиями/полигонами; отдельно оба режима кнопки азимута, совпадающие
   точки, north-up/повёрнутая карта, отсутствие компаса и обновление линии GPS.

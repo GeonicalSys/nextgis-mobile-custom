@@ -1,12 +1,20 @@
 schema_version: 1
 triggers:
+  - id: ERROR-REPORTING
+    paths: [app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java, app/src/main/java/com/nextgis/mobile/util/Diagnostics*.java, app/src/main/java/com/nextgis/mobile/util/CustomLogMessageFormat.java, app/src/main/java/com/nextgis/mobile/MainApplication.java, app/src/androidTest/java/com/nextgis/mobile/util/Diagnostics*.java, tools/verify-diagnostic-delivery.ps1]
+    owners: [app]
+    read: [docs/architecture/error-reporting.md, docs/architecture/crash-recovery.md]
+    invariants: [INV-DIAGNOSTIC-DELIVERY, INV-CRASH-DRAFT-RECOVERY, INV-PROJECT-SCRIPTS]
+    must_update_docs: [app/docs/README.md, app/docs/manifest.yaml, docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md, docs/reference/settings-and-config.md, docs/registry/config-keys.yaml, docs/reference/official-differences.md]
+    verify: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, SMOKE-DIAGNOSTIC-DELIVERY]
+    strict_docs: true
   - id: CONDITIONAL-FORM-RULES
-    paths: [maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java, maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java, maplibui/src/main/java/com/nextgis/maplibui/util/FormMetadataSnapshot.java, maplibui/src/main/java/com/nextgis/maplibui/control/FormScrollView.java, maplibui/src/main/res/layout/activity_standard_attributes.xml, maplibui/src/main/java/com/nextgis/maplibui/util/LayerUtil.java, app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java]
+    paths: [maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java, maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java, maplibui/src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java, maplibui/src/main/java/com/nextgis/maplibui/util/FormChoiceAdapter.java, app/src/androidTest/java/com/nextgis/mobile/reliability/FormAppearanceTest.java, maplibui/src/main/java/com/nextgis/maplibui/util/FormMetadataSnapshot.java, maplibui/src/main/java/com/nextgis/maplibui/control/FormScrollView.java, maplibui/src/main/res/layout/activity_standard_attributes.xml, maplibui/src/main/java/com/nextgis/maplibui/util/LayerUtil.java, app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java]
     owners: [maplib, maplibui, app]
     read: [docs/architecture/conditional-form-rules.md, docs/guides/form-behavior-user-guide.md]
     invariants: [INV-CONDITIONAL-REQUIRED, INV-REQUIRED-FIELDS, INV-CRASH-DRAFT-RECOVERY]
     must_update_docs: [docs/architecture/conditional-form-rules.md, docs/guides/form-behavior-user-guide.md, docs/registry/config-keys.yaml, docs/registry/ecosystem.yaml]
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-CONDITIONAL-REQUIRED, SMOKE-FORM-NAVIGATION, SMOKE-REQUIRED-FIELDS]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-CONDITIONAL-REQUIRED, SMOKE-FORM-APPEARANCE, SMOKE-FORM-NAVIGATION, SMOKE-REQUIRED-FIELDS]
     strict_docs: true
   - id: LAYER-PENDING-INDICATOR
     paths: [maplibui/src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java, maplibui/src/main/res/layout/row_layer.xml, app/src/androidTest/java/com/nextgis/mobile/reliability/LayerPendingChangesTest.java]
@@ -17,7 +25,7 @@ triggers:
     verify: [AUTO-MAPLIBUI-ASSEMBLE, SMOKE-LAYER-PENDING-INDICATOR]
     strict_docs: true
   - id: CASCADING-FORM-LISTS
-    paths: [maplib/src/main/java/com/nextgis/maplib/forms/**, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java, maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java, app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java]
+    paths: [maplib/src/main/java/com/nextgis/maplib/forms/**, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormElements.java, maplibui/src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java, maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/DoubleCombobox.java, maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Tabs.java, app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java]
     owners: [maplib, maplibui, app]
     read: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
     invariants: [INV-CASCADING-FORM-LISTS, INV-REQUIRED-FIELDS, INV-CRASH-DRAFT-RECOVERY]
@@ -444,7 +452,7 @@ triggers:
       - maplib/docs/manifest.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT-PERMISSIONS, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
     strict_docs: true
   - id: LAYER-FILL-AND-REORDER
     paths:
@@ -577,6 +585,10 @@ triggers:
     strict_docs: true
   - id: ACCOUNT-SYNC-SCHEDULING
     paths:
+      - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+      - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
+      - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
+      - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
       - maplib/src/main/java/com/nextgis/maplib/datasource/Feature.java
       - maplib/src/main/java/com/nextgis/maplib/util/CoalescingRefresh.java
       - maplib/src/main/java/com/nextgis/maplib/util/NgwSync*.java
@@ -601,10 +613,11 @@ triggers:
     invariants: [INV-SYNC-ACCOUNT-ISOLATION, INV-PROJECT-OPERATION-EXCLUSION, INV-SPATIAL-CACHE-CONSISTENCY]
     must_update_docs:
       - docs/architecture/ngw-sync-and-storage.md
+      - docs/guides/project-synchronization-user-guide.md
       - app/docs/manifest.yaml
       - maplib/docs/manifest.yaml
       - maplibui/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-INTERRUPT-ACTION, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LAYER-SYNC-SETTINGS, SMOKE-NGW-SYNC-RECOVERY, SMOKE-NGW-SELECTOR-RESTORE]
+    verify: [SMOKE-ALL-PROJECT-SYNC, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-INTERRUPT-ACTION, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LAYER-SYNC-SETTINGS, SMOKE-NGW-SYNC-RECOVERY, SMOKE-NGW-SELECTOR-RESTORE]
     strict_docs: true
   - id: BACKUP-AND-DESTRUCTIVE-LAYER-CHANGE
     paths:

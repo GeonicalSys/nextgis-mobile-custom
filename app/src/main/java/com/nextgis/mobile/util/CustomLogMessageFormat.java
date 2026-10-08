@@ -34,6 +34,7 @@ public class CustomLogMessageFormat extends LogFormat {
     @Override
     public String getFormattedLogMessage(String logLevelName, String tag, String message, String timeStamp, String senderName, String osVersion,
                                          String deviceUUID) {
+        AppDiagnostics.observeLog(message);
         String uuid = deviceUUID;
         if (uuid == null) {
             uuid = "DeviceUUID";

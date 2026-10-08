@@ -373,15 +373,12 @@ public class OfflineSyncIntentService extends IntentService {
                 Log.d("SSYNC", "OfflineSyncIntentService account=" + account.name
                         + " ngwLayerCount=" + layers.size());
 
-                if (layers.size() > 0)
+                if (ProjectSyncRunner.allProjects(this) || layers.size() > 0)
                     mAccounts.add(account);
             }
             Log.d("SSYNC", "OfflineSyncIntentService accounts queued=" + mAccounts.size()
                     + " manual=" + manualSync + " lpath=" + lpath);
             prioritizeActiveCollectorAccount(application, mAccounts);
-            if (!mAccounts.isEmpty()) {
-                NgwSyncProgress.beginSession(this, mAccounts.size());
-            }
 
             Bundle bundle = new Bundle();
             if (lpath != null) {
@@ -391,30 +388,9 @@ public class OfflineSyncIntentService extends IntentService {
             bundle.putBoolean(EXTRA_PROJECT_OPERATION_ALREADY_HELD, true);
             bundle.putBoolean(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_RECHECK_SKIPPED,
                     forceRecheck);
-            for (Account account : mAccounts) {
-                if (Thread.currentThread().isInterrupted()
-                        || isCancellationRequested(operationGeneration)) break;
-                try {
-                    // SyncResult and SyncAdapter carry per-run state. Reusing either
-                    // leaked errors/cancellation from one account into the next one.
-                    SyncResult syncResult = new SyncResult();
-                    SyncAdapter syncAdapter = new SyncAdapter(getApplicationContext(), true);
-                    Log.d("SSYNC", "onPerformSync call for: " + account.name);
-                    syncAdapter.onPerformSync(account,
-                            new Bundle(bundle),
-                            com.nextgis.mobile.util.AppSettingsConstants.AUTHORITY,
-                            null, syncResult);
-                    Log.d("SSYNC", "onPerformSync finished for: " + account.name
-                            + " hasError=" + syncResult.hasError()
-                            + " stats=" + syncResult.stats);
-                } catch (Exception accountError) {
-                    // A broken secondary account must not suppress the remaining
-                    // project accounts in this manual sync run.
-                    Log.e("SSYNC", "Account sync failed: " + account.name, accountError);
-                    HyperLog.e(Constants.TAG,
-                            "OfflineSyncIntentService account failed: " + account.name,
-                            accountError);
-                }
+            if (!Thread.currentThread().isInterrupted() && !isCancellationRequested(operationGeneration)) {
+                ProjectSyncRunner.run(getApplicationContext(), mAccounts, bundle,
+                        AppSettingsConstants.AUTHORITY, null, new SyncResult());
             }
         } catch (Exception e) {
             Log.e("SSYNC", "handleActionFoo failed: " + e.getMessage(), e);

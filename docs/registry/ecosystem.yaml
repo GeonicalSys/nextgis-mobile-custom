@@ -33,7 +33,7 @@ contracts:
     to: mobile-app
     type: server_resource_contract
     transport: Legacy NGFP ZIP meta.json.lisa_form_rules
-    statement: Native bounded scalar/all/any/not conditions strengthen static required; UI markers and Save share pinned rules, drafts keep verified SHA-256 snapshots, desktop clone preserves literals and field names without resource-ID remap. No PostGIS schema/data write is needed.
+    statement: Native v1/v2 conditions strengthen visible static required; v2 visible targets field containers or portable lisa_id elements without clearing values. UI visibility, markers and Save share pinned rules; drafts keep verified SHA-256 snapshots and desktop clone preserves namespace literals/field names without resource-ID remap. Tab navigation and independent selector rendering preserve the same field identities; no PostGIS schema/data write is needed.
     owners: [maplib, maplibui, app]
     local_docs: [docs/architecture/conditional-form-rules.md, docs/guides/form-behavior-user-guide.md]
     external_docs:
@@ -45,7 +45,7 @@ contracts:
     to: mobile-app
     type: server_resource_contract
     transport: Legacy NGFP ZIP meta.json.lisa_form_dependencies
-    statement: Access synchronizer supplies shared stable-key dictionaries and declarative parent filters; desktop cloning preserves the complete namespace without resource-ID substitution. Native Android filters offline, clears descendants and validates Save while retaining pinned drafts and unchanged historical attributes. Standard two-level controls and audit questions remain compatible.
+    statement: Access synchronizer supplies shared stable-key dictionaries and declarative parent filters; desktop cloning preserves the complete namespace without resource-ID substitution. Native Android filters offline, clears descendants and validates Save while retaining pinned drafts and unchanged historical attributes. Managed legacy pairs render as separate labelled combobox fields without rewriting server forms; ordinary two-level controls and audit questions remain compatible.
     owners: [maplib, maplibui, app]
     local_docs: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
     external_docs:
@@ -134,3 +134,6 @@ boundaries:
     local_docs:
       - docs/architecture/lisa-ecosystem.md
     verify: [AUTO-DOCS-VALIDATE]
+
+# Consumer-only: split legacy cascade captions prefer NGFP fields[].display_name over layer alias.
+# Multi-project sync changes local execution/storage ownership; NGW/desktop package formats are unchanged.

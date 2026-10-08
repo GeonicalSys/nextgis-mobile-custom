@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-06
+last_verified: 2026-10-08
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -18,6 +18,12 @@ related_code:
 ---
 
 # Настройки и конфигурационные ключи
+
+sync_all_projects — «Синхронизировать все проекты» в общих настройках,
+по умолчанию true. Определяет охват ручного и scheduled account запуска:
+все загруженные проекты либо только открытый. Не меняет период/включение
+подключений, отдельную команду слоя и owner уже записанной recovery pair.
+Действия пользователя: [руководство синхронизации](../guides/project-synchronization-user-guide.md).
 
 Предупреждение об энергосбережении GPS читает системный PowerManager и текущий
 `gnss_input`; отдельной настройки «не показывать» нет. Старое
@@ -98,6 +104,10 @@ Battery Saver; приложение не меняет системный реж�
   отдельных ключей, но читает ту же коррекцию склонения. Магнитное склонение
   рассчитывается встроенной WMM2025; ручная поправка `C` добавляется к модельному
   `D`. Виджет во время измерения показывает эффективное `D + C` и отдельно `C`.
+  Live-измерение требует доступа к местоположению; Bluetooth-разрешение для
+  штатного GPS не требуется. Отказ запуска завершает измерение с сообщением и
+  освобождает ресурсы; после выдачи разрешения можно повторить запуск. Настройки
+  звука и порогов не меняют Android service type `location`.
 - Updates: `check_updates`, update flavor metadata, release repository fields.
 - Backups: `layer_backup_max_gb` (Общие → Другое, default 5 GB) caps `LayerBackups/`;
   каждый ZIP хранит таблицы слоя и только локальные файлы вложений, без
@@ -106,6 +116,13 @@ Battery Saver; приложение не меняет системный реж�
   HyperLog и пункт «Поделиться логом». `verbose_log` (там же, «Расширенное
   логирование», default false) пишет каждое измерение GPS/NMEA, включая
   координаты; только для диагностики.
+- Автоматические отчёты GlitchTip независимы от локального логирования.
+  `sentry.dsn` из игнорируемого `sentry.properties` задаёт приёмник; APK не содержит
+  пароль администратора. `io.sentry.auto-init=false`, screenshots/view hierarchy
+  и performance sampling отключены. SDK queue в private files ограничена 256
+  обычными envelopes; connected WorkManager retry не запускает GIS sync.
+  [Доставка и границы](../architecture/error-reporting.md),
+  [разбор ошибок](../guides/bug-reports-user-guide.md).
 - Collector: project registry JSON, project metadata, composition state.
 - Layer config: `feature_label_field`, `mobile_render_mode`, `render_mode`,
   `layer_origin`, `mobile`.

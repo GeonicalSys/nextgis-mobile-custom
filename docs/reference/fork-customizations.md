@@ -1,7 +1,7 @@
 ---
 title: Каталог кастомизаций форка
 type: reference
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - app
   - maplib
@@ -10,6 +10,16 @@ related_code:
 ---
 
 # Каталог кастомизаций форка
+
+Автоматические багрепорты в собственный GlitchTip: `AppDiagnostics`,
+`DiagnosticsTransport`, `DiagnosticsRetryWorker` в app. SDK queue переживает
+offline/5xx и process restart; [контракт](../architecture/error-reporting.md),
+[разбор отчётов](../guides/bug-reports-user-guide.md).
+
+Общая синхронизация загруженных проектов: ProjectSyncRunner в app,
+SyncWorkspaceSession в maplib и scoped fill/rebuild/journals в maplibui.
+Настройка включена по умолчанию; контракт — [sync/storage](../architecture/ngw-sync-and-storage.md),
+пользовательские действия — [руководство](../guides/project-synchronization-user-guide.md).
 
 Это компактная карта отличий GeonicalSystem от официального NextGIS Mobile. Код и
 машиночитаемые registry-файлы остаются источниками истины; документ помогает быстро найти

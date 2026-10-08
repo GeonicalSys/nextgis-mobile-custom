@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -17,6 +17,11 @@ related_code:
 ---
 
 # Crash recovery and durable drafts
+
+Разворачивание каскадного `double_combobox` в отдельные поля меняет только
+отображение. Saved-state keys и pinned cascade definition прежние; старые
+черновики сохраняют выбор по именам полей. Свайп отменяет касание исходного
+контрола до смены вкладки, не меняя флажок или введённый комментарий.
 
 Проверка обязательных полей выполняется после checkpoint формы и до изменения
 строки/вложений. Незавершённый обязательный атрибут не запрещает durable draft,
@@ -190,6 +195,12 @@ Geometry coordinates, field values, photo paths, and credentials are not logged.
 
 ## Failure boundaries
 
+Автоматическая [диагностика](error-reporting.md) сохраняет отдельные SDK envelopes
+и не меняет содержимое или время очистки draft journals. HyperLogCrashHandler
+делегирует Sentry и Android; fatal процесс завершается штатно. WorkManager retry
+не открывает GIS базы и не перезапускает SDK/handlers. Контекст отчёта состоит
+из stack/version/device и фиксированных стадий, без значений формы и геометрии.
+
 The form Save worker checkpoints before database work and after assigning a new id.
 Its UUID resolves through `FeatureSaveJournal`; retry after a lost reply returns the
 same row. A failed photo or edited signature keeps the form and checkpoint, including
@@ -224,7 +235,27 @@ large snapshots still run synchronously and may stall the main thread. See the
 восстанавливает уже созданный ID до hook, чтобы retry не считал объект новым.
 Пакеты старых pin автоматически не удаляются. [Контракт](project-scripts.md).
 
-Декларативная обязательность NGFP отдельно закреплена через `lisa_required_pin`
-в owning layer/form_rules. Обновление meta не меняет восстановленный черновик;
+Декларативные обязательность и видимость NGFP закреплены одним `lisa_required_pin`
+в owning layer/form_rules. Видимость после восстановления вычисляется заново по
+сохранённым значениям; скрытие не удаляет текст, вложения или состояние каскада.
+Обновление meta не меняет восстановленный черновик;
 повреждение снимка блокирует запись и сохраняет pin и значения. Пустой pin
 закрепляет отсутствие условий. [Контракт](conditional-form-rules.md).
+
+Bundle и durable draft считывают зарегистрированные `mFields`, независимо от
+контейнеров оформления. Прямые Tabs дополнительно сохраняют выбранную вкладку;
+подписи собираются и со скрытых страниц. Обход только прямых детей controls_list
+неполон: обычное поле теперь находится внутри FieldContainer.
+
+## Project sync recovery
+
+ProjectSyncRunner persists every planned project/account pair before starting.
+Successful pairs are acknowledged independently after all scoped async children
+and service deliveries finish. Recovery matches the registry identity even when
+another map is open; an extra never supplies a trusted database path.
+Collector import journals are partitioned by canonical project path and migrate
+the legacy marker only to its matching UID. Cancellation retains pending work
+and does not close a database with an unresolved write or queued child.
+
+See [sync/storage](ngw-sync-and-storage.md) and the
+[user guide](../guides/project-synchronization-user-guide.md).

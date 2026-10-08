@@ -97,30 +97,32 @@
             android:name=".stakeout.StakeoutForegroundService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location|connectedDevice" />
+            android:foregroundServiceType="location" />
 
         <meta-data
             android:name="io.sentry.dsn"
             android:value="@string/SENTRY_DSN" />
+        <!-- Initialize after the isolated-script guard, with the app's delivery/privacy policy. -->
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
         <!-- Disable automatic breadcrumbs for user interactions (clicks, swipes, scrolls). -->
         <meta-data
             android:name="io.sentry.traces.user-interaction.enable"
             android:value="false" />
-        <!-- Keep screenshots for crash diagnostics. -->
+        <!-- GlitchTip receives diagnostic event data, without unsupported generic attachments. -->
         <meta-data
             android:name="io.sentry.attach-screenshot"
-            android:value="true" />
+            android:value="false" />
         <!-- Avoid collecting the full view hierarchy. -->
         <meta-data
             android:name="io.sentry.attach-view-hierarchy"
             android:value="false" />
-        <!-- Sample performance traces and profiling in production. -->
+        <!-- Error reports only; performance/replay payloads are not needed by this receiver. -->
         <meta-data
             android:name="io.sentry.traces.sample-rate"
-            android:value="0.05" />
+            android:value="0.0" />
         <meta-data
             android:name="io.sentry.traces.profiling.sample-rate"
-            android:value="0.05" />
+            android:value="0.0" />
         <meta-data
             android:name="com.nextgis.mobile.UPDATE_FLAVOR"
             android:value="${updateFlavor}" />

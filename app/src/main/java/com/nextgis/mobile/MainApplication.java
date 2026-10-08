@@ -100,6 +100,7 @@ public class MainApplication extends GISApplication
             super.onCreate();
             return;
         }
+        initializeDiagnostics();
         // set userAgent info
         try {
             NetworkUtil.setUserAgentPrefix(this, "NextGIS-Mobile/" + BuildConfig.VERSION_NAME,
@@ -167,6 +168,11 @@ public class MainApplication extends GISApplication
                     () -> SyncRecoveryJournal.schedulePendingIfNeeded(this),
                     3_000L);
         }
+    }
+
+    /** Runs before the local crash logger, which must delegate to Sentry and Android. */
+    protected void initializeDiagnostics() {
+        com.nextgis.mobile.util.AppDiagnostics.initialize(this);
     }
 
     private boolean isDefaultApplicationProcess() {

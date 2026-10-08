@@ -341,6 +341,7 @@
     <string name="stakeout_unmute">Включить звук выноса</string>
     <string name="stakeout_stop">Завершить вынос</string>
     <string name="stakeout_unavailable">Этот объект нельзя использовать для выноса</string>
+    <string name="stakeout_start_failed">Не удалось запустить измерение. Проверьте доступ к местоположению и повторите попытку.</string>
     <string name="stakeout_settings_title">Вынос координат</string>
     <string name="stakeout_sound_enabled">Звуковые подсказки</string>
     <string name="stakeout_far_distance">Расстояние редкого сигнала</string>
@@ -398,4 +399,9 @@
     <string name="location_sources_recording">Только GPS; приблизительные позиции не записываются</string>
     <string name="location_sources_automatic">Автоматически: GPS, Wi-Fi и мобильные сети</string>
     <string name="walk_sampling_settings">Обход: частота сохранения точек</string>
+    <string name="sync_scope_title">Синхронизация</string>
+    <string name="sync_all_projects">Синхронизировать все проекты</string>
+    <string name="sync_all_projects_summary">Ручная синхронизация и запуск по расписанию охватывают все загруженные проекты. Если выключить, синхронизируется только открытый проект.</string>
+    <string name="project_sync_incomplete_title">Синхронизация не завершена</string>
+    <string name="project_sync_incomplete">Не удалось завершить синхронизацию проектов: %1$s. Изменения сохранены на устройстве. Повторите попытку позже.</string>
 </resources>

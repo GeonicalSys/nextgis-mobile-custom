@@ -27,6 +27,7 @@ import com.nextgis.maplibui.mapui.VectorLayerUI;
 import com.nextgis.maplibui.util.ConditionalRequiredController;
 import com.nextgis.maplibui.util.ConstantsUI;
 import com.nextgis.maplibui.util.FeatureFormDraftStore;
+import com.nextgis.maplibui.util.FormFieldLayout;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -86,7 +87,8 @@ public class ConditionalRequiredFieldsTest {
             layer=new VectorLayerUI(app,new File(map.getPath(),"required_rule_"+UUID.randomUUID().toString().replace("-","")));
             layer.setName("Conditional requirement test");map.addLayer(layer);
             layer.create(GeoConstants.GTPoint,Arrays.asList(new Field(GeoConstants.FTInteger,"check","Safety check"),
-                    new Field(GeoConstants.FTString,"comment","Comment",staticRequired)));
+                    new Field(GeoConstants.FTString,"comment","Comment",staticRequired),
+                    new Field(GeoConstants.FTReal,"latitude","Latitude"), new Field(GeoConstants.FTReal,"longitude","Longitude")));
             layer.setIsEditable(true);map.save();form=new File(layer.getPath(),"933_form.json");meta=new File(layer.getPath(),"933_ngfp_meta.json");
             write(form,"""
                 [{"type":"tabs","pages":[
@@ -100,6 +102,13 @@ public class ConditionalRequiredFieldsTest {
             write(meta,new JSONObject().put(ConditionalRequiredRules.META_KEY,new JSONObject().put("schema_version",1)
                     .put("required",new JSONArray().put(new JSONObject().put("field","comment").put("label","Comment").put("when",
                             new JSONObject().put("field",field).put("op","eq").put("value",value))))).toString());
+        }
+        void visibility(String target, boolean value) throws Exception {
+            JSONObject metadata = new JSONObject(new String(Files.readAllBytes(meta.toPath()), StandardCharsets.UTF_8));
+            JSONObject rules = metadata.getJSONObject(ConditionalRequiredRules.META_KEY);
+            rules.put("schema_version", 2).put("visible", new JSONArray().put(new JSONObject()
+                    .put("field", target).put("when", new JSONObject().put("field", "check").put("op", "eq").put("value", value))));
+            write(meta, metadata.toString());
         }
         Intent intent(long id) {
             GeoPoint point=new GeoPoint(100,200);point.setCRS(GeoConstants.CRS_WEB_MERCATOR);
@@ -189,6 +198,211 @@ public class ConditionalRequiredFieldsTest {
             f.metadata("unknown_field",false);
             try (ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
                 s.onActivity(ConditionalRequiredFieldsTest::save);dialog(f.app.getString(R.string.form_rules_unavailable));assertEquals(0,f.layer.getSqliteTableRowCount());
+            }
+        }
+    }
+    private static View commentContainer(ModifyAttributesActivity activity) {
+        View view = (View) controls(activity).get("comment");
+        assertNotNull("Each input has a single caption/value container", FormFieldLayout.container(view));
+        return FormFieldLayout.container(view);
+    }
+    @Test public void hiddenStaticRequiredFieldDoesNotBlockSaveButVisibleEmptyFieldDoes() throws Exception {
+        for (boolean checked : new boolean[]{true, false}) {
+            try (Fixture f = new Fixture(true)) {
+                f.visibility("comment", false);
+                try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                    s.onActivity(a -> { ((CheckBox) controls(a).get("check")).setChecked(checked); save(a); });
+                    if (checked) {
+                        await(() -> s.getState() == androidx.lifecycle.Lifecycle.State.DESTROYED);
+                        assertEquals(1, f.layer.getSqliteTableRowCount());
+                    } else {
+                        dialog(f.app.getString(R.string.form_required_fields_title));
+                        assertEquals(0, f.layer.getSqliteTableRowCount());
+                        clickButton(f.app.getString(android.R.string.ok));
+                        s.onActivity(a -> {
+                            assertEquals(View.VISIBLE, commentContainer(a).getVisibility());
+                            assertTrue(((View) controls(a).get("comment")).isShown());
+                            java.util.ArrayList<View> errors = new java.util.ArrayList<>();
+                            commentContainer(a).findViewsWithText(errors, f.app.getString(R.string.form_fill_required), View.FIND_VIEWS_WITH_TEXT);
+                            assertFalse("Inline error accompanies the border", errors.isEmpty());
+                        });
+                    }
+                }
+            }
+        }
+    }
+    @Test public void hideShowKeepsTextAcrossRotationPinnedUpdateAndDurableRecovery() throws Exception {
+        try (Fixture f = new Fixture(false)) {
+            f.visibility("comment", false);
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                s.onActivity(a -> {
+                    assertEquals(View.GONE, commentContainer(a).getVisibility());
+                    ((CheckBox) controls(a).get("check")).setChecked(false);
+                });
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                s.onActivity(a -> {
+                    assertEquals(View.VISIBLE, commentContainer(a).getVisibility());
+                    ((EditText) controls(a).get("comment")).setText("Keep hidden text");
+                    ((CheckBox) controls(a).get("check")).setChecked(true);
+                });
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                s.onActivity(a -> assertEquals(View.GONE, commentContainer(a).getVisibility()));
+                f.visibility("comment", true); // The open form and its draft keep the previous pin.
+                s.recreate();
+                s.onActivity(a -> {
+                    assertEquals(View.GONE, commentContainer(a).getVisibility());
+                    assertEquals("Keep hidden text", ((EditText) controls(a).get("comment")).getText().toString());
+                });
+            }
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND)
+                    .putExtra(FeatureFormDraftStore.KEY_APPLY_FORM_DRAFT, true))) {
+                s.onActivity(a -> {
+                    assertEquals(View.GONE, commentContainer(a).getVisibility());
+                    ((CheckBox) controls(a).get("check")).setChecked(false);
+                });
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                s.onActivity(a -> {
+                    assertEquals(View.VISIBLE, commentContainer(a).getVisibility());
+                    assertEquals("Keep hidden text", ((EditText) controls(a).get("comment")).getText().toString());
+                    ((CheckBox) controls(a).get("check")).setChecked(true);
+                    a.getOnBackPressedDispatcher().onBackPressed();
+                });
+                clickButton(f.app.getString(R.string.save));
+                await(() -> s.getState() == androidx.lifecycle.Lifecycle.State.DESTROYED);
+                try (android.database.Cursor cursor = f.layer.query(null, null, null, null, null)) {
+                    assertTrue(cursor.moveToFirst());
+                    assertEquals("Keep hidden text", cursor.getString(cursor.getColumnIndexOrThrow("comment")));
+                }
+            }
+        }
+    }
+    @Test public void visibilityOfNestedTabsAlsoHidesRequiredDescendantsAndPinnedHeader() throws Exception {
+        try (Fixture f = new Fixture(true)) {
+            write(f.form, """
+                [{"type":"checkbox","attributes":{"field":"check","text":"Show details","init_value":true}},
+                 {"type":"tabs","lisa_id":"details","pages":[{"caption":"Details","elements":[
+                   {"type":"tabs","pages":[{"caption":"Nested","elements":[
+                     {"type":"text_label","attributes":{"text":"Explanation"}},
+                     {"type":"text_edit","attributes":{"field":"comment","text":"","max_string_count":3,"only_figures":false}}]}]}]}]}]
+                """);
+            JSONObject metadata = new JSONObject(new String(Files.readAllBytes(f.meta.toPath()), StandardCharsets.UTF_8));
+            metadata.getJSONObject(ConditionalRequiredRules.META_KEY).put("schema_version", 2).put("visible", new JSONArray().put(new JSONObject()
+                    .put("element", "details").put("when", new JSONObject().put("field", "check").put("op", "eq").put("value", false))));
+            write(f.meta, metadata.toString());
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                s.onActivity(a -> {
+                    android.view.ViewGroup header = a.findViewById(R.id.form_tabs_header);
+                    assertEquals(View.GONE, header.getChildAt(0).getVisibility());
+                    save(a);
+                });
+                await(() -> s.getState() == androidx.lifecycle.Lifecycle.State.DESTROYED);
+                assertEquals(1, f.layer.getSqliteTableRowCount());
+            }
+        }
+    }
+    @Test public void visibilityAppliesToReadOnlyFormsAndStandaloneExplanationElements() throws Exception {
+        try (Fixture f = new Fixture(false)) {
+            write(f.form, """
+                [{"type":"text_label","lisa_id":"help","attributes":{"text":"Explain the issue"}},
+                 {"type":"checkbox","attributes":{"field":"check","text":"Safety check","init_value":true}},
+                 {"type":"text_edit","attributes":{"field":"comment","text":"","max_string_count":3,"only_figures":false}}]
+                """);
+            f.visibility("comment", false);
+            JSONObject metadata = new JSONObject(new String(Files.readAllBytes(f.meta.toPath()), StandardCharsets.UTF_8));
+            metadata.getJSONObject(ConditionalRequiredRules.META_KEY).getJSONArray("visible").put(new JSONObject()
+                    .put("element", "help").put("when", new JSONObject().put("field", "check").put("op", "eq").put("value", false)));
+            write(f.meta, metadata.toString());
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND)
+                    .putExtra(ConstantsUI.KEY_VIEW_ONLY, true))) {
+                s.onActivity(a -> {
+                    assertEquals(View.GONE, commentContainer(a).getVisibility());
+                    android.view.ViewGroup root = a.findViewById(R.id.controls_list);
+                    boolean found = false;
+                    for (int i=0; i<root.getChildCount(); i++) if ("help".equals(root.getChildAt(i).getTag(R.id.form_element_id))) {
+                        found = true; assertEquals(View.GONE, root.getChildAt(i).getVisibility());
+                    }
+                    assertTrue(found);
+                });
+            }
+        }
+    }
+    @Test public void missingOrDuplicateVisibilityElementAndUnknownFieldFailClosed() throws Exception {
+        for (String target : new String[]{"missing", "duplicate", "unknown_field"}) {
+            try (Fixture f = new Fixture(false)) {
+                String extra = target.equals("duplicate") ? """
+                    ,{"type":"text_label","lisa_id":"duplicate","attributes":{"text":"One"}},
+                     {"type":"text_label","lisa_id":"duplicate","attributes":{"text":"Two"}}
+                    """ : "";
+                write(f.form, """
+                    [{"type":"checkbox","attributes":{"field":"check","text":"Check","init_value":true}},
+                     {"type":"text_edit","attributes":{"field":"comment","text":"Retain me","max_string_count":3,"only_figures":false}}
+                    """ + extra + "]");
+                write(f.meta, new JSONObject().put(ConditionalRequiredRules.META_KEY, new JSONObject().put("schema_version", 2)
+                        .put("visible", new JSONArray().put(new JSONObject().put(target.equals("unknown_field") ? "field" : "element", target)
+                                .put("when", new JSONObject().put("field", "check").put("op", "eq").put("value", false))))).toString());
+                try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                    s.onActivity(ConditionalRequiredFieldsTest::save);
+                    dialog(f.app.getString(R.string.form_rules_unavailable));
+                    assertEquals(0, f.layer.getSqliteTableRowCount());
+                    assertNotNull(FeatureFormDraftStore.load(f.app));
+                }
+            }
+        }
+    }
+    @Test public void coordinatesElementHasOneVisibilityTargetForBothControlsAtRootAndInTabs() throws Exception {
+        for (boolean nested : new boolean[]{false,true}) {
+            try (Fixture f = new Fixture(false)) {
+                String elements = """
+                    [{"type":"checkbox","attributes":{"field":"check","text":"Show coordinates","init_value":true}},
+                     {"type":"coordinates","lisa_id":"position","attributes":{"field_lat":"latitude","field_long":"longitude"}}]
+                    """;
+                write(f.form, nested ? "[{\"type\":\"tabs\",\"pages\":[{\"caption\":\"Position\",\"elements\":"+elements+"}]}]" : elements);
+                write(f.meta,"""
+                    {"lisa_form_rules":{"schema_version":2,"visible":[
+                      {"element":"position","when":{"field":"check","op":"eq","value":false}}]}}
+                    """);
+                try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                    s.onActivity(a -> {
+                        View latitude = (View) controls(a).get("latitude"), longitude = (View) controls(a).get("longitude");
+                        assertNotNull(latitude); assertNotNull(longitude);
+                        View group = (View) FormFieldLayout.container(latitude).getParent();
+                        assertEquals("position",group.getTag(R.id.form_element_id));
+                        assertSame(group,FormFieldLayout.container(longitude).getParent());
+                        assertEquals(View.GONE,group.getVisibility());
+                        ((CheckBox) controls(a).get("check")).setChecked(false);
+                    });
+                    InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                    s.onActivity(a -> {
+                        assertTrue(((View) controls(a).get("latitude")).isShown());
+                        assertTrue(((View) controls(a).get("longitude")).isShown());
+                        save(a);
+                    });
+                    await(() -> s.getState()==androidx.lifecycle.Lifecycle.State.DESTROYED);
+                    assertEquals(1,f.layer.getSqliteTableRowCount());
+                }
+            }
+        }
+    }
+    @Test public void fieldAndElementVisibilityMustBothAllowShowingTheControl() throws Exception {
+        try (Fixture f = new Fixture(true)) {
+            write(f.form,"""
+                [{"type":"checkbox","attributes":{"field":"check","text":"Check","init_value":true}},
+                 {"type":"text_edit","lisa_id":"explanation","attributes":{"field":"comment","text":"","max_string_count":3,"only_figures":false}}]
+                """);
+            write(f.meta,"""
+                {"lisa_form_rules":{"schema_version":2,"visible":[
+                  {"field":"comment","when":{"field":"check","op":"eq","value":false}},
+                  {"element":"explanation","when":{"field":"check","op":"eq","value":true}}]}}
+                """);
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                s.onActivity(a -> {
+                    assertEquals(View.GONE,commentContainer(a).getVisibility());
+                    ((CheckBox)controls(a).get("check")).setChecked(false);
+                });
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                s.onActivity(a -> { assertEquals(View.GONE,commentContainer(a).getVisibility()); save(a); });
+                await(() -> s.getState()==androidx.lifecycle.Lifecycle.State.DESTROYED);
+                assertEquals(1,f.layer.getSqliteTableRowCount());
             }
         }
     }

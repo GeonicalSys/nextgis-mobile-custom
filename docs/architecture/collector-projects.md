@@ -460,3 +460,13 @@ Import и composition sync используют один `ProjectScriptSync`; me
 принадлежат проекту. Открытая форма закрепляет версию, новые формы получают
 обновление после sync. Сам NGFP не меняется. [Архитектура](project-scripts.md),
 [руководство пользователя](../guides/project-scripts-user-guide.md).
+
+## Фоновая синхронизация закрытых проектов
+
+ProjectSyncRunner открывает отдельный MapDrawable без активации и renderer.
+SyncWorkspaceSession передаёт owning map всем callbacks, provider URI и сервисам;
+глобальная открытая карта и preferences не переключаются. Collector import journal
+хранится отдельно для canonical map path, runtime state восстанавливается по owner
+на main thread. Одинаковые group IDs в разных проектах не связывают их очереди.
+Полный контракт — [sync/storage](ngw-sync-and-storage.md), действия пользователя —
+[синхронизация проектов](../guides/project-synchronization-user-guide.md).

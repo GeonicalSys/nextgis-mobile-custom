@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -10,9 +10,19 @@ last_verified: 2026-10-07
 
 NGFP-вкладки закреплены сверху и переключаются взмахом по содержимому. Общие
 условные требования (`lisa_form_rules`) работают offline и перед Save/Back Save.
+V2 добавляет visibility по тем же условиям: комментарий появляется при снятой
+отметке, скрывается без очистки и восстанавливается из draft. Скрытые поля не
+блокируют Save. Чёткие подписи, рамки, перенос названий и нижняя кнопка Save
+применяются ко всем формам; FormAppearanceTest проверяет обе темы.
 `ConditionalRequiredFieldsTest` проверяет маркеры, inactive fields, SQLite,
 статический required, pin/recreate/durable recovery и повреждённые настройки.
 [Руководство](../../docs/guides/form-behavior-user-guide.md).
+
+Каскадные поля отображаются отдельно: каждый список имеет собственную подпись,
+полную ширину и отступ. Старые сдвоенные элементы с декларативным каскадом
+разворачиваются при открытии, без обновления серверной формы. Native regression
+проверяет многократные свайпы над включёнными списками, флажком, комментарием
+и пустой областью, сохранение выбора и исключение выделения текста/подписи.
 
 В списке слоёв жёлтая точка отмечает несинхронизированные изменения конкретного
 слоя. Она и общий индикатор sync обновляются из одного фонового снимка outbox,
@@ -144,6 +154,10 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   виджет показывает эффективное склонение `D + C` и отдельно сохраняемую коррекцию `C`;
   темп мягкого звука задаётся четырьмя порогами и не блокируется грубой accuracy-заглушкой
   mock-поставщика; foreground service сохраняет GPS и звук при выключенном экране;
+- обычный азимут и вынос не требуют Bluetooth-разрешений. При отказе Android
+  запустить измерение приложение показывает сообщение, завершает live-режим и
+  освобождает GPS, звук и уведомление; после выдачи доступа к местоположению
+  измерение можно начать заново;
 - карта показывает свежую позицию GPS (чип, mock или native NMEA) с кругом точности в метрах и
   сектором направления телефона (истинный курс, без коррекции выноса); ширина
   сектора следует за неопределённостью компаса. Компас
@@ -219,7 +233,7 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
 - длительное нажатие sync-кнопки с подтверждением перепроверяет пропущенные
   серверные геометрии, обходя часовой checkpoint `SYNC_NONE`; обычное нажатие
   сохраняет стандартный режим и всё ещё получает новые server counts;
-- ручная синхронизация запускается только для NGW-слоёв активного проекта;
+- ручная и scheduled синхронизация по умолчанию обходят все загруженные проекты; общая настройка может ограничить их открытой картой;
   все account обрабатываются одним serial foreground worker под одним lease,
   без параллельного дублирования через `ContentResolver.requestSync`; повторный
   запуск отклоняется. При попытке переключить, создать, переименовать или удалить
@@ -290,8 +304,11 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   в runtime `MainApplication`, `AccountAuthenticator` и `SyncAdapter`; release
   использует `com.nextgis.account.geonical`, debug — `com.nextgis.account.debug`.
 - Реальные DSN, client secrets и signing credentials не входят в docs.
-- Sentry оставляет crash screenshots, но не собирает interaction breadcrumbs и
-  view hierarchy; traces/profiling в production семплируются с долей `0.05`.
+- GlitchTip получает автоматические error reports со stack/device/version и
+  структурированными стадиями работы. SDK cache сохраняется при offline/5xx;
+  WorkManager повторяет отправку без открытого экрана. Screenshots, view hierarchy
+  и performance payloads отключены. [Доставка](../../docs/architecture/error-reporting.md),
+  [руководство](../../docs/guides/bug-reports-user-guide.md).
 
 ## Диагностика
 
@@ -425,6 +442,12 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
 
 ## Проверки
 
+`StakeoutForegroundServiceTest` проверяет настоящий Android foreground lifecycle
+без Bluetooth: фон/Stop, синхронный отказ, быстрый restart, stale requests и
+восстановление старого Intent без GPS/audio. Второй запуск с отозванными Fine и
+Coarse permissions проверяет асинхронный отказ и освобождение GPS lease/listener.
+Только изолированный Android 14+ эмулятор; CI выполняет оба режима.
+
 Структурированный список: [manifest.yaml](manifest.yaml). При изменении app API
 или общих resources обязательны обе release-сборки; при изменении версии —
 полная debug/release version matrix.
@@ -503,3 +526,14 @@ Smoke должен пройти выдачу разрешения и устан�
 
 [Архитектура](../../docs/architecture/project-scripts.md),
 [руководство](../../docs/guides/project-scripts-user-guide.md).
+
+## Изоляция общей синхронизации
+
+Настройка sync_all_projects включена по умолчанию. ProjectSyncRunner сериализует
+project/account passes, а SyncWorkspaceSession связывает owning map с каждым
+callback, provider URI и service ticket до фактического завершения. Закрытая карта
+не активируется; открытая форма/черновик и preferences остаются прежними.
+Полный контракт: consuming root docs/architecture/ngw-sync-and-storage.md;
+пользовательская инструкция: docs/guides/project-synchronization-user-guide.md.
+Перед изменениями читать оба документа. Нельзя заменить изоляцию временным
+переключением глобальной карты или prefs, либо закрыть БД по timeout при живом child.

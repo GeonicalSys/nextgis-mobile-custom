@@ -91,12 +91,19 @@ preferences:
     user_configurable: true
     source: app/src/main/res/xml/preference_headers.xml
     purpose: Open shared underlay management directly from the top-level Settings list next to Project; Geonical may also start Debug underlay import from that catalog
+  sync_all_projects:
+    owner: app
+    type: boolean
+    default: true
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_general.xml
+    purpose: Scope manual and per-account scheduled sync to all downloaded projects; false limits new runs to the open project, while exact pending recovery and layer-specific commands retain their owner
   sync_recovery_journal:
     owner: app
     type: app_private_shared_preferences
     user_configurable: false
     source: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
-    purpose: Mark one interrupted account sync with its active workspace so process restart requests an idempotent recovery pass without crossing project or flavor identity
+    purpose: Atomically persist pending_v2 project/account pairs before the queue begins; acknowledge only after scoped children finish and resolve recovery identities through the registry across active-project changes
   map_show_loc:
     owner: app
     type: boolean
@@ -165,7 +172,7 @@ preferences:
     default: true
     source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
     ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат)
-    purpose: Initial sound-guidance state for each new foreground stakeout or current-location-to-map-point session; static point-to-point measurement does not use it
+    purpose: Initial sound-guidance state for each new foreground stakeout or current-location-to-map-point session; static point-to-point measurement does not use it. Muting never changes the location-only service type or makes Bluetooth permission mandatory; rejected starts release GPS and audio.
   stakeout_far_distance:
     owner: app
     type: string_decimal_meters
@@ -292,6 +299,10 @@ preferences:
       Finish acknowledges the final snapshot; successful feature Save or explicit Discard clears it.
     session_source: maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
 manifest_metadata:
+  io.sentry.auto-init:
+    owner: app
+    source: app/src/main/AndroidManifest.xml
+    purpose: Disable provider auto-init; AppDiagnostics initializes after the isolated-script UID guard with explicit delivery and redaction policy.
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
     source: app/src/main/AndroidManifest.xml
@@ -303,7 +314,7 @@ manifest_metadata:
   io.sentry.attach-screenshot:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Attach a screenshot to crash diagnostics
+    purpose: Disable unsupported generic screenshot attachments; useful diagnostics are serialized inside the event.
   io.sentry.attach-view-hierarchy:
     owner: app
     source: app/src/main/AndroidManifest.xml
@@ -311,12 +322,17 @@ manifest_metadata:
   io.sentry.traces.sample-rate:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Sample production performance traces at 0.05
+    purpose: Disable performance traces; the receiver is used for error reports only.
   io.sentry.traces.profiling.sample-rate:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Sample production profiles at 0.05
+    purpose: Disable performance profiles; the receiver is used for error reports only.
 runtime_constants:
+  SOURCE_REVISION:
+    owner: app
+    type: string
+    source: app/build.gradle
+    purpose: BuildConfig Git HEAD plus optional dirty marker, included as diagnostic source_revision without changing the APK version.
   apk_version_update:
     owner: app
     type: https_url
@@ -336,6 +352,11 @@ variant_resources:
     source: app/build.gradle
     purpose: Variant-specific SyncAdapter account type; must equal nextgis_accounts_auth and MainApplication runtime type
 build_inputs:
+  diagnosticDeliveryChecks:
+    owner: app
+    source: app/build.gradle
+    optional: true
+    purpose: Opt-in false-by-default Gradle property selects an emulator-only diagnostic test runner with an explicit synthetic DSN; normal APK configuration is unchanged.
   ciReliabilityChecks:
     owner: app
     source: app/build.gradle
@@ -361,6 +382,10 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  diagnostic-reports:
+    owner: app
+    source: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+    purpose: SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; a unique connected WorkManager job retries without GIS synchronization.
   ngw-field-required:
     owner: maplib
     location_name: fields[].required in the local layer config JSON
@@ -398,7 +423,7 @@ storage:
     purpose: One-time creation of the initial local project and non-destructive adoption of a legacy standalone map before the first MapDrawable opens
   collector-import-journal:
     owner: maplibui
-    location_name: collector_import_journal SharedPreferences
+    location_name: collector_import_journal_<SHA256 canonical map path> SharedPreferences; UID-gated migration from legacy collector_import_journal
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
   collector-form-transaction:
     owner: maplibui
@@ -455,7 +480,11 @@ form_rules:
   lisa_form_rules:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java
-    purpose: NGFP meta.json schema_version 1 required targets with bounded scalar/all/any/not conditions; strengthens static required without changing fields or values.
+    purpose: NGFP meta.json v1/v2 required and v2 visible field/element targets with shared bounded conditions; hidden fields skip UI validation without clearing values or changing layer metadata.
+  lisa_id:
+    owner: maplibui
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java
+    purpose: Unique top-level NGFP element name for v2 visible.element; Latin letters, underscores and hyphens only, up to 128 chars, preserving legacy clone compatibility.
   lisa_required_pin:
     owner: maplibui
     source: maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java
@@ -465,7 +494,7 @@ form_dependencies:
   lisa_form_dependencies:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java
-    purpose: Optional NGFP meta.json schema_version 1 shared string tables and acyclic field rules with stable keys and AND parent filters; no scripts, SQL, runtime queries or layer schema change.
+    purpose: Optional NGFP meta.json schema_version 1 shared string tables and acyclic field rules with stable keys and AND parent filters; managed legacy pairs render as independent labelled fields without changing the JSON, keys or schema.
   lisa_cascade_pin:
     owner: maplibui
     source: maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java

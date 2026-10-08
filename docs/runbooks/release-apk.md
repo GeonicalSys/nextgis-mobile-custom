@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -14,6 +14,16 @@ related_code:
 ---
 
 # Выпуск Lisa и Belka APK
+
+## Конфигурация багрепортов
+
+Обычная локальная сборка читает `sentry.dsn` из игнорируемого `sentry.properties`.
+Это публичный SDK DSN нужного GlitchTip project; административный пароль и auth
+token для отправки ошибок APK не нужны. Не печатать DSN и не добавлять его в Git.
+Проверять host/project установленного приёмника для всех variants. В явном CI
+режиме допускается отсутствие private file и пустой DSN — отчёты отключены.
+`diagnosticDeliveryChecks=true` нужен только test APK, а не production конфигурации.
+Перед обновлением SDK выполнить [delivery checks](../architecture/error-reporting.md).
 
 ## Версия
 
@@ -41,13 +51,14 @@ related_code:
 
 ## Обязательная сборка и проверка версии
 
-Для текущего debug-only выпуска закрыть цепочку maplib PR38 (Merge Commit) →
-maplibui PR26 (Merge Commit) → app PR46 (Squash). Предыдущие PR37/25/45 уже
-входят в baseline `5686d8c`. После library merges app закрепляет именно fetched
-remote merge commits; после app merge сверяются remote tip, tree и все строки
-[delivery matrix](../reference/debug-3.1.2.23-delivery.md). Затем обязательны
-APK version matrix и publisher dry-run. Пользователь разрешил публикацию только
-debug; собранные для проверки Lisa/Belka Release не публикуются.
+Перед итоговой сборкой закрыть все требуемые PR из delivery matrix. Для текущей
+задачи порядок: maplib #43 (Merge Commit) → maplibui #31 (Merge Commit) → app #51
+(Squash). После library merges app закрепляет fetched remote merge commits;
+после app merge сверяются remote tip, содержимое и все строки
+[матрицы закрытия](../history/mobile-form-sync-delivery-2026-10-08.md).
+Затем выполнить APK version matrix. Запрос от 8 октября — локальный Lisa Release
+APK без повышения версии и публикации: publisher, включая dry-run, не запускается.
+Предыдущий debug-only цикл: [историческая матрица](../reference/debug-3.1.2.23-delivery.md).
 
 ```powershell
 Set-Location C:\dev\lisa\android_projects\android_gisapp
@@ -75,8 +86,9 @@ APK может содержать production basename. Это не версия 
 - embedded `UPDATE_FLAVOR` совпадает с flavor;
 - versionCode/versionName;
 - подпись ожидаемым release certificate;
-- Sentry manifest policy: interaction breadcrumbs и view hierarchy выключены,
-  crash screenshot включён, trace/profile sample rate равен `0.05`;
+- Sentry manifest policy: auto-init, interaction breadcrumbs, view hierarchy
+  и crash screenshot выключены, trace/profile sample rate равен `0`;
+  AppDiagnostics инициализирует SDK после isolated-script guard;
 - JTS Core присутствует в обеих release-сборках, а
   `MultiPolygonGeometryRepairTest` проходит в `:maplib:testDebugUnitTest`;
 - runtime dependency graph разрешает `org.maplibre.gl:android-sdk-opengl:13.0.2`

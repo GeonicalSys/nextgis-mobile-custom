@@ -26,6 +26,29 @@ validation. Если updater отправляет пользователя за 
 Android, он сохраняет только проверенный pending manifest, повторно валидирует
 его после возврата и не требует повторного ручного запуска проверки обновлений.
 
+## Диагностические отчёты
+
+Читать `../docs/architecture/error-reporting.md` и
+`../docs/guides/bug-reports-user-guide.md`. AppDiagnostics запускается после
+isolated-script guard, до HyperLog handler. Не глотать fatal exceptions и не
+переинициализировать SDK ради retry. DiagnosticsTransport сохраняет SDK envelopes
+при offline, 5xx и rate limiting; стандартный AsyncHttpTransport 8.37.1 теряет
+отчёты при HTTP 503. После обновления SDK перепроверять hints/cache/WorkManager.
+Не отправлять raw HyperLog, NMEA, accounts, field values, geometry и фото.
+Новые operation/phase — enum; новые handled captures должны исключать обычную
+offline/cancel ситуацию. Реальные DSN/пароли не коммитить. Delivery test runner
+включается только `-PdiagnosticDeliveryChecks=true`, тесты — на отдельном эмуляторе.
+
+## Азимут и вынос
+
+Азимут и вынос используют только location foreground service, даже при
+запрещённом Bluetooth. Отказ внутри onStartCommand приходит асинхронно: он
+должен остановить owning controller, снять GPS lease/listener, звук и уведомление.
+Service session ID живёт только в процессе; stale start/stop не затрагивает нового
+владельца. При unowned redelivery выполнить foreground-start contract перед
+остановкой, не восстанавливая GPS/audio. StakeoutForegroundServiceTest запускать
+только на изолированном Android 14+ эмуляторе, отдельно с GPS grant и deny.
+
 ## Версионирование variants
 
 - Production Lisa/Belka получают `versionCode`/`versionName` из
@@ -63,6 +86,9 @@ regression-тесты `CascadingFormsTest` и `ConditionalRequiredFieldsTest` з
 только на изолированном эмуляторе; никогда не запускать suite на рабочем телефоне.
 Проверять публичный запуск формы со связанным meta, вкладки, Save/Back Save,
 pin черновика и отсутствие SQLite-записи при нарушении условий.
+FormAppearanceTest проверяет обе темы, перенос выбранного имени и нижний Save.
+V2 visibility: hide/show/rotation/durable recovery не стирают текст; hidden static
+required не блокирует Save, а видимый required остаётся обязательным.
 
 Владеет ранним Application guard изолированного процесса, pinned native build и тестовым примером contractor-audit. Правила не меняют flavors/версии/accounts. Sentry app-start injection отключён; остальные crash/tracing hooks сохранены.
 
@@ -71,3 +97,18 @@ pin черновика и отсутствие SQLite-записи при нар
 сначала в APK. Не поставлять arbitrary SQL, Java reflection, сеть или GIS-движок
 внешним JS. Старые пакеты сохранять для pin черновиков. Cross-repo schema/API
 обновлять одновременно с stand_project и central registries.
+
+## Общая синхронизация проектов
+
+Читать consuming root docs/architecture/ngw-sync-and-storage.md и
+docs/guides/project-synchronization-user-guide.md. sync_all_projects по умолчанию true;
+ручной и scheduled account запуск используют ProjectSyncRunner. Не переключать
+mMap/active prefs ради фонового проекта. Владельца переносить через
+SyncWorkspaceSession во все async callbacks, service tickets и provider URI;
+untagged UI URI всегда относится к активной карте, expired token не имеет fallback.
+Очередь держит глобальный lease до завершения дочерних работ и mutating HTTP.
+Полный pending project/account план сохраняется до первого прохода; Collector
+journals разделены по canonical map path. Проверять cancellation, equal layer/group
+IDs, сохранность draft и реальный fill на изолированном эмуляторе.
+Подписи разделённых double_combobox брать из meta.fields keyname/display_name,
+затем layer alias; field key используется только при отсутствии обоих.
