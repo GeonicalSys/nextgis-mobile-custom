@@ -390,6 +390,10 @@ public class MapFragment
                 override fun onStakeoutStateChanged(state: StakeoutController.UiState) {
                     updateStakeoutWidget(state)
                 }
+
+                override fun onStakeoutUnavailable() {
+                    showStakeoutUnavailable()
+                }
             }
         )
 
@@ -5434,7 +5438,7 @@ public class MapFragment
             mStakeoutController?.start(target)
         } catch (exception: RuntimeException) {
             HyperLog.w(Constants.TAG, "Azimuth target initialization failed", exception)
-            Toast.makeText(context, R.string.stakeout_unavailable, Toast.LENGTH_LONG).show()
+            showStakeoutUnavailable()
         }
     }
 
@@ -5667,8 +5671,13 @@ public class MapFragment
             setNewMode(MODE_STAKEOUT)
         } catch (exception: RuntimeException) {
             HyperLog.w(Constants.TAG, "Stakeout target initialization failed", exception)
-            Toast.makeText(context, R.string.stakeout_unavailable, Toast.LENGTH_LONG).show()
+            showStakeoutUnavailable()
         }
+    }
+
+    private fun showStakeoutUnavailable() {
+        if (view != null && isLiveStakeoutMode(mode)) setNewMode(MODE_NORMAL)
+        context?.let { Toast.makeText(it, R.string.stakeout_start_failed, Toast.LENGTH_LONG).show() }
     }
 
     private fun updateStakeoutWidget(state: StakeoutController.UiState) {

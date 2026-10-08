@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  SMOKE-STAKEOUT-PERMISSIONS:
+    type: automatic
+    scope: [app]
+    command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.reliability.StakeoutForegroundServiceTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
+    expected: Isolated Android 14+ emulator only with Bluetooth Connect/Scan denied. With location granted, real location-only service survives background and Stop releases GPS, wake lock and notification; stale requests cannot stop a newer owner. Run deniedLocationStopsGuidanceWithoutCrashOrLeakedGps again with Fine and Coarse revoked to verify asynchronous rejection and retry cleanup. Unowned redelivery does not restore GPS/audio or crash.
   SMOKE-FORM-APPEARANCE:
     type: automatic
     scope: [app, maplibui]
@@ -593,6 +598,8 @@ tests:
     type: device
     scope: [app, maplib]
     steps:
+      - Deny Bluetooth Connect/Scan while keeping system location permission and repeat live azimuth and stakeout, including Home and Stop
+      - On an isolated emulator revoke both location permissions and verify rejected starts show a plain message, stop live mode and release GPS/audio without crashing
       - Connect the production geodetic receiver path and verify it publishes corrected WGS84 GPS fixes for the pole tip
       - Configure stakeout thresholds 5, 1, 0.5 and 0.1 metres and enable sound
       - Select editable and read-only Point, LineString, Polygon and their Multi variants, then start Слежение

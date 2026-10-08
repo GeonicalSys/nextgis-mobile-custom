@@ -338,6 +338,7 @@
     <string name="stakeout_unmute">Enable stakeout sound</string>
     <string name="stakeout_stop">Stop stakeout</string>
     <string name="stakeout_unavailable">This object cannot be used for stakeout</string>
+    <string name="stakeout_start_failed">Unable to start measurement. Check location access and try again.</string>
     <string name="stakeout_settings_title">Stakeout</string>
     <string name="stakeout_sound_enabled">Sound guidance</string>
     <string name="stakeout_far_distance">Slow signal distance</string>

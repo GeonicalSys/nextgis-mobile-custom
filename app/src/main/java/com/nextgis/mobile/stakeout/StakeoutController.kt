@@ -31,6 +31,7 @@ class StakeoutController(
 ) : GpsEventListener {
     interface Listener {
         fun onStakeoutStateChanged(state: UiState)
+        fun onStakeoutUnavailable() {}
     }
 
     data class UiState(
@@ -91,6 +92,7 @@ class StakeoutController(
     private var active = false
     private var uiForeground = false
     private var resourcesActive = false
+    private var foregroundSessionId: String? = null
     private var muted = false
 
     val isActive: Boolean
@@ -215,12 +217,20 @@ class StakeoutController(
     private fun startActiveResources() {
         if (resourcesActive) return
         resourcesActive = true
-        StakeoutForegroundService.start(applicationContext)
-        gpsEventSource.addRawListener(this)
-        gpsEventSource.acquireHighFrequencyUpdates(highFrequencyOwner)
-        if (uiForeground) headingProvider.start()
-        handler.removeCallbacks(cueRunnable)
-        handler.post(cueRunnable)
+        try {
+            foregroundSessionId = StakeoutForegroundService.start(applicationContext) {
+                stopInternal(clearListener = true)
+                listener.onStakeoutUnavailable()
+            }
+            gpsEventSource.addRawListener(this)
+            gpsEventSource.acquireHighFrequencyUpdates(highFrequencyOwner)
+            if (uiForeground) headingProvider.start()
+            handler.removeCallbacks(cueRunnable)
+            handler.post(cueRunnable)
+        } catch (exception: RuntimeException) {
+            stopInternal(clearListener = false)
+            throw exception
+        }
     }
 
     private fun stopActiveResources() {
@@ -231,7 +241,8 @@ class StakeoutController(
         headingProvider.stop()
         handler.removeCallbacks(cueRunnable)
         audioCue?.stop()
-        StakeoutForegroundService.stop(applicationContext)
+        foregroundSessionId?.let { StakeoutForegroundService.stop(applicationContext, it) }
+        foregroundSessionId = null
     }
 
     private fun stopInternal(clearListener: Boolean) {

@@ -64,6 +64,13 @@ jobs:
             adb shell cmd location set-location-enabled true
             adb shell svc wifi disable
             ./gradlew -PciReliabilityChecks=true :app:connectedLisaDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.nextgis.mobile.reliability --console=plain
+            adb shell pm revoke com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
+            adb shell pm revoke com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
+            adb shell am instrument -w -r -e class com.nextgis.mobile.reliability.StakeoutForegroundServiceTest#deniedLocationStopsGuidanceWithoutCrashOrLeakedGps com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner > build/stakeout-location-denied.log
+            cat build/stakeout-location-denied.log
+            python3 -c "from pathlib import Path; text = Path('build/stakeout-location-denied.log').read_text(); assert 'OK (1 test)' in text and 'FAILURES!!!' not in text and 'Process crashed' not in text, text"
+            adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
+            adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
       - name: Store test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -75,4 +82,5 @@ jobs:
             app/build/outputs/androidTest-results
             maplib/build/reports/tests
             maplibui/build/reports/tests
+            build/stakeout-location-denied.log
           if-no-files-found: ignore

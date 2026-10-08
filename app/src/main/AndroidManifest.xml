@@ -97,7 +97,7 @@
             android:name=".stakeout.StakeoutForegroundService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location|connectedDevice" />
+            android:foregroundServiceType="location" />
 
         <meta-data
             android:name="io.sentry.dsn"

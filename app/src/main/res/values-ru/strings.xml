@@ -341,6 +341,7 @@
     <string name="stakeout_unmute">Включить звук выноса</string>
     <string name="stakeout_stop">Завершить вынос</string>
     <string name="stakeout_unavailable">Этот объект нельзя использовать для выноса</string>
+    <string name="stakeout_start_failed">Не удалось запустить измерение. Проверьте доступ к местоположению и повторите попытку.</string>
     <string name="stakeout_settings_title">Вынос координат</string>
     <string name="stakeout_sound_enabled">Звуковые подсказки</string>
     <string name="stakeout_far_distance">Расстояние редкого сигнала</string>

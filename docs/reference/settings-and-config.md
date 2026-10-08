@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -104,6 +104,10 @@ Battery Saver; приложение не меняет системный реж�
   отдельных ключей, но читает ту же коррекцию склонения. Магнитное склонение
   рассчитывается встроенной WMM2025; ручная поправка `C` добавляется к модельному
   `D`. Виджет во время измерения показывает эффективное `D + C` и отдельно `C`.
+  Live-измерение требует доступа к местоположению; Bluetooth-разрешение для
+  штатного GPS не требуется. Отказ запуска завершает измерение с сообщением и
+  освобождает ресурсы; после выдачи разрешения можно повторить запуск. Настройки
+  звука и порогов не меняют Android service type `location`.
 - Updates: `check_updates`, update flavor metadata, release repository fields.
 - Backups: `layer_backup_max_gb` (Общие → Другое, default 5 GB) caps `LayerBackups/`;
   каждый ZIP хранит таблицы слоя и только локальные файлы вложений, без

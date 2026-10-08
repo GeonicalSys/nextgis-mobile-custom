@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -81,6 +81,15 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version
 вручную проверяются launcher, intro и about каждого бренда.
 
 ## Проверки надёжности и воспроизводимость
+
+Дополнение 2026-10-08: `StakeoutForegroundServiceTest` проверяет location-only
+тип службы, работу без Bluetooth, фон, освобождение GPS, отказ запуска и
+устаревшие команды. На API36 локально прошли пять сценариев с разрешённым GPS;
+сценарий отказа GPS в этом проходе пропущен по предусловию и отдельно успешно
+выполнен после фактического отзыва coarse/fine location. CI повторяет этот
+отдельный проход и проверяет instrumentation output, поскольку код возврата
+`adb` сам по себе не доказывает успех. Разрешения после проверки восстанавливаются.
+Проверка на физическом устройстве Android15 остаётся ручной.
 
 Дополнение 2026-10-04: Pigo BLE/GATT/session regressions проверены на API 26/36.
 Локально прошли 574 unit tests (451 maplib, 82 maplibui, 41 app), 28 native

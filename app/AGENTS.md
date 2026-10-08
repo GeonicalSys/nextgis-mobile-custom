@@ -26,6 +26,16 @@ validation. Если updater отправляет пользователя за 
 Android, он сохраняет только проверенный pending manifest, повторно валидирует
 его после возврата и не требует повторного ручного запуска проверки обновлений.
 
+## Азимут и вынос
+
+Азимут и вынос используют только location foreground service, даже при
+запрещённом Bluetooth. Отказ внутри onStartCommand приходит асинхронно: он
+должен остановить owning controller, снять GPS lease/listener, звук и уведомление.
+Service session ID живёт только в процессе; stale start/stop не затрагивает нового
+владельца. При unowned redelivery выполнить foreground-start contract перед
+остановкой, не восстанавливая GPS/audio. StakeoutForegroundServiceTest запускать
+только на изолированном Android 14+ эмуляторе, отдельно с GPS grant и deny.
+
 ## Версионирование variants
 
 - Production Lisa/Belka получают `versionCode`/`versionName` из

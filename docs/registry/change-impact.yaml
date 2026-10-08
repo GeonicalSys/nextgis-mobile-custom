@@ -444,7 +444,7 @@ triggers:
       - maplib/docs/manifest.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT-PERMISSIONS, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
     strict_docs: true
   - id: LAYER-FILL-AND-REORDER
     paths:
