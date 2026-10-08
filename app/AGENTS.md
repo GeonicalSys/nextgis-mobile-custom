@@ -63,6 +63,9 @@ regression-тесты `CascadingFormsTest` и `ConditionalRequiredFieldsTest` з
 только на изолированном эмуляторе; никогда не запускать suite на рабочем телефоне.
 Проверять публичный запуск формы со связанным meta, вкладки, Save/Back Save,
 pin черновика и отсутствие SQLite-записи при нарушении условий.
+FormAppearanceTest проверяет обе темы, перенос выбранного имени и нижний Save.
+V2 visibility: hide/show/rotation/durable recovery не стирают текст; hidden static
+required не блокирует Save, а видимый required остаётся обязательным.
 
 Владеет ранним Application guard изолированного процесса, pinned native build и тестовым примером contractor-audit. Правила не меняют flavors/версии/accounts. Sentry app-start injection отключён; остальные crash/tracing hooks сохранены.
 

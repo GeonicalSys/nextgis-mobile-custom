@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -608,5 +608,8 @@ Collector import/composition sync на worker читает только namespac
 
 `meta.json.lisa_form_rules` доставляется вместе с NGFP и задаёт
 [зависимую обязательность](conditional-form-rules.md) без изменения схемы слоя
-или feature/outbox. Статический required остаётся обязательным при любом условии.
+или feature/outbox. Для видимого поля статический required остаётся обязательным
+при любом условии. V2 того же namespace добавляет visible для field/element;
+скрытый контейнер не блокирует UI required/cascade gate, но его значение
+сохраняется в контролах, draft и обычном Save. Схема/flag слоя не меняются.
 Default launch передаёт парные numbered или legacy form/meta файлы.

@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -26,6 +26,13 @@ related_code:
 Plugins workspace, затем отдельно доставляется в desktop profile.
 
 ## Поток
+
+Поведение NGFP передаётся через собственные блоки meta.json: каскадные списки,
+обязательность и видимость. `lisa_form_rules` v2 позволяет скрывать поля и
+элементы по тем же условиям, что и required, сохраняя значения и версию правил
+черновика. Новый APK устанавливают до обновления формы; облачный UI может не
+показывать эти настройки. [Контракт](conditional-form-rules.md) и
+[инструкция пользователя](../guides/form-behavior-user-guide.md).
 
 ```mermaid
 flowchart LR

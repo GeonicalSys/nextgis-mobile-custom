@@ -462,7 +462,11 @@ form_rules:
   lisa_form_rules:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java
-    purpose: NGFP meta.json schema_version 1 required targets with bounded scalar/all/any/not conditions; strengthens static required without changing fields or values.
+    purpose: NGFP meta.json v1/v2 required and v2 visible field/element targets with shared bounded conditions; hidden fields skip UI validation without clearing values or changing layer metadata.
+  lisa_id:
+    owner: maplibui
+    source: maplibui/src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java
+    purpose: Unique top-level NGFP element name for v2 visible.element; Latin letters, underscores and hyphens only, up to 128 chars, preserving legacy clone compatibility.
   lisa_required_pin:
     owner: maplibui
     source: maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java

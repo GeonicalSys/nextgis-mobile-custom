@@ -193,7 +193,12 @@ registry/docs. Общую карту отличий открывай в
 
 Для зависимой обязательности читать `docs/architecture/conditional-form-rules.md`
 и `docs/guides/form-behavior-user-guide.md`. Декларативный `lisa_form_rules`
-усиливает статический required, не меняет значения и не исполняет код. Общий
+в v1 усиливает required; v2 добавляет visible для field/element (lisa_id).
+Скрытое поле не блокирует UI Save, но значение, слой и draft не очищать.
+Видимость и required вычислять по одному pinned снимку и текущим значениям,
+включая скрытые/неактивные вкладки; ошибка bind/version/pin блокирует Save.
+Оформление FormFieldLayout общее для NGFP/обычных форм, подпись выше рамки;
+не возвращать технические key вместо alias и не заменять listeners каскада. Общий
 Save gate обязателен для toolbar и Back Save; условия вычисляются по текущим
 типизированным значениям, включая неактивные вкладки. Сохранять проверенный
 `lisa_required_pin` в owning layer/form_rules и durable draft; ошибка pin

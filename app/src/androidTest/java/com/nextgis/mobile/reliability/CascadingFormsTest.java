@@ -205,6 +205,14 @@ public class CascadingFormsTest {
         }
         return null;
     }
+    private static View caption(View root, String text) {
+        if (root instanceof android.widget.TextView && text.contentEquals(((android.widget.TextView)root).getText())) return root;
+        if (root instanceof android.view.ViewGroup) {
+            android.view.ViewGroup group=(android.view.ViewGroup)root;
+            for (int i=0;i<group.getChildCount();i++) { View found=caption(group.getChildAt(i),text); if(found!=null) return found; }
+        }
+        return null;
+    }
     private static void swipe(ActivityScenario<FormBuilderModifyAttributesActivity> scenario, boolean left,
                               java.util.function.Function<FormBuilderModifyAttributesActivity,View> target) {
         float[] points=new float[3];
@@ -241,7 +249,7 @@ public class CascadingFormsTest {
                 });
                 swipe(s,true,a -> a.findViewById(R.id.form_scroll));
                 s.onActivity(a -> {assertEquals(1,tabs(a).getValue());assertEquals(0,((ScrollView)a.findViewById(R.id.form_scroll)).getScrollY());});
-                swipe(s,false,a -> ((android.view.ViewGroup)tabs(a).getPageLayouts().get(1)).getChildAt(0));
+                swipe(s,false,a -> caption(tabs(a).getPageLayouts().get(1),"Swipe here"));
                 s.onActivity(a -> {assertEquals(0,tabs(a).getValue());assertEquals("Driver",a.getCascadingLists().value("jobtitle1"));});
                 s.onActivity(a -> {ScrollView scroll=a.findViewById(R.id.form_scroll);scroll.scrollTo(0,scroll.getChildAt(0).getHeight());});
                 InstrumentationRegistry.getInstrumentation().waitForIdleSync();
@@ -297,8 +305,9 @@ public class CascadingFormsTest {
                 s.onActivity(a -> {
                     for (String[] field : new String[][]{{"jobtitle1", "Должность 1"}, {"eployee1", "Работник 1"}}) {
                         View view = spinner(a, field[0]);
-                        android.view.ViewGroup parent = (android.view.ViewGroup)view.getParent();
-                        android.widget.TextView caption = (android.widget.TextView)parent.getChildAt(parent.indexOfChild(view) - 1);
+                        com.nextgis.maplibui.util.FormFieldLayout.FieldContainer container = com.nextgis.maplibui.util.FormFieldLayout.container(view);
+                        assertNotNull(container);
+                        android.widget.TextView caption = (android.widget.TextView)container.getChildAt(0);
                         assertEquals(field[1] + " *", caption.getText().toString());
                     }
                 });

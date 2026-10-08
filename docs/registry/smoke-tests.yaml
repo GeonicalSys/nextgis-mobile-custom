@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  SMOKE-FORM-APPEARANCE:
+    type: automatic
+    scope: [app, maplibui]
+    command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.reliability.FormAppearanceTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
+    expected: Isolated emulator only; both app themes keep permanent captions distinct from outlined values, long selections wrap, hidden comments occupy no layout space and footer Save uses the same required gate without SQLite writes on failure.
   SMOKE-ALL-PROJECT-SYNC:
     type: automatic
     scope: [app, maplib, maplibui]
@@ -9,7 +14,7 @@ tests:
     type: automatic
     scope: [app, maplib, maplibui]
     command: .\gradlew.bat :app:connectedLisaDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.nextgis.mobile.reliability.ConditionalRequiredFieldsTest"
-    expected: Unchecked checkbox requires the inactive comment before SQLite writes; checked item is optional unless statically required, markers update, immutable pins survive rotation/durable recovery and corrupt/unknown rules block Save retaining the draft.
+    expected: V1 required remains compatible. V2 hides complete comment or element containers without clearing values; visible-only required, inactive/nested tabs, view-only and pinned headers share rules. Hide/show/rotation/durable recovery retain text; corrupt pins, duplicate IDs and unknown targets block Save before SQLite writes.
   SMOKE-FORM-NAVIGATION:
     type: automatic
     scope: [app, maplibui]

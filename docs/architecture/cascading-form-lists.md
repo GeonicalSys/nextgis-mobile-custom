@@ -1,7 +1,7 @@
 ---
 title: Зависимые списки NGFP
 type: architecture
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java
@@ -17,7 +17,12 @@ related_code:
 если граф управляет обоими полями. Штатный pair без графа остаётся совместимым.
 Преобразование работает и на верхнем уровне, и во вложенных Tabs, не меняет
 исходный JSON, имена полей, значения или pin черновика. Каждый selector имеет
-минимальную высоту 56dp, полную ширину и нижний отступ 12dp через FormFieldLayout.
+минимальную высоту 56dp, полную ширину и контейнер с отступом 20dp через
+FormFieldLayout. Длинное выбранное имя переносится внутри рамки, подпись остаётся
+выше. Если legacy pair имеет переносимый lisa_id, сохраняется сам control с
+двумя раздельными обёртками, чтобы visible.element управлял всей парой.
+Условно скрытое поле не блокирует UI membership gate, значения не очищаются;
+видимые поля продолжают полную проверку. [Общий контракт](conditional-form-rules.md).
 Для новых каскадов использовать отдельные combobox; pair не нужен. Нет JS,
 SQL, сетевых запросов при выборе или нового типа элемента формы. Без расширения
 старые формы сохраняют прежнее поведение. `input_search`/AutoTextEdit, radio и

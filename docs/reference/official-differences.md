@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 related_code:
   - app/build.gradle
   - app/src/main
@@ -34,6 +34,13 @@ maplib HEAD f260631d синхронизация обращается к един
 Оба файла и три HEAD повторно проверены через GitHub API 7 октября 2026 года.
 В разделённых каскадных полях форк использует псевдонимы NGFP metadata
 keyname/display_name, затем псевдоним слоя, сохраняя технические keys для записи.
+
+Повторная проверка official app/maplib/maplibui 8 октября 2026 через GitHub API
+подтвердила те же HEAD. Форк добавляет «Чёткие поля»: постоянные подписи над
+рамкой, контрастные значения, перенос длинных имён, inline-ошибки и закреплённый
+Save. V2 `lisa_form_rules.visible` управляет полями и отдельными элементами,
+сохраняет скрытый текст/черновик и согласует visibility с required. Official
+TextEdit/Combobox/Tabs по прежнему HEAD этих расширений не содержат.
 
 Форк закрепляет вкладки NGFP над вертикальной прокруткой и переключает их
 горизонтальным взмахом по содержимому. Независимый `lisa_form_rules` задаёт

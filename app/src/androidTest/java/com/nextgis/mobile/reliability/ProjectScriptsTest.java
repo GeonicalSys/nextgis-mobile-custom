@@ -120,13 +120,15 @@ public class ProjectScriptsTest {
             group=atRoot ? map : new LayerGroup(app,new java.io.File(map.getPath(),"scripts_"+UUID.randomUUID().toString().replace("-","")),app.getLayerFactory());
             group.setName("Synthetic project scripts test");
             if(!atRoot)map.addLayer(group);
-            CollectorProjectMetadata metadata = CollectorProjectMetadata.create("scripts-test",999803,"Test",null);
+            // Repeated emulator runs can retain a prior synthetic project after an interrupted test.
+            // Use a unique owner rather than weakening the application's identity checks.
+            CollectorProjectMetadata metadata = CollectorProjectMetadata.create("scripts-test-"+UUID.randomUUID(),999803,"Test",null);
             group.setCollectorProjectMetadata(metadata);
             JSONObject bindings = new JSONObject();
             for (int i=0;i<ALIASES.length;i++) {
                 NGWVectorLayerUI layer = new NGWVectorLayerUI(app,new java.io.File(group.getPath(),"script_audit_"+UUID.randomUUID().toString().replace("-","")+"_"+i));
                 layer.setName("Synthetic audit "+i);
-                layer.setAccountName("scripts-test");
+                layer.setAccountName(metadata.getAccountName());
                 layer.setRemoteId(100+i);
                 layer.setLayerOriginMetadata(LayerOriginMetadata.collectorLayer(metadata.getProjectUid(),i,0));
                 layer.setSyncType(Constants.SYNC_NONE);
@@ -238,6 +240,8 @@ public class ProjectScriptsTest {
                     .put("attributes",new JSONObject().put("field","contractor").put("last",false)
                             .put("allow_adding_values",false).put("input_search",false).put("values",choices)));
             Files.write(form.toPath(),elements.toString().getBytes(StandardCharsets.UTF_8));
+            assertSame("Fixture resolves its own form layer before launch",f.layers.get(0),
+                    ProjectScriptHost.resolve(f.group,f.reference,ALIASES[0]));
             GeoPoint point = new GeoPoint(10,20);point.setCRS(GeoConstants.CRS_WEB_MERCATOR);
             Intent intent = new Intent(app,FormBuilderModifyAttributesActivity.class)
                     .putExtra(ConstantsUI.KEY_LAYER_ID,f.layers.get(0).getId())
@@ -245,6 +249,8 @@ public class ProjectScriptsTest {
                     .putExtra(ConstantsUI.KEY_GEOMETRY,point).putExtra(ConstantsUI.KEY_GEOMETRY_CHANGED,true)
                     .putExtra(ConstantsUI.KEY_FORM_PATH,form);
             try(ActivityScenario<FormBuilderModifyAttributesActivity> scenario=ActivityScenario.launch(intent)) {
+                scenario.onActivity(activity -> assertSame("Activity uses the fixture's registered layer",f.layers.get(0),
+                        member(activity,ModifyAttributesActivity.class,"mLayer")));
                 // Let listener installation finish, then change twice inside the debounce window.
                 Thread.sleep(800);
                 scenario.onActivity(activity -> { contractor(activity).setSelection(1);contractor(activity).setSelection(2); });
@@ -260,6 +266,8 @@ public class ProjectScriptsTest {
                 // Remote rules changed, but an already-open form retains the verified reference.
                 f.group.getCollectorProjectMetadata().setScriptsState(null,null,"disabled");
                 scenario.recreate();
+                scenario.onActivity(activity -> assertEquals("Selection survives presentation containers",
+                        "Тест",((IControl)contractor(activity)).getValue()));
                 awaitDialog(scenario);
                 scenario.onActivity(activity -> {
                     assertEquals(f.reference.toString(),member(activity,ModifyAttributesActivity.class,"mScriptReferencePin"));

@@ -33,7 +33,7 @@ contracts:
     to: mobile-app
     type: server_resource_contract
     transport: Legacy NGFP ZIP meta.json.lisa_form_rules
-    statement: Native bounded scalar/all/any/not conditions strengthen static required; UI markers and Save share pinned rules, drafts keep verified SHA-256 snapshots, desktop clone preserves literals and field names without resource-ID remap. Tab navigation and independent selector rendering preserve the same field identities; no PostGIS schema/data write is needed.
+    statement: Native v1/v2 conditions strengthen visible static required; v2 visible targets field containers or portable lisa_id elements without clearing values. UI visibility, markers and Save share pinned rules; drafts keep verified SHA-256 snapshots and desktop clone preserves namespace literals/field names without resource-ID remap. Tab navigation and independent selector rendering preserve the same field identities; no PostGIS schema/data write is needed.
     owners: [maplib, maplibui, app]
     local_docs: [docs/architecture/conditional-form-rules.md, docs/guides/form-behavior-user-guide.md]
     external_docs:

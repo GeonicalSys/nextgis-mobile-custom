@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -10,6 +10,10 @@ last_verified: 2026-10-07
 
 NGFP-вкладки закреплены сверху и переключаются взмахом по содержимому. Общие
 условные требования (`lisa_form_rules`) работают offline и перед Save/Back Save.
+V2 добавляет visibility по тем же условиям: комментарий появляется при снятой
+отметке, скрывается без очистки и восстанавливается из draft. Скрытые поля не
+блокируют Save. Чёткие подписи, рамки, перенос названий и нижняя кнопка Save
+применяются ко всем формам; FormAppearanceTest проверяет обе темы.
 `ConditionalRequiredFieldsTest` проверяет маркеры, inactive fields, SQLite,
 статический required, pin/recreate/durable recovery и повреждённые настройки.
 [Руководство](../../docs/guides/form-behavior-user-guide.md).
