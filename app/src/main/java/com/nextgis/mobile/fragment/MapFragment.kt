@@ -129,6 +129,7 @@ import com.nextgis.maplibui.overlay.RulerOverlay.OnRulerChanged
 import com.nextgis.maplibui.overlay.UndoRedoOverlay
 import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.service.WalkEditService
+import com.nextgis.maplibui.service.WalkGeometrySnapshot
 import com.nextgis.maplibui.util.WalkSessionStore
 import com.nextgis.maplibui.util.FeatureFormDraftStore
 import com.nextgis.maplibui.util.LayerUtil
@@ -481,6 +482,10 @@ public class MapFragment
         mMapRef.get()!!.setZoomAndCenter(mapZoom, GeoPoint(mapScrollX, mapScrollY))
 
         mMainButton = view.findViewById(R.id.multiple_actions)
+        mMainButton?.setOnFloatingActionsMenuUpdateListener(object : FloatingActionsMenu.OnFloatingActionsMenuUpdateListener {
+            override fun onMenuExpanded() { positionWalkPanel(true) }
+            override fun onMenuCollapsed() { positionWalkPanel(false) }
+        })
         mAddPointButton = view.findViewById(R.id.add_point_by_tap)
         mAddPointButton?.setOnClickListener(this)
 
@@ -1014,6 +1019,7 @@ public class MapFragment
     private var newFeatureDefaults: Bundle? = null
     private var finishedWalkEditId: String? = null
     private var pendingWalkFinishId: String? = null
+    private var pendingWalkFormId: String? = null
     private var walkPreviewKey: String? = null
     private var walkPreviewMap: MapDrawable? = null
     private val walkSessionReceiver = object : BroadcastReceiver() {
@@ -1053,7 +1059,7 @@ public class MapFragment
             }
 
             override fun onFinishWalk(session: WalkSessionStore.Snapshot) {
-                if (session.phase == WalkSessionPolicy.Phase.FINISHED) openFinishedWalk(session)
+                if (session.phase == WalkSessionPolicy.Phase.FINISHED) openFinishedWalk(session, true)
                 else {
                     pendingWalkFinishId = session.id
                     if (!WalkEditService.requestCommand(requireContext(), session.id, WalkSessionPolicy.Command.FINISH))
@@ -1066,24 +1072,40 @@ public class MapFragment
                     .setTitle(com.nextgis.maplibui.R.string.walk_discard)
                     .setMessage(com.nextgis.maplibui.R.string.walk_discard_confirm)
                     .setPositiveButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
-                        WalkEditService.requestCommand(requireContext(), session.id, WalkSessionPolicy.Command.DISCARD)
+                        if (WalkEditService.requestCommand(requireContext(), session.id, WalkSessionPolicy.Command.DISCARD)
+                            && finishedWalkEditId == session.id) cancelEdits()
                     }.setNegativeButton(android.R.string.cancel, null).show()
             }
 
-            override fun onShowWalk(session: WalkSessionStore.Snapshot) {
-                val envelope = session.geometry()?.envelope ?: return
-                mMapRef.get()?.setZoomAndCenter(mMapRef.get()!!.zoomLevel, envelope.center)
-            }
         })
     }
 
-    private fun openFinishedWalk(session: WalkSessionStore.Snapshot) {
+    private fun positionWalkPanel(menuExpanded: Boolean) {
+        val panel = walkPanel ?: return
+        val params = panel.layoutParams as? RelativeLayout.LayoutParams ?: return
+        params.bottomMargin = Math.round((if (menuExpanded) 88 else 4) * resources.displayMetrics.density)
+        panel.layoutParams = params
+    }
+
+    private fun openFinishedWalk(session: WalkSessionStore.Snapshot, showForm: Boolean = false) {
         val ctx = context ?: return
         val current = WalkSessionStore.load(ctx) ?: return
         if (current.id != session.id || current.isPointActive || current.phase != WalkSessionPolicy.Phase.FINISHED
-            || mode == MODE_EDIT || mNewFeatureFormLaunchInProgress) return
+            || mNewFeatureFormLaunchInProgress) return
+        if (mode == MODE_EDIT) {
+            if (finishedWalkEditId == current.id && showForm) saveEdits()
+            return
+        }
         val layer = mMapRef.get()?.map?.getLayerById(current.layerId) as? VectorLayer ?: return
         val geometry = current.geometry() ?: return
+        if (!WalkGeometrySnapshot.hasEnoughPoints(geometry)) {
+            // The service has acknowledged its final snapshot; no row or form may be created.
+            if (WalkSessionStore.clear(ctx, current.id)) {
+                Toast.makeText(ctx, com.nextgis.maplibui.R.string.walk_insufficient_points, Toast.LENGTH_LONG).show()
+                walkPanel?.refresh()
+            } else Toast.makeText(ctx, com.nextgis.maplibui.R.string.walk_save_failed, Toast.LENGTH_LONG).show()
+            return
+        }
         val draft = GeometryEditDraftStore.Snapshot().apply {
             layerId = current.layerId
             featureId = current.featureId
@@ -1093,6 +1115,7 @@ public class MapFragment
         }
         if (!GeometryEditDraftStore.save(ctx, draft, "finished-walk-edit")) return
         finishedWalkEditId = current.id
+        pendingWalkFormId = if (showForm) current.id else null
         resumeManualGeometryFromDraft()
         walkPanel?.refresh()
     }
@@ -1261,6 +1284,11 @@ public class MapFragment
 
 
     fun saveEdits(): Boolean {
+        val walkSession = WalkSessionStore.load(context)?.takeIf {
+            it.id == finishedWalkEditId && it.phase == WalkSessionPolicy.Phase.FINISHED
+                && it.layerId == mSelectedLayer?.id && !it.isPointActive
+        }
+        if (walkSession != null && mNewFeatureFormLaunchInProgress) return true
         val feature = editLayerOverlay!!.selectedFeature
         var featureId = Constants.NOT_FOUND.toLong()
         var geometry: GeoGeometry? = null
@@ -1381,7 +1409,7 @@ public class MapFragment
         editLayerOverlay!!.setHasEdits(false)
 
         if (mSelectedLayer != null) {
-            if (featureId == Constants.NOT_FOUND.toLong()) {
+            if (featureId == Constants.NOT_FOUND.toLong() || walkSession != null) {
                 //show attributes edit activity
                 val vectorLayerUI = mSelectedLayer as IVectorLayerUI
                 if (pointSessionId != null || finishedWalkEditId != null || newFeatureDefaults != null) {
@@ -1391,6 +1419,7 @@ public class MapFragment
                         return false
                     }
                 } else vectorLayerUI.showEditForm(mActivity, featureId, geometry, -1)
+                if (walkSession != null) mNewFeatureFormLaunchInProgress = true
                 clearManualGeometryDraft("handoff-to-attribute-form")
             } else {
                 var uri =  Uri.parse("content://" + mApp!!.authority + "/" + mSelectedLayer!!.path.name)
@@ -1615,6 +1644,7 @@ public class MapFragment
             WalkSessionStore.clear(requireContext(), session.id)
         }
         finishedWalkEditId = null
+        pendingWalkFormId = null
         finishPointCreation()
         editLayerOverlay?.setHasEdits(false)
         editLayerOverlay?.setSelectedFeature(null)
@@ -1667,6 +1697,7 @@ public class MapFragment
         setNewMode(if (wasNewFeature) MODE_NORMAL else MODE_SELECT_ACTION)
         clearManualGeometryDraft("geometry-cancel")
         finishedWalkEditId = null
+        pendingWalkFormId = null
         finishPointCreation()
     }
 
@@ -2033,7 +2064,10 @@ public class MapFragment
         setMarginsToPanel()
         defineMenuItems()
 
-        walkPanel?.setEditorAvailable(mode == MODE_NORMAL || mode == MODE_SELECT_ACTION || mode == MODE_SELECT_FOR_VIEW)
+        val finishedWalkEditor = mode == MODE_EDIT && finishedWalkEditId != null
+            && WalkSessionStore.load(context)?.id == finishedWalkEditId
+        walkPanel?.setEditorAvailable(mode == MODE_NORMAL || mode == MODE_SELECT_ACTION
+            || mode == MODE_SELECT_FOR_VIEW || finishedWalkEditor)
 
         if (askPerm)
             Handler().postDelayed(Runnable(){
@@ -2054,6 +2088,8 @@ public class MapFragment
         val activity = mActivity ?: return false
         val layer = mSelectedLayer ?: return false
         val layerUI = layer as? IVectorLayerUI ?: return false
+        if (finishedWalkEditId != null && WalkSessionStore.load(context)?.id == finishedWalkEditId)
+            return saveEdits()
         val featureId = editLayerOverlay?.selectedFeatureId ?: Constants.NOT_FOUND.toLong()
         if (featureId == Constants.NOT_FOUND.toLong()) {
             if (mNewFeatureFormLaunchInProgress) return true
@@ -3053,6 +3089,10 @@ public class MapFragment
             "GeometryDraft resumed layer=${snapshot.layerId} feature=${snapshot.featureId} " +
                 "mode=${modeName(snapshot.editMode)} geometryType=${geometry.type}"
         )
+        if (pendingWalkFormId != null && pendingWalkFormId == finishedWalkEditId) {
+            pendingWalkFormId = null
+            saveEdits()
+        }
         return true
     }
 

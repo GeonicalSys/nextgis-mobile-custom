@@ -301,6 +301,9 @@ triggers:
       - maplibui/src/main/res/menu/ruler_measurement.xml
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometryInsertion.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometrySnapshot.java
+      - maplibui/src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ControlHelper.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
       - maplibui/src/main/res/menu/edit_line.xml
       - maplibui/src/main/res/menu/edit_multiline.xml

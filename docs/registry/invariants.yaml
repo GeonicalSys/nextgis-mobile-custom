@@ -333,6 +333,8 @@ invariants:
       toggle and walk panel. Right-edge tools reflow into columns using actual view
       height, including orientation changes without Activity recreation. The creation
       menu has its own bottom row and cannot overlap the tools or walk controls.
+      The compact walk panel sits at the bottom and moves above that row only
+      while the creation menu is expanded; it exposes no GPS accuracy or overflow.
     related_code:
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -619,6 +621,10 @@ invariants:
       a GPS gap pauses the walk until an explicit reconnection. While walk recording is active,
       a separate panel owns controls and normal menus remain available. Point creation locks all
       walk controls from chooser through Save/Cancel; Finish awaits the service acknowledgement. For new
+      walk geometry, every line needs two distinct vertices and every polygon ring three;
+      insufficient geometry exits with a readable message and no feature/form write.
+      The finished owner's Save stays enabled in its editor and opens attributes for
+      new and existing features; Cancel is direct and confirmed. For new
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not

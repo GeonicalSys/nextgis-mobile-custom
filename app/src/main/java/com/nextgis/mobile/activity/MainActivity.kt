@@ -495,6 +495,9 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         //stopRefresh(mToolbar!!.menu.findItem(R.id.menu_refresh))
         mToolbar!!.menu.clear()
         mToolbar!!.inflateMenu(com.nextgis.maplibui.R.menu.edit_geometry)
+        ControlHelper.setEnabled(mToolbar!!.menu.findItem(com.nextgis.maplibui.R.id.menu_edit_save),
+            mapFragment!!.hasEdits())
+        mapFragment!!.undoRedoOverlay?.defineUndoRedo()
 
         var item = mToolbar!!.menu.findItem(com.nextgis.maplibui.R.id.menu_edit_redo)
         val visible = mapFragment!!.mode != MapFragment.MODE_EDIT_BY_WALK

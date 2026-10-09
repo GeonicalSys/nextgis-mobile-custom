@@ -75,6 +75,13 @@ public class MapEditingToolsTest {
     @After public void tearDown() {
         if (scenario != null) {
             scenario.onActivity(activity -> {
+                com.nextgis.maplibui.util.WalkSessionStore.Snapshot walk = com.nextgis.maplibui.util.WalkSessionStore.load(app);
+                if (walk != null && layers.stream().anyMatch(layer -> layer.getId() == walk.layerId)) {
+                    assertTrue(com.nextgis.maplibui.service.WalkEditService.requestCommand(app, walk.id,
+                            com.nextgis.maplibui.util.WalkSessionPolicy.Command.DISCARD));
+                    com.nextgis.maplibui.util.FeatureFormDraftStore.clear(app);
+                    com.nextgis.maplibui.util.GeometryEditDraftStore.clear(app, "walk-test-complete");
+                }
                 if (activity.getMapFragment() != null)
                     activity.getMapFragment().setNewMode(MapFragment.MODE_NORMAL);
                 for (VectorLayerUI layer : layers) assertTrue(layer.delete(false));
@@ -121,6 +128,212 @@ public class MapEditingToolsTest {
 
     private int mode(MainActivity activity) {
         return ((MaplibreMapInteraction) activity.getMapFragment()).getMode();
+    }
+
+    private android.widget.TextView buttonWithText(View view, String text) {
+        if (view instanceof android.widget.TextView && text.contentEquals(((android.widget.TextView) view).getText()))
+            return (android.widget.TextView) view;
+        if (view instanceof android.view.ViewGroup) {
+            android.view.ViewGroup group = (android.view.ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                android.widget.TextView button = buttonWithText(group.getChildAt(i), text);
+                if (button != null) return button;
+            }
+        }
+        return null;
+    }
+
+    private void clickDialogButton(String id) {
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        instrumentation.waitForIdleSync();
+        int buttonId = id.endsWith("button2") ? android.R.id.button2 : android.R.id.button1;
+        AtomicBoolean clicked = new AtomicBoolean();
+        long deadline = android.os.SystemClock.uptimeMillis() + 5000;
+        while (!clicked.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+            instrumentation.runOnMainSync(() -> {
+                List<View> roots = android.view.inspector.WindowInspector.getGlobalWindowViews();
+                for (int i = roots.size() - 1; i >= 0; i--) {
+                    View root = roots.get(i);
+                    View button = root.findViewById(buttonId);
+                    if (button != null && button.isShown() && root.isAttachedToWindow()) {
+                        clicked.set(button.performClick());
+                        break;
+                    }
+                }
+            });
+            if (!clicked.get()) android.os.SystemClock.sleep(50);
+        }
+        assertTrue("Confirmation button unavailable: " + id, clicked.get());
+        instrumentation.waitForIdleSync();
+    }
+
+    private void beginWalk(MainActivity activity, boolean enoughPoints, long featureId) {
+        try {
+            MapDrawable map = (MapDrawable) app.getMap();
+            VectorLayerUI layer = new VectorLayerUI(app, new File(map.getPath(),
+                    "walk_ui_" + UUID.randomUUID().toString().replace("-", "")));
+            layer.setName("Walk test");
+            map.addLayer(layer); layers.add(layer);
+            layer.create(GeoConstants.GTLineString, Collections.emptyList());
+            layer.setIsEditable(true); layer.setVisible(true); map.save();
+            com.nextgis.maplib.datasource.GeoLineString line = new com.nextgis.maplib.datasource.GeoLineString();
+            line.setCRS(GeoConstants.CRS_WEB_MERCATOR); line.add(new GeoPoint(0, 0));
+            if (enoughPoints) line.add(new GeoPoint(10, 10));
+            if (featureId != Constants.NOT_FOUND) {
+                ContentValues values = new ContentValues(); values.put(Constants.FIELD_GEOM, line.toBlob());
+                featureId = layer.insertAddChanges(values);
+                assertTrue(featureId != Constants.NOT_FOUND);
+                line.add(new GeoPoint(20, 10));
+            }
+            assertNotNull(com.nextgis.maplibui.util.WalkSessionStore.begin(app, layer.getId(), featureId,
+                    line, 0, 0, line.getPointCount(), MainActivity.class.getName()));
+            ((com.nextgis.maplibui.view.WalkRecordingPanel) activity.findViewById(R.id.walk_recording_panel)).refresh();
+        } catch (Exception error) { throw new AssertionError(error); }
+    }
+
+    @Test public void finishingAnInsufficientWalkCreatesNoObjectOrForm() {
+        scenario.onActivity(activity -> {
+            beginWalk(activity, false, Constants.NOT_FOUND);
+            View panel = activity.findViewById(R.id.walk_recording_panel);
+            assertTrue(buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_finish)).performClick());
+        });
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        scenario.onActivity(activity -> {
+            assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
+            assertNull(com.nextgis.maplibui.util.FeatureFormDraftStore.load(app));
+            assertNull(com.nextgis.maplibui.util.GeometryEditDraftStore.load(app));
+            assertEquals(0, layers.get(0).getCount());
+            assertEquals(MapFragment.MODE_NORMAL, mode(activity));
+            assertEquals(View.GONE, activity.findViewById(R.id.walk_recording_panel).getVisibility());
+        });
+    }
+
+    @Test public void finishedWalkSaveOpensAttributesForNewAndExistingObjects() throws Exception {
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        for (long featureId : new long[]{Constants.NOT_FOUND, 1}) {
+            android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
+                    com.nextgis.maplibui.activity.ModifyAttributesActivity.class.getName(), null, false);
+            com.nextgis.maplibui.activity.ModifyAttributesActivity opened = null;
+            try {
+                scenario.onActivity(activity -> {
+                    beginWalk(activity, true, featureId);
+                    View panel = activity.findViewById(R.id.walk_recording_panel);
+                    assertTrue(buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_finish)).performClick());
+                });
+                AtomicBoolean ready = new AtomicBoolean();
+                long deadline = android.os.SystemClock.uptimeMillis() + 20000;
+                while (!ready.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+                    instrumentation.waitForIdleSync();
+                    scenario.onActivity(activity -> ready.set(mode(activity) == MapFragment.MODE_EDIT));
+                    if (!ready.get()) Thread.sleep(40);
+                }
+                assertTrue("Finished geometry did not reach the editor", ready.get());
+                if (featureId == Constants.NOT_FOUND) {
+                    android.graphics.Bitmap screenshot = instrumentation.getUiAutomation().takeScreenshot();
+                    assertNotNull(screenshot);
+                    try (java.io.FileOutputStream image = new java.io.FileOutputStream(new File(app.getFilesDir(), "walk-finished-panel.png"))) {
+                        assertTrue(screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, image));
+                    } finally { screenshot.recycle(); }
+                }
+                scenario.onActivity(activity -> {
+                    View panel = activity.findViewById(R.id.walk_recording_panel);
+                    android.widget.TextView save = buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_complete_object));
+                    assertNotNull(save); assertTrue(save.isEnabled()); assertEquals(1f, save.getAlpha(), 0);
+                    assertNull(buttonWithText(panel, "⋮"));
+                    activity.showEditToolbar();
+                    androidx.appcompat.widget.Toolbar toolbar = activity.findViewById(R.id.main_toolbar);
+                    android.view.MenuItem disk = toolbar.getMenu().findItem(com.nextgis.maplibui.R.id.menu_edit_save);
+                    assertTrue(disk.isEnabled()); assertEquals(255, disk.getIcon().getAlpha());
+                    assertTrue(save.performClick());
+                });
+                opened = (com.nextgis.maplibui.activity.ModifyAttributesActivity) instrumentation.waitForMonitorWithTimeout(monitor, 20000);
+                assertNotNull("Walk attributes did not open", opened);
+                instrumentation.waitForIdleSync();
+                com.nextgis.maplibui.util.FeatureFormDraftStore.Snapshot draft = com.nextgis.maplibui.util.FeatureFormDraftStore.load(app);
+                assertNotNull(draft); assertNotNull(draft.walkSessionId); assertTrue(draft.geometryChanged);
+                assertEquals(featureId == Constants.NOT_FOUND ? 0 : 1, layers.get(layers.size() - 1).getCount());
+                com.nextgis.maplibui.activity.ModifyAttributesActivity form = opened;
+                instrumentation.runOnMainSync(() -> {
+                    android.widget.PopupMenu popup = new android.widget.PopupMenu(form, new View(form));
+                    assertTrue(form.onOptionsItemSelected(popup.getMenu().add(0, com.nextgis.maplibui.R.id.menu_apply, 0, "Save")));
+                });
+                AtomicBoolean saved = new AtomicBoolean();
+                deadline = android.os.SystemClock.uptimeMillis() + 20000;
+                while (!saved.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+                    instrumentation.waitForIdleSync();
+                    scenario.onActivity(activity -> saved.set(mode(activity) == MapFragment.MODE_NORMAL
+                            && com.nextgis.maplibui.util.WalkSessionStore.load(app) == null));
+                    if (!saved.get()) Thread.sleep(40);
+                }
+                assertTrue("Attribute Save did not finish the walking session", saved.get());
+                VectorLayerUI layer = layers.get(layers.size() - 1);
+                assertEquals(1, layer.getCount());
+                try (android.database.Cursor rows = layer.query(null, null, null, null, null)) {
+                    assertTrue(rows.moveToFirst());
+                    long savedId = rows.getLong(rows.getColumnIndexOrThrow(Constants.FIELD_ID));
+                    assertEquals(featureId == Constants.NOT_FOUND ? 2 : 3,
+                            ((com.nextgis.maplib.datasource.GeoLineString) layer.getGeometryForId(savedId)).getPointCount());
+                }
+            } finally {
+                if (opened != null && !opened.isFinishing()) {
+                    com.nextgis.maplibui.activity.ModifyAttributesActivity form = opened;
+                    instrumentation.runOnMainSync(form::finish);
+                }
+                instrumentation.removeMonitor(monitor);
+                com.nextgis.maplibui.util.FeatureFormDraftStore.clear(app);
+            }
+        }
+    }
+
+    @Test public void iconStateDoesNotLeakBetweenButtonsOrToolbarRecreation() {
+        scenario.onActivity(activity -> {
+            android.widget.PopupMenu popup = new android.widget.PopupMenu(activity, new View(activity));
+            android.view.MenuItem first = popup.getMenu().add("First").setIcon(com.nextgis.maplibui.R.drawable.ic_action_save);
+            android.view.MenuItem second = popup.getMenu().add("Second").setIcon(com.nextgis.maplibui.R.drawable.ic_action_save);
+            com.nextgis.maplibui.util.ControlHelper.setEnabled(first, false);
+            com.nextgis.maplibui.util.ControlHelper.setEnabled(second, true);
+            assertEquals(160, first.getIcon().getAlpha()); assertEquals(255, second.getIcon().getAlpha());
+            com.nextgis.maplibui.util.ControlHelper.setEnabled(first, true);
+            com.nextgis.maplibui.util.ControlHelper.setEnabled(second, false);
+            assertEquals(255, first.getIcon().getAlpha()); assertEquals(160, second.getIcon().getAlpha());
+            com.nextgis.maplibui.util.ControlHelper.setEnabled(popup.getMenu().add("No icon"), false);
+        });
+    }
+
+    @Test public void bottomWalkPanelMovesForCreationMenuAndCancelRequiresConfirmation() {
+        final int[] bottom = new int[1];
+        scenario.onActivity(activity -> beginWalk(activity, true, Constants.NOT_FOUND));
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        scenario.onActivity(activity -> {
+            View panel = activity.findViewById(R.id.walk_recording_panel);
+            bottom[0] = panel.getBottom();
+            assertTrue(panel.getBottom() > activity.findViewById(R.id.map_action_row).getTop());
+            ((com.getbase.floatingactionbutton.FloatingActionsMenu) activity.findViewById(R.id.multiple_actions)).expand();
+        });
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        scenario.onActivity(activity -> {
+            assertTrue(activity.findViewById(R.id.walk_recording_panel).getBottom() < bottom[0]);
+            ((com.getbase.floatingactionbutton.FloatingActionsMenu) activity.findViewById(R.id.multiple_actions)).collapse();
+        });
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        scenario.onActivity(activity -> {
+            View panel = activity.findViewById(R.id.walk_recording_panel);
+            assertEquals(bottom[0], panel.getBottom());
+            assertTrue(buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_cancel)).performClick());
+            assertNotNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
+        });
+        clickDialogButton("android:id/button2");
+        assertNotNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
+        scenario.onActivity(activity -> {
+            View panel = activity.findViewById(R.id.walk_recording_panel);
+            buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_cancel)).performClick();
+        });
+        clickDialogButton("android:id/button1");
+        long deadline = android.os.SystemClock.uptimeMillis() + 5000;
+        while (com.nextgis.maplibui.util.WalkSessionStore.load(app) != null
+                && android.os.SystemClock.uptimeMillis() < deadline) android.os.SystemClock.sleep(50);
+        assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
+        assertEquals(0, layers.get(0).getCount());
     }
 
     @Test public void layerChoiceOffersCategoryBeforeSketchAndHandsDefaultsToRealForm() throws Exception {

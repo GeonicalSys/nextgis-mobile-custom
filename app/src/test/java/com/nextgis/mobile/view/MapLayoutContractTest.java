@@ -43,7 +43,7 @@ public class MapLayoutContractTest {
             String id = element.getAttributeNS(ANDROID, "id");
             if (!id.isEmpty()) assertTrue("Duplicate view " + id, ids.add(id));
             if (id.equals("@+id/walk_recording_panel")) {
-                assertEquals("@id/map_action_row", element.getAttributeNS(ANDROID, "layout_above"));
+                assertEquals("@id/fl_status_panel", element.getAttributeNS(ANDROID, "layout_above"));
                 assertEquals("@id/map_control_rail", element.getAttributeNS(ANDROID, "layout_toStartOf"));
             }
             if (id.equals("@+id/multiple_actions")) {

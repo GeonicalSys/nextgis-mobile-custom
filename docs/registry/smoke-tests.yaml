@@ -524,6 +524,11 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
+      - Start a new line or polygon walk and immediately Finish with insufficient distinct vertices; verify the readable no-save message, no new feature/form and released walk owner
+      - Finish a valid new or existing walk; verify active panel Save and toolbar Save open attributes with the latest geometry and no premature row write
+      - Inspect the compact bottom panel without GPS accuracy or overflow; Cancel sits beside Finish and confirmation cancellation retains the session
+      - Expand creation actions, rotate and use large fonts; verify the panel moves clear of the actions and returns to the bottom after collapse
+      - Recreate edit menus and toggle different actions; active Save and other enabled icons remain fully opaque
       - On Android 14+ deny Bluetooth permissions but grant fine location; start a walk using the system GNSS and verify its location-only foreground service and visible panel
       - Upgrade an installation with a retained failed walk session; inspect the panel, saved vertices and explicit Resume/Finish/Discard without erasing the draft
       - Enable background recording sound and start geometry-by-walk editing

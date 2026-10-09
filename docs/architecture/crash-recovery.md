@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-08
+last_verified: 2026-10-09
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -81,7 +81,9 @@ for filter thresholds, display freshness, database migration and field verificat
 
 One background walk owns its complete geometry independently of the foreground
 point editor. Normal map menus remain available; `WalkRecordingPanel` owns
-Resume, Finish, Show and Discard actions. A second walk cannot start.
+Resume, Finish/Save and confirmed Cancel actions without an overflow menu.
+The compact panel omits GPS accuracy and sits at the bottom of the map,
+moving above the creation menu only while it is expanded. A second walk cannot start.
 
 | Concern | Behavior |
 |---------|----------|
@@ -89,10 +91,11 @@ Resume, Finish, Show and Discard actions. A second walk cannot start.
 | Geometry | `WalkGeometrySnapshot` changes only the selected part of a private copy, retaining other members and holes; WKT restoration removes the selected ring's synthetic closing duplicate, including a one-node ring |
 | Live preview | Independent `walk-preview-source` shows confirmed geometry without borrowing the point editor. Root CRS is restored on the private copy before conversion from metres to WGS84; full/lite style reload restores the cached preview |
 | Point start | A durable point UUID is acquired before the layer chooser. Only one Point/MultiPoint creation session may accompany the recording; stage progresses through choose, geometry and form |
-| Complete control lock | From point start until successful point Save or explicit Cancel/Discard, all walk controls are disabled, including Show and notification/backend Resume/Finish/Discard. GPS processing and geometry persistence continue |
+| Complete control lock | From point start until successful point Save or explicit Cancel/Discard, all walk controls and notification/backend Resume/Finish/Discard are disabled. GPS processing and geometry persistence continue |
 | Lifecycle | Camera, backgrounding, screen off, failed Save and process recreation retain the point lock. A GPS gap may automatically pause recording but cannot allow manual reconnection before the point session ends |
 | Finish | A matching command changes RECORDING to FINISHING; the service flushes its validated tail, persists full geometry and acknowledges FINISHED before the UI opens manual editing/form. No new point can begin during this transition |
-| Final save | The walk draft is retained through validation/form errors and cleared after successful feature Save; cancelling final editing keeps the finished draft available |
+| Minimum geometry | After FINISHED, every line requires two distinct vertices and every polygon ring three, excluding WKT closure duplicates. Empty collections or short members/rings close the walk with “Собрано недостаточно точек, выхожу без сохранения”, without a feature row or attribute form; existing features are unchanged |
+| Final save | The active Save panel button and toolbar Save use the same geometry validation/repair and open attributes for new or existing walk features. An unrelated editor or point owner still locks controls. The walk draft is retained through validation/form errors and cleared after successful feature Save; cancelling final editing keeps the finished draft available |
 | Unexpected end | Service death keeps the private geometry. Sticky recovery with existing vertices pauses insertion; the panel offers explicit Resume/Discard. FINISHING recovers as FINISHED, never as a new recording |
 | Startup reconciliation | A RECORDING owner at initial revision with no service, point lock or persisted snapshot is an unacknowledged start and is removed silently. A stopped owner with a real snapshot is offered Continue/Discard. A session belonging to another map is never hidden: startup offers an emergency reset. |
 | Emergency reset | General settings expose a confirmed reset that releases a point lock, stops the matching service and removes only `walkedit_temp` plus a walk-owned form checkpoint. Projects, layers, features, accounts and unrelated drafts are untouched. |
