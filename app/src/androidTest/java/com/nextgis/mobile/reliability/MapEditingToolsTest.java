@@ -883,9 +883,10 @@ public class MapEditingToolsTest {
     }
 
     @Test public void rulerAcceptsFingerDriftAndKeepsPanCancelAndLongPressSeparate() {
+        openMeasurementMenu();
+        chooseMeasurementTool(R.id.measurement_ruler);
         scenario.onActivity(activity -> {
             MapDrawable map = (MapDrawable) app.getMap();
-            activity.findViewById(R.id.action_ruler).performClick();
             assertTrue(activity.getMapFragment().isRulerMeasuring());
             int before = map.getMeasurementGeometry().getPointCount();
             float density = activity.getResources().getDisplayMetrics().density;
@@ -904,6 +905,117 @@ public class MapEditingToolsTest {
             activity.findViewById(R.id.add_point_by_tap).performClick();
             assertFalse(activity.getMapFragment().isRulerMeasuring());
         });
+    }
+
+    private void openMeasurementMenu() {
+        scenario.onActivity(activity -> {
+            View button = activity.findViewById(R.id.action_measurements);
+            assertEquals(View.VISIBLE, button.getVisibility());
+            assertTrue(button.isEnabled());
+            assertEquals(activity.getString(R.string.measurement_tools), button.getContentDescription());
+            assertTrue(button.performClick());
+        });
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    }
+
+    private android.widget.ListView measurementMenu(View root) {
+        if (root instanceof android.widget.ListView && root.isShown()) {
+            android.widget.ListView list = (android.widget.ListView) root;
+            for (int i = 0; i < list.getCount(); i++) {
+                Object item = list.getItemAtPosition(i);
+                if (item instanceof android.view.MenuItem && ((android.view.MenuItem) item).getItemId() == R.id.measurement_azimuth_points)
+                    return list;
+            }
+        }
+        if (root instanceof android.view.ViewGroup) {
+            android.view.ViewGroup group = (android.view.ViewGroup) root;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                android.widget.ListView list = measurementMenu(group.getChildAt(i));
+                if (list != null) return list;
+            }
+        }
+        return null;
+    }
+
+    private void chooseMeasurementTool(int id) {
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        AtomicBoolean clicked = new AtomicBoolean();
+        long deadline = android.os.SystemClock.uptimeMillis() + 5000;
+        while (!clicked.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+            instrumentation.runOnMainSync(() -> {
+                for (View root : android.view.inspector.WindowInspector.getGlobalWindowViews()) {
+                    android.widget.ListView list = measurementMenu(root);
+                    if (list == null) continue;
+                    for (int i = 0; i < list.getCount(); i++) {
+                        android.view.MenuItem item = (android.view.MenuItem) list.getItemAtPosition(i);
+                        if (item.getItemId() == id) {
+                            View row = list.getChildAt(i - list.getFirstVisiblePosition());
+                            if (row != null) clicked.set(list.performItemClick(row, i, list.getItemIdAtPosition(i)));
+                        }
+                    }
+                }
+            });
+            if (!clicked.get()) android.os.SystemClock.sleep(50);
+        }
+        assertTrue("Measurement choice unavailable: " + id, clicked.get());
+        instrumentation.waitForIdleSync();
+    }
+
+    @Test public void oneMeasurementButtonStartsRulerAndBothAzimuthModes() {
+        openMeasurementMenu();
+        // Back dismisses the chooser without starting a tool.
+        InstrumentationRegistry.getInstrumentation().getUiAutomation().performGlobalAction(
+                android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK);
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        scenario.onActivity(activity -> {
+            assertEquals(MapFragment.MODE_NORMAL, mode(activity));
+            assertFalse(activity.getMapFragment().isRulerMeasuring());
+        });
+        openMeasurementMenu(); chooseMeasurementTool(R.id.measurement_ruler);
+        scenario.onActivity(activity -> {
+            assertTrue(activity.getMapFragment().isRulerMeasuring());
+            assertEquals(View.GONE, activity.findViewById(R.id.action_measurements).getVisibility());
+            assertTrue(activity.findViewById(R.id.add_point_by_tap).performClick());
+        });
+        for (int choice : new int[]{R.id.measurement_azimuth_points, R.id.measurement_azimuth_current}) {
+            openMeasurementMenu(); chooseMeasurementTool(choice);
+            scenario.onActivity(activity -> {
+                assertEquals(choice == R.id.measurement_azimuth_current ? MapFragment.MODE_AZIMUTH_CURRENT : MapFragment.MODE_AZIMUTH_POINTS,
+                        mode(activity));
+                assertEquals(View.GONE, activity.findViewById(R.id.action_measurements).getVisibility());
+                activity.getOnBackPressedDispatcher().onBackPressed();
+                assertEquals(MapFragment.MODE_NORMAL, mode(activity));
+                assertEquals(View.VISIBLE, activity.findViewById(R.id.action_measurements).getVisibility());
+            });
+        }
+    }
+
+    @Test public void hidingRulerKeepsAzimuthChoicesAccessibleAfterRecreation() {
+        String key = AppSettingsConstants.KEY_PREF_SHOW_MEASURING;
+        boolean had = preferences.contains(key), old = preferences.getBoolean(key, true);
+        try {
+            assertTrue(preferences.edit().putBoolean(key, false).commit());
+            scenario.recreate(); openMeasurementMenu();
+            InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+                android.widget.ListView list = null;
+                for (View root : android.view.inspector.WindowInspector.getGlobalWindowViews()) {
+                    list = measurementMenu(root); if (list != null) break;
+                }
+                assertNotNull(list); assertEquals(2, list.getCount());
+                for (int i = 0; i < list.getCount(); i++)
+                    assertNotEquals(R.id.measurement_ruler, ((android.view.MenuItem) list.getItemAtPosition(i)).getItemId());
+            });
+            chooseMeasurementTool(R.id.measurement_azimuth_points);
+            scenario.onActivity(activity -> {
+                assertEquals(MapFragment.MODE_AZIMUTH_POINTS, mode(activity));
+                activity.getOnBackPressedDispatcher().onBackPressed();
+                assertEquals(View.VISIBLE, activity.findViewById(R.id.action_measurements).getVisibility());
+            });
+        } finally {
+            SharedPreferences.Editor editor = preferences.edit();
+            if (had) editor.putBoolean(key, old); else editor.remove(key);
+            assertTrue(editor.commit());
+        }
     }
 
     @Test public void azimuthAcceptsFingerDriftWithoutInterpretingADragAsAnotherPoint() {

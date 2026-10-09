@@ -254,8 +254,7 @@ public class MapFragment
 
     protected var mivZoomIn: FloatingActionButton? = null
     protected var mivZoomOut: FloatingActionButton? = null
-    protected var mRuler: FloatingActionButton? = null
-    protected var mAzimuth: FloatingActionButton? = null
+    protected var mMeasurements: FloatingActionButton? = null
     private var trackStatusButton: FloatingActionButton? = null
     protected var mAddNewGeometry: FloatingActionButton? = null
     protected var mAddPointButton: FloatingActionButton? = null
@@ -494,10 +493,9 @@ public class MapFragment
 
         mAddNewGeometry = view.findViewById(R.id.add_new_geometry)
         mAddNewGeometry?.setOnClickListener(this)
-        mRuler = view.findViewById(R.id.action_ruler)
-        mRuler?.setOnClickListener(this)
-        mAzimuth = view.findViewById(R.id.action_azimuth)
-        mAzimuth?.setOnClickListener(this)
+        mMeasurements = view.findViewById(R.id.action_measurements)
+        mMeasurements?.setOnClickListener(this)
+        mMeasurements?.let { androidx.core.view.ViewCompat.setTooltipText(it, getString(R.string.measurement_tools)) }
         trackStatusButton = requireNotNull(view.findViewById(R.id.action_track_status))
         trackStatusButton?.setOnClickListener { mActivity?.toggleTrackRecordingFromMap(it) }
         refreshTrackStatusButton()
@@ -1792,8 +1790,7 @@ public class MapFragment
             mRulerOverlay!!.stopMeasuring()
             undoRedoOverlay!!.clearHistory()
             showMainButton()
-            showRulerButton()
-            showAzimuthButton()
+            showMeasurementsButton()
             hideAddByTapButton()
             mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_add_point)
             mActivity!!.title = mActivity!!.appName
@@ -1828,8 +1825,7 @@ public class MapFragment
 
         hideMainButton()
         hideAddByTapButton()
-        hideRulerButton()
-        hideAzimuthButton()
+        hideMeasurementsButton()
 
         val toolbar = mActivity!!.bottomToolbar
         toolbar.background.alpha = 128
@@ -1851,8 +1847,7 @@ public class MapFragment
                 editLayerOverlay?.setSelectedLayer(null)
                 toolbar.visibility = View.GONE
                 showMainButton()
-                showRulerButton()
-                showAzimuthButton()
+                showMeasurementsButton()
                 if (mStatusPanelMode != 0) mStatusPanel!!.visibility = View.VISIBLE
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_NONE
                 if (!preserveRulerHistoryDuringModeRestore)
@@ -3311,10 +3306,7 @@ public class MapFragment
             if (mZoom != null) mZoom!!.visibility = View.GONE
         }
 
-        showControls =
-            mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_MEASURING, true)
-        mRuler!!.visibility = if (showControls && mode == MODE_NORMAL) View.VISIBLE else View.GONE
-        mAzimuth?.visibility = if (mode == MODE_NORMAL) View.VISIBLE else View.GONE
+        mMeasurements!!.visibility = if (mode == MODE_NORMAL && !isRulerMeasuring) View.VISIBLE else View.GONE
 
         if (null != mMapRef.get()) {
             mMapRef.get()!!.map.setBackground(mApp!!.mapBackground)
@@ -4263,26 +4255,12 @@ public class MapFragment
     }
 
 
-    fun showRulerButton() {
-        if (mPreferences!!.getBoolean(
-                AppSettingsConstants.KEY_PREF_SHOW_MEASURING,
-                true
-            )
-        ) mRuler!!.visibility =
-            View.VISIBLE
+    fun showMeasurementsButton() {
+        mMeasurements?.visibility = View.VISIBLE
     }
 
-
-    fun hideRulerButton() {
-        mRuler!!.visibility = View.GONE
-    }
-
-    fun showAzimuthButton() {
-        mAzimuth?.visibility = View.VISIBLE
-    }
-
-    fun hideAzimuthButton() {
-        mAzimuth?.visibility = View.GONE
+    fun hideMeasurementsButton() {
+        mMeasurements?.visibility = View.GONE
     }
 
 
@@ -5420,8 +5398,7 @@ public class MapFragment
                 mRulerOverlay!!.stopMeasuring()
                 undoRedoOverlay!!.clearHistory()
                 showMainButton()
-                showRulerButton()
-                showAzimuthButton()
+                showMeasurementsButton()
                 hideAddByTapButton()
                 mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_add_point)
                 mActivity!!.title = mActivity!!.appName
@@ -5431,11 +5408,7 @@ public class MapFragment
 
             } else addPointByTap()
 
-            R.id.action_ruler -> {
-                startMeasuring()
-                Toast.makeText(context, R.string.tap_to_measure, Toast.LENGTH_SHORT).show()
-            }
-            R.id.action_azimuth -> showAzimuthModeDialog()
+            R.id.action_measurements -> showMeasurementToolsMenu(v)
         }
     }
 
@@ -5453,8 +5426,7 @@ public class MapFragment
         }
         hideOverlayPoint()
         hideMainButton()
-        hideRulerButton()
-        hideAzimuthButton()
+        hideMeasurementsButton()
         showAddByTapButton()
         mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_apply_dark)
         mActivity!!.showRulerToolbar()
@@ -5518,22 +5490,29 @@ public class MapFragment
         private const val LEGACY_MODE_EDIT_BY_TOUCH = 5
     }
 
-    private fun showAzimuthModeDialog() {
-        val ctx = context ?: return
-        val items = arrayOf(
-            getString(R.string.azimuth_mode_current),
-            getString(R.string.azimuth_mode_points)
-        )
-        AlertDialog.Builder(ctx)
-            .setTitle(R.string.azimuth_mode_title)
-            .setItems(items) { _, selected ->
-                clearAzimuthMeasurement()
-                setNewMode(
-                    if (selected == 0) MODE_AZIMUTH_CURRENT else MODE_AZIMUTH_POINTS
-                )
+    private fun showMeasurementToolsMenu(anchor: View) {
+        if (mode != MODE_NORMAL || isRulerMeasuring) return
+        val menu = androidx.appcompat.widget.PopupMenu(requireContext(), anchor)
+        menu.inflate(R.menu.menu_measurements)
+        menu.menu.findItem(R.id.measurement_ruler).isVisible =
+            mPreferences?.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_MEASURING, true) != false
+        menu.setOnMenuItemClickListener { item ->
+            // A selection from an old window must not replace a newly opened editor/tool.
+            if (!isAdded || view == null || mode != MODE_NORMAL || isRulerMeasuring) return@setOnMenuItemClickListener false
+            when (item.itemId) {
+                R.id.measurement_ruler -> {
+                    startMeasuring()
+                    Toast.makeText(context, R.string.tap_to_measure, Toast.LENGTH_SHORT).show()
+                }
+                R.id.measurement_azimuth_current, R.id.measurement_azimuth_points -> {
+                    clearAzimuthMeasurement()
+                    setNewMode(if (item.itemId == R.id.measurement_azimuth_current) MODE_AZIMUTH_CURRENT else MODE_AZIMUTH_POINTS)
+                }
+                else -> return@setOnMenuItemClickListener false
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+            true
+        }
+        menu.show()
     }
 
     private fun mapPointFromScreen(screenX: Float, screenY: Float): GeoPoint? {

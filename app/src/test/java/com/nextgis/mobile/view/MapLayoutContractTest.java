@@ -51,8 +51,9 @@ public class MapLayoutContractTest {
                         "fab_expandDirection"));
             }
         }
-        for (String id : new String[]{"action_track_status", "walk_recording_panel", "action_azimuth",
-                "action_ruler", "action_zoom_in", "action_zoom_out", "multiple_actions", "fl_attributes"}) {
+        assertFalse(ids.contains("@+id/action_azimuth"));
+        assertFalse(ids.contains("@+id/action_ruler"));
+        for (String id : new String[]{"action_track_status", "walk_recording_panel", "action_measurements", "action_zoom_in", "action_zoom_out", "multiple_actions", "fl_attributes"}) {
             assertTrue("Missing map control " + id, ids.contains("@+id/" + id));
         }
     }

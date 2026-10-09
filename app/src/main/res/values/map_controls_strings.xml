@@ -3,4 +3,8 @@
     <string name="map_measure_distance">Measure distance</string>
     <string name="map_zoom_in">Zoom in</string>
     <string name="map_zoom_out">Zoom out</string>
+    <string name="measurement_tools">Measurements</string>
+    <string name="measurement_ruler">Ruler</string>
+    <string name="measurement_azimuth_current">Azimuth from my location</string>
+    <string name="measurement_azimuth_points">Azimuth between points</string>
 </resources>

@@ -627,7 +627,8 @@ tests:
       - Compare the displayed magnetic azimuth with a control bearing plus known local WMM2025 declination, including wrap around 0/360 degrees
       - Change the declination correction during measurement, confirm the magnetic azimuth and the declination line update immediately to D+C, restart the app and verify the correction persists, then reset it to 0
       - Repeat on a device/emulator without a rotation-vector sensor and compare the arrow with a known north-up and explicitly rotated map bearing
-      - Open the azimuth button, select current location to map point, drag and replace the target, and verify the fixed GPS endpoint, temporary segment and result update after release
+      - Open the single Measurements button, dismiss without selecting, then start Ruler and each azimuth mode; finish each tool and verify the same button returns; hide Ruler in settings, recreate and verify both azimuth choices remain
+      - Open Measurements, select Azimuth from my location, drag and replace the target, and verify the fixed GPS endpoint, temporary segment and result update after release
       - Select point A to point B, choose two arbitrary points, drag A and B independently, verify every released position recalculates the result, then test coincident points and tap a third point to begin a new measurement
       - On a narrow portrait screen verify the numeric magnetic-azimuth value remains visible below its label instead of being clipped
         - Mute and unmute the widget, rotate portrait/landscape, lock the screen and press Home for several minutes, then resume and stop the mode
