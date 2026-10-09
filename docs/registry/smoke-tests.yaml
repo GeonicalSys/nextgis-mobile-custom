@@ -803,7 +803,8 @@ tests:
     command: Run the track delivery section in docs/runbooks/device-smoke-tests.md on an isolated device
     steps:
       - Open track settings before UID registration and verify upload is enabled and the control is available
-      - Record and stop offline, register the same UID in WebGIS without changing settings and verify automatic delivery clears the pending badge
+      - Record and stop before UID registration; verify retained points have no track badge, then register without changing settings and verify automatic delivery
       - Disable upload and verify pending tracks do not contribute to badges or send points; re-enable and verify retained points are delivered
+      - Confirm registration with a rejected packet; verify the badge survives transport failure and restart, hides after registered=false or changing hub and returns after the new hub confirms registration
       - Repeat after restart and a project switch, and reject a later packet to verify only accepted rows are acknowledged
-    expected: Enabled-before-registration intent survives registration, failed packets retain unsent rows and only enabled track upload contributes to the pending badge
+    expected: Enabled-before-registration intent survives registration, failed packets retain unsent rows and only enabled upload with confirmed registration of the current server/UID contributes to the pending track badge

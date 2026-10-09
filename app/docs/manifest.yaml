@@ -10,7 +10,7 @@ entrypoints:
   - app/src/main/AndroidManifest.xml
 key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java
-    responsibility: Verify delayed registration, pending badge updates and opt-out, packet-specific acknowledgements with repeated timestamps, and real background workspace delivery against an isolated loopback endpoint.
+    responsibility: Verify delayed registration with hidden pending badges, confirmed registration and revocation, transport failure and server isolation, badge updates and opt-out, packet-specific acknowledgements with repeated timestamps, and real background workspace delivery against an isolated loopback endpoint.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java
     responsibility: Verify category choices through sketch, current-location and background-walk creation, recreation, interrupted recorder recovery, point-lock cancellation, confirmation-safe pause/resume, same-zoom GPS start centring, three 48dp targets in both themes at normal/200-percent fonts, the unified Measurements menu and ruler/azimuth placement gestures, and the real attribute-form SQLite Save; isolated emulator only.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java

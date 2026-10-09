@@ -667,7 +667,9 @@ public class LayersFragment
                 @Override public void onChange(boolean selfChange) { refreshPendingChangesBadge(); }
             };
     private final SharedPreferences.OnSharedPreferenceChangeListener mTrackSendListener = (preferences, key) -> {
-        if (SettingsConstants.KEY_PREF_TRACK_SEND.equals(key)) {
+        if (SettingsConstants.KEY_PREF_TRACK_SEND.equals(key)
+                || com.nextgis.maplibui.mapui.TrackRegistrationState.PREF_REGISTERED_DEVICE.equals(key)
+                || com.nextgis.maplibui.mapui.TrackRegistrationState.PREF_HUB.equals(key)) {
             if (getView() != null) getView().post(() -> { if (isAdded() && getView() != null) { refreshTrackSyncAvailability(); refreshPendingChangesBadge(); } });
         }
     };
@@ -698,7 +700,7 @@ public class LayersFragment
         if (getActivity() == null) return;
         IGISApplication app = (IGISApplication) getActivity().getApplication();
         MapBase map = app.getMap();
-        boolean sendTracks = com.nextgis.maplib.util.TrackSendSettings.isEnabled(PreferenceManager.getDefaultSharedPreferences(requireContext()));
+        boolean showPendingTracks = com.nextgis.maplibui.mapui.TrackRegistrationState.canShowPending(requireContext());
         int generation = ++mBadgeGeneration;
         WeakReference<LayersFragment> owner = new WeakReference<>(this);
         android.os.Handler handler = mBadgeHandler;
@@ -706,7 +708,7 @@ public class LayersFragment
             java.util.Set<Integer> pending = new java.util.HashSet<>();
             boolean complete = false;
             try {
-                if (map instanceof LayerGroup) collectPendingLayers((LayerGroup) map, pending, sendTracks);
+                if (map instanceof LayerGroup) collectPendingLayers((LayerGroup) map, pending, showPendingTracks);
                 complete = true;
             } catch (RuntimeException ex) {
                 HyperLog.w(Constants.TAG, "Pending sync badge query failed", ex);
@@ -716,8 +718,8 @@ public class LayersFragment
                 LayersFragment fragment = owner.get();
                 if (fragment == null || fragment.mBadgeGeneration != generation) return;
                 fragment.mBadgeQuery = null;
-                if (fragment.isAdded() && sendTracks != com.nextgis.maplib.util.TrackSendSettings.isEnabled(
-                        PreferenceManager.getDefaultSharedPreferences(fragment.requireContext()))) {
+                if (fragment.isAdded() && showPendingTracks != com.nextgis.maplibui.mapui.TrackRegistrationState.canShowPending(
+                        fragment.requireContext())) {
                     fragment.mBadgeRefreshPending = false;
                     fragment.refreshPendingChangesBadge();
                     return;
@@ -735,13 +737,13 @@ public class LayersFragment
         });
     }
 
-    private static boolean collectPendingLayers(LayerGroup group, java.util.Set<Integer> result, boolean sendTracks) {
+    private static boolean collectPendingLayers(LayerGroup group, java.util.Set<Integer> result, boolean showPendingTracks) {
         boolean any = false;
         for (com.nextgis.maplib.api.ILayer layer : group.getLayers()) {
             boolean pending = layer instanceof LayerGroup
-                    ? collectPendingLayers((LayerGroup) layer, result, sendTracks)
+                    ? collectPendingLayers((LayerGroup) layer, result, showPendingTracks)
                     : layer instanceof TrackLayer
-                    ? sendTracks && com.nextgis.maplibui.mapui.TrackUploader.hasPending(group.getContext(), (TrackLayer) layer)
+                    ? showPendingTracks && com.nextgis.maplibui.mapui.TrackUploader.hasPending(group.getContext(), (TrackLayer) layer)
                     : layer instanceof VectorLayer && ((VectorLayer) layer).isChanges();
             if (pending) { result.add(layer.getId()); any = true; }
         }

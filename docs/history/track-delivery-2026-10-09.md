@@ -14,7 +14,9 @@ related_code:
 # Индикация и автоматическая доставка трека
 
 Жёлтая отметка общего sync и строки треков использует owning-layer sent=0
-только при включённой отправке. Commit observer и preference listener обновляют
+только при включённой отправке и подтверждённой регистрации текущего сервера/UID.
+До регистрации отметка скрыта; HTTP/сетевая ошибка сохраняет известное
+подтверждение, registered=false отзывает его. Commit observer и preference listener обновляют
 снимок без повторного открытия drawer/settings. Отправка включена по умолчанию,
 переключатель доступен до регистрации; старый автоматически снятый false
 включается один раз, последующий ручной opt-out сохраняется.
@@ -59,15 +61,15 @@ tracker с полевым GNSS, длительный screen-off/Doze и факт
 Повторный fetch всех Android owners успешен. Открыты только свои Draft app #54 (my-maplibre), maplibui #34 (master)
 и новый maplib #46 (master); easypicker и publisher не имеют иных PR/codex
 branches. Все exact library commits записаны в consumer gitlinks.
-Предыдущие a73bdddddc8947884d0a7b3b7f1490c2a933c0a3 app и
-ca1bac8127d976d3cfdea5dd415541164d0af82a maplibui остаются предками; все категории,
+Предыдущие a21f74c396156d7ed58855639bf8c3cf887c3e2a app и
+028e1c01fcc75afa95cb1d13b3478ac938331f48 maplibui остаются предками; все категории,
 обход, GPS pan и объединённое меню измерений сохранены. Отложенных требований нет.
 
 | Требование | Владелец / commit | PR / base | Включение |
 |---|---|---|---|
-| Default и сохранение намерения отправки | maplib c25ab629e5aba9a17dc7295490170c48c676aa47 | #46 / master | Exact gitlink consumer; commit указан в #54 |
-| Все прежние формы/категории/обход + durable upload и ACK | maplibui 028e1c01fcc75afa95cb1d13b3478ac938331f48 | #34 / master | Exact gitlink consumer; предыдущие пять commits сохранены |
-| Все прежние creation/walk/measurements + default UI, badge, native/docs | app follow-up на a73bdddddc8947884d0a7b3b7f1490c2a933c0a3; LayersFragment blob ed651553260a91497303120a75f9aee3cfb9f045 | #54 / my-maplibre | Предыдущие девять commits сохранены |
+| Default и сохранение намерения отправки, граница с индикацией | maplib 0647400484de22f593a1fcd472dbfa0a3d845328 | #46 / master | Exact gitlink consumer; commit указан в #54 |
+| Все прежние формы/категории/обход + durable upload, registration state и ACK | maplibui d70a5572980340b6cd64fb894f728d4a80b3d4e9 | #34 / master | Exact gitlink consumer; предыдущие commits сохранены |
+| Все прежние creation/walk/measurements + default UI, badge, native/docs | app follow-up на a21f74c396156d7ed58855639bf8c3cf887c3e2a; LayersFragment blob 4d354abe53c456e10edf2fe61d14ca875d2edd4e | #54 / my-maplibre | Предыдущие commits сохранены |
 | Easypicker | d6327f3de7a6d488a18d1896f8c97c60cd28d2a8 | remote master | Pin не менялся |
 
 Порядок: Merge Commit maplib #46, Merge Commit maplibui #34, fetch обоих remote
@@ -80,3 +82,29 @@ d9f5241c0e8a4904b6359bba9fae4a56bd62dd33 и maplib
 b8f3e3e6bf4bad56f8ce910c885ea6af1b898998 повторно проверены 9 октября.
 Official SettingsFragment всё ещё отключает флаг при отсутствии регистрации.
 Tracker Hub API проверен по [официальному контракту](https://docs.nextgis.com/tracker_hub_dev/source/main.html).
+
+## Уточнение индикации после регистрации — 9 октября 2026
+
+Значение track_send само по себе больше не включает отметку трека.
+TrackRegistrationState хранит подтверждение для точной пары сервер/UID;
+unknown/registered=false скрывают отметку, транспортный сбой сохраняет известное
+подтверждение, смена сервера требует своего подтверждения. Cache не заменяет
+сетевую проверку перед packet и не влияет на автоматический retry или sent=0.
+Preference listener и stale guard снимка учитывают регистрацию вместе с intent.
+
+- Lisa Debug/test APK и обе flavor Release validation builds: успешны,
+  JBR 21.0.9 / Gradle 9.3.1, 3 min 47 s; production версия не менялась.
+- maplib 514/514, maplibui 92/92; docs validator и 7/7 tests, strict diff validation.
+- На том же изолированном read-only API36 AVD итоговая native regression **8/8**,
+  125.742 s: семь TrackUploadTest и failed Stop/tail recovery.
+- Проверены hidden badge до регистрации при enabled intent, реальный WorkManager
+  retry без settings, badge при confirmed registration/rejected packet, opt-out,
+  revocation, HTTP503 с сохранением badge, Activity recreation, смена hub,
+  отдельный background owner и packet-specific ACK для одинаковых timestamps.
+- Первый instrumentation запуск не дошёл до тестов: ActivityManager завершил
+  процесс за background ANR при холодной загрузке эмулятора. После завершения
+  bootstrap повторный запуск всех восьми сценариев прошёл; обходов production
+  lifecycle и увеличения test timeout не добавляли. Эмулятор после тестов закрыт.
+- Дополнены module packs, config/invariant/change-impact/smoke registries,
+  sync/settings/user-guide/official-differences и существующие карточки отчёта.
+  Полевая/production WebGIS/Doze приёмка выше по-прежнему не выполнялась.

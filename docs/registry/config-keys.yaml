@@ -7,6 +7,11 @@ preferences:
     user_configurable: true
     source: app/src/main/res/xml/preferences_tracks.xml
     purpose: Independent upload intent; registration and connectivity defer delivery without clearing this choice.
+  track_registered_device:
+    owner: maplibui
+    type: string
+    source: maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java
+    purpose: SHA-256 fingerprint of the exact server and UID after registered=true; absent or mismatched identity hides track badges, registered=false revokes matching confirmation, transport failure preserves known registration. Independent of upload intent and packet ACK.
   track_send_default_enabled_v1:
     owner: maplib
     type: boolean

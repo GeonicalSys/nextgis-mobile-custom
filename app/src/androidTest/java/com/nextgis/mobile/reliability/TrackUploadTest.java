@@ -15,6 +15,7 @@ import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.mapui.TrackLayerUI;
 import com.nextgis.maplibui.mapui.TrackUploader;
 import com.nextgis.maplibui.mapui.TrackWorker;
+import com.nextgis.maplibui.mapui.TrackRegistrationState;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
@@ -37,6 +38,7 @@ public class TrackUploadTest {
         final ServerSocket server = new ServerSocket(0);
         final CompletableFuture<List<Integer>> packets = new CompletableFuture<>();
         volatile boolean registered = true;
+        volatile int registrationCode = 200;
         final java.util.concurrent.atomic.AtomicInteger registrationChecks = new java.util.concurrent.atomic.AtomicInteger();
         Endpoint(int... codes) throws Exception {
             server.setSoTimeout(90000);
@@ -56,6 +58,7 @@ public class TrackUploadTest {
                         String response = ""; int code = 200;
                         if (request.contains("/registered")) {
                             response = "{\"registered\":" + registered + "}";
+                            code = registrationCode;
                             registrationChecks.incrementAndGet();
                         }
                         else { counts.add(new JSONArray(new String(body, 0, read)).length()); code = codes[index++]; }
@@ -77,6 +80,7 @@ public class TrackUploadTest {
         final boolean oldSend = TrackSendSettings.isEnabled(prefs), hadSend = prefs.contains(SettingsConstants.KEY_PREF_TRACK_SEND);
         final boolean oldIntro = prefs.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false), hadIntro = prefs.contains(AppSettingsConstants.KEY_PREF_INTRO);
         final String oldHub = prefs.getString("tracker_hub_url", null);
+        final String oldRegistration = prefs.getString(TrackRegistrationState.PREF_REGISTERED_DEVICE, null);
         final ActivityScenario<MainActivity> scenario;
         final MapContentProviderHelper map;
         final TrackLayer layer;
@@ -84,7 +88,8 @@ public class TrackUploadTest {
         Fixture(int count) throws Exception {
             assertTrue("Isolated emulator only", "ranchu".equals(android.os.Build.HARDWARE) || "goldfish".equals(android.os.Build.HARDWARE));
             WorkManager.getInstance(app).cancelAllWorkByTag(TrackWorker.WORK_TAG).getResult().get(10, TimeUnit.SECONDS);
-            prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true).putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false).commit();
+            prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true).putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false)
+                    .remove(TrackRegistrationState.PREF_REGISTERED_DEVICE).commit();
             scenario = ActivityScenario.launch(MainActivity.class);
             long deadline = android.os.SystemClock.uptimeMillis() + 30000;
             while (app.getMap() == null && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(50);
@@ -131,6 +136,8 @@ public class TrackUploadTest {
             scenario.close();
             SharedPreferences.Editor restore = prefs.edit();
             if (oldHub == null) restore.remove("tracker_hub_url"); else restore.putString("tracker_hub_url", oldHub);
+            if (oldRegistration == null) restore.remove(TrackRegistrationState.PREF_REGISTERED_DEVICE);
+            else restore.putString(TrackRegistrationState.PREF_REGISTERED_DEVICE, oldRegistration);
             if (hadSend) restore.putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, oldSend); else restore.remove(SettingsConstants.KEY_PREF_TRACK_SEND);
             if (hadIntro) restore.putBoolean(AppSettingsConstants.KEY_PREF_INTRO, oldIntro); else restore.remove(AppSettingsConstants.KEY_PREF_INTRO);
             assertTrue(restore.commit());
@@ -138,15 +145,17 @@ public class TrackUploadTest {
     }
 
     @Test public void registrationLaterUploadsWithoutChangingTheSettingAndClearsTheBadge() throws Exception {
-        try (Fixture f = new Fixture(2); Endpoint hub = new Endpoint(200)) {
+        try (Fixture f = new Fixture(2); Endpoint hub = new Endpoint(404, 200)) {
             hub.registered = false;
-            f.hub(hub); f.badge(true);
+            f.hub(hub); assertFalse(TrackRegistrationState.canShowPending(f.app)); f.badge(false);
             assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
-            assertEquals(0, f.sent()); assertTrue(TrackSendSettings.isEnabled(f.prefs)); f.badge(true);
+            assertEquals(0, f.sent()); assertTrue(TrackSendSettings.isEnabled(f.prefs)); f.badge(false);
             hub.registered = true;
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertEquals(0, f.sent()); assertTrue(TrackRegistrationState.canShowPending(f.app)); f.badge(true);
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
             assertEquals(2, f.sent()); f.badge(false);
-            assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
+            assertEquals(Arrays.asList(2, 2), hub.packets.get(5, TimeUnit.SECONDS));
         }
     }
 
@@ -155,8 +164,10 @@ public class TrackUploadTest {
             f.hub(hub);
             assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
             assertEquals(100, f.sent()); assertTrue(TrackUploader.hasPending(f.app, f.layer));
+            f.badge(true);
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
             assertEquals(101, f.sent());
+            f.badge(false);
             assertEquals(Arrays.asList(100, 1, 1), hub.packets.get(5, TimeUnit.SECONDS));
         }
     }
@@ -172,6 +183,7 @@ public class TrackUploadTest {
                 while (hub.registrationChecks.get() == 0 && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(100);
                 assertTrue("WorkManager did not run the persisted upload", hub.registrationChecks.get() > 0);
                 assertEquals(0, f.sent()); assertTrue(TrackSendSettings.isEnabled(f.prefs));
+                assertFalse(TrackRegistrationState.canShowPending(f.app)); f.badge(false);
                 hub.registered = true;
                 deadline = android.os.SystemClock.uptimeMillis() + 60000;
                 while (f.sent() != 2 && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(100);
@@ -183,12 +195,49 @@ public class TrackUploadTest {
     }
 
     @Test public void optOutHidesPendingTracksAndDoesNotSendThem() throws Exception {
-        try (Fixture f = new Fixture(2)) {
+        try (Fixture f = new Fixture(2); Endpoint hub = new Endpoint(404)) {
             f.badge(false);
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
             assertEquals(0, f.sent());
-            f.prefs.edit().putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, true).commit(); f.badge(true);
+            f.hub(hub);
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(true);
             f.prefs.edit().putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false).commit(); f.badge(false);
+            assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertEquals(0, f.sent()); assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test public void registrationRevocationHidesPendingButTemporaryServerFailureKeepsTheBadge() throws Exception {
+        try (Fixture f = new Fixture(2); Endpoint hub = new Endpoint(404, 200)) {
+            f.hub(hub);
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(true);
+            f.scenario.recreate(); f.badge(true);
+            hub.registrationCode = 503;
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertTrue(TrackRegistrationState.canShowPending(f.app)); f.badge(true);
+            hub.registrationCode = 200; hub.registered = false;
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertFalse(TrackRegistrationState.canShowPending(f.app)); f.badge(false);
+            assertEquals(0, f.sent()); assertTrue(TrackSendSettings.isEnabled(f.prefs));
+            hub.registered = true;
+            assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(false);
+            assertEquals(Arrays.asList(2, 2), hub.packets.get(5, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test public void changingTrackerHubDoesNotReuseAnotherServersRegistration() throws Exception {
+        try (Fixture f = new Fixture(2); Endpoint first = new Endpoint(404); Endpoint second = new Endpoint(404, 200)) {
+            f.hub(first);
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(true);
+            second.registered = false; f.hub(second);
+            assertFalse(TrackRegistrationState.canShowPending(f.app)); f.badge(false);
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(false);
+            assertEquals(0, f.sent());
+            second.registered = true;
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(true);
+            assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(false);
+            assertEquals(Collections.singletonList(2), first.packets.get(5, TimeUnit.SECONDS));
+            assertEquals(Arrays.asList(2, 2), second.packets.get(5, TimeUnit.SECONDS));
         }
     }
 
