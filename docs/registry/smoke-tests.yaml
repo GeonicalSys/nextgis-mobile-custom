@@ -525,8 +525,10 @@ tests:
     scope: [app, maplib, maplibui]
     steps:
       - Start a new line or polygon walk and immediately Finish with insufficient distinct vertices; verify the readable no-save message, no new feature/form and released walk owner
-      - Finish a valid new or existing walk; verify active panel Save and toolbar Save open attributes with the latest geometry and no premature row write
-      - Inspect the compact bottom panel without GPS accuracy or overflow; Cancel sits beside Finish and confirmation cancellation retains the session
+      - Press the disk on a valid new or existing walk, cancel once and confirm; verify the acknowledged final geometry immediately opens attributes with no premature row write
+      - Inspect the single 48dp themed row with only layer name, disk, pause/play and cross, three 48dp targets, long-press and accessibility names; cancel each confirmation and verify the owner is retained
+      - Confirm Pause, supply fresh fixes and verify geometry does not grow; cancel Resume once, then confirm reconnection and verify the same owner records again; acquire a point lock while a confirmation is open and verify the queued command is rejected
+      - Start current-location or new walk creation from a distant map extent; verify map target matches the actual GPS geometry anchor, zoom is unchanged and cancelled category selection does not pan
       - Expand creation actions, rotate and use large fonts; verify the panel moves clear of the actions and returns to the bottom after collapse
       - Recreate edit menus and toggle different actions; active Save and other enabled icons remain fully opaque
       - On Android 14+ deny Bluetooth permissions but grant fine location; start a walk using the system GNSS and verify its location-only foreground service and visible panel

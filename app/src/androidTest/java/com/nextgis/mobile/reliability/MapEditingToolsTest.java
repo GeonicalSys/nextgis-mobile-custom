@@ -149,17 +149,14 @@ public class MapEditingToolsTest {
         return ((MaplibreMapInteraction) activity.getMapFragment()).getMode();
     }
 
-    private android.widget.TextView buttonWithText(View view, String text) {
-        if (view instanceof android.widget.TextView && text.contentEquals(((android.widget.TextView) view).getText()))
-            return (android.widget.TextView) view;
-        if (view instanceof android.view.ViewGroup) {
-            android.view.ViewGroup group = (android.view.ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                android.widget.TextView button = buttonWithText(group.getChildAt(i), text);
-                if (button != null) return button;
-            }
-        }
-        return null;
+    private void clickWalkButton(int id) {
+        scenario.onActivity(activity -> {
+            com.nextgis.maplibui.view.WalkRecordingPanel panel = activity.findViewById(R.id.walk_recording_panel);
+            panel.refresh();
+            View button = panel.findViewById(id);
+            assertNotNull(button); assertTrue(button.isEnabled()); assertEquals(1f, button.getAlpha(), 0);
+            assertTrue(button.performClick());
+        });
     }
 
     private void clickDialogButton(String id) {
@@ -214,8 +211,9 @@ public class MapEditingToolsTest {
         scenario.onActivity(activity -> {
             beginWalk(activity, false, Constants.NOT_FOUND);
             View panel = activity.findViewById(R.id.walk_recording_panel);
-            assertTrue(buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_finish)).performClick());
+            assertTrue(panel.findViewById(com.nextgis.maplibui.R.id.walk_panel_finish).performClick());
         });
+        clickDialogButton("android:id/button1");
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         scenario.onActivity(activity -> {
             assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
@@ -237,34 +235,17 @@ public class MapEditingToolsTest {
                 scenario.onActivity(activity -> {
                     beginWalk(activity, true, featureId);
                     View panel = activity.findViewById(R.id.walk_recording_panel);
-                    assertTrue(buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_finish)).performClick());
+                    assertTrue(panel.findViewById(com.nextgis.maplibui.R.id.walk_panel_finish).performClick());
                 });
-                AtomicBoolean ready = new AtomicBoolean();
-                long deadline = android.os.SystemClock.uptimeMillis() + 20000;
-                while (!ready.get() && android.os.SystemClock.uptimeMillis() < deadline) {
-                    instrumentation.waitForIdleSync();
-                    scenario.onActivity(activity -> ready.set(mode(activity) == MapFragment.MODE_EDIT));
-                    if (!ready.get()) Thread.sleep(40);
-                }
-                assertTrue("Finished geometry did not reach the editor", ready.get());
-                if (featureId == Constants.NOT_FOUND) {
-                    android.graphics.Bitmap screenshot = instrumentation.getUiAutomation().takeScreenshot();
-                    assertNotNull(screenshot);
-                    try (java.io.FileOutputStream image = new java.io.FileOutputStream(new File(app.getFilesDir(), "walk-finished-panel.png"))) {
-                        assertTrue(screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, image));
-                    } finally { screenshot.recycle(); }
-                }
-                scenario.onActivity(activity -> {
-                    View panel = activity.findViewById(R.id.walk_recording_panel);
-                    android.widget.TextView save = buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_complete_object));
-                    assertNotNull(save); assertTrue(save.isEnabled()); assertEquals(1f, save.getAlpha(), 0);
-                    assertNull(buttonWithText(panel, "⋮"));
-                    activity.showEditToolbar();
-                    androidx.appcompat.widget.Toolbar toolbar = activity.findViewById(R.id.main_toolbar);
-                    android.view.MenuItem disk = toolbar.getMenu().findItem(com.nextgis.maplibui.R.id.menu_edit_save);
-                    assertTrue(disk.isEnabled()); assertEquals(255, disk.getIcon().getAlpha());
-                    assertTrue(save.performClick());
-                });
+                // No recording mutation or row before confirmation; cancelling keeps this owner.
+                String walkId = com.nextgis.maplibui.util.WalkSessionStore.load(app).id;
+                clickDialogButton("android:id/button2");
+                assertEquals(walkId, com.nextgis.maplibui.util.WalkSessionStore.load(app).id);
+                assertEquals(com.nextgis.maplibui.util.WalkSessionPolicy.Phase.RECORDING,
+                        com.nextgis.maplibui.util.WalkSessionStore.load(app).phase);
+                assertNull(com.nextgis.maplibui.util.FeatureFormDraftStore.load(app));
+                clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_finish);
+                clickDialogButton("android:id/button1");
                 opened = (com.nextgis.maplibui.activity.ModifyAttributesActivity) instrumentation.waitForMonitorWithTimeout(monitor, 20000);
                 assertNotNull("Walk attributes did not open", opened);
                 instrumentation.waitForIdleSync();
@@ -277,7 +258,7 @@ public class MapEditingToolsTest {
                     assertTrue(form.onOptionsItemSelected(popup.getMenu().add(0, com.nextgis.maplibui.R.id.menu_apply, 0, "Save")));
                 });
                 AtomicBoolean saved = new AtomicBoolean();
-                deadline = android.os.SystemClock.uptimeMillis() + 20000;
+                long deadline = android.os.SystemClock.uptimeMillis() + 20000;
                 while (!saved.get() && android.os.SystemClock.uptimeMillis() < deadline) {
                     instrumentation.waitForIdleSync();
                     scenario.onActivity(activity -> saved.set(mode(activity) == MapFragment.MODE_NORMAL
@@ -338,14 +319,14 @@ public class MapEditingToolsTest {
         scenario.onActivity(activity -> {
             View panel = activity.findViewById(R.id.walk_recording_panel);
             assertEquals(bottom[0], panel.getBottom());
-            assertTrue(buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_cancel)).performClick());
+            assertTrue(panel.findViewById(com.nextgis.maplibui.R.id.walk_panel_cancel).performClick());
             assertNotNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
         });
         clickDialogButton("android:id/button2");
         assertNotNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
         scenario.onActivity(activity -> {
             View panel = activity.findViewById(R.id.walk_recording_panel);
-            buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_cancel)).performClick();
+            panel.findViewById(com.nextgis.maplibui.R.id.walk_panel_cancel).performClick();
         });
         clickDialogButton("android:id/button1");
         long deadline = android.os.SystemClock.uptimeMillis() + 5000;
@@ -353,6 +334,117 @@ public class MapEditingToolsTest {
                 && android.os.SystemClock.uptimeMillis() < deadline) android.os.SystemClock.sleep(50);
         assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
         assertEquals(0, layers.get(0).getCount());
+    }
+
+    private void awaitWalkPaused(String id, boolean paused) throws Exception {
+        long deadline = android.os.SystemClock.uptimeMillis() + 10000;
+        while (android.os.SystemClock.uptimeMillis() < deadline) {
+            com.nextgis.maplibui.util.WalkSessionStore.Snapshot session = com.nextgis.maplibui.util.WalkSessionStore.load(app);
+            if (session != null && id.equals(session.id) && session.gpsPaused == paused
+                    && com.nextgis.maplibui.service.WalkEditService.isSessionRunning(id)) return;
+            Thread.sleep(40);
+        }
+        fail("Recorder did not reach paused=" + paused);
+    }
+
+    @Test public void pauseAndResumeRequireConfirmationAndRetainGeometry() throws Exception {
+        scenario.onActivity(activity -> beginWalk(activity, true, Constants.NOT_FOUND));
+        supplyCurrentFix();
+        String id = com.nextgis.maplibui.util.WalkSessionStore.load(app).id;
+        scenario.onActivity(activity -> assertTrue(com.nextgis.maplibui.service.WalkEditService.requestCommand(activity, id,
+                com.nextgis.maplibui.util.WalkSessionPolicy.Command.RESUME)));
+        awaitWalkPaused(id, false);
+        clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_resume);
+        clickDialogButton("android:id/button2");
+        assertFalse(com.nextgis.maplibui.util.WalkSessionStore.load(app).gpsPaused);
+        clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_resume);
+        clickDialogButton("android:id/button1");
+        awaitWalkPaused(id, true);
+        String pausedGeometry = com.nextgis.maplibui.util.WalkSessionStore.load(app).geometry().toWKT(true);
+        scenario.onActivity(activity -> {
+            try {
+                java.lang.reflect.Field active = com.nextgis.maplibui.service.WalkEditService.class.getDeclaredField("sActive");
+                active.setAccessible(true);
+                com.nextgis.maplibui.service.WalkEditService service = (com.nextgis.maplibui.service.WalkEditService) active.get(null);
+                assertNotNull(service);
+                android.location.Location fix = new android.location.Location(android.location.LocationManager.GPS_PROVIDER);
+                fix.setLatitude(55.01); fix.setLongitude(37.01); fix.setAccuracy(1);
+                fix.setTime(System.currentTimeMillis()); fix.setElapsedRealtimeNanos(android.os.SystemClock.elapsedRealtimeNanos());
+                service.onRecordingLocation(fix); service.onRecordingFlushComplete();
+            } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+        });
+        assertEquals(pausedGeometry, com.nextgis.maplibui.util.WalkSessionStore.load(app).geometry().toWKT(true));
+        assertEquals(0, layers.get(0).getCount());
+        clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_resume);
+        clickDialogButton("android:id/button2");
+        assertTrue(com.nextgis.maplibui.util.WalkSessionStore.load(app).gpsPaused);
+        // A foreground point acquired while confirmation is open still blocks the service command.
+        clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_resume);
+        String pointId = com.nextgis.maplibui.util.WalkSessionStore.beginPoint(app, R.id.add_current_location);
+        assertNotNull(pointId);
+        clickDialogButton("android:id/button1");
+        assertTrue(com.nextgis.maplibui.util.WalkSessionStore.load(app).gpsPaused);
+        assertTrue(com.nextgis.maplibui.util.WalkSessionStore.endPoint(app, pointId));
+        supplyCurrentFix();
+        clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_resume);
+        clickDialogButton("android:id/button1");
+        awaitWalkPaused(id, false);
+        assertEquals(id, com.nextgis.maplibui.util.WalkSessionStore.load(app).id);
+        clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_cancel);
+        clickDialogButton("android:id/button1");
+        long deadline = android.os.SystemClock.uptimeMillis() + 10000;
+        while ((com.nextgis.maplibui.util.WalkSessionStore.load(app) != null
+                || com.nextgis.maplibui.service.WalkEditService.isSessionRunning(id))
+                && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(40);
+        assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
+        assertFalse(com.nextgis.maplibui.service.WalkEditService.isSessionRunning(id));
+    }
+
+    @Test public void compactWalkCardKeepsThreeAccessibleTargetsInBothThemes() {
+        scenario.onActivity(activity -> {
+            beginWalk(activity, true, Constants.NOT_FOUND);
+            layers.get(0).setName("Наблюдения вдоль маршрута обследования");
+            for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1, 2}) {
+                android.content.res.Configuration config = new android.content.res.Configuration(activity.getResources().getConfiguration());
+                config.setLocale(new java.util.Locale("ru")); config.fontScale = scale;
+                android.content.Context themed = new androidx.appcompat.view.ContextThemeWrapper(
+                        activity.createConfigurationContext(config), dark ? R.style.AppTheme_Dark : R.style.AppTheme);
+                com.nextgis.maplibui.view.WalkRecordingPanel panel = new com.nextgis.maplibui.view.WalkRecordingPanel(themed);
+                panel.setListener(new com.nextgis.maplibui.view.WalkRecordingPanel.Listener() {
+                    @Override public void onSessionChanged(com.nextgis.maplibui.util.WalkSessionStore.Snapshot session) { }
+                    @Override public void onFinishWalk(com.nextgis.maplibui.util.WalkSessionStore.Snapshot session) { }
+                    @Override public void onPauseOrResumeWalk(com.nextgis.maplibui.util.WalkSessionStore.Snapshot session, boolean resume) { }
+                    @Override public void onDiscardWalk(com.nextgis.maplibui.util.WalkSessionStore.Snapshot session) { }
+                });
+                float density = themed.getResources().getDisplayMetrics().density;
+                int width = Math.round((scale == 1 ? 360 : 280) * density), target = Math.round(48 * density);
+                panel.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                panel.layout(0, 0, width, panel.getMeasuredHeight());
+                assertEquals("Normal panel is a single 48dp row", target, panel.getHeight());
+                for (int buttonId : new int[]{com.nextgis.maplibui.R.id.walk_panel_finish,
+                        com.nextgis.maplibui.R.id.walk_panel_resume, com.nextgis.maplibui.R.id.walk_panel_cancel}) {
+                    View button = panel.findViewById(buttonId);
+                    assertEquals(target, button.getWidth()); assertEquals(target, button.getHeight());
+                    assertTrue(button.getPaddingLeft() >= Math.round(14 * density));
+                    assertTrue(button.isEnabled()); assertEquals(1f, button.getAlpha(), 0);
+                    assertNotNull(button.getContentDescription());
+                    android.graphics.Rect bounds = new android.graphics.Rect(0, 0, button.getWidth(), button.getHeight());
+                    panel.offsetDescendantRectToMyCoords(button, bounds);
+                    assertTrue(bounds.left >= 0 && bounds.right <= width && bounds.bottom <= panel.getHeight());
+                }
+                android.widget.TextView title = panel.findViewById(com.nextgis.maplibui.R.id.walk_panel_title);
+                assertEquals(layers.get(0).getName(), title.getText().toString());
+                assertTrue(title.getWidth() > 0);
+                android.graphics.Bitmap bitmap = android.graphics.Bitmap.createBitmap(width, panel.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
+                panel.draw(new android.graphics.Canvas(bitmap));
+                try (java.io.FileOutputStream image = new java.io.FileOutputStream(new File(app.getFilesDir(),
+                        "walk-card-" + (dark ? "dark" : "light") + "-" + (int) scale + ".png"))) {
+                    assertTrue(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, image));
+                } catch (java.io.IOException error) { throw new AssertionError(error); }
+                finally { bitmap.recycle(); }
+            }
+        });
     }
 
     @Test public void layerChoiceOffersCategoryBeforeSketchAndHandsDefaultsToRealForm() throws Exception {
@@ -492,6 +584,20 @@ public class MapEditingToolsTest {
         });
     }
 
+    private void moveCameraAway() {
+        scenario.onActivity(activity -> ((MapDrawable) app.getMap()).getMaplibreMap().moveCamera(
+                CameraUpdateFactory.newLatLngZoom(new LatLng(-10, -15), 11.5)));
+    }
+
+    private void assertCameraAtCreationFix() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            org.maplibre.android.camera.CameraPosition camera = ((MapDrawable) app.getMap()).getMaplibreMap().getCameraPosition();
+            assertEquals(55, camera.target.getLatitude(), .00001);
+            assertEquals(37, camera.target.getLongitude(), .00001);
+            assertEquals(11.5, camera.zoom, .00001);
+        });
+    }
+
     private void supplyCurrentFix() {
         scenario.onActivity(activity -> {
             try {
@@ -582,6 +688,7 @@ public class MapEditingToolsTest {
             assertNotNull(draft); assertEquals(walkId, draft.walkSessionId);
             assertCategory(expected, com.nextgis.maplibui.util.FeatureFormDraftStore.controlStateToBundle(draft));
             if (walkId == null) {
+                assertCameraAtCreationFix();
                 GeoPoint point = (GeoPoint) com.nextgis.maplibui.util.FeatureFormDraftStore.geometryFromSnapshot(draft);
                 GeoPoint expectedPoint = new GeoPoint(37, 55); expectedPoint.setCRS(GeoConstants.CRS_WGS84);
                 assertTrue(expectedPoint.project(GeoConstants.CRS_WEB_MERCATOR));
@@ -617,13 +724,13 @@ public class MapEditingToolsTest {
     }
 
     @Test public void currentLocationCategorySurvivesPickerRecreationAndSavesToSQLite() throws Exception {
-        addStandardCategoryLayer(GeoConstants.GTPoint); supplyCurrentFix();
+        addStandardCategoryLayer(GeoConstants.GTPoint); supplyCurrentFix(); moveCameraAway();
         clickCreationAction(R.id.add_current_location);
         chooseFirstCategory(false);
         scenario.onActivity(activity -> assertEquals(MapFragment.MODE_NORMAL, mode(activity)));
         clickCreationAction(R.id.add_current_location);
         scenario.recreate();
-        supplyCurrentFix();
+        supplyCurrentFix(); moveCameraAway();
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
                 com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(), null, false);
@@ -641,7 +748,7 @@ public class MapEditingToolsTest {
         com.nextgis.maplibui.util.WalkSessionStore.Snapshot session = com.nextgis.maplibui.util.WalkSessionStore.load(app);
         assertEquals(walkId, session.id); assertFalse(session.isPointActive());
         assertEquals(0, layers.get(1).getCount());
-        supplyCurrentFix();
+        supplyCurrentFix(); moveCameraAway();
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
                 com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(), null, false);
@@ -654,11 +761,12 @@ public class MapEditingToolsTest {
     }
 
     @Test public void walkCategorySurvivesRecorderInterruptionAndFinishedGeometryHandoff() throws Exception {
-        addStandardCategoryLayer(GeoConstants.GTLineString); supplyCurrentFix();
+        addStandardCategoryLayer(GeoConstants.GTLineString); supplyCurrentFix(); moveCameraAway();
         clickCreationAction(R.id.add_geometry_by_walk);
         chooseFirstCategory(false); assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
         clickCreationAction(R.id.add_geometry_by_walk);
         android.os.Bundle expected = chooseFirstCategory(true);
+        assertCameraAtCreationFix();
         com.nextgis.maplibui.util.WalkSessionStore.Snapshot walk = com.nextgis.maplibui.util.WalkSessionStore.load(app);
         assertNotNull(walk); assertCategory(expected, com.nextgis.maplibui.util.FeatureTypeDefaults.decode(walk.initialValues));
         long deadline = android.os.SystemClock.uptimeMillis() + 10000;
@@ -676,23 +784,11 @@ public class MapEditingToolsTest {
         assertTrue(com.nextgis.maplibui.util.WalkSessionStore.updateGeometry(app, walk.id, line, 2, true));
         scenario.recreate();
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        scenario.onActivity(activity -> {
-            View panel = activity.findViewById(R.id.walk_recording_panel);
-            ((com.nextgis.maplibui.view.WalkRecordingPanel) panel).refresh();
-            assertTrue(buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_finish)).performClick());
-        });
-        AtomicBoolean editing = new AtomicBoolean(); deadline = android.os.SystemClock.uptimeMillis() + 20000;
-        while (!editing.get() && android.os.SystemClock.uptimeMillis() < deadline) {
-            scenario.onActivity(activity -> editing.set(mode(activity) == MapFragment.MODE_EDIT));
-            if (!editing.get()) Thread.sleep(40);
-        }
-        assertTrue("Finished walk did not recover", editing.get());
-        assertCategory(expected, com.nextgis.maplibui.util.FeatureTypeDefaults.decode(
-                com.nextgis.maplibui.util.GeometryEditDraftStore.load(app).initialValues));
         android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
                 com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(), null, false);
         try {
-            scenario.onActivity(activity -> assertTrue(activity.getMapFragment().saveEdits()));
+            clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_finish);
+            clickDialogButton("android:id/button1");
             saveCategoryForm(monitor, expected, walk.id);
             assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
         } finally { instrumentation.removeMonitor(monitor); }

@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-10-06
+last_verified: 2026-10-09
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -62,6 +62,14 @@ foreground `location|connectedDevice` с тихим уведомлением. С
 
 Опция `verbose_log` пишет в HyperLog каждое GNSS/NMEA измерение и причину
 `onLocationUnavailable`; по умолчанию координаты в лог не попадают.
+
+Подтверждённая ручная пауза обхода использует существующий gps_paused:
+сервис сначала сбрасывает принятый хвост в геометрию, сохраняет её и перестаёт
+добавлять новые точки. Курсор карты и другой recorder сохраняют общий GNSS
+источник. Продолжение требует подтверждения соединения и свежего recording fix;
+sampler начинается заново. Звуковой heartbeat во время паузы не подтверждает
+запись. Стартовое центрирование карты использует ту же опору геометрии при
+неизменном масштабе; pan не становится источником записываемых координат.
 
 ## Энергосбережение и выключенный экран — 2026-10-06
 

@@ -1042,7 +1042,7 @@ public class MapFragment
         }
         if (session?.phase == WalkSessionPolicy.Phase.FINISHED && pendingWalkFinishId == session.id) {
             pendingWalkFinishId = null
-            view?.post { openFinishedWalk(session) }
+            view?.post { openFinishedWalk(session, true) }
         }
         mScaleRulerLayout?.visibility = if (session == null && mode == MODE_NORMAL
             && mPreferences?.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER, false) == true
@@ -1059,12 +1059,32 @@ public class MapFragment
             }
 
             override fun onFinishWalk(session: WalkSessionStore.Snapshot) {
-                if (session.phase == WalkSessionPolicy.Phase.FINISHED) openFinishedWalk(session, true)
-                else {
-                    pendingWalkFinishId = session.id
-                    if (!WalkEditService.requestCommand(requireContext(), session.id, WalkSessionPolicy.Command.FINISH))
-                        pendingWalkFinishId = null
-                }
+                AlertDialog.Builder(requireContext())
+                    .setTitle(com.nextgis.maplibui.R.string.walk_complete_object)
+                    .setMessage(if (session.phase == WalkSessionPolicy.Phase.FINISHED)
+                        com.nextgis.maplibui.R.string.walk_save_ready_confirm else com.nextgis.maplibui.R.string.walk_save_confirm)
+                    .setPositiveButton(com.nextgis.maplibui.R.string.walk_complete_object) { _, _ ->
+                        val current = WalkSessionStore.load(requireContext())
+                        if (current?.id != session.id || current.isPointActive || !WalkSessionStore.isCurrentMap(requireContext(), current))
+                            return@setPositiveButton
+                        if (current.phase == WalkSessionPolicy.Phase.FINISHED) openFinishedWalk(current, true)
+                        else {
+                            pendingWalkFinishId = session.id
+                            if (!WalkEditService.requestCommand(requireContext(), session.id, WalkSessionPolicy.Command.FINISH))
+                                pendingWalkFinishId = null
+                        }
+                    }.setNegativeButton(android.R.string.cancel, null).show()
+            }
+
+            override fun onPauseOrResumeWalk(session: WalkSessionStore.Snapshot, resume: Boolean) {
+                val title = if (resume) com.nextgis.maplibui.R.string.walk_resume else com.nextgis.maplibui.R.string.walk_pause
+                AlertDialog.Builder(requireContext())
+                    .setTitle(title)
+                    .setMessage(if (resume) com.nextgis.maplibui.R.string.walk_resume_confirm else com.nextgis.maplibui.R.string.walk_pause_confirm)
+                    .setPositiveButton(title) { _, _ ->
+                        WalkEditService.requestCommand(requireContext(), session.id,
+                            if (resume) WalkSessionPolicy.Command.RESUME else WalkSessionPolicy.Command.PAUSE)
+                    }.setNegativeButton(android.R.string.cancel, null).show()
             }
 
             override fun onDiscardWalk(session: WalkSessionStore.Snapshot) {
@@ -3781,6 +3801,7 @@ public class MapFragment
         }
         val geometry: GeoGeometry = if (layer.geometryType == GeoConstants.GTMultiPoint)
             GeoMultiPoint().apply { crs = GeoConstants.CRS_WEB_MERCATOR; add(point) } else point
+        centerMapAtCreationPoint(point)
         // The immediate form owns the GPS point; recreated MapLibre edit sources may still be loading.
         editLayerOverlay!!.selectedFeature.geometry = geometry
         undoRedoOverlay!!.clearHistory()
@@ -3951,6 +3972,15 @@ public class MapFragment
         }
     }
 
+    /** Pan to the actual creation anchor without changing the user's zoom. */
+    private fun centerMapAtCreationPoint(point: GeoPoint) {
+        val geographic = point.copy() as GeoPoint
+        if (!geographic.project(GeoConstants.CRS_WGS84)) return
+        mMapRef.get()?.map?.maplibreMap?.moveCamera(
+            CameraUpdateFactory.newLatLng(LatLng(geographic.y, geographic.x))
+        )
+    }
+
     private fun applyInitialWalkGeometryAtStartLocation(): Boolean {
         val layer = mSelectedLayer ?: return false
         val anchor = walkStartAnchorWebMercator()
@@ -3962,6 +3992,7 @@ public class MapFragment
             ).show()
             return false
         }
+        centerMapAtCreationPoint(anchor)
         val geom = buildInitialWalkGeometry(layer.geometryType, anchor)
         val feat = editLayerOverlay!!.selectedFeature
         feat.geometry = geom
