@@ -61,10 +61,7 @@ import android.widget.Toast;
 import com.nextgis.maplib.api.ILayer;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.MapContentProviderHelper;
-import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.FileUtil;
-import com.nextgis.maplib.util.HttpResponse;
-import com.nextgis.maplib.util.NetworkUtil;
 import com.nextgis.maplib.gnss.GnssInputPrefs;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.GISApplication;
@@ -99,8 +96,6 @@ import static com.nextgis.maplib.util.Constants.MAP_EXT;
 import static com.nextgis.maplib.util.SettingsConstants.KEY_PREF_MAP;
 import static com.nextgis.maplib.util.SettingsConstants.KEY_PREF_SD_CARD_NAME;
 import static com.nextgis.maplib.util.SettingsConstants.KEY_PREF_UNITS;
-import static com.nextgis.maplibui.service.TrackerService.HOST;
-import static com.nextgis.maplibui.service.TrackerService.URL;
 import static com.nextgis.maplibui.service.TrackerService.getUid;
 import static com.nextgis.maplibui.service.TrackerService.isTrackerServiceRunning;
 import static com.nextgis.mobile.util.AppSettingsConstants.KEY_PREF_SHOW_COMPASS;
@@ -757,60 +752,17 @@ public class SettingsFragment
     }
 
     public static void initializeUid(CheckBoxPreference preference) {
-        // async check
-        // registered = true - enabled = true; keep state
-        // registered = false - enabled = false; checked = false
-        // no network - enabled = false; keep state; no network info
-//        Context context = preference.getContext();
-//        String uid = getUid(context);
-        //preferenceч.setSummary(context.getString(R.string.track_uid, uid));
-        new CheckRegistration(preference,AccountUtil.isProUser(preference.getContext())).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private static class CheckRegistration extends AsyncTask<Void, Void, Boolean> {
-        private CheckBoxPreference mPreference;
-        private final boolean isProFinal;
-
-        CheckRegistration(CheckBoxPreference preference, boolean isPro) {
-            mPreference = preference;
-            isProFinal = isPro;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            try {
-                if (isProFinal) {
-                    String base = mPreference.getSharedPreferences().getString("tracker_hub_url", HOST);
-                    String url = String.format("%s/%s/registered", base + URL, getUid(mPreference.getContext()));
-                    HttpResponse response = NetworkUtil.get(url, null, null, false);
-                    String body = response.getResponseBody();
-                    JSONObject json = new JSONObject(body == null ? "" : body);
-                    return json.optBoolean("registered");
-                } else
-                    return false;
-            } catch (IOException | JSONException e) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-            if (result == null) {
-                mPreference.setSummary(com.nextgis.maplib.R.string.error_connect_failed);
-                return;
-            }
-
-            //Context context = mPreference.getContext();
-            //String uid = getUid(context);
-            //mPreference.setSummary(context.getString(R.string.track_uid, uid));
-
-            if (result) {
-                mPreference.setEnabled(true);
-            } else {
-                mPreference.setChecked(false);
-            }
-        }
+        com.nextgis.maplib.util.TrackSendSettings.migrateDefault(preference.getSharedPreferences());
+        preference.setEnabled(true);
+        preference.setChecked(com.nextgis.maplib.util.TrackSendSettings.isEnabled(preference.getSharedPreferences()));
+        preference.setSummary(R.string.track_send_pending_registration);
+        preference.setOnPreferenceChangeListener((changed, value) -> {
+            // Persist before scheduling: WorkManager must see the new upload intent.
+            preference.getSharedPreferences().edit().putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, (Boolean) value).commit();
+            if ((Boolean) value) com.nextgis.maplibui.mapui.TrackWorker.scheduleAll(preference.getContext());
+            else com.nextgis.maplibui.mapui.TrackWorker.cancel(preference.getContext());
+            return true;
+        });
     }
 
     public static void initializeLocationMins(

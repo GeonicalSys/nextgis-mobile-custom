@@ -796,3 +796,14 @@ tests:
       LocalVectorTileWorker-1 and LocalVectorTileWorker-2; queued work is bounded, obsolete map
       generations close their sockets, and temporary queue/heap pressure is reported as throttled
       retryable requests. The layer resumes drawing after pressure falls and identify still works.
+
+  SMOKE-TRACK-DELIVERY:
+    type: device
+    scope: [app, maplib, maplibui]
+    command: Run the track delivery section in docs/runbooks/device-smoke-tests.md on an isolated device
+    steps:
+      - Open track settings before UID registration and verify upload is enabled and the control is available
+      - Record and stop offline, register the same UID in WebGIS without changing settings and verify automatic delivery clears the pending badge
+      - Disable upload and verify pending tracks do not contribute to badges or send points; re-enable and verify retained points are delivered
+      - Repeat after restart and a project switch, and reject a later packet to verify only accepted rows are acknowledged
+    expected: Enabled-before-registration intent survives registration, failed packets retain unsent rows and only enabled track upload contributes to the pending badge

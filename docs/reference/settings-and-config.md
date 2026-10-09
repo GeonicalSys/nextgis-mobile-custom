@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-08
+last_verified: 2026-10-09
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -205,3 +205,10 @@ durable checkpoint до запуска Activity. Точные имена клю�
 настройки и не server schema. Их повреждение нельзя лечить автоматическим
 удалением. `ciReliabilityChecks` — opt-in Gradle property для проверки без
 private Sentry DSN; в обычной сборке требования config остаются прежними.
+
+## Отправка трека
+
+track_send имеет default=true, а track_send_default_enabled_v1 однократно
+мигрирует прежнее автоматическое выключение. После миграции ручной opt-out
+сохраняется. Регистрация UID управляет готовностью доставки, но не галочкой.
+Контракт: [доставка трека](../architecture/ngw-sync-and-storage.md#доставка-трека-и-регистрация-uid).

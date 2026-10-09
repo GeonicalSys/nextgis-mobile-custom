@@ -1,5 +1,12 @@
 schema_version: 1
 invariants:
+  INV-TRACK-DELIVERY:
+    title: Track upload intent survives registration delays and acknowledgements stay in the owning workspace
+    owners: [maplib, maplibui, app]
+    statement: Upload defaults to enabled with one-time legacy migration and later explicit opt-out. Registration and network failure never clear upload intent or unsent points. Live and durable delivery serialize packets, acknowledge only accepted rowids in the captured track database, and never resolve a queued background owner to the active map. Pending track badges require enabled upload and clear only after acknowledgement.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/util/TrackSendSettings.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackUploader.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackWorker.java, app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-TRACK-DELIVERY]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/reference/settings-and-config.md, docs/guides/project-synchronization-user-guide.md]
   INV-FEATURE-TYPE-CREATION:
     title: Explicit style categories initialize valid parents and survive draft handoff
     owners: [maplib, maplibui, app]

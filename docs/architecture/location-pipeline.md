@@ -511,3 +511,12 @@ negative sampling preferences fall back to existing 2s/5m defaults. WKT/snapshot
 traversal is linear without changing geometry or closing-ring rules. Durability
 limits and native fault checks are in [crash recovery](crash-recovery.md) and
 [the audit](../reference/mobile-reliability-audit.md).
+
+## Отправка трека после регистрации
+
+track_send по умолчанию true. Старые установки однократно включают отправку
+через track_send_default_enabled_v1; последующее ручное выключение сохраняется.
+Регистрация UID больше не снимает галочку. Неотправленные точки сохраняются
+для следующей живой или фоновой попытки, включая Stop и process restart.
+WorkManager jobs принадлежат сохранённому пути проекта и не переходят на другую
+карту. Полный контракт и индикация: [доставка трека](ngw-sync-and-storage.md#доставка-трека-и-регистрация-uid).

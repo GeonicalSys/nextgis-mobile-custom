@@ -156,10 +156,12 @@ public class MainApplication extends GISApplication
             }
         }
         updateFromOldVersion();
+        com.nextgis.maplib.util.TrackSendSettings.migrateDefault(mSharedPreferences);
         NGWUtil.NGUA = "ng_mobile";
         NGWUtil.UUID = TrackerService.getUid(this);
 
         if (isDefaultApplicationProcess()) {
+            com.nextgis.maplibui.mapui.TrackWorker.scheduleAll(this);
             if (LegacyUnderlayMigrationContract.shouldScheduleSharedCatalogMigration(
                     deferLegacyDebugWorkspace)) {
                 com.nextgis.maplibui.util.SharedUnderlayProjects.scheduleMigration(this);

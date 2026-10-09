@@ -7,4 +7,5 @@
     <string name="measurement_ruler">Линейка</string>
     <string name="measurement_azimuth_current">Азимут от местоположения</string>
     <string name="measurement_azimuth_points">Азимут между точками</string>
+    <string name="track_send_pending_registration">Точки трека отправятся автоматически после регистрации устройства на сервере. Неотправленные точки сохраняются на устройстве.</string>
 </resources>

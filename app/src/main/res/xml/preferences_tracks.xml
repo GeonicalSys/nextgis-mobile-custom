@@ -78,8 +78,7 @@
     <CheckBoxPreference
         app:iconSpaceReserved="false"
 
-        android:defaultValue="false"
-        android:enabled="false"
+        android:defaultValue="true"
         android:key="track_send"
         android:title="@string/track_send"
         android:singleLineTitle="false"

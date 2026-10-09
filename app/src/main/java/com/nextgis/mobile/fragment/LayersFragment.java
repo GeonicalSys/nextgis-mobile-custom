@@ -300,7 +300,7 @@ public class LayersFragment
                 mAccounts.add(account);
         }
 
-        if (mAccounts.isEmpty()) {
+        if (mAccounts.isEmpty() && !canSendTracks()) {
             if (null != mSyncButton) {
                 mSyncButton.setEnabled(false);
                 mSyncButton.setVisibility(View.GONE);
@@ -629,6 +629,11 @@ public class LayersFragment
             getActivity().registerReceiver(mSyncReceiver, intentFilter);
         }
 
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(mTrackSendListener);
+        getActivity().getContentResolver().registerContentObserver(android.net.Uri.parse("content://"
+                + ((IGISApplication) getActivity().getApplication()).getAuthority() + "/" + TrackLayer.TABLE_TRACKPOINTS),
+                true, mTrackUploadObserver);
+        refreshTrackSyncAvailability();
         refreshSyncButtonAnimateState(isSyncActive());
         mSyncStateReconcileEnabled = true;
         mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
@@ -648,6 +653,8 @@ public class LayersFragment
             mSyncButton.removeCallbacks(mSyncStateReconcileRunnable);
         }
         refreshSyncButtonAnimateState(false);
+        getActivity().getContentResolver().unregisterContentObserver(mTrackUploadObserver);
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).unregisterOnSharedPreferenceChangeListener(mTrackSendListener);
         getActivity().unregisterReceiver(mSyncReceiver);
         super.onPause();
     }
@@ -655,6 +662,31 @@ public class LayersFragment
     /**
      * One worker snapshot drives the sync button and the corresponding layer rows.
      */
+    private final android.database.ContentObserver mTrackUploadObserver =
+            new android.database.ContentObserver(mBadgeHandler) {
+                @Override public void onChange(boolean selfChange) { refreshPendingChangesBadge(); }
+            };
+    private final SharedPreferences.OnSharedPreferenceChangeListener mTrackSendListener = (preferences, key) -> {
+        if (SettingsConstants.KEY_PREF_TRACK_SEND.equals(key)) {
+            if (getView() != null) getView().post(() -> { if (isAdded() && getView() != null) { refreshTrackSyncAvailability(); refreshPendingChangesBadge(); } });
+        }
+    };
+
+    private boolean canSendTracks() {
+        return getContext() != null && com.nextgis.maplib.util.TrackSendSettings.isEnabled(
+                PreferenceManager.getDefaultSharedPreferences(getContext()))
+                && MapContentProviderHelper.getVectorLayerByPath(((IGISApplication) requireActivity().getApplication()).getMap(),
+                TrackLayer.TABLE_TRACKS) != null;
+    }
+
+    private void refreshTrackSyncAvailability() {
+        if (mSyncButton == null) return;
+        boolean show = !mAccounts.isEmpty() || canSendTracks();
+        mSyncButton.setVisibility(show ? View.VISIBLE : View.GONE);
+        mSyncButton.setEnabled(show);
+        mSyncButton.setOnClickListener(this);
+    }
+
     protected void refreshPendingChangesBadge() {
         if (mSyncPendingBadge == null) {
             return;
@@ -666,6 +698,7 @@ public class LayersFragment
         if (getActivity() == null) return;
         IGISApplication app = (IGISApplication) getActivity().getApplication();
         MapBase map = app.getMap();
+        boolean sendTracks = com.nextgis.maplib.util.TrackSendSettings.isEnabled(PreferenceManager.getDefaultSharedPreferences(requireContext()));
         int generation = ++mBadgeGeneration;
         WeakReference<LayersFragment> owner = new WeakReference<>(this);
         android.os.Handler handler = mBadgeHandler;
@@ -673,7 +706,7 @@ public class LayersFragment
             java.util.Set<Integer> pending = new java.util.HashSet<>();
             boolean complete = false;
             try {
-                if (map instanceof LayerGroup) collectPendingLayers((LayerGroup) map, pending);
+                if (map instanceof LayerGroup) collectPendingLayers((LayerGroup) map, pending, sendTracks);
                 complete = true;
             } catch (RuntimeException ex) {
                 HyperLog.w(Constants.TAG, "Pending sync badge query failed", ex);
@@ -683,6 +716,12 @@ public class LayersFragment
                 LayersFragment fragment = owner.get();
                 if (fragment == null || fragment.mBadgeGeneration != generation) return;
                 fragment.mBadgeQuery = null;
+                if (fragment.isAdded() && sendTracks != com.nextgis.maplib.util.TrackSendSettings.isEnabled(
+                        PreferenceManager.getDefaultSharedPreferences(fragment.requireContext()))) {
+                    fragment.mBadgeRefreshPending = false;
+                    fragment.refreshPendingChangesBadge();
+                    return;
+                }
                 if (result != null && fragment.isAdded() && fragment.mSyncPendingBadge != null && app.getMap() == map) {
                     boolean show = fragment.mSyncButton != null && fragment.mSyncButton.getVisibility() == View.VISIBLE;
                     fragment.mSyncPendingBadge.setVisibility(show && !result.isEmpty() ? View.VISIBLE : View.GONE);
@@ -696,11 +735,13 @@ public class LayersFragment
         });
     }
 
-    private static boolean collectPendingLayers(LayerGroup group, java.util.Set<Integer> result) {
+    private static boolean collectPendingLayers(LayerGroup group, java.util.Set<Integer> result, boolean sendTracks) {
         boolean any = false;
         for (com.nextgis.maplib.api.ILayer layer : group.getLayers()) {
             boolean pending = layer instanceof LayerGroup
-                    ? collectPendingLayers((LayerGroup) layer, result)
+                    ? collectPendingLayers((LayerGroup) layer, result, sendTracks)
+                    : layer instanceof TrackLayer
+                    ? sendTracks && com.nextgis.maplibui.mapui.TrackUploader.hasPending(group.getContext(), (TrackLayer) layer)
                     : layer instanceof VectorLayer && ((VectorLayer) layer).isChanges();
             if (pending) { result.add(layer.getId()); any = true; }
         }
@@ -795,6 +836,8 @@ public class LayersFragment
         if (context == null) {
             return;
         }
+        if (canSendTracks()) com.nextgis.maplibui.mapui.TrackWorker.schedule(context);
+        if (mAccounts.isEmpty()) { refreshPendingChangesBadge(); return; }
         try {
             if (!isSomeToSync()) {
                 Toast.makeText(context, com.nextgis.maplibui.R.string.sync_no_layers, LENGTH_LONG).show();
@@ -849,7 +892,7 @@ public class LayersFragment
 
         String name = getContext().getPackageName() + "_preferences";
         SharedPreferences mSharedPreferences = getContext().getSharedPreferences(name, MODE_MULTI_PROCESS);
-        boolean trackSync = mSharedPreferences.getBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false);
+        boolean trackSync = mSharedPreferences.getBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, true);
 
         for (int i = 0; i < allAccounts.size(); i++ ){
             if (isSomeToSync(allAccounts.get(i), trackSync))

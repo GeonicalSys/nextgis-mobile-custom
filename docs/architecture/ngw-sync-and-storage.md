@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-08
+last_verified: 2026-10-09
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -582,6 +582,30 @@ NextGIS ID нормализует только login/email; Web GIS passwords и
 сохраняют свои прежние правила. В resource tree folder/up icon назначается на
 каждую bind независимо от того, была ли строка раньше кнопкой добавления аккаунта.
 
+## Доставка трека и регистрация UID
+
+Отправка треков включена по умолчанию и не зависит от регистрации UID.
+Однократная миграция track_send_default_enabled_v1 включает старое значение,
+которое прежняя проверка регистрации могла снять автоматически; последующий
+явный отказ пользователя сохраняется. В настройках переключатель доступен
+до регистрации. Проверка /registered выполняется при доставке, не меняя track_send;
+при registered=false, отсутствии сети или ошибке точки остаются sent=0.
+После создания трекера следующая попытка отправляет накопленные точки без
+повторного посещения настроек.
+
+Живой recorder и TrackWorker используют TrackUploader и один delivery lock.
+Пакет содержит до 100 точек; после успешного ответа /packet подтверждаются
+только rowid этого пакета в той же owning-map базе, а не все совпавшие timestamps.
+Новые точки и неуспешные пакеты сохраняют sent=0. WorkManager хранит canonical
+map path и отдельные unique immediate/15-minute periodic jobs для каждого проекта,
+с network constraint. После Stop и startup доставка продолжается, даже если
+теперь открыт другой проект; удалённый или незарегистрированный чужой workspace
+не заменяется активной картой. Background map открывается через SyncWorkspaceSession
+без переключения mMap/preferences и закрывается под DATA_SYNC lease. Android
+может отложить background work при ограничениях питания/сети.
+
+Контракт Tracker Hub: [registered и packet](https://docs.nextgis.com/tracker_hub_dev/source/main.html).
+
 ## Правила проекта и чтение истории
 
 Жёлтая точка в строке слоя и на кнопке синхронизации строятся из одного
@@ -589,7 +613,11 @@ NextGIS ID нормализует только login/email; Web GIS passwords и
 в том числе скрытые; группа отмечается при изменениях в дочернем слое.
 Outbox учитывает удалённые объекты и изменения вложений, даже когда объектов
 в слое уже нет. `LayersListAdapter` получает только набор layer ID и не читает
-SQLite при отрисовке. Изменения слоя, возврат на экран и завершение/отмена sync
+SQLite при отрисовке. Для TrackLayer снимок проверяет sent=0 через owning layer
+только при track_send=true; общий sync доступен и без векторных аккаунтов, когда
+включена отправка трека. ContentObserver trackpoints и preference listener обновляют
+отметки после новых точек, успешного ACK и opt-out без открытия настроек.
+Изменения слоя, возврат на экран и завершение/отмена sync
 обновляют снимок; lifecycle generation и owning map отбрасывают устаревший ответ.
 Переработанная строка всегда устанавливает/снимает точку для нового слоя.
 
