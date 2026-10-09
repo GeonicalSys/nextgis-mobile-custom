@@ -53,6 +53,24 @@ public class MapEditingToolsTest {
     @Before public void setUp() throws Exception {
         app = (GISApplication) InstrumentationRegistry.getInstrumentation().getTargetContext()
                 .getApplicationContext();
+        assertTrue("Run only on the isolated emulator", android.os.Build.MODEL.contains("sdk")
+                || android.os.Build.FINGERPRINT.startsWith("generic"));
+        // Remove only uniquely named fixtures from an interrupted earlier run of this suite.
+        List<com.nextgis.maplib.api.ILayer> interrupted = new ArrayList<>();
+        com.nextgis.maplib.map.LayerGroup.getVectorLayersByType((MapDrawable) app.getMap(), GeoConstants.GTAnyCheck, interrupted);
+        for (com.nextgis.maplib.api.ILayer candidate : interrupted) {
+            if (!(candidate instanceof VectorLayerUI)) continue;
+            VectorLayerUI layer = (VectorLayerUI) candidate;
+            if (!layer.getPath().getName().matches("(creation_type_|walk_ui_)[0-9a-f]{32}")) continue;
+            com.nextgis.maplibui.util.WalkSessionStore.Snapshot walk = com.nextgis.maplibui.util.WalkSessionStore.load(app);
+            if (walk != null && walk.layerId == layer.getId()) {
+                if (walk.isPointActive()) assertTrue(com.nextgis.maplibui.util.WalkSessionStore.endPoint(app, walk.pointId));
+                assertTrue(com.nextgis.maplibui.service.WalkEditService.requestCommand(app, walk.id,
+                        com.nextgis.maplibui.util.WalkSessionPolicy.Command.DISCARD));
+            }
+            assertTrue(layer.delete(false));
+        }
+        app.getMap().save();
         preferences = PreferenceManager.getDefaultSharedPreferences(app);
         hadIntro = preferences.contains(AppSettingsConstants.KEY_PREF_INTRO);
         oldIntro = preferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
@@ -77,6 +95,7 @@ public class MapEditingToolsTest {
             scenario.onActivity(activity -> {
                 com.nextgis.maplibui.util.WalkSessionStore.Snapshot walk = com.nextgis.maplibui.util.WalkSessionStore.load(app);
                 if (walk != null && layers.stream().anyMatch(layer -> layer.getId() == walk.layerId)) {
+                    if (walk.isPointActive()) assertTrue(com.nextgis.maplibui.util.WalkSessionStore.endPoint(app, walk.pointId));
                     assertTrue(com.nextgis.maplibui.service.WalkEditService.requestCommand(app, walk.id,
                             com.nextgis.maplibui.util.WalkSessionPolicy.Command.DISCARD));
                     com.nextgis.maplibui.util.FeatureFormDraftStore.clear(app);
@@ -441,6 +460,242 @@ public class MapEditingToolsTest {
             com.nextgis.maplibui.util.FeatureFormDraftStore.clear(app);
             com.nextgis.maplibui.util.GeometryEditDraftStore.clear(app,"test-complete");
         }
+    }
+
+    private void addStandardCategoryLayer(int geometryType) {
+        scenario.onActivity(activity -> {
+            try (java.io.InputStream stream = InstrumentationRegistry.getInstrumentation().getContext()
+                    .getAssets().open("feature-types/standard-field-types.json")) {
+                org.json.JSONArray fixtures = new org.json.JSONArray(new String(stream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8));
+                org.json.JSONObject fixture = null;
+                for (int i = 0; i < fixtures.length(); i++)
+                    if (fixtures.getJSONObject(i).getInt("geometry_type") == geometryType) fixture = fixtures.getJSONObject(i);
+                assertNotNull(fixture);
+                MapDrawable map = (MapDrawable) app.getMap();
+                VectorLayerUI layer = new VectorLayerUI(app, new File(map.getPath(),
+                        "creation_type_" + UUID.randomUUID().toString().replace("-", "")));
+                map.addLayer(layer); layers.add(layer); layer.setName("Creation categories");
+                ArrayList<com.nextgis.maplib.datasource.Field> fields = new ArrayList<>();
+                org.json.JSONArray schema = fixture.getJSONArray("fields");
+                for (int i = 0; i < schema.length(); i++) {
+                    com.nextgis.maplib.datasource.Field field = new com.nextgis.maplib.datasource.Field();
+                    field.fromJSON(schema.getJSONObject(i)); fields.add(field);
+                }
+                layer.create(geometryType, fields); layer.setIsEditable(true); layer.setVisible(false);
+                layer.setRenderer(fixture.getJSONObject("renderer_properties"));
+                assertTrue(com.nextgis.maplibui.util.FeatureTypeDefaults.hasCategories(layer));
+                java.nio.file.Files.write(new File(layer.getPath(), "form.json").toPath(),
+                        fixture.getJSONArray("form").toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                java.nio.file.Files.write(new File(layer.getPath(), "ngfp_meta.json").toPath(), "{}".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                map.save();
+            } catch (Exception error) { throw new AssertionError(error); }
+        });
+    }
+
+    private void supplyCurrentFix() {
+        scenario.onActivity(activity -> {
+            try {
+                android.location.Location fix = new android.location.Location(android.location.LocationManager.GPS_PROVIDER);
+                fix.setLatitude(55); fix.setLongitude(37); fix.setAccuracy(1);
+                fix.setTime(System.currentTimeMillis()); fix.setElapsedRealtimeNanos(android.os.SystemClock.elapsedRealtimeNanos());
+                com.nextgis.maplib.location.GpsEventSource source = app.getGpsEventSource();
+                // Every scenario starts with one accepted fix, independent of the preceding recorder's filter.
+                java.lang.reflect.Field filter = source.getClass().getDeclaredField("filter"); filter.setAccessible(true);
+                ((com.nextgis.maplib.util.LocationTrackFilter) filter.get(source)).reset();
+                java.lang.reflect.Field raw = source.getClass().getDeclaredField("rawGps"); raw.setAccessible(true); raw.set(source, null);
+                java.lang.reflect.Field listener = source.getClass().getDeclaredField("gpsListener"); listener.setAccessible(true);
+                ((android.location.LocationListener) listener.get(source)).onLocationChanged(fix);
+                assertNotNull(source.getLastKnownLocation()); assertNotNull(source.getLastRecordingLocation());
+            } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+        });
+    }
+
+    private void clickCreationAction(int id) {
+        scenario.onActivity(activity -> ((com.getbase.floatingactionbutton.FloatingActionsMenu)
+                activity.findViewById(R.id.multiple_actions)).expand());
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        scenario.onActivity(activity -> {
+            View action = activity.findViewById(id);
+            assertTrue("Creation action disabled: " + id, action.isEnabled());
+            assertSame(app.getMap(), activity.getMapFragment().getMMapRef().get().getMap());
+            assertTrue(action.performClick());
+            activity.getSupportFragmentManager().executePendingTransactions();
+            androidx.fragment.app.Fragment chooser = activity.getSupportFragmentManager()
+                    .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseLayerDialog.TAG);
+            if (chooser instanceof com.nextgis.maplibui.dialog.ChooseLayerDialog)
+                ((com.nextgis.maplibui.dialog.ChooseLayerDialog) chooser).onLayerSelect(layers.get(layers.size() - 1));
+        });
+    }
+
+    private android.os.Bundle chooseFirstCategory(boolean accept) throws Exception {
+        AtomicBoolean ready = new AtomicBoolean();
+        java.util.concurrent.atomic.AtomicReference<String> status = new java.util.concurrent.atomic.AtomicReference<>();
+        long deadline = android.os.SystemClock.uptimeMillis() + 20000;
+        while (!ready.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+            scenario.onActivity(activity -> {
+                androidx.fragment.app.DialogFragment dialog = (androidx.fragment.app.DialogFragment) activity.getMapFragment()
+                        .getChildFragmentManager().findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                if (dialog == null || dialog.getDialog() == null) {
+                    status.set("no category dialog; children=" + activity.getMapFragment().getChildFragmentManager().getFragments()
+                            + "; activity=" + activity.getSupportFragmentManager().getFragments());
+                    return;
+                }
+                android.widget.ListView list = ((androidx.appcompat.app.AlertDialog) dialog.getDialog()).getListView();
+                status.set("category list=" + (list == null ? "null" : list.getCount() + "/" + list.getChildCount()));
+                ready.set(list != null && list.getCount() > 0 && list.getChildCount() > 0
+                        && list.getItemAtPosition(0) instanceof com.nextgis.maplibui.util.FeatureTypeDefaults.Choice);
+            });
+            if (!ready.get()) Thread.sleep(40);
+        }
+        assertTrue("Creation category did not load: " + status.get(), ready.get());
+        final android.os.Bundle[] selected = new android.os.Bundle[1];
+        scenario.onActivity(activity -> {
+            androidx.fragment.app.DialogFragment dialog = (androidx.fragment.app.DialogFragment) activity.getMapFragment()
+                    .getChildFragmentManager().findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+            android.widget.ListView list = ((androidx.appcompat.app.AlertDialog) dialog.requireDialog()).getListView();
+            selected[0] = ((com.nextgis.maplibui.util.FeatureTypeDefaults.Choice) list.getItemAtPosition(0)).state;
+            assertEquals(0, layers.get(layers.size() - 1).getCount());
+            if (accept) assertTrue(list.performItemClick(list.getChildAt(0), 0, 0));
+            else ((androidx.appcompat.app.AlertDialog) dialog.requireDialog()).getButton(android.content.DialogInterface.BUTTON_NEGATIVE).performClick();
+        });
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        return selected[0];
+    }
+
+    private void assertCategory(android.os.Bundle expected, android.os.Bundle actual) {
+        assertNotNull(actual);
+        for (String field : new String[]{"classobj", "typeobj"}) {
+            String key = com.nextgis.maplibui.util.ControlHelper.getSavedStateKey(field);
+            assertEquals(expected.getString(key), actual.getString(key));
+        }
+    }
+
+    private void saveCategoryForm(android.app.Instrumentation.ActivityMonitor monitor, android.os.Bundle expected,
+                                  String walkId) throws Exception {
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity form =
+                (com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity) instrumentation.waitForMonitorWithTimeout(monitor, 20000);
+        assertNotNull("Category attributes did not open", form);
+        try {
+            instrumentation.waitForIdleSync();
+            com.nextgis.maplibui.util.FeatureFormDraftStore.Snapshot draft = com.nextgis.maplibui.util.FeatureFormDraftStore.load(app);
+            assertNotNull(draft); assertEquals(walkId, draft.walkSessionId);
+            assertCategory(expected, com.nextgis.maplibui.util.FeatureFormDraftStore.controlStateToBundle(draft));
+            if (walkId == null) {
+                GeoPoint point = (GeoPoint) com.nextgis.maplibui.util.FeatureFormDraftStore.geometryFromSnapshot(draft);
+                GeoPoint expectedPoint = new GeoPoint(37, 55); expectedPoint.setCRS(GeoConstants.CRS_WGS84);
+                assertTrue(expectedPoint.project(GeoConstants.CRS_WEB_MERCATOR));
+                assertEquals(expectedPoint.getX(), point.getX(), .001);
+                assertEquals(expectedPoint.getY(), point.getY(), .001);
+            }
+            assertEquals(0, layers.get(layers.size() - 1).getCount());
+            instrumentation.runOnMainSync(() -> {
+                android.widget.PopupMenu menu = new android.widget.PopupMenu(form, new View(form));
+                assertTrue(form.onOptionsItemSelected(menu.getMenu().add(0, com.nextgis.maplibui.R.id.menu_apply, 0, "Save")));
+            });
+            AtomicBoolean saved = new AtomicBoolean();
+            long deadline = android.os.SystemClock.uptimeMillis() + 20000;
+            while (!saved.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+                instrumentation.waitForIdleSync();
+                scenario.onActivity(activity -> saved.set(mode(activity) == MapFragment.MODE_NORMAL
+                        && com.nextgis.maplibui.util.FeatureFormDraftStore.load(app) == null
+                        && com.nextgis.maplibui.util.GeometryEditDraftStore.load(app) == null));
+                if (!saved.get()) Thread.sleep(40);
+            }
+            assertTrue("Category form did not finish saving", saved.get());
+            VectorLayerUI layer = layers.get(layers.size() - 1); assertEquals(1, layer.getCount());
+            try (android.database.Cursor row = layer.query(null, null, null, null, null)) {
+                assertTrue(row.moveToFirst());
+                for (String field : new String[]{"classobj", "typeobj"})
+                    assertEquals(expected.getString(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey(field)),
+                            row.getString(row.getColumnIndexOrThrow(field)));
+            }
+        } finally {
+            if (!form.isFinishing()) instrumentation.runOnMainSync(form::finish);
+            instrumentation.waitForIdleSync();
+        }
+    }
+
+    @Test public void currentLocationCategorySurvivesPickerRecreationAndSavesToSQLite() throws Exception {
+        addStandardCategoryLayer(GeoConstants.GTPoint); supplyCurrentFix();
+        clickCreationAction(R.id.add_current_location);
+        chooseFirstCategory(false);
+        scenario.onActivity(activity -> assertEquals(MapFragment.MODE_NORMAL, mode(activity)));
+        clickCreationAction(R.id.add_current_location);
+        scenario.recreate();
+        supplyCurrentFix();
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
+                com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(), null, false);
+        try { saveCategoryForm(monitor, chooseFirstCategory(true), null); }
+        finally { instrumentation.removeMonitor(monitor); }
+    }
+
+    @Test public void cancellingLocationCategoryReleasesPointLockDuringBackgroundWalk() throws Exception {
+        scenario.onActivity(activity -> beginWalk(activity, true, Constants.NOT_FOUND));
+        addStandardCategoryLayer(GeoConstants.GTPoint);
+        String walkId = com.nextgis.maplibui.util.WalkSessionStore.load(app).id;
+        clickCreationAction(R.id.add_current_location);
+        assertTrue(com.nextgis.maplibui.util.WalkSessionStore.load(app).isPointActive());
+        chooseFirstCategory(false);
+        com.nextgis.maplibui.util.WalkSessionStore.Snapshot session = com.nextgis.maplibui.util.WalkSessionStore.load(app);
+        assertEquals(walkId, session.id); assertFalse(session.isPointActive());
+        assertEquals(0, layers.get(1).getCount());
+        supplyCurrentFix();
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
+                com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(), null, false);
+        try {
+            clickCreationAction(R.id.add_current_location);
+            saveCategoryForm(monitor, chooseFirstCategory(true), null);
+            assertEquals(walkId, com.nextgis.maplibui.util.WalkSessionStore.load(app).id);
+            assertFalse(com.nextgis.maplibui.util.WalkSessionStore.load(app).isPointActive());
+        } finally { instrumentation.removeMonitor(monitor); }
+    }
+
+    @Test public void walkCategorySurvivesRecorderInterruptionAndFinishedGeometryHandoff() throws Exception {
+        addStandardCategoryLayer(GeoConstants.GTLineString); supplyCurrentFix();
+        clickCreationAction(R.id.add_geometry_by_walk);
+        chooseFirstCategory(false); assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
+        clickCreationAction(R.id.add_geometry_by_walk);
+        android.os.Bundle expected = chooseFirstCategory(true);
+        com.nextgis.maplibui.util.WalkSessionStore.Snapshot walk = com.nextgis.maplibui.util.WalkSessionStore.load(app);
+        assertNotNull(walk); assertCategory(expected, com.nextgis.maplibui.util.FeatureTypeDefaults.decode(walk.initialValues));
+        long deadline = android.os.SystemClock.uptimeMillis() + 10000;
+        while (!com.nextgis.maplibui.service.WalkEditService.isSessionRunning(walk.id)
+                && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(40);
+        assertTrue(com.nextgis.maplibui.service.WalkEditService.isSessionRunning(walk.id));
+        app.stopService(new android.content.Intent(app, com.nextgis.maplibui.service.WalkEditService.class));
+        deadline = android.os.SystemClock.uptimeMillis() + 10000;
+        while (com.nextgis.maplibui.service.WalkEditService.isSessionRunning(walk.id)
+                && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(40);
+        assertFalse(com.nextgis.maplibui.service.WalkEditService.isSessionRunning(walk.id));
+        // Simulate a durable recorder snapshot after interruption; keep its real owner and category.
+        com.nextgis.maplib.datasource.GeoLineString line = (com.nextgis.maplib.datasource.GeoLineString) walk.geometry();
+        line.add(new GeoPoint(line.getPoint(0).getX() + 10, line.getPoint(0).getY() + 10));
+        assertTrue(com.nextgis.maplibui.util.WalkSessionStore.updateGeometry(app, walk.id, line, 2, true));
+        scenario.recreate();
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        scenario.onActivity(activity -> {
+            View panel = activity.findViewById(R.id.walk_recording_panel);
+            ((com.nextgis.maplibui.view.WalkRecordingPanel) panel).refresh();
+            assertTrue(buttonWithText(panel, activity.getString(com.nextgis.maplibui.R.string.walk_finish)).performClick());
+        });
+        AtomicBoolean editing = new AtomicBoolean(); deadline = android.os.SystemClock.uptimeMillis() + 20000;
+        while (!editing.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+            scenario.onActivity(activity -> editing.set(mode(activity) == MapFragment.MODE_EDIT));
+            if (!editing.get()) Thread.sleep(40);
+        }
+        assertTrue("Finished walk did not recover", editing.get());
+        assertCategory(expected, com.nextgis.maplibui.util.FeatureTypeDefaults.decode(
+                com.nextgis.maplibui.util.GeometryEditDraftStore.load(app).initialValues));
+        android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
+                com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(), null, false);
+        try {
+            scenario.onActivity(activity -> assertTrue(activity.getMapFragment().saveEdits()));
+            saveCategoryForm(monitor, expected, walk.id);
+            assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
+        } finally { instrumentation.removeMonitor(monitor); }
     }
 
     @Test public void selectionImmediatelyEnablesToolsAndBackClearsIt() {

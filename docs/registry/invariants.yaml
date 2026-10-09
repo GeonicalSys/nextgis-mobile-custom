@@ -3,7 +3,7 @@ invariants:
   INV-FEATURE-TYPE-CREATION:
     title: Explicit style categories initialize valid parents and survive draft handoff
     owners: [maplib, maplibui, app]
-    statement: A new object may explicitly choose a concrete local style category before geometry. Mixed forms are inspected without normalizing non-selector or empty bindings. Legacy and cascading selectors use canonical values and every valid stable-key parent filter; ambiguous tuples remain separate choices. Initial state never overwrites restored control state or existing objects, survives geometry and pre-launch form checkpoints, and never bypasses the normal Save gates.
+    statement: A new object created by sketch, current location or walk may explicitly choose a concrete local style category before geometry. The dialog preserves its originating tool through recreation; walk ownership persists typed initial values atomically until geometry/form handoff, and cancelling a point category releases only the foreground point lock. Mixed forms are inspected without normalizing non-selector or empty bindings. Legacy and cascading selectors use canonical values and every valid stable-key parent filter; ambiguous tuples remain separate choices. Initial state never overwrites restored control state or existing objects, survives geometry and pre-launch form checkpoints, and never bypasses the normal Save gates.
     related_code: [maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/util/LayerUtil.java, app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt]
     verify_smoke: [SMOKE-FEATURE-TYPE-CREATION]
     must_update_docs: [docs/architecture/feature-type-creation.md, docs/guides/form-behavior-user-guide.md]

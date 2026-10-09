@@ -1,7 +1,7 @@
 schema_version: 1
 triggers:
   - id: FEATURE-TYPE-CREATION
-    paths: [maplibui/src/main/java/com/nextgis/maplibui/dialog/ChooseFeatureTypeDialog.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java, maplibui/src/main/res/layout/row_feature_type.xml]
+    paths: [maplibui/src/main/java/com/nextgis/maplibui/dialog/ChooseFeatureTypeDialog.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java, maplibui/src/main/res/layout/row_feature_type.xml, app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt, maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java]
     owners: [maplib, maplibui, app]
     read: [docs/architecture/feature-type-creation.md, docs/architecture/cascading-form-lists.md, docs/architecture/crash-recovery.md]
     invariants: [INV-FEATURE-TYPE-CREATION, INV-CASCADING-FORM-LISTS, INV-CRASH-DRAFT-RECOVERY]

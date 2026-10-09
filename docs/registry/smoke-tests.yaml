@@ -4,7 +4,7 @@ tests:
     type: automatic
     scope: [app, maplib, maplibui]
     command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.reliability.CascadingFormsTest,com.nextgis.mobile.reliability.MapEditingToolsTest,com.nextgis.mobile.reliability.StandardFeatureTypesTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
-    expected: Isolated emulator only. Category defaults fill all stable-key parents, preserve blank unrelated branches, override remembered legacy values, survive dialog/form recreation and durable recovery, and write the selected pair through the shared SQLite Save gate. The real map path chooses a category before sketching, hands defaults to the attribute form, saves both fields and returns to the map without drafts. Manual project smoke also covers Cancel, a single layer, simple styling and real project symbols.
+    expected: Isolated emulator only. Category defaults fill all stable-key parents, preserve blank unrelated branches, override remembered legacy values, survive dialog/form recreation and durable recovery, and write the selected pair through the shared SQLite Save gate. Real map creation paths choose a category before sketching, current-location form or walk recording, preserve the originating tool through recreation and interrupted recorder recovery, hand defaults to the attribute form, save both fields and return to the map without drafts. Cancelling a point category during a walk releases the point lock and retains the recording. Manual project smoke also covers Cancel, a single layer, simple styling and real project symbols.
   SMOKE-DIAGNOSTIC-DELIVERY:
     type: automatic
     scope: [app]

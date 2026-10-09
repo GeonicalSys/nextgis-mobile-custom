@@ -267,3 +267,10 @@ and does not close a database with an unresolved write or queued child.
 
 See [sync/storage](ngw-sync-and-storage.md) and the
 [user guide](../guides/project-synchronization-user-guide.md).
+
+Выбранная по стилю категория нового обхода хранится в walk_initial_values
+того же атомарного снимка WalkSessionStore, что и геометрия/владелец записи.
+Finish переносит её в initial_values GeometryEditDraftStore и затем в durable
+checkpoint формы. При создании по местоположению категория сразу попадает
+в checkpoint формы. Старые записи без начальных значений читаются; существующие
+объекты эти defaults не получают. Контракт: [тип объекта](feature-type-creation.md).

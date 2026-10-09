@@ -614,7 +614,7 @@ public class MapFragment
             if (defaults == null || layer == null) finishPointCreation()
             else {
                 newFeatureDefaults = defaults
-                startNewGeometryCreation(layer)
+                startChosenFeatureCreation(layer, result.getInt(ChooseFeatureTypeDialog.KEY_TOOL, EDIT_LAYER))
             }
         }
 
@@ -1112,6 +1112,7 @@ public class MapFragment
             editMode = MODE_EDIT
             geometryWkt = geometry.toWKT(true)
             mapPath = current.mapPath
+            initialValues = current.initialValues
         }
         if (!GeometryEditDraftStore.save(ctx, draft, "finished-walk-edit")) return
         finishedWalkEditId = current.id
@@ -1745,8 +1746,9 @@ public class MapFragment
                 != Constants.NOT_FOUND.toLong())
             selectedFeatureMode(mSelectedLayer!!) else requestedMode
         if (mode == MODE_EDIT_BY_WALK) {
-            if (editLayerOverlay?.startIndependentWalk() == true) {
+            if (editLayerOverlay?.startIndependentWalk(newFeatureDefaults) == true) {
                 clearManualGeometryDraft("walk-ownership-transferred")
+                newFeatureDefaults = null
                 mMapRef.get()?.map?.cancelFeatureEdit(false)
                 setNewMode(MODE_NORMAL)
                 walkPanel?.refresh()
@@ -3582,15 +3584,41 @@ public class MapFragment
         }
     }
 
-    private fun chooseNewFeatureType(layer: VectorLayer) {
+    private fun chooseNewFeatureType(layer: VectorLayer, tool: Int = EDIT_LAYER) {
         newFeatureDefaults = null
         if (!FeatureTypeDefaults.hasCategories(layer)) {
-            startNewGeometryCreation(layer)
+            startChosenFeatureCreation(layer, tool)
             return
         }
         if (childFragmentManager.findFragmentByTag(ChooseFeatureTypeDialog.TAG) != null) return
-        ChooseFeatureTypeDialog.create(layer, currentMapDraftPath()!!)
+        ChooseFeatureTypeDialog.create(layer, currentMapDraftPath()!!, tool)
             .show(childFragmentManager, ChooseFeatureTypeDialog.TAG)
+    }
+
+    private fun startChosenFeatureCreation(layer: VectorLayer, tool: Int) {
+        when (tool) {
+            ADD_CURRENT_LOC -> {
+                ensureLayerVisibleForCreation(layer)
+                mSelectedLayer?.isLocked = false
+                mSelectedLayer = layer
+                editLayerOverlay!!.setSelectedLayer(layer)
+                launchCurrentPointForm(layer)
+            }
+            ADD_GEOMETRY_BY_WALK -> {
+                ensureLayerVisibleForCreation(layer)
+                mSelectedLayer?.isLocked = false
+                mSelectedLayer = layer
+                editLayerOverlay!!.setSelectedLayer(layer)
+                editLayerOverlay!!.newGeometryByWalk()
+                if (!applyInitialWalkGeometryAtStartLocation()) {
+                    newFeatureDefaults = null
+                    return
+                }
+                prepareMaplibreSessionForNewWalkGeometry()
+                setNewMode(MODE_EDIT_BY_WALK)
+            }
+            else -> startNewGeometryCreation(layer)
+        }
     }
 
     /** Start a new sketch immediately: one centre point/node, then taps add subsequent nodes. */
@@ -3710,14 +3738,7 @@ public class MapFragment
             //open form
             val vectorLayer = layers[0]
             if (vectorLayer is ILayerUI) {
-                ensureLayerVisibleForCreation(vectorLayer as VectorLayer)
-                mSelectedLayer = vectorLayer as VectorLayer
-                editLayerOverlay!!.setSelectedLayer(mSelectedLayer)
-
-                if (useCreatePointFromOverlay)
-                    createPointFromOverlay(false)
-
-                launchCurrentPointForm(vectorLayer)
+                chooseNewFeatureType(vectorLayer as VectorLayer, ADD_CURRENT_LOC)
 
                 Toast.makeText(
                     mActivity,
@@ -3744,13 +3765,9 @@ public class MapFragment
         }
     }
 
-    /** Vector layers allowed for object creation (collector «Редактируемый» policy). */
+    /** Hand the current GPS point and category directly to the attribute form. */
     private fun launchCurrentPointForm(layer: VectorLayer) {
-        val layerUI = layer as? IVectorLayerUI ?: return
-        if (pointSessionId == null) {
-            layerUI.showEditForm(mActivity, Constants.NOT_FOUND.toLong(), null, -1)
-            return
-        }
+        editLayerOverlay!!.selectedFeature = Feature()
         val location = mGpsEventSource?.lastKnownLocation
         if (location == null) {
             Toast.makeText(context, com.nextgis.maplibui.R.string.walk_gps_wait, Toast.LENGTH_LONG).show()
@@ -3764,9 +3781,14 @@ public class MapFragment
         }
         val geometry: GeoGeometry = if (layer.geometryType == GeoConstants.GTMultiPoint)
             GeoMultiPoint().apply { crs = GeoConstants.CRS_WEB_MERCATOR; add(point) } else point
+        // The immediate form owns the GPS point; recreated MapLibre edit sources may still be loading.
         editLayerOverlay!!.selectedFeature.geometry = geometry
-        mMapRef.get()?.map?.replaceGeometryFromHistoryChanges(geometry)
-        if (LayerUtil.showSessionEditForm(layer, requireActivity(), Constants.NOT_FOUND.toLong(), geometry, null)) {
+        undoRedoOverlay!!.clearHistory()
+        setNewMode(MODE_EDIT)
+        editLayerOverlay!!.setHasEdits(true)
+        persistManualGeometryDraft("current-location-start")
+        if (LayerUtil.showSessionEditForm(layer, requireActivity(), Constants.NOT_FOUND.toLong(), geometry,
+                null, newFeatureDefaults)) {
             clearManualGeometryDraft("point-form-handoff")
         }
     }
@@ -3800,6 +3822,7 @@ public class MapFragment
     }
 
     protected fun addGeometryByWalk() {
+        if (isDialogShown) return
         if (WalkSessionStore.load(context) != null || WalkEditService.hasValidDraft(context)) {
             Toast.makeText(context, com.nextgis.maplibui.R.string.walk_already_active, Toast.LENGTH_LONG).show()
             walkPanel?.refresh()
@@ -3816,18 +3839,8 @@ public class MapFragment
             Toast.makeText(mActivity, getString(R.string.warning_no_edit_layers), Toast.LENGTH_LONG)
                 .show()
         } else if (layers.size == 1) {
-            // Fork walk implementation (CUSTOMIZATIONS §2): explicit MapLibre edit session +
-            // validated GNSS anchor for initial geometry. Upstream variant called newGeometryByWalk twice
-            // around createPointFromOverlay(true) — reconciled: keep fork pipeline as the more
-            // deterministic path (§17 Walk reconciliation).
             val layer = layers[0] as VectorLayer
-            ensureLayerVisibleForCreation(layer)
-            mSelectedLayer = layer
-            editLayerOverlay!!.setSelectedLayer(layer)
-            editLayerOverlay!!.newGeometryByWalk()
-            if (!applyInitialWalkGeometryAtStartLocation()) return
-            prepareMaplibreSessionForNewWalkGeometry()
-            setNewMode(MODE_EDIT_BY_WALK)
+            chooseNewFeatureType(layer, ADD_GEOMETRY_BY_WALK)
 
             Toast.makeText(
                 mActivity,
@@ -3963,6 +3976,10 @@ public class MapFragment
         startFillByWalk: Boolean
     ) {
         val vectorLayer = layer as? VectorLayer ?: run { finishPointCreation(); return }
+        if (code == EDIT_LAYER || code == ADD_CURRENT_LOC || code == ADD_GEOMETRY_BY_WALK) {
+            chooseNewFeatureType(vectorLayer, code)
+            return
+        }
         if (code != ADD_GEOMETRY_BY_WALK) bindPointCreation(vectorLayer)
 
         ensureLayerVisibleForCreation(vectorLayer)
@@ -3976,18 +3993,7 @@ public class MapFragment
         if (useCreatePointFromOverlay && code != ADD_GEOMETRY_BY_WALK)
             createPointFromOverlay(startFillByWalk)
 
-        if (code == ADD_CURRENT_LOC) {
-            if (layer is ILayerUI) {
-                launchCurrentPointForm(vectorLayer)
-            }
-        } else if (code == EDIT_LAYER) {
-            chooseNewFeatureType(vectorLayer)
-        } else if (code == ADD_GEOMETRY_BY_WALK) {
-            editLayerOverlay!!.newGeometryByWalk()
-            if (!applyInitialWalkGeometryAtStartLocation()) return
-            prepareMaplibreSessionForNewWalkGeometry()
-            setNewMode(MODE_EDIT_BY_WALK)
-        } else if (code == ADD_POINT_BY_TAP) {
+        if (code == ADD_POINT_BY_TAP) {
             createPointFromOverlay(false)
         }
     }
