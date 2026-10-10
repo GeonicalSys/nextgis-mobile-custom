@@ -254,13 +254,21 @@ tests:
       - Open a map containing overlapping saved and active tracks plus vector layers
       - Move the current location onto the overlap and rotate the phone in place
       - Cover or disturb the compass, then uncover it; freeze GPS while rotating
+      - Disable or omit the rotation-vector sensor and move with a valid GPS course, including north at 0 degrees; then stop
+      - Freeze rotation-vector events for more than 500 ms without a new GPS event, then resume the sensor
+      - Zoom in and out and rotate the map while watching the sector and the fix anchor
       - Perform a lite reload or hot layer update
     expected: >
-      The standing and moving location cursor remains fully visible above tracks and every
+      The Orbit location cursor remains fully visible above tracks and every
       other MapLibre object before and after reload. The heading cone stays between the
       accuracy circle and the puck, turns with the phone, widens when heading is uncertain
       or the compass is disturbed, narrows after the field settles, and disappears without
-      hiding the circle or icon when the compass is unreliable, missing or stale.
+      hiding the circle when the compass is unavailable, unreliable, missing or stale.
+      The triangle follows the compass even at rest, immediately switches to a moving
+      fix's valid course when compass readings expire, and disappears only when neither
+      direction is available. Restored compass takes priority again. Its sector remains
+      about 36 logical map pixels long across zoom; GPS accuracy remains metric and
+      movement course alone never creates a compass sector. The ring never shifts on rotation.
 
   SMOKE-MAP-CAMERA-CONTROLS:
     type: device

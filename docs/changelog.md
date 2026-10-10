@@ -1,12 +1,34 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-10
+last_verified: 2026-10-11
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-11 — «Орбита» и направление по компасу с резервным курсом движения
+
+- Maplib отрисовывает центрированные векторные круг/треугольник «Орбиты»;
+  compass heading приоритетен даже на остановке, без него используется курс
+  движущегося фикса, без обоих направлений остаётся круг.
+- Сектор точности компаса сохраняет длину 36 логических пикселей карты при
+  смене zoom, угол следует прежней оценке неопределённости. Круг GPS остаётся
+  метрическим; курс движения не создаёт сектор компаса.
+- App активно уведомляет об expiry компаса после 500 мс без нового GPS/sensor
+  callback; stop очищает показания и отменяет таймер.
+- Обновлены rendering/location contracts, registries, smoke, module packs,
+  карточки отчёта и сверка official upstream от 2026-10-11.
+- Проверки: 39 unit tests (геометрия, неопределённость и provider lifecycle,
+  provider на API 26/36), native MapLibre fixture на изолированном API 36
+  с аппаратным EGL (`-gpu host`; SwiftShader не выводил также контрольные bitmap icons),
+  Lisa Debug assemble, Lisa/Belka Release compile, validator и 7 docs tests.
+  Физический компас, перекрытие реальными треками/векторами и полный cold/hot
+  device smoke остаются непроверенными.
+- Порядок доставки: maplib Draft PR → Merge Commit в master → fetch и pin
+  remote merge SHA в текущем app PR → повторные проверки → Squash app PR.
+  До закрытия библиотеки release APK не готовится и не публикуется; версии прежние.
 
 ## 2026-10-10 — GlitchTip 52: завершение перетаскивания слоёв
 

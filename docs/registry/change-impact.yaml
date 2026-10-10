@@ -268,6 +268,10 @@ triggers:
       - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
       - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
       - app/src/test/java/com/nextgis/mobile/location/HeadingConeAccuracyTest.kt
+      - app/src/test/java/com/nextgis/mobile/location/DeviceHeadingProviderTest.kt
+      - app/src/androidTest/java/com/nextgis/mobile/reliability/LocationOrbitTest.java
+      - maplib/src/main/res/drawable/ic_user_location_dot.xml
+      - maplib/src/main/res/drawable/ic_user_location_orbit.xml
     owners: [maplib, app]
     read:
       - docs/architecture/map-rendering.md

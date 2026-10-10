@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-10
+last_verified: 2026-10-11
 related_code:
   - app/build.gradle
   - app/src/main
@@ -1050,14 +1050,27 @@ style update и batch reload проверяет, что `user-location-layer` �
 layer в style (MapLibre рисует снизу вверх). У слоя включены
 `iconAllowOverlap` и `iconIgnorePlacement`, чтобы collision detection не прятал
 значок под треками и плотными векторами. Источник `user-location-source`
-обновляется из GPS; тип иконки (`stand` / `go`) и bearing приходят как свойства
-feature. Круг точности — геодезическая заливка `user-location-accuracy`
+обновляется из свежего GPS/network snapshot. «Орбита» использует центрированные
+векторные ресурсы круга с точкой и отдельным треугольником. `has_direction`
+выбирает ресурс; bearing — истинный компасный heading, а при недоступном,
+отсутствующем, UNRELIABLE или старше 500 мс компасе — валидный курс движения.
+Компас приоритетен даже на месте; без обоих направлений треугольник скрывается.
+Legacy type=stand/go остаётся свойством feature. Круг точности — геодезическая заливка `user-location-accuracy`
 (`role=accuracy`). Сектор направления — `user-location-heading` (`role=heading`)
 между кругом и символом: ось — истинный курс телефона, ширина — оценка
-неопределённости heading (не константа `values[4]`/SENSOR_STATUS), длина 8 м.
-Компас не поворачивает иконку. Свежесть
+неопределённости heading (не константа `values[4]`/SENSOR_STATUS), длина — 36
+логических пикселей карты при текущем масштабе. GPS bearing не создаёт сектор.
+Таймер активно переключает маркер на движение, если компас замолк; смена камеры
+пересчитывает длину сектора. Свежесть позиции
 проверяется по времени измерения; устаревшие Point и Polygon очищаются, а
-отсутствие heading скрывает только сектор.
+отсутствие heading скрывает сектор и оставляет курс движения, если он доступен.
+
+Сверено через GitHub API 2026-10-11: official maplib master
+[`b8f3e3e6bf4bad56f8ce910c885ea6af1b898998`](https://github.com/nextgis/android_maplib/commit/b8f3e3e6bf4bad56f8ce910c885ea6af1b898998)
+по-прежнему выбирает standing/moving ресурсы и GPS-bearing; official app master
+[`f11d38f77e4caf1b569526c5f620b2ec513c5f9d`](https://github.com/nextgis/nextgis_mobile_android/commit/f11d38f77e4caf1b569526c5f620b2ec513c5f9d).
+«Орбита», сектор неопределённости и приоритет компаса — локальный контракт
+maplib + app, который нужно сохранить при upstream sync.
 
 #### `.ngrc` и политика `immutable_local`
 

@@ -7,6 +7,8 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
 import android.os.SystemClock
+import android.os.Handler
+import android.os.Looper
 import android.view.Surface
 import android.view.WindowManager
 import com.nextgis.maplib.map.UserLocationGeometry
@@ -16,7 +18,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * Phone heading for the map GPS cone: rotation-vector magnetic azimuth converted to true heading
+ * Phone heading for the map pointer and compass sector: magnetic azimuth converted to true heading
  * with WMM declination only (no stakeout correction). Half-angle follows heading uncertainty.
  */
 internal class DeviceHeadingProvider(
@@ -49,6 +51,8 @@ internal class DeviceHeadingProvider(
     private var filteredCos = 0.0
     private var hasFilteredHeading = false
     private var started = false
+    private val expiryHandler = Handler(Looper.getMainLooper())
+    private val expireHeading = Runnable { expireHeadingIfStale() }
 
     fun start() {
         if (started || rotationSensor == null) return
@@ -69,6 +73,8 @@ internal class DeviceHeadingProvider(
     fun stop() {
         if (started) sensorManager.unregisterListener(this)
         started = false
+        expiryHandler.removeCallbacks(expireHeading)
+        clearHeading()
     }
 
     fun updateLocation(location: Location) {
@@ -186,11 +192,27 @@ internal class DeviceHeadingProvider(
         val smoothed = HeadingConeAccuracy.smoothHalfAngle(smoothedHalfAngle, combined)
         smoothedHalfAngle = smoothed
         headingHalfAngle = UserLocationGeometry.clampHalfAngleDegrees(smoothed)
-        if (refreshStale) headingElapsedMillis = nowElapsedMillis
+        if (refreshStale) {
+            headingElapsedMillis = nowElapsedMillis
+            expiryHandler.removeCallbacks(expireHeading)
+            expiryHandler.postDelayed(expireHeading, SENSOR_STALE_MILLIS + 1L)
+        }
         onHeadingChanged()
     }
 
+    private fun expireHeadingIfStale() {
+        if (!started) return
+        val age = SystemClock.elapsedRealtime() - headingElapsedMillis
+        if (age > SENSOR_STALE_MILLIS) {
+            clearHeading()
+            onHeadingChanged()
+        } else {
+            expiryHandler.postDelayed(expireHeading, SENSOR_STALE_MILLIS + 1L - age)
+        }
+    }
+
     private fun clearHeading() {
+        expiryHandler.removeCallbacks(expireHeading)
         magneticHeading = null
         lastRawHeadingDegrees = null
         headingHalfAngle = null
