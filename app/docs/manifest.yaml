@@ -9,6 +9,18 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SyncOfflineAndWalkGpsTest.java
+    responsibility: Verify offline manual/retry dialogs, network-constrained account work and real walk callbacks across GPS loss, timestamp gaps, point locks, explicit pause and sticky recovery; isolated Debug emulator only.
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/EmulatorNetworkFixture.java
+    responsibility: Temporarily control isolated-emulator connectivity for account/track native checks and restore radio settings.
+  - path: app/src/main/java/com/nextgis/mobile/util/SyncNotifications.java
+    responsibility: Keep stable manual/account foreground notification identities and remove stale progress at main-process startup without clearing failures or GPS notifications.
+  - path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+    responsibility: Keep manual dataSync foreground execution, reject inactive or post-destroy progress callbacks, and remove the owning progress notification when the service ends.
+  - path: app/src/test/java/com/nextgis/mobile/util/SyncNotificationsTest.java
+    responsibility: Reproduce inactive-progress repost and post-destroy callbacks across a new session on API 26/36; verify default error-only notices and preserved explicit preference.
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SyncNotificationsTest.java
+    responsibility: Verify real Android notification removal, readable default errors, orphan cleanup and bound account service finish/cancel with delayed progress; isolated emulator only.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
     responsibility: Bound automatic SDK HTTP 5xx bursts with status/method/local-or-remote tags, a ten-minute window and 64 hashed endpoint keys; retain the first request, fatal events and cached replay.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
@@ -20,7 +32,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsNoiseTest.java
     responsibility: Seed synthetic local backlog on an isolated emulator, cold-start an obsolete HyperLog endpoint and verify retained logs, crash handler and bounded SDK HTTP captures.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java
-    responsibility: Verify delayed registration with hidden pending badges, confirmed registration and revocation, transport failure and server isolation, badge updates and opt-out, packet-specific acknowledgements with repeated timestamps, and real background workspace delivery against an isolated loopback endpoint.
+    responsibility: Verify delayed registration, revocation, network deferral/reconnect, transport failure and server isolation, the track row badge plus the aggregate badge with other pending layer rows, opt-out, packet-specific acknowledgements with repeated timestamps, and real background workspace delivery against an isolated loopback endpoint.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java
     responsibility: Verify category choices through sketch, current-location and background-walk creation, recreation, interrupted recorder recovery, point-lock cancellation, confirmation-safe pause/resume, same-zoom GPS start centring, three 48dp targets in both themes at normal/200-percent fonts, the unified Measurements menu and ruler/azimuth placement gestures, and the real attribute-form SQLite Save; isolated emulator only.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java
@@ -40,9 +52,9 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/FormAppearanceTest.java
     responsibility: Verify real light/dark native fields, permanent captions, wrapped long choices, hidden comment layout and footer Save gate on synthetic offline data.
   - path: app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
-    responsibility: Apply default-on all-project scope to manual and scheduled passes; preserve the active map/draft while serially opening headless owning maps, draining async children and recording exact recovery pairs.
+    responsibility: Defer disconnected account dispatch before lease/progress/journal changes; apply default-on all-project scope to manual and scheduled passes, preserving the active map/draft while serially opening headless owning maps, draining async children and recording exact recovery pairs.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/ProjectSyncRunnerTest.java
-    responsibility: Native synthetic-project scope, failure continuation, durable queues, equal-id journals, cancellation and real background fill verification.
+    responsibility: Native synthetic-project scope, network deferral/reconnect, failure continuation, durable queues, equal-id journals, cancellation and real background fill verification.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java
     responsibility: Verify dynamic requirements, inactive tabs, toolbar and Back Save, immutable draft pins and corrupt snapshot failures before SQLite writes.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
@@ -76,7 +88,7 @@ key_components:
   - path: app/src/test/java/com/nextgis/mobile/view/MapLayoutContractTest.java
     responsibility: Require all phone, landscape and tablet wrappers to include the same complete map content and preserve the separate action row.
   - path: app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
-    responsibility: Shared worker snapshot includes enabled-track sent=0 rows, reacts to trackpoint commits and upload-intent changes, and keeps manual track upload available without vector accounts; Run one serial manual-sync pipeline, reconcile sync animation and the determinate progress ring in both directions against worker-owned state and the process-wide data-sync lease throughout the visible lifecycle, query pending changes off the main thread with lifecycle and map guards, and confirm explicit rechecking of skipped server geometries on long press.
+    responsibility: Shared worker snapshot includes enabled-track sent=0 rows, reacts to trackpoint commits and upload-intent changes, and keeps manual track upload available without vector accounts; explain absent network before dispatch, run one serial manual-sync pipeline, reconcile sync animation and the determinate progress ring against worker-owned state and the data-sync lease throughout the visible lifecycle, query pending changes off the main thread with lifecycle and map guards, and confirm explicit rechecking of skipped server geometries on long press.
   - path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
     responsibility: For GPX FileProvider URIs, advertise text/xml in getType and anonymous lookup so MimeTypeMap clients do not append .bin or .null, while retaining canonical root and grant checks.
   - path: app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
@@ -154,9 +166,9 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
     responsibility: Branch-specific Lisa Mobile manifest, trusted versioned URL, integrity, identity, Android 9-10 archive-certificate fallback without weakening SHA-256 matching, and process-death-safe continuation after Android install permission.
   - path: app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
-    responsibility: Run backup-gated project integrity repair before each account, durably journal unfinished passes, defer heavy MapLibre reload until account completion, and surface the base NGW result or a plain user-visible repair/server failure without duplicating layer retry state.
+    responsibility: Run backup-gated project integrity repair before each account, durably journal unfinished passes, defer heavy MapLibre reload until completion, and surface the base NGW result or a plain failure without duplicating layer retry state; error notifications bypass default-off optional start/finish notices.
   - path: app/src/main/java/com/nextgis/mobile/datasource/SyncService.java
-    responsibility: Keep system account sync in a low-priority dataSync foreground service from adapter start through finish/cancel.
+    responsibility: Keep system account sync in a low-priority dataSync foreground service through finish/cancel and reject late callbacks after destruction.
   - path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
     responsibility: Atomically persist pending_v2 project/account pairs before dispatch; acknowledge each only after its children finish and recover its registered owner across active-project changes.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java
@@ -172,7 +184,7 @@ public_contracts:
     symbol: MapFragment implements MaplibreMapInteraction
     path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
     consumers: [maplib, maplibui]
-settings_refs: [track_send, track_send_default_enabled_v1, io.sentry.auto-init, diagnosticDeliveryChecks, diagnostic-reports, sync_all_projects, track_recording_mode, feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, keep_screen_on, keep_screen_on_default_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, stakeout_declination_correction, background_recording_sound, permission_requested_marker, check_updates, sw_track_service, apk_version_update, updater-pending-install, sync_recovery_journal, com.nextgis.mobile.PREFS_UNDERLAYS, debug_companion_install, shared_underlay_migration, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
+settings_refs: [show_sync, track_send, track_send_default_enabled_v1, io.sentry.auto-init, diagnosticDeliveryChecks, diagnostic-reports, sync_all_projects, track_recording_mode, feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, keep_screen_on, keep_screen_on_default_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, stakeout_declination_correction, background_recording_sound, permission_requested_marker, check_updates, sw_track_service, apk_version_update, updater-pending-install, sync_recovery_journal, com.nextgis.mobile.PREFS_UNDERLAYS, debug_companion_install, shared_underlay_migration, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
 storage_contracts:
   - id: diagnostic-reports
     path: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -180,7 +192,7 @@ storage_contracts:
     path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
   - id: sync-recovery-journal
     path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
-invariant_refs: [INV-LOCAL-LOG-STARTUP, INV-TRACK-DELIVERY, INV-DIAGNOSTIC-DELIVERY, INV-CONDITIONAL-REQUIRED, INV-PROJECT-SCRIPTS, INV-REQUIRED-FIELDS, INV-FLAVORS, INV-VERSION-COUPLING, INV-MAPLIBRE-BACKEND-COMPATIBILITY, INV-MAPLIBRE-VIEW-LIFECYCLE, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-SPATIAL-CACHE-CONSISTENCY, INV-HIDDEN-VECTOR-TILE-IDENTIFY, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-UNDERLAY-DISPLAY, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-PROJECT-OPERATION-EXCLUSION, INV-NGRC-PRESERVE, INV-LEGACY-UNDERLAY-MIGRATION, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-ECOSYSTEM-SERVER-BOUNDARY, INV-CRASH-DRAFT-RECOVERY, INV-MULTIPOLYGON-REPAIR, INV-GEOMETRY-SKETCH-WORKFLOW, INV-GPS-TRACK-FILTER, INV-STAKEOUT-GUIDANCE, INV-LOCAL-VECTOR-LAYERS, INV-LOCAL-WRITE-COMMIT, INV-TRACK-RETRY, INV-TOOL-TAP-TOLERANCE]
+invariant_refs: [INV-SYNC-NOTIFICATIONS, INV-LOCAL-LOG-STARTUP, INV-TRACK-DELIVERY, INV-DIAGNOSTIC-DELIVERY, INV-CONDITIONAL-REQUIRED, INV-PROJECT-SCRIPTS, INV-REQUIRED-FIELDS, INV-FLAVORS, INV-VERSION-COUPLING, INV-MAPLIBRE-BACKEND-COMPATIBILITY, INV-MAPLIBRE-VIEW-LIFECYCLE, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-SPATIAL-CACHE-CONSISTENCY, INV-HIDDEN-VECTOR-TILE-IDENTIFY, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-UNDERLAY-DISPLAY, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-PROJECT-OPERATION-EXCLUSION, INV-NGRC-PRESERVE, INV-LEGACY-UNDERLAY-MIGRATION, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-ECOSYSTEM-SERVER-BOUNDARY, INV-CRASH-DRAFT-RECOVERY, INV-MULTIPOLYGON-REPAIR, INV-GEOMETRY-SKETCH-WORKFLOW, INV-GPS-TRACK-FILTER, INV-STAKEOUT-GUIDANCE, INV-LOCAL-VECTOR-LAYERS, INV-LOCAL-WRITE-COMMIT, INV-TRACK-RETRY, INV-TOOL-TAP-TOLERANCE]
 global_docs:
   - docs/architecture/error-reporting.md
   - docs/guides/bug-reports-user-guide.md
@@ -202,5 +214,5 @@ global_docs:
   - docs/reference/build-matrix.md
   - docs/reference/flavors-and-versioning.md
   - docs/runbooks/release-apk.md
-smoke_tests: [SMOKE-TRACK-DELIVERY, SMOKE-DIAGNOSTIC-DELIVERY, SMOKE-STAKEOUT-PERMISSIONS, SMOKE-FORM-APPEARANCE, SMOKE-CONDITIONAL-REQUIRED, SMOKE-FORM-NAVIGATION, SMOKE-PROJECT-SCRIPTS, SMOKE-REQUIRED-FIELDS, AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-POLYGON-LABEL-ANCHOR, SMOKE-MAP-OPENGL-COMPATIBILITY, SMOKE-MAP-SURFACE-LIFECYCLE, SMOKE-HOT-RASTER, SMOKE-DEBUG-UNDERLAY-MIGRATION, SMOKE-SHARED-UNDERLAYS, SMOKE-UNDERLAY-DISPLAY, SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY, SMOKE-LOCAL-VECTOR-TILE-STRESS, SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-CAMERA-CONTROLS, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-NGW-IMPORT-BACK, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LOCAL-VECTOR-LAYERS, SMOKE-COLLECTOR-IMPORT, SMOKE-LAYER-SYNC-SETTINGS, SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-SCHEMA-REBUILD-GUARD, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-INTERRUPT-ACTION, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE, SMOKE-CRASH-DRAFT-RECOVERY, SMOKE-MULTIPOLYGON-REPAIR, SMOKE-GEOMETRY-SKETCH-WORKFLOW, SMOKE-GPS-RECORDING, SMOKE-STAKEOUT, AUTO-RELIABILITY-NATIVE, SMOKE-RELIABILITY-FAILURES, SMOKE-TOOL-TAP, SMOKE-NGID-AND-RESOURCE-ICONS]
+smoke_tests: [SMOKE-SYNC-OFFLINE, SMOKE-SYNC-NOTIFICATIONS, SMOKE-TRACK-DELIVERY, SMOKE-DIAGNOSTIC-DELIVERY, SMOKE-STAKEOUT-PERMISSIONS, SMOKE-FORM-APPEARANCE, SMOKE-CONDITIONAL-REQUIRED, SMOKE-FORM-NAVIGATION, SMOKE-PROJECT-SCRIPTS, SMOKE-REQUIRED-FIELDS, AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-POLYGON-LABEL-ANCHOR, SMOKE-MAP-OPENGL-COMPATIBILITY, SMOKE-MAP-SURFACE-LIFECYCLE, SMOKE-HOT-RASTER, SMOKE-DEBUG-UNDERLAY-MIGRATION, SMOKE-SHARED-UNDERLAYS, SMOKE-UNDERLAY-DISPLAY, SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY, SMOKE-LOCAL-VECTOR-TILE-STRESS, SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-CAMERA-CONTROLS, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-NGW-IMPORT-BACK, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LOCAL-VECTOR-LAYERS, SMOKE-COLLECTOR-IMPORT, SMOKE-LAYER-SYNC-SETTINGS, SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-SCHEMA-REBUILD-GUARD, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-INTERRUPT-ACTION, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE, SMOKE-CRASH-DRAFT-RECOVERY, SMOKE-MULTIPOLYGON-REPAIR, SMOKE-GEOMETRY-SKETCH-WORKFLOW, SMOKE-GPS-RECORDING, SMOKE-STAKEOUT, AUTO-RELIABILITY-NATIVE, SMOKE-RELIABILITY-FAILURES, SMOKE-TOOL-TAP, SMOKE-NGID-AND-RESOURCE-ICONS]
 upstream_hotspots: [MAP-HOST, MAPLIBRE-BACKEND, APP-FLAVORS, RASTER-MBTILES]

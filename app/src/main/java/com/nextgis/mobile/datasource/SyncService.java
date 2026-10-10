@@ -46,11 +46,12 @@ import com.nextgis.maplibui.util.NotificationHelper;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
 import com.hypertrack.hyperlog.HyperLog;
+import com.nextgis.mobile.util.SyncNotifications;
 
 public class SyncService extends NGWSyncService {
 
     private static final int NOTIFICATION_ID = 518;
-    private static final int FOREGROUND_NOTIFICATION_ID = 520;
+    private static final int FOREGROUND_NOTIFICATION_ID = SyncNotifications.ACCOUNT_PROGRESS_ID;
     private static final String FOREGROUND_CHANNEL_ID = "account_sync_fgs";
     protected MessageReceiver mMessageReceiver;
     private BroadcastReceiver mForegroundReceiver;
@@ -179,12 +180,14 @@ public class SyncService extends NGWSyncService {
 
     @Override
     public void onDestroy(){
+        mForegroundBlocked = true;
         unregisterReceiver(mMessageReceiver);
         if (mForegroundReceiver != null) {
             unregisterReceiver(mForegroundReceiver);
             mForegroundReceiver = null;
         }
         stopForeground(true);
+        SyncNotifications.cancelProgress(this, FOREGROUND_NOTIFICATION_ID);
         super.onDestroy();
     }
 

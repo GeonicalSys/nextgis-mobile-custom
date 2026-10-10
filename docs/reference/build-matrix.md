@@ -13,10 +13,31 @@ related_code:
 
 # Матрица сборки и версий
 
+App lifecycle unit tests используют Robolectric `4.16.1` (как maplib) и Android
+resources на API 26/36. Это test-only dependency; runtime APK зависимости и
+версии не меняются. Отсутствующие SHA-256 test artifacts добавляются в
+`gradle/verification-metadata.xml`, dependency verification остаётся включённой.
+
 Диагностика использует Sentry Android `8.37.1` и WorkManager `2.11.2`, одинаково
 в Debug/Lisa/Belka. `diagnosticDeliveryChecks=true` меняет только instrumentation
 runner test APK для изолированной проверки доставки; версии, application/account
 IDs, signing и production APK от этого флага не меняются.
+
+`SyncOfflineAndWalkGpsTest`, `ProjectSyncRunnerTest` и `TrackUploadTest` проверяют
+на изолированном API 36 эмуляторе ручной offline запуск, ожидание сети account
+worker, сохранность очереди/track outbox и продолжение после reconnect, GPS gaps
+и ручную паузу. `EmulatorNetworkFixture` временно меняет только radios эмулятора.
+Для этой задачи проверены Debug/test APK и compile Lisa/Belka Release sources.
+Maplibui #35 слит Merge Commit `795f2c681fbed53e0ef496775a10a05e1a6a7124`;
+app #55 закрепляет именно этот fetched remote commit. По отдельному подтверждению
+пользователя после Squash app #55 собирается локальный Lisa Release APK и
+проверяется version matrix; публикация и установка на рабочий телефон не запрошены.
+Версии и runtime зависимости не меняются.
+
+TrackUploadTest проверяет отметку строки «Мои треки» и согласованность общего
+индикатора со всеми строками слоёв. Он не предполагает, что другой тест не
+оставил неотправленные изменения векторного слоя: выключение отправки треков
+не должно скрывать такие изменения. Это исправление изоляции native fixture.
 `BuildConfig.SOURCE_REVISION` фиксирует Git HEAD и dirty marker для багрепортов;
 изменение этого поля не повышает versionName/versionCode.
 

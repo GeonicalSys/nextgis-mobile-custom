@@ -1,5 +1,12 @@
 schema_version: 1
 preferences:
+  show_sync:
+    owner: app
+    type: boolean
+    default: false
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_general.xml
+    purpose: Optional synchronization start/finish/cancel notices only; queue errors bypass this preference and silent Android foreground indicators last only while the service runs. Preserve explicit user choice.
   track_send:
     owner: app
     type: boolean
@@ -313,7 +320,8 @@ preferences:
     purpose: >
       Durable full-geometry walk owner with map path, session UUID, RECORDING/FINISHING/FINISHED
       phase, revision and optional point owner/stage/layer/tool; preserves legacy part WKT,
-      insertion target and gps_paused. Every manual command is locked until point Save/Cancel.
+      insertion target and user-controlled gps_paused. GPS loss and sticky recovery never
+      infer a new pause; the next usable fix continues automatically. Every manual command is locked until point Save/Cancel.
       Finish acknowledges the final snapshot; successful feature Save or explicit Discard clears it.
     session_source: maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
 manifest_metadata:

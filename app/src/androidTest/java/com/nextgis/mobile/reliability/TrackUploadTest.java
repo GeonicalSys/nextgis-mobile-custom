@@ -5,6 +5,8 @@ import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -17,6 +19,7 @@ import com.nextgis.maplibui.mapui.TrackUploader;
 import com.nextgis.maplibui.mapui.TrackWorker;
 import com.nextgis.maplibui.mapui.TrackRegistrationState;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
@@ -29,11 +32,19 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONArray;
 import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class TrackUploadTest {
+    private EmulatorNetworkFixture network;
+    @Before public void connectedFixture() throws Exception {
+        network = new EmulatorNetworkFixture(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        network.connected(true);
+    }
+    @After public void restoreConnectivity() throws Exception { if (network != null) network.close(); }
     private static class Endpoint implements AutoCloseable {
         final ServerSocket server = new ServerSocket(0);
         final CompletableFuture<List<Integer>> packets = new CompletableFuture<>();
@@ -119,14 +130,39 @@ public class TrackUploadTest {
                 "SELECT count(*) FROM trackpoints WHERE session = ? AND sent = 1", new String[]{Long.toString(trackId)}); }
         void badge(boolean expected) throws Exception {
             AtomicBoolean matches = new AtomicBoolean(); long deadline = android.os.SystemClock.uptimeMillis() + 10000;
+            java.util.concurrent.atomic.AtomicReference<String> state = new java.util.concurrent.atomic.AtomicReference<>("no row");
             do {
                 scenario.onActivity(activity -> {
-                    View badge = activity.findViewById(R.id.sync_pending_badge);
-                    matches.set(badge != null && (badge.getVisibility() == View.VISIBLE) == expected);
+                    ListView list = activity.findViewById(R.id.layer_list);
+                    ListAdapter adapter = list.getAdapter();
+                    for (int i = 0; i < adapter.getCount(); i++) {
+                        if (adapter.getItemId(i) != layer.getId()) continue;
+                        View row = list.getChildAt(i - list.getFirstVisiblePosition());
+                        if (row == null) { list.setSelection(i); return; }
+                        View badge = row.findViewById(com.nextgis.maplibui.R.id.layer_pending_badge);
+                        boolean trackMatches = badge != null && (badge.getVisibility() == View.VISIBLE) == expected;
+                        View summary = activity.findViewById(R.id.sync_pending_badge);
+                        // Other suite fixtures may retain pending vector edits. Opt-out hides
+                        // this track's row badge, without requiring their aggregate badge to vanish.
+                        boolean anyPending = false;
+                        for (int j = 0; j < adapter.getCount(); j++) {
+                            View item = adapter.getView(j, null, list);
+                            View pending = item.findViewById(com.nextgis.maplibui.R.id.layer_pending_badge);
+                            anyPending |= pending != null && pending.getVisibility() == View.VISIBLE;
+                        }
+                        boolean showSummary = anyPending && activity.findViewById(R.id.sync).getVisibility() == View.VISIBLE;
+                        com.nextgis.mobile.fragment.LayersFragment fragment = (com.nextgis.mobile.fragment.LayersFragment)
+                                activity.getSupportFragmentManager().findFragmentById(R.id.layers);
+                        state.set("expected=" + expected + " row=" + badge.getVisibility() + " summary=" + summary.getVisibility()
+                                + " send=" + TrackSendSettings.isEnabled(prefs) + " eligible=" + TrackRegistrationState.canShowPending(app)
+                                + " resumed=" + fragment.isResumed() + " anyRows=" + anyPending);
+                        matches.set(trackMatches && (summary.getVisibility() == View.VISIBLE) == showSummary);
+                        return;
+                    }
                 });
                 if (!matches.get()) Thread.sleep(50);
             } while (!matches.get() && android.os.SystemClock.uptimeMillis() < deadline);
-            assertTrue("Track upload badge was not reconciled", matches.get());
+            assertTrue("Track upload badge was not reconciled: " + state.get(), matches.get());
         }
         void hub(Endpoint endpoint) { prefs.edit().putString("tracker_hub_url", endpoint.url()).putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, true).commit(); }
         @Override public void close() throws Exception {
@@ -156,6 +192,21 @@ public class TrackUploadTest {
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
             assertEquals(2, f.sent()); f.badge(false);
             assertEquals(Arrays.asList(2, 2), hub.packets.get(5, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test public void disconnectedTrackDeliveryMakesNoRequestAndRetainsPointsUntilReconnect() throws Exception {
+        try (Fixture f = new Fixture(2); Endpoint hub = new Endpoint(200)) {
+            f.hub(hub);
+            network.connected(false);
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertFalse(TrackUploader.upload(f.app, f.layer));
+            assertEquals(0, hub.registrationChecks.get()); assertEquals(0, f.sent());
+            assertFalse(ProjectOperationCoordinator.isBusy());
+            assertTrue(TrackSendSettings.isEnabled(f.prefs));
+            network.connected(true);
+            assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertEquals(2, f.sent()); assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
         }
     }
 

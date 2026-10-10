@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="sync_no_internet">No internet connection</string>
+    <string name="sync_optional_notifications_title">Notify when synchronization starts and finishes</string>
+    <string name="sync_optional_notifications_summary">Errors are reported even when this is off. Background synchronization may show a silent system indicator.</string>
+    <string name="sync_failed_notification_title">Synchronization incomplete</string>
+    <string name="sync_failed_notification_message">Some data could not be synchronized. Please try again.</string>
     <string name="sync_recheck_skipped_prompt">Check previously skipped objects again? Large layers may need to be downloaded again.</string>
 </resources>

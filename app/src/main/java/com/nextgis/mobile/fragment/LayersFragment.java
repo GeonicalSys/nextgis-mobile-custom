@@ -74,6 +74,7 @@ import com.nextgis.maplib.service.NGWSyncService;
 import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.NgwSyncProgress;
+import com.nextgis.maplib.util.NetworkUtil;
 import com.nextgis.maplib.util.SettingsConstants;
 import android.text.TextUtils;
 import com.nextgis.maplibui.GISApplication;
@@ -805,7 +806,9 @@ public class LayersFragment
         final String shortError = shortenSyncError(error);
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.sync_failed_retry_title)
-                .setMessage(getString(R.string.sync_failed_retry_message, shortError))
+                .setMessage(new NetworkUtil(requireContext()).isNetworkAvailable()
+                        ? getString(R.string.sync_failed_retry_message, shortError)
+                        : getString(R.string.sync_no_internet))
                 .setPositiveButton(com.nextgis.maplibui.R.string.retry, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -836,6 +839,10 @@ public class LayersFragment
     protected void startManualSync(boolean forceRecheck) {
         Context context = getContext();
         if (context == null) {
+            return;
+        }
+        if (!new NetworkUtil(context).isNetworkAvailable()) {
+            showSyncFailureDialog(null);
             return;
         }
         if (canSendTracks()) com.nextgis.maplibui.mapui.TrackWorker.schedule(context);

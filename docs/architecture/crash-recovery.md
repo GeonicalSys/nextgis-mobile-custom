@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -59,7 +59,7 @@ intent or used to close a track. Existing segment and durable Stop rules apply.
 | Point durability | Each sampled, validated GNSS point is queued in owning-map AtomicFile storage before a serial idempotent SQLite insert; filter/sampling tails are flushed before Stop. Pending files are acknowledged only after database commit |
 | GPS validation | Shared `LocationTrackFilter` retains valid movement through 160 km/h, rejects invalid/old/inaccurate fixes and isolated material spikes, and drains its delayed two-fix buffer on stop or before a long-gap segment reset |
 | Provider ownership | Application-owned GpsEventSource; GPS (chip, mock or native NMEA) for display with Network only as GPS-absent fallback; GNSS chip, mock receiver extras or native NMEA for track/walk recording |
-| GPS gaps | Database v6 persists trackpoints.segment; gaps survive map reload and GPX export. Walk stores gps_paused and requires explicit reconnection |
+| GPS gaps | Database v6 persists trackpoints.segment; gaps survive map reload and GPX export. Walk flushes accepted points, resets its sampler and automatically accepts the next usable fix without setting gps_paused |
 | Recording flag | Durable preference `track_recording_enabled` is intent, not proof of an active service or track row. The menu and the walking-person button under the ruler distinguish Start, Starting, Recording and Error; neither shows a false active state before service confirmation. Explicit Stop persists pending_stop and clears recording intent only after all queued points and track closure are committed. A foreground/SQLite failure keeps the queue and warns without deleting unfinished data. |
 | System location | Interactive Start is rejected before changing durable intent when Android system location is off. The app explains the requirement and opens Location settings; the service repeats the check to close lifecycle races. |
 | Process ordering | `TrackerService` runs in the default application process. The toolbar Start lifecycle therefore executes before a later toolbar Stop, and both sides observe one in-process preference state; a stale delayed Start is rejected if the durable flag is already off |
@@ -92,13 +92,13 @@ moving above the creation menu only while it is expanded. A second walk cannot s
 | Live preview | Independent `walk-preview-source` shows confirmed geometry without borrowing the point editor. Root CRS is restored on the private copy before conversion from metres to WGS84; full/lite style reload restores the cached preview |
 | Point start | A durable point UUID is acquired before the layer chooser. Only one Point/MultiPoint creation session may accompany the recording; stage progresses through choose, geometry and form |
 | Complete control lock | From point start until successful point Save or explicit Cancel/Discard, all walk controls and notification/backend Pause/Resume/Finish/Discard are disabled. GPS processing and geometry persistence continue |
-| Lifecycle | Camera, backgrounding, screen off, failed Save and process recreation retain the point lock. A GPS gap may automatically pause recording but cannot allow manual reconnection before the point session ends |
+| Lifecycle | Camera, backgrounding, screen off, failed Save and process recreation retain the point lock. GPS loss leaves recording intent and the point lock intact; fresh fixes continue recording automatically |
 | Finish | The disk button confirms finishing and opening attributes. A matching command changes RECORDING to FINISHING; the service flushes its validated tail, persists full geometry and acknowledges FINISHED before the UI hands geometry to the editor and automatically opens its attribute form. No new point can begin during this transition |
 | Manual pause | The confirmed Pause command flushes already accepted fixes and persists gps_paused under the same owner. New recording callbacks cannot append while paused. Confirmed Resume resets the sampler and warns that the next point connects to the last recorded point. A stale confirmation still checks UUID, phase and point lock in the service |
 | Panel | One themed 48dp row contains layer name and disk/pause-or-play/cross, all with 48dp touch targets, accessibility names and long-press hints. No ordinary status/accuracy label or overflow. Point lock and persistence errors add a readable notice; final geometry keeps Save/Cancel available and disables Pause |
 | Minimum geometry | After FINISHED, every line requires two distinct vertices and every polygon ring three, excluding WKT closure duplicates. Empty collections or short members/rings close the walk with “Собрано недостаточно точек, выхожу без сохранения”, without a feature row or attribute form; existing features are unchanged |
 | Final save | The active Save panel button and toolbar Save use the same geometry validation/repair and open attributes for new or existing walk features. An unrelated editor or point owner still locks controls. The walk draft is retained through validation/form errors and cleared after successful feature Save; cancelling final editing keeps the finished draft available |
-| Unexpected end | Service death keeps the private geometry. Sticky recovery with existing vertices pauses insertion; the panel offers explicit Resume/Discard. FINISHING recovers as FINISHED, never as a new recording |
+| Unexpected end | Service death keeps the private geometry and user pause intent. Sticky recovery restores gps_paused without inferring a pause from existing vertices; a stopped owner still offers Continue/Discard. FINISHING recovers as FINISHED, never as a new recording |
 | Startup reconciliation | A RECORDING owner at initial revision with no service, point lock or persisted snapshot is an unacknowledged start and is removed silently. A stopped owner with a real snapshot is offered Continue/Discard. A session belonging to another map is never hidden: startup offers an emergency reset. |
 | Emergency reset | General settings expose a confirmed reset that releases a point lock, stops the matching service and removes only `walkedit_temp` plus a walk-owned form checkpoint. Projects, layers, features, accounts and unrelated drafts are untouched. |
 | Owner validation | Commands carry the session UUID and check map identity, phase and point lock. Old notification intents cannot control a later walk |

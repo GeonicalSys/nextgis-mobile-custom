@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="sync_no_internet">Отсутствует подключение к интернету</string>
+    <string name="sync_optional_notifications_title">Сообщать о начале и завершении синхронизации</string>
+    <string name="sync_optional_notifications_summary">Ошибки сообщаются и при выключенном пункте. Во время фоновой синхронизации может отображаться тихий системный индикатор.</string>
+    <string name="sync_failed_notification_title">Синхронизация не завершена</string>
+    <string name="sync_failed_notification_message">Не удалось синхронизировать все данные. Повторите попытку.</string>
     <string name="sync_recheck_skipped_prompt">Повторно проверить ранее пропущенные объекты? Может потребоваться загрузка больших слоёв.</string>
 </resources>
