@@ -90,7 +90,7 @@ maplibui `d70a5572`. Ничего требуемого не отложено.
 |---|---|---|---|
 | Shared local-only HyperLog, NGFP canonical hash; прежняя track intent migration | maplib `007001c84e49c1aaf908688898cd8740151be020` | #46 / master | Exact app gitlink, open Draft |
 | Base initializer; прежние category/walk/track UI fixes | maplibui `dcc4487d4e88614c23bf71ea5d7bcbe28298d97b` | #34 / master | Exact app gitlink, open Draft |
-| HTTP policy, app initializer, native checks/docs и прежние creation/measurements/track flows | app scoped follow-up на `codex/feature-type-empty-lists` | #54 / my-maplibre | Предыдущий app tip остаётся ancestor; точный commit записан после фиксации |
+| HTTP policy, app initializer, native checks/docs и прежние creation/measurements/track flows | app `0babee94293839386ba0ef802a118d16e2065344` | #54 / my-maplibre | Код и exact gitlinks присутствуют; open Draft |
 
 Сначала Merge Commit maplib #46, затем Merge Commit maplibui #34; после fetch
 удалённых merge commits обновить app gitlinks, затем Squash app #54 и повторить
