@@ -130,8 +130,9 @@ Collector sync после установки остаются непровере
 Обновлены diagnostic/location/settings docs, app pack/contract, registries и две
 карточки отчёта. Дополнение остаётся в том же app Draft #54; library gitlinks прежние.
 
-Сначала Merge Commit maplib #46, затем Merge Commit maplibui #34; после fetch
-удалённых merge commits обновить app gitlinks, затем Squash app #54 и повторить
-closure audit перед выпуском. Текущие gitlinks на Draft heads служат для проверки,
-не закрывают release dependencies. Merge, APK publication и publisher изменения
-в этой задаче не выполнялись.
+maplib #46 влит Merge Commit в `master`: `7525d38d79e9e6201a64f1fc404c9d6eff4e2d41`
+(включает `007001c84e49c1aaf908688898cd8740151be020`). maplibui #34 влит Merge
+Commit в `master`: `acd9b3c82ec9bf66befd59c382e88ef7eba231ad` (включает
+`dcc4487d4e88614c23bf71ea5d7bcbe28298d97b`). App gitlinks указывают на эти
+merge commits. Версии production и debug не менялись. APK не публиковался,
+`upload_mobile` не менялся.
