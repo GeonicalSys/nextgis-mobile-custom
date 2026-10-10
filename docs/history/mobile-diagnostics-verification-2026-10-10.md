@@ -92,6 +92,43 @@ maplibui `d70a5572`. Ничего требуемого не отложено.
 | Base initializer; прежние category/walk/track UI fixes | maplibui `dcc4487d4e88614c23bf71ea5d7bcbe28298d97b` | #34 / master | Exact app gitlink, open Draft |
 | HTTP policy, app initializer, native checks/docs и прежние creation/measurements/track flows | app `0babee94293839386ba0ef802a118d16e2065344` | #54 / my-maplibre | Код и exact gitlinks присутствуют; open Draft |
 
+## Дополнение: содержимое отчётов и GPS без записи
+
+По явному указанию владельца контракт диагностики 2 сохраняет предоставленные
+URL/query, headers/cookies, response status/headers, контекст, значения, пути и
+сообщения без маскирования, включая credentials. Размер/глубина ограничены;
+потоковые HTTP-тела и business storage для отчёта не читаются. SDK OkHttp hint
+позволяет сохранить исходные URL/headers, которые сам SDK иначе скрывает.
+Ограничение повторных HTTP 5xx, fatal delegation, cache/retry остаются прежними.
+Предыдущие redacted native envelopes выше описывают прежний контракт 1.
+
+При открытии/Resume без трека проверяются Battery Saver GPS policy, пользовательский
+запрет фоновой работы и отсутствие исключения из оптимизации батареи. Неблокирующее
+предупреждение предлагает нужные системные страницы. Подтверждение хранится после
+реального показа/нажатия, переживает rotation только текущего процесса; queued
+предупреждение не считается показанным, Pause закрывает его. Новое ограничение
+предупреждает снова, снятие ограничений сбрасывает подтверждение. Native тест
+обнаружил ранний acknowledgement до показа при переходе lifecycle; это исправлено.
+
+Проверены 58/58 app unit tests, SDK cache с 28 одинаковыми HTTP 503 и другим
+источником (ровно два отчёта, адреса сохранены), настоящий SDK capture с исходными
+URL/query/Authorization/Cookie и Response/Retry-After. Native Android 16/API 36
+проверил запуск без записи, три вида ограничений, маршруты настроек, rotation,
+сброс подтверждения и настоящий screen-off/screen-on (22.644 s на итоговом APK); существующие
+два TrackPowerWarningTest, включая реальные LocationManager fixes и SQLite,
+прошли (46.428 s). GPS после снятия энергосбережения продолжает запись в тот же трек.
+Рабочий телефон и его ограничения не менялись; OEM-поведение и полный полевой
+Collector sync после установки остаются непроверенными.
+
+Прежний app CI run 38036347049 упал в двух MapEditingToolsTest сценариях обхода.
+Оба целевых сценария локально повторены успешно (22.422 s). CI fixture теперь
+выдаёт GET_ACCOUNTS вместе с location grants, чтобы обязательное стартовое окно
+разрешения не перекрывало UI-тесты; полный удалённый suite требует нового CI run.
+Оба Lisa/Belka Release validation APK и Debug/test APK собраны; версии не менялись.
+Документационный validator, его 7 tests и strict changed-file проверка прошли.
+Обновлены diagnostic/location/settings docs, app pack/contract, registries и две
+карточки отчёта. Дополнение остаётся в том же app Draft #54; library gitlinks прежние.
+
 Сначала Merge Commit maplib #46, затем Merge Commit maplibui #34; после fetch
 удалённых merge commits обновить app gitlinks, затем Squash app #54 и повторить
 closure audit перед выпуском. Текущие gitlinks на Draft heads служат для проверки,

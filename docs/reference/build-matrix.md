@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -144,6 +144,14 @@ legacy tools package. PR запускает regression один раз, push —
 my-maplibre. Удалён устаревший MaxPermSize JVM flag, мешавший чистому JDK21
 запустить Gradle daemon; local user properties ранее скрывали эту ошибку.
 Workflow не собирает/не публикует release APK.
+Перед native UI suite выдаются location и GET_ACCOUNTS: обязательное стартовое
+окно доступа к учётным записям не должно перекрывать сценарии карты. Новый
+`BackgroundLocationWarningTest` проверяет реальные Battery Saver/background/Doze
+настройки на API36 без записи и после screen-off/on; ограничения меняются после
+Pause, как при переходе пользователя в системные настройки. Диагностические
+native проверки SDK HTTP URL/query/headers и limiter выполняются отдельно с
+opt-in runner и явным loopback DSN. См.
+[проверку 10 октября](../history/mobile-diagnostics-verification-2026-10-10.md).
 
 Library dependency closure завершена; приложение закрепляет оба remote merge
 commits. На Windows и в чистой Linux CI выполнены обе release Kotlin/Java

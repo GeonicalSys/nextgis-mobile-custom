@@ -43,8 +43,8 @@ public class DiagnosticsDeliveryTest {
         assertTrue(envelopes.contains("Synthetic handled mobile diagnostic"));
         assertTrue(envelopes.contains("AZIMUTH"));
         assertTrue(envelopes.contains("diagnostics_contract"));
-        assertFalse(envelopes.contains("probe-secret"));
-        assertFalse(envelopes.contains("private.example"));
+        assertTrue(envelopes.contains("probe-secret"));
+        assertTrue(envelopes.contains("private.example"));
         assertTrue(Thread.getDefaultUncaughtExceptionHandler()
                 instanceof com.nextgis.maplibui.util.HyperLogCrashHandler);
     }

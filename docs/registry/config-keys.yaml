@@ -23,7 +23,7 @@ preferences:
     type: boolean
     default: false
     source: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    purpose: Suppress only the legacy Doze exemption prompt; never suppress a current Battery Saver restriction on screen-off system GPS.
+    purpose: Suppress only the legacy Doze exemption prompt; never suppress a current Battery Saver restriction or launch/resume background-location warning.
   tracks_temp:
     owner: maplibui
     type: shared_preferences_file
@@ -320,7 +320,7 @@ manifest_metadata:
   io.sentry.auto-init:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Disable provider auto-init; AppDiagnostics initializes after the isolated-script UID guard with explicit delivery and redaction policy.
+    purpose: Disable provider auto-init; AppDiagnostics initializes after the isolated-script UID guard with explicit delivery, payload-size and duplicate-frequency limits.
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
     source: app/src/main/AndroidManifest.xml
@@ -412,7 +412,7 @@ storage:
   diagnostic-reports:
     owner: app
     source: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-    purpose: SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; connected WorkManager retry is independent of GIS sync and a process-local ten-minute HTTP 5xx filter never drops cached replay or fatal events.
+    purpose: SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; contract 2 retains supplied URLs/query/headers/context without content masking, with bounded strings/collections. Connected WorkManager retry is independent of GIS sync and a process-local ten-minute HTTP 5xx filter never drops cached replay or fatal events.
   ngw-field-required:
     owner: maplib
     location_name: fields[].required in the local layer config JSON

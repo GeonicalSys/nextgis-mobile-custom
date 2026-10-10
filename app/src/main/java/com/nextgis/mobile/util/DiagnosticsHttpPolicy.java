@@ -15,7 +15,7 @@ import io.sentry.protocol.Request;
 import io.sentry.protocol.SentryException;
 import io.sentry.protocol.SentryStackFrame;
 
-/** Bounds automatically captured HTTP 5xx bursts before request data is removed. */
+/** Bounds automatically captured HTTP 5xx bursts while retaining the first request. */
 final class DiagnosticsHttpPolicy {
     static final long REPEAT_WINDOW_MS = 10 * 60 * 1000L;
     private static final int MAX_KEYS = 64;
@@ -46,7 +46,7 @@ final class DiagnosticsHttpPolicy {
                     if (host != null) {
                         host = host.toLowerCase(Locale.ROOT);
                         source = isLoopback(host) ? "local" : "remote";
-                        // No query, userinfo, coordinates or customer endpoint leaves the process.
+                        // The limiter key excludes query/userinfo; the report keeps the original request.
                         // Slippy tile/resource numbers share one key; distinct endpoint names do not.
                         String path = uri.getPath() == null ? "" : uri.getPath();
                         path = path.replaceAll("(?<=/)[0-9]+(?=/|\\.|$)", "{number}");

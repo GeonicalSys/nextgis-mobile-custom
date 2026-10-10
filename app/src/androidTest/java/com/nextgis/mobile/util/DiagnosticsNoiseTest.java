@@ -65,7 +65,7 @@ public class DiagnosticsNoiseTest {
         assertTrue(Thread.getDefaultUncaughtExceptionHandler() instanceof HyperLogCrashHandler);
     }
 
-    @Test public void sdkBeforeSendPersistsOneHttpEventPerBurstWithSafeSource() throws Exception {
+    @Test public void sdkBeforeSendPersistsAddressAndOneHttpEventPerBurst() throws Exception {
         context();
         AppDiagnostics.operation(AppDiagnostics.Operation.MAP, AppDiagnostics.Phase.START);
         // The explicit test DSN points to an unavailable loopback receiver: inspect SDK cache.
@@ -85,9 +85,11 @@ public class DiagnosticsNoiseTest {
                 count++;
                 local |= text.contains("\"http_source\":\"local\"");
                 remote |= text.contains("\"http_source\":\"remote\"");
-                assertFalse(text.contains("private.example"));
-                assertFalse(text.contains("probe-secret"));
-                assertFalse(text.contains("/tiles/"));
+                assertTrue(text.contains("/tiles/12/43/"));
+                if (text.contains("\"http_source\":\"remote\"")) {
+                    assertTrue(text.contains("private.example"));
+                    assertTrue(text.contains("token=probe-secret"));
+                }
             }
             if (count >= 2) break;
             SystemClock.sleep(100);
@@ -116,6 +118,40 @@ public class DiagnosticsNoiseTest {
         Files.write(formFile.toPath(), reordered.getBytes(StandardCharsets.UTF_8));
         Files.write(metaFile.toPath(), meta.getBytes(StandardCharsets.UTF_8));
         assertEquals(snapshot, LayerFormHashUtil.md5NgfpFiles(formFile, metaFile));
+    }
+
+    @Test public void actualSdkHttpCaptureRetainsOriginalRequestAndResponse() throws Exception {
+        context();
+        AppDiagnostics.operation(AppDiagnostics.Operation.SYNC, AppDiagnostics.Phase.START);
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url("https://probe:demo-pass@request.example/api/resource/803?project=42&token=demo-token")
+                .header("Authorization", "Bearer demo-header").header("Cookie", "session=demo-cookie").build();
+        okhttp3.Response response = new okhttp3.Response.Builder().request(request)
+                .protocol(okhttp3.Protocol.HTTP_1_1).code(503).message("Unavailable")
+                .header("Retry-After", "60").header("Set-Cookie", "session=demo-new").build();
+        io.sentry.okhttp.SentryOkHttpUtils.INSTANCE.captureClientError$sentry_okhttp(
+                Sentry.getCurrentScopes(), request, response);
+        Sentry.flush(7_000L);
+        File cache = new File(Sentry.getCurrentScopes().getOptions().getCacheDirPath());
+        long deadline = SystemClock.elapsedRealtime() + 10_000;
+        do {
+            File[] files = cache.listFiles(file -> file.getName().endsWith(".envelope"));
+            if (files != null) for (File file : files) {
+                String text = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+                if (!text.contains("request.example")) continue;
+                assertTrue(text.contains("https://probe:demo-pass@request.example/api/resource/803"));
+                assertTrue(text.contains("project=42&token=demo-token"));
+                assertTrue(text.contains("Bearer demo-header"));
+                assertTrue(text.contains("session=demo-cookie"));
+                assertTrue(text.contains("session=demo-new"));
+                assertTrue(text.contains("\"Retry-After\":\"60\""));
+                assertTrue(text.contains("\"status_code\":503"));
+                assertTrue(text.contains("\"diagnostics_contract\":\"2\""));
+                return;
+            }
+            SystemClock.sleep(100);
+        } while (SystemClock.elapsedRealtime() < deadline);
+        fail("The SDK event must retain request/response diagnostic details");
     }
 
     private static String hash(String form, String meta) throws Exception {

@@ -861,6 +861,22 @@ invariants:
       - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-DIAGNOSTIC-NOISE]
     must_update_docs: [docs/architecture/error-reporting.md, maplib/docs/README.md, maplibui/docs/README.md, app/docs/README.md]
+  INV-BACKGROUND-LOCATION-WARNING:
+    title: Background GPS restrictions are checked without starting a recorder
+    owners: [app]
+    statement: >
+      Check launch/resume for screen-off GPS Battery Saver policy, user background
+      restriction and battery optimization. Offer the applicable public system settings
+      without changing them or starting a recorder automatically. Retain one acknowledgement
+      per unchanged launch state across rotation; a changed risk warns again and clearing
+      restrictions removes the warning. Legacy Doze prompt suppression does not hide it.
+      Missing Doze exemption means a possible risk, not proof of current GPS failure.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java
+    verify_smoke: [SMOKE-BACKGROUND-LOCATION-WARNING, AUTO-APP-RELEASES]
+    must_update_docs: [docs/architecture/location-pipeline.md, docs/reference/settings-and-config.md, app/docs/README.md]
   INV-DIAGNOSTIC-DELIVERY:
     title: Diagnostic events survive offline and temporary server failures
     owners: [app]
@@ -869,11 +885,14 @@ invariants:
       handler. Persist bounded SDK envelopes in private files storage before async HTTP;
       retain offline, 5xx and rate-limited failures, replay through SDK observers and a
       connected WorkManager job without reinitializing handlers. Event UUID and diagnostic
-      stack/version/device/typed-operation context survive process restart. Never read or
-      attach raw HyperLog, NMEA, GIS attributes/geometry, accounts or photos. Fatal exceptions
+      stack/version/device/typed-operation context survive process restart. Do not read
+      business storage, photos or raw HyperLog in crash callbacks. Supplied event data,
+      original HTTP URLs/query/headers/cookies, response metadata, custom context and
+      frame paths are retained without content masking under bounded serialization.
+      Never consume streaming HTTP bodies for reporting. Fatal exceptions
       still delegate to Android and existing draft recovery remains independent.
-      Limit only new automatic handled SDK HTTP 5xx bursts before request redaction;
-      retain safe status/source tags and never suppress fatal failures or cached replay.
+      Limit only new automatic handled SDK HTTP 5xx bursts; retain the first request
+      and status/source tags, never suppress fatal failures or cached replay.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -881,6 +900,7 @@ invariants:
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
     verify_smoke: [SMOKE-DIAGNOSTIC-DELIVERY, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
     must_update_docs: [docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md]
   INV-CRASH-DRAFT-RECOVERY:

@@ -125,8 +125,17 @@ Battery Saver; приложение не меняет системный реж�
   обычными envelopes; connected WorkManager retry не запускает GIS sync.
   Автоматические HTTP 5xx ограничены десятью минутами на одинаковую группу;
   fatal и replay сохранённых отчётов сохраняют прежний путь доставки.
+  Контракт диагностики 2 сохраняет URL/query, headers/cookies, доступные данные
+  события и пути без маскирования. Ограничитель размера не читает HTTP streams
+  или файлы проекта и не влияет на точность ключа подавления повторов.
   [Доставка и границы](../architecture/error-reporting.md),
   [разбор ошибок](../guides/bug-reports-user-guide.md).
+- При открытии/Resume `BackgroundLocationWarning` проверяет GPS-политику
+  энергосбережения, системный запрет фоновой работы и наличие исключения из
+  оптимизации батареи. Предупреждение с «Настроить» показывается без записи трека;
+  одна неизменная ситуация не повторяется при screen-on или rotation в текущем
+  запуске. Старое `battery_dont_show_pref` эту проверку не отключает. Настройки
+  меняет пользователь; возврат не запускает трек/обход.
 - Collector: project registry JSON, project metadata, composition state.
 - Layer config: `feature_label_field`, `mobile_render_mode`, `render_mode`,
   `layer_origin`, `mobile`.

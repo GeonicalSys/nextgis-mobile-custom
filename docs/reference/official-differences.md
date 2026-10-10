@@ -1591,8 +1591,11 @@ Google Analytics и автоматическая отправка событий
 stack trace, версию/бренд, устройство и фиксированные стадии работы. Private SDK
 envelopes переживают offline/process restart; транспорт сохраняет 5xx/429 вместо
 удаления, connected WorkManager повторяет отправку без Activity и GIS sync.
-Screenshots, иерархия экранов и performance payloads отключены; полный HyperLog,
-атрибуты, геометрия и фото не прикладываются. Новая реализация не меняет fatal
+Screenshots, иерархия экранов и performance payloads отключены; полный HyperLog
+и файлы проекта/фото не прикладываются. Контракт 2 сохраняет уже предоставленные
+URL/query/HTTP headers/cookies/response, extras/custom contexts и frame paths,
+включая пароли и значения, без маскирования, с ограничением размера. HTTP streams
+и business storage для этого не читаются. Новая реализация не меняет fatal
 delegation или восстановление черновиков. В проверенном official app master
 `f11d38f7` такой transport/cache retry policy и фонового задания нет.
 [Контракт](../architecture/error-reporting.md),
@@ -1603,7 +1606,12 @@ maplib `b8f3e3e6`, maplibui `d9f5241c`. Logger официального app и G
 официального maplibui сохраняют прямой HyperLog initialize;
 общего local-only initializer и фильтра автоматических HTTP 5xx там нет.
 Форк мигрирует устаревший endpoint до первого initialize, сохраняет локальные
-логи и ограничивает HTTP-бурсты с безопасными status/source тегами.
+логи и ограничивает HTTP-бурсты, сохраняя request и status/source теги первого события.
+Original HTTP context берётся из SDK hint до маскирования userinfo/headers самим SDK.
+Проверка Battery Saver, user background restriction и Doze exemption также
+выполняется при открытии/Resume без записи; «Настроить» предлагает необходимые
+системные переходы без автоматического запуска трека. В official app `f11d38f7`
+таких launch/resume проверок и сохранения диагностического HTTP hint нет.
 Collector NGFP в форке сравнивается по JSON с упорядоченными ключами обеих частей,
 с сохранением значений/порядка массивов и транзакционного hash guard. Официальный
 NGW formbuilder `bdcdb3b1` строит legacy attributes из set; это объясняет возможность

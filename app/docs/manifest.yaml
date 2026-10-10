@@ -10,7 +10,13 @@ entrypoints:
   - app/src/main/AndroidManifest.xml
 key_components:
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
-    responsibility: Bound automatic SDK HTTP 5xx bursts before redaction with safe status/method/local-or-remote tags, a ten-minute window and 64 hashed endpoint keys; preserve fatal and cached replay.
+    responsibility: Bound automatic SDK HTTP 5xx bursts with status/method/local-or-remote tags, a ten-minute window and 64 hashed endpoint keys; retain the first request, fatal events and cached replay.
+  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
+    responsibility: Bound supplied diagnostic strings and structured values without content masking, arbitrary object serialization, cycles or storage reads.
+  - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt
+    responsibility: Warn at launch/resume without recording about screen-off GPS power policy, background restriction and battery optimization; offer relevant system settings once per unchanged launch state.
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java
+    responsibility: Verify actual emulator power/background/optimization restrictions, settings routing, rotation and no automatic recorder start.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsNoiseTest.java
     responsibility: Seed synthetic local backlog on an isolated emulator, cold-start an obsolete HyperLog endpoint and verify retained logs, crash handler and bounded SDK HTTP captures.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java
@@ -20,13 +26,13 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java
     responsibility: Verify all 40 standard point, line and polygon style categories, symbols and canonical class/type defaults, including the actual mixed point form; isolated emulator only.
   - path: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-    responsibility: Initialize error-only Sentry after the isolated UID guard, redact event data and record typed operation stages without reading business data or raw logs.
+    responsibility: Initialize error-only Sentry after the isolated UID guard, retain original HTTP hint and supplied event context with size limits, and record typed stages without business-storage reads.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java
     responsibility: Persist SDK envelopes before async HTTP, retain offline/5xx/rate-limited events, acknowledge SDK crash/replay hints and preserve TLS validation.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java
     responsibility: Retry existing SDK cache/outbox from a connected periodic WorkManager job without opening a GIS project or reinstalling crash handlers.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
-    responsibility: Bound and redact diagnostic messages, filter expected offline/cancellation outcomes and limit duplicate handled failures.
+    responsibility: Bound diagnostic messages, filter expected offline/cancellation outcomes and limit duplicate handled failures.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsDeliveryTest.java
     responsibility: Test offline handled/fatal reports, process restart, network return and real WorkManager after HTTP 503 on an isolated emulator with explicit test DSN.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsTestRunner.java

@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: BACKGROUND-LOCATION-WARNING
+    paths: [app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt, app/src/main/res/values/background_location.xml, app/src/main/res/values-ru/background_location.xml, app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java]
+    owners: [app]
+    read: [docs/architecture/location-pipeline.md, docs/reference/settings-and-config.md]
+    invariants: [INV-BACKGROUND-LOCATION-WARNING]
+    must_update_docs: [docs/architecture/location-pipeline.md, docs/reference/settings-and-config.md, docs/reference/official-differences.md, app/docs/README.md, app/docs/manifest.yaml]
+    verify: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, SMOKE-BACKGROUND-LOCATION-WARNING]
+    strict_docs: true
   - id: LOCAL-LOG-STARTUP
     paths: [maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java, app/src/main/java/com/nextgis/mobile/util/Logger.java, maplib/src/test/java/com/nextgis/maplib/util/LocalLogInitializerTest.java, app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsNoiseTest.java]
     owners: [maplib, maplibui, app]

@@ -14,7 +14,7 @@ import io.sentry.protocol.User;
 import static org.junit.Assert.*;
 
 public class AppDiagnosticsTest {
-    @Test public void eventKeepsStackAndOperationButDropsBusinessPayloads() {
+    @Test public void eventKeepsSuppliedContextPathsAndStack() {
         SentryEvent event = new SentryEvent();
         event.setUser(new User());
         event.setRequest(new Request());
@@ -33,20 +33,20 @@ public class AppDiagnosticsTest {
         exception.setStacktrace(new SentryStackTrace(new ArrayList<>(List.of(frame))));
         event.setExceptions(new ArrayList<>(List.of(exception)));
         AppDiagnostics.sanitize(event);
-        assertNull(event.getUser());
-        assertNull(event.getRequest());
-        assertNull(event.getExtras());
-        assertFalse(event.getContexts().containsKey("geometry"));
+        assertNotNull(event.getUser());
+        assertNotNull(event.getRequest());
+        assertEquals("private field value", event.getExtras().get("feature_attributes"));
+        assertTrue(event.getContexts().containsKey("geometry"));
         assertEquals("AZIMUTH", event.getTag("operation"));
         assertEquals("SecurityException", event.getExceptions().get(0).getType());
-        assertFalse(exception.getValue().contains("demo-secret"));
+        assertTrue(exception.getValue().contains("demo-secret"));
         assertEquals("onStartCommand", frame.getFunction());
         assertEquals(Integer.valueOf(58), frame.getLineno());
-        assertNull(frame.getVars());
-        assertNull(frame.getAbsPath());
+        assertNotNull(frame.getVars());
+        assertEquals("/storage/emulated/0/customer", frame.getAbsPath());
     }
 
-    @Test public void onlyStructuredBreadcrumbsSurviveIncludingReplayedEvents() {
+    @Test public void httpAndFormBreadcrumbContextSurvivesIncludingReplay() {
         Breadcrumb http = new Breadcrumb();
         http.setCategory("http");
         http.setData("url", "https://private.example/resource/803");
@@ -57,8 +57,9 @@ public class AppDiagnosticsTest {
         SentryEvent event = new SentryEvent();
         event.setBreadcrumbs(new ArrayList<>(List.of(http, screen)));
         AppDiagnostics.sanitize(event);
-        assertEquals(1, event.getBreadcrumbs().size());
+        assertEquals(2, event.getBreadcrumbs().size());
+        assertEquals("https://private.example/resource/803", http.getData("url"));
         assertEquals("ModifyAttributesActivity", screen.getData("screen"));
-        assertNull(screen.getData("field_value"));
+        assertEquals("private person", screen.getData("field_value"));
     }
 }

@@ -52,13 +52,13 @@ public class DiagnosticsHttpPolicyTest {
         assertTrue(policy.shouldReport(nonSdk, 5));
     }
 
-    @Test public void sanitizationKeepsSafeStatusAndSourceWithoutAddress() {
+    @Test public void limitingKeepsAddressStatusAndSource() {
         for (String url : new String[]{"http://localhost/tiles/1", "http://[::1]/tiles/1",
                 "http://127.0.0.1:1853/tiles/1", "https://private.example/resource/803?password=secret"}) {
             DiagnosticsHttpPolicy policy = new DiagnosticsHttpPolicy();
             SentryEvent event = http(503, url);
             assertSame(event, AppDiagnostics.prepareForSend(event, 1, policy));
-            assertNull(event.getRequest());
+            assertEquals(url, event.getRequest().getUrl());
             assertEquals("503", event.getTag("http_status"));
             assertEquals(url.contains("private") ? "remote" : "local", event.getTag("http_source"));
             assertEquals("GET", event.getTag("http_method"));

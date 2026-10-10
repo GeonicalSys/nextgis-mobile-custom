@@ -200,6 +200,9 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     override fun onCreate(savedInstanceState: Bundle?) {
         HyperLog.v(Constants.TAG, "MainActivity.onCreate")
         super.onCreate(savedInstanceState)
+        if (savedInstanceState?.getInt("background_location_warning_process") == android.os.Process.myPid()) {
+            backgroundLocationWarning.shownState = savedInstanceState.getInt("background_location_warning_state")
+        }
         // initialize the default settings
         PreferenceManager.setDefaultValues(this, R.xml.preferences_general, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_map, false)
@@ -557,6 +560,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     private val trackPowerWarning by lazy { com.nextgis.mobile.location.TrackPowerWarning(this) }
+    private val backgroundLocationWarning by lazy { com.nextgis.mobile.location.BackgroundLocationWarning(this) }
 
     private fun performTrackControl(item: MenuItem?) {
         val iconAndTitle = TrackerService.start_stop_tracking_GetIconWithTitle(this)
@@ -1804,6 +1808,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         // Durable track-recording flag: silently resume after crash/reboot (no dialog).
         TrackerService.ensureRecordingRunningIfEnabled(this)
         trackPowerWarning.refresh()
+        window.decorView.post {
+            if (!isFinishing && !isDestroyed && lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) {
+                backgroundLocationWarning.refresh()
+            }
+        }
 
         maybeOfferCrashRecovery()
         if (SDCardUtils.isSDCardUsedAndExtracted(this)) {
@@ -1956,6 +1965,9 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) {
+            backgroundLocationWarning.refresh()
+        }
         if (hasFocus) {
             startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
             startupUpdateCheckHandler.postDelayed(
@@ -1997,7 +2009,14 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         super.onConfigurationChanged(newConfig)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("background_location_warning_state", backgroundLocationWarning.shownState)
+        outState.putInt("background_location_warning_process", android.os.Process.myPid())
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onPause() {
+        backgroundLocationWarning.close()
         trackModeMenu?.dismiss()
         try {
             if (mMessageReceiver != null) {
@@ -2116,6 +2135,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     override fun onDestroy() {
+        backgroundLocationWarning.close()
         trackPowerWarning.close()
         HyperLog.v(Constants.TAG, "MainActivity.onDestroy")
         startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)

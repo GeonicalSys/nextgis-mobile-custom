@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -27,6 +27,8 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
   - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
+  - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt
+  - app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java
 ---
 
 # Текущая позиция и запись GPS
@@ -87,6 +89,26 @@ sampler начинается заново. Звуковой heartbeat во вр�
 уведомление и сообщает открытому экрану. Resume повторно проверяет ограничение.
 Старое «не спрашивать» для Doze не скрывает новое предупреждение. Ни предупреждение,
 ни смена режима питания не закрывают трек и не удаляют его точки; Stop доступен.
+
+С 10 октября проверка выполняется также при открытии карты и Resume без трека
+или обхода. `BackgroundLocationWarning` различает GPS-политику Battery Saver,
+`ActivityManager.isBackgroundRestricted()` на API 28+ и отсутствие Doze exemption.
+Последнее показывает возможный риск прерывания, а не доказывает текущий отказ GPS.
+Предупреждение в Snackbar не блокирует карту; «Настроить» предлагает нужные
+переходы: Battery Saver, настройки приложения для разрешения фоновой работы,
+запрос исключения из оптимизации батареи. Return/rotation не запускают запись.
+Одна неизменная ситуация показывается один раз за запуск, включая rotation;
+новое ограничение предупреждает снова, устранение закрывает предупреждение.
+Старое «не спрашивать» не скрывает проверку при открытии.
+
+Foreground location service и wake lock уже используются; программно отключать
+системный Battery Saver или пользовательский запрет фоновой работы приложение
+не может. Документация Android описывает
+[фоновые ограничения](https://developer.android.com/topic/performance/background-optimization)
+и [частичное исключение Doze](https://developer.android.com/training/monitoring-device-state/doze-standby).
+Часть OEM-ограничений не видна через публичные API; проверка не обещает обнаружить
+все режимы производителя. Экран снимает только свою подписку при Pause и
+возвращает при Resume; активный recorder сохраняет общий GPS source.
 
 Полевые логи Release 3.1.2.27 и Debug 3.1.2.23 от 6 октября показывают живой
 сервис и wake lock, неизменную GPS-подписку и прекращение сырых fixes после

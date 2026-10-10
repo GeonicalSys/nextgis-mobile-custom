@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.sentry.Breadcrumb;
+import io.sentry.Hint;
 import io.sentry.IConnectionStatusProvider;
 import io.sentry.Integration;
 import io.sentry.Sentry;
@@ -32,6 +33,8 @@ import io.sentry.android.core.SentryAndroidOptions;
 import io.sentry.protocol.SentryException;
 import io.sentry.protocol.SentryStackFrame;
 import io.sentry.protocol.SentryStackTrace;
+import io.sentry.protocol.Request;
+import io.sentry.protocol.Response;
 import io.sentry.hints.Cached;
 import io.sentry.util.HintUtils;
 
@@ -45,12 +48,6 @@ public final class AppDiagnostics {
             new AtomicReference<>(Operation.STARTUP);
     private static final Set<String> CONTEXTS = new HashSet<>(
             Arrays.asList("app", "device", "os", "runtime", "gpu", "trace"));
-    private static final Set<String> BREADCRUMB_CATEGORIES = new HashSet<>(
-            Arrays.asList("lisa.operation", "ui.lifecycle", "app.lifecycle", "device.event", "network.event"));
-    private static final Set<String> BREADCRUMB_KEYS = new HashSet<>(Arrays.asList(
-            "operation", "phase", "state", "screen", "action", "level", "charging",
-            "battery_level", "low_memory", "network_type", "signal_strength", "is_connected",
-            "available", "metered", "validated", "download_bandwidth", "upload_bandwidth"));
 
     public enum Operation { STARTUP, MAP, GEOMETRY_EDIT, ATTRIBUTE_FORM, SYNC, AZIMUTH, STAKEOUT, TRACK, WALK }
     public enum Phase { START, READY, SAVE, RESTORE, STOP, FAILED, FINISHED, CANCELLED }
@@ -90,7 +87,7 @@ public final class AppDiagnostics {
         options.setDist(BuildConfig.FLAVOR);
         options.setEnvironment(BuildConfig.DEBUG ? "debug" : "production");
         options.setTag("brand", BuildConfig.FLAVOR);
-        options.setTag("diagnostics_contract", "1");
+        options.setTag("diagnostics_contract", "2");
         options.setTag("source_revision", BuildConfig.SOURCE_REVISION);
         options.setSendDefaultPii(false);
         options.setAttachServerName(false);
@@ -104,8 +101,11 @@ public final class AppDiagnostics {
         options.setProfileSessionSampleRate(0.0);
         options.setSendClientReports(false);
         options.setTransportFactory(DiagnosticsTransport::new);
-        options.setBeforeSend((event, hint) -> HintUtils.hasType(hint, Cached.class)
-                ? sanitize(event) : prepareForSend(event, SystemClock.elapsedRealtime(), HTTP_POLICY));
+        options.setBeforeSend((event, hint) -> {
+            if (HintUtils.hasType(hint, Cached.class)) return sanitize(event);
+            preserveHttpContext(event, hint);
+            return prepareForSend(event, SystemClock.elapsedRealtime(), HTTP_POLICY);
+        });
         options.setBeforeBreadcrumb((breadcrumb, hint) -> sanitize(breadcrumb));
     }
 
@@ -169,48 +169,122 @@ public final class AppDiagnostics {
         return sanitize(event);
     }
 
+    // The SDK's OkHttp hint retains the original URL/headers even when its default
+    // event strips userinfo or headers. Do not read/consume streaming HTTP bodies.
+    static void preserveHttpContext(SentryEvent event, Hint hint) {
+        okhttp3.Request rawRequest = hint.getAs("okHttp:request", okhttp3.Request.class);
+        if (rawRequest != null) {
+            Request request = event.getRequest() == null ? new Request() : new Request(event.getRequest());
+            request.setUrl(rawRequest.url().newBuilder().query(null).fragment(null).build().toString());
+            request.setQueryString(rawRequest.url().encodedQuery());
+            request.setFragment(rawRequest.url().encodedFragment());
+            request.setMethod(rawRequest.method());
+            request.setHeaders(headers(rawRequest.headers()));
+            request.setCookies(rawRequest.header("Cookie"));
+            event.setRequest(request);
+        }
+        okhttp3.Response rawResponse = hint.getAs("okHttp:response", okhttp3.Response.class);
+        if (rawResponse != null) {
+            Response response = event.getContexts().getResponse() == null ? new Response()
+                    : new Response(event.getContexts().getResponse());
+            response.setHeaders(headers(rawResponse.headers()));
+            response.setCookies(rawResponse.header("Set-Cookie"));
+            response.setStatusCode(rawResponse.code());
+            event.getContexts().setResponse(response);
+        }
+    }
+
+    private static java.util.Map<String, String> headers(okhttp3.Headers source) {
+        java.util.Map<String, String> result = new java.util.LinkedHashMap<>();
+        for (int i = 0; i < Math.min(source.size(), 64); i++) {
+            String key = source.name(i);
+            String value = DiagnosticsPayloadLimiter.text(source.value(i));
+            String previous = result.get(key);
+            result.put(key, DiagnosticsPayloadLimiter.text(previous == null ? value : previous + ", " + value));
+        }
+        return result;
+    }
+
     static SentryEvent sanitize(SentryEvent event) {
-        event.setUser(null);
-        event.setRequest(null);
-        event.setServerName(null);
-        event.setTransaction(null);
-        event.setExtras(null);
+        DiagnosticsPayloadLimiter limit = new DiagnosticsPayloadLimiter();
+        if (event.getRequest() != null) {
+            Request request = new Request(event.getRequest());
+            request.setUrl(DiagnosticsPayloadLimiter.text(request.getUrl()));
+            request.setQueryString(DiagnosticsPayloadLimiter.text(request.getQueryString()));
+            request.setFragment(DiagnosticsPayloadLimiter.text(request.getFragment()));
+            request.setCookies(DiagnosticsPayloadLimiter.text(request.getCookies()));
+            request.setHeaders(limit.strings(request.getHeaders()));
+            request.setEnvs(limit.strings(request.getEnvs()));
+            request.setOthers(limit.strings(request.getOthers()));
+            request.setData(limit.value(request.getData()));
+            request.setUnknown(limit.map(request.getUnknown()));
+            event.setRequest(request);
+        }
+        event.setServerName(DiagnosticsPayloadLimiter.text(event.getServerName()));
+        event.setTransaction(DiagnosticsPayloadLimiter.text(event.getTransaction()));
+        event.setExtras(limit.map(event.getExtras()));
+        if (event.getUser() != null) {
+            io.sentry.protocol.User user = new io.sentry.protocol.User(event.getUser());
+            user.setEmail(DiagnosticsPayloadLimiter.text(user.getEmail()));
+            user.setId(DiagnosticsPayloadLimiter.text(user.getId()));
+            user.setUsername(DiagnosticsPayloadLimiter.text(user.getUsername()));
+            user.setName(DiagnosticsPayloadLimiter.text(user.getName()));
+            user.setData(limit.strings(user.getData()));
+            user.setUnknown(limit.map(user.getUnknown()));
+            event.setUser(user);
+        }
         for (String key : java.util.Collections.list(event.getContexts().keys())) {
-            if (!CONTEXTS.contains(key)) event.getContexts().remove(key);
+            Object context = event.getContexts().get(key);
+            if (context instanceof Response) {
+                Response response = new Response((Response) context);
+                response.setCookies(DiagnosticsPayloadLimiter.text(response.getCookies()));
+                response.setHeaders(limit.strings(response.getHeaders()));
+                response.setData(limit.value(response.getData()));
+                response.setUnknown(limit.map(response.getUnknown()));
+                event.getContexts().put(key, response);
+            } else if (!CONTEXTS.contains(key)) {
+                Object bounded = limit.value(context);
+                if (bounded == null) event.getContexts().remove(key);
+                else event.getContexts().put(key, bounded);
+            }
         }
         if (event.getTag("operation") == null) event.setTag("operation", LAST_OPERATION.get().name());
         if (event.getMessage() != null) {
-            event.getMessage().setMessage(DiagnosticsPolicy.redact(event.getMessage().getMessage()));
-            event.getMessage().setFormatted(DiagnosticsPolicy.redact(event.getMessage().getFormatted()));
-            event.getMessage().setParams(null);
+            event.getMessage().setMessage(DiagnosticsPolicy.limitMessage(event.getMessage().getMessage()));
+            event.getMessage().setFormatted(DiagnosticsPolicy.limitMessage(event.getMessage().getFormatted()));
+            event.getMessage().setParams(limit.strings(event.getMessage().getParams()));
         }
         if (event.getExceptions() != null) for (SentryException exception : event.getExceptions()) {
-            exception.setValue(DiagnosticsPolicy.redact(exception.getValue()));
-            sanitize(exception.getStacktrace());
+            exception.setValue(DiagnosticsPolicy.limitMessage(exception.getValue()));
+            sanitize(exception.getStacktrace(), limit);
         }
-        if (event.getThreads() != null) event.getThreads().forEach(thread -> sanitize(thread.getStacktrace()));
+        if (event.getThreads() != null) event.getThreads().forEach(thread -> sanitize(thread.getStacktrace(), limit));
         if (event.getBreadcrumbs() != null) {
-            event.getBreadcrumbs().removeIf(breadcrumb -> sanitize(breadcrumb) == null);
+            event.getBreadcrumbs().forEach(breadcrumb -> sanitize(breadcrumb, limit));
         }
         return event;
     }
 
-    private static void sanitize(SentryStackTrace stack) {
+    private static void sanitize(SentryStackTrace stack, DiagnosticsPayloadLimiter limit) {
         if (stack == null || stack.getFrames() == null) return;
         for (SentryStackFrame frame : stack.getFrames()) {
-            frame.setVars(null);
-            frame.setAbsPath(null);
-            frame.setPreContext(null);
-            frame.setPostContext(null);
+            frame.setVars(limit.map(frame.getVars()));
+            frame.setAbsPath(DiagnosticsPayloadLimiter.text(frame.getAbsPath()));
+            frame.setPreContext(limit.strings(frame.getPreContext()));
+            frame.setPostContext(limit.strings(frame.getPostContext()));
+            frame.setContextLine(DiagnosticsPayloadLimiter.text(frame.getContextLine()));
         }
     }
 
     static Breadcrumb sanitize(Breadcrumb breadcrumb) {
-        if (!BREADCRUMB_CATEGORIES.contains(breadcrumb.getCategory())) return null;
-        breadcrumb.setMessage(DiagnosticsPolicy.redact(breadcrumb.getMessage()));
-        breadcrumb.getData().keySet().retainAll(BREADCRUMB_KEYS);
-        breadcrumb.getData().replaceAll((key, value) -> value instanceof Number || value instanceof Boolean
-                ? value : DiagnosticsPolicy.redact(String.valueOf(value)));
+        return sanitize(breadcrumb, new DiagnosticsPayloadLimiter());
+    }
+
+    private static Breadcrumb sanitize(Breadcrumb breadcrumb, DiagnosticsPayloadLimiter limit) {
+        breadcrumb.setMessage(DiagnosticsPolicy.limitMessage(breadcrumb.getMessage()));
+        java.util.Map<String, Object> data = limit.map(breadcrumb.getData());
+        breadcrumb.getData().clear();
+        if (data != null) breadcrumb.getData().putAll(data);
         return breadcrumb;
     }
 

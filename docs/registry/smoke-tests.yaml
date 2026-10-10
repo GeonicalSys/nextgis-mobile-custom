@@ -1,14 +1,22 @@
 schema_version: 1
 tests:
+  SMOKE-BACKGROUND-LOCATION-WARNING:
+    type: device
+    scope: [app]
+    steps:
+      - On an isolated Debug emulator run BackgroundLocationWarningTest with location/account grants and enabled location; do not run on a physical phone.
+      - Verify launch without recording warns for screen-off GPS Battery Saver, app background restriction and missing Doze exemption, even with the legacy prompt hidden.
+      - Verify each Settings action targets the relevant system page, rotation retains acknowledgement and Resume detects a new restriction.
+    expected: Warning does not block the map or start a track/walk; unchanged acknowledged state does not repeat, new restriction warns and clearing restrictions dismisses it. OEM field smoke remains separate.
   SMOKE-DIAGNOSTIC-NOISE:
     type: device
     scope: [app, maplib, maplibui]
     steps:
       - On an isolated Debug emulator build with diagnosticDeliveryChecks and use DiagnosticsTestRunner with an explicit test DSN pointing to an unavailable loopback receiver.
       - Invoke DiagnosticsNoiseTest seedObsoleteEndpointAndLargeLocalBacklog, stop only the emulator Debug process and separately invoke coldStartRetainsBacklogAndDelegatingHandlerWithoutRemoteUpload.
-      - Invoke sdkBeforeSendPersistsOneHttpEventPerBurstWithSafeSource on a fresh synthetic cache and rerun the existing workerRetriesTemporaryServerFailureWithoutNetworkChange with its loopback DSN.
+      - Invoke sdkBeforeSendPersistsAddressAndOneHttpEventPerBurst and actualSdkHttpCaptureRetainsOriginalRequestAndResponse on fresh synthetic caches; rerun workerRetriesTemporaryServerFailureWithoutNetworkChange with its loopback DSN.
       - Invoke androidJsonHashKeepsSnapshotDownloadAndStagedFormConsistent with synthetic forms to exercise the actual Android JSON implementation.
-    expected: 6000 synthetic log rows survive cold startup without an upload URL or repeated initialization; app format and delegating handler remain. Twenty-eight same-source 503 events produce one redacted envelope and a different source another, while the receiver 503 retry still succeeds without reinstalling handlers. Never run this on a physical device.
+    expected: 6000 synthetic log rows survive cold startup without an upload URL or repeated initialization; app format and delegating handler remain. Twenty-eight same-source 503 events produce one envelope retaining its address and a different source another. Actual SDK capture keeps original query/headers/response, while receiver 503 retry succeeds without reinstalling handlers. Never run this on a physical device.
   SMOKE-FEATURE-TYPE-CREATION:
     type: automatic
     scope: [app, maplib, maplibui]
