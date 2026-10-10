@@ -87,7 +87,7 @@ DiagnosticsTestRunner с `diagnosticsDsn=http://synthetic@127.0.0.1:9/1` и кл
 | Startup HyperLog, HTTP diagnostic noise/context, canonical form hash, power warning | app `a7df33f5b6f7ef143d787b4be9fef8ca32177bd2`, maplib `7525d38d79e9e6201a64f1fc404c9d6eff4e2d41`, maplibui `acd9b3c82ec9bf66befd59c382e88ef7eba231ad` | app #54 / my-maplibre, maplib #46 / master, maplibui #34 / master | MERGED; содержатся в app base и library bases |
 | Stale notification cleanup/default error-only messages | app `bc879f54696b9272a790770839dd343d058ef959` | [#55](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/55) / my-maplibre | OPEN Draft; ancestor текущего app branch |
 | Walk GPS continuation; account/track wait for network | maplibui `e697b07d71b8b03bb0b542ea2d762e011b0a85e6`, ancestor `ddf7e8a810540aea6055152fa146c2d0f67b6b9a` | [#35](https://github.com/GeonicalSys/android_maplibui/pull/35) / master | OPEN Draft; app временно закрепляет tested branch tip для review/CI |
-| Readable manual offline sync, background runner guard, native checks/docs | app scoped follow-up to `bc879f5` | [#55](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/55) / my-maplibre | OPEN Draft; присутствует в текущем PR diff |
+| Readable manual offline sync, background runner guard, native checks/docs | app `e0c1be403ee5ba022dfca6c3ed01ff89c5eef3b7` | [#55](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/55) / my-maplibre | OPEN Draft; присутствует в текущем PR diff |
 
 Порядок: **Merge Commit maplibui #35 → fetch remote master → pin его merge commit
 в app #55 → Squash app #55 → closure audit → Release APK**. Branch-tip pin для
