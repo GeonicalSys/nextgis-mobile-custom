@@ -129,6 +129,7 @@ import com.nextgis.maplibui.overlay.RulerOverlay.OnRulerChanged
 import com.nextgis.maplibui.overlay.UndoRedoOverlay
 import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.service.WalkEditService
+import com.nextgis.maplibui.service.WalkGeometrySnapshot
 import com.nextgis.maplibui.util.WalkSessionStore
 import com.nextgis.maplibui.util.FeatureFormDraftStore
 import com.nextgis.maplibui.util.LayerUtil
@@ -253,8 +254,7 @@ public class MapFragment
 
     protected var mivZoomIn: FloatingActionButton? = null
     protected var mivZoomOut: FloatingActionButton? = null
-    protected var mRuler: FloatingActionButton? = null
-    protected var mAzimuth: FloatingActionButton? = null
+    protected var mMeasurements: FloatingActionButton? = null
     private var trackStatusButton: FloatingActionButton? = null
     protected var mAddNewGeometry: FloatingActionButton? = null
     protected var mAddPointButton: FloatingActionButton? = null
@@ -481,6 +481,10 @@ public class MapFragment
         mMapRef.get()!!.setZoomAndCenter(mapZoom, GeoPoint(mapScrollX, mapScrollY))
 
         mMainButton = view.findViewById(R.id.multiple_actions)
+        mMainButton?.setOnFloatingActionsMenuUpdateListener(object : FloatingActionsMenu.OnFloatingActionsMenuUpdateListener {
+            override fun onMenuExpanded() { positionWalkPanel(true) }
+            override fun onMenuCollapsed() { positionWalkPanel(false) }
+        })
         mAddPointButton = view.findViewById(R.id.add_point_by_tap)
         mAddPointButton?.setOnClickListener(this)
 
@@ -489,10 +493,9 @@ public class MapFragment
 
         mAddNewGeometry = view.findViewById(R.id.add_new_geometry)
         mAddNewGeometry?.setOnClickListener(this)
-        mRuler = view.findViewById(R.id.action_ruler)
-        mRuler?.setOnClickListener(this)
-        mAzimuth = view.findViewById(R.id.action_azimuth)
-        mAzimuth?.setOnClickListener(this)
+        mMeasurements = view.findViewById(R.id.action_measurements)
+        mMeasurements?.setOnClickListener(this)
+        mMeasurements?.let { androidx.core.view.ViewCompat.setTooltipText(it, getString(R.string.measurement_tools)) }
         trackStatusButton = requireNotNull(view.findViewById(R.id.action_track_status))
         trackStatusButton?.setOnClickListener { mActivity?.toggleTrackRecordingFromMap(it) }
         refreshTrackStatusButton()
@@ -609,7 +612,7 @@ public class MapFragment
             if (defaults == null || layer == null) finishPointCreation()
             else {
                 newFeatureDefaults = defaults
-                startNewGeometryCreation(layer)
+                startChosenFeatureCreation(layer, result.getInt(ChooseFeatureTypeDialog.KEY_TOOL, EDIT_LAYER))
             }
         }
 
@@ -1014,6 +1017,7 @@ public class MapFragment
     private var newFeatureDefaults: Bundle? = null
     private var finishedWalkEditId: String? = null
     private var pendingWalkFinishId: String? = null
+    private var pendingWalkFormId: String? = null
     private var walkPreviewKey: String? = null
     private var walkPreviewMap: MapDrawable? = null
     private val walkSessionReceiver = object : BroadcastReceiver() {
@@ -1036,7 +1040,7 @@ public class MapFragment
         }
         if (session?.phase == WalkSessionPolicy.Phase.FINISHED && pendingWalkFinishId == session.id) {
             pendingWalkFinishId = null
-            view?.post { openFinishedWalk(session) }
+            view?.post { openFinishedWalk(session, true) }
         }
         mScaleRulerLayout?.visibility = if (session == null && mode == MODE_NORMAL
             && mPreferences?.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER, false) == true
@@ -1053,12 +1057,32 @@ public class MapFragment
             }
 
             override fun onFinishWalk(session: WalkSessionStore.Snapshot) {
-                if (session.phase == WalkSessionPolicy.Phase.FINISHED) openFinishedWalk(session)
-                else {
-                    pendingWalkFinishId = session.id
-                    if (!WalkEditService.requestCommand(requireContext(), session.id, WalkSessionPolicy.Command.FINISH))
-                        pendingWalkFinishId = null
-                }
+                AlertDialog.Builder(requireContext())
+                    .setTitle(com.nextgis.maplibui.R.string.walk_complete_object)
+                    .setMessage(if (session.phase == WalkSessionPolicy.Phase.FINISHED)
+                        com.nextgis.maplibui.R.string.walk_save_ready_confirm else com.nextgis.maplibui.R.string.walk_save_confirm)
+                    .setPositiveButton(com.nextgis.maplibui.R.string.walk_complete_object) { _, _ ->
+                        val current = WalkSessionStore.load(requireContext())
+                        if (current?.id != session.id || current.isPointActive || !WalkSessionStore.isCurrentMap(requireContext(), current))
+                            return@setPositiveButton
+                        if (current.phase == WalkSessionPolicy.Phase.FINISHED) openFinishedWalk(current, true)
+                        else {
+                            pendingWalkFinishId = session.id
+                            if (!WalkEditService.requestCommand(requireContext(), session.id, WalkSessionPolicy.Command.FINISH))
+                                pendingWalkFinishId = null
+                        }
+                    }.setNegativeButton(android.R.string.cancel, null).show()
+            }
+
+            override fun onPauseOrResumeWalk(session: WalkSessionStore.Snapshot, resume: Boolean) {
+                val title = if (resume) com.nextgis.maplibui.R.string.walk_resume else com.nextgis.maplibui.R.string.walk_pause
+                AlertDialog.Builder(requireContext())
+                    .setTitle(title)
+                    .setMessage(if (resume) com.nextgis.maplibui.R.string.walk_resume_confirm else com.nextgis.maplibui.R.string.walk_pause_confirm)
+                    .setPositiveButton(title) { _, _ ->
+                        WalkEditService.requestCommand(requireContext(), session.id,
+                            if (resume) WalkSessionPolicy.Command.RESUME else WalkSessionPolicy.Command.PAUSE)
+                    }.setNegativeButton(android.R.string.cancel, null).show()
             }
 
             override fun onDiscardWalk(session: WalkSessionStore.Snapshot) {
@@ -1066,33 +1090,51 @@ public class MapFragment
                     .setTitle(com.nextgis.maplibui.R.string.walk_discard)
                     .setMessage(com.nextgis.maplibui.R.string.walk_discard_confirm)
                     .setPositiveButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
-                        WalkEditService.requestCommand(requireContext(), session.id, WalkSessionPolicy.Command.DISCARD)
+                        if (WalkEditService.requestCommand(requireContext(), session.id, WalkSessionPolicy.Command.DISCARD)
+                            && finishedWalkEditId == session.id) cancelEdits()
                     }.setNegativeButton(android.R.string.cancel, null).show()
             }
 
-            override fun onShowWalk(session: WalkSessionStore.Snapshot) {
-                val envelope = session.geometry()?.envelope ?: return
-                mMapRef.get()?.setZoomAndCenter(mMapRef.get()!!.zoomLevel, envelope.center)
-            }
         })
     }
 
-    private fun openFinishedWalk(session: WalkSessionStore.Snapshot) {
+    private fun positionWalkPanel(menuExpanded: Boolean) {
+        val panel = walkPanel ?: return
+        val params = panel.layoutParams as? RelativeLayout.LayoutParams ?: return
+        params.bottomMargin = Math.round((if (menuExpanded) 88 else 4) * resources.displayMetrics.density)
+        panel.layoutParams = params
+    }
+
+    private fun openFinishedWalk(session: WalkSessionStore.Snapshot, showForm: Boolean = false) {
         val ctx = context ?: return
         val current = WalkSessionStore.load(ctx) ?: return
         if (current.id != session.id || current.isPointActive || current.phase != WalkSessionPolicy.Phase.FINISHED
-            || mode == MODE_EDIT || mNewFeatureFormLaunchInProgress) return
+            || mNewFeatureFormLaunchInProgress) return
+        if (mode == MODE_EDIT) {
+            if (finishedWalkEditId == current.id && showForm) saveEdits()
+            return
+        }
         val layer = mMapRef.get()?.map?.getLayerById(current.layerId) as? VectorLayer ?: return
         val geometry = current.geometry() ?: return
+        if (!WalkGeometrySnapshot.hasEnoughPoints(geometry)) {
+            // The service has acknowledged its final snapshot; no row or form may be created.
+            if (WalkSessionStore.clear(ctx, current.id)) {
+                Toast.makeText(ctx, com.nextgis.maplibui.R.string.walk_insufficient_points, Toast.LENGTH_LONG).show()
+                walkPanel?.refresh()
+            } else Toast.makeText(ctx, com.nextgis.maplibui.R.string.walk_save_failed, Toast.LENGTH_LONG).show()
+            return
+        }
         val draft = GeometryEditDraftStore.Snapshot().apply {
             layerId = current.layerId
             featureId = current.featureId
             editMode = MODE_EDIT
             geometryWkt = geometry.toWKT(true)
             mapPath = current.mapPath
+            initialValues = current.initialValues
         }
         if (!GeometryEditDraftStore.save(ctx, draft, "finished-walk-edit")) return
         finishedWalkEditId = current.id
+        pendingWalkFormId = if (showForm) current.id else null
         resumeManualGeometryFromDraft()
         walkPanel?.refresh()
     }
@@ -1261,6 +1303,11 @@ public class MapFragment
 
 
     fun saveEdits(): Boolean {
+        val walkSession = WalkSessionStore.load(context)?.takeIf {
+            it.id == finishedWalkEditId && it.phase == WalkSessionPolicy.Phase.FINISHED
+                && it.layerId == mSelectedLayer?.id && !it.isPointActive
+        }
+        if (walkSession != null && mNewFeatureFormLaunchInProgress) return true
         val feature = editLayerOverlay!!.selectedFeature
         var featureId = Constants.NOT_FOUND.toLong()
         var geometry: GeoGeometry? = null
@@ -1381,7 +1428,7 @@ public class MapFragment
         editLayerOverlay!!.setHasEdits(false)
 
         if (mSelectedLayer != null) {
-            if (featureId == Constants.NOT_FOUND.toLong()) {
+            if (featureId == Constants.NOT_FOUND.toLong() || walkSession != null) {
                 //show attributes edit activity
                 val vectorLayerUI = mSelectedLayer as IVectorLayerUI
                 if (pointSessionId != null || finishedWalkEditId != null || newFeatureDefaults != null) {
@@ -1391,6 +1438,7 @@ public class MapFragment
                         return false
                     }
                 } else vectorLayerUI.showEditForm(mActivity, featureId, geometry, -1)
+                if (walkSession != null) mNewFeatureFormLaunchInProgress = true
                 clearManualGeometryDraft("handoff-to-attribute-form")
             } else {
                 var uri =  Uri.parse("content://" + mApp!!.authority + "/" + mSelectedLayer!!.path.name)
@@ -1615,6 +1663,7 @@ public class MapFragment
             WalkSessionStore.clear(requireContext(), session.id)
         }
         finishedWalkEditId = null
+        pendingWalkFormId = null
         finishPointCreation()
         editLayerOverlay?.setHasEdits(false)
         editLayerOverlay?.setSelectedFeature(null)
@@ -1667,6 +1716,7 @@ public class MapFragment
         setNewMode(if (wasNewFeature) MODE_NORMAL else MODE_SELECT_ACTION)
         clearManualGeometryDraft("geometry-cancel")
         finishedWalkEditId = null
+        pendingWalkFormId = null
         finishPointCreation()
     }
 
@@ -1714,8 +1764,9 @@ public class MapFragment
                 != Constants.NOT_FOUND.toLong())
             selectedFeatureMode(mSelectedLayer!!) else requestedMode
         if (mode == MODE_EDIT_BY_WALK) {
-            if (editLayerOverlay?.startIndependentWalk() == true) {
+            if (editLayerOverlay?.startIndependentWalk(newFeatureDefaults) == true) {
                 clearManualGeometryDraft("walk-ownership-transferred")
+                newFeatureDefaults = null
                 mMapRef.get()?.map?.cancelFeatureEdit(false)
                 setNewMode(MODE_NORMAL)
                 walkPanel?.refresh()
@@ -1739,8 +1790,7 @@ public class MapFragment
             mRulerOverlay!!.stopMeasuring()
             undoRedoOverlay!!.clearHistory()
             showMainButton()
-            showRulerButton()
-            showAzimuthButton()
+            showMeasurementsButton()
             hideAddByTapButton()
             mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_add_point)
             mActivity!!.title = mActivity!!.appName
@@ -1775,8 +1825,7 @@ public class MapFragment
 
         hideMainButton()
         hideAddByTapButton()
-        hideRulerButton()
-        hideAzimuthButton()
+        hideMeasurementsButton()
 
         val toolbar = mActivity!!.bottomToolbar
         toolbar.background.alpha = 128
@@ -1798,8 +1847,7 @@ public class MapFragment
                 editLayerOverlay?.setSelectedLayer(null)
                 toolbar.visibility = View.GONE
                 showMainButton()
-                showRulerButton()
-                showAzimuthButton()
+                showMeasurementsButton()
                 if (mStatusPanelMode != 0) mStatusPanel!!.visibility = View.VISIBLE
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_NONE
                 if (!preserveRulerHistoryDuringModeRestore)
@@ -2033,7 +2081,10 @@ public class MapFragment
         setMarginsToPanel()
         defineMenuItems()
 
-        walkPanel?.setEditorAvailable(mode == MODE_NORMAL || mode == MODE_SELECT_ACTION || mode == MODE_SELECT_FOR_VIEW)
+        val finishedWalkEditor = mode == MODE_EDIT && finishedWalkEditId != null
+            && WalkSessionStore.load(context)?.id == finishedWalkEditId
+        walkPanel?.setEditorAvailable(mode == MODE_NORMAL || mode == MODE_SELECT_ACTION
+            || mode == MODE_SELECT_FOR_VIEW || finishedWalkEditor)
 
         if (askPerm)
             Handler().postDelayed(Runnable(){
@@ -2054,6 +2105,8 @@ public class MapFragment
         val activity = mActivity ?: return false
         val layer = mSelectedLayer ?: return false
         val layerUI = layer as? IVectorLayerUI ?: return false
+        if (finishedWalkEditId != null && WalkSessionStore.load(context)?.id == finishedWalkEditId)
+            return saveEdits()
         val featureId = editLayerOverlay?.selectedFeatureId ?: Constants.NOT_FOUND.toLong()
         if (featureId == Constants.NOT_FOUND.toLong()) {
             if (mNewFeatureFormLaunchInProgress) return true
@@ -3053,6 +3106,10 @@ public class MapFragment
             "GeometryDraft resumed layer=${snapshot.layerId} feature=${snapshot.featureId} " +
                 "mode=${modeName(snapshot.editMode)} geometryType=${geometry.type}"
         )
+        if (pendingWalkFormId != null && pendingWalkFormId == finishedWalkEditId) {
+            pendingWalkFormId = null
+            saveEdits()
+        }
         return true
     }
 
@@ -3249,10 +3306,7 @@ public class MapFragment
             if (mZoom != null) mZoom!!.visibility = View.GONE
         }
 
-        showControls =
-            mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_MEASURING, true)
-        mRuler!!.visibility = if (showControls && mode == MODE_NORMAL) View.VISIBLE else View.GONE
-        mAzimuth?.visibility = if (mode == MODE_NORMAL) View.VISIBLE else View.GONE
+        mMeasurements!!.visibility = if (mode == MODE_NORMAL && !isRulerMeasuring) View.VISIBLE else View.GONE
 
         if (null != mMapRef.get()) {
             mMapRef.get()!!.map.setBackground(mApp!!.mapBackground)
@@ -3542,15 +3596,41 @@ public class MapFragment
         }
     }
 
-    private fun chooseNewFeatureType(layer: VectorLayer) {
+    private fun chooseNewFeatureType(layer: VectorLayer, tool: Int = EDIT_LAYER) {
         newFeatureDefaults = null
         if (!FeatureTypeDefaults.hasCategories(layer)) {
-            startNewGeometryCreation(layer)
+            startChosenFeatureCreation(layer, tool)
             return
         }
         if (childFragmentManager.findFragmentByTag(ChooseFeatureTypeDialog.TAG) != null) return
-        ChooseFeatureTypeDialog.create(layer, currentMapDraftPath()!!)
+        ChooseFeatureTypeDialog.create(layer, currentMapDraftPath()!!, tool)
             .show(childFragmentManager, ChooseFeatureTypeDialog.TAG)
+    }
+
+    private fun startChosenFeatureCreation(layer: VectorLayer, tool: Int) {
+        when (tool) {
+            ADD_CURRENT_LOC -> {
+                ensureLayerVisibleForCreation(layer)
+                mSelectedLayer?.isLocked = false
+                mSelectedLayer = layer
+                editLayerOverlay!!.setSelectedLayer(layer)
+                launchCurrentPointForm(layer)
+            }
+            ADD_GEOMETRY_BY_WALK -> {
+                ensureLayerVisibleForCreation(layer)
+                mSelectedLayer?.isLocked = false
+                mSelectedLayer = layer
+                editLayerOverlay!!.setSelectedLayer(layer)
+                editLayerOverlay!!.newGeometryByWalk()
+                if (!applyInitialWalkGeometryAtStartLocation()) {
+                    newFeatureDefaults = null
+                    return
+                }
+                prepareMaplibreSessionForNewWalkGeometry()
+                setNewMode(MODE_EDIT_BY_WALK)
+            }
+            else -> startNewGeometryCreation(layer)
+        }
     }
 
     /** Start a new sketch immediately: one centre point/node, then taps add subsequent nodes. */
@@ -3670,14 +3750,7 @@ public class MapFragment
             //open form
             val vectorLayer = layers[0]
             if (vectorLayer is ILayerUI) {
-                ensureLayerVisibleForCreation(vectorLayer as VectorLayer)
-                mSelectedLayer = vectorLayer as VectorLayer
-                editLayerOverlay!!.setSelectedLayer(mSelectedLayer)
-
-                if (useCreatePointFromOverlay)
-                    createPointFromOverlay(false)
-
-                launchCurrentPointForm(vectorLayer)
+                chooseNewFeatureType(vectorLayer as VectorLayer, ADD_CURRENT_LOC)
 
                 Toast.makeText(
                     mActivity,
@@ -3704,13 +3777,9 @@ public class MapFragment
         }
     }
 
-    /** Vector layers allowed for object creation (collector «Редактируемый» policy). */
+    /** Hand the current GPS point and category directly to the attribute form. */
     private fun launchCurrentPointForm(layer: VectorLayer) {
-        val layerUI = layer as? IVectorLayerUI ?: return
-        if (pointSessionId == null) {
-            layerUI.showEditForm(mActivity, Constants.NOT_FOUND.toLong(), null, -1)
-            return
-        }
+        editLayerOverlay!!.selectedFeature = Feature()
         val location = mGpsEventSource?.lastKnownLocation
         if (location == null) {
             Toast.makeText(context, com.nextgis.maplibui.R.string.walk_gps_wait, Toast.LENGTH_LONG).show()
@@ -3724,9 +3793,15 @@ public class MapFragment
         }
         val geometry: GeoGeometry = if (layer.geometryType == GeoConstants.GTMultiPoint)
             GeoMultiPoint().apply { crs = GeoConstants.CRS_WEB_MERCATOR; add(point) } else point
+        centerMapAtCreationPoint(point)
+        // The immediate form owns the GPS point; recreated MapLibre edit sources may still be loading.
         editLayerOverlay!!.selectedFeature.geometry = geometry
-        mMapRef.get()?.map?.replaceGeometryFromHistoryChanges(geometry)
-        if (LayerUtil.showSessionEditForm(layer, requireActivity(), Constants.NOT_FOUND.toLong(), geometry, null)) {
+        undoRedoOverlay!!.clearHistory()
+        setNewMode(MODE_EDIT)
+        editLayerOverlay!!.setHasEdits(true)
+        persistManualGeometryDraft("current-location-start")
+        if (LayerUtil.showSessionEditForm(layer, requireActivity(), Constants.NOT_FOUND.toLong(), geometry,
+                null, newFeatureDefaults)) {
             clearManualGeometryDraft("point-form-handoff")
         }
     }
@@ -3760,6 +3835,7 @@ public class MapFragment
     }
 
     protected fun addGeometryByWalk() {
+        if (isDialogShown) return
         if (WalkSessionStore.load(context) != null || WalkEditService.hasValidDraft(context)) {
             Toast.makeText(context, com.nextgis.maplibui.R.string.walk_already_active, Toast.LENGTH_LONG).show()
             walkPanel?.refresh()
@@ -3776,18 +3852,8 @@ public class MapFragment
             Toast.makeText(mActivity, getString(R.string.warning_no_edit_layers), Toast.LENGTH_LONG)
                 .show()
         } else if (layers.size == 1) {
-            // Fork walk implementation (CUSTOMIZATIONS §2): explicit MapLibre edit session +
-            // validated GNSS anchor for initial geometry. Upstream variant called newGeometryByWalk twice
-            // around createPointFromOverlay(true) — reconciled: keep fork pipeline as the more
-            // deterministic path (§17 Walk reconciliation).
             val layer = layers[0] as VectorLayer
-            ensureLayerVisibleForCreation(layer)
-            mSelectedLayer = layer
-            editLayerOverlay!!.setSelectedLayer(layer)
-            editLayerOverlay!!.newGeometryByWalk()
-            if (!applyInitialWalkGeometryAtStartLocation()) return
-            prepareMaplibreSessionForNewWalkGeometry()
-            setNewMode(MODE_EDIT_BY_WALK)
+            chooseNewFeatureType(layer, ADD_GEOMETRY_BY_WALK)
 
             Toast.makeText(
                 mActivity,
@@ -3898,6 +3964,15 @@ public class MapFragment
         }
     }
 
+    /** Pan to the actual creation anchor without changing the user's zoom. */
+    private fun centerMapAtCreationPoint(point: GeoPoint) {
+        val geographic = point.copy() as GeoPoint
+        if (!geographic.project(GeoConstants.CRS_WGS84)) return
+        mMapRef.get()?.map?.maplibreMap?.moveCamera(
+            CameraUpdateFactory.newLatLng(LatLng(geographic.y, geographic.x))
+        )
+    }
+
     private fun applyInitialWalkGeometryAtStartLocation(): Boolean {
         val layer = mSelectedLayer ?: return false
         val anchor = walkStartAnchorWebMercator()
@@ -3909,6 +3984,7 @@ public class MapFragment
             ).show()
             return false
         }
+        centerMapAtCreationPoint(anchor)
         val geom = buildInitialWalkGeometry(layer.geometryType, anchor)
         val feat = editLayerOverlay!!.selectedFeature
         feat.geometry = geom
@@ -3923,6 +3999,10 @@ public class MapFragment
         startFillByWalk: Boolean
     ) {
         val vectorLayer = layer as? VectorLayer ?: run { finishPointCreation(); return }
+        if (code == EDIT_LAYER || code == ADD_CURRENT_LOC || code == ADD_GEOMETRY_BY_WALK) {
+            chooseNewFeatureType(vectorLayer, code)
+            return
+        }
         if (code != ADD_GEOMETRY_BY_WALK) bindPointCreation(vectorLayer)
 
         ensureLayerVisibleForCreation(vectorLayer)
@@ -3936,18 +4016,7 @@ public class MapFragment
         if (useCreatePointFromOverlay && code != ADD_GEOMETRY_BY_WALK)
             createPointFromOverlay(startFillByWalk)
 
-        if (code == ADD_CURRENT_LOC) {
-            if (layer is ILayerUI) {
-                launchCurrentPointForm(vectorLayer)
-            }
-        } else if (code == EDIT_LAYER) {
-            chooseNewFeatureType(vectorLayer)
-        } else if (code == ADD_GEOMETRY_BY_WALK) {
-            editLayerOverlay!!.newGeometryByWalk()
-            if (!applyInitialWalkGeometryAtStartLocation()) return
-            prepareMaplibreSessionForNewWalkGeometry()
-            setNewMode(MODE_EDIT_BY_WALK)
-        } else if (code == ADD_POINT_BY_TAP) {
+        if (code == ADD_POINT_BY_TAP) {
             createPointFromOverlay(false)
         }
     }
@@ -4186,26 +4255,12 @@ public class MapFragment
     }
 
 
-    fun showRulerButton() {
-        if (mPreferences!!.getBoolean(
-                AppSettingsConstants.KEY_PREF_SHOW_MEASURING,
-                true
-            )
-        ) mRuler!!.visibility =
-            View.VISIBLE
+    fun showMeasurementsButton() {
+        mMeasurements?.visibility = View.VISIBLE
     }
 
-
-    fun hideRulerButton() {
-        mRuler!!.visibility = View.GONE
-    }
-
-    fun showAzimuthButton() {
-        mAzimuth?.visibility = View.VISIBLE
-    }
-
-    fun hideAzimuthButton() {
-        mAzimuth?.visibility = View.GONE
+    fun hideMeasurementsButton() {
+        mMeasurements?.visibility = View.GONE
     }
 
 
@@ -5343,8 +5398,7 @@ public class MapFragment
                 mRulerOverlay!!.stopMeasuring()
                 undoRedoOverlay!!.clearHistory()
                 showMainButton()
-                showRulerButton()
-                showAzimuthButton()
+                showMeasurementsButton()
                 hideAddByTapButton()
                 mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_add_point)
                 mActivity!!.title = mActivity!!.appName
@@ -5354,11 +5408,7 @@ public class MapFragment
 
             } else addPointByTap()
 
-            R.id.action_ruler -> {
-                startMeasuring()
-                Toast.makeText(context, R.string.tap_to_measure, Toast.LENGTH_SHORT).show()
-            }
-            R.id.action_azimuth -> showAzimuthModeDialog()
+            R.id.action_measurements -> showMeasurementToolsMenu(v)
         }
     }
 
@@ -5376,8 +5426,7 @@ public class MapFragment
         }
         hideOverlayPoint()
         hideMainButton()
-        hideRulerButton()
-        hideAzimuthButton()
+        hideMeasurementsButton()
         showAddByTapButton()
         mAddPointButton!!.setIcon(com.nextgis.maplibui.R.drawable.ic_action_apply_dark)
         mActivity!!.showRulerToolbar()
@@ -5441,22 +5490,29 @@ public class MapFragment
         private const val LEGACY_MODE_EDIT_BY_TOUCH = 5
     }
 
-    private fun showAzimuthModeDialog() {
-        val ctx = context ?: return
-        val items = arrayOf(
-            getString(R.string.azimuth_mode_current),
-            getString(R.string.azimuth_mode_points)
-        )
-        AlertDialog.Builder(ctx)
-            .setTitle(R.string.azimuth_mode_title)
-            .setItems(items) { _, selected ->
-                clearAzimuthMeasurement()
-                setNewMode(
-                    if (selected == 0) MODE_AZIMUTH_CURRENT else MODE_AZIMUTH_POINTS
-                )
+    private fun showMeasurementToolsMenu(anchor: View) {
+        if (mode != MODE_NORMAL || isRulerMeasuring) return
+        val menu = androidx.appcompat.widget.PopupMenu(requireContext(), anchor)
+        menu.inflate(R.menu.menu_measurements)
+        menu.menu.findItem(R.id.measurement_ruler).isVisible =
+            mPreferences?.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_MEASURING, true) != false
+        menu.setOnMenuItemClickListener { item ->
+            // A selection from an old window must not replace a newly opened editor/tool.
+            if (!isAdded || view == null || mode != MODE_NORMAL || isRulerMeasuring) return@setOnMenuItemClickListener false
+            when (item.itemId) {
+                R.id.measurement_ruler -> {
+                    startMeasuring()
+                    Toast.makeText(context, R.string.tap_to_measure, Toast.LENGTH_SHORT).show()
+                }
+                R.id.measurement_azimuth_current, R.id.measurement_azimuth_points -> {
+                    clearAzimuthMeasurement()
+                    setNewMode(if (item.itemId == R.id.measurement_azimuth_current) MODE_AZIMUTH_CURRENT else MODE_AZIMUTH_POINTS)
+                }
+                else -> return@setOnMenuItemClickListener false
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+            true
+        }
+        menu.show()
     }
 
     private fun mapPointFromScreen(screenX: Float, screenY: Float): GeoPoint? {

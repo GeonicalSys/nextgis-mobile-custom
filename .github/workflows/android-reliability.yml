@@ -60,6 +60,7 @@ jobs:
             adb shell appops set com.nextgis.mobile.debug MANAGE_EXTERNAL_STORAGE allow
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
+            adb shell pm grant com.nextgis.mobile.debug android.permission.GET_ACCOUNTS
             adb shell pm grant com.nextgis.mobile.debug android.permission.POST_NOTIFICATIONS
             adb shell cmd location set-location-enabled true
             adb shell svc wifi disable

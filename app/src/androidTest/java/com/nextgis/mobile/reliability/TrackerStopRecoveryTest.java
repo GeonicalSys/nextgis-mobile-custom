@@ -50,6 +50,9 @@ public class TrackerStopRecoveryTest {
         assertFalse("Run only on an isolated emulator without a user recording", TrackerService.isTrackRecordingEnabled(app));
         assertFalse(temporary.contains("track_uri"));
         assertFalse(temporary.contains("pending_stop"));
+        boolean hadSend = preferences.contains(SettingsConstants.KEY_PREF_TRACK_SEND);
+        boolean oldSend = preferences.getBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, true);
+        assertTrue(preferences.edit().putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false).commit());
         boolean hadIntro = preferences.contains(AppSettingsConstants.KEY_PREF_INTRO);
         boolean oldIntro = preferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
         boolean hadFlag = preferences.contains(SettingsConstants.KEY_PREF_TRACK_RECORDING_ENABLED);
@@ -132,6 +135,7 @@ public class TrackerStopRecoveryTest {
                     + app.getAuthority() + "/tracks"), TrackLayer.FIELD_ID + " IN (?)",
                     new String[] { trackUri.getLastPathSegment() });
             SharedPreferences.Editor restore = preferences.edit();
+            if (hadSend) restore.putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, oldSend); else restore.remove(SettingsConstants.KEY_PREF_TRACK_SEND);
             if (hadIntro) restore.putBoolean(AppSettingsConstants.KEY_PREF_INTRO, oldIntro); else restore.remove(AppSettingsConstants.KEY_PREF_INTRO);
             if (hadFlag) restore.putBoolean(SettingsConstants.KEY_PREF_TRACK_RECORDING_ENABLED, false); else restore.remove(SettingsConstants.KEY_PREF_TRACK_RECORDING_ENABLED);
             if (hadFailure) restore.putBoolean("track_recording_failure", oldFailure); else restore.remove("track_recording_failure");

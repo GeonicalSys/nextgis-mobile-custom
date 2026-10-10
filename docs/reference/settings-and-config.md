@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-08
+last_verified: 2026-10-10
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -116,13 +116,26 @@ Battery Saver; приложение не меняет системный реж�
   HyperLog и пункт «Поделиться логом». `verbose_log` (там же, «Расширенное
   логирование», default false) пишет каждое измерение GPS/NMEA, включая
   координаты; только для диагностики.
+  Общий `LocalLogInitializer` сохраняет локальный журнал и формат, удаляя при
+  старте устаревшую настройку `HyperLog/URL`; фиктивный endpoint не записывается.
 - Автоматические отчёты GlitchTip независимы от локального логирования.
   `sentry.dsn` из игнорируемого `sentry.properties` задаёт приёмник; APK не содержит
   пароль администратора. `io.sentry.auto-init=false`, screenshots/view hierarchy
   и performance sampling отключены. SDK queue в private files ограничена 256
   обычными envelopes; connected WorkManager retry не запускает GIS sync.
+  Автоматические HTTP 5xx ограничены десятью минутами на одинаковую группу;
+  fatal и replay сохранённых отчётов сохраняют прежний путь доставки.
+  Контракт диагностики 2 сохраняет URL/query, headers/cookies, доступные данные
+  события и пути без маскирования. Ограничитель размера не читает HTTP streams
+  или файлы проекта и не влияет на точность ключа подавления повторов.
   [Доставка и границы](../architecture/error-reporting.md),
   [разбор ошибок](../guides/bug-reports-user-guide.md).
+- При открытии/Resume `BackgroundLocationWarning` проверяет GPS-политику
+  энергосбережения, системный запрет фоновой работы и наличие исключения из
+  оптимизации батареи. Предупреждение с «Настроить» показывается без записи трека;
+  одна неизменная ситуация не повторяется при screen-on или rotation в текущем
+  запуске. Старое `battery_dont_show_pref` эту проверку не отключает. Настройки
+  меняет пользователь; возврат не запускает трек/обход.
 - Collector: project registry JSON, project metadata, composition state.
 - Layer config: `feature_label_field`, `mobile_render_mode`, `render_mode`,
   `layer_origin`, `mobile`.
@@ -205,3 +218,13 @@ durable checkpoint до запуска Activity. Точные имена клю�
 настройки и не server schema. Их повреждение нельзя лечить автоматическим
 удалением. `ciReliabilityChecks` — opt-in Gradle property для проверки без
 private Sentry DSN; в обычной сборке требования config остаются прежними.
+
+## Отправка трека
+
+track_send имеет default=true, а track_send_default_enabled_v1 однократно
+мигрирует прежнее автоматическое выключение. После миграции ручной opt-out
+сохраняется. Регистрация UID управляет готовностью доставки и отметкой трека, но не галочкой.
+track_registered_device хранит SHA-256 точной пары сервер/UID после registered=true.
+До подтверждения или после registered=false отметка скрыта. Сетевые ошибки
+сохраняют прежнее подтверждение; смена сервера/UID требует своего подтверждения.
+Контракт: [доставка трека](../architecture/ngw-sync-and-storage.md#доставка-трека-и-регистрация-uid).

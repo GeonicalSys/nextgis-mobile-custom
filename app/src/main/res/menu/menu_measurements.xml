@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/measurement_ruler" android:title="@string/measurement_ruler" />
+    <item android:id="@+id/measurement_azimuth_current" android:title="@string/measurement_azimuth_current" />
+    <item android:id="@+id/measurement_azimuth_points" android:title="@string/measurement_azimuth_points" />
+</menu>

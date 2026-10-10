@@ -1,10 +1,27 @@
 schema_version: 1
 tests:
+  SMOKE-BACKGROUND-LOCATION-WARNING:
+    type: device
+    scope: [app]
+    steps:
+      - On an isolated Debug emulator run BackgroundLocationWarningTest with location/account grants and enabled location; do not run on a physical phone.
+      - Verify launch without recording warns for screen-off GPS Battery Saver, app background restriction and missing Doze exemption, even with the legacy prompt hidden.
+      - Verify each Settings action targets the relevant system page, rotation retains acknowledgement and Resume detects a new restriction.
+    expected: Warning does not block the map or start a track/walk; unchanged acknowledged state does not repeat, new restriction warns and clearing restrictions dismisses it. OEM field smoke remains separate.
+  SMOKE-DIAGNOSTIC-NOISE:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - On an isolated Debug emulator build with diagnosticDeliveryChecks and use DiagnosticsTestRunner with an explicit test DSN pointing to an unavailable loopback receiver.
+      - Invoke DiagnosticsNoiseTest seedObsoleteEndpointAndLargeLocalBacklog, stop only the emulator Debug process and separately invoke coldStartRetainsBacklogAndDelegatingHandlerWithoutRemoteUpload.
+      - Invoke sdkBeforeSendPersistsAddressAndOneHttpEventPerBurst and actualSdkHttpCaptureRetainsOriginalRequestAndResponse on fresh synthetic caches; rerun workerRetriesTemporaryServerFailureWithoutNetworkChange with its loopback DSN.
+      - Invoke androidJsonHashKeepsSnapshotDownloadAndStagedFormConsistent with synthetic forms to exercise the actual Android JSON implementation.
+    expected: 6000 synthetic log rows survive cold startup without an upload URL or repeated initialization; app format and delegating handler remain. Twenty-eight same-source 503 events produce one envelope retaining its address and a different source another. Actual SDK capture keeps original query/headers/response, while receiver 503 retry succeeds without reinstalling handlers. Never run this on a physical device.
   SMOKE-FEATURE-TYPE-CREATION:
     type: automatic
     scope: [app, maplib, maplibui]
-    command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.reliability.CascadingFormsTest,com.nextgis.mobile.reliability.MapEditingToolsTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
-    expected: Isolated emulator only. Category defaults fill all stable-key parents, preserve blank unrelated branches, override remembered legacy values, survive dialog/form recreation and durable recovery, and write the selected pair through the shared SQLite Save gate. The real map path chooses a category before sketching, hands defaults to the attribute form, saves both fields and returns to the map without drafts. Manual project smoke also covers Cancel, a single layer, simple styling and real project symbols.
+    command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.reliability.CascadingFormsTest,com.nextgis.mobile.reliability.MapEditingToolsTest,com.nextgis.mobile.reliability.StandardFeatureTypesTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
+    expected: Isolated emulator only. Category defaults fill all stable-key parents, preserve blank unrelated branches, override remembered legacy values, survive dialog/form recreation and durable recovery, and write the selected pair through the shared SQLite Save gate. Real map creation paths choose a category before sketching, current-location form or walk recording, preserve the originating tool through recreation and interrupted recorder recovery, hand defaults to the attribute form, save both fields and return to the map without drafts. Cancelling a point category during a walk releases the point lock and retains the recording. Manual project smoke also covers Cancel, a single layer, simple styling and real project symbols.
   SMOKE-DIAGNOSTIC-DELIVERY:
     type: automatic
     scope: [app]
@@ -524,6 +541,13 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
+      - Start a new line or polygon walk and immediately Finish with insufficient distinct vertices; verify the readable no-save message, no new feature/form and released walk owner
+      - Press the disk on a valid new or existing walk, cancel once and confirm; verify the acknowledged final geometry immediately opens attributes with no premature row write
+      - Inspect the single 48dp themed row with only layer name, disk, pause/play and cross, three 48dp targets, long-press and accessibility names; cancel each confirmation and verify the owner is retained
+      - Confirm Pause, supply fresh fixes and verify geometry does not grow; cancel Resume once, then confirm reconnection and verify the same owner records again; acquire a point lock while a confirmation is open and verify the queued command is rejected
+      - Start current-location or new walk creation from a distant map extent; verify map target matches the actual GPS geometry anchor, zoom is unchanged and cancelled category selection does not pan
+      - Expand creation actions, rotate and use large fonts; verify the panel moves clear of the actions and returns to the bottom after collapse
+      - Recreate edit menus and toggle different actions; active Save and other enabled icons remain fully opaque
       - On Android 14+ deny Bluetooth permissions but grant fine location; start a walk using the system GNSS and verify its location-only foreground service and visible panel
       - Upgrade an installation with a retained failed walk session; inspect the panel, saved vertices and explicit Resume/Finish/Discard without erasing the draft
       - Enable background recording sound and start geometry-by-walk editing
@@ -620,7 +644,8 @@ tests:
       - Compare the displayed magnetic azimuth with a control bearing plus known local WMM2025 declination, including wrap around 0/360 degrees
       - Change the declination correction during measurement, confirm the magnetic azimuth and the declination line update immediately to D+C, restart the app and verify the correction persists, then reset it to 0
       - Repeat on a device/emulator without a rotation-vector sensor and compare the arrow with a known north-up and explicitly rotated map bearing
-      - Open the azimuth button, select current location to map point, drag and replace the target, and verify the fixed GPS endpoint, temporary segment and result update after release
+      - Open the single Measurements button, dismiss without selecting, then start Ruler and each azimuth mode; finish each tool and verify the same button returns; hide Ruler in settings, recreate and verify both azimuth choices remain
+      - Open Measurements, select Azimuth from my location, drag and replace the target, and verify the fixed GPS endpoint, temporary segment and result update after release
       - Select point A to point B, choose two arbitrary points, drag A and B independently, verify every released position recalculates the result, then test coincident points and tap a third point to begin a new measurement
       - On a narrow portrait screen verify the numeric magnetic-azimuth value remains visible below its label instead of being clipped
         - Mute and unmute the widget, rotate portrait/landscape, lock the screen and press Home for several minutes, then resume and stop the mode
@@ -788,3 +813,15 @@ tests:
       LocalVectorTileWorker-1 and LocalVectorTileWorker-2; queued work is bounded, obsolete map
       generations close their sockets, and temporary queue/heap pressure is reported as throttled
       retryable requests. The layer resumes drawing after pressure falls and identify still works.
+
+  SMOKE-TRACK-DELIVERY:
+    type: device
+    scope: [app, maplib, maplibui]
+    command: Run the track delivery section in docs/runbooks/device-smoke-tests.md on an isolated device
+    steps:
+      - Open track settings before UID registration and verify upload is enabled and the control is available
+      - Record and stop before UID registration; verify retained points have no track badge, then register without changing settings and verify automatic delivery
+      - Disable upload and verify pending tracks do not contribute to badges or send points; re-enable and verify retained points are delivered
+      - Confirm registration with a rejected packet; verify the badge survives transport failure and restart, hides after registered=false or changing hub and returns after the new hub confirms registration
+      - Repeat after restart and a project switch, and reject a later packet to verify only accepted rows are acknowledged
+    expected: Enabled-before-registration intent survives registration, failed packets retain unsent rows and only enabled upload with confirmed registration of the current server/UID contributes to the pending track badge

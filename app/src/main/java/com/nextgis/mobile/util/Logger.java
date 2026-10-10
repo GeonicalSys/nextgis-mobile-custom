@@ -23,9 +23,7 @@ package com.nextgis.mobile.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-
-import com.hypertrack.hyperlog.HyperLog;
+import com.nextgis.maplib.util.LocalLogInitializer;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.util.HyperLogCrashHandler;
 
@@ -36,9 +34,7 @@ public final class Logger {
     }
 
     public static void initialize(Context context) {
-        HyperLog.initialize(context);
-        HyperLog.setLogLevel(Log.VERBOSE);
-        HyperLog.setLogFormat(new CustomLogMessageFormat(context));
+        LocalLogInitializer.initialize(context, new CustomLogMessageFormat(context));
 
         if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof HyperLogCrashHandler)) {
             Thread.setDefaultUncaughtExceptionHandler(

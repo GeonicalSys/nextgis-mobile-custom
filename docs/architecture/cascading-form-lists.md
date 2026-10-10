@@ -1,7 +1,7 @@
 ---
 title: Зависимые списки NGFP
 type: architecture
-last_verified: 2026-10-08
+last_verified: 2026-10-09
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java
@@ -27,6 +27,13 @@ FormFieldLayout. Длинное выбранное имя переносится
 SQL, сетевых запросов при выборе или нового типа элемента формы. Без расширения
 старые формы сохраняют прежнее поведение. `input_search`/AutoTextEdit, radio и
 числовые поля пока не поддерживаются; неподдерживаемая привязка блокирует Save.
+
+Предварительный выбор типа по стилю поддерживает обычный legacy double_combobox
+без lisa_form_dependencies. Подписи, вкладки и обычные combobox в той же форме
+не считаются парами полей и не прерывают загрузку категорий. Регрессии используют
+стандартные формы полевых точек, линий и площадей и проверяют classobj/typeobj.
+Отмена предварительного выбора не создаёт объект; длинные списки сохраняют
+видимую кнопку отмены, а ошибка чтения шаблона показывается понятным сообщением.
 
 ## Формат v1
 

@@ -1,9 +1,16 @@
 schema_version: 1
 invariants:
+  INV-TRACK-DELIVERY:
+    title: Track upload intent survives registration delays and acknowledgements stay in the owning workspace
+    owners: [maplib, maplibui, app]
+    statement: Upload defaults to enabled with one-time legacy migration and later explicit opt-out. Registration and network failure never clear upload intent or unsent points. Live and durable delivery serialize packets, acknowledge only accepted rowids in the captured track database, and never resolve a queued background owner to the active map. Pending track badges require enabled upload and confirmed registration for the exact server/UID; unknown or explicitly unregistered devices have no track badge. Transport failure retains known registration, while successful packet acknowledgement removes pending rows.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/util/TrackSendSettings.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackUploader.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackWorker.java, app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-TRACK-DELIVERY]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/reference/settings-and-config.md, docs/guides/project-synchronization-user-guide.md]
   INV-FEATURE-TYPE-CREATION:
     title: Explicit style categories initialize valid parents and survive draft handoff
     owners: [maplib, maplibui, app]
-    statement: A new object may explicitly choose a concrete local style category before geometry. Legacy and cascading selectors use canonical values and every valid stable-key parent filter; ambiguous tuples remain separate choices. Initial state never overwrites restored control state or existing objects, survives geometry and pre-launch form checkpoints, and never bypasses the normal Save gates.
+    statement: A new object created by sketch, current location or walk may explicitly choose a concrete local style category before geometry. The dialog preserves its originating tool through recreation; walk ownership persists typed initial values atomically until geometry/form handoff, and cancelling a point category releases only the foreground point lock. Mixed forms are inspected without normalizing non-selector or empty bindings. Legacy and cascading selectors use canonical values and every valid stable-key parent filter; ambiguous tuples remain separate choices. Initial state never overwrites restored control state or existing objects, survives geometry and pre-launch form checkpoints, and never bypasses the normal Save gates.
     related_code: [maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/util/LayerUtil.java, app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt]
     verify_smoke: [SMOKE-FEATURE-TYPE-CREATION]
     must_update_docs: [docs/architecture/feature-type-creation.md, docs/guides/form-behavior-user-guide.md]
@@ -333,6 +340,8 @@ invariants:
       toggle and walk panel. Right-edge tools reflow into columns using actual view
       height, including orientation changes without Activity recreation. The creation
       menu has its own bottom row and cannot overlap the tools or walk controls.
+      The compact walk panel sits at the bottom and moves above that row only
+      while the creation menu is expanded; it exposes no GPS accuracy or overflow.
     related_code:
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -487,7 +496,7 @@ invariants:
   INV-COLLECTOR-FORM-ATOMIC:
     title: Collector form updates preserve one valid file pair
     owners: [maplib, maplibui]
-    statement: Validate downloaded and unpacked hashes, install form/meta as one recoverable transaction, and preserve the previous form on failure.
+    statement: Validate downloaded and unpacked hashes over canonical form/meta JSON; ignore object key order and whitespace but preserve every value, rule, identity and array order, excluding only top-level ngw_connection. Install form/meta as one recoverable transaction and preserve the previous form on failure.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/LayerFormHashUtil.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
@@ -619,6 +628,10 @@ invariants:
       a GPS gap pauses the walk until an explicit reconnection. While walk recording is active,
       a separate panel owns controls and normal menus remain available. Point creation locks all
       walk controls from chooser through Save/Cancel; Finish awaits the service acknowledgement. For new
+      walk geometry, every line needs two distinct vertices and every polygon ring three;
+      insufficient geometry exits with a readable message and no feature/form write.
+      The finished owner's Save stays enabled in its editor and opens attributes for
+      new and existing features; Cancel is direct and confirmed. For new
       Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the
       attribute action becomes available as soon as geometry exists and delegates to the same
       validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not
@@ -837,6 +850,33 @@ invariants:
       - maplib/docs/manifest.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml
+  INV-LOCAL-LOG-STARTUP:
+    title: Local logging does not prepare remote backlog uploads at startup
+    owners: [maplib, maplibui, app]
+    statement: Initialize HyperLog only once per process after removing its obsolete URL setting; never persist a dummy endpoint, overwrite the app format in base initialization or delete local logs. Preserve expiry, export preferences and delegating crash handlers.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
+      - app/src/main/java/com/nextgis/mobile/util/Logger.java
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-DIAGNOSTIC-NOISE]
+    must_update_docs: [docs/architecture/error-reporting.md, maplib/docs/README.md, maplibui/docs/README.md, app/docs/README.md]
+  INV-BACKGROUND-LOCATION-WARNING:
+    title: Background GPS restrictions are checked without starting a recorder
+    owners: [app]
+    statement: >
+      Check launch/resume for screen-off GPS Battery Saver policy, user background
+      restriction and battery optimization. Offer the applicable public system settings
+      without changing them or starting a recorder automatically. Retain one acknowledgement
+      per unchanged launch state across rotation; a changed risk warns again and clearing
+      restrictions removes the warning. Legacy Doze prompt suppression does not hide it.
+      Missing Doze exemption means a possible risk, not proof of current GPS failure.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java
+    verify_smoke: [SMOKE-BACKGROUND-LOCATION-WARNING, AUTO-APP-RELEASES]
+    must_update_docs: [docs/architecture/location-pipeline.md, docs/reference/settings-and-config.md, app/docs/README.md]
   INV-DIAGNOSTIC-DELIVERY:
     title: Diagnostic events survive offline and temporary server failures
     owners: [app]
@@ -845,15 +885,22 @@ invariants:
       handler. Persist bounded SDK envelopes in private files storage before async HTTP;
       retain offline, 5xx and rate-limited failures, replay through SDK observers and a
       connected WorkManager job without reinitializing handlers. Event UUID and diagnostic
-      stack/version/device/typed-operation context survive process restart. Never read or
-      attach raw HyperLog, NMEA, GIS attributes/geometry, accounts or photos. Fatal exceptions
+      stack/version/device/typed-operation context survive process restart. Do not read
+      business storage, photos or raw HyperLog in crash callbacks. Supplied event data,
+      original HTTP URLs/query/headers/cookies, response metadata, custom context and
+      frame paths are retained without content masking under bounded serialization.
+      Never consume streaming HTTP bodies for reporting. Fatal exceptions
       still delegate to Android and existing draft recovery remains independent.
+      Limit only new automatic handled SDK HTTP 5xx bursts; retain the first request
+      and status/source tags, never suppress fatal failures or cached replay.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
     verify_smoke: [SMOKE-DIAGNOSTIC-DELIVERY, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
     must_update_docs: [docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md]
   INV-CRASH-DRAFT-RECOVERY:

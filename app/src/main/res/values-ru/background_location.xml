@@ -1,0 +1,11 @@
+<resources>
+    <string name="background_location_title">GPS и работа в фоне</string>
+    <string name="background_location_saver_warning">Энергосбережение ограничивает GPS при выключенном экране. Отключите его для непрерывного получения координат.</string>
+    <string name="background_location_restricted_warning">Android ограничивает фоновую работу приложения. Разрешите работу без ограничений, чтобы GPS продолжал работать при выключенном экране.</string>
+    <string name="background_location_optimized_warning">Оптимизация батареи может прерывать GPS при выключенном экране. Разрешите приложению работу без ограничений батареи.</string>
+    <string name="background_location_settings">Настроить</string>
+    <string name="background_location_disable_saver">Выключить энергосбережение</string>
+    <string name="background_location_allow_background">Разрешить фоновую работу</string>
+    <string name="background_location_disable_optimization">Отключить оптимизацию батареи</string>
+    <string name="background_location_settings_unavailable">Откройте настройки батареи телефона и разрешите приложению работу без ограничений.</string>
+</resources>

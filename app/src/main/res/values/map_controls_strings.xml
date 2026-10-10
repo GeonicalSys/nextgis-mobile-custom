@@ -3,4 +3,9 @@
     <string name="map_measure_distance">Measure distance</string>
     <string name="map_zoom_in">Zoom in</string>
     <string name="map_zoom_out">Zoom out</string>
+    <string name="measurement_tools">Measurements</string>
+    <string name="measurement_ruler">Ruler</string>
+    <string name="measurement_azimuth_current">Azimuth from my location</string>
+    <string name="measurement_azimuth_points">Azimuth between points</string>
+    <string name="track_send_pending_registration">Track points will be sent automatically after this device is registered on the server. Unsent points are kept on the device.</string>
 </resources>

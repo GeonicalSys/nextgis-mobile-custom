@@ -1,11 +1,29 @@
 schema_version: 1
 preferences:
+  track_send:
+    owner: app
+    type: boolean
+    default: true
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_tracks.xml
+    purpose: Independent upload intent; registration and connectivity defer delivery without clearing this choice.
+  track_registered_device:
+    owner: maplibui
+    type: string
+    source: maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java
+    purpose: SHA-256 fingerprint of the exact server and UID after registered=true; absent or mismatched identity hides track badges, registered=false revokes matching confirmation, transport failure preserves known registration. Independent of upload intent and packet ACK.
+  track_send_default_enabled_v1:
+    owner: maplib
+    type: boolean
+    default: false
+    source: maplib/src/main/java/com/nextgis/maplib/util/TrackSendSettings.java
+    purpose: Enable legacy registration-disabled upload once; preserve subsequent user opt-out.
   battery_dont_show_pref:
     owner: app
     type: boolean
     default: false
     source: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    purpose: Suppress only the legacy Doze exemption prompt; never suppress a current Battery Saver restriction on screen-off system GPS.
+    purpose: Suppress only the legacy Doze exemption prompt; never suppress a current Battery Saver restriction or launch/resume background-location warning.
   tracks_temp:
     owner: maplibui
     type: shared_preferences_file
@@ -302,7 +320,7 @@ manifest_metadata:
   io.sentry.auto-init:
     owner: app
     source: app/src/main/AndroidManifest.xml
-    purpose: Disable provider auto-init; AppDiagnostics initializes after the isolated-script UID guard with explicit delivery and redaction policy.
+    purpose: Disable provider auto-init; AppDiagnostics initializes after the isolated-script UID guard with explicit delivery, payload-size and duplicate-frequency limits.
   com.nextgis.mobile.UPDATE_FLAVOR:
     owner: app
     source: app/src/main/AndroidManifest.xml
@@ -386,10 +404,15 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  hyperlog-local-only:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
+    location_name: URL in HyperLog SharedPreferences
+    purpose: Remove obsolete upload endpoint before first process initialization without touching local logs or export settings; never persist a dummy endpoint.
   diagnostic-reports:
     owner: app
     source: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-    purpose: SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; a unique connected WorkManager job retries without GIS synchronization.
+    purpose: SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; contract 2 retains supplied URLs/query/headers/context without content masking, with bounded strings/collections. Connected WorkManager retry is independent of GIS sync and a process-local ten-minute HTTP 5xx filter never drops cached replay or fatal events.
   ngw-field-required:
     owner: maplib
     location_name: fields[].required in the local layer config JSON

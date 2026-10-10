@@ -6,30 +6,28 @@ import java.net.UnknownHostException;
 import static org.junit.Assert.*;
 
 public class DiagnosticsPolicyTest {
-    @Test public void usefulAndroidFailureSurvivesRedaction() {
+    @Test public void usefulAndroidFailureSurvivesLimiting() {
         String explanation = "Starting FGS with type location requires permissions "
                 + "android.permission.FOREGROUND_SERVICE_LOCATION and ACCESS_FINE_LOCATION";
-        assertEquals(explanation, DiagnosticsPolicy.redact(explanation));
+        assertEquals(explanation, DiagnosticsPolicy.limitMessage(explanation));
         assertEquals("Cannot update display while location is unavailable",
-                DiagnosticsPolicy.redact("Cannot update display while location is unavailable"));
+                DiagnosticsPolicy.limitMessage("Cannot update display while location is unavailable"));
     }
 
-    @Test public void credentialsAddressesAndSqlNeverEnterEventMessages() {
-        String redacted = DiagnosticsPolicy.redact("Failed password='demo-password' "
+    @Test public void suppliedAddressesParametersCoordinatesAndSqlRemainUseful() {
+        String original = "Failed password='demo-password' "
                 + "Authorization: Bearer demo-bearer https://name:demo-pass@example.org/resource/803?token=demo-token "
-                + "name@example.org at 60.123456, 28.123456; while compiling: INSERT INTO staff VALUES('private person')");
-        for (String secret : new String[]{"demo-password", "demo-bearer", "demo-pass", "demo-token",
-                "example.org", "60.123456", "28.123456", "private person"}) assertFalse(secret, redacted.contains(secret));
-        assertTrue(redacted.contains("[database statement omitted]"));
+                + "name@example.org at 60.123456, 28.123456; while compiling: INSERT INTO staff VALUES('private person')";
+        assertEquals(original, DiagnosticsPolicy.limitMessage(original));
     }
 
     @Test public void pathsReceiverDataAndHugeMessagesAreBounded() {
-        assertFalse(DiagnosticsPolicy.redact("Cannot read /storage/emulated/0/customer/project/photo.jpg").contains("customer"));
-        assertFalse(DiagnosticsPolicy.redact("Cannot read C:\\Work\\customer\\file.db").contains("customer"));
-        assertFalse(DiagnosticsPolicy.redact("GNSS $GPGGA,123,60.123456,N").contains("123,"));
-        assertEquals("Invalid geometry: [geometry omitted]",
-                DiagnosticsPolicy.redact("Invalid geometry: SRID=4326;POINT(28.12 60.22)"));
-        assertEquals(1024, DiagnosticsPolicy.redact("x".repeat(100_000)).length());
+        assertTrue(DiagnosticsPolicy.limitMessage("Cannot read /storage/emulated/0/customer/project/photo.jpg").contains("customer"));
+        assertTrue(DiagnosticsPolicy.limitMessage("Cannot read C:\\Work\\customer\\file.db").contains("customer"));
+        assertTrue(DiagnosticsPolicy.limitMessage("GNSS $GPGGA,123,60.123456,N").contains("123,"));
+        assertEquals("Invalid geometry: SRID=4326;POINT(28.12 60.22)",
+                DiagnosticsPolicy.limitMessage("Invalid geometry: SRID=4326;POINT(28.12 60.22)"));
+        assertEquals(4096, DiagnosticsPolicy.limitMessage("x".repeat(100_000)).length());
     }
 
     @Test public void offlineAndCancellationAreExpectedButLocalStorageFailureIsReported() {

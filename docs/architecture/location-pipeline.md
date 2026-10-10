@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-10-06
+last_verified: 2026-10-10
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -27,6 +27,8 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
   - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
+  - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt
+  - app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java
 ---
 
 # Текущая позиция и запись GPS
@@ -63,6 +65,14 @@ foreground `location|connectedDevice` с тихим уведомлением. С
 Опция `verbose_log` пишет в HyperLog каждое GNSS/NMEA измерение и причину
 `onLocationUnavailable`; по умолчанию координаты в лог не попадают.
 
+Подтверждённая ручная пауза обхода использует существующий gps_paused:
+сервис сначала сбрасывает принятый хвост в геометрию, сохраняет её и перестаёт
+добавлять новые точки. Курсор карты и другой recorder сохраняют общий GNSS
+источник. Продолжение требует подтверждения соединения и свежего recording fix;
+sampler начинается заново. Звуковой heartbeat во время паузы не подтверждает
+запись. Стартовое центрирование карты использует ту же опору геометрии при
+неизменном масштабе; pan не становится источником записываемых координат.
+
 ## Энергосбережение и выключенный экран — 2026-10-06
 
 `PARTIAL_WAKE_LOCK` и foreground service не отменяют глобальную политику GPS
@@ -79,6 +89,26 @@ foreground `location|connectedDevice` с тихим уведомлением. С
 уведомление и сообщает открытому экрану. Resume повторно проверяет ограничение.
 Старое «не спрашивать» для Doze не скрывает новое предупреждение. Ни предупреждение,
 ни смена режима питания не закрывают трек и не удаляют его точки; Stop доступен.
+
+С 10 октября проверка выполняется также при открытии карты и Resume без трека
+или обхода. `BackgroundLocationWarning` различает GPS-политику Battery Saver,
+`ActivityManager.isBackgroundRestricted()` на API 28+ и отсутствие Doze exemption.
+Последнее показывает возможный риск прерывания, а не доказывает текущий отказ GPS.
+Предупреждение в Snackbar не блокирует карту; «Настроить» предлагает нужные
+переходы: Battery Saver, настройки приложения для разрешения фоновой работы,
+запрос исключения из оптимизации батареи. Return/rotation не запускают запись.
+Одна неизменная ситуация показывается один раз за запуск, включая rotation;
+новое ограничение предупреждает снова, устранение закрывает предупреждение.
+Старое «не спрашивать» не скрывает проверку при открытии.
+
+Foreground location service и wake lock уже используются; программно отключать
+системный Battery Saver или пользовательский запрет фоновой работы приложение
+не может. Документация Android описывает
+[фоновые ограничения](https://developer.android.com/topic/performance/background-optimization)
+и [частичное исключение Doze](https://developer.android.com/training/monitoring-device-state/doze-standby).
+Часть OEM-ограничений не видна через публичные API; проверка не обещает обнаружить
+все режимы производителя. Экран снимает только свою подписку при Pause и
+возвращает при Resume; активный recorder сохраняет общий GPS source.
 
 Полевые логи Release 3.1.2.27 и Debug 3.1.2.23 от 6 октября показывают живой
 сервис и wake lock, неизменную GPS-подписку и прекращение сырых fixes после
@@ -503,3 +533,12 @@ negative sampling preferences fall back to existing 2s/5m defaults. WKT/snapshot
 traversal is linear without changing geometry or closing-ring rules. Durability
 limits and native fault checks are in [crash recovery](crash-recovery.md) and
 [the audit](../reference/mobile-reliability-audit.md).
+
+## Отправка трека после регистрации
+
+track_send по умолчанию true. Старые установки однократно включают отправку
+через track_send_default_enabled_v1; последующее ручное выключение сохраняется.
+Регистрация UID больше не снимает галочку. Неотправленные точки сохраняются
+для следующей живой или фоновой попытки, включая Stop и process restart.
+WorkManager jobs принадлежат сохранённому пути проекта и не переходят на другую
+карту. Полный контракт и индикация: [доставка трека](ngw-sync-and-storage.md#доставка-трека-и-регистрация-uid).

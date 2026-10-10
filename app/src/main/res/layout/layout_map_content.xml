@@ -96,19 +96,8 @@
         android:layout_above="@id/map_action_row"
         android:padding="8dp">
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_azimuth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/azimuth_tool"
-            fab:fab_addButtonColorNormal="?attr/colorPrimary"
-            fab:fab_addButtonColorPressed="?attr/colorAccent"
-            fab:fab_addButtonPlusIconColor="@android:color/white"
-            fab:fab_icon="@drawable/ic_azimuth"
-            fab:fab_size="mini"/>
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_ruler"
-            android:contentDescription="@string/map_measure_distance"
+            android:id="@+id/action_measurements"
+            android:contentDescription="@string/measurement_tools"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_addButtonColorNormal="?attr/colorPrimary"
@@ -151,7 +140,7 @@
             fab:fab_size="mini"/>
     </com.nextgis.mobile.view.MapControlRail>
 
-    <!-- Reserved lower row: expanding creation actions never cover the tool rail or walk controls. -->
+    <!-- Reserved lower row: the walk panel moves above it while creation actions are expanded. -->
     <View
         android:id="@+id/map_action_row"
         android:layout_width="match_parent"
@@ -197,11 +186,11 @@
         android:id="@+id/walk_recording_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/map_action_row"
-        android:layout_marginStart="12dp"
+        android:layout_above="@id/fl_status_panel"
+        android:layout_marginStart="8dp"
         android:layout_toStartOf="@id/map_control_rail"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="4dp"
         android:visibility="gone" />
 
     <include

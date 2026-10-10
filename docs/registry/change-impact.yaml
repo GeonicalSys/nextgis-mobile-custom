@@ -1,7 +1,31 @@
 schema_version: 1
 triggers:
+  - id: BACKGROUND-LOCATION-WARNING
+    paths: [app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt, app/src/main/res/values/background_location.xml, app/src/main/res/values-ru/background_location.xml, app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java]
+    owners: [app]
+    read: [docs/architecture/location-pipeline.md, docs/reference/settings-and-config.md]
+    invariants: [INV-BACKGROUND-LOCATION-WARNING]
+    must_update_docs: [docs/architecture/location-pipeline.md, docs/reference/settings-and-config.md, docs/reference/official-differences.md, app/docs/README.md, app/docs/manifest.yaml]
+    verify: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, SMOKE-BACKGROUND-LOCATION-WARNING]
+    strict_docs: true
+  - id: LOCAL-LOG-STARTUP
+    paths: [maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java, app/src/main/java/com/nextgis/mobile/util/Logger.java, maplib/src/test/java/com/nextgis/maplib/util/LocalLogInitializerTest.java, app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsNoiseTest.java]
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/error-reporting.md, docs/architecture/crash-recovery.md]
+    invariants: [INV-LOCAL-LOG-STARTUP, INV-DIAGNOSTIC-DELIVERY, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs: [docs/architecture/error-reporting.md, docs/reference/settings-and-config.md, docs/registry/config-keys.yaml, docs/reference/official-differences.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml, maplibui/docs/README.md, maplibui/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-DIAGNOSTIC-NOISE]
+    strict_docs: true
+  - id: TRACK-DELIVERY
+    paths: [maplib/src/main/java/com/nextgis/maplib/util/TrackSendSettings.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackUploader.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackWorker.java, app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java]
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/ngw-sync-and-storage.md, docs/reference/settings-and-config.md]
+    invariants: [INV-TRACK-DELIVERY, INV-SYNC-ACCOUNT-ISOLATION, INV-PROJECT-OPERATION-EXCLUSION]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/guides/project-synchronization-user-guide.md, docs/reference/settings-and-config.md, docs/reference/official-differences.md, docs/registry/config-keys.yaml, app/docs/manifest.yaml, maplib/docs/manifest.yaml, maplibui/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-APP-RELEASES, AUTO-RELIABILITY-NATIVE, SMOKE-TRACK-DELIVERY]
+    strict_docs: true
   - id: FEATURE-TYPE-CREATION
-    paths: [maplibui/src/main/java/com/nextgis/maplibui/dialog/ChooseFeatureTypeDialog.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java, maplibui/src/main/res/layout/row_feature_type.xml]
+    paths: [maplibui/src/main/java/com/nextgis/maplibui/dialog/ChooseFeatureTypeDialog.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java, maplibui/src/main/res/layout/row_feature_type.xml, app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt, maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java]
     owners: [maplib, maplibui, app]
     read: [docs/architecture/feature-type-creation.md, docs/architecture/cascading-form-lists.md, docs/architecture/crash-recovery.md]
     invariants: [INV-FEATURE-TYPE-CREATION, INV-CASCADING-FORM-LISTS, INV-CRASH-DRAFT-RECOVERY]
@@ -301,6 +325,9 @@ triggers:
       - maplibui/src/main/res/menu/ruler_measurement.xml
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometryInsertion.java
+      - maplibui/src/main/java/com/nextgis/maplibui/service/WalkGeometrySnapshot.java
+      - maplibui/src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ControlHelper.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java
       - maplibui/src/main/res/menu/edit_line.xml
       - maplibui/src/main/res/menu/edit_multiline.xml

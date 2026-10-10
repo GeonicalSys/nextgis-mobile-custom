@@ -3,4 +3,9 @@
     <string name="map_measure_distance">Измерить расстояние</string>
     <string name="map_zoom_in">Приблизить</string>
     <string name="map_zoom_out">Отдалить</string>
+    <string name="measurement_tools">Измерения</string>
+    <string name="measurement_ruler">Линейка</string>
+    <string name="measurement_azimuth_current">Азимут от местоположения</string>
+    <string name="measurement_azimuth_points">Азимут между точками</string>
+    <string name="track_send_pending_registration">Точки трека отправятся автоматически после регистрации устройства на сервере. Неотправленные точки сохраняются на устройстве.</string>
 </resources>

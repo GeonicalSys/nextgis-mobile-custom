@@ -34,7 +34,10 @@ isolated-script guard, до HyperLog handler. Не глотать fatal exceptio
 переинициализировать SDK ради retry. DiagnosticsTransport сохраняет SDK envelopes
 при offline, 5xx и rate limiting; стандартный AsyncHttpTransport 8.37.1 теряет
 отчёты при HTTP 503. После обновления SDK перепроверять hints/cache/WorkManager.
-Не отправлять raw HyperLog, NMEA, accounts, field values, geometry и фото.
+Не читать business storage, raw HyperLog или фото из crash callback. По явному
+требованию владельца сохранять уже предоставленные event URL/query/headers,
+контекст и значения без маскирования, с ограничением размера/глубины; HTTP streams
+не читать и не расходовать ради отчёта.
 Новые operation/phase — enum; новые handled captures должны исключать обычную
 offline/cancel ситуацию. Реальные DSN/пароли не коммитить. Delivery test runner
 включается только `-PdiagnosticDeliveryChecks=true`, тесты — на отдельном эмуляторе.
