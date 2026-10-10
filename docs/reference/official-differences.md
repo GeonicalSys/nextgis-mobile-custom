@@ -1720,3 +1720,14 @@ GIS-выборка и календарное месячное окно реал�
 явный registered=false отзывает его. Official app f11d38f77e4caf1b569526c5f620b2ec513c5f9d,
 maplibui d9f5241c0e8a4904b6359bba9fae4a56bd62dd33 и maplib
 b8f3e3e6bf4bad56f8ce910c885ea6af1b898998 проверены 9 октября 2026.
+
+## Уведомления синхронизации
+
+При сверке 2026-10-10 official `nextgis/nextgis_mobile_android` остаётся на
+`f11d38f77e4caf1b569526c5f620b2ec513c5f9d`. Форк сохраняет выключенные по умолчанию
+сообщения start/finish, но ошибка общей очереди уведомляет независимо от этой
+настройки. Inactive progress и late callbacks закрытых sync-служб не возвращают
+уже удалённый индикатор; основной process startup убирает orphan 519/520.
+Тихий foreground-индикатор работает до завершения службы. Контракт и проверки:
+[NGW sync](../architecture/ngw-sync-and-storage.md) и
+[проверка уведомлений](../history/sync-notifications-verification-2026-10-10.md).

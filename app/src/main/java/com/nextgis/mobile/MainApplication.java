@@ -101,6 +101,9 @@ public class MainApplication extends GISApplication
             return;
         }
         initializeDiagnostics();
+        if (isDefaultApplicationProcess()) {
+            com.nextgis.mobile.util.SyncNotifications.clearStaleProgress(this);
+        }
         // set userAgent info
         try {
             NetworkUtil.setUserAgentPrefix(this, "NextGIS-Mobile/" + BuildConfig.VERSION_NAME,

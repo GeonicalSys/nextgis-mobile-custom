@@ -54,10 +54,11 @@ public class OfflineSyncIntentService extends IntentService {
 
     private static final String ACTION_OFFSYNC = "com.nextgis.mobile.util.action.OFFSYNC";
     private static final String SYNC_CHANNEL_ID = "manual_sync_fgs";
-    private static final int SYNC_NOTIFICATION_ID = 519;
+    private static final int SYNC_NOTIFICATION_ID = SyncNotifications.MANUAL_PROGRESS_ID;
     private BroadcastReceiver mProgressReceiver;
     private PendingIntent mSyncContentIntent;
     private volatile boolean mForegroundBlocked;
+    private boolean mNotificationsClosed;
 
 
 
@@ -220,11 +221,13 @@ public class OfflineSyncIntentService extends IntentService {
 
     @Override
     public void onDestroy() {
+        mNotificationsClosed = true;
         if (mProgressReceiver != null) {
             unregisterReceiver(mProgressReceiver);
             mProgressReceiver = null;
         }
         stopForeground(true);
+        SyncNotifications.cancelProgress(this, SYNC_NOTIFICATION_ID);
         super.onDestroy();
     }
 
@@ -248,7 +251,9 @@ public class OfflineSyncIntentService extends IntentService {
     }
 
     private void updateSyncNotification(NgwSyncProgress.Snapshot snapshot) {
-        if (mForegroundBlocked) return;
+        // finishSession broadcasts an inactive snapshot. Posting it would turn the finished
+        // foreground card into a new, independent indefinite-progress notification.
+        if (mForegroundBlocked || mNotificationsClosed || snapshot == null || !snapshot.active) return;
         NotificationManager manager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
@@ -395,6 +400,9 @@ public class OfflineSyncIntentService extends IntentService {
         } catch (Exception e) {
             Log.e("SSYNC", "handleActionFoo failed: " + e.getMessage(), e);
             HyperLog.e(Constants.TAG, "OfflineSyncIntentService.handleActionFoo crash: " + e.getMessage(), e);
+            if (!isCancellationRequested(operationGeneration) && !Thread.currentThread().isInterrupted()) {
+                new SyncAdapter(this, true).sendNotification(this, SyncAdapter.SYNC_CHANGES, null);
+            }
         } finally {
             boolean canceled;
             synchronized (CANCEL_LOCK) {

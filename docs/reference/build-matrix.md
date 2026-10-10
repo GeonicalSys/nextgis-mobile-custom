@@ -13,6 +13,11 @@ related_code:
 
 # Матрица сборки и версий
 
+App lifecycle unit tests используют Robolectric `4.16.1` (как maplib) и Android
+resources на API 26/36. Это test-only dependency; runtime APK зависимости и
+версии не меняются. Отсутствующие SHA-256 test artifacts добавляются в
+`gradle/verification-metadata.xml`, dependency verification остаётся включённой.
+
 Диагностика использует Sentry Android `8.37.1` и WorkManager `2.11.2`, одинаково
 в Debug/Lisa/Belka. `diagnosticDeliveryChecks=true` меняет только instrumentation
 runner test APK для изолированной проверки доставки; версии, application/account

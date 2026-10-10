@@ -61,6 +61,7 @@ import static com.nextgis.mobile.util.OfflineSyncIntentService.EXTRA_PROJECT_OPE
 
 public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
     private static final int NOTIFICATION_ID = 517;
+    private static final int ERROR_NOTIFICATION_ID = 518;
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -181,8 +182,16 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
             String message)
     {
         if (com.nextgis.maplib.util.SyncWorkspaceSession.current() != null) return;
-        if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SYNC, false))
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager == null) return;
+        boolean failed = SYNC_CHANGES.equals(notificationType);
+        if (SYNC_FINISH.equals(notificationType)) notificationManager.cancel(ERROR_NOTIFICATION_ID);
+        if (!failed && !PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(AppSettingsConstants.KEY_PREF_SHOW_SYNC, false)) {
+            notificationManager.cancel(NOTIFICATION_ID);
             return;
+        }
 
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setFlags(
@@ -225,14 +234,22 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
                 break;
 
             case SYNC_CHANGES:
-                // Sync failures are shown in-app (dialog), never as notifications.
-                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE))
-                        .cancel(NOTIFICATION_ID);
+                largeIcon = NotificationHelper.getLargeIcon(
+                        com.nextgis.maplibui.R.drawable.ic_action_information_light, context.getResources());
+                builder.setProgress(0, 0, false)
+                        .setOnlyAlertOnce(true)
+                        .setCategory(NotificationCompat.CATEGORY_ERROR)
+                        .setContentTitle(context.getString(R.string.sync_failed_notification_title))
+                        .setContentText(context.getString(R.string.sync_failed_notification_message))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(
+                                context.getString(R.string.sync_failed_notification_message)));
+                break;
+            default:
                 return;
         }
 
         builder.setLargeIcon(largeIcon);
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        if (failed) notificationManager.cancel(NOTIFICATION_ID);
+        notificationManager.notify(failed ? ERROR_NOTIFICATION_ID : NOTIFICATION_ID, builder.build());
     }
 }

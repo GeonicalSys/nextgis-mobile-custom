@@ -1,5 +1,13 @@
 schema_version: 1
 tests:
+  SMOKE-SYNC-NOTIFICATIONS:
+    type: device
+    scope: [app]
+    command: Run SyncNotificationsTest on an isolated emulator with DiagnosticsTestRunner and an explicit synthetic loopback DSN; select the emulator serial for every adb command.
+    steps:
+      - Build app unit tests and Lisa Debug/test APKs with diagnosticDeliveryChecks=true; install only to the isolated emulator and grant POST_NOTIFICATIONS.
+      - Run adb -s <isolated-emulator-serial> shell am instrument -w -r -e class com.nextgis.mobile.reliability.SyncNotificationsTest -e diagnosticsDsn http://synthetic@127.0.0.1:9/1 -e diagnosticsRun sync-notifications com.nextgis.mobile.debug.test/com.nextgis.mobile.util.DiagnosticsTestRunner.
+    expected: Unit API 26/36 reproduces inactive-progress repost and destroyed callbacks across the next session and preserves explicit optional messages. Native notifications show only readable errors by default, remove orphan manual/account progress without clearing errors, and disappear after bound account finish/cancel despite delayed progress. No physical phone or live NGW accounts.
   SMOKE-BACKGROUND-LOCATION-WARNING:
     type: device
     scope: [app]

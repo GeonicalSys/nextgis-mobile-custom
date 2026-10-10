@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -303,6 +303,23 @@ guard и form/walk reservations также используют owning project, 
 вероятность завершения при выключенном экране; расписание Android не гарантирует
 точное время запуска. Пользовательские действия описаны в
 [руководстве синхронизации](../guides/project-synchronization-user-guide.md).
+
+`show_sync=false` в XML и app fallback отключает обычные start/finish/cancel
+сообщения; явный выбор пользователя не мигрируется. Ошибка общей очереди
+показывает одно заменяемое уведомление 518 с понятным текстом независимо от
+`show_sync`. Raw exception/HTTP message туда не попадает; ручной in-app диалог
+с перечнем не обновившихся проектов сохраняется. Успешный повтор снимает прежнее
+уведомление ошибки при выключенных обычных сообщениях.
+
+Служебные индикаторы manual 519 и account 520 остаются тихими и не зависят от
+optional messages: Android требует уведомление для foreground service
+([контракт Android](https://developer.android.com/develop/background-work/services/fgs)).
+Manual receiver не публикует inactive snapshot; уничтоженные службы блокируют
+поздние callbacks до unregister/stopForeground и отдельно отменяют свой ID.
+Это исключает повторный бесконечный spinner после удаления итогового индикатора.
+MainApplication очищает оставшиеся 519/520 только при старте основного процесса,
+до создания служб; ошибки и GPS не очищаются. Формат данных, очередь, lease,
+расписания и правила завершения самого sync не меняются.
 
 Завершение bound `NGWSyncService` не ждёт worker на Android main thread:
 незавершённый проход фиксируется journal и повторяется после запуска, вместо

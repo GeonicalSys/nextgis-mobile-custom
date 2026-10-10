@@ -1,5 +1,12 @@
 schema_version: 1
 preferences:
+  show_sync:
+    owner: app
+    type: boolean
+    default: false
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_general.xml
+    purpose: Optional synchronization start/finish/cancel notices only; queue errors bypass this preference and silent Android foreground indicators last only while the service runs. Preserve explicit user choice.
   track_send:
     owner: app
     type: boolean
