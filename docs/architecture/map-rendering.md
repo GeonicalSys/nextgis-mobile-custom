@@ -32,6 +32,13 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+`ReorderedLayerViewAnimated` завершает жест без анимации, если после fling
+перетаскиваемая строка больше не видна или adapter снят. Cancel очищает hover,
+идентификаторы и ожидание прокрутки, восстанавливает видимость доступной строки
+и доступность списка. Перестановки сохраняет прежний LayersListAdapter.endDrag;
+порядок LayerGroup/MapLibre не меняется.
+См. [разбор GlitchTip 52](../reference/glitchtip-layer-reorder-2026-10-10.md).
+
 Перед открытием карты app и GISApplication используют общий local-only
 `LocalLogInitializer`: накопленный HyperLog не сериализуется для фиктивной
 удалённой отправки на main thread. Сам pipeline rendering не меняется.

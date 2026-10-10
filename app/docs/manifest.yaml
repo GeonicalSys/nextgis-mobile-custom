@@ -9,6 +9,10 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/fragment/ReorderedLayerViewAnimated.java
+    responsibility: Animate layer reorder; safely finish/cancel when the dragged row or adapter disappears, clearing pending-scroll/hover state and restoring enabled/visible state.
+  - path: app/src/test/java/com/nextgis/mobile/fragment/ReorderedLayerViewAnimatedTest.java
+    responsibility: Reproduce idle-after-fling with a detached row, cancellation with a visible row, detached adapter and normal waiting-for-scroll on Robolectric API 26/36.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SyncOfflineAndWalkGpsTest.java
     responsibility: Verify offline manual/retry dialogs, network-constrained account work and real walk callbacks across GPS loss, timestamp gaps, point locks, explicit pause and sticky recovery; isolated Debug emulator only.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/EmulatorNetworkFixture.java

@@ -8,6 +8,15 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-10 — GlitchTip 52: завершение перетаскивания слоёв
+
+- App обрабатывает исчезнувшую строку/adapter после fling без NullPointerException;
+  cancel очищает ожидание scroll idle, hover и возвращает доступность списка.
+- 8 Robolectric checks (4 сценария на API 26/36), сверён актуальный upstream.
+  Порядок слоёв, версии и submodule pointers не меняются.
+- Desktop contract дополнен сохранностью прежнего MBTiles при повторном экспорте;
+  Android importer остаётся прежним.
+
 ## 2026-10-10 — Подготовка Lisa Release после закрытия библиотеки
 
 - Maplibui #35 слит Merge Commit; app #55 закрепляет fetched remote merge SHA.
