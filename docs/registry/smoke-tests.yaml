@@ -341,7 +341,7 @@ tests:
   SMOKE-LAYER-REORDER:
     type: device
     scope: [maplib, maplibui]
-    steps: [Reorder mixed vector and raster layers, Finish the gesture, Compare list and map]
+    steps: [Reorder mixed vector and raster layers, Finish the gesture, Fling until the dragged row is offscreen and let scrolling reach idle, Cancel during pending scroll and reorder again, Compare list and map]
     expected: Map and list converge to the same bottom-to-top order.
   SMOKE-LAYER-VISIBILITY-ICON:
     type: device
