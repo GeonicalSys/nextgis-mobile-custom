@@ -1072,6 +1072,13 @@ Legacy type=stand/go остаётся свойством feature. Круг то�
 «Орбита», сектор неопределённости и приоритет компаса — локальный контракт
 maplib + app, который нужно сохранить при upstream sync.
 
+Локальный графический smoke `com.nextgis.mobile.rendering.LocationOrbitTest`
+проверяет реальные пиксели маркера, anchor, сектор и резервный курс на отдельном
+Debug API 36 эмуляторе с работающим EGL (`-gpu host`). Он запускается явно,
+отдельно от headless CI package `reliability`: использованный SwiftShader не
+выводил также контрольные bitmap icons. Обычный reliability CI не подтверждает
+визуальную проверку «Орбиты» и не заменяет её проверку на физическом устройстве.
+
 #### `.ngrc` и политика `immutable_local`
 
 Распаковка `.ngrc` идёт только в новый каталог слоя с защитой от path traversal
