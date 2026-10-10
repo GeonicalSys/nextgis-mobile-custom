@@ -94,3 +94,29 @@ DiagnosticsTestRunner с `diagnosticsDsn=http://synthetic@127.0.0.1:9/1` и кл
 review/CI не означает завершённую зависимость. Merge/release/publication
 заблокированы до обновления consumer pin и проверки remote inclusion. В этом
 цикле разрешены правки/commits/Draft PR, merge пользователем не запрошен.
+
+## Подготовка локального Lisa Release по следующему запросу
+
+Пользователь отдельно подтвердил Merge Commit #35, обновление consumer pin и
+Squash #55 перед локальной сборкой. Fetch/inventory всех пяти Android owner
+repositories: новых открытых PR и published codex heads нет; required union
+составляют только #35/#55 поверх merged #54/#46/#34. Maplibui #35 слит в
+`795f2c681fbed53e0ef496775a10a05e1a6a7124`; ancestry подтверждает включение
+`ddf7e8a8` и `e697b07d`. App закрепляет этот remote Merge Commit вместо branch tip.
+Никакие изменения не отложены; easypicker/publisher не меняются.
+
+Полный CI на прежнем app head `6c7accc` завершил native пакет с одним падением
+`TrackUploadTest.optOutHidesPendingTracksAndDoesNotSendThem` и одним штатно
+пропущенным отдельным denial probe. Проверка общего badge предполагала, что
+все остальные слои чистые. Fixture теперь проверяет строку трека отдельно и
+согласованность общего badge с отметками всех строк; реальные чужие изменения
+не очищаются. Есть диагностическое состояние настройки/UI при timeout.
+Окончательная native версия TrackUploadTest: **8/8**, 44.045 s, включая
+offline/reconnect, WorkManager, opt-out, registration/revocation и owning-map ACK.
+Product code и версия не менялись в этом follow-up. Docs validator/tooling
+и build checks выполняются перед app merge; старый failed CI не считается green.
+
+После Squash требуется fetch и сравнение полной Git tree app с проверенным PR
+head (squash commit не обязан сохранять ancestry), затем проверка library pins
+и version matrix. Desktop checkout параллельно dirty в другой задаче;
+Android repositories clean/fresh перед merge, desktop файлы не затрагиваются.

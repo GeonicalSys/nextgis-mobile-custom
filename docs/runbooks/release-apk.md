@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -50,6 +50,14 @@ token для отправки ошибок APK не нужны. Не печат�
    notes, если пользователь не запросил иное.
 
 ## Обязательная сборка и проверка версии
+
+Исправления offline sync, уведомлений и GPS обхода: maplibui #35 (Merge Commit
+`795f2c681fbed53e0ef496775a10a05e1a6a7124`) → fetched pin в app #55 → app #55
+(Squash). По запросу 10 октября нужен локальный Lisa Release APK без повышения
+версии, публикации и установки на рабочий телефон. Все required изменения
+в app base #54 / maplib #46 / maplibui #34 и этой цепочке должны входить в remote
+tip; только затем запускать version matrix. Детали:
+[проверка исправлений](../history/sync-offline-walk-verification-2026-10-10.md).
 
 Перед итоговой сборкой закрыть все требуемые PR из delivery matrix. Для исходной
 задачи порядок: maplib #45 (Merge Commit) → maplibui #33 (Merge Commit) → app #53

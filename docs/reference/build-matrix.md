@@ -27,9 +27,17 @@ IDs, signing и production APK от этого флага не меняются.
 на изолированном API 36 эмуляторе ручной offline запуск, ожидание сети account
 worker, сохранность очереди/track outbox и продолжение после reconnect, GPS gaps
 и ручную паузу. `EmulatorNetworkFixture` временно меняет только radios эмулятора.
-Для этой задачи проверяются Debug/test APK и compile Lisa/Belka Release sources;
-Release APK, merge и публикация ждут Merge Commit maplibui #35 и pin этого
-remote merge commit в app #55. Версии и runtime зависимости не меняются.
+Для этой задачи проверены Debug/test APK и compile Lisa/Belka Release sources.
+Maplibui #35 слит Merge Commit `795f2c681fbed53e0ef496775a10a05e1a6a7124`;
+app #55 закрепляет именно этот fetched remote commit. По отдельному подтверждению
+пользователя после Squash app #55 собирается локальный Lisa Release APK и
+проверяется version matrix; публикация и установка на рабочий телефон не запрошены.
+Версии и runtime зависимости не меняются.
+
+TrackUploadTest проверяет отметку строки «Мои треки» и согласованность общего
+индикатора со всеми строками слоёв. Он не предполагает, что другой тест не
+оставил неотправленные изменения векторного слоя: выключение отправки треков
+не должно скрывать такие изменения. Это исправление изоляции native fixture.
 `BuildConfig.SOURCE_REVISION` фиксирует Git HEAD и dirty marker для багрепортов;
 изменение этого поля не повышает versionName/versionCode.
 

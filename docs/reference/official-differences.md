@@ -1743,3 +1743,9 @@ dispatch/queue/track packets закрывают потерю подключен�
 Тихий foreground-индикатор работает до завершения службы. Контракт и проверки:
 [NGW sync](../architecture/ngw-sync-and-storage.md) и
 [проверка уведомлений](../history/sync-notifications-verification-2026-10-10.md).
+
+Для сборки с этими исправлениями app закрепляет fetched Merge Commit maplibui
+#35 `795f2c681fbed53e0ef496775a10a05e1a6a7124`, содержащий GPS continuity и
+network guards. Повторная сверка official app/maplibui/maplib 2026-10-10
+подтвердила прежние upstream SHA, приведённые выше; это фиксация доставки,
+без новых runtime зависимостей или повышения версии.
