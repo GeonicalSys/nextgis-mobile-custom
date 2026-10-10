@@ -24,6 +24,8 @@ related_code:
   provider на API 26/36), native MapLibre fixture на изолированном API 36
   с аппаратным EGL (`-gpu host`; SwiftShader не выводил также контрольные bitmap icons),
   Lisa Debug assemble, Lisa/Belka Release compile, validator и 7 docs tests.
+  `com.nextgis.mobile.rendering.LocationOrbitTest` запускается явно на таком
+  эмуляторе, отдельно от обычного SwiftShader CI package `reliability`.
   Физический компас, перекрытие реальными треками/векторами и полный cold/hot
   device smoke остаются непроверенными.
 - Порядок доставки: maplib Draft PR → Merge Commit в master → fetch и pin

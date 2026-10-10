@@ -251,6 +251,7 @@ tests:
     type: device
     scope: [app, maplib]
     steps:
+      - Run com.nextgis.mobile.rendering.LocationOrbitTest explicitly on an isolated Debug API 36 emulator with working EGL (-gpu host); the SwiftShader reliability CI package does not run this graphics smoke
       - Open a map containing overlapping saved and active tracks plus vector layers
       - Move the current location onto the overlap and rotate the phone in place
       - Cover or disturb the compass, then uncover it; freeze GPS while rotating

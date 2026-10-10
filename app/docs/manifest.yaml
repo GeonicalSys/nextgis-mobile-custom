@@ -153,8 +153,8 @@ key_components:
     responsibility: Foreground rotation-vector true heading for the Orbit pointer and compass-uncertainty sector, using WMM2025 declination without stakeout correction, plus magnetometer and heading-jitter inputs to HeadingConeAccuracy; actively notify compass expiry after 500 ms without waiting for another GPS/sensor event and clear/cancel on stop.
   - path: app/src/test/java/com/nextgis/mobile/location/DeviceHeadingProviderTest.kt
     responsibility: Exercise compass absence, registration failure, unreliable readings, active expiry, fresh-sample recovery and stop/restart on Android API 26 and 36 without GPS callbacks.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LocationOrbitTest.java
-    responsibility: Check actual MapLibre vector images and central fix anchor, topmost accuracy-sector-symbol order after a hot style addition and lite reload, rendered compass/course/plain-dot transitions, visible sector size through native projection at zoom 16/18/19, actual position-dot pixels in screenshots and removal when the fix expires on an isolated Debug emulator with a working EGL backend.
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
+    responsibility: Explicit graphics smoke outside the SwiftShader reliability CI package; check actual MapLibre vector images and central fix anchor, topmost accuracy-sector-symbol order after a hot style addition and lite reload, rendered compass/course/plain-dot transitions, visible sector size through native projection at zoom 16/18/19, actual position-dot pixels in screenshots and removal when the fix expires on an isolated Debug emulator with a working EGL backend.
   - path: app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
     responsibility: Combine rotation-vector heading accuracy, circular yaw jitter, raw-vs-filtered innovation and magnetometer field penalty, then open the cone faster than it closes.
   - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt

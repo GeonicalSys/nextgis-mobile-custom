@@ -1,4 +1,4 @@
-package com.nextgis.mobile.reliability;
+package com.nextgis.mobile.rendering;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -34,7 +34,11 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 import static org.junit.Assert.*;
 
-/** Exercises actual MapLibre style, vector images, rendered features and map projection. */
+/**
+ * Explicit graphics smoke on an isolated emulator with a working EGL backend.
+ * Kept outside reliability's headless CI package because its SwiftShader backend
+ * cannot render the bitmap symbols needed by the screenshot assertions.
+ */
 @RunWith(AndroidJUnit4.class)
 public class LocationOrbitTest {
     private static final Point FIX = Point.fromLngLat(21.0095, 52.23035);
