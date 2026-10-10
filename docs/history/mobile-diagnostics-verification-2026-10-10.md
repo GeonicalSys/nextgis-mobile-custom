@@ -91,6 +91,7 @@ maplibui `d70a5572`. Ничего требуемого не отложено.
 | Shared local-only HyperLog, NGFP canonical hash; прежняя track intent migration | maplib `007001c84e49c1aaf908688898cd8740151be020` | #46 / master | Exact app gitlink, open Draft |
 | Base initializer; прежние category/walk/track UI fixes | maplibui `dcc4487d4e88614c23bf71ea5d7bcbe28298d97b` | #34 / master | Exact app gitlink, open Draft |
 | HTTP policy, app initializer, native checks/docs и прежние creation/measurements/track flows | app `0babee94293839386ba0ef802a118d16e2065344` | #54 / my-maplibre | Код и exact gitlinks присутствуют; open Draft |
+| Исходный HTTP/event context без маскирования, launch/resume GPS warning и CI permissions | app `6c2c1c5450c74bc98805f8e12d0c1bf3bd612ae0` | #54 / my-maplibre | Текущий task tip включает прежние app commits и те же exact library gitlinks; open Draft |
 
 ## Дополнение: содержимое отчётов и GPS без записи
 
