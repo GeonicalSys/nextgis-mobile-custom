@@ -1,5 +1,14 @@
 schema_version: 1
 tests:
+  SMOKE-DIAGNOSTIC-NOISE:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - On an isolated Debug emulator build with diagnosticDeliveryChecks and use DiagnosticsTestRunner with an explicit test DSN pointing to an unavailable loopback receiver.
+      - Invoke DiagnosticsNoiseTest seedObsoleteEndpointAndLargeLocalBacklog, stop only the emulator Debug process and separately invoke coldStartRetainsBacklogAndDelegatingHandlerWithoutRemoteUpload.
+      - Invoke sdkBeforeSendPersistsOneHttpEventPerBurstWithSafeSource on a fresh synthetic cache and rerun the existing workerRetriesTemporaryServerFailureWithoutNetworkChange with its loopback DSN.
+      - Invoke androidJsonHashKeepsSnapshotDownloadAndStagedFormConsistent with synthetic forms to exercise the actual Android JSON implementation.
+    expected: 6000 synthetic log rows survive cold startup without an upload URL or repeated initialization; app format and delegating handler remain. Twenty-eight same-source 503 events produce one redacted envelope and a different source another, while the receiver 503 retry still succeeds without reinstalling handlers. Never run this on a physical device.
   SMOKE-FEATURE-TYPE-CREATION:
     type: automatic
     scope: [app, maplib, maplibui]

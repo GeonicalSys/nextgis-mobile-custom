@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,14 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+Перед открытием карты app и GISApplication используют общий local-only
+`LocalLogInitializer`: накопленный HyperLog не сериализуется для фиктивной
+удалённой отправки на main thread. Сам pipeline rendering не меняется.
+HTTP 503 от локального tile provider и от удалённого сервера различаются только
+безопасным `http_source` в диагностике, повторные 5xx ограничены. Collector form
+sync сравнивает canonical JSON и сохраняет прежнюю форму при реальном mismatch.
+См. [диагностику](error-reporting.md) и [формы Collector](collector-projects.md).
 
 Новый объект сначала получает [категорию стиля](feature-type-creation.md).
 Превью использует копию effective Style, штатные PNG-маркеры и fill patterns,

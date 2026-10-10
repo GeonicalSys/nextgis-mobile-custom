@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -116,11 +116,15 @@ Battery Saver; приложение не меняет системный реж�
   HyperLog и пункт «Поделиться логом». `verbose_log` (там же, «Расширенное
   логирование», default false) пишет каждое измерение GPS/NMEA, включая
   координаты; только для диагностики.
+  Общий `LocalLogInitializer` сохраняет локальный журнал и формат, удаляя при
+  старте устаревшую настройку `HyperLog/URL`; фиктивный endpoint не записывается.
 - Автоматические отчёты GlitchTip независимы от локального логирования.
   `sentry.dsn` из игнорируемого `sentry.properties` задаёт приёмник; APK не содержит
   пароль администратора. `io.sentry.auto-init=false`, screenshots/view hierarchy
   и performance sampling отключены. SDK queue в private files ограничена 256
   обычными envelopes; connected WorkManager retry не запускает GIS sync.
+  Автоматические HTTP 5xx ограничены десятью минутами на одинаковую группу;
+  fatal и replay сохранённых отчётов сохраняют прежний путь доставки.
   [Доставка и границы](../architecture/error-reporting.md),
   [разбор ошибок](../guides/bug-reports-user-guide.md).
 - Collector: project registry JSON, project metadata, composition state.

@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 related_code:
   - app/build.gradle
   - app/src/main
@@ -1597,6 +1597,18 @@ delegation или восстановление черновиков. В пров
 `f11d38f7` такой transport/cache retry policy и фонового задания нет.
 [Контракт](../architecture/error-reporting.md),
 [разбор отчётов](../guides/bug-reports-user-guide.md).
+
+Повторно проверено 10 октября 2026 через GitHub API: official app `f11d38f7`,
+maplib `b8f3e3e6`, maplibui `d9f5241c`. Logger официального app и GISApplication
+официального maplibui сохраняют прямой HyperLog initialize;
+общего local-only initializer и фильтра автоматических HTTP 5xx там нет.
+Форк мигрирует устаревший endpoint до первого initialize, сохраняет локальные
+логи и ограничивает HTTP-бурсты с безопасными status/source тегами.
+Collector NGFP в форке сравнивается по JSON с упорядоченными ключами обеих частей,
+с сохранением значений/порядка массивов и транзакционного hash guard. Официальный
+NGW formbuilder `bdcdb3b1` строит legacy attributes из set; это объясняет возможность
+разного порядка ключей у workers, но не является доказательством содержимого
+конкретных двух скачиваний на рабочем устройстве.
 
 ## Что намеренно не включено
 

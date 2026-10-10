@@ -404,10 +404,15 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  hyperlog-local-only:
+    owner: maplib
+    source: maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
+    location_name: URL in HyperLog SharedPreferences
+    purpose: Remove obsolete upload endpoint before first process initialization without touching local logs or export settings; never persist a dummy endpoint.
   diagnostic-reports:
     owner: app
     source: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-    purpose: SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; a unique connected WorkManager job retries without GIS synchronization.
+    purpose: SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; connected WorkManager retry is independent of GIS sync and a process-local ten-minute HTTP 5xx filter never drops cached replay or fatal events.
   ngw-field-required:
     owner: maplib
     location_name: fields[].required in the local layer config JSON

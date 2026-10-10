@@ -496,7 +496,7 @@ invariants:
   INV-COLLECTOR-FORM-ATOMIC:
     title: Collector form updates preserve one valid file pair
     owners: [maplib, maplibui]
-    statement: Validate downloaded and unpacked hashes, install form/meta as one recoverable transaction, and preserve the previous form on failure.
+    statement: Validate downloaded and unpacked hashes over canonical form/meta JSON; ignore object key order and whitespace but preserve every value, rule, identity and array order, excluding only top-level ngw_connection. Install form/meta as one recoverable transaction and preserve the previous form on failure.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/LayerFormHashUtil.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java
@@ -850,6 +850,17 @@ invariants:
       - maplib/docs/manifest.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml
+  INV-LOCAL-LOG-STARTUP:
+    title: Local logging does not prepare remote backlog uploads at startup
+    owners: [maplib, maplibui, app]
+    statement: Initialize HyperLog only once per process after removing its obsolete URL setting; never persist a dummy endpoint, overwrite the app format in base initialization or delete local logs. Preserve expiry, export preferences and delegating crash handlers.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
+      - app/src/main/java/com/nextgis/mobile/util/Logger.java
+      - app/src/main/java/com/nextgis/mobile/MainApplication.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, SMOKE-DIAGNOSTIC-NOISE]
+    must_update_docs: [docs/architecture/error-reporting.md, maplib/docs/README.md, maplibui/docs/README.md, app/docs/README.md]
   INV-DIAGNOSTIC-DELIVERY:
     title: Diagnostic events survive offline and temporary server failures
     owners: [app]
@@ -861,12 +872,15 @@ invariants:
       stack/version/device/typed-operation context survive process restart. Never read or
       attach raw HyperLog, NMEA, GIS attributes/geometry, accounts or photos. Fatal exceptions
       still delegate to Android and existing draft recovery remains independent.
+      Limit only new automatic handled SDK HTTP 5xx bursts before request redaction;
+      retain safe status/source tags and never suppress fatal failures or cached replay.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
     verify_smoke: [SMOKE-DIAGNOSTIC-DELIVERY, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
     must_update_docs: [docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md]
   INV-CRASH-DRAFT-RECOVERY:

@@ -1,12 +1,21 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 ---
 
 # app — Android-приложение Lisa/Belka
 
 ## Назначение
+
+Запуск локального журнала проходит через общий `LocalLogInitializer` без
+фиктивного URL и повторной подготовки backlog к отправке. Локальные логи,
+пользовательский формат и delegating crash handler сохраняются. Автоматические
+HTTP 5xx в GlitchTip ограничены десятью минутами, с безопасными status/source
+тегами; fatal и disk replay проходят прежним путём. NGFP сравнивается по
+каноническому JSON, чтобы порядок ключей сервера не вызывал ложную ошибку sync.
+Проверки: `DiagnosticsHttpPolicyTest`, `LocalLogInitializerTest`,
+`LayerFormHashUtilTest` и emulator-only `DiagnosticsNoiseTest`.
 
 В «Мои треки» отправка на сервер включена по умолчанию; UID можно зарегистрировать
 позже, без повторного включения галочки. Жёлтая отметка общего sync и строки

@@ -32,12 +32,15 @@ import io.sentry.android.core.SentryAndroidOptions;
 import io.sentry.protocol.SentryException;
 import io.sentry.protocol.SentryStackFrame;
 import io.sentry.protocol.SentryStackTrace;
+import io.sentry.hints.Cached;
+import io.sentry.util.HintUtils;
 
 /** Error diagnostics only: SDK event/cache/handler contracts with a durable HTTP extension. */
 public final class AppDiagnostics {
     static final String RETRY_WORK = "diagnostic-reports-retry";
     private static final String TAG = "AppDiagnostics";
     private static final DiagnosticsPolicy POLICY = new DiagnosticsPolicy();
+    private static final DiagnosticsHttpPolicy HTTP_POLICY = new DiagnosticsHttpPolicy();
     private static final AtomicReference<Operation> LAST_OPERATION =
             new AtomicReference<>(Operation.STARTUP);
     private static final Set<String> CONTEXTS = new HashSet<>(
@@ -101,7 +104,8 @@ public final class AppDiagnostics {
         options.setProfileSessionSampleRate(0.0);
         options.setSendClientReports(false);
         options.setTransportFactory(DiagnosticsTransport::new);
-        options.setBeforeSend((event, hint) -> sanitize(event));
+        options.setBeforeSend((event, hint) -> HintUtils.hasType(hint, Cached.class)
+                ? sanitize(event) : prepareForSend(event, SystemClock.elapsedRealtime(), HTTP_POLICY));
         options.setBeforeBreadcrumb((breadcrumb, hint) -> sanitize(breadcrumb));
     }
 
@@ -157,6 +161,12 @@ public final class AppDiagnostics {
                 : message.contains("clear") ? Phase.FINISHED
                 : message.contains("restor") || message.contains("recover") ? Phase.RESTORE : Phase.SAVE;
         operation(operation, phase);
+    }
+
+    static SentryEvent prepareForSend(SentryEvent event, long now, DiagnosticsHttpPolicy httpPolicy) {
+        if (event.getTag("operation") == null) event.setTag("operation", LAST_OPERATION.get().name());
+        if (!httpPolicy.shouldReport(event, now)) return null;
+        return sanitize(event);
     }
 
     static SentryEvent sanitize(SentryEvent event) {

@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-10-07
+last_verified: 2026-10-10
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -326,6 +326,15 @@ HTTP 404 при feature sync managed-слоя также не превращае
 hash распакованных файлов, новая пара `form.json`/`ngfp_meta.json` ставится через
 stage/backup/marker, а при прерывании восстанавливается прежняя согласованная
 пара. Неполный remote snapshot вообще не применяется к локальной композиции.
+
+`LayerFormHashUtil` вычисляет MD5 по каноническому JSON обеих частей NGFP: ключи
+объектов рекурсивно упорядочены, пробелы не влияют на результат. Порядок массивов,
+значения, `lisa_id`, правила и справочники сохраняются; только верхний
+`meta.ngw_connection` исключается, как и раньше. NGW legacy export собирает
+attributes из set и разные server workers могут выдавать иной порядок ключей.
+Это не должно ломать сравнение snapshot/download/staged files. Реальное изменение
+формы между запросами по-прежнему отклоняется до установки. Старый byte-based hash
+может вызвать однократное безопасное обновление формы после upgrade.
 
 ## Config и feature data
 

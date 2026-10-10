@@ -1,13 +1,15 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-08
+last_verified: 2026-10-10
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
 ---
 
 # Доставка диагностических отчётов
@@ -19,8 +21,9 @@ related_code:
 
 ## Владение и запуск
 
-`app` владеет политикой диагностики. Новых API `maplib`/`maplibui` или NGW-ресурсов
-нет. `MainApplication.initializeDiagnostics` запускается после раннего guard
+`app` владеет политикой диагностики, `maplib.LocalLogInitializer` — общей
+инициализацией локального журнала в app/maplibui. NGW-ресурсы не меняются.
+`MainApplication.initializeDiagnostics` запускается после раннего guard
 изолированного script UID, до HyperLog и `GISApplication.onCreate`.
 `io.sentry.auto-init=false` предотвращает вторую автоматическую инициализацию.
 Пустой DSN в явно разрешённой CI-конфигурации отключает отчёты и retry job.
@@ -31,6 +34,14 @@ Sentry Android 8.37.1 собирает JVM exceptions, поддерживаем�
 Фатальное исключение завершает процесс; диагностика не пытается продолжить
 выполнение повреждённого приложения. Существующие черновики и recovery journals
 сохраняют прежнее поведение. Background worker не переинициализирует SDK или handlers.
+
+Все точки запуска HyperLog используют один process-wide `LocalLogInitializer`.
+Перед первым initialize удаляется только устаревший `HyperLog/URL`: фиктивный
+loopback endpoint вызывал синхронную подготовку всего журнала к отправке даже
+при повторном initialize. У закреплённой версии библиотеки пустой URL прекращает
+push до чтения backlog. Файлы/SQLite журнала, семидневное хранение, пользовательский
+формат и crash handler сохраняются. Повторный вызов базового GISApplication не
+заменяет app-формат и не запускает initialize ещё раз.
 
 ## Очередь и транспорт
 
@@ -96,6 +107,21 @@ cancel не создают handled bug report. Повтор одинаковой
 ограничен десятью минутами; fatal exceptions SDK этот фильтр не проходят.
 Новые catch-ветви подключать явно, не превращать каждое предупреждение в событие.
 
+Автоматические `SentryHttpClientException` от `SentryOkHttpInterceptor` проходят
+отдельный фильтр `DiagnosticsHttpPolicy` в BeforeSend. Первый HTTP 5xx сохраняется,
+повторы в течение десяти минут подавляются по status/method/operation/месту вызова
+и endpoint. Числовые сегменты пути тайлов/ресурсов объединяются, query отбрасывается;
+endpoint хранится только как SHA-256 в ограниченном process-local наборе (64 ключа).
+После окна допускается следующий отчёт; после перезапуска лимит начинается заново.
+Другие endpoint, серверы, статусы и операции остаются отдельными. Fatal/unhandled
+exceptions этот фильтр не проходят, cached replay не фильтруется повторно.
+
+До удаления request добавляются только `http_status`, `http_method` и `http_source`
+(`local` для loopback, `remote` или `unknown`). Адрес, query и путь в отчёт не входят.
+503 при загрузке тайлов сам по себе не доказывает падение приложения или недоступность
+NGW: ответ может дать локальный tile provider. Это отдельный поток от 503 при доставке
+самих envelopes; transport/retry policy сохраняется.
+
 ## Проверка и обновление SDK
 
 Обновление Sentry обязательно повторяет native delivery checks: disk persistence,
@@ -120,3 +146,8 @@ deliverWhenNetworkReturns. Отдельный workerRetriesTemporaryServerFailur
 использует локальный synthetic HTTP endpoint. Рабочий телефон не используется.
 См. [проверку](../history/error-reporting-verification-2026-10-08.md) и
 [руководство администратора](../guides/bug-reports-user-guide.md).
+
+Регрессии запуска и HTTP-шум проверяет `DiagnosticsNoiseTest`: отдельные invocations
+синтетически создают 6000 строк (~12 MB), затем проверяют cold start/локальный журнал
+и SDK BeforeSend с 28 повторными 503. Требуются тот же opt-in runner, явный test DSN
+и изолированный эмулятор. Рабочий телефон используется только для чтения диагностики.

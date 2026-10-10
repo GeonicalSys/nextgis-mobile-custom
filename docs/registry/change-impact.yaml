@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: LOCAL-LOG-STARTUP
+    paths: [maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java, app/src/main/java/com/nextgis/mobile/util/Logger.java, maplib/src/test/java/com/nextgis/maplib/util/LocalLogInitializerTest.java, app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsNoiseTest.java]
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/error-reporting.md, docs/architecture/crash-recovery.md]
+    invariants: [INV-LOCAL-LOG-STARTUP, INV-DIAGNOSTIC-DELIVERY, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs: [docs/architecture/error-reporting.md, docs/reference/settings-and-config.md, docs/registry/config-keys.yaml, docs/reference/official-differences.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml, maplibui/docs/README.md, maplibui/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-RELEASES, SMOKE-DIAGNOSTIC-NOISE]
+    strict_docs: true
   - id: TRACK-DELIVERY
     paths: [maplib/src/main/java/com/nextgis/maplib/util/TrackSendSettings.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackUploader.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackWorker.java, app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java]
     owners: [maplib, maplibui, app]

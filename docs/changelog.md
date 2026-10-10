@@ -1,12 +1,20 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-10 — Локальный журнал, HTTP-шум и hash форм
+
+- Зафиксированы единая local-only инициализация HyperLog с миграцией устаревшего
+  URL, сохранность журнала/формата и ограничение автоматических HTTP 5xx.
+- Уточнён canonical JSON hash NGFP без ослабления form transaction guard.
+- Обновлены component packs, инварианты, blast radius, smoke registry и
+  [проверка](history/mobile-diagnostics-verification-2026-10-10.md).
 
 ## 2026-10-09 — Регистрация и доставка треков
 
