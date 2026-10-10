@@ -914,7 +914,9 @@ invariants:
       process with the toolbar so lifecycle delivery and durable preference reads are ordered;
       stale delayed Start delivery after explicit Stop creates no empty session. Walk digitizing
       keeps its full-geometry owner on unexpected service death and exposes recovery in its
-      panel; a restarted service pauses insertion. Finish preserves the draft until successful
+      panel; a restarted service restores the user's stored pause intent. GPS loss flushes
+      accepted fixes and resets sampling without pausing; the next usable fix continues
+      automatically, including while a point owner locks manual controls. Finish preserves the draft until successful
       feature Save or explicit Discard. An active point owner locks every walk command and
       survives camera, failed Save and process recreation; GNSS persistence remains independent. Non-walk vertex/tap
       editing synchronously journals its latest WKT plus active-map/layer/feature identity in

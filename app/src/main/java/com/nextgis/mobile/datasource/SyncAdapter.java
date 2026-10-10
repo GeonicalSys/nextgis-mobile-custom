@@ -234,15 +234,17 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
                 break;
 
             case SYNC_CHANGES:
+                String failureMessage = context.getString(
+                        new com.nextgis.maplib.util.NetworkUtil(context).isNetworkAvailable()
+                                ? R.string.sync_failed_notification_message : R.string.sync_no_internet);
                 largeIcon = NotificationHelper.getLargeIcon(
                         com.nextgis.maplibui.R.drawable.ic_action_information_light, context.getResources());
                 builder.setProgress(0, 0, false)
                         .setOnlyAlertOnce(true)
                         .setCategory(NotificationCompat.CATEGORY_ERROR)
                         .setContentTitle(context.getString(R.string.sync_failed_notification_title))
-                        .setContentText(context.getString(R.string.sync_failed_notification_message))
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(
-                                context.getString(R.string.sync_failed_notification_message)));
+                        .setContentText(failureMessage)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(failureMessage));
                 break;
             default:
                 return;

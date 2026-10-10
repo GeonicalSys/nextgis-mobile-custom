@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: SYNC-NETWORK-FEEDBACK
+    paths: [app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java, app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java, app/src/main/res/values/sync_recovery_strings.xml, app/src/main/res/values-ru/sync_recovery_strings.xml, app/src/androidTest/java/com/nextgis/mobile/reliability/SyncOfflineAndWalkGpsTest.java]
+    owners: [app]
+    read: [docs/architecture/ngw-sync-and-storage.md, docs/guides/project-synchronization-user-guide.md]
+    invariants: [INV-SYNC-NOTIFICATIONS, INV-SYNC-ACCOUNT-ISOLATION, INV-PROJECT-OPERATION-EXCLUSION]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/guides/project-synchronization-user-guide.md, app/docs/README.md, app/docs/manifest.yaml, docs/reference/official-differences.md]
+    verify: [AUTO-APP-DEBUG, SMOKE-SYNC-OFFLINE]
+    strict_docs: true
   - id: SYNC-NOTIFICATIONS
     paths: [app/src/main/java/com/nextgis/mobile/util/SyncNotifications.java, app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java, app/src/main/java/com/nextgis/mobile/datasource/SyncService.java, app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java, app/src/main/res/xml/preferences_general.xml, app/src/main/res/values/sync_recovery_strings.xml, app/src/main/res/values-ru/sync_recovery_strings.xml, app/src/test/java/com/nextgis/mobile/util/SyncNotificationsTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/SyncNotificationsTest.java]
     owners: [app]

@@ -17,6 +17,7 @@ import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.map.MapDrawable;
 import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.NetworkUtil;
 import com.nextgis.maplib.util.NgwSyncIo;
 import com.nextgis.maplib.util.NgwSyncProgress;
 import com.nextgis.maplib.util.SettingsConstants;
@@ -104,6 +105,13 @@ public final class ProjectSyncRunner {
 
     static void run(Context context, List<Account> accounts, Bundle extras, String authority,
                     ContentProviderClient provider, SyncResult result, Pass pass) {
+        // Android may dispatch a previously queued account sync as the network drops.
+        // Ask its scheduler to retry without starting progress, diagnostics or a new journal.
+        if (!new NetworkUtil(context).isNetworkAvailable()) {
+            result.stats.numIoExceptions++;
+            result.delayUntil = System.currentTimeMillis() / 1000L + 30;
+            return;
+        }
         GISApplication app = (GISApplication) context.getApplicationContext();
         Bundle requested = extras == null ? new Bundle() : new Bundle(extras);
         boolean held = requested.getBoolean(OfflineSyncIntentService.EXTRA_PROJECT_OPERATION_ALREADY_HELD, false)

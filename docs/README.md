@@ -27,6 +27,7 @@ related_code:
 | Вынос координат и звуковое наведение | [architecture/stakeout.md](architecture/stakeout.md) |
 | Синхронизация всех проектов для пользователя | [guides/project-synchronization-user-guide.md](guides/project-synchronization-user-guide.md) |
 | Уведомление остаётся после sync | [architecture/ngw-sync-and-storage.md](architecture/ngw-sync-and-storage.md) и [проверка уведомлений](history/sync-notifications-verification-2026-10-10.md) |
+| Синхронизация без сети и обход после потери GPS | [проверка](history/sync-offline-walk-verification-2026-10-10.md) |
 | Collector/NGW sync | [architecture/collector-projects.md](architecture/collector-projects.md) |
 | Настройка Collector | [runbooks/collector-project-setup.md](runbooks/collector-project-setup.md) |
 | Upstream merge | [runbooks/upstream-sync.md](runbooks/upstream-sync.md) |

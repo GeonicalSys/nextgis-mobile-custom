@@ -1,5 +1,13 @@
 schema_version: 1
 tests:
+  SMOKE-SYNC-OFFLINE:
+    type: device
+    scope: [app, maplibui]
+    command: On an isolated Debug emulator use DiagnosticsTestRunner with an explicit synthetic DSN for offline/walk, account queue and track delivery suites; select the emulator serial in every adb command.
+    steps:
+      - Build Lisa Debug/test APKs with diagnosticDeliveryChecks=true; grant storage, location and POST_NOTIFICATIONS only to the isolated emulator.
+      - Run adb -s <isolated-emulator-serial> shell am instrument -w -r -e class com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest,com.nextgis.mobile.reliability.SyncNotificationsTest,com.nextgis.mobile.util.ProjectSyncRunnerTest,com.nextgis.mobile.reliability.TrackUploadTest -e diagnosticsDsn http://synthetic@127.0.0.1:9/1 -e diagnosticsRun sync-offline-walk com.nextgis.mobile.debug.test/com.nextgis.mobile.util.DiagnosticsTestRunner.
+    expected: Disconnected manual tap/retry shows No internet connection without dispatching sync or changing last-sync time. Error notification uses the same readable text. Account work stays ENQUEUED with zero attempts until network returns; disconnected runner and track delivery retain queues/points without HTTP. GPS loss/timestamp gap resumes automatically without dropping the first usable fix or releasing point locks; explicit pause and sticky user pause state remain intact. No physical phone or production NGW accounts.
   SMOKE-SYNC-NOTIFICATIONS:
     type: device
     scope: [app]
@@ -549,6 +557,7 @@ tests:
     type: device
     scope: [app, maplib, maplibui]
     steps:
+      - Lose GPS during a walk, including while a point owns manual controls, then restore it; recording stays active, the first usable fix appends automatically and the point lock remains; a manually paused walk must remain paused across the same loss/recovery and sticky restart
       - Start a new line or polygon walk and immediately Finish with insufficient distinct vertices; verify the readable no-save message, no new feature/form and released walk owner
       - Press the disk on a valid new or existing walk, cancel once and confirm; verify the acknowledged final geometry immediately opens attributes with no premature row write
       - Inspect the single 48dp themed row with only layer name, disk, pause/play and cross, three 48dp targets, long-press and accessibility names; cancel each confirmation and verify the owner is retained

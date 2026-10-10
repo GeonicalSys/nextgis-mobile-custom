@@ -17,6 +17,7 @@ import com.nextgis.maplibui.mapui.TrackUploader;
 import com.nextgis.maplibui.mapui.TrackWorker;
 import com.nextgis.maplibui.mapui.TrackRegistrationState;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
@@ -29,11 +30,19 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONArray;
 import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class TrackUploadTest {
+    private EmulatorNetworkFixture network;
+    @Before public void connectedFixture() throws Exception {
+        network = new EmulatorNetworkFixture(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        network.connected(true);
+    }
+    @After public void restoreConnectivity() throws Exception { if (network != null) network.close(); }
     private static class Endpoint implements AutoCloseable {
         final ServerSocket server = new ServerSocket(0);
         final CompletableFuture<List<Integer>> packets = new CompletableFuture<>();
@@ -156,6 +165,21 @@ public class TrackUploadTest {
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
             assertEquals(2, f.sent()); f.badge(false);
             assertEquals(Arrays.asList(2, 2), hub.packets.get(5, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test public void disconnectedTrackDeliveryMakesNoRequestAndRetainsPointsUntilReconnect() throws Exception {
+        try (Fixture f = new Fixture(2); Endpoint hub = new Endpoint(200)) {
+            f.hub(hub);
+            network.connected(false);
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertFalse(TrackUploader.upload(f.app, f.layer));
+            assertEquals(0, hub.registrationChecks.get()); assertEquals(0, f.sent());
+            assertFalse(ProjectOperationCoordinator.isBusy());
+            assertTrue(TrackSendSettings.isEnabled(f.prefs));
+            network.connected(true);
+            assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertEquals(2, f.sent()); assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
         }
     }
 

@@ -86,7 +86,8 @@ public class SyncNotificationsTest {
         Notification failure = notification(518);
         assertEquals(context.getString(R.string.sync_failed_notification_title),
                 failure.extras.getString(Notification.EXTRA_TITLE));
-        assertEquals(context.getString(R.string.sync_failed_notification_message),
+        assertEquals(context.getString(new com.nextgis.maplib.util.NetworkUtil(context).isNetworkAvailable()
+                        ? R.string.sync_failed_notification_message : R.string.sync_no_internet),
                 failure.extras.getString(Notification.EXTRA_TEXT));
         assertEquals(0, failure.flags & Notification.FLAG_ONGOING_EVENT);
         adapter.sendNotification(context, SyncAdapter.SYNC_FINISH, null);

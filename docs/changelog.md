@@ -8,6 +8,17 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-10 — Offline сообщение и продолжение обхода после GPS gap
+
+- Без активной сети ручной sync сообщает об отсутствии интернета до запуска очереди.
+- Фоновые account/track jobs ждут сеть; повторная проверка перед отправкой сохраняет
+  recovery queue и track outbox без offline HTTP/notification/diagnostic noise.
+- GPS loss, timestamp gap и sticky restart больше не включают паузу обхода;
+  явная ручная пауза, geometry persistence, point locks и Finish fence сохранены.
+- Обновлены app/maplibui packs, location/sync/recovery contracts и проверки.
+- Поставка: Merge Commit maplibui → app pin на remote merge commit → app Squash;
+  новые library dependency и Draft PR не означают готовность выпуска APK.
+
 ## 2026-10-10 — Завершение уведомлений синхронизации
 
 - Описаны default-off обычные сообщения, независимое уведомление ошибки и

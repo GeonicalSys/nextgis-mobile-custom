@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import com.nextgis.maplib.service.NGWSyncService;
@@ -24,6 +26,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ServiceController;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
+import org.robolectric.shadows.ShadowNetworkInfo;
 
 import java.lang.reflect.Field;
 
@@ -41,6 +44,9 @@ public class SyncNotificationsTest {
     @Before public void setUp() {
         context = RuntimeEnvironment.getApplication();
         manager = context.getSystemService(NotificationManager.class);
+        NetworkInfo connected = ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.CONNECTED,
+                ConnectivityManager.TYPE_WIFI, 0, true, true);
+        shadowOf(context.getSystemService(ConnectivityManager.class)).setActiveNetworkInfo(connected);
         PreferenceManager.getDefaultSharedPreferences(context).edit()
                 .remove(AppSettingsConstants.KEY_PREF_SHOW_SYNC).commit();
         NgwSyncProgress.beginSession(context, 1);
@@ -132,6 +138,18 @@ public class SyncNotificationsTest {
         assertNotNull(completed);
         assertEquals(context.getString(com.nextgis.maplib.R.string.sync_finished),
                 completed.extras.getString(Notification.EXTRA_TEXT));
+    }
+
+    @Test public void disconnectedFailureExplainsMissingInternetWithoutRawServerText() {
+        shadowOf(context.getSystemService(ConnectivityManager.class)).setActiveNetworkInfo(null);
+        SyncAdapter adapter = new SyncAdapter(context, true);
+        adapter.sendNotification(context, SyncAdapter.SYNC_CHANGES, "IOException https://example.test");
+        Notification failure = shadowOf(manager).getNotification(518);
+        assertNotNull(failure);
+        assertEquals(context.getString(R.string.sync_no_internet),
+                failure.extras.getString(Notification.EXTRA_TEXT));
+        adapter.sendNotification(context, SyncAdapter.SYNC_FINISH, null);
+        assertNull(shadowOf(manager).getNotification(518));
     }
 
     private static BroadcastReceiver receiver(Object service, String name) throws Exception {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="sync_no_internet">No internet connection</string>
     <string name="sync_optional_notifications_title">Notify when synchronization starts and finishes</string>
     <string name="sync_optional_notifications_summary">Errors are reported even when this is off. Background synchronization may show a silent system indicator.</string>
     <string name="sync_failed_notification_title">Synchronization incomplete</string>

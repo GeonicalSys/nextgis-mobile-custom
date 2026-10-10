@@ -22,6 +22,14 @@ resources на API 26/36. Это test-only dependency; runtime APK зависи�
 в Debug/Lisa/Belka. `diagnosticDeliveryChecks=true` меняет только instrumentation
 runner test APK для изолированной проверки доставки; версии, application/account
 IDs, signing и production APK от этого флага не меняются.
+
+`SyncOfflineAndWalkGpsTest`, `ProjectSyncRunnerTest` и `TrackUploadTest` проверяют
+на изолированном API 36 эмуляторе ручной offline запуск, ожидание сети account
+worker, сохранность очереди/track outbox и продолжение после reconnect, GPS gaps
+и ручную паузу. `EmulatorNetworkFixture` временно меняет только radios эмулятора.
+Для этой задачи проверяются Debug/test APK и compile Lisa/Belka Release sources;
+Release APK, merge и публикация ждут Merge Commit maplibui #35 и pin этого
+remote merge commit в app #55. Версии и runtime зависимости не меняются.
 `BuildConfig.SOURCE_REVISION` фиксирует Git HEAD и dirty marker для багрепортов;
 изменение этого поля не повышает versionName/versionCode.
 

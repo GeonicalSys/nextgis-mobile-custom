@@ -33,6 +33,9 @@ import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
+import com.nextgis.mobile.reliability.EmulatorNetworkFixture;
 import org.junit.runner.RunWith;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -51,6 +54,13 @@ import static org.junit.Assert.*;
 public class ProjectSyncRunnerTest {
     private static final Account ACCOUNT = new Account("offline-test", "offline-test");
     private static final String LAYER = "sync_owner_test";
+    private EmulatorNetworkFixture network;
+
+    @Before public void connectedFixture() throws Exception {
+        network = new EmulatorNetworkFixture(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        network.connected(true);
+    }
+    @After public void restoreConnectivity() throws Exception { if (network != null) network.close(); }
 
     private static class Fixture implements AutoCloseable {
         final GISApplication app = (GISApplication)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
@@ -106,6 +116,27 @@ public class ProjectSyncRunnerTest {
     }
     private static NGWVectorLayer layer(GISApplication app) {
         return (NGWVectorLayer)MapContentProviderHelper.getVectorLayerByPath((MapContentProviderHelper)app.getMap(),LAYER);
+    }
+    @Test public void disconnectedBackgroundRetainsQueueWithoutStartingAndRunsAfterReconnect() throws Exception {
+        try (Fixture f = new Fixture()) {
+            assertTrue(SyncRecoveryJournal.enqueue(f.app, ProjectSyncRunner.inventory(f.app), Collections.singletonList(ACCOUNT), false));
+            String pending = SyncRecoveryJournal.load(f.app).toString();
+            long lastSync = f.prefs.getLong(com.nextgis.maplib.util.SettingsConstants.KEY_PREF_LAST_SYNC_TIMESTAMP, 0);
+            network.connected(false);
+            SyncResult deferred = new SyncResult();
+            f.run(new Bundle(), (a,e,u,p,r) -> fail("No offline account pass or HTTP"), deferred);
+            assertEquals(1, deferred.stats.numIoExceptions);
+            assertTrue(deferred.delayUntil > System.currentTimeMillis() / 1000L);
+            assertFalse(com.nextgis.maplib.service.NGWSyncService.isSyncStarted());
+            assertFalse(ProjectOperationCoordinator.isBusy());
+            assertEquals(pending, SyncRecoveryJournal.load(f.app).toString());
+            assertEquals(lastSync, f.prefs.getLong(com.nextgis.maplib.util.SettingsConstants.KEY_PREF_LAST_SYNC_TIMESTAMP, 0));
+            network.connected(true);
+            List<String> visited = new ArrayList<>(); SyncResult resumed = new SyncResult();
+            f.run(new Bundle(), (a,e,u,p,r) -> visited.add(layer(f.app).getName()), resumed);
+            assertFalse(resumed.hasError()); assertEquals(3, visited.size());
+            assertEquals(0, SyncRecoveryJournal.load(f.app).length());
+        }
     }
     @Test public void durableQueueRetainsOtherAccountsAndMigratesOnlyTheLegacyOwner() throws Exception {
         try (Fixture f = new Fixture()) {
