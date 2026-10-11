@@ -92,6 +92,11 @@ public class ReorderedLayerViewAnimated
         View mobileView = getViewForID(mMobileItemId);
         View aboveView = getViewForID(mAboveItemId);
 
+        if (mobileView == null) {
+            touchEventsCancelled();
+            return;
+        }
+
         boolean isBelow = (belowView != null) && (deltaYTotal > belowView.getTop());
         boolean isAbove = (aboveView != null) && (deltaYTotal < aboveView.getTop());
 
@@ -129,6 +134,9 @@ public class ReorderedLayerViewAnimated
                             observer.removeOnPreDrawListener(this);
 
                             View switchView = getViewForID(switchItemID);
+                            if (switchView == null) {
+                                return true;
+                            }
                             AnimatorProxy switchViewProxy = AnimatorProxy.wrap(switchView);
 
                             mTotalOffset += deltaY;
@@ -154,8 +162,16 @@ public class ReorderedLayerViewAnimated
     protected void touchEventsEnded()
     {
 
-        final View mobileView = getViewForID(mMobileItemId);
+        final View mobileView = getAdapter() == null ? null : getViewForID(mMobileItemId);
         if (mCellIsMobile || mIsWaitingForScrollFinish) {
+
+            // A fling or list refresh can detach the dragged row before idle arrives.
+            // There is no visible target to animate back to in that case.
+            if (mobileView == null || mHoverCell == null
+                    || mHoverCellCurrentBounds == null || mHoverCellOriginalBounds == null) {
+                touchEventsCancelled();
+                return;
+            }
 
             LayersListAdapter adapter = (LayersListAdapter) getAdapter();
             adapter.endDrag();
@@ -212,6 +228,32 @@ public class ReorderedLayerViewAnimated
         } else {
             touchEventsCancelled();
         }
+    }
+
+
+    @Override
+    protected void touchEventsCancelled()
+    {
+        final View mobileView = getAdapter() == null ? null : getViewForID(mMobileItemId);
+        if (mCellIsMobile || mIsWaitingForScrollFinish) {
+            LayersListAdapter adapter = (LayersListAdapter) getAdapter();
+            if (adapter != null) {
+                adapter.endDrag();
+            }
+        }
+        if (mobileView != null) {
+            mobileView.setVisibility(VISIBLE);
+        }
+        mAboveItemId = NOT_FOUND;
+        mMobileItemId = NOT_FOUND;
+        mBelowItemId = NOT_FOUND;
+        mHoverCell = null;
+        mCellIsMobile = false;
+        mIsWaitingForScrollFinish = false;
+        mIsMobileScrolling = false;
+        mActivePointerId = NOT_FOUND;
+        setEnabled(true);
+        invalidate();
     }
 
 

@@ -1,7 +1,7 @@
 ---
 title: GeonicalSystem NextGIS Mobile — документация
 type: index
-last_verified: 2026-10-10
+last_verified: 2026-10-11
 related_code:
   - settings.gradle
   - .gitmodules
@@ -33,6 +33,7 @@ related_code:
 | Upstream merge | [runbooks/upstream-sync.md](runbooks/upstream-sync.md) |
 | Release APK | [runbooks/release-apk.md](runbooks/release-apk.md) |
 | Настройки/build | [reference/build-matrix.md](reference/build-matrix.md) и [reference/settings-and-config.md](reference/settings-and-config.md) |
+| Долгий CI и loopback-тесты отправки треков | [reference/build-matrix.md](reference/build-matrix.md) |
 | Отличия форка | [reference/fork-customizations.md](reference/fork-customizations.md) |
 | Передача отличий official-разработчикам | [reference/official-differences.md](reference/official-differences.md) |
 | Открытые Collector-задачи | [roadmap/collector.md](roadmap/collector.md) |

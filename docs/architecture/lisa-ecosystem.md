@@ -109,6 +109,10 @@ Android-документацию не затрагивает.
 
 ### Offline basemap artifact
 
+QTiles заменяет существующую подложку только после подтверждения и успешного
+экспорта; отмена/ошибка сохраняет прежний MBTiles. Переносится готовый файл,
+а не временные `.qtiles-*.mbtiles`. Android schema/importer, CRS и zoom прежние.
+
 `qtiles_geonical` создаёт raster MBTiles/ZIP на desktop и не публикует результат
 в NGW автоматически. Передача в Android — отдельное явное действие пользователя
 или release-процедуры. Android consumer принимает raster MBTiles с таблицами

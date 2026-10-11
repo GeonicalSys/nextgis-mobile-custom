@@ -4809,7 +4809,8 @@ public class MapFragment
         }
 
         val isStanding =
-            !location.hasBearing() || !location.hasSpeed() || location.speed == 0f
+            !location.hasBearing() || !location.hasSpeed() ||
+                !location.bearing.isFinite() || !location.speed.isFinite() || location.speed <= 0f
 
         val headingProvider = ensureDeviceHeadingProvider()
         headingProvider?.updateLocation(location)
@@ -6217,6 +6218,9 @@ public class MapFragment
     }
 
     override fun onCameraIdle() {
+
+        // Refresh the angular uncertainty sector for the new map scale, even without a sensor tick.
+        applyDeviceHeadingToMap()
 
         val zoom = getCurrentZoom()
         setMapLibreZoomInEnabled()

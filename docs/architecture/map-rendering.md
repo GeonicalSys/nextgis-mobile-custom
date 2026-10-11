@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-10
+last_verified: 2026-10-11
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,13 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+`ReorderedLayerViewAnimated` завершает жест без анимации, если после fling
+перетаскиваемая строка больше не видна или adapter снят. Cancel очищает hover,
+идентификаторы и ожидание прокрутки, восстанавливает видимость доступной строки
+и доступность списка. Перестановки сохраняет прежний LayersListAdapter.endDrag;
+порядок LayerGroup/MapLibre не меняется.
+См. [разбор GlitchTip 52](../reference/glitchtip-layer-reorder-2026-10-10.md).
 
 Перед открытием карты app и GISApplication используют общий local-only
 `LocalLogInitializer`: накопленный HyperLog не сериализуется для фиктивной
@@ -423,8 +430,14 @@ IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `user-location-source` содержит свежие Point, Polygon accuracy и при наличии
 компаса Polygon heading. Круг в метрах лежит под сектором, сектор — под верхним
 курсором; при expiry source очищается. Ширина сектора следует за неопределённостью
-heading, а не за фиксированным углом. Иконка stand/go и её GPS-bearing не
-меняются с компасом. Трек рисуется только по сохранённым сегментам, без линии к
+heading, а не за фиксированным углом. Геодезическая длина сектора рассчитывается
+для 36 логических пикселей карты и обновляется после смены zoom. Курсор «Орбита»
+использует центрированный векторный ресурс: круг остаётся на фиксе, треугольник
+вращается по истинному компасному heading; без компаса — по GPS-курсу движущегося
+фикса. Нет обоих направлений — только круг. `has_direction` выбирает ресурс,
+`bearing` задаёт угол; legacy `type=stand/go` сохраняется. Выравнивание вращения
+по карте учитывает bearing камеры, центр иконки закреплён явно. Трек рисуется
+только по сохранённым сегментам, без линии к
 текущему display fix.
 Подробности: [GPS pipeline](location-pipeline.md).
 

@@ -1,12 +1,59 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-10
+last_verified: 2026-10-11
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-11 — Изоляция тестов отправки треков в CI
+
+- Все восемь TrackUploadTest выполняются после новой установки Debug/test APK,
+  отдельно от 115 recorder/form reliability-тестов. Остаточный live sender больше
+  не конкурирует за loopback-пакеты; assertions и покрытие сохранены.
+- CI требует `OK (8 tests)`, сохраняет отдельный лог и останавливает Debug процесс
+  перед denied-GPS probe. Изменён только workflow проверок, production код прежний.
+- EmulatorNetworkFixture ждёт именно активный connected Wi-Fi после асинхронного
+  отключения mobile data; старое сотовое соединение больше не даёт ложную готовность.
+  Teardown ждёт окончания восстановления Wi-Fi adapter перед следующим тестом.
+
+## 2026-10-11 — «Орбита» и направление по компасу с резервным курсом движения
+
+- Maplib отрисовывает центрированные векторные круг/треугольник «Орбиты»;
+  compass heading приоритетен даже на остановке, без него используется курс
+  движущегося фикса, без обоих направлений остаётся круг.
+- Сектор точности компаса сохраняет длину 36 логических пикселей карты при
+  смене zoom, угол следует прежней оценке неопределённости. Круг GPS остаётся
+  метрическим; курс движения не создаёт сектор компаса.
+- App активно уведомляет об expiry компаса после 500 мс без нового GPS/sensor
+  callback; stop очищает показания и отменяет таймер.
+- Обновлены rendering/location contracts, registries, smoke, module packs,
+  карточки отчёта и сверка official upstream от 2026-10-11.
+- Проверки: 39 unit tests (геометрия, неопределённость и provider lifecycle,
+  provider на API 26/36), native MapLibre fixture на изолированном API 36
+  с аппаратным EGL (`-gpu host`; SwiftShader не выводил также контрольные bitmap icons),
+  Lisa Debug assemble, Lisa/Belka Release compile, validator и 7 docs tests.
+  `com.nextgis.mobile.rendering.LocationOrbitTest` запускается явно на таком
+  эмуляторе, отдельно от обычного SwiftShader CI package `reliability`.
+  Физический компас, перекрытие реальными треками/векторами и полный cold/hot
+  device smoke остаются непроверенными.
+- Порядок доставки: maplib Draft PR → Merge Commit в master → fetch и pin
+  remote merge SHA в текущем app PR → повторные проверки → Squash app PR.
+  Maplib #47 слит Merge Commit `fa11fc72226b776ed528e207772ac26575180577`;
+  app #56 закрепляет этот fetched remote SHA. После зелёного CI и Squash #56
+  по поручению пользователя готовится локальный Lisa Release APK для проверки
+  компаса на телефоне. Версии прежние, публикация не выполняется.
+
+## 2026-10-10 — GlitchTip 52: завершение перетаскивания слоёв
+
+- App обрабатывает исчезнувшую строку/adapter после fling без NullPointerException;
+  cancel очищает ожидание scroll idle, hover и возвращает доступность списка.
+- 8 Robolectric checks (4 сценария на API 26/36), сверён актуальный upstream.
+  Порядок слоёв, версии и submodule pointers не меняются.
+- Desktop contract дополнен сохранностью прежнего MBTiles при повторном экспорте;
+  Android importer остаётся прежним.
 
 ## 2026-10-10 — Подготовка Lisa Release после закрытия библиотеки
 
