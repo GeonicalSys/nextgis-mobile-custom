@@ -14,6 +14,8 @@ related_code:
   Debug app/maplib остаются 3.1.2.23 / 218, канал Debug не публикуется.
 - Обновлены независимые ожидания APK version matrix, build/flavor/release
   contracts и пользовательский WHATS_NEW с доработками после публичной 3.1.2.27.
+- CI выбирает единственные собранные Lisa Debug app/test APK через `GITHUB_ENV`,
+  вместо установки файлов с закреплённым прежним номером production-версии.
 - Доставка: maplib #49 Merge Commit → fetched merge pin в app #58 → зелёный CI
   → app #58 Squash → version matrix → publisher dry-run → публикация двух release.
 

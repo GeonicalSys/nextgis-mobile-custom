@@ -49,6 +49,9 @@ SHA-256 `b7f4d128750be792df6280aea347ad96dec77dc5198b67fc3e1db72249f19229`.
 выполнен fetch, remote master и local maplib checkout равны `4abe395`.
 Полный diff деревьев между tested release head `0be3058` и remote merge пуст.
 Root закрепляет именно merge SHA в #58. Release APK блокируется до Squash app.
+После bump CI run `38155925093` завершился до запуска native tests: workflow
+искал прежний basename `3.1.2.27`. В #58 пути app/test APK теперь определяются
+по единственному собранному файлу; итоговый CI повторяется на исправленном head.
 
 ## Проверки
 

@@ -182,6 +182,10 @@ legacy tools package. PR запускает regression один раз, push —
 my-maplibre. Удалён устаревший MaxPermSize JVM flag, мешавший чистому JDK21
 запустить Gradle daemon; local user properties ранее скрывали эту ошибку.
 Workflow не собирает/не публикует release APK.
+После сборки workflow требует ровно один app APK и один test APK в отдельных
+Lisa Debug output directories и передаёт их пути через `GITHUB_ENV` для обеих
+установок. Номер production-версии в basename больше не закреплён в CI;
+реальные debug package/version проверяет отдельная APK version matrix.
 Перед native UI suite выдаются location и GET_ACCOUNTS: обязательное стартовое
 окно доступа к учётным записям не должно перекрывать сценарии карты. Новый
 `BackgroundLocationWarningTest` проверяет реальные Battery Saver/background/Doze
