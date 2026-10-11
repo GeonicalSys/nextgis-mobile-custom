@@ -141,7 +141,10 @@ public class BackgroundLocationWarningTest {
                 shell("cmd power set-mode 0");
                 shell("appops set " + app.getPackageName() + " RUN_ANY_IN_BACKGROUND ignore");
                 await("App restriction detected", () -> app.getSystemService(ActivityManager.class).isBackgroundRestricted());
-                scenario.moveToState(Lifecycle.State.RESUMED);
+                // ActivityScenario resumes through a broadcast from the restricted app UID.
+                // Return through the foreground helper instead, like the user's Back gesture.
+                shell("input keyevent KEYCODE_BACK");
+                await("Restricted app returns to foreground", () -> scenario.getState() == Lifecycle.State.RESUMED);
                 awaitMessage(scenario, com.nextgis.mobile.R.string.background_location_restricted_warning);
                 chooseSettings(scenario);
                 assertEquals(1, restricted.getHits());

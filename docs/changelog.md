@@ -19,6 +19,10 @@ related_code:
   повторно сверены через GitHub API; оба SHA совпадают с проверкой «Орбиты».
 - Порядок доставки: maplib Merge Commit → pin remote merge-коммита в app →
   app Squash Merge. Release APK до закрытия этой цепочки не собирается.
+- Исправлена подготовка BackgroundLocationWarningTest: после ограничения
+  фонового UID тест возвращается кнопкой Back из helper Activity, сохраняя
+  ожидание RESUMED и все проверки предупреждения/настроек/отсутствия записи.
+  Встроенный broadcast ActivityScenario задерживался на API 36 и давал таймаут.
 
 ## 2026-10-11 — Изоляция тестов отправки треков в CI
 
