@@ -27,9 +27,9 @@ token для отправки ошибок APK не нужны. Не печат�
 
 ## Версия
 
-Подготавливаемый выпуск `3.1.2.27`: production `versionCode 221`, Lisa Debug —
+Подготавливаемый выпуск `3.1.2.28`: production `versionCode 222`, Lisa Debug —
 `3.1.2.23` / `versionCode 218`; диагностический release
-`maplib.VERSION_NAME 3.1.2.27`, debug — `3.1.2.23`.
+`maplib.VERSION_NAME 3.1.2.28`, debug — `3.1.2.23`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.
@@ -50,6 +50,12 @@ token для отправки ошибок APK не нужны. Не печат�
    notes, если пользователь не запросил иное.
 
 ## Обязательная сборка и проверка версии
+
+Выпуск «Орбиты-кольца» 3.1.2.28 / 222: maplib #49 (Merge Commit) → fetched
+remote merge pin в app #58 → зелёный CI итогового app head → app #58 (Squash)
+→ APK version matrix → подпись/identity → publisher dry-run → публикация
+только `lisa` и `belka`. Debug сохраняет 3.1.2.23 / 218 и не публикуется.
+Перед сборкой сверить [матрицу доставки](../history/orbit-ring-delivery-2026-10-11.md).
 
 «Контрастная орбита»: maplib #48 (Merge Commit
 `f2c676a6ea0e35dfb97f539ee3b5a9b653b273ab`) → fetched pin в app #57 →

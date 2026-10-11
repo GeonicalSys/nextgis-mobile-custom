@@ -1095,6 +1095,11 @@ Consumer pin обновлён после Merge Commit maplib #48:
 оба SHA выше; пользовательские отличия сохраняются. App #57 закрепляет fetched
 remote merge-коммит библиотеки перед своей release-сборкой.
 
+«Орбита-кольцо» и production maplib 3.1.2.28 вошли через Merge Commit #49
+`4abe395e01a97bdc91c79c8f54223c39d13e68ee`; дерево равно tested head `0be3058`.
+App #58 закрепляет fetched merge SHA и поднимает обе production flavors до
+3.1.2.28 / 222. Debug сохраняет 3.1.2.23 / 218 и не публикуется.
+
 Локальный графический smoke `com.nextgis.mobile.rendering.LocationOrbitTest`
 проверяет реальные пиксели синей точки 6 dp, прозрачного окна и утолщённого
 обода, видимость красного символа 14 dp под всеми служебными слоями без

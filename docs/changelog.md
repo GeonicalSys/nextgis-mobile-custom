@@ -8,6 +8,15 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-11 — Production выпуск ЛИСА/БЕЛКА 3.1.2.28
+
+- Production versionCode поднят до 222, app/maplib release version — 3.1.2.28;
+  Debug app/maplib остаются 3.1.2.23 / 218, канал Debug не публикуется.
+- Обновлены независимые ожидания APK version matrix, build/flavor/release
+  contracts и пользовательский WHATS_NEW с доработками после публичной 3.1.2.27.
+- Доставка: maplib #49 Merge Commit → fetched merge pin в app #58 → зелёный CI
+  → app #58 Squash → version matrix → publisher dry-run → публикация двух release.
+
 ## 2026-10-11 — «Орбита-кольцо» показывает точку под курсором
 
 - Прозрачное окно 21 dp оставляет видимыми небольшие точечные объекты на

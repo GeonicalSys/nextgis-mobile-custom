@@ -124,9 +124,10 @@ Launcher и экраны intro/about получают иконку через fl
 id изображения в MapLibre. Карта использует MapLibre Android `13.0.2` с явным
 OpenGL backend вместо Vulkan-default artifact.
 
-Для debug-only выпуска подготовлены Lisa Debug `3.1.2.23` / `218` и сопряжённая
-maplib `3.1.2.23`. Production остаётся `3.1.2.27` / `221`. APK version matrix
-выполняется после закрытия library/app PRs; публикация разрешена только в debug.
+Текущий production выпуск Lisa/Belka — `3.1.2.28` / `222`, сопряжённая
+maplib — `3.1.2.28`. Lisa Debug и maplib debug остаются `3.1.2.23` / `218`.
+APK version matrix выполняется после закрытия library/app PRs; в этом цикле
+публикуются только Lisa Release и Belka Release, Debug не публикуется.
 
 Внешний Pigo по BLE использует собственную пару UART-каналов и может получать
 BESTPOSB без предварительного запуска PiMock. HUD сбрасывает старое качество
