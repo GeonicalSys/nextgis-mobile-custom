@@ -1071,6 +1071,9 @@ Legacy type=stand/go остаётся свойством feature. Круг то�
 [`f11d38f77e4caf1b569526c5f620b2ec513c5f9d`](https://github.com/nextgis/nextgis_mobile_android/commit/f11d38f77e4caf1b569526c5f620b2ec513c5f9d).
 «Орбита», сектор неопределённости и приоритет компаса — локальный контракт
 maplib + app, который нужно сохранить при upstream sync.
+Consumer pin обновлён после Merge Commit maplib #47:
+`fa11fc72226b776ed528e207772ac26575180577`. Повторная проверка official master
+2026-10-11 подтвердила оба SHA выше; пользовательские отличия сохраняются.
 
 Локальный графический smoke `com.nextgis.mobile.rendering.LocationOrbitTest`
 проверяет реальные пиксели маркера, anchor, сектор и резервный курс на отдельном

@@ -30,7 +30,10 @@ related_code:
   device smoke остаются непроверенными.
 - Порядок доставки: maplib Draft PR → Merge Commit в master → fetch и pin
   remote merge SHA в текущем app PR → повторные проверки → Squash app PR.
-  До закрытия библиотеки release APK не готовится и не публикуется; версии прежние.
+  Maplib #47 слит Merge Commit `fa11fc72226b776ed528e207772ac26575180577`;
+  app #56 закрепляет этот fetched remote SHA. После зелёного CI и Squash #56
+  по поручению пользователя готовится локальный Lisa Release APK для проверки
+  компаса на телефоне. Версии прежние, публикация не выполняется.
 
 ## 2026-10-10 — GlitchTip 52: завершение перетаскивания слоёв
 
