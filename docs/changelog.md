@@ -8,6 +8,25 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-11 — «Контрастная орбита» на пёстрых подложках
+
+- У маркера плотный синий диск, белая обводка с тонкой тёмной кромкой и
+  увеличенный треугольник. Центр фикса и compass/course fallback сохранены.
+- Сектор компаса увеличен до 56 логических пикселей, полупрозрачная заливка
+  дополнена отдельными белым и синим контурами. Метрический GPS radius прежний.
+- Rendering/location/settings contracts, пятислойный инвариант, module packs,
+  native graphics smoke и карточки отчёта обновлены. Official app/maplib HEAD
+  повторно сверены через GitHub API; оба SHA совпадают с проверкой «Орбиты».
+- Порядок доставки: maplib Merge Commit → pin remote merge-коммита в app →
+  app Squash Merge. Release APK до закрытия этой цепочки не собирается.
+- Исправлена подготовка BackgroundLocationWarningTest: после ограничения
+  фонового UID тест возвращается кнопкой Back из helper Activity, сохраняя
+  ожидание RESUMED и все проверки предупреждения/настроек/отсутствия записи.
+  Встроенный broadcast ActivityScenario задерживался на API 36 и давал таймаут.
+- Maplib #48 слит Merge Commit `f2c676a6ea0e35dfb97f539ee3b5a9b653b273ab`;
+  app #57 закрепляет fetched remote SHA. Все пять owner repositories проверены,
+  иных открытых требуемых PR нет. Порядок и проверки записаны в delivery matrix.
+
 ## 2026-10-11 — Изоляция тестов отправки треков в CI
 
 - Все восемь TrackUploadTest выполняются после новой установки Debug/test APK,
