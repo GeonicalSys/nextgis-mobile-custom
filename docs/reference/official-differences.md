@@ -13,6 +13,12 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+Native CI форка изолирует восемь loopback-тестов доставки треков новой установкой
+Debug/test APK после recorder fixtures. EmulatorNetworkFixture ждёт connected
+Wi-Fi, исключая исчезающее mobile-data соединение после переключения radios,
+и завершения восстановления Wi-Fi adapter перед следующим тестом.
+Это только тестовое окружение; production проверки сети и доставка прежние.
+
 Форк безопасно завершает перетаскивание слоёв, если fling или обновление списка
 убрали перетаскиваемую строку из видимой части. Cancel сбрасывает hover и ожидание
 scroll idle. GitHub API 2026-10-10: official app master

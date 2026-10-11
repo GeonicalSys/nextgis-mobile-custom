@@ -25,6 +25,12 @@ last_verified: 2026-10-11
 Guards перед dispatch/queue/upload закрывают отключение после network constraint;
 recovery journal и SQLite sent=0 остаются для повтора при подключении.
 
+EmulatorNetworkFixture ждёт активный connected Wi-Fi после переключения radios:
+асинхронное отключение mobile data не должно дать ложную готовность сети.
+Перед следующим тестом fixture ждёт завершения восстановления Wi-Fi adapter.
+CI запускает восемь TrackUploadTest после новой установки APK, отдельно от
+recorder fixtures. Это изоляция проверки; runtime network guards прежние.
+
 Сообщения о начале/успешном завершении синхронизации выключены по умолчанию
 (`show_sync=false`); явный выбор пользователя сохраняется. Ошибка очереди
 показывает понятное уведомление независимо от этой настройки. Обязательный

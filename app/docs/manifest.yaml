@@ -16,7 +16,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SyncOfflineAndWalkGpsTest.java
     responsibility: Verify offline manual/retry dialogs, network-constrained account work and real walk callbacks across GPS loss, timestamp gaps, point locks, explicit pause and sticky recovery; isolated Debug emulator only.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/EmulatorNetworkFixture.java
-    responsibility: Temporarily control isolated-emulator connectivity for account/track native checks and restore radio settings.
+    responsibility: Wait for the Wi-Fi adapter and connected Wi-Fi rather than disappearing cellular connectivity for isolated-emulator account/track checks, and finish restoring radios before the next test.
   - path: app/src/main/java/com/nextgis/mobile/util/SyncNotifications.java
     responsibility: Keep stable manual/account foreground notification identities and remove stale progress at main-process startup without clearing failures or GPS notifications.
   - path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
