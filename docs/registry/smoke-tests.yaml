@@ -252,7 +252,7 @@ tests:
     scope: [app, maplib]
     steps:
       - Run com.nextgis.mobile.rendering.LocationOrbitTest explicitly on an isolated Debug API 36 emulator with working EGL (-gpu host); the SwiftShader reliability CI package does not run this graphics smoke
-      - Open a map containing overlapping saved and active tracks plus vector layers
+      - Open a map containing overlapping saved and active tracks plus vector layers; repeat on a light street map, dense thematic polygons and a textured aerial or forest basemap
       - Move the current location onto the overlap and rotate the phone in place
       - Cover or disturb the compass, then uncover it; freeze GPS while rotating
       - Disable or omit the rotation-vector sensor and move with a valid GPS course, including north at 0 degrees; then stop
@@ -261,14 +261,17 @@ tests:
       - Perform a lite reload or hot layer update
     expected: >
       The Orbit location cursor remains fully visible above tracks and every
-      other MapLibre object before and after reload. The heading cone stays between the
+      other MapLibre object before and after reload. Its solid blue disc, white halo, dark
+      outer edge and larger outlined triangle remain distinct from the blue track and
+      basemap detail. The sector has a separate white halo and blue boundary above its
+      translucent fill. The heading cone stays between the
       accuracy circle and the puck, turns with the phone, widens when heading is uncertain
       or the compass is disturbed, narrows after the field settles, and disappears without
       hiding the circle when the compass is unavailable, unreliable, missing or stale.
       The triangle follows the compass even at rest, immediately switches to a moving
       fix's valid course when compass readings expire, and disappears only when neither
       direction is available. Restored compass takes priority again. Its sector remains
-      about 36 logical map pixels long across zoom; GPS accuracy remains metric and
+      about 56 logical map pixels long across zoom; GPS accuracy remains metric and
       movement course alone never creates a compass sector. The ring never shifts on rotation.
 
   SMOKE-MAP-CAMERA-CONTROLS:

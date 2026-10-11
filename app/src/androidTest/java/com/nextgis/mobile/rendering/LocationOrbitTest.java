@@ -60,6 +60,9 @@ public class LocationOrbitTest {
             await(screen, () -> ((MapDrawable) app.getMap()).getMaplibreMap() != null
                     && ((MapDrawable) app.getMap()).getMaplibreMap().getStyle() != null);
             screen.onActivity(activity -> {
+                // This graphics fixture injects overlay fixes directly; a real GPS-expiry callback
+                // must not clear them while screenshots and camera updates are in flight.
+                app.getGpsEventSource().removeListener(activity.getMapFragment());
                 try {
                     Method stop = activity.getMapFragment().getClass().getDeclaredMethod("stopDeviceHeading");
                     stop.setAccessible(true);
@@ -80,7 +83,9 @@ public class LocationOrbitTest {
                 assertNotNull(orbit);
                 assertEquals(dot.getWidth(), orbit.getWidth());
                 assertEquals(dot.getHeight(), orbit.getHeight());
-                assertEquals(Color.rgb(49, 137, 214), orbit.getPixel(orbit.getWidth() / 2, orbit.getHeight() / 2));
+                assertEquals(Color.WHITE, orbit.getPixel(orbit.getWidth() / 2, orbit.getHeight() / 2));
+                int blueSampleX = orbit.getWidth() / 2 + Math.round(orbit.getWidth() * 6f / 72f);
+                assertEquals(Color.rgb(8, 114, 232), orbit.getPixel(blueSampleX, orbit.getHeight() / 2));
                 assertEquals(dot.getPixel(dot.getWidth() / 2, dot.getHeight() / 2),
                         orbit.getPixel(orbit.getWidth() / 2, orbit.getHeight() / 2));
                 SymbolLayer symbol = (SymbolLayer) style.getLayer("user-location-layer");
@@ -138,8 +143,10 @@ public class LocationOrbitTest {
     private static void assertStack(Style style) {
         List<Layer> layers = style.getLayers();
         int n = layers.size();
-        assertEquals("user-location-accuracy", layers.get(n - 3).getId());
-        assertEquals("user-location-heading", layers.get(n - 2).getId());
+        assertEquals("user-location-accuracy", layers.get(n - 5).getId());
+        assertEquals("user-location-heading", layers.get(n - 4).getId());
+        assertEquals("user-location-heading-halo", layers.get(n - 3).getId());
+        assertEquals("user-location-heading-outline", layers.get(n - 2).getId());
         assertEquals("user-location-layer", layers.get(n - 1).getId());
     }
 
@@ -159,7 +166,7 @@ public class LocationOrbitTest {
             }
         }
         float density = app.getResources().getDisplayMetrics().density;
-        assertEquals(36f, longest / density, 1.5);
+        assertEquals(56f, longest / density, 1.5);
     }
 
     private static void screenshot(GISApplication app, String name) throws Exception {
@@ -177,10 +184,15 @@ public class LocationOrbitTest {
         assertNotNull(image);
         try (FileOutputStream file = new FileOutputStream(new File(app.getExternalFilesDir(null), name))) {
             assertTrue(image.compress(Bitmap.CompressFormat.PNG, 100, file));
-            int actual = image.getPixel(center[0], center[1]);
-            assertEquals("Position dot must be visibly rendered at the fix", 49, Color.red(actual), 10);
-            assertEquals("Position dot must be visibly rendered at the fix", 137, Color.green(actual), 10);
-            assertEquals("Position dot must be visibly rendered at the fix", 214, Color.blue(actual), 10);
+            int anchor = image.getPixel(center[0], center[1]);
+            assertEquals("White centre stays at the fix", 255, Color.red(anchor), 10);
+            assertEquals("White centre stays at the fix", 255, Color.green(anchor), 10);
+            assertEquals("White centre stays at the fix", 255, Color.blue(anchor), 10);
+            int blueSampleX = center[0] + Math.round(6f * app.getResources().getDisplayMetrics().density);
+            int actual = image.getPixel(blueSampleX, center[1]);
+            assertEquals("Solid blue disc must be visibly rendered beside its centre", 8, Color.red(actual), 10);
+            assertEquals("Solid blue disc must be visibly rendered beside its centre", 114, Color.green(actual), 10);
+            assertEquals("Solid blue disc must be visibly rendered beside its centre", 232, Color.blue(actual), 10);
         } finally { image.recycle(); }
     }
 
