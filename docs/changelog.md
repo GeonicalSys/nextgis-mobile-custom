@@ -23,6 +23,9 @@ related_code:
   фонового UID тест возвращается кнопкой Back из helper Activity, сохраняя
   ожидание RESUMED и все проверки предупреждения/настроек/отсутствия записи.
   Встроенный broadcast ActivityScenario задерживался на API 36 и давал таймаут.
+- Maplib #48 слит Merge Commit `f2c676a6ea0e35dfb97f539ee3b5a9b653b273ab`;
+  app #57 закрепляет fetched remote SHA. Все пять owner repositories проверены,
+  иных открытых требуемых PR нет. Порядок и проверки записаны в delivery matrix.
 
 ## 2026-10-11 — Изоляция тестов отправки треков в CI
 

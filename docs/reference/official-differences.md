@@ -1082,13 +1082,12 @@ Legacy type=stand/go остаётся свойством feature. Круг то�
 [`f11d38f77e4caf1b569526c5f620b2ec513c5f9d`](https://github.com/nextgis/nextgis_mobile_android/commit/f11d38f77e4caf1b569526c5f620b2ec513c5f9d).
 «Орбита», сектор неопределённости и приоритет компаса — локальный контракт
 maplib + app, который нужно сохранить при upstream sync.
-Consumer pin обновлён после Merge Commit maplib #47:
-`fa11fc72226b776ed528e207772ac26575180577`. Повторная проверка official master
-2026-10-11 подтвердила оба SHA выше; пользовательские отличия сохраняются.
-Для «Контрастной орбиты» official HEAD повторно сверены через GitHub API
-2026-10-11: оба SHA прежние. Внедрение контрастного оформления требует Merge
-Commit нового maplib PR, затем pin этого merge-коммита в consuming app;
-текущий `fa11fc7` относится к предыдущему варианту «Орбиты».
+Consumer pin обновлён после Merge Commit maplib #48:
+`f2c676a6ea0e35dfb97f539ee3b5a9b653b273ab`. Merge содержит прежний #47 и
+контрастное оформление; дерево совпадает с протестированным `f548831`.
+Повторная проверка official master через GitHub API 2026-10-11 подтвердила
+оба SHA выше; пользовательские отличия сохраняются. App #57 закрепляет fetched
+remote merge-коммит библиотеки перед своей release-сборкой.
 
 Локальный графический smoke `com.nextgis.mobile.rendering.LocationOrbitTest`
 проверяет реальные пиксели маркера, anchor, сектор и резервный курс на отдельном
@@ -1663,6 +1662,9 @@ Original HTTP context берётся из SDK hint до маскирования
 выполняется при открытии/Resume без записи; «Настроить» предлагает необходимые
 системные переходы без автоматического запуска трека. В official app `f11d38f7`
 таких launch/resume проверок и сохранения диагностического HTTP hint нет.
+Повторная проверка official app HEAD 2026-10-11 подтвердила `f11d38f7`.
+Исправление BackgroundLocationWarningTest использует Back для возврата из
+тестового helper при запрещённой фоновой работе UID; production contract прежний.
 Collector NGFP в форке сравнивается по JSON с упорядоченными ключами обеих частей,
 с сохранением значений/порядка массивов и транзакционного hash guard. Официальный
 NGW formbuilder `bdcdb3b1` строит legacy attributes из set; это объясняет возможность

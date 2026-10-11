@@ -23,6 +23,7 @@ tests:
       - On an isolated Debug emulator run BackgroundLocationWarningTest with location/account grants and enabled location; do not run on a physical phone.
       - Verify launch without recording warns for screen-off GPS Battery Saver, app background restriction and missing Doze exemption, even with the legacy prompt hidden.
       - Verify each Settings action targets the relevant system page, rotation retains acknowledgement and Resume detects a new restriction.
+      - While the app UID is background-restricted, return from the foreground test helper with system Back and await RESUMED; do not rely on the restricted UID's implicit AndroidX resume broadcast.
     expected: Warning does not block the map or start a track/walk; unchanged acknowledged state does not repeat, new restriction warns and clearing restrictions dismisses it. OEM field smoke remains separate.
   SMOKE-DIAGNOSTIC-NOISE:
     type: device
