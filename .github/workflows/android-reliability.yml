@@ -41,6 +41,14 @@ jobs:
           :maplibui:assembleDebug :app:assembleLisaDebug :app:assembleLisaDebugAndroidTest
           :app:compileLisaReleaseKotlin :app:compileLisaReleaseJavaWithJavac
           :app:compileBelkaReleaseKotlin :app:compileBelkaReleaseJavaWithJavac
+      - name: Resolve built Debug APK paths
+        run: |
+          set -- app/build/outputs/apk/lisa/debug/*.apk
+          [ "$#" -eq 1 ] && [ -f "$1" ]
+          printf 'LISA_DEBUG_APK=%s\n' "$1" >> "$GITHUB_ENV"
+          set -- app/build/outputs/apk/androidTest/lisa/debug/*.apk
+          [ "$#" -eq 1 ] && [ -f "$1" ]
+          printf 'LISA_TEST_APK=%s\n' "$1" >> "$GITHUB_ENV"
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -56,7 +64,7 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -no-audio -no-snapshot -gpu swiftshader_indirect -no-boot-anim
           script: |
-            adb install -r app/build/outputs/apk/lisa/debug/ngmobile-3.1.2.27-lisa-debug.apk
+            adb install -r "$LISA_DEBUG_APK"
             adb shell appops set com.nextgis.mobile.debug MANAGE_EXTERNAL_STORAGE allow
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
@@ -67,8 +75,8 @@ jobs:
             ./gradlew -PciReliabilityChecks=true :app:connectedLisaDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.nextgis.mobile.reliability -Pandroid.testInstrumentationRunnerArguments.notClass=com.nextgis.mobile.reliability.TrackUploadTest --console=plain
             # UTP removes both packages. Reinstall so recorder fixtures cannot leave a live sender
             # competing with the loopback hub's deterministic packet responses.
-            adb install -r app/build/outputs/apk/lisa/debug/ngmobile-3.1.2.27-lisa-debug.apk
-            adb install -r app/build/outputs/apk/androidTest/lisa/debug/ngmobile-3.1.2.27-lisa-debug-androidTest.apk
+            adb install -r "$LISA_DEBUG_APK"
+            adb install -r "$LISA_TEST_APK"
             adb shell appops set com.nextgis.mobile.debug MANAGE_EXTERNAL_STORAGE allow
             adb shell pm grant com.nextgis.mobile.debug android.permission.POST_NOTIFICATIONS
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION

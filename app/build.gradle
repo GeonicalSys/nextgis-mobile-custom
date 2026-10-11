@@ -38,8 +38,8 @@ sentry {
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
-def productionVersionCode = 221
-def productionVersionName = '3.1.2.27'
+def productionVersionCode = 222
+def productionVersionName = '3.1.2.28'
 def debugVersionCode = 218
 def debugVersionName = '3.1.2.23'
 

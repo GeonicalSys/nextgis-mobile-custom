@@ -54,8 +54,12 @@ Debug останавливается. Граница изоляции дейст
 `BuildConfig.SOURCE_REVISION` фиксирует Git HEAD и dirty marker для багрепортов;
 изменение этого поля не повышает versionName/versionCode.
 
-Production остаётся `3.1.2.27` / `221`, Debug — `3.1.2.23` / `218`.
-Закрытие текущей задачи: Merge Commit maplib #45 → maplibui #33 → app #53
+Текущий production выпуск — `3.1.2.28` / `222`, Debug — `3.1.2.23` / `218`.
+Публикация обеих release: maplib #49 (Merge Commit) → fetched pin в app #58 →
+зелёный CI → app #58 (Squash) → APK version matrix → dry-run → `lisa`/`belka`.
+Debug не публикуется. [Матрица](../history/orbit-ring-delivery-2026-10-11.md).
+
+Предыдущая задача: Merge Commit maplib #45 → maplibui #33 → app #53
 с fetched remote library pins, затем Squash app и APK version matrix.
 Запрошен только локальный Lisa Release APK, без публикации и повышения версии.
 Состав: [матрица закрытия](../history/feature-type-delivery-2026-10-09.md).
@@ -72,11 +76,11 @@ Production остаётся `3.1.2.27` / `221`, Debug — `3.1.2.23` / `218`.
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `221` |
-| App versionName (release) | `3.1.2.27` |
+| App versionCode (release) | `222` |
+| App versionName (release) | `3.1.2.28` |
 | App versionCode (debug) | `218` |
 | App versionName (debug) | `3.1.2.23` |
-| maplib VERSION_NAME (release) | `3.1.2.27` |
+| maplib VERSION_NAME (release) | `3.1.2.28` |
 | maplib VERSION_NAME (debug) | `3.1.2.23` |
 | MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |
@@ -178,6 +182,10 @@ legacy tools package. PR запускает regression один раз, push —
 my-maplibre. Удалён устаревший MaxPermSize JVM flag, мешавший чистому JDK21
 запустить Gradle daemon; local user properties ранее скрывали эту ошибку.
 Workflow не собирает/не публикует release APK.
+После сборки workflow требует ровно один app APK и один test APK в отдельных
+Lisa Debug output directories и передаёт их пути через `GITHUB_ENV` для обеих
+установок. Номер production-версии в basename больше не закреплён в CI;
+реальные debug package/version проверяет отдельная APK version matrix.
 Перед native UI suite выдаются location и GET_ACCOUNTS: обязательное стартовое
 окно доступа к учётным записям не должно перекрывать сценарии карты. Новый
 `BackgroundLocationWarningTest` проверяет реальные Battery Saver/background/Doze

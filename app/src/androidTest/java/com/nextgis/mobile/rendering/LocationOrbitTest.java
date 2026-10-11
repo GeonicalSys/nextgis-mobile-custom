@@ -20,10 +20,13 @@ import org.maplibre.android.camera.CameraUpdateFactory;
 import org.maplibre.android.geometry.LatLng;
 import org.maplibre.android.maps.Style;
 import org.maplibre.android.style.layers.BackgroundLayer;
+import org.maplibre.android.style.layers.CircleLayer;
+import org.maplibre.android.style.layers.PropertyFactory;
 import org.maplibre.android.style.layers.Layer;
 import org.maplibre.android.style.layers.SymbolLayer;
 import org.maplibre.android.style.sources.GeoJsonSource;
 import org.maplibre.geojson.Feature;
+import org.maplibre.geojson.FeatureCollection;
 import org.maplibre.geojson.Point;
 import org.maplibre.geojson.Polygon;
 import java.lang.reflect.Method;
@@ -83,9 +86,20 @@ public class LocationOrbitTest {
                 assertNotNull(orbit);
                 assertEquals(dot.getWidth(), orbit.getWidth());
                 assertEquals(dot.getHeight(), orbit.getHeight());
-                assertEquals(Color.WHITE, orbit.getPixel(orbit.getWidth() / 2, orbit.getHeight() / 2));
-                int blueSampleX = orbit.getWidth() / 2 + Math.round(orbit.getWidth() * 6f / 72f);
-                assertEquals(Color.rgb(8, 114, 232), orbit.getPixel(blueSampleX, orbit.getHeight() / 2));
+                for (Bitmap marker : new Bitmap[]{dot, orbit}) {
+                    int cx = marker.getWidth() / 2;
+                    int cy = marker.getHeight() / 2;
+                    float density = marker.getWidth() / 72f;
+                    assertEquals(Color.rgb(8, 114, 232), marker.getPixel(cx, cy));
+                    assertEquals("6 dp blue centre ends before 4 dp", 0,
+                            Color.alpha(marker.getPixel(cx + Math.round(4f * density), cy)));
+                    assertEquals("Transparent ring opening", 0,
+                            Color.alpha(marker.getPixel(cx + Math.round(9f * density), cy)));
+                    assertEquals("Blue rim grows outward into the white rim", Color.rgb(8, 114, 232),
+                            marker.getPixel(cx + Math.round(12f * density), cy));
+                    assertEquals("White outer rim remains", Color.WHITE,
+                            marker.getPixel(cx + Math.round(14f * density), cy));
+                }
                 assertEquals(dot.getPixel(dot.getWidth() / 2, dot.getHeight() / 2),
                         orbit.getPixel(orbit.getWidth() / 2, orbit.getHeight() / 2));
                 SymbolLayer symbol = (SymbolLayer) style.getLayer("user-location-layer");
@@ -95,6 +109,7 @@ public class LocationOrbitTest {
                 map.updateLocation(FIX, true, 140f, 12f, 35f, 30f);
                 assertStack(style);
                 style.removeLayer("orbit-test-hot-layer");
+                ensurePointUnderCursor(style);
             });
             awaitMarker(screen, app, true, 35f);
             screen.onActivity(activity -> assertSectorSize((MapDrawable) app.getMap(), app));
@@ -102,7 +117,11 @@ public class LocationOrbitTest {
             screen.onActivity(activity -> ((MapDrawable) app.getMap())
                     .loadLayersToMaplibreMapLite(Collections.emptyList(), true));
             awaitMarker(screen, app, true, 35f);
-            screen.onActivity(activity -> assertStack(((MapDrawable) app.getMap()).getMaplibreMap().getStyle()));
+            screen.onActivity(activity -> {
+                Style style = ((MapDrawable) app.getMap()).getMaplibreMap().getStyle();
+                assertStack(style);
+                ensurePointUnderCursor(style);
+            });
             for (double zoom : new double[]{16, 19}) {
                 screen.onActivity(activity -> ((MapDrawable) app.getMap()).getMaplibreMap()
                         .moveCamera(CameraUpdateFactory.zoomTo(zoom)));
@@ -150,6 +169,18 @@ public class LocationOrbitTest {
         assertEquals("user-location-layer", layers.get(n - 1).getId());
     }
 
+    private static void ensurePointUnderCursor(Style style) {
+        if (style.getSource("orbit-test-feature-source") == null) {
+            style.addSource(new GeoJsonSource("orbit-test-feature-source",
+                    FeatureCollection.fromFeatures(Collections.singletonList(Feature.fromGeometry(FIX)))));
+        }
+        if (style.getLayer("orbit-test-feature") == null) {
+            style.addLayerBelow(new CircleLayer("orbit-test-feature", "orbit-test-feature-source")
+                    .withProperties(PropertyFactory.circleRadius(7f),
+                            PropertyFactory.circleColor("#D52339")), "user-location-accuracy");
+        }
+    }
+
     private static void assertSectorSize(MapDrawable map, GISApplication app) {
         GeoJsonSource source = map.getMaplibreMap().getStyle().getSourceAs("user-location-source");
         PointF start = markerPoint(map);
@@ -185,14 +216,22 @@ public class LocationOrbitTest {
         try (FileOutputStream file = new FileOutputStream(new File(app.getExternalFilesDir(null), name))) {
             assertTrue(image.compress(Bitmap.CompressFormat.PNG, 100, file));
             int anchor = image.getPixel(center[0], center[1]);
-            assertEquals("White centre stays at the fix", 255, Color.red(anchor), 10);
-            assertEquals("White centre stays at the fix", 255, Color.green(anchor), 10);
-            assertEquals("White centre stays at the fix", 255, Color.blue(anchor), 10);
-            int blueSampleX = center[0] + Math.round(6f * app.getResources().getDisplayMetrics().density);
+            assertEquals("Blue centre stays at the fix", 8, Color.red(anchor), 10);
+            assertEquals("Blue centre stays at the fix", 114, Color.green(anchor), 10);
+            assertEquals("Blue centre stays at the fix", 232, Color.blue(anchor), 10);
+            float density = app.getResources().getDisplayMetrics().density;
+            int featureSampleX = center[0] + Math.round(3f * density);
+            int featureSampleY = center[1] - Math.round(5f * density);
+            int feature = image.getPixel(featureSampleX, featureSampleY);
+            assertEquals("The smaller feature remains visible through the opening", 213, Color.red(feature), 10);
+            assertEquals("Accuracy and compass fills must not tint the feature", 35, Color.green(feature), 10);
+            assertEquals("Accuracy and compass fills must not tint the feature", 57, Color.blue(feature), 10);
+            // Sample inside the band, away from the white edge after texture rotation/filtering.
+            int blueSampleX = center[0] + Math.round(11.5f * density);
             int actual = image.getPixel(blueSampleX, center[1]);
-            assertEquals("Solid blue disc must be visibly rendered beside its centre", 8, Color.red(actual), 10);
-            assertEquals("Solid blue disc must be visibly rendered beside its centre", 114, Color.green(actual), 10);
-            assertEquals("Solid blue disc must be visibly rendered beside its centre", 232, Color.blue(actual), 10);
+            assertEquals("Blue rim remains visible", 8, Color.red(actual), 10);
+            assertEquals("Blue rim remains visible", 114, Color.green(actual), 10);
+            assertEquals("Blue rim remains visible", 232, Color.blue(actual), 10);
         } finally { image.recycle(); }
     }
 
