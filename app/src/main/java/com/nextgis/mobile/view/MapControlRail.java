@@ -15,11 +15,13 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Reflows map tools into columns from the right edge without shrinking their touch targets. */
+/** Reflows map tools into columns; fits a natural touch target when even one cell exceeds the viewport. */
 public final class MapControlRail extends ViewGroup {
     private final int gap;
     private int cellWidth;
     private int cellHeight;
+    private int naturalCellWidth, naturalCellHeight;
+    private float fitScale = 1f;
     private int rows = 1;
     private final ImageButton overflow;
     private final List<View> displayed = new ArrayList<>();
@@ -70,9 +72,14 @@ public final class MapControlRail extends ViewGroup {
         int height = MeasureSpec.getMode(heightSpec) == MeasureSpec.UNSPECIFIED
                 ? count * cellHeight + Math.max(0, count - 1) * gap + paddingY
                 : MeasureSpec.getSize(heightSpec);
-        rows = MapControlGrid.rows(count, Math.max(0, height - paddingY), cellHeight, gap);
         int availableWidth = MeasureSpec.getMode(widthSpec) == MeasureSpec.UNSPECIFIED
                 ? Integer.MAX_VALUE : Math.max(0, MeasureSpec.getSize(widthSpec) - paddingX);
+        naturalCellWidth = cellWidth; naturalCellHeight = cellHeight;
+        fitScale = Math.min(1f, Math.min(availableWidth / (float) cellWidth,
+                Math.max(0, height - paddingY) / (float) cellHeight));
+        cellWidth = Math.max(1, (int) (naturalCellWidth * fitScale));
+        cellHeight = Math.max(1, (int) (naturalCellHeight * fitScale));
+        rows = MapControlGrid.rows(count, Math.max(0, height - paddingY), cellHeight, gap);
         int capacity = MapControlGrid.capacity(availableWidth, Math.max(0, height - paddingY),
                 cellWidth, cellHeight, gap);
         boolean needsOverflow = count > capacity;
@@ -93,10 +100,8 @@ public final class MapControlRail extends ViewGroup {
         overflow.setVisibility(needsOverflow ? VISIBLE : GONE);
         if (needsOverflow) displayed.add(overflow);
         for (View control : displayed) {
-            control.measure(MeasureSpec.makeMeasureSpec(Math.min(cellWidth, availableWidth),
-                            MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(Math.min(cellHeight, Math.max(0, height - paddingY)),
-                            MeasureSpec.EXACTLY));
+            control.measure(MeasureSpec.makeMeasureSpec(naturalCellWidth, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(naturalCellHeight, MeasureSpec.EXACTLY));
         }
         int columns = displayed.isEmpty() ? 0 : (displayed.size() + rows - 1) / rows;
         int width = columns * cellWidth + Math.max(0, columns - 1) * gap
@@ -115,8 +120,10 @@ public final class MapControlRail extends ViewGroup {
             int right = Math.max(0, getWidth() - getPaddingRight()
                     - (index / rows) * (cellWidth + gap));
             int top = Math.min(getPaddingTop() + (index % rows) * (cellHeight + gap), getHeight());
-            child.layout(right - child.getMeasuredWidth(), top, right,
-                    Math.min(top + child.getMeasuredHeight(), getHeight()));
+            child.setPivotX(0); child.setPivotY(0);
+            child.setScaleX(fitScale); child.setScaleY(fitScale);
+            int left = right - Math.round(child.getMeasuredWidth() * fitScale);
+            child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredHeight());
         }
     }
 

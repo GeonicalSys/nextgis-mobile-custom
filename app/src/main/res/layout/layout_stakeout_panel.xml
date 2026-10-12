@@ -1,154 +1,148 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version='1.0' encoding='utf-8'?>
+<com.nextgis.maplibui.view.FittedPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/stakeout_panel"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_stakeout_panel"
     android:elevation="8dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
     android:visibility="gone">
-
-    <ImageView
-        android:id="@+id/stakeout_direction"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:contentDescription="@string/stakeout_direction"
-        android:padding="8dp"
-        android:src="@drawable/ic_stakeout" />
-
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_stakeout_panel"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/stakeout_distance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:maxLines="2"
-            android:text="@string/stakeout_waiting_for_gps"
-            android:textColor="@android:color/white"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/stakeout_azimuth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:maxLines="2"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/stakeout_details"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:maxLines="3"
-            android:textColor="#D9FFFFFF"
-            android:textSize="13sp"
-            android:visibility="gone" />
-
-        <LinearLayout
+        <com.nextgis.maplibui.view.ReflowingGuidanceHeader android:layout_width="match_parent" android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/stakeout_direction"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/stakeout_direction"
+                android:padding="8dp"
+                android:src="@drawable/ic_stakeout" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <com.nextgis.maplibui.view.WrappingLabel
+                    android:id="@+id/stakeout_distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/stakeout_waiting_for_gps"
+                    android:textColor="@android:color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/stakeout_azimuth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/stakeout_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#D9FFFFFF"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageButton
+                    android:id="@+id/stakeout_stop"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/stakeout_stop"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_stakeout_stop" />
+                <ImageButton
+                    android:id="@+id/stakeout_sound"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/stakeout_mute"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_stakeout_sound_on" />
+            </LinearLayout>
+        </com.nextgis.maplibui.view.ReflowingGuidanceHeader>
+        <com.nextgis.maplibui.view.WrappingRow
             android:id="@+id/stakeout_correction_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
             android:paddingTop="2dp">
-
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:text="@string/azimuth_correction"
                 android:textColor="#D9FFFFFF"
                 android:textSize="13sp" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
+                android:gravity="center_vertical">
                 <TextView
                     android:id="@+id/stakeout_correction_minus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:gravity="center"
+                    android:padding="4dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/azimuth_correction_decrease"
-                    android:gravity="center"
                     android:text="@string/azimuth_correction_minus"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
-
                 <TextView
                     android:id="@+id/stakeout_correction_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:gravity="center"
+                    android:padding="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:contentDescription="@string/azimuth_correction"
                     android:focusable="true"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:minWidth="48dp"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
+                    android:contentDescription="@string/azimuth_correction"
                     android:textColor="@android:color/white"
                     android:textSize="13sp" />
-
                 <TextView
                     android:id="@+id/stakeout_correction_plus"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:gravity="center"
+                    android:padding="4dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/azimuth_correction_increase"
-                    android:gravity="center"
                     android:text="@string/azimuth_correction_plus"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/stakeout_correction_reset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/azimuth_correction_reset"
-                    android:gravity="center"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:text="@string/azimuth_correction_reset"
-                    android:textColor="#D9FFFFFF"
-                    android:textSize="12sp" />
             </LinearLayout>
-        </LinearLayout>
+            <TextView
+                android:id="@+id/stakeout_correction_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:gravity="center"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/azimuth_correction_reset"
+                android:text="@string/azimuth_correction_reset"
+                android:textColor="#D9FFFFFF"
+                android:textSize="12sp" />
+        </com.nextgis.maplibui.view.WrappingRow>
     </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/stakeout_sound"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/stakeout_mute"
-        android:padding="12dp"
-        android:src="@drawable/ic_stakeout_sound_on" />
-
-    <ImageButton
-        android:id="@+id/stakeout_stop"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/stakeout_stop"
-        android:padding="12dp"
-        android:src="@drawable/ic_stakeout_stop" />
-</LinearLayout>
+</com.nextgis.maplibui.view.FittedPanelLayout>

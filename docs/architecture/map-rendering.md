@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-11
+last_verified: 2026-10-13
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,8 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+Панели и инструменты карты адаптируются к font/display scale по [контракту UI](ui-accessibility.md). Компас/GNSS HUD освобождают место на низком экране; азимут располагается под toolbar/компасом слева от инструментов, значения статуса переносятся. View transforms вписывают панели и доставляют touch к отображаемым действиям; MapView сохраняет свою геометрию.
 
 `ReorderedLayerViewAnimated` завершает жест без анимации, если после fling
 перетаскиваемая строка больше не видна или adapter снят. Cancel очищает hover,

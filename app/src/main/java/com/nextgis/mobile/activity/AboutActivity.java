@@ -153,7 +153,7 @@ public class AboutActivity extends NGActivity implements ViewPager.OnPageChangeL
             v.findViewById(R.id.creditsInto).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog builder = new AlertDialog.Builder(activity)
+                    AlertDialog builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
                             .setTitle(R.string.credits_intro)
                             .setMessage(R.string.credits)
                             .setPositiveButton(android.R.string.ok, null)

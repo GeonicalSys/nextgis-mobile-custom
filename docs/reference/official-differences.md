@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-11
+last_verified: 2026-10-13
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,16 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+Форк поддерживает общую адаптацию к крупным font/display scales: перенос
+полных названий и подписей, растущие по тексту кнопки, локальное вписывание
+панелей с корректными touch transforms и адаптивный заголовок toolbar.
+Native LargeTextLayoutTest проверяет текст и реальные границы в обеих темах,
+portrait/landscape и при совместном увеличении шрифта и display size.
+GitHub API 2026-10-13: official app `542f69f9`, maplibui `fe53b928`;
+официальная row_layer.xml сохраняет фиксированную listPreferredItemHeight,
+maxLines=2 и ellipsize=end. Контракт форка:
+[крупный интерфейс](../architecture/ui-accessibility.md).
 
 Native CI форка изолирует восемь loopback-тестов доставки треков новой установкой
 Debug/test APK после recorder fixtures. EmulatorNetworkFixture ждёт connected
@@ -1673,9 +1683,13 @@ maplib `b8f3e3e6`, maplibui `d9f5241c`. Logger официального app и G
 Original HTTP context берётся из SDK hint до маскирования userinfo/headers самим SDK.
 Проверка Battery Saver, user background restriction и Doze exemption также
 выполняется при открытии/Resume без записи; «Настроить» предлагает необходимые
-системные переходы без автоматического запуска трека. В official app `f11d38f7`
+системные переходы без автоматического запуска трека. При одном доступном действии
+системный запрос или страница открывается сразу; при нескольких ограничениях
+сохраняется выбор настройки. В official app `542f69f9`
 таких launch/resume проверок и сохранения диагностического HTTP hint нет.
-Повторная проверка official app HEAD 2026-10-11 подтвердила `f11d38f7`.
+Повторная проверка official app HEAD и MainActivity через GitHub API 2026-10-12
+подтвердила `542f69f9`; upstream по-прежнему использует отдельный Doze-диалог
+при запуске записи.
 Исправление BackgroundLocationWarningTest использует Back для возврата из
 тестового helper при запрещённой фоновой работе UID; production contract прежний.
 Collector NGFP в форке сравнивается по JSON с упорядоченными ключами обеих частей,

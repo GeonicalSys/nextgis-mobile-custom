@@ -1,5 +1,23 @@
 schema_version: 1
 invariants:
+  INV-UI-VISIBLE-BOUNDS:
+    title: Enlarged system text and display sizes retain full labels and reachable actions
+    owners: [app, maplibui]
+    statement: >
+      Adapt in order through wrapping and flexible layout, clear shorter wording, then
+      local fitting only for remaining overflow. Respect system font/display settings;
+      never silently reset them. Critical actions stay within usable screen bounds after
+      insets and rotation with the keyboard closed. Simultaneous visibility of the entire UI
+      and keyboard is not required; normal IME behavior remains unchanged. Native tests must verify complete text layout,
+      no hidden lines or ellipsis, transformed action bounds and actual touch delivery.
+      Map panels fit without introducing scrolling and restore natural sizes when space returns.
+    related_code:
+      - maplibui/src/main/java/com/nextgis/maplibui/view/FittedPanelLayout.java
+      - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ToolbarTextFit.java
+      - app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java
+    verify_smoke: [SMOKE-LARGE-TEXT-UI, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-DEBUG]
+    must_update_docs: [docs/architecture/ui-accessibility.md, app/docs/README.md, maplibui/docs/README.md]
   INV-TRACK-DELIVERY:
     title: Track upload intent survives registration delays and acknowledgements stay in the owning workspace
     owners: [maplib, maplibui, app]
@@ -866,8 +884,9 @@ invariants:
     owners: [app]
     statement: >
       Check launch/resume for screen-off GPS Battery Saver policy, user background
-      restriction and battery optimization. Offer the applicable public system settings
-      without changing them or starting a recorder automatically. Retain one acknowledgement
+      restriction and battery optimization. Open the applicable public system setting
+      directly when there is one action; retain a choice when multiple restrictions apply,
+      without changing settings or starting a recorder automatically. Retain one acknowledgement
       per unchanged launch state across rotation; a changed risk warns again and clearing
       restrictions removes the warning. Legacy Doze prompt suppression does not hide it.
       Missing Doze exemption means a possible risk, not proof of current GPS failure.

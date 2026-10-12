@@ -42,7 +42,7 @@ class TrackPowerWarning(private val activity: Activity) {
         if (activity.isFinishing || activity.isDestroyed || dialog?.isShowing == true) return
         activeWarningShown = true
         HyperLog.i(Constants.TAG, "Track power dialog " + LocationPowerPolicy.diagnostics(activity))
-        dialog = AlertDialog.Builder(activity)
+        dialog = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(activity)
             .setTitle(R.string.track_power_title)
             .setMessage(R.string.track_power_message)
             .setPositiveButton(R.string.track_power_settings) { _, _ -> openSettings() }

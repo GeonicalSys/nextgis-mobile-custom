@@ -98,7 +98,7 @@ public class CreateVectorLayerActivity extends NGActivity implements View.OnClic
                 finish();
             }
             if (showAlert)
-                new androidx.appcompat.app.AlertDialog.Builder(this)
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
                         .setMessage(info)
                         .setPositiveButton(com.nextgis.maplibui.R.string.ok, null)
                         .create()

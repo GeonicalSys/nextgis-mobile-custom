@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-11
+last_verified: 2026-10-13
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -12,6 +12,8 @@ related_code:
 ---
 
 # Матрица сборки и версий
+
+Android reliability CI включает русский UI при font scale 2.0 и density 620, обе ориентации и native/AppCompat диалоги. Тест подтверждает фактическую русскую локаль, ориентацию и закрытую клавиатуру, нажимает X и нижнюю кнопку отмены; отдельный проход открывает меню/разделы настроек и окна аккаунтов, входа, проекта и подложек; PNG сохраняются в артефакт. Дополнительно проверяется матрица fontScale 1.0/1.3/2.0 и узкие окна обоих themes. Контракт: [крупный интерфейс](../architecture/ui-accessibility.md).
 
 App lifecycle unit tests используют Robolectric `4.16.1` (как maplib) и Android
 resources на API 26/36. Это test-only dependency; runtime APK зависимости и
@@ -38,7 +40,7 @@ TrackUploadTest проверяет отметку строки «Мои трек
 индикатора со всеми строками слоёв. Он не предполагает, что другой тест не
 оставил неотправленные изменения векторного слоя: выключение отправки треков
 не должно скрывать такие изменения. Это исправление изоляции native fixture.
-В CI остальные 115 reliability-тестов выполняются через connected tests, затем
+В CI остальные 123 reliability-теста выполняются через connected tests, затем
 после удаления UTP и новой установки Debug/test APK все восемь TrackUploadTest
 запускаются отдельным instrumentation pass. Остаточный отправитель из recorder
 fixtures иначе конкурирует с тестом за loopback HTTP и вызывает долгие таймауты.

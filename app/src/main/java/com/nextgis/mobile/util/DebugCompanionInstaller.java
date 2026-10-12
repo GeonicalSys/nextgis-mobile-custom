@@ -62,7 +62,7 @@ public final class DebugCompanionInstaller {
     }
     public static boolean offer(Activity activity, boolean fromProject) {
         if (!needsUpdate(activity) || BUSY.get() || hasActiveUi(activity) || AppUpdateManager.isBusyOrPending(activity)) return false;
-        show(activity, new AlertDialog.Builder(activity).setTitle(R.string.companion_title).setMessage(R.string.companion_offer)
+        show(activity, com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity).setTitle(R.string.companion_title).setMessage(R.string.companion_offer)
                 .setNegativeButton(R.string.companion_later, null)
                 .setPositiveButton(R.string.companion_update, (dialog, which) -> download(activity, fromProject)).create());
         return true;
@@ -161,7 +161,7 @@ public final class DebugCompanionInstaller {
     }
     private static void install(Activity activity, DebugCompanionPolicy.Manifest manifest, File apk) {
         if (Build.VERSION.SDK_INT >= 26 && !activity.getPackageManager().canRequestPackageInstalls()) {
-            show(activity, new AlertDialog.Builder(activity).setTitle(R.string.update_install_permission_title)
+            show(activity, com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity).setTitle(R.string.update_install_permission_title)
                     .setMessage(R.string.update_install_permission_message)
                     .setNegativeButton(android.R.string.cancel, (d, w) -> clear(activity))
                     .setOnCancelListener(d -> clear(activity))
@@ -262,7 +262,7 @@ public final class DebugCompanionInstaller {
         activity.runOnUiThread(() -> {
             try {
                 dismiss(progress);
-                if (usable(activity)) show(activity, new AlertDialog.Builder(activity).setTitle(R.string.companion_title)
+                if (usable(activity)) show(activity, com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity).setTitle(R.string.companion_title)
                         .setMessage(R.string.companion_failed).setPositiveButton(android.R.string.ok, null).create());
             } finally { BUSY.set(false); }
         });

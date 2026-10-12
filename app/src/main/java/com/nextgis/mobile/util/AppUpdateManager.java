@@ -173,7 +173,7 @@ public final class AppUpdateManager
                     dismiss(checkProgressDialog);
                     if (manifest.versionCode <= BuildConfig.VERSION_CODE) {
                         if (interactive) {
-                            new AlertDialog.Builder(activity)
+                            com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
                                     .setTitle(R.string.update_check)
                                     .setMessage(R.string.update_no)
                                     .setPositiveButton(android.R.string.ok, null)
@@ -361,7 +361,7 @@ public final class AppUpdateManager
                     .append(String.format(Locale.getDefault(), "%.1f MB", sizeMb));
         }
 
-        new AlertDialog.Builder(activity)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
                 .setTitle(R.string.update_title)
                 .setMessage(message.toString())
                 .setNegativeButton(android.R.string.cancel, null)
@@ -632,7 +632,7 @@ public final class AppUpdateManager
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
                 && !activity.getPackageManager().canRequestPackageInstalls()) {
-            new AlertDialog.Builder(activity)
+            com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
                     .setTitle(R.string.update_install_permission_title)
                     .setMessage(R.string.update_install_permission_message)
                     .setNegativeButton(android.R.string.cancel, null)
@@ -752,7 +752,7 @@ public final class AppUpdateManager
         if (message == null || message.trim().isEmpty()) {
             message = error.getClass().getSimpleName();
         }
-        new AlertDialog.Builder(activity)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
                 .setTitle(R.string.update_title)
                 .setMessage(activity.getString(R.string.update_error, message))
                 .setPositiveButton(android.R.string.ok, null)

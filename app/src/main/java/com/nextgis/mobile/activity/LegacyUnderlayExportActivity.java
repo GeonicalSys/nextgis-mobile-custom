@@ -32,7 +32,7 @@ public class LegacyUnderlayExportActivity extends AppCompatActivity {
         List<LocalTMSLayer> layers =
                 LegacyUnderlayMigrationContract.collectLocalUnderlays(this);
         if (layers.isEmpty()) {
-            new AlertDialog.Builder(this)
+            com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
                     .setTitle(R.string.legacy_underlay_export_title)
                     .setMessage(R.string.legacy_underlay_export_empty)
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> finishCanceled())
@@ -41,7 +41,7 @@ public class LegacyUnderlayExportActivity extends AppCompatActivity {
             return;
         }
 
-        new AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
                 .setTitle(R.string.legacy_underlay_export_title)
                 .setMessage(getString(R.string.legacy_underlay_export_confirmation, layers.size()))
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> finishCanceled())

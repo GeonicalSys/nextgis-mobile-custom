@@ -240,6 +240,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
         mToolbar = findViewById(R.id.main_toolbar)
         setSupportActionBar(mToolbar)
+        mToolbar?.let { com.nextgis.maplibui.util.ToolbarTextFit.attach(it) }
         if (null != supportActionBar) {
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         }
@@ -701,7 +702,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             mapTrackTogglePending = false
             mTrackItem = null
             mapFragment?.refreshTrackStatusButton()
-            android.app.AlertDialog.Builder(this)
+            com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(this)
                 .setTitle(com.nextgis.maplibui.R.string.recording_location_disabled_title)
                 .setMessage(com.nextgis.maplibui.R.string.recording_location_disabled_message)
                 .setPositiveButton(com.nextgis.maplibui.R.string.action_settings) { _, _ ->
@@ -817,7 +818,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     private fun clearLog() {
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(R.string.clear_log)
             .setMessage(R.string.clear_log_message)
             .setPositiveButton(R.string.clear_log) { _, _ ->
@@ -849,7 +850,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     private fun clearLayerBackups() {
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(R.string.clear_layer_backups)
             .setMessage(R.string.clear_layer_backups_message)
             .setPositiveButton(R.string.clear_layer_backups) { _, _ ->
@@ -905,7 +906,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             }
             com.nextgis.maplibui.util.WalkSessionRecoveryPolicy.Action.OFFER_FOREIGN_MAP_RESET -> {
                 crashRecoveryOffered = true
-                AlertDialog.Builder(this)
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
                     .setTitle(com.nextgis.maplibui.R.string.walk_emergency_reset)
                     .setMessage(com.nextgis.maplibui.R.string.walk_foreign_map_message)
                     .setPositiveButton(com.nextgis.maplibui.R.string.walk_emergency_reset) { _, _ ->
@@ -922,7 +923,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 map.crashRecoveryWalkDialogShown = true
                 map.pauseInterruptedWalkForRecovery()
                 HyperLog.v(Constants.TAG, "CrashRecovery offering walk draft")
-                AlertDialog.Builder(this)
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
                     .setTitle(com.nextgis.maplibui.R.string.walkedit_interrupted_title)
                     .setMessage(com.nextgis.maplibui.R.string.walkedit_interrupted_message)
                     .setPositiveButton(com.nextgis.maplibui.R.string.walkedit_continue) { _, _ ->
@@ -957,7 +958,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
         crashRecoveryOffered = true
         HyperLog.v(Constants.TAG, "CrashRecovery offering manual geometry draft")
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(com.nextgis.maplibui.R.string.geometry_edit_interrupted_title)
             .setMessage(com.nextgis.maplibui.R.string.geometry_edit_interrupted_message)
             .setPositiveButton(com.nextgis.maplibui.R.string.geometry_edit_continue) { _, _ ->
@@ -998,7 +999,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             Constants.TAG,
             "CrashRecovery offering form draft layer=${draft.layerId} feature=${draft.featureId}"
         )
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(com.nextgis.maplibui.R.string.form_draft_title)
             .setMessage(com.nextgis.maplibui.R.string.form_draft_message)
             .setPositiveButton(com.nextgis.maplibui.R.string.form_draft_continue) { _, _ ->
@@ -1019,7 +1020,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         val map = mapFragment ?: return false
         if (!map.hasPointCreationWithoutDraft()) return false
         crashRecoveryOffered = true
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(com.nextgis.maplibui.R.string.form_draft_title)
             .setMessage(com.nextgis.maplibui.R.string.walk_point_recovery)
             .setPositiveButton(com.nextgis.maplibui.R.string.form_draft_continue) { _, _ ->
@@ -1107,7 +1108,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         try {
             val fileName = "ng-logs.zip"
             if (temp == null) {
-                AlertDialog.Builder(this)
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
                     .setMessage(com.nextgis.maplibui.R.string.error_file_create)
                     .setPositiveButton(com.nextgis.maplibui.R.string.ok, null)
                     .create()
@@ -1671,7 +1672,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 val s = SpannableString(message) // msg should have url to enable clicking
                 Linkify.addLinks(s, Linkify.ALL)
 
-                val builder = android.app.AlertDialog.Builder(this@MainActivity)
+                val builder = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(this@MainActivity)
                 builder.setMessage(s)
                     .setPositiveButton("ok", null)
                     .setTitle(title)
@@ -1735,7 +1736,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                         }
                         container.addView(checkBox)
 
-                        val builder = android.app.AlertDialog.Builder(this@MainActivity)
+                        val builder = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(this@MainActivity)
                         builder.setMessage(com.nextgis.maplibui.R.string.battery_optimization)
                             .setPositiveButton(com.nextgis.maplibui.R.string.battery_optimization_turnoff) { dialog, which ->
                                 if (checkBox.isChecked) {
@@ -1816,7 +1817,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
         maybeOfferCrashRecovery()
         if (SDCardUtils.isSDCardUsedAndExtracted(this)) {
-            val builder = android.app.AlertDialog.Builder(this@MainActivity)
+            val builder = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(this@MainActivity)
             builder.setMessage(com.nextgis.maplibui.R.string.no_sd_card_attention)
                 .setPositiveButton(com.nextgis.maplibui.R.string.ok, null)
                 .setTitle(com.nextgis.maplibui.R.string.sd_card)
@@ -1833,7 +1834,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             inputType = android.text.InputType.TYPE_CLASS_TEXT or
                 android.text.InputType.TYPE_TEXT_VARIATION_URI
         }
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(R.string.action_add_by_url)
             .setView(input)
             .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -2092,7 +2093,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             val openSettings = previouslyRequested && requested.all {
                 !ActivityCompat.shouldShowRequestPermissionRationale(this, it)
             }
-            val builder = AlertDialog.Builder(activity).setTitle(title)
+            val builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity).setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(
                     if (openSettings) R.string.permission_open_settings

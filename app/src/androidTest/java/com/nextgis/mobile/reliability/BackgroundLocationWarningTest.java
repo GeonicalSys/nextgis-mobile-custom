@@ -71,20 +71,19 @@ public class BackgroundLocationWarningTest {
         }); } catch (AssertionError error) { throw new AssertionError(error.getMessage() + ": " + last.get(), error); }
     }
 
-    private static void chooseSettings(ActivityScenario<MainActivity> scenario) {
+    private static void openOnlySettings(ActivityScenario<MainActivity> scenario) {
         scenario.onActivity(activity -> {
             activity.findViewById(com.google.android.material.R.id.snackbar_action).performClick();
-            try {
-                Field delegate = MainActivity.class.getDeclaredField("backgroundLocationWarning$delegate");
-                delegate.setAccessible(true);
-                BackgroundLocationWarning warning = (BackgroundLocationWarning) ((kotlin.Lazy<?>) delegate.get(activity)).getValue();
-                Field field = BackgroundLocationWarning.class.getDeclaredField("dialog");
-                field.setAccessible(true);
-                AlertDialog dialog = (AlertDialog) field.get(warning);
-                assertNotNull(dialog);
-                dialog.getListView().performItemClick(dialog.getListView().getChildAt(0), 0, 0);
-            } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+            assertNull("A single setting opens directly without an app choice dialog", settingsDialog(activity));
         });
+    }
+
+    private static AlertDialog settingsDialog(MainActivity activity) {
+        try {
+            Field field = BackgroundLocationWarning.class.getDeclaredField("dialog");
+            field.setAccessible(true);
+            return (AlertDialog) field.get(warning(activity));
+        } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
     }
 
     private static BackgroundLocationWarning warning(MainActivity activity) {
@@ -129,7 +128,7 @@ public class BackgroundLocationWarningTest {
             await("Saver enabled", () -> { try { shell("cmd power set-mode 1"); return LocationPowerPolicy.shouldWarn(app); } catch (Exception e) { throw new AssertionError(e); } });
             try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
                 awaitMessage(scenario, com.nextgis.mobile.R.string.background_location_saver_warning);
-                chooseSettings(scenario);
+                openOnlySettings(scenario);
                 assertEquals(1, saver.getHits());
                 scenario.recreate();
                 instrumentation.waitForIdleSync();
@@ -142,18 +141,18 @@ public class BackgroundLocationWarningTest {
                 shell("appops set " + app.getPackageName() + " RUN_ANY_IN_BACKGROUND ignore");
                 await("App restriction detected", () -> app.getSystemService(ActivityManager.class).isBackgroundRestricted());
                 // ActivityScenario resumes through a broadcast from the restricted app UID.
-                // Return through the foreground helper instead, like the user's Back gesture.
-                shell("input keyevent KEYCODE_BACK");
+                // Bring the existing task forward as a launcher would; an IME can consume Back.
+                shell("am start -W -f 0x20000 -n " + app.getPackageName() + "/" + MainActivity.class.getName());
                 await("Restricted app returns to foreground", () -> scenario.getState() == Lifecycle.State.RESUMED);
                 awaitMessage(scenario, com.nextgis.mobile.R.string.background_location_restricted_warning);
-                chooseSettings(scenario);
+                openOnlySettings(scenario);
                 assertEquals(1, restricted.getHits());
                 scenario.moveToState(Lifecycle.State.CREATED);
                 shell("appops set " + app.getPackageName() + " RUN_ANY_IN_BACKGROUND allow");
                 shell("dumpsys deviceidle whitelist -" + app.getPackageName());
                 scenario.moveToState(Lifecycle.State.RESUMED);
                 awaitMessage(scenario, com.nextgis.mobile.R.string.background_location_optimized_warning);
-                chooseSettings(scenario);
+                openOnlySettings(scenario);
                 assertEquals(1, optimized.getHits());
                 scenario.moveToState(Lifecycle.State.CREATED);
                 shell("dumpsys deviceidle whitelist +" + app.getPackageName());
@@ -170,6 +169,22 @@ public class BackgroundLocationWarningTest {
                 shell("input keyevent KEYCODE_WAKEUP");
                 shell("wm dismiss-keyguard");
                 awaitMessage(scenario, com.nextgis.mobile.R.string.background_location_saver_warning);
+                scenario.moveToState(Lifecycle.State.CREATED);
+                shell("dumpsys deviceidle whitelist -" + app.getPackageName());
+                scenario.moveToState(Lifecycle.State.RESUMED);
+                awaitMessage(scenario, com.nextgis.mobile.R.string.background_location_saver_warning);
+                scenario.onActivity(activity -> {
+                    activity.findViewById(com.google.android.material.R.id.snackbar_action).performClick();
+                    AlertDialog dialog = settingsDialog(activity);
+                    assertNotNull("Multiple restrictions retain a choice of settings", dialog);
+                    assertEquals(2, dialog.getListView().getAdapter().getCount());
+                    assertEquals(activity.getString(com.nextgis.mobile.R.string.background_location_disable_optimization),
+                            dialog.getListView().getAdapter().getItem(1));
+                    assertEquals("No system setting opens until the user chooses", 1, optimized.getHits());
+                    dialog.getListView().performItemClick(dialog.getListView().getChildAt(1), 1, 1);
+                });
+                assertEquals(2, optimized.getHits());
+                assertEquals(1, saver.getHits());
                 assertFalse("Settings and resume never start a track", TrackerService.hasRecordingSession(app));
             }
         } finally {

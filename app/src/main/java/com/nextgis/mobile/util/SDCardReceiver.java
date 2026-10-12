@@ -17,7 +17,7 @@ public class SDCardReceiver extends BroadcastReceiver {
 
         String nameSD = intent.getData().getPath();
         if (action.equals(Intent.ACTION_MEDIA_EJECT)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            AlertDialog.Builder builder = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(context);
             builder.setMessage("Card removed")
                     .setPositiveButton("ok", null)
                     .setTitle("SD Card");

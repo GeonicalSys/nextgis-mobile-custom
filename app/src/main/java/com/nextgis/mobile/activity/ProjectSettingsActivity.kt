@@ -224,7 +224,7 @@ class ProjectSettingsActivity : AppCompatActivity() {
         } else {
             getString(R.string.project_delete_confirmation, project.name)
         }
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(R.string.project_delete_local_copy)
             .setMessage(message)
             .setNegativeButton(android.R.string.cancel, null)
@@ -325,7 +325,7 @@ class ProjectSettingsActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ))
         }
-        val dialog = AlertDialog.Builder(this)
+        val dialog = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(title)
             .setView(holder)
             .setNegativeButton(android.R.string.cancel, null)

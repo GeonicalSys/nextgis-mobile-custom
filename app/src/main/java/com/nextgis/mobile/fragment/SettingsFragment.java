@@ -348,7 +348,7 @@ public class SettingsFragment
                 @Override
                 public boolean onPreferenceClick(final Preference preference)
                 {
-                    AlertDialog.Builder confirm = new AlertDialog.Builder(activity);
+                    AlertDialog.Builder confirm = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity);
                     confirm.setTitle(R.string.reset_settings_title)
                             .setMessage(R.string.reset_settings_message)
                             .setNegativeButton(android.R.string.cancel, null)
@@ -404,7 +404,7 @@ public class SettingsFragment
                 clicked.setSummary(com.nextgis.maplibui.R.string.walk_emergency_reset_empty);
                 return true;
             }
-            new AlertDialog.Builder(activity)
+            com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
                     .setTitle(com.nextgis.maplibui.R.string.walk_emergency_reset)
                     .setMessage(com.nextgis.maplibui.R.string.walk_emergency_reset_confirm)
                     .setNegativeButton(android.R.string.cancel, null)
@@ -501,7 +501,7 @@ public class SettingsFragment
                 {
                     final int[] selectedItem = {-1};
                     final CharSequence[] items = fetchLayers(activity);
-                    AlertDialog.Builder confirm = new AlertDialog.Builder(activity);
+                    AlertDialog.Builder confirm = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity);
                     confirm.setTitle(R.string.select_layer_to_restore)
                             .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                                 @Override
@@ -1125,7 +1125,7 @@ public class SettingsFragment
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(
                 activity, "android.permission.POST_NOTIFICATIONS")) {
 
-            AlertDialog.Builder confirm = new AlertDialog.Builder(activity);
+            AlertDialog.Builder confirm = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity);
             confirm.setTitle(R.string.push_perm_title)
                     .setMessage(R.string.push_perm_why_text)
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
@@ -1176,7 +1176,7 @@ public class SettingsFragment
 
                 // alert perm off
 
-                AlertDialog.Builder confirm = new AlertDialog.Builder(this.getActivity());
+                AlertDialog.Builder confirm = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this.getActivity());
                 confirm.setTitle(R.string.push_perm_title)
                         .setMessage(R.string.push_perm_text)
                         .setPositiveButton(android.R.string.ok, null)

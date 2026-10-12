@@ -1057,7 +1057,7 @@ public class MapFragment
             }
 
             override fun onFinishWalk(session: WalkSessionStore.Snapshot) {
-                AlertDialog.Builder(requireContext())
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(requireContext())
                     .setTitle(com.nextgis.maplibui.R.string.walk_complete_object)
                     .setMessage(if (session.phase == WalkSessionPolicy.Phase.FINISHED)
                         com.nextgis.maplibui.R.string.walk_save_ready_confirm else com.nextgis.maplibui.R.string.walk_save_confirm)
@@ -1076,7 +1076,7 @@ public class MapFragment
 
             override fun onPauseOrResumeWalk(session: WalkSessionStore.Snapshot, resume: Boolean) {
                 val title = if (resume) com.nextgis.maplibui.R.string.walk_resume else com.nextgis.maplibui.R.string.walk_pause
-                AlertDialog.Builder(requireContext())
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(requireContext())
                     .setTitle(title)
                     .setMessage(if (resume) com.nextgis.maplibui.R.string.walk_resume_confirm else com.nextgis.maplibui.R.string.walk_pause_confirm)
                     .setPositiveButton(title) { _, _ ->
@@ -1086,7 +1086,7 @@ public class MapFragment
             }
 
             override fun onDiscardWalk(session: WalkSessionStore.Snapshot) {
-                AlertDialog.Builder(requireContext())
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(requireContext())
                     .setTitle(com.nextgis.maplibui.R.string.walk_discard)
                     .setMessage(com.nextgis.maplibui.R.string.walk_discard_confirm)
                     .setPositiveButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
@@ -1100,7 +1100,7 @@ public class MapFragment
 
     private fun positionWalkPanel(menuExpanded: Boolean) {
         val panel = walkPanel ?: return
-        val params = panel.layoutParams as? RelativeLayout.LayoutParams ?: return
+        val params = panel.layoutParams as? ViewGroup.MarginLayoutParams ?: return
         params.bottomMargin = Math.round((if (menuExpanded) 88 else 4) * resources.displayMetrics.density)
         panel.layoutParams = params
     }
@@ -1728,7 +1728,7 @@ public class MapFragment
         }
 
         val ctx = context ?: return
-        AlertDialog.Builder(ctx)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(ctx)
             .setTitle(R.string.geometry_edit_cancel_title)
             .setMessage(R.string.geometry_edit_cancel_message)
             .setPositiveButton(R.string.geometry_edit_cancel_confirm) { _, _ -> cancelEdits() }
@@ -2088,7 +2088,9 @@ public class MapFragment
 
         if (askPerm)
             Handler().postDelayed(Runnable(){
-                mActivity?.askBackgroundPerm(null)
+                val host = mActivity
+                if (isAdded && isResumed && host != null && !host.isFinishing && !host.isDestroyed)
+                    host.askBackgroundPerm(null)
             }, 1000)
 
     }
@@ -2872,7 +2874,7 @@ public class MapFragment
 
     private fun showWalkInterruptedDialog() {
         val act = activity ?: return
-        AlertDialog.Builder(act)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(act)
             .setTitle(com.nextgis.maplibui.R.string.walkedit_interrupted_title)
             .setMessage(com.nextgis.maplibui.R.string.walkedit_interrupted_message)
             .setPositiveButton(com.nextgis.maplibui.R.string.walkedit_continue) { _, _ ->
@@ -4309,7 +4311,7 @@ public class MapFragment
 
         val items = featureNames.toTypedArray<String>()
         val ctx = context ?: return
-        val builder = AlertDialog.Builder(ctx)
+        val builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(ctx)
         builder.setTitle(R.string.choose_object)
         builder.setItems(items) { dialog, which -> //String selectedItem = items[which];
             // remove after some time
@@ -5730,7 +5732,7 @@ public class MapFragment
             setPadding(padding, padding / 2, padding, 0)
             addView(input)
         }
-        val dialog = AlertDialog.Builder(ctx)
+        val dialog = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(ctx)
             .setTitle(R.string.azimuth_correction)
             .setMessage(R.string.azimuth_correction_help)
             .setView(container)
@@ -5900,7 +5902,7 @@ public class MapFragment
         val layer = mSelectedLayer
         if (layer != null && blockWalkLayerEdit(layer)) return
 
-        val builder = AlertDialog.Builder(activity!!)
+        val builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity!!)
             .setTitle(com.nextgis.maplibui.R.string.delete_confirm_feature)
             .setMessage(com.nextgis.maplibui.R.string.delete_feature)
             .setPositiveButton(com.nextgis.maplibui.R.string.menu_delete) {

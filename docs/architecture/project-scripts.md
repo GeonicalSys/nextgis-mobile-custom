@@ -1,7 +1,7 @@
 ---
 title: Пакеты правил мобильного проекта
 type: architecture
-last_verified: 2026-10-07
+last_verified: 2026-10-13
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/scripts
   - maplib/src/main/cpp
@@ -11,6 +11,8 @@ related_code:
 ---
 
 # Пакеты правил мобильного проекта
+
+Предупреждения и блокирующие подтверждения `ProjectScriptFormController` используют общие builders `FittedDialogs`. При крупном интерфейсе полный текст и кнопки вписываются в окно с закрытой клавиатурой; script callbacks работают через прежние обработчики. Проверка описана в [контракте UI](ui-accessibility.md).
 
 Правила конкретного Collector-проекта доставляются исходным JavaScript в ZIP.
 Доступ к ГИС, датам и будущим расчётам реализуется в APK через фиксированный API.

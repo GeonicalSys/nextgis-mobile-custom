@@ -54,7 +54,7 @@ public class NewFieldDialog extends NGDialog {
         final EditText name = (EditText) view.findViewById(R.id.et_field_name);
         final Spinner type = (Spinner) view.findViewById(R.id.sp_field_type);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContextWeakRef.get());
+        AlertDialog.Builder builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(mContextWeakRef.get());
         builder.setTitle(mTitle).setView(view).setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
