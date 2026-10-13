@@ -437,6 +437,14 @@ public class LargeTextLayoutTest {
         int requested = landscape ? android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 : android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         int expected = landscape ? Configuration.ORIENTATION_LANDSCAPE : Configuration.ORIENTATION_PORTRAIT;
+        androidx.core.os.LocaleListCompat oldLocales = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
+        android.os.LocaleList oldPlatformLocales = Build.VERSION.SDK_INT >= 33
+                ? app.getSystemService(android.app.LocaleManager.class).getApplicationLocales() : null;
+        if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class)
+                .setApplicationLocales(android.os.LocaleList.forLanguageTags("ru"));
+        else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
+                androidx.core.os.LocaleListCompat.forLanguageTags("ru")));
+        try {
         try (ActivityScenario<com.nextgis.mobile.activity.SettingsActivity> scenario =
                      ActivityScenario.launch(com.nextgis.mobile.activity.SettingsActivity.class)) {
             scenario.onActivity(activity -> activity.setRequestedOrientation(requested));
@@ -507,6 +515,11 @@ public class LargeTextLayoutTest {
                     image(activity.getWindow().getDecorView(), type.getSimpleName() + "-" + expected);
                 });
             }
+        }
+        } finally {
+            if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class)
+                    .setApplicationLocales(oldPlatformLocales);
+            else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(oldLocales));
         }
     }
 

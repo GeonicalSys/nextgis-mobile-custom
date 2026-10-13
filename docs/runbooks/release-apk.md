@@ -28,9 +28,9 @@ token для отправки ошибок APK не нужны. Не печат�
 
 ## Версия
 
-Подготавливаемый выпуск `3.1.2.28`: production `versionCode 222`, Lisa Debug —
+Подготавливаемый выпуск `3.1.2.29`: production `versionCode 223`, Lisa Debug —
 `3.1.2.23` / `versionCode 218`; диагностический release
-`maplib.VERSION_NAME 3.1.2.28`, debug — `3.1.2.23`.
+`maplib.VERSION_NAME 3.1.2.29`, debug — `3.1.2.23`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.
@@ -51,6 +51,12 @@ token для отправки ошибок APK не нужны. Не печат�
    notes, если пользователь не запросил иное.
 
 ## Обязательная сборка и проверка версии
+
+Выпуск 3.1.2.29 / 223: maplib #50 и maplibui #36 (Merge Commit) →
+maplib #51 с production `3.1.2.29` (Merge Commit
+`28a4300ae308c6f531c9b8073382f09c1d6ad052`) → fetched pins в app #59 →
+зелёный CI → app #59 (Squash) → APK version matrix → dry-run → публикация
+только `lisa` и `belka`. Debug сохраняет 3.1.2.23 / 218.
 
 Выпуск «Орбиты-кольца» 3.1.2.28 / 222: maplib #49 (Merge Commit) → fetched
 remote merge pin в app #58 → зелёный CI итогового app head → app #58 (Squash)

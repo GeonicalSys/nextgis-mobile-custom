@@ -8,6 +8,12 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-13 — Production выпуск ЛИСА/БЕЛКА 3.1.2.29
+
+- Production versionCode 223, app/maplib release version 3.1.2.29.
+  Debug остаётся 3.1.2.23 / 218. Проверки крупного интерфейса в reliability CI
+  записаны отдельными командами эмулятора.
+
 ## 2026-10-13 — Pin слитых библиотек диагностики и крупного интерфейса
 
 - App закрепляет fetched Merge Commit maplib #50 и maplibui #36.

@@ -56,7 +56,7 @@ Debug останавливается. Граница изоляции дейст
 `BuildConfig.SOURCE_REVISION` фиксирует Git HEAD и dirty marker для багрепортов;
 изменение этого поля не повышает versionName/versionCode.
 
-Текущий production выпуск — `3.1.2.28` / `222`, Debug — `3.1.2.23` / `218`.
+Текущий production выпуск — `3.1.2.29` / `223`, Debug — `3.1.2.23` / `218`.
 Публикация обеих release: maplib #49 (Merge Commit) → fetched pin в app #58 →
 зелёный CI → app #58 (Squash) → APK version matrix → dry-run → `lisa`/`belka`.
 Debug не публикуется. [Матрица](../history/orbit-ring-delivery-2026-10-11.md).
@@ -78,11 +78,11 @@ Debug не публикуется. [Матрица](../history/orbit-ring-delive
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `222` |
-| App versionName (release) | `3.1.2.28` |
+| App versionCode (release) | `223` |
+| App versionName (release) | `3.1.2.29` |
 | App versionCode (debug) | `218` |
 | App versionName (debug) | `3.1.2.23` |
-| maplib VERSION_NAME (release) | `3.1.2.28` |
+| maplib VERSION_NAME (release) | `3.1.2.29` |
 | maplib VERSION_NAME (debug) | `3.1.2.23` |
 | MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |
@@ -176,7 +176,10 @@ Guava33.4.8-jre: он добавлен после сверки с опублик
 добавляются только после проверки конкретного источника/изменения зависимости.
 
 `.github/workflows/android-reliability.yml` запускает unit suites трёх owners,
-maplibui/debug APK, обе release source sets и native API36 suite. CI использует
+maplibui/debug APK, обе release source sets и native API36 suite. Скрипт
+эмулятора выполняет каждую строку отдельно, поэтому проверки крупного
+интерфейса — отдельные команды для portrait/landscape и native/compat/settings,
+а не shell-цикл. CI использует
 `-PciReliabilityChecks=true`: только при отсутствующем sentry.properties допускает
 пустой DSN для тестов. Обычные builds сохраняют обязательный private config;
 секреты не публикуются. SDK setup явно запрашивает platform-tools, не удалённый

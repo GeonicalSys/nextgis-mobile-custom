@@ -140,8 +140,8 @@ Launcher и экраны intro/about получают иконку через fl
 id изображения в MapLibre. Карта использует MapLibre Android `13.0.2` с явным
 OpenGL backend вместо Vulkan-default artifact.
 
-Текущий production выпуск Lisa/Belka — `3.1.2.28` / `222`, сопряжённая
-maplib — `3.1.2.28`. Lisa Debug и maplib debug остаются `3.1.2.23` / `218`.
+Текущий production выпуск Lisa/Belka — `3.1.2.29` / `223`, сопряжённая
+maplib — `3.1.2.29`. Lisa Debug и maplib debug остаются `3.1.2.23` / `218`.
 APK version matrix выполняется после закрытия library/app PRs; в этом цикле
 публикуются только Lisa Release и Belka Release, Debug не публикуется.
 

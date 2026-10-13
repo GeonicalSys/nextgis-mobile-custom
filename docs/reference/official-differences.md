@@ -21,8 +21,11 @@ GitHub API 2026-10-13: official maplib
 `fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4` и official app
 `04d57c9fd843db6745c170147d6a2863da807352`
 не содержат MapRuntimeDiagnostics и SyncRecoveryJournal соответственно.
-App закрепляет fetched Merge Commit maplib #50
-`6f398acb59d98fdb5a858754404646c3dfe73f4f`; дерево равно проверенному `f6735d2`.
+App закрепляет fetched Merge Commit maplib #51
+`28a4300ae308c6f531c9b8073382f09c1d6ad052`, включающий #50
+`6f398acb59d98fdb5a858754404646c3dfe73f4f`. Диагностическое дерево равно
+проверенному `f6735d2`; production VERSION_NAME — `3.1.2.29`.
+Lisa/Belka Release — `3.1.2.29` / `223`. Debug остаётся `3.1.2.23` / `218`.
 
 Форк поддерживает общую адаптацию к крупным font/display scales: перенос
 полных названий и подписей, растущие по тексту кнопки, локальное вписывание
