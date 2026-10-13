@@ -99,6 +99,11 @@
             android:exported="false"
             android:foregroundServiceType="location" />
 
+        <service
+            android:name=".location.BackgroundLocationService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
         <meta-data
             android:name="io.sentry.dsn"
             android:value="@string/SENTRY_DSN" />

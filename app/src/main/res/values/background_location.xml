@@ -1,4 +1,11 @@
 <resources>
+    <string name="background_gps_setting">GPS in the background</string>
+    <string name="background_gps_setting_summary">Keep location active with the screen off and outside the app. Stops after two hours without returning to the app. Track and walk recording are controlled separately.</string>
+    <string name="background_gps_channel">Background location</string>
+    <string name="background_gps_title">Location is active</string>
+    <string name="background_gps_notification">GPS stays active with the screen off. Background operation can be disabled in location settings.</string>
+    <string name="location_network_age">Network · ≈%1$d s ago</string>
+    <string name="location_reported_accuracy">±%1$.1f %2$s</string>
     <string name="background_location_title">GPS and background operation</string>
     <string name="background_location_saver_warning">Battery Saver restricts GPS when the screen is off. Turn it off for continuous location updates.</string>
     <string name="background_location_restricted_warning">Android restricts this app’s background operation. Allow unrestricted battery use to keep GPS working with the screen off.</string>

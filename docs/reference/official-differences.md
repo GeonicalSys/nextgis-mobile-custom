@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,21 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Автоматический background GPS и удержание Network — 2026-10-14
+
+Форк запускает отдельный не записывающий location foreground service с открытия
+приложения. Настройка `background_gps_enabled` default true; таймер — два часа вне
+приложения, независимый от Track/Walk/stakeout. Последняя Network-точка сохраняется
+с timestamp, ±accuracy и возрастом, не превращаясь в свежий recording fix.
+Долгое восстановление автоматически даёт bounded warning snapshot GNSS/raw/filter/
+power в существующую диагностическую очередь. Официальный app master
+`04d57c9fd843db6745c170147d6a2863da807352`, maplib
+`fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4`, maplibui
+`29390d0331b9ef7cebcfadbc59d084c4de1e326c` проверены через GitHub API;
+новые app controller/service, shared background lease и recovery policy являются
+изменениями форка. Порядок merge: maplib, maplibui docs, app pins; версии не меняются.
+
 
 Форк добавляет MapRuntimeDiagnostics: независимое наблюдение синхронных touch
 queries, bounded atomic snapshot для delayed AppExitInfo, этапы/нагрузка локальных

@@ -1,12 +1,25 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-14 — Автоматический GPS и диагностика восстановления
+
+- Описаны default-enabled background owner, двухчасовой timeout и независимость
+  записи/наведения; добавлен preference в config registry и новый change-impact.
+- Display Network retention сохраняет исходные timestamp/accuracy и показывает
+  возраст; recording/fresh getters не принимают эти устаревшие точки.
+- Recovery snapshots используют существующую offline diagnostic queue; обновлены
+  module packs, invariants, dependencies и сравнение с актуальным official master.
+- Зафиксированы непрерывность GPS в формах даже при выключенном фоне, native
+  экран/таймер/recorder проверки, 36 реальных settings-профилей и 24 status-профиля;
+  результаты и Draft dependency matrix сохранены в `history/2026-10-14-background-gps.md`.
+
 
 ## 2026-10-13 — Production выпуск ЛИСА/БЕЛКА 3.1.2.29
 

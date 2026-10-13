@@ -979,6 +979,7 @@ public class SettingsFragment
         editor.remove(SettingsConstantsUI.KEY_PREF_COORD_FORMAT);
         editor.remove(KEY_PREF_SHOW_ZOOM_CONTROLS);
         editor.remove(SettingsConstants.KEY_PREF_LOCATION_SOURCE);
+        editor.remove(com.nextgis.mobile.location.BackgroundLocationPolicy.PREFERENCE);
         editor.remove(SettingsConstants.KEY_PREF_GNSS_INPUT);
         editor.remove(SettingsConstants.KEY_PREF_GNSS_TRANSPORT);
         editor.remove(SettingsConstants.KEY_PREF_GNSS_DEVICE_ID);

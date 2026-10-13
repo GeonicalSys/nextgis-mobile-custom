@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: BACKGROUND-GPS-RECOVERY
+    paths: [app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt, app/src/main/java/com/nextgis/mobile/location/BackgroundLocationPolicy.java, app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt, maplib/src/main/java/com/nextgis/maplib/location/GpsRecoveryPolicy.java, app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java]
+    owners: [app, maplib, maplibui]
+    read: [docs/architecture/location-pipeline.md, docs/architecture/error-reporting.md, docs/reference/settings-and-config.md]
+    invariants: [INV-GPS-TRACK-FILTER, INV-LOCATION-CURSOR-TOP, INV-DIAGNOSTIC-DELIVERY]
+    must_update_docs: [docs/architecture/location-pipeline.md, docs/architecture/error-reporting.md, docs/reference/settings-and-config.md, docs/reference/official-differences.md, docs/registry/config-keys.yaml, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml, maplibui/docs/README.md, maplibui/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-APP-RELEASES, SMOKE-GPS-RECORDING, AUTO-RELIABILITY-NATIVE]
+    strict_docs: true
   - id: UI-LARGE-TEXT
     paths: [app/src/main/res/values-ru, maplibui/src/main/res/values-ru, app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt, app/src/main/res/menu, app/src/main/res/values/large_interface.xml, app/src/main/res/values-h320dp, maplibui/src/main/res/menu, maplibui/src/main/java/com/nextgis/maplibui/view/WrappingLabel.java, maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java, maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java, app/src/main/res/layout, app/src/main/res/layout-land, app/src/main/res/values/styles.xml, app/src/main/java/com/nextgis/mobile/view, app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java, maplibui/src/main/res/layout, maplibui/src/main/res/layout-land, maplibui/src/main/res/values/styles.xml, maplibui/src/main/res/values/readable_buttons.xml, maplibui/src/main/java/com/nextgis/maplibui/view/FittedPanelLayout.java, maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java, maplibui/src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java, maplibui/src/main/java/com/nextgis/maplibui/util/ToolbarTextFit.java, maplibui/src/main/java/com/nextgis/maplibui/activity/NGActivity.java, maplibui/src/main/java/com/nextgis/maplibui/activity/NGPreferenceActivity.java, maplibui/src/main/java/com/nextgis/maplibui/fragment/NGPreferenceFragment.java]
     owners: [app, maplibui]

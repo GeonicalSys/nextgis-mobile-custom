@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -17,6 +17,14 @@ related_code:
 ---
 
 # Crash recovery and durable drafts
+
+## Автоматический GPS и восстановление записи
+
+Автоматический background GPS не создаёт track/walk intent или геометрический
+черновик. Его lease и двухчасовой таймер принадлежат текущему процессу; worker
+и boot не восстанавливают его без открытия приложения. Track/Walk сохраняют
+прежние durable intent и recovery независимо от этой опции.
+
 
 Диалоги сохранения, повторной попытки и восстановления используют общие builders `FittedDialogs`. Компоновка сохраняет текст и доступность действий при крупном интерфейсе с закрытой клавиатурой; journal/save/retry callbacks привязаны к прежним кнопкам. Отложенный запрос фонового GPS проверяет состояние Fragment/Activity перед показом окна, а `TrackerService` отменяет запрос у уничтоженного host. Проверка описана в [контракте UI](ui-accessibility.md).
 

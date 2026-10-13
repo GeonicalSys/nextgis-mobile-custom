@@ -93,6 +93,7 @@ public class MainApplication extends GISApplication
 {
     public static final String LAYER_OSM = "osm";
     public static final String LAYER_TRACKS = "tracks";
+    private com.nextgis.mobile.location.BackgroundLocationController backgroundLocationController;
 
     @Override
     public void onCreate() {
@@ -157,6 +158,8 @@ public class MainApplication extends GISApplication
         NGWUtil.UUID = TrackerService.getUid(this);
 
         if (isDefaultApplicationProcess()) {
+            backgroundLocationController = new com.nextgis.mobile.location.BackgroundLocationController(this);
+            backgroundLocationController.start();
             com.nextgis.maplibui.mapui.TrackWorker.scheduleAll(this);
             if (LegacyUnderlayMigrationContract.shouldScheduleSharedCatalogMigration(
                     deferLegacyDebugWorkspace)) {

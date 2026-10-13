@@ -49,10 +49,28 @@ public final class AppDiagnostics {
     private static final Set<String> CONTEXTS = new HashSet<>(
             Arrays.asList("app", "device", "os", "runtime", "gpu", "trace"));
 
-    public enum Operation { STARTUP, MAP, GEOMETRY_EDIT, ATTRIBUTE_FORM, SYNC, AZIMUTH, STAKEOUT, TRACK, WALK }
+    public enum Operation { STARTUP, MAP, GEOMETRY_EDIT, ATTRIBUTE_FORM, SYNC, AZIMUTH, STAKEOUT, TRACK, WALK, LOCATION }
     public enum Phase { START, READY, SAVE, RESTORE, STOP, FAILED, FINISHED, CANCELLED }
 
     private AppDiagnostics() { }
+
+    /** Rate limiting is owned by the acquisition policy; warnings diagnose reception, not crashes. */
+    public static void reportGpsRecovery(java.util.Map<String, Object> snapshot) {
+        try {
+            String reason = Boolean.TRUE.equals(snapshot.get("raw_fresh")) ? "display_processing" : "acquisition";
+            SentryEvent event = new SentryEvent();
+            io.sentry.protocol.Message message = new io.sentry.protocol.Message();
+            message.setFormatted("GPS recovery delayed: " + reason);
+            event.setMessage(message);
+            event.setLevel(SentryLevel.WARNING);
+            event.setTag("operation", Operation.LOCATION.name());
+            event.setTag("failure_kind", "gps_recovery");
+            event.setTag("gps_recovery_reason", reason);
+            event.setFingerprints(Arrays.asList("gps-recovery", reason));
+            event.getContexts().put("gps_recovery", new java.util.LinkedHashMap<>(snapshot));
+            Sentry.captureEvent(event);
+        } catch (RuntimeException ignored) { }
+    }
 
     public static void initialize(Context context) {
         initialize(context, BuildConfig.SENTRY_DSN);

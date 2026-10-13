@@ -1,7 +1,7 @@
 ---
 title: Магнитный азимут, расстояние и вынос координат
 type: architecture
-last_verified: 2026-10-09
+last_verified: 2026-10-14
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
@@ -18,6 +18,14 @@ related_code:
 ---
 
 # Магнитный азимут, расстояние и вынос координат
+
+## Владение автоматическим GPS
+
+Автоматический background GPS имеет собственного владельца. Его выключение
+в настройках или двухчасовой timeout не освобождают high-frequency/raw lease
+активного наведения. Остановка выноса также не останавливает действующее
+автоматическое получение; служба выноса и её уведомление сохраняют свой lifecycle.
+
 
 Общая строка GPS health теперь также сообщает политику энергосбережения.
 Foreground service выноса, как и записи, не отменяет системное отключение GPS

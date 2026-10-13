@@ -3387,7 +3387,7 @@ public class MapFragment
         if (null != mStatusPanel) {
             if (mStatusPanelMode != 0) {
                 mStatusPanel!!.visibility = View.VISIBLE
-                fillStatusPanel(mGpsEventSource!!.lastKnownLocation)
+                fillStatusPanel(mGpsEventSource!!.lastDisplayLocation)
 
                 if (mode != MODE_NORMAL && !isLiveStakeoutMode(mode)
                     && mode != MODE_AZIMUTH_POINTS && mStatusPanelMode != 3
@@ -4946,7 +4946,7 @@ public class MapFragment
     }
 
     fun updateLastLocation() {
-        val location = mGpsEventSource?.lastKnownLocation
+        val location = mGpsEventSource?.lastDisplayLocation
         if (location == null) onLocationUnavailable() else onLocationChanged(location)
     }
 
@@ -4983,7 +4983,8 @@ public class MapFragment
                     ), null, null, null
                 )
             } else {
-                mStatusSource!!.text = ""
+                val age = location.extras?.getLong(GpsEventSource.DISPLAY_NETWORK_AGE_SECONDS, 0) ?: 0
+                mStatusSource!!.text = if (age > 0) getString(R.string.location_network_age, age) else ""
                 mStatusSource!!.setCompoundDrawablesWithIntrinsicBounds(
                     ContextCompat.getDrawable(
                         activity!!,
@@ -4992,10 +4993,8 @@ public class MapFragment
                 )
             }
 
-            mStatusAccuracy!!.text = String.format(
-                Locale.getDefault(),
-                "%.1f %s", location.accuracy, getString(com.nextgis.maplib.R.string.unit_meter)
-            )
+            mStatusAccuracy!!.text = getString(R.string.location_reported_accuracy,
+                location.accuracy, getString(com.nextgis.maplib.R.string.unit_meter))
             mStatusLatitude!!.text =
                 formatCoordinate(
                     location.latitude,

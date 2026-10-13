@@ -1,5 +1,12 @@
 schema_version: 1
 preferences:
+  background_gps_enabled:
+    owner: app
+    type: boolean
+    default: true
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_location.xml
+    purpose: Continue automatic GPS outside the app for up to two hours; foreground screens and forms keep GPS with this disabled, and explicit recording/guidance owners remain independent.
   show_sync:
     owner: app
     type: boolean

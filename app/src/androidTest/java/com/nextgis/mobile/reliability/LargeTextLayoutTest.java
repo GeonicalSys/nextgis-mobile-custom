@@ -35,6 +35,21 @@ import static org.junit.Assert.*;
 public class LargeTextLayoutTest {
     private static final int[][] SCREENS = {{360, 640, 420}, {320, 568, 540}, {568, 320, 540}, {280, 500, 620}};
 
+    @Test public void retainedNetworkPositionFitsCompleteRussianAgeAndAccuracy() {
+        for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS)
+            for (boolean dark : new boolean[]{false, true}) {
+                Context context = themed(scale, screen, dark);
+                View panel = LayoutInflater.from(context).inflate(R.layout.status_panel, null);
+                ((TextView) panel.findViewById(R.id.tv_latitude)).setText("59.998448° С");
+                ((TextView) panel.findViewById(R.id.tv_longitude)).setText("34.349237° В");
+                ((TextView) panel.findViewById(R.id.tv_source)).setText(context.getString(R.string.location_network_age, 7200L));
+                ((TextView) panel.findViewById(R.id.tv_accuracy)).setText(context.getString(R.string.location_reported_accuracy, 4214f, "м"));
+                layout(panel, dp(context, screen[0]), dp(context, screen[1]));
+                textFits(panel);
+                image(panel, "network-age-" + scale + "-" + screen[0] + "-" + dark);
+            }
+    }
+
     private static Context themed(float fontScale, int[] screen, boolean dark) {
         Context app = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertTrue(app.getPackageName().endsWith(".debug"));
@@ -426,6 +441,73 @@ public class LargeTextLayoutTest {
             adapter.bindViewHolder(holder, position);
             layout(holder.itemView, list.getWidth(), dp(list.getContext(), 2000));
             textFits(holder.itemView);
+        }
+    }
+
+    @Test public void realLocationSettingsShowCompleteBackgroundGpsSwitch() throws Exception {
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Context app = instrumentation.getTargetContext();
+        // Assert emulator/debug isolation before changing local preferences or locale.
+        themed(1f, SCREENS[0], false);
+        android.content.SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(app);
+        String gpsKey = com.nextgis.mobile.location.BackgroundLocationPolicy.PREFERENCE;
+        String themeKey = com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_THEME;
+        boolean hadGps = preferences.contains(gpsKey), oldGps = preferences.getBoolean(gpsKey, true);
+        boolean hadTheme = preferences.contains(themeKey);
+        String oldTheme = preferences.getString(themeKey, "light");
+        String theme = "dark".equals(InstrumentationRegistry.getArguments().getString("uiTheme")) ? "dark" : "light";
+        preferences.edit().remove(gpsKey).putString(themeKey, theme).commit();
+        androidx.core.os.LocaleListCompat oldLocales = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
+        android.os.LocaleList oldPlatformLocales = Build.VERSION.SDK_INT >= 33
+                ? app.getSystemService(android.app.LocaleManager.class).getApplicationLocales() : null;
+        if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class)
+                .setApplicationLocales(android.os.LocaleList.forLanguageTags("ru"));
+        else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
+                androidx.core.os.LocaleListCompat.forLanguageTags("ru")));
+        boolean landscape = "landscape".equals(InstrumentationRegistry.getArguments().getString("uiOrientation"));
+        int expected = landscape ? Configuration.ORIENTATION_LANDSCAPE : Configuration.ORIENTATION_PORTRAIT;
+        try (ActivityScenario<com.nextgis.mobile.activity.SettingsActivity> scenario =
+                     ActivityScenario.launch(com.nextgis.mobile.activity.SettingsActivity.class)) {
+            scenario.onActivity(activity -> activity.setRequestedOrientation(landscape
+                    ? android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    : android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT));
+            AtomicBoolean ready = new AtomicBoolean();
+            long deadline = android.os.SystemClock.uptimeMillis() + 10_000;
+            while (!ready.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+                scenario.onActivity(activity -> ready.set(activity.getResources().getConfiguration().orientation == expected
+                        && "ru".equals(activity.getResources().getConfiguration().getLocales().get(0).getLanguage())));
+                if (!ready.get()) Thread.sleep(100);
+            }
+            assertTrue("Russian settings reached requested orientation", ready.get());
+            String root = "com.nextgis.mobile.PREFS_LOCATION";
+            scenario.onActivity(activity -> {
+                android.os.Bundle args = new android.os.Bundle();
+                args.putString(androidx.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, root);
+                activity.replaceSettingsFragment(args);
+                activity.getSupportFragmentManager().executePendingTransactions();
+            });
+            instrumentation.waitForIdleSync(); Thread.sleep(300);
+            scenario.onActivity(activity -> {
+                androidx.preference.PreferenceFragmentCompat fragment = (androidx.preference.PreferenceFragmentCompat)
+                        activity.getSupportFragmentManager().findFragmentByTag(root);
+                assertNotNull(fragment);
+                androidx.preference.SwitchPreferenceCompat background = fragment.findPreference(gpsKey);
+                assertNotNull("Real location screen includes background switch", background);
+                assertTrue("Background GPS defaults on", background.isChecked());
+                preferenceRowsFit(fragment);
+                textFits(activity.findViewById(com.nextgis.maplibui.R.id.main_toolbar));
+                Configuration config = activity.getResources().getConfiguration();
+                image(activity.getWindow().getDecorView(), "background-settings-" + theme + "-"
+                        + config.fontScale + "-" + config.densityDpi + "-" + expected);
+            });
+        } finally {
+            android.content.SharedPreferences.Editor restore = preferences.edit();
+            if (hadGps) restore.putBoolean(gpsKey, oldGps); else restore.remove(gpsKey);
+            if (hadTheme) restore.putString(themeKey, oldTheme); else restore.remove(themeKey);
+            restore.commit();
+            if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class)
+                    .setApplicationLocales(oldPlatformLocales);
+            else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(oldLocales));
         }
     }
 

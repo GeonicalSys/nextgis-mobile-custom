@@ -1,4 +1,11 @@
 <resources>
+    <string name="background_gps_setting">GPS в фоне</string>
+    <string name="background_gps_setting_summary">Получать координаты при выключенном экране и вне приложения. Отключать после двух часов без возврата в приложение. Запись трека и обхода управляется отдельно.</string>
+    <string name="background_gps_channel">Местоположение в фоне</string>
+    <string name="background_gps_title">Местоположение включено</string>
+    <string name="background_gps_notification">GPS работает и при выключенном экране. Фоновую работу можно отключить в настройках местоположения.</string>
+    <string name="location_network_age">Сеть · ≈%1$d с назад</string>
+    <string name="location_reported_accuracy">±%1$.1f %2$s</string>
     <string name="background_location_title">GPS и работа в фоне</string>
     <string name="background_location_saver_warning">Энергосбережение ограничивает GPS при выключенном экране. Отключите его для непрерывного получения координат.</string>
     <string name="background_location_restricted_warning">Android ограничивает фоновую работу приложения. Разрешите работу без ограничений, чтобы GPS продолжал работать при выключенном экране.</string>

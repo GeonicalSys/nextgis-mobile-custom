@@ -1,7 +1,7 @@
 ---
 title: Адаптация интерфейса к крупному шрифту и размеру отображения
 type: architecture
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java
   - maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java
@@ -17,6 +17,22 @@ related_code:
 ---
 
 # Крупный интерфейс
+
+## Фоновый GPS и возраст сетевой позиции
+
+Настройка «GPS в фоне» использует штатный многострочный `SwitchPreferenceCompat`:
+название, полный текст про выключенный экран, двухчасовой лимит и независимую
+запись показываются без ellipsis. `LargeTextLayoutTest` проверяет реальные строки
+экрана местоположения в обеих темах и ориентациях при системном шрифте 1/1.3/2
+и увеличенном display size. Сохранённая сетевая позиция в статусной панели
+показывает ±accuracy и «Сеть · ≈… с назад»; нативная матрица проверяет полные
+координаты, accuracy 4214 м и возраст 7200 с на ширинах 360/320/280 dp и landscape.
+
+На изолированном Android 16 2026-10-14 прошли все 36 настоящих settings-профилей:
+font scale 1/1.3/2, density 420/540/617 (portrait ≈411/320/280 dp), light/dark,
+portrait/landscape. Это проверяет масштаб отдельно и совместно. Все 24
+status-panel профиля также прошли; примеры PNG визуально просмотрены.
+
 
 Интерфейс и проверки надписей используют русский язык. Пользователь выбирает
 системные font scale и display size. Приложение сохраняет

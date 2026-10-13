@@ -16,6 +16,7 @@ edges:
       - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
       - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
       - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsRecoveryPolicy.java
   - from: app
     to: easypicker-module
     type: gradle

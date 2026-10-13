@@ -2,13 +2,21 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt
+    responsibility: Keep foreground GPS active on every app Activity even with background disabled; own the separate default-enabled service through a two-hour monotonic inactivity timer and immediate preference reconciliation.
+  - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt
+    responsibility: Promote a location foreground service before acquiring an independent shared GPS lease; cancel pending launches safely and preserve explicit recorder owners.
+  - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationPolicy.java
+    responsibility: Define the default background GPS setting and deterministic two-hour inactivity policy.
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java
+    responsibility: Verify actual screen sleep/wake, foreground forms with background off, service ownership, two-hour expiry, resume and immediate setting changes without stopping a recording owner on an isolated Debug emulator.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/MapRuntimeDiagnosticsNativeTest.java
     responsibility: Block the real main looper and verify independent snapshot persistence plus Sentry context delivery, then saturate the actual loopback queue and verify explicit rejection headers on an isolated Debug emulator.
   - path: app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalTest.java
@@ -22,7 +30,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/view/MapStatusPanel.java
     responsibility: Limit enlarged telemetry to one quarter of usable map height below the toolbar, reserving the attribution footer so map actions retain a visible area.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java
-    responsibility: Verify full Russian text layouts, transformed visible bounds and touch delivery for enlarged font/display sizes, both themes and orientations; capture synthetic emulator screenshots.
+    responsibility: Verify full Russian text layouts, transformed visible bounds and touch delivery for enlarged font/display sizes, both themes and orientations, including retained Network age/accuracy and the real default-enabled background GPS setting; capture emulator screenshots.
   - path: app/src/main/res/layout/status_panel_content.xml
     responsibility: Share wrapping GPS coordinates/status values across orientations with bounded panel fitting.
   - path: app/src/main/res/layout/layout_stakeout_panel.xml

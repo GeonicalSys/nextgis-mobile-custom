@@ -1,7 +1,7 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -14,6 +14,18 @@ related_code:
 ---
 
 # Доставка диагностических отчётов
+
+## Автоматическая диагностика восстановления GPS
+
+Долгое получение GPS создаёт warning `gps_recovery` с operation `LOCATION`.
+Передаётся готовый ограниченный snapshot: ожидание, возраст измерения/доставки,
+accuracy, состояние фильтра и GNSS, power state и число владельцев. Provider off
+и отсутствие permission не создают event. Порог — 30 секунд первичного ожидания
+или 15 секунд повторного восстановления, один report на эпизод и максимум один
+в десять минут. Группировка — acquisition/display_processing. Используется
+существующий durable transport с offline retry; verbose_log и ручной HyperLog
+экспорт не требуются. Business storage и полная БД журнала не читаются.
+
 
 MapRuntimeDiagnostics добавляет адресную диагностику локальных тайлов и
 touch queries MapLibre. Быстрые успешные операции не пишутся в журнал.
