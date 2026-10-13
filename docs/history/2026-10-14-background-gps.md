@@ -56,6 +56,10 @@ validation builds используют содержимое изменённых
 
 ## Связанные Draft dependencies
 
+- [app #60](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/60), основной
+  code commit `68065557ad1f81774fe8ac346423d859e8816ded`, base `my-maplibre`, Draft,
+  unmerged. Последующий docs commit добавляет только ссылки/матрицу; ancestry
+  подтверждает присутствие code commit, а `git ls-tree` — два task pins ниже.
 - [maplib #52](https://github.com/GeonicalSys/android_maplib/pull/52), commit
   `725ebc6f02227582fe84bb12faa0d21579bf798c`, base `master`, Draft, unmerged.
 - [maplibui #37](https://github.com/GeonicalSys/android_maplibui/pull/37), commit
