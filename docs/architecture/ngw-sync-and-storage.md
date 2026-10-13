@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-10
+last_verified: 2026-10-13
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -301,6 +301,12 @@ service ticket истекает через 60 секунд, закрывает r
 managed layers группируются по account + project_uid + remote_id. Копии без
 локальных правок сначала резервируются и сводятся к одной копии одним map commit;
 edited-дубликаты блокируют проход без удаления.
+
+SyncRecoveryJournal.enqueueOrThrow сохраняет исходный exception как cause и
+добавляет этап read_queue/legacy_inventory/merge_pairs/commit, число project/account
+и записей, размер JSON и доступное место. Runner передаёт эту причину в GlitchTip
+и полный stack в HyperLog вместо общего boolean failure. Legacy inventory
+читается только при наличии legacy active marker. Ошибочная очередь не сбрасывается.
 
 SyncRecoveryJournal.pending_v2 атомарно сохраняет весь план project/account до
 первого прохода, без credentials/feature data. Только завершённая пара снимается;

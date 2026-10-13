@@ -13,6 +13,13 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+Форк добавляет MapRuntimeDiagnostics: независимое наблюдение синхронных touch
+queries, bounded atomic snapshot для delayed AppExitInfo, этапы/нагрузка локальных
+тайлов и точные queue_full/heap_headroom headers. Sync enqueue передаёт исходную
+причину и этап ошибки, сохраняя журнал. Это дополнение к [контракту диагностики](../architecture/error-reporting.md).
+GitHub API 2026-10-13: official maplib fcddbd2c и official app 0979cf20
+не содержат MapRuntimeDiagnostics и SyncRecoveryJournal соответственно.
+
 Форк поддерживает общую адаптацию к крупным font/display scales: перенос
 полных названий и подписей, растущие по тексту кнопки, локальное вписывание
 панелей с корректными touch transforms и адаптивный заголовок toolbar.

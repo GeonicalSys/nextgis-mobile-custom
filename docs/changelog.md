@@ -8,6 +8,16 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-13 — Диагностика slow map queries и причины отказа sync queue
+
+- Добавлены bounded independent observer и snapshot journal с timestamp/process
+  matching для slow queries/тайлов, точные headers/tags причины local 503,
+  independent reason throttling и native fixtures реальной блокировки/очереди.
+- SyncRecoveryJournal сохраняет cause/phase/размер/свободное место вместо boolean
+  failure; необязательное повторное чтение legacy inventory устранено.
+- Очереди данных и resource limits сохранены; остающиеся production причины
+  отмечаются как разобранные с подготовленной диагностикой, а не как выпущенный фикс.
+
 ## 2026-10-13 — Разбор открытых GlitchTip отчётов
 
 - Проверены 8 открытых Android-групп: 6 Debug и 2 production. Три UI сбоя уже

@@ -912,6 +912,9 @@ invariants:
       still delegate to Android and existing draft recovery remains independent.
       Limit only new automatic handled SDK HTTP 5xx bursts; retain the first request
       and status/source tags, never suppress fatal failures or cached replay.
+      Map runtime snapshots are bounded, captured without SDK/business reads from the observer
+      and attached only to matching operation timestamps; old process identity is never replaced
+      with the reporting process version. Queue and heap 503 reasons remain independently observable.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -920,6 +923,7 @@ invariants:
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
     verify_smoke: [SMOKE-DIAGNOSTIC-DELIVERY, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
     must_update_docs: [docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md]
   INV-CRASH-DRAFT-RECOVERY:

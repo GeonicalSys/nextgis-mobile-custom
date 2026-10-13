@@ -1,7 +1,7 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-10
+last_verified: 2026-10-13
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -14,6 +14,34 @@ related_code:
 ---
 
 # Доставка диагностических отчётов
+
+MapRuntimeDiagnostics добавляет адресную диагностику локальных тайлов и
+touch queries MapLibre. Быстрые успешные операции не пишутся в журнал.
+Slow/failed операции содержат request id, map mode, lifecycle/scene state,
+возраст последнего полученного кадра, heap, число workers/queued requests,
+этап и длительность queue/lock/index query/feature-read-and-clip/MVT encoding.
+Наблюдатель запускается через 1 s независимо от UI; заканчивающаяся операция
+с длительностью от 500 ms тоже фиксируется. Повтор одного вида сообщения
+ограничен 10 s и содержит число подавленных повторов.
+
+Watchdog не обращается к MapLibre или бизнес-хранилищу. Он снимает только
+заранее записанное состояние и ограниченный Java stack вызывающего потока.
+Его scheduler отделён от записи HyperLog/файла; writer имеет 16 queued tasks
+и фиксирует количество dropped diagnostic tasks. Снимок до 16 KiB атомарно
+сохраняется в private map-runtime-diagnostics.json. BeforeSend прикладывает
+его как map_runtime, включая прежние session/pid/version/source_revision,
+только если время события относится к записанной операции (grace 15 s).
+Таким образом AppExitInfo после перезапуска не получает случайные сведения
+нового процесса. Это небольшое диагностическое хранилище, не raw HyperLog DB.
+
+Ответ local vector tile 503 включает X-Lisa-Tile-Reason (queue_full либо
+heap_headroom) и X-Lisa-Tile-Request. SDK HTTP hint сохраняет эти headers;
+DiagnosticsHttpPolicy добавляет local_tile_reason/local_tile_request.
+Причины ограничиваются независимо; request id не размножает limiter keys.
+Последняя глобальная operation может быть SYNC при HTTP-запросе тайла —
+назначение запроса определять по endpoint и диагностическим headers.
+Причина ожидания внутри native renderer по одному Java snapshot всё ещё
+может требовать native/system trace.
 
 Приёмник — собственный GlitchTip, проект NextGIS Mobile. Администратор смотрит
 ошибки в [веб-интерфейсе](https://apps-geonical.ru/errors/). Уведомления на сервере

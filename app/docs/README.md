@@ -420,6 +420,12 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
 
 ## Диагностика
 
+Slow/blocked touch queries и local tile pressure имеют bounded map_runtime
+снимок, независимый observer и private journal для AppExitInfo после restart.
+Local 503 указывает queue_full/heap_headroom и request id. Sync queue failure
+сохраняет первопричину, этап, объём очереди и доступное место; данные очереди
+не удаляются. [Контракт](../../docs/architecture/error-reporting.md).
+
 Открытые GlitchTip issue и подтверждённые границы диагноза:
 [разбор 2026-10-13](../../docs/reference/glitchtip-triage-2026-10-13.md).
 У старого Debug AppExitInfo проверять source revision отдельно от времени доставки;

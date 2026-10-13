@@ -57,8 +57,22 @@ final class DiagnosticsHttpPolicy {
             event.setTag("http_status", status.group(1));
             event.setTag("http_source", source);
             event.setTag("http_method", method);
+            String localReason = "";
+            if ("local".equals(source) && "503".equals(status.group(1)) && request != null
+                    && request.getUrl() != null && request.getUrl().contains("/tiles/")) {
+                io.sentry.protocol.Response response = event.getContexts().getResponse();
+                if (response != null && response.getHeaders() != null) {
+                    String reason = header(response, com.nextgis.maplib.util.MapRuntimeDiagnostics.REASON_HEADER);
+                    if ("queue_full".equals(reason) || "heap_headroom".equals(reason)) {
+                        localReason = reason;
+                        event.setTag("local_tile_reason", reason);
+                        String id = header(response, com.nextgis.maplib.util.MapRuntimeDiagnostics.REQUEST_HEADER);
+                        if (id != null && id.matches("[0-9]{1,19}")) event.setTag("local_tile_request", id);
+                    }
+                }
+            }
             String key = status.group(1) + ":" + method + ":" + endpoint + ":"
-                    + event.getTag("operation") + ":" + callSite(exception);
+                    + event.getTag("operation") + ":" + callSite(exception) + ":" + localReason;
             Long previous = sent.get(key);
             if (previous != null && now >= previous && now - previous < REPEAT_WINDOW_MS) return false;
             sent.remove(key);
@@ -67,6 +81,12 @@ final class DiagnosticsHttpPolicy {
             return true;
         }
         return true;
+    }
+
+    private static String header(io.sentry.protocol.Response response, String name) {
+        for (java.util.Map.Entry<String, String> entry : response.getHeaders().entrySet())
+            if (name.equalsIgnoreCase(entry.getKey())) return entry.getValue();
+        return null;
     }
 
     private static String safeMethod(String method) {

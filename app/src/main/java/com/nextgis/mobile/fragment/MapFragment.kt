@@ -216,6 +216,7 @@ public class MapFragment
     }
     private val mapLibreFrameListener =
         MapLibreMapView.OnDidFinishRenderingFrameListener { fully, _, _ ->
+            com.nextgis.maplib.util.MapRuntimeDiagnostics.frameReceived()
             if (awaitingMapLibreFrameAfterResume) {
                 awaitingMapLibreFrameAfterResume = false
                 HyperLog.v(
@@ -703,6 +704,7 @@ public class MapFragment
 
         val allLayers = mapRef.getAllLayers()
 
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.sceneState("loading_layers")
         mapDrawable.loadLayersToMaplibreMap(styleJson, allLayers, true, true)
     }
 
@@ -712,6 +714,7 @@ public class MapFragment
     }
 
     override fun setMapLayersLoaded() {
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.sceneState("ready")
         mapLibreLayersAppliedForCurrentView = true
         startMapLibreRenderRecovery("layers-applied")
         updateLastLocation()
@@ -773,6 +776,7 @@ public class MapFragment
         val layersTrack = mapRef.getLayersByType(Constants.LAYERTYPE_TRACKS)
         vectorLayers.addAll(layersTrack)
         val allLayers = mapRef.getAllLayers()
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.sceneState("loading_layers")
         mapDrawable.loadLayersToMaplibreMap(styleJson, allLayers, true, true)
         return true
     }
@@ -3195,6 +3199,7 @@ public class MapFragment
     }
 
     override fun onPause() {
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.mapState("paused")
         HyperLog.v(
             Constants.TAG,
             "MapFragment.onPause mode=${modeName(mode)} " +
@@ -3281,6 +3286,7 @@ public class MapFragment
 
 
     override fun onResume() {
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.mapState("resumed")
         HyperLog.v(Constants.TAG, "MapFragment.onResume")
         super.onResume()
 

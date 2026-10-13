@@ -146,6 +146,9 @@ Battery Saver; приложение не меняет системный реж�
   Общий `LocalLogInitializer` сохраняет локальный журнал и формат, удаляя при
   старте устаревшую настройку `HyperLog/URL`; фиктивный endpoint не записывается.
 - Автоматические отчёты GlitchTip независимы от локального логирования.
+  map-runtime-diagnostics.json — private bounded snapshot до 16 KiB для slow
+  queries/tile pressure, не пользовательская настройка. Быстрые операции не
+  записываются; event timestamps предотвращают присоединение чужого startup state.
   `sentry.dsn` из игнорируемого `sentry.properties` задаёт приёмник; APK не содержит
   пароль администратора. `io.sentry.auto-init=false`, screenshots/view hierarchy
   и performance sampling отключены. SDK queue в private files ограничена 256
