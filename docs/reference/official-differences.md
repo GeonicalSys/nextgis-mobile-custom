@@ -17,17 +17,25 @@ related_code:
 queries, bounded atomic snapshot для delayed AppExitInfo, этапы/нагрузка локальных
 тайлов и точные queue_full/heap_headroom headers. Sync enqueue передаёт исходную
 причину и этап ошибки, сохраняя журнал. Это дополнение к [контракту диагностики](../architecture/error-reporting.md).
-GitHub API 2026-10-13: official maplib fcddbd2c и official app 0979cf20
+GitHub API 2026-10-13: official maplib
+`fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4` и official app
+`04d57c9fd843db6745c170147d6a2863da807352`
 не содержат MapRuntimeDiagnostics и SyncRecoveryJournal соответственно.
+App закрепляет fetched Merge Commit maplib #50
+`6f398acb59d98fdb5a858754404646c3dfe73f4f`; дерево равно проверенному `f6735d2`.
 
 Форк поддерживает общую адаптацию к крупным font/display scales: перенос
 полных названий и подписей, растущие по тексту кнопки, локальное вписывание
 панелей с корректными touch transforms и адаптивный заголовок toolbar.
 Native LargeTextLayoutTest проверяет текст и реальные границы в обеих темах,
 portrait/landscape и при совместном увеличении шрифта и display size.
-GitHub API 2026-10-13: official app `542f69f9`, maplibui `fe53b928`;
+GitHub API 2026-10-13: official app
+`04d57c9fd843db6745c170147d6a2863da807352`, maplibui
+`29390d0331b9ef7cebcfadbc59d084c4de1e326c`;
 официальная row_layer.xml сохраняет фиксированную listPreferredItemHeight,
-maxLines=2 и ellipsize=end. Контракт форка:
+maxLines=2 и ellipsize=end. App закрепляет fetched Merge Commit maplibui #36
+`d5313944b9ca776819cfc3a28f99e5a691fe4a09`; дерево равно проверенному `5bab1d9f`.
+Контракт форка:
 [крупный интерфейс](../architecture/ui-accessibility.md).
 
 Нижняя панель сохраняет две группы: координаты/масштаб и GPS/точность.

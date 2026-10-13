@@ -8,6 +8,12 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-13 — Pin слитых библиотек диагностики и крупного интерфейса
+
+- App закрепляет fetched Merge Commit maplib #50 и maplibui #36.
+  Official maplib, maplibui и app на эту дату по-прежнему без диагностики
+  touch/tiles и без вписывания крупных подписей.
+
 ## 2026-10-13 — Диагностика slow map queries и причины отказа sync queue
 
 - Добавлены bounded independent observer и snapshot journal с timestamp/process
