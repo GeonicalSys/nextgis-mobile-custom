@@ -412,6 +412,12 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  map-runtime-diagnostics:
+    owner: maplib
+    type: private_json_file
+    source: maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+    filename: map-runtime-diagnostics.json
+    purpose: Atomic private 16 KiB diagnostic snapshot; timestamp matching keeps process/version ownership for delayed AppExitInfo, ordinary fast successes do not write.
   hyperlog-local-only:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
@@ -441,6 +447,11 @@ storage:
     location_name: app_update_state SharedPreferences
     source: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
     purpose: One-shot validated update manifest used only while Android install permission is pending; resume revalidates APK identity and Android 9-10 certificate fallback before installation
+  updater-startup-session:
+    owner: app
+    location_name: MainActivity savedInstanceState Bundle startup_update_session and startup_update_completed
+    source: app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java
+    purpose: Ephemeral completion belonging to the current process session; recreation preserves a completed check, process death restores a pending check, and failed or deferred requests never mark it complete
   collector-registry:
     owner: maplibui
     location_name: collector_projects_registry.json

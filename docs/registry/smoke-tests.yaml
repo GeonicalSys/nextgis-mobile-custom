@@ -1,5 +1,22 @@
 schema_version: 1
 tests:
+  AUTO-UPDATER-CHECKS:
+    type: automatic
+    scope: [app]
+    command: .\gradlew.bat :app:testLisaDebugUnitTest
+    expected: StartupUpdateCheckSchedulerTest reproduces network/request failures, focus and busy deferral, companion UI, restored process/window, foreground retry and late/duplicate callbacks. AppUpdateNetworkStateTest permits active INTERNET without VALIDATED and preserves the offline gate; AppUpdatePendingInstallationTest ensures cleared stale or rejected continuation cannot suppress a fresh check. Logs distinguish restore, skip, request, valid result and retry.
+  SMOKE-LARGE-TEXT-UI:
+    type: device
+    scope: [app, maplibui]
+    steps:
+      - On an isolated Debug emulator run LargeTextLayoutTest with Russian text, both themes, fontScale 1.0/1.3/2.0, density 420/540/620 and portrait/landscape effective widths 280/320/360/568 dp.
+      - Check a compact ordinary two-row status panel at all display densities, no altitude/speed or empty footer; pass DOWN/MOVE/UP through collapsed menu slots and retain the visible add-button tap.
+      - When coordinates wrap, place short zoom/GPS/accuracy values together if they fit; restore the ordinary arrangement when width returns. Notifications may cover the map: check their own full text/actions, then check map controls separately after dismissal.
+      - Verify complete azimuth instructions, correction values, settings titles/summaries, layer/resource names, login labels and GPS status; reject ellipsis, hidden lines and overlapping controls.
+      - Verify Close and all correction actions stay inside the fitted panel and receive touches at their transformed visible positions.
+      - Open the real settings menu and General/Map/Location/Tracks sections; verify every adapter row and the actual account/login/project/underlay screens in both orientations, retaining their existing list/form scrolling.
+      - Change real emulator font_scale to 2.0 and wm density to 620 together; invoke the real-window test with uiOrientation portrait and landscape, assert the actual Russian locale and orientation with the keyboard closed, no map-tool overlap, and reachable Close/Save/Cancel; inspect screenshots and run FormAppearanceTest. Restore emulator settings afterwards.
+    expected: All displayed labels remain readable and actions accessible; wrap and shorten first, fit remaining oversized components locally, restore natural sizes when room returns, and do not add scrolling to map panels. Physical OEM smoke remains separate.
   SMOKE-SYNC-OFFLINE:
     type: device
     scope: [app, maplibui]
@@ -22,7 +39,8 @@ tests:
     steps:
       - On an isolated Debug emulator run BackgroundLocationWarningTest with location/account grants and enabled location; do not run on a physical phone.
       - Verify launch without recording warns for screen-off GPS Battery Saver, app background restriction and missing Doze exemption, even with the legacy prompt hidden.
-      - Verify each Settings action targets the relevant system page, rotation retains acknowledgement and Resume detects a new restriction.
+      - Verify each single Settings action opens the relevant system request or page directly without an app choice dialog; rotation retains acknowledgement and Resume detects a new restriction.
+      - Enable GPS Battery Saver and remove Doze exemption together; verify the choice dialog offers both settings and the selected battery optimization action opens its system request.
       - While the app UID is background-restricted, return from the foreground test helper with system Back and await RESUMED; do not rely on the restricted UID's implicit AndroidX resume broadcast.
     expected: Warning does not block the map or start a track/walk; unchanged acknowledged state does not repeat, new restriction warns and clearing restrictions dismisses it. OEM field smoke remains separate.
   SMOKE-DIAGNOSTIC-NOISE:
@@ -39,6 +57,15 @@ tests:
     scope: [app, maplib, maplibui]
     command: adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.reliability.CascadingFormsTest,com.nextgis.mobile.reliability.MapEditingToolsTest,com.nextgis.mobile.reliability.StandardFeatureTypesTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner
     expected: Isolated emulator only. Category defaults fill all stable-key parents, preserve blank unrelated branches, override remembered legacy values, survive dialog/form recreation and durable recovery, and write the selected pair through the shared SQLite Save gate. Real map creation paths choose a category before sketching, current-location form or walk recording, preserve the originating tool through recreation and interrupted recorder recovery, hand defaults to the attribute form, save both fields and return to the map without drafts. Cancelling a point category during a walk releases the point lock and retains the recording. Manual project smoke also covers Cancel, a single layer, simple styling and real project symbols.
+  SMOKE-MAP-RUNTIME-DIAGNOSTICS:
+    type: device
+    scope: [app, maplib]
+    command: On an isolated Debug emulator run MapRuntimeDiagnosticsNativeTest via DiagnosticsTestRunner with an explicit synthetic DSN.
+    steps:
+      - Block the main looper with a synthetic query and verify the observer persists a bounded snapshot before the main thread returns and BeforeSend includes it.
+      - Saturate the real local tile server with two blocked workers and sixteen queued requests; verify the next request returns 503 with queue_full and a request id.
+      - Run ProjectSyncRunnerTest and the unit parsing/commit-failure fixtures; retain the original pending queue and check the precise phase/cause.
+    expected: Fast operations do not write, slow/failed operations remain observable with bounded overhead, HTTP reasons survive SDK context and sync failure never clears recovery state.
   SMOKE-DIAGNOSTIC-DELIVERY:
     type: automatic
     scope: [app]
@@ -794,7 +821,7 @@ tests:
   SMOKE-SELF-UPDATE:
     type: device
     scope: [app]
-    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, On Android 9 or 10 download a valid same-certificate update whose archive PackageManager may omit SigningInfo, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
+    steps: [Start offline and restore Internet without restarting the phone, Verify foreground retry and correlated skip or HTTP failure logs, Close and relaunch the app and recreate a restored window in a new process, Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, On Android 9 or 10 download a valid same-certificate update whose archive PackageManager may omit SigningInfo, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
     expected: Valid same-branch same-signature update, including the Android 9-10 legacy archive-signature fallback, reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL, integrity or certificate is rejected.
   SMOKE-NGW-URL-IMPORT:
     type: device

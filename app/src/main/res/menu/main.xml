@@ -29,7 +29,7 @@
         android:icon="@drawable/ic_map_rotation_disabled"
         android:orderInCategory="0"
         android:title="@string/allow_map_rotation"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_locate"

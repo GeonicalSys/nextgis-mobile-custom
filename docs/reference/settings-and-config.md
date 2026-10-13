@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-11
+last_verified: 2026-10-13
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -146,6 +146,9 @@ Battery Saver; приложение не меняет системный реж�
   Общий `LocalLogInitializer` сохраняет локальный журнал и формат, удаляя при
   старте устаревшую настройку `HyperLog/URL`; фиктивный endpoint не записывается.
 - Автоматические отчёты GlitchTip независимы от локального логирования.
+  map-runtime-diagnostics.json — private bounded snapshot до 16 KiB для slow
+  queries/tile pressure, не пользовательская настройка. Быстрые операции не
+  записываются; event timestamps предотвращают присоединение чужого startup state.
   `sentry.dsn` из игнорируемого `sentry.properties` задаёт приёмник; APK не содержит
   пароль администратора. `io.sentry.auto-init=false`, screenshots/view hierarchy
   и performance sampling отключены. SDK queue в private files ограничена 256
@@ -160,6 +163,8 @@ Battery Saver; приложение не меняет системный реж�
 - При открытии/Resume `BackgroundLocationWarning` проверяет GPS-политику
   энергосбережения, системный запрет фоновой работы и наличие исключения из
   оптимизации батареи. Предупреждение с «Настроить» показывается без записи трека;
+  при одном доступном действии сразу открывается системный запрос или страница,
+  при нескольких ограничениях сначала предлагается выбор нужной настройки;
   одна неизменная ситуация не повторяется при screen-on или rotation в текущем
   запуске. Старое `battery_dont_show_pref` эту проверку не отключает. Настройки
   меняет пользователь; возврат не запускает трек/обход.

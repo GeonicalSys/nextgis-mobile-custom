@@ -42,9 +42,13 @@ public class MapLayoutContractTest {
             Element element = (Element) elements.item(i);
             String id = element.getAttributeNS(ANDROID, "id");
             if (!id.isEmpty()) assertTrue("Duplicate view " + id, ids.add(id));
-            if (id.equals("@+id/walk_recording_panel")) {
+            if (id.equals("@+id/map_panels_stack")) {
                 assertEquals("@id/fl_status_panel", element.getAttributeNS(ANDROID, "layout_above"));
                 assertEquals("@id/map_control_rail", element.getAttributeNS(ANDROID, "layout_toStartOf"));
+            }
+            if (id.equals("@+id/walk_recording_panel")) {
+                Element stack = (Element) element.getParentNode().getParentNode();
+                assertEquals("@+id/map_panels_stack", stack.getAttributeNS(ANDROID, "id"));
             }
             if (id.equals("@+id/multiple_actions")) {
                 assertEquals("left", element.getAttributeNS("http://schemas.android.com/apk/res-auto",
@@ -53,7 +57,7 @@ public class MapLayoutContractTest {
         }
         assertFalse(ids.contains("@+id/action_azimuth"));
         assertFalse(ids.contains("@+id/action_ruler"));
-        for (String id : new String[]{"action_track_status", "walk_recording_panel", "action_measurements", "action_zoom_in", "action_zoom_out", "multiple_actions", "fl_attributes"}) {
+        for (String id : new String[]{"map_panels_stack", "action_track_status", "walk_recording_panel", "action_measurements", "action_zoom_in", "action_zoom_out", "multiple_actions", "fl_attributes"}) {
             assertTrue("Missing map control " + id, ids.contains("@+id/" + id));
         }
     }

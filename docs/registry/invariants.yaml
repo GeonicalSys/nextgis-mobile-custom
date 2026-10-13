@@ -1,5 +1,23 @@
 schema_version: 1
 invariants:
+  INV-UI-VISIBLE-BOUNDS:
+    title: Enlarged system text and display sizes retain full labels and reachable actions
+    owners: [app, maplibui]
+    statement: >
+      Adapt in order through wrapping and flexible layout, clear shorter wording, then
+      local fitting only for remaining overflow. Respect system font/display settings;
+      never silently reset them. Critical actions stay within usable screen bounds after
+      insets and rotation with the keyboard closed. Simultaneous visibility of the entire UI
+      and keyboard is not required; normal IME behavior remains unchanged. Native tests must verify complete text layout,
+      no hidden lines or ellipsis, transformed action bounds and actual touch delivery.
+      Map panels fit without introducing scrolling and restore natural sizes when space returns.
+    related_code:
+      - maplibui/src/main/java/com/nextgis/maplibui/view/FittedPanelLayout.java
+      - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/ToolbarTextFit.java
+      - app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java
+    verify_smoke: [SMOKE-LARGE-TEXT-UI, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-DEBUG]
+    must_update_docs: [docs/architecture/ui-accessibility.md, app/docs/README.md, maplibui/docs/README.md]
   INV-TRACK-DELIVERY:
     title: Track upload intent survives registration delays and acknowledgements stay in the owning workspace
     owners: [maplib, maplibui, app]
@@ -866,8 +884,9 @@ invariants:
     owners: [app]
     statement: >
       Check launch/resume for screen-off GPS Battery Saver policy, user background
-      restriction and battery optimization. Offer the applicable public system settings
-      without changing them or starting a recorder automatically. Retain one acknowledgement
+      restriction and battery optimization. Open the applicable public system setting
+      directly when there is one action; retain a choice when multiple restrictions apply,
+      without changing settings or starting a recorder automatically. Retain one acknowledgement
       per unchanged launch state across rotation; a changed risk warns again and clearing
       restrictions removes the warning. Legacy Doze prompt suppression does not hide it.
       Missing Doze exemption means a possible risk, not proof of current GPS failure.
@@ -893,6 +912,9 @@ invariants:
       still delegate to Android and existing draft recovery remains independent.
       Limit only new automatic handled SDK HTTP 5xx bursts; retain the first request
       and status/source tags, never suppress fatal failures or cached replay.
+      Map runtime snapshots are bounded, captured without SDK/business reads from the observer
+      and attached only to matching operation timestamps; old process identity is never replaced
+      with the reporting process version. Queue and heap 503 reasons remain independently observable.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -901,6 +923,7 @@ invariants:
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
     verify_smoke: [SMOKE-DIAGNOSTIC-DELIVERY, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
     must_update_docs: [docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md]
   INV-CRASH-DRAFT-RECOVERY:
@@ -983,6 +1006,22 @@ invariants:
     must_update_docs:
       - docs/runbooks/release-apk.md
       - app/docs/README.md
+  INV-UPDATER-AUTO-RETRY:
+    title: A skipped or failed startup update check remains pending
+    owners: [app]
+    statement: Request the branch manifest on an active INTERNET network without requiring Android VALIDATED; keep automatic checks pending through offline, request failures, lost focus, busy updater and process restoration. Retry only in a focused resumed window with bounded backoff; preserve successful completion only in the same process and log every scheduling decision and correlated HTTP outcome.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/test/java/com/nextgis/mobile/util/StartupUpdateCheckSchedulerTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkStateTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdatePendingInstallationTest.java
+    verify_smoke: [AUTO-UPDATER-CHECKS, SMOKE-SELF-UPDATE]
+    must_update_docs:
+      - docs/runbooks/release-apk.md
+      - app/docs/README.md
+      - app/docs/manifest.yaml
   INV-NGW-URL-IMPORT:
     title: Direct NGW URL import preserves account, permission and layer contracts
     owners: [maplib, maplibui, app]

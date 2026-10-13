@@ -300,25 +300,33 @@ public class MapEditingToolsTest {
         });
     }
 
+    private int visibleBottom(View view) {
+        android.graphics.Rect visible = new android.graphics.Rect();
+        assertTrue("The action panel is visible", view.getGlobalVisibleRect(visible));
+        return visible.bottom;
+    }
+
     @Test public void bottomWalkPanelMovesForCreationMenuAndCancelRequiresConfirmation() {
         final int[] bottom = new int[1];
         scenario.onActivity(activity -> beginWalk(activity, true, Constants.NOT_FOUND));
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         scenario.onActivity(activity -> {
             View panel = activity.findViewById(R.id.walk_recording_panel);
-            bottom[0] = panel.getBottom();
-            assertTrue(panel.getBottom() > activity.findViewById(R.id.map_action_row).getTop());
+            bottom[0] = visibleBottom(panel);
+            int[] rowPosition = new int[2];
+            activity.findViewById(R.id.map_action_row).getLocationOnScreen(rowPosition);
+            assertTrue(bottom[0] > rowPosition[1]);
             ((com.getbase.floatingactionbutton.FloatingActionsMenu) activity.findViewById(R.id.multiple_actions)).expand();
         });
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         scenario.onActivity(activity -> {
-            assertTrue(activity.findViewById(R.id.walk_recording_panel).getBottom() < bottom[0]);
+            assertTrue(visibleBottom(activity.findViewById(R.id.walk_recording_panel)) < bottom[0]);
             ((com.getbase.floatingactionbutton.FloatingActionsMenu) activity.findViewById(R.id.multiple_actions)).collapse();
         });
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         scenario.onActivity(activity -> {
             View panel = activity.findViewById(R.id.walk_recording_panel);
-            assertEquals(bottom[0], panel.getBottom());
+            assertEquals(bottom[0], visibleBottom(panel));
             assertTrue(panel.findViewById(com.nextgis.maplibui.R.id.walk_panel_cancel).performClick());
             assertNotNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
         });
@@ -421,7 +429,7 @@ public class MapEditingToolsTest {
                 panel.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 panel.layout(0, 0, width, panel.getMeasuredHeight());
-                assertEquals("Normal panel is a single 48dp row", target, panel.getHeight());
+                assertTrue("Wrapped title retains all three action targets", panel.getHeight() >= target);
                 for (int buttonId : new int[]{com.nextgis.maplibui.R.id.walk_panel_finish,
                         com.nextgis.maplibui.R.id.walk_panel_resume, com.nextgis.maplibui.R.id.walk_panel_cancel}) {
                     View button = panel.findViewById(buttonId);
@@ -436,6 +444,10 @@ public class MapEditingToolsTest {
                 android.widget.TextView title = panel.findViewById(com.nextgis.maplibui.R.id.walk_panel_title);
                 assertEquals(layers.get(0).getName(), title.getText().toString());
                 assertTrue(title.getWidth() > 0);
+                assertTrue("The complete layer name fits vertically", title.getLayout().getHeight()
+                        <= title.getHeight() - title.getCompoundPaddingTop() - title.getCompoundPaddingBottom());
+                for (int line = 0; line < title.getLayout().getLineCount(); line++)
+                    assertEquals("The layer name is not truncated", 0, title.getLayout().getEllipsisCount(line));
                 android.graphics.Bitmap bitmap = android.graphics.Bitmap.createBitmap(width, panel.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
                 panel.draw(new android.graphics.Canvas(bitmap));
                 try (java.io.FileOutputStream image = new java.io.FileOutputStream(new File(app.getFilesDir(),
@@ -634,6 +646,10 @@ public class MapEditingToolsTest {
     }
 
     private android.os.Bundle chooseFirstCategory(boolean accept) throws Exception {
+        return chooseFirstCategory(accept, false);
+    }
+
+    private android.os.Bundle chooseFirstCategory(boolean accept, boolean refreshGps) throws Exception {
         AtomicBoolean ready = new AtomicBoolean();
         java.util.concurrent.atomic.AtomicReference<String> status = new java.util.concurrent.atomic.AtomicReference<>();
         long deadline = android.os.SystemClock.uptimeMillis() + 20000;
@@ -654,6 +670,8 @@ public class MapEditingToolsTest {
             if (!ready.get()) Thread.sleep(40);
         }
         assertTrue("Creation category did not load: " + status.get(), ready.get());
+        // Waiting through cancellation/reopening can outlive the real eight-second GPS freshness window.
+        if (refreshGps) supplyCurrentFix();
         final android.os.Bundle[] selected = new android.os.Bundle[1];
         scenario.onActivity(activity -> {
             androidx.fragment.app.DialogFragment dialog = (androidx.fragment.app.DialogFragment) activity.getMapFragment()
@@ -765,7 +783,7 @@ public class MapEditingToolsTest {
         clickCreationAction(R.id.add_geometry_by_walk);
         chooseFirstCategory(false); assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
         clickCreationAction(R.id.add_geometry_by_walk);
-        android.os.Bundle expected = chooseFirstCategory(true);
+        android.os.Bundle expected = chooseFirstCategory(true, true);
         assertCameraAtCreationFix();
         com.nextgis.maplibui.util.WalkSessionStore.Snapshot walk = com.nextgis.maplibui.util.WalkSessionStore.load(app);
         assertNotNull(walk); assertCategory(expected, com.nextgis.maplibui.util.FeatureTypeDefaults.decode(walk.initialValues));

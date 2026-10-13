@@ -13,6 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.List;
+import java.io.IOException;
+import com.nextgis.maplib.util.ProdLogUtil;
 
 /** Durable pending project/account pairs, never credentials or feature data. */
 public final class SyncRecoveryJournal {
@@ -23,8 +25,26 @@ public final class SyncRecoveryJournal {
     public static synchronized boolean enqueue(Context context, List<ProjectSyncRunner.Target> targets,
                                                List<Account> accounts, boolean manual) {
         try {
+            enqueueOrThrow(context, targets, accounts, manual);
+            return true;
+        } catch (IOException error) {
+            HyperLog.e(Constants.TAG, ProdLogUtil.withStack("Cannot persist sync recovery queue", error));
+            return false;
+        }
+    }
+
+    /** Preserve the real failure for the runner's diagnostic report, never replace it with a boolean. */
+    public static synchronized void enqueueOrThrow(Context context, List<ProjectSyncRunner.Target> targets,
+                                                  List<Account> accounts, boolean manual) throws IOException {
+        String phase = "read_queue";
+        int beforeCount = -1, afterCount = -1, bytes = -1;
+        try {
             JSONArray queue = load(context);
-            boolean migrated = migrateLegacy(context, queue, ProjectSyncRunner.inventory(context));
+            beforeCount = queue.length();
+            phase = "legacy_inventory";
+            boolean migrated = preferences(context).getBoolean("active", false)
+                    && migrateLegacy(context, queue, ProjectSyncRunner.inventory(context));
+            phase = "merge_pairs";
             for (ProjectSyncRunner.Target target : targets) for (Account account : accounts) {
                 JSONObject existing = find(queue, target.key(), account.name);
                 if (existing != null) {
@@ -32,12 +52,22 @@ public final class SyncRecoveryJournal {
                 } else queue.put(new JSONObject().put("target", target.key()).put("account", account.name)
                         .put("manual", manual).put("started_at", System.currentTimeMillis()));
             }
-            SharedPreferences.Editor editor = preferences(context).edit().putString(QUEUE, queue.toString());
+            String payload = queue.toString();
+            afterCount = queue.length();
+            bytes = payload.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
+            phase = "commit";
+            SharedPreferences.Editor editor = preferences(context).edit().putString(QUEUE, payload);
             if (migrated) editor.remove("active").remove("account").remove("workspace").remove("manual")
                     .remove("started_at").remove("attempt");
-            return editor.commit();
+            if (!editor.commit()) throw new IOException("SharedPreferences.commit returned false");
         } catch (Exception error) {
-            HyperLog.e(Constants.TAG, "Cannot persist sync recovery queue", error); return false;
+            long available = -1;
+            try { available = context.getFilesDir().getUsableSpace(); } catch (RuntimeException ignored) { }
+            throw new IOException("Cannot persist sync queue phase=" + phase
+                    + " projects=" + (targets == null ? -1 : targets.size())
+                    + " accounts=" + (accounts == null ? -1 : accounts.size())
+                    + " before=" + beforeCount + " after=" + afterCount + " bytes=" + bytes
+                    + " storageAvailableBytes=" + available, error);
         }
     }
 

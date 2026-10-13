@@ -198,6 +198,8 @@ public class MapFragment
 
     lateinit var mMapRef: WeakReference<MapViewOverlays>
     private var mapLibreMapView: MapLibreMapView? = null
+    private var defaultLogoMargins: IntArray? = null
+    private var defaultAttributionMargins: IntArray? = null
     @Volatile
     private var awaitingMapLibreFrameAfterResume = false
     private var mapLibreRenderRecoveryActive = false
@@ -214,6 +216,7 @@ public class MapFragment
     }
     private val mapLibreFrameListener =
         MapLibreMapView.OnDidFinishRenderingFrameListener { fully, _, _ ->
+            com.nextgis.maplib.util.MapRuntimeDiagnostics.frameReceived()
             if (awaitingMapLibreFrameAfterResume) {
                 awaitingMapLibreFrameAfterResume = false
                 HyperLog.v(
@@ -261,8 +264,6 @@ public class MapFragment
 
     protected var mStatusSource: TextView? = null
     protected var mStatusAccuracy: TextView? = null
-    protected var mStatusSpeed: TextView? = null
-    protected var mStatusAltitude: TextView? = null
     protected var mStatusLatitude: TextView? = null
     protected var mStatusLongitude: TextView? = null
     protected var mZoom: TextView? = null
@@ -510,6 +511,10 @@ public class MapFragment
         mivZoomOut?.setOnClickListener(this)
 
         mStatusPanel = view.findViewById(R.id.fl_status_panel)
+        mStatusPanel?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateMapAttributionMargins() }
+        view.findViewById<View>(R.id.ll_ruler)?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateMapAttributionMargins() }
+        (view.findViewById<ViewGroup>(R.id.map_panels_stack))?.getChildAt(0)
+            ?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateMapAttributionMargins() }
         gnssHud = view.findViewById(R.id.gnss_hud)
         gnssHudQuality = view.findViewById(R.id.gnss_hud_quality)
         gnssHudDetail = view.findViewById(R.id.gnss_hud_detail)
@@ -666,6 +671,12 @@ public class MapFragment
 
         configureMapRotationGestures(mapboxMap, isMapRotationEnabled)
         mapboxMap.uiSettings.isCompassEnabled = false
+        mapboxMap.uiSettings.let { ui ->
+            defaultLogoMargins = intArrayOf(ui.logoMarginLeft, ui.logoMarginTop, ui.logoMarginRight, ui.logoMarginBottom)
+            defaultAttributionMargins = intArrayOf(ui.attributionMarginLeft, ui.attributionMarginTop,
+                ui.attributionMarginRight, ui.attributionMarginBottom)
+        }
+        updateMapAttributionMargins()
 
         val restoredBearing = if (isMapRotationEnabled) {
             try {
@@ -693,6 +704,7 @@ public class MapFragment
 
         val allLayers = mapRef.getAllLayers()
 
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.sceneState("loading_layers")
         mapDrawable.loadLayersToMaplibreMap(styleJson, allLayers, true, true)
     }
 
@@ -702,6 +714,7 @@ public class MapFragment
     }
 
     override fun setMapLayersLoaded() {
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.sceneState("ready")
         mapLibreLayersAppliedForCurrentView = true
         startMapLibreRenderRecovery("layers-applied")
         updateLastLocation()
@@ -763,6 +776,7 @@ public class MapFragment
         val layersTrack = mapRef.getLayersByType(Constants.LAYERTYPE_TRACKS)
         vectorLayers.addAll(layersTrack)
         val allLayers = mapRef.getAllLayers()
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.sceneState("loading_layers")
         mapDrawable.loadLayersToMaplibreMap(styleJson, allLayers, true, true)
         return true
     }
@@ -1057,7 +1071,7 @@ public class MapFragment
             }
 
             override fun onFinishWalk(session: WalkSessionStore.Snapshot) {
-                AlertDialog.Builder(requireContext())
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(requireContext())
                     .setTitle(com.nextgis.maplibui.R.string.walk_complete_object)
                     .setMessage(if (session.phase == WalkSessionPolicy.Phase.FINISHED)
                         com.nextgis.maplibui.R.string.walk_save_ready_confirm else com.nextgis.maplibui.R.string.walk_save_confirm)
@@ -1076,7 +1090,7 @@ public class MapFragment
 
             override fun onPauseOrResumeWalk(session: WalkSessionStore.Snapshot, resume: Boolean) {
                 val title = if (resume) com.nextgis.maplibui.R.string.walk_resume else com.nextgis.maplibui.R.string.walk_pause
-                AlertDialog.Builder(requireContext())
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(requireContext())
                     .setTitle(title)
                     .setMessage(if (resume) com.nextgis.maplibui.R.string.walk_resume_confirm else com.nextgis.maplibui.R.string.walk_pause_confirm)
                     .setPositiveButton(title) { _, _ ->
@@ -1086,7 +1100,7 @@ public class MapFragment
             }
 
             override fun onDiscardWalk(session: WalkSessionStore.Snapshot) {
-                AlertDialog.Builder(requireContext())
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(requireContext())
                     .setTitle(com.nextgis.maplibui.R.string.walk_discard)
                     .setMessage(com.nextgis.maplibui.R.string.walk_discard_confirm)
                     .setPositiveButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
@@ -1100,7 +1114,7 @@ public class MapFragment
 
     private fun positionWalkPanel(menuExpanded: Boolean) {
         val panel = walkPanel ?: return
-        val params = panel.layoutParams as? RelativeLayout.LayoutParams ?: return
+        val params = panel.layoutParams as? ViewGroup.MarginLayoutParams ?: return
         params.bottomMargin = Math.round((if (menuExpanded) 88 else 4) * resources.displayMetrics.density)
         panel.layoutParams = params
     }
@@ -1728,7 +1742,7 @@ public class MapFragment
         }
 
         val ctx = context ?: return
-        AlertDialog.Builder(ctx)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(ctx)
             .setTitle(R.string.geometry_edit_cancel_title)
             .setMessage(R.string.geometry_edit_cancel_message)
             .setPositiveButton(R.string.geometry_edit_cancel_confirm) { _, _ -> cancelEdits() }
@@ -2088,7 +2102,9 @@ public class MapFragment
 
         if (askPerm)
             Handler().postDelayed(Runnable(){
-                mActivity?.askBackgroundPerm(null)
+                val host = mActivity
+                if (isAdded && isResumed && host != null && !host.isFinishing && !host.isDestroyed)
+                    host.askBackgroundPerm(null)
             }, 1000)
 
     }
@@ -2309,6 +2325,8 @@ public class MapFragment
             mapLibreView.onDestroy()
         }
         mapLibreMapView = null
+        defaultLogoMargins = null
+        defaultAttributionMargins = null
 
         editLayerOverlay?.mBottomToolbar?.setOnClickListener(null)
         editLayerOverlay?.mBottomToolbar = null
@@ -2872,7 +2890,7 @@ public class MapFragment
 
     private fun showWalkInterruptedDialog() {
         val act = activity ?: return
-        AlertDialog.Builder(act)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(act)
             .setTitle(com.nextgis.maplibui.R.string.walkedit_interrupted_title)
             .setMessage(com.nextgis.maplibui.R.string.walkedit_interrupted_message)
             .setPositiveButton(com.nextgis.maplibui.R.string.walkedit_continue) { _, _ ->
@@ -3181,6 +3199,7 @@ public class MapFragment
     }
 
     override fun onPause() {
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.mapState("paused")
         HyperLog.v(
             Constants.TAG,
             "MapFragment.onPause mode=${modeName(mode)} " +
@@ -3267,6 +3286,7 @@ public class MapFragment
 
 
     override fun onResume() {
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.mapState("resumed")
         HyperLog.v(Constants.TAG, "MapFragment.onResume")
         super.onResume()
 
@@ -3470,7 +3490,32 @@ public class MapFragment
 
             statusPanel.minimumHeight = bottom
             statusPanel.requestLayout()
+            updateMapAttributionMargins()
         }
+    }
+
+    private fun updateMapAttributionMargins() {
+        val mapView = mapLibreMapView ?: return
+        val root = mMapRelativeLayout ?: return
+        val ui = mapDrawableOrNull?.maplibreMap?.uiSettings ?: return
+        val logo = defaultLogoMargins ?: return
+        val attribution = defaultAttributionMargins ?: return
+        var availableBottom = root.height
+        for (id in intArrayOf(R.id.fl_status_panel, R.id.ll_ruler)) {
+            root.findViewById<View>(id)?.let { overlay ->
+                if (overlay.visibility == View.VISIBLE && overlay.height > 0)
+                    availableBottom = minOf(availableBottom, overlay.top)
+            }
+        }
+        val panels = root.findViewById<ViewGroup>(R.id.map_panels_stack)?.getChildAt(0)
+        if (panels != null && panels.visibility == View.VISIBLE && panels.height > 0) {
+            val panelLocation = IntArray(2); val rootLocation = IntArray(2)
+            panels.getLocationInWindow(panelLocation); root.getLocationInWindow(rootLocation)
+            availableBottom = minOf(availableBottom, panelLocation[1] - rootLocation[1])
+        }
+        val covered = (mapView.height - availableBottom).coerceAtLeast(0)
+        ui.setLogoMargins(logo[0], logo[1], logo[2], logo[3] + covered)
+        ui.setAttributionMargins(attribution[0], attribution[1], attribution[2], attribution[3] + covered)
     }
 
 
@@ -4309,7 +4354,7 @@ public class MapFragment
 
         val items = featureNames.toTypedArray<String>()
         val ctx = context ?: return
-        val builder = AlertDialog.Builder(ctx)
+        val builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(ctx)
         builder.setTitle(R.string.choose_object)
         builder.setItems(items) { dialog, which -> //String selectedItem = items[which];
             // remove after some time
@@ -4951,17 +4996,6 @@ public class MapFragment
                 Locale.getDefault(),
                 "%.1f %s", location.accuracy, getString(com.nextgis.maplib.R.string.unit_meter)
             )
-            mStatusAltitude!!.text = String.format(
-                Locale.getDefault(),
-                "%.1f %s", location.altitude, getString(com.nextgis.maplib.R.string.unit_meter)
-            )
-            mStatusSpeed!!.text = String.format(
-                Locale.getDefault(),
-                "%.1f %s/%s",
-                location.speed * 3600 / 1000,
-                getString(com.nextgis.maplib.R.string.unit_kilometer),
-                getString(com.nextgis.maplib.R.string.unit_hour)
-            )
             mStatusLatitude!!.text =
                 formatCoordinate(
                     location.latitude,
@@ -4989,8 +5023,6 @@ public class MapFragment
         mStatusSource!!.setCompoundDrawables(null, null, null, null)
         mStatusSource!!.text = ""
         mStatusAccuracy!!.text = getString(com.nextgis.maplibui.R.string.n_a)
-        mStatusAltitude!!.text = getString(com.nextgis.maplibui.R.string.n_a)
-        mStatusSpeed!!.text = getString(com.nextgis.maplibui.R.string.n_a)
         mStatusLatitude!!.text = getString(com.nextgis.maplibui.R.string.n_a)
         mStatusLongitude!!.text = getString(com.nextgis.maplibui.R.string.n_a)
     }
@@ -5000,15 +5032,12 @@ public class MapFragment
         get() {
             mStatusLongitude!!.measure(0, 0)
             mStatusLatitude!!.measure(0, 0)
-            mStatusAltitude!!.measure(0, 0)
-            mStatusSpeed!!.measure(0, 0)
             mStatusAccuracy!!.measure(0, 0)
             mStatusSource!!.measure(0, 0)
 
             val totalWidth =
                 mStatusSource!!.measuredWidth + mStatusLongitude!!.measuredWidth +
-                        mStatusLatitude!!.measuredWidth + mStatusAccuracy!!.measuredWidth +
-                        mStatusSpeed!!.measuredWidth + mStatusAltitude!!.measuredWidth
+                        mStatusLatitude!!.measuredWidth + mStatusAccuracy!!.measuredWidth
 
             val metrics = DisplayMetrics()
             mActivity!!.windowManager.defaultDisplay.getMetrics(metrics)
@@ -5021,8 +5050,6 @@ public class MapFragment
     private fun defineTextViews(panel: View) {
         mStatusSource = panel.findViewById(R.id.tv_source)
         mStatusAccuracy = panel.findViewById(R.id.tv_accuracy)
-        mStatusSpeed = panel.findViewById(R.id.tv_speed)
-        mStatusAltitude = panel.findViewById(R.id.tv_altitude)
         mStatusLatitude = panel.findViewById(R.id.tv_latitude)
         mStatusLongitude = panel.findViewById(R.id.tv_longitude)
         mZoom = panel.findViewById(R.id.tv_zoom)
@@ -5730,7 +5757,7 @@ public class MapFragment
             setPadding(padding, padding / 2, padding, 0)
             addView(input)
         }
-        val dialog = AlertDialog.Builder(ctx)
+        val dialog = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(ctx)
             .setTitle(R.string.azimuth_correction)
             .setMessage(R.string.azimuth_correction_help)
             .setView(container)
@@ -5900,7 +5927,7 @@ public class MapFragment
         val layer = mSelectedLayer
         if (layer != null && blockWalkLayerEdit(layer)) return
 
-        val builder = AlertDialog.Builder(activity!!)
+        val builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity!!)
             .setTitle(com.nextgis.maplibui.R.string.delete_confirm_feature)
             .setMessage(com.nextgis.maplibui.R.string.delete_feature)
             .setPositiveButton(com.nextgis.maplibui.R.string.menu_delete) {

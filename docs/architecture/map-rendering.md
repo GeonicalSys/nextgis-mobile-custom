@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-11
+last_verified: 2026-10-13
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,23 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+Touch queries marker/vertex/azimuth проходят через MapRuntimeDiagnostics:
+перед синхронным SDK вызовом записывается trace, независимый watcher фиксирует
+ожидание, finally завершает trace при результате или исключении. Native вызов
+сохраняет поток и прежнее поведение. LocalVectorTileServer диагностирует
+queue wait, layer-lock wait, запрос IDs, чтение/обрезку features и MVT encoding;
+503 указывает точную причину и request id. Политика двух workers, очереди 16
+и heap headroom 64 MiB сохраняется. [Контракт диагностики](error-reporting.md).
+
+Панели и инструменты карты адаптируются к font/display scale по [контракту UI](ui-accessibility.md). Компас/GNSS HUD освобождают место на низком экране; азимут располагается под toolbar/компасом слева от инструментов, значения статуса переносятся. View transforms вписывают панели и доставляют touch к отображаемым действиям; MapView сохраняет свою геометрию.
+
+Свёрнутый `MapActionsMenu` передаёт карте DOWN/MOVE/UP вне видимого плюса:
+устаревшая AnimatorProxy-анимация скрытых кнопок больше не создаёт мёртвую
+область около масштабной линейки. Нижняя панель отображает координаты,
+масштаб, GPS/спутники и точность; короткие показатели объединяются при переносе
+координат. MapLibre logo/attribution поднимаются над фактическими нижними панелями
+вместо добавления пустого footer. Высота и скорость в этой панели удалены.
 
 `ReorderedLayerViewAnimated` завершает жест без анимации, если после fling
 перетаскиваемая строка больше не видна или adapter снят. Cancel очищает hover,

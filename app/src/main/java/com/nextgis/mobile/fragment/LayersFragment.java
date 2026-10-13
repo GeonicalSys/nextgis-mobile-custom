@@ -318,7 +318,7 @@ public class LayersFragment
                 mSyncButton.setEnabled(true);
                 mSyncButton.setOnClickListener(this);
                 mSyncButton.setOnLongClickListener(view -> {
-                    new AlertDialog.Builder(requireContext())
+                    com.nextgis.maplibui.util.FittedDialogs.compatBuilder(requireContext())
                             .setMessage(R.string.sync_recheck_skipped_prompt)
                             .setPositiveButton(android.R.string.ok, (dialog, which) -> startManualSync(true))
                             .setNegativeButton(android.R.string.cancel, null).show();
@@ -413,7 +413,7 @@ public class LayersFragment
 
                 if (activityRef.get() == null)
                     return;
-                AlertDialog builder = new AlertDialog.Builder(activityRef.get())
+                AlertDialog builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activityRef.get())
                         .setTitle(com.nextgis.maplibui.R.string.save)
                         .setMessage(com.nextgis.maplibui.R.string.has_edits)
                         .setPositiveButton(com.nextgis.maplibui.R.string.save, new DialogInterface.OnClickListener() {
@@ -804,7 +804,7 @@ public class LayersFragment
         }
         mSyncFailureDialogShowing = true;
         final String shortError = shortenSyncError(error);
-        new AlertDialog.Builder(getActivity())
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(getActivity())
                 .setTitle(R.string.sync_failed_retry_title)
                 .setMessage(new NetworkUtil(requireContext()).isNetworkAvailable()
                         ? getString(R.string.sync_failed_retry_message, shortError)

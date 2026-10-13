@@ -1,7 +1,7 @@
 ---
 title: Общее хранилище подложек и обновление Debug перед переносом
 type: architecture
-last_verified: 2026-09-21
+last_verified: 2026-10-13
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java
@@ -19,6 +19,8 @@ related_code:
 ---
 
 # Хранилище подложек
+
+Окна каталога подложек используют общие builders `FittedDialogs`, чтобы подписи и действия вписывались при крупном системном интерфейсе. Подтверждения удаления, импорта и замены вызывают прежние обработчики каталога. Проверка компоновки описана в [контракте UI](ui-accessibility.md).
 
 Хранилище принадлежит одному Android application ID. Оно находится в
 `externalFilesDir("map")/shared_underlays`; при отсутствии external files —

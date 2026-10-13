@@ -79,6 +79,32 @@ public class DiagnosticsHttpPolicyTest {
         assertTrue(policy.shouldReport(http(503, "https://host0.example/tiles/1"), 3));
     }
 
+    @Test public void localTileReasonsArePreservedAndThrottledSeparatelyWithoutRequestIdFanout() {
+        DiagnosticsHttpPolicy policy = new DiagnosticsHttpPolicy();
+        SentryEvent queue = tileReason("queue_full", "12");
+        assertTrue(policy.shouldReport(queue, 1));
+        assertEquals("queue_full", queue.getTag("local_tile_reason"));
+        assertEquals("12", queue.getTag("local_tile_request"));
+        assertTrue(policy.shouldReport(tileReason("heap_headroom", "13"), 2));
+        assertFalse(policy.shouldReport(tileReason("queue_full", "14"), 3));
+    }
+
+    @Test public void remoteAndUnknownHeadersDoNotBecomeTrustedLocalTileReasons() {
+        DiagnosticsHttpPolicy policy = new DiagnosticsHttpPolicy();
+        SentryEvent remote = tileReason("queue_full", "12"); remote.getRequest().setUrl("https://example.com/tiles/1");
+        assertTrue(policy.shouldReport(remote, 1)); assertNull(remote.getTag("local_tile_reason"));
+        SentryEvent malformed = tileReason("unknown_reason", "text");
+        assertTrue(policy.shouldReport(malformed, 2)); assertNull(malformed.getTag("local_tile_reason"));
+    }
+
+    private static SentryEvent tileReason(String reason, String id) {
+        SentryEvent event = http(503, "http://127.0.0.1:8080/tiles/1/2/3/4.pbf");
+        io.sentry.protocol.Response response = new io.sentry.protocol.Response();
+        response.setHeaders(java.util.Map.of("x-lisa-tile-reason", reason, "X-LISA-TILE-REQUEST", id));
+        event.getContexts().setResponse(response);
+        return event;
+    }
+
     static SentryEvent http(int status, String url) {
         SentryEvent event = new SentryEvent();
         event.setLevel(SentryLevel.ERROR);

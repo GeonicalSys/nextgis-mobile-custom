@@ -63,6 +63,7 @@ class UnderlayCatalogActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(layout)
         setSupportActionBar(findViewById(com.nextgis.maplibui.R.id.main_toolbar))
+        com.nextgis.maplibui.util.ToolbarTextFit.attach(findViewById(com.nextgis.maplibui.R.id.main_toolbar))
         title = getString(if (choose) R.string.underlay_from_catalog else R.string.underlay_catalog)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -236,10 +237,10 @@ class UnderlayCatalogActivity : AppCompatActivity() {
     private fun actions(asset: SharedUnderlayCatalog.Asset) {
         val options = if (asset.isReady) arrayOf(getString(R.string.underlay_rename), getString(R.string.underlay_delete))
             else arrayOf(getString(R.string.underlay_delete))
-        AlertDialog.Builder(this).setTitle(asset.name).setItems(options) { _, which ->
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this).setTitle(asset.name).setItems(options) { _, which ->
             if (asset.isReady && which == 0) {
                 val input = EditText(this).apply { setText(asset.name); setSingleLine() }
-                AlertDialog.Builder(this).setTitle(R.string.underlay_rename).setView(input)
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this).setTitle(R.string.underlay_rename).setView(input)
                     .setNegativeButton(android.R.string.cancel, null)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         if (input.text.isNotBlank()) work { SharedUnderlayStore.catalog(this).rename(asset.id, input.text.toString()); refresh() }
@@ -249,7 +250,7 @@ class UnderlayCatalogActivity : AppCompatActivity() {
                 val uses = if (names.isEmpty()) getString(R.string.underlay_unused) else names.joinToString("\n")
                 runOnUiThread {
                     if (isFinishing || isDestroyed) return@runOnUiThread
-                    AlertDialog.Builder(this).setTitle(R.string.underlay_delete)
+                    com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this).setTitle(R.string.underlay_delete)
                         .setMessage(getString(R.string.underlay_delete_confirm, asset.name, uses))
                         .setNegativeButton(android.R.string.cancel, null)
                         .setPositiveButton(R.string.underlay_delete) { _, _ ->
@@ -278,7 +279,7 @@ class UnderlayCatalogActivity : AppCompatActivity() {
             DebugCompanionInstaller.offer(this, true)
             return
         }
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(R.string.underlay_import_from_old_app)
             .setMessage(getString(R.string.legacy_underlay_import_confirmation, project.name))
             .setNegativeButton(android.R.string.cancel, null)
@@ -390,7 +391,7 @@ class UnderlayCatalogActivity : AppCompatActivity() {
             }
             return
         }
-        exitConfirmDialog = AlertDialog.Builder(this)
+        exitConfirmDialog = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setMessage(R.string.legacy_underlay_import_exit_message)
             .setNegativeButton(R.string.legacy_underlay_import_exit_stay, null)
             .setPositiveButton(R.string.legacy_underlay_import_exit_leave) { _, _ ->

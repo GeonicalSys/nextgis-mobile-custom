@@ -1,12 +1,13 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-11
+last_verified: 2026-10-13
 related_code:
   - app/build.gradle
   - maplib/build.gradle
   - tools/verify-apk-version-matrix.ps1
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+  - app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/AndroidManifest.xml
   - app/src/lisa/res/values/launcher_icon.xml
@@ -27,9 +28,9 @@ token для отправки ошибок APK не нужны. Не печат�
 
 ## Версия
 
-Подготавливаемый выпуск `3.1.2.28`: production `versionCode 222`, Lisa Debug —
+Подготавливаемый выпуск `3.1.2.29`: production `versionCode 223`, Lisa Debug —
 `3.1.2.23` / `versionCode 218`; диагностический release
-`maplib.VERSION_NAME 3.1.2.28`, debug — `3.1.2.23`.
+`maplib.VERSION_NAME 3.1.2.29`, debug — `3.1.2.23`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.
@@ -50,6 +51,12 @@ token для отправки ошибок APK не нужны. Не печат�
    notes, если пользователь не запросил иное.
 
 ## Обязательная сборка и проверка версии
+
+Выпуск 3.1.2.29 / 223: maplib #50 и maplibui #36 (Merge Commit) →
+maplib #51 с production `3.1.2.29` (Merge Commit
+`28a4300ae308c6f531c9b8073382f09c1d6ad052`) → fetched pins в app #59 →
+зелёный CI → app #59 (Squash) → APK version matrix → dry-run → публикация
+только `lisa` и `belka`. Debug сохраняет 3.1.2.23 / 218.
 
 Выпуск «Орбиты-кольца» 3.1.2.28 / 222: maplib #49 (Merge Commit) → fetched
 remote merge pin в app #58 → зелёный CI итогового app head → app #58 (Squash)
@@ -147,6 +154,34 @@ Release smoke должен включать trusted-pair и negative-пару: A
 package/certificate не должен получить URI или поток подложки.
 
 ## Self-hosted update manifest
+
+Автопроверка запускается в resumed главном окне с фокусом через 2,5 секунды.
+`StartupUpdateCheckScheduler` сохраняет незавершённую попытку при отсутствии
+сети, ошибке запроса, busy/pending установке, companion UI и потере фокуса.
+Повтор после сетевой ошибки: 10, 30, 120, затем максимум один раз в 300 секунд;
+изменение default network или Resume приближает попытку до 2,5 секунды.
+Пауза/закрытие окна снимает timers и network callback. После process death
+восстановленный Bundle не отключает новую проверку; успешный результат или
+показанное предложение сохраняется только при пересоздании в том же процессе.
+Pending установка остаётся приоритетной отдельной процедурой.
+Очищенный невалидный/устаревший pending manifest, уже установленная версия или
+отказ в install permission не считаются новой выполненной проверкой:
+`resumePendingInstallation()` возвращает true только при начале продолжения.
+
+Сеть должна быть active и иметь INTERNET; системный VALIDATED записывается
+для диагностики и не блокирует реальный HTTP request. Manifest request имеет
+общий timeout 45 секунд, connect/read — 30 секунд; HTTP cache отключён.
+В HyperLog искать `Updater startup` и `Updater check`/`Updater manifest`:
+reason/delay, mode, branch, current/available versionCode, признаки сети,
+request id, HTTP status, publishedAt, exception и elapsedMs. `result=current`
+означает валидный manifest без новой версии; `result=offer_shown` — реальный
+показ предложения; `result_deferred` оставляет попытку для foreground retry.
+Автоматические сетевые ошибки пишутся локально без диалога/отправки багрепорта.
+
+Локальная regression-проверка: `:app:testLisaDebugUnitTest` включает
+`StartupUpdateCheckSchedulerTest` и `AppUpdateNetworkStateTest`.
+`AppUpdatePendingInstallationTest` проверяет, что очищенная continuation не
+подавляет проверку следующего выпуска, сохраняя product validation.
 
 Публичная база: `https://apps-geonical.ru/lisa-mobile`. Ветки и manifest:
 

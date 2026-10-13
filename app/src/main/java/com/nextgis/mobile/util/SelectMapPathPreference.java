@@ -144,7 +144,7 @@ public class SelectMapPathPreference
                 }
             }
 
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+            AlertDialog.Builder alertDialog = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(context);
             alertDialog.setTitle(com.nextgis.maplibui.R.string.choose_storage);
             final int selectedItemFinal = selectedItem;
             String[] array = externalFilesStrings.toArray(new String[externalFilesPaths.size()]);
@@ -164,7 +164,7 @@ public class SelectMapPathPreference
                     // check path exists
                     File newPath = new File(value);
                     if (newPath.listFiles() !=null && newPath.listFiles().length != 0) {
-                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
+                        android.app.AlertDialog.Builder builder = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(getContext());
                         builder.setMessage(com.nextgis.maplibui.R.string.warning_folder_should_be_empty_clear)
                                 .setPositiveButton(com.nextgis.maplibui.R.string.clean, new DialogInterface.OnClickListener() {
                                     @Override
@@ -197,7 +197,7 @@ public class SelectMapPathPreference
             customAlertDialog.show();
 
         } else {
-            new AlertDialog.Builder(getContext())
+            com.nextgis.maplibui.util.FittedDialogs.compatBuilder(getContext())
                     .setMessage(com.nextgis.maplibui.R.string.no_storages_error)
                     .setPositiveButton(com.nextgis.maplibui.R.string.ok, null)
                     .create()

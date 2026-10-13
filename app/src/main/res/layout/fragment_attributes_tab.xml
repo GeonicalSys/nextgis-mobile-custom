@@ -34,7 +34,6 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="5dp"
-        android:singleLine="true"
         android:text="@string/action_attributes"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 

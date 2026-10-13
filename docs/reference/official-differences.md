@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-11
+last_verified: 2026-10-13
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,42 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+Форк добавляет MapRuntimeDiagnostics: независимое наблюдение синхронных touch
+queries, bounded atomic snapshot для delayed AppExitInfo, этапы/нагрузка локальных
+тайлов и точные queue_full/heap_headroom headers. Sync enqueue передаёт исходную
+причину и этап ошибки, сохраняя журнал. Это дополнение к [контракту диагностики](../architecture/error-reporting.md).
+GitHub API 2026-10-13: official maplib
+`fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4` и official app
+`04d57c9fd843db6745c170147d6a2863da807352`
+не содержат MapRuntimeDiagnostics и SyncRecoveryJournal соответственно.
+App закрепляет fetched Merge Commit maplib #51
+`28a4300ae308c6f531c9b8073382f09c1d6ad052`, включающий #50
+`6f398acb59d98fdb5a858754404646c3dfe73f4f`. Диагностическое дерево равно
+проверенному `f6735d2`; production VERSION_NAME — `3.1.2.29`.
+Lisa/Belka Release — `3.1.2.29` / `223`. Debug остаётся `3.1.2.23` / `218`.
+
+Форк поддерживает общую адаптацию к крупным font/display scales: перенос
+полных названий и подписей, растущие по тексту кнопки, локальное вписывание
+панелей с корректными touch transforms и адаптивный заголовок toolbar.
+Native LargeTextLayoutTest проверяет текст и реальные границы в обеих темах,
+portrait/landscape и при совместном увеличении шрифта и display size.
+GitHub API 2026-10-13: official app
+`04d57c9fd843db6745c170147d6a2863da807352`, maplibui
+`29390d0331b9ef7cebcfadbc59d084c4de1e326c`;
+официальная row_layer.xml сохраняет фиксированную listPreferredItemHeight,
+maxLines=2 и ellipsize=end. App закрепляет fetched Merge Commit maplibui #36
+`d5313944b9ca776819cfc3a28f99e5a691fe4a09`; дерево равно проверенному `5bab1d9f`.
+Контракт форка:
+[крупный интерфейс](../architecture/ui-accessibility.md).
+
+Нижняя панель сохраняет две группы: координаты/масштаб и GPS/точность.
+Если масштаб не помещается рядом с координатами, он переходит к GPS/точности;
+короткие показатели располагаются вместе, когда хватает ширины.
+Высота и скорость удалены; пустой footer при повышенном display size не добавляется.
+Прозрачные слоты свёрнутого меню создания передают карте тапы и жесты,
+несмотря на старую AnimatorProxy-анимацию скрытых кнопок. Native regression
+проверяет DOWN/MOVE/UP, видимый плюс и компактную панель при разном DPI.
 
 Native CI форка изолирует восемь loopback-тестов доставки треков новой установкой
 Debug/test APK после recorder fixtures. EmulatorNetworkFixture ждёт connected
@@ -1629,7 +1665,13 @@ Production и debug используют отдельные Android account/prov
 ### Самостоятельное обновление APK
 
 Пользователь может проверить обновления из приложения; после свежего запуска
-также выполняется тихая проверка при наличии сети. Для Lisa, Belka и Debug
+также выполняется тихая проверка при наличии сети. Неудачная попытка повторяется
+после восстановления сети или возврата к карте с ограниченной частотой.
+Восстановление окна в новом процессе не отключает проверку; системный признак
+VALIDATED не блокирует запрос к доступному серверу. Причины ожидания/ошибок и
+результат записываются в локальный журнал. GitHub API 2026-10-13: official app
+master `04d57c9fd843db6745c170147d6a2863da807352` не содержит self-hosted updater
+и startup scheduler. Для Lisa, Belka и Debug
 используются отдельные ветки репозитория `apps-geonical.ru/lisa-mobile`. Перед
 предложением установки приложение сверяет schema, ветку/channel, package ID,
 версию и versioned URL, а после скачивания — размер, SHA-256, реальные
@@ -1673,9 +1715,13 @@ maplib `b8f3e3e6`, maplibui `d9f5241c`. Logger официального app и G
 Original HTTP context берётся из SDK hint до маскирования userinfo/headers самим SDK.
 Проверка Battery Saver, user background restriction и Doze exemption также
 выполняется при открытии/Resume без записи; «Настроить» предлагает необходимые
-системные переходы без автоматического запуска трека. В official app `f11d38f7`
+системные переходы без автоматического запуска трека. При одном доступном действии
+системный запрос или страница открывается сразу; при нескольких ограничениях
+сохраняется выбор настройки. В official app `542f69f9`
 таких launch/resume проверок и сохранения диагностического HTTP hint нет.
-Повторная проверка official app HEAD 2026-10-11 подтвердила `f11d38f7`.
+Повторная проверка official app HEAD и MainActivity через GitHub API 2026-10-12
+подтвердила `542f69f9`; upstream по-прежнему использует отдельный Doze-диалог
+при запуске записи.
 Исправление BackgroundLocationWarningTest использует Back для возврата из
 тестового helper при запрещённой фоновой работе UID; production contract прежний.
 Collector NGFP в форке сравнивается по JSON с упорядоченными ключами обеих частей,

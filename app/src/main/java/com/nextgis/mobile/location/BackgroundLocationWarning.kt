@@ -5,6 +5,7 @@ import android.app.ActivityManager
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
@@ -43,6 +44,9 @@ class BackgroundLocationWarning(private val activity: Activity) {
             else -> R.string.background_location_optimized_warning
         }
         snackbar = Snackbar.make(activity.findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE)
+            .setTextColor(Color.WHITE)
+            .setBackgroundTint(Color.rgb(50, 50, 50))
+            .setActionTextColor(Color.rgb(255, 183, 77))
             .setAction(R.string.background_location_settings) {
                 shownState = state // An explicit tap also acknowledges a visible, still-animating bar.
                 showSettingsChoices()
@@ -60,7 +64,8 @@ class BackgroundLocationWarning(private val activity: Activity) {
                 }
             })
             .also {
-                it.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).maxLines = 6
+                it.setMaxInlineActionWidth((120 * activity.resources.displayMetrics.density).toInt())
+                it.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).maxLines = Int.MAX_VALUE
                 it.show()
             }
     }
@@ -83,7 +88,11 @@ class BackgroundLocationWarning(private val activity: Activity) {
         if (state and OPTIMIZED != 0) choices += R.string.background_location_disable_optimization to
             Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:${activity.packageName}"))
         if (choices.isEmpty()) { close(); shownState = 0; return }
-        dialog = AlertDialog.Builder(activity)
+        if (choices.size == 1) {
+            openSettings(choices.single().second)
+            return
+        }
+        dialog = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(activity)
             .setTitle(R.string.background_location_title)
             .setItems(choices.map { activity.getString(it.first) }.toTypedArray()) { _, index ->
                 openSettings(choices[index].second)

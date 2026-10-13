@@ -25,7 +25,7 @@ object ProjectChooserDialog {
         }
         val rows = arrayOfNulls<CheckedTextView>(projects.size)
         val selected = intArrayOf(projects.indexOfFirst { it.isActive(context) })
-        val dialog = AlertDialog.Builder(context)
+        val dialog = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(context)
             .setTitle(R.string.collector_project_switch)
             .setView(ScrollView(context).apply { addView(container) })
             .setPositiveButton(R.string.collector_project_open, null)

@@ -358,9 +358,9 @@
     <string name="azimuth_mode_title">Измерить азимут и расстояние</string>
     <string name="azimuth_mode_current">От себя до точки</string>
     <string name="azimuth_mode_points">Между двумя точками</string>
-    <string name="azimuth_select_target">Укажите точку назначения на карте</string>
-    <string name="azimuth_select_start">Укажите точку А на карте</string>
-    <string name="azimuth_select_end">Укажите точку Б на карте</string>
+    <string name="azimuth_select_target">Выберите точку на карте</string>
+    <string name="azimuth_select_start">Выберите точку А</string>
+    <string name="azimuth_select_end">Выберите точку Б</string>
     <string name="azimuth_magnetic_format">Магнитный азимут:\n%1$s°</string>
     <string name="azimuth_declination_format">Склонение: %1$s°</string>
     <string name="azimuth_undefined">Магнитный азимут:\n—</string>

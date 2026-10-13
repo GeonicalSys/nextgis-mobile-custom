@@ -1,7 +1,7 @@
 ---
 title: Зависимые списки NGFP
 type: architecture
-last_verified: 2026-10-09
+last_verified: 2026-10-13
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java
@@ -9,6 +9,8 @@ related_code:
 ---
 
 # Зависимые списки NGFP
+
+Диалоги выбора используют общие builders `FittedDialogs`: подписи и действия адаптируются к крупному интерфейсу. Существующие ключи элементов, выбор и cascade callbacks сохраняются. Проверка компоновки описана в [контракте UI](ui-accessibility.md).
 
 Механизм встроен в APK: `maplib` разбирает данные и граф связей, `maplibui`
 управляет обычными независимыми `combobox`. `CascadingFormElements` разворачивает

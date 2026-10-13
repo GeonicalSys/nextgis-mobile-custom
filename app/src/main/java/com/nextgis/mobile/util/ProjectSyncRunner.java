@@ -139,9 +139,7 @@ public final class ProjectSyncRunner {
                     requested.getString(com.nextgis.maplib.datasource.ngw.SyncAdapter.ACTION_LPATH),
                     requested.getString(EXTRA_RECOVERY_TARGET));
             boolean manual = requested.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false);
-            if (!SyncRecoveryJournal.enqueue(context, targets, accounts, manual)) {
-                throw new IOException("Cannot persist sync queue");
-            }
+            SyncRecoveryJournal.enqueueOrThrow(context, targets, accounts, manual);
             ownsProgress = NgwSyncProgress.ensureSession(context, Math.max(1, targets.size() * accounts.size()));
             for (Target target : targets) {
                 if (Thread.currentThread().isInterrupted() || generation != NgwSyncIo.captureGeneration()) break;
@@ -215,7 +213,7 @@ public final class ProjectSyncRunner {
             }
         } catch (Exception error) {
             result.stats.numIoExceptions++;
-            HyperLog.e(Constants.TAG, "Project sync queue failed", error);
+            HyperLog.e(Constants.TAG, com.nextgis.maplib.util.ProdLogUtil.withStack("Project sync queue failed", error));
             AppDiagnostics.report(AppDiagnostics.Operation.SYNC, error);
         } finally {
             AppDiagnostics.operation(AppDiagnostics.Operation.SYNC,

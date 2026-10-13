@@ -39,6 +39,9 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -127,6 +130,7 @@ import com.nextgis.mobile.R
 import com.nextgis.mobile.fragment.LayersFragment
 import com.nextgis.mobile.fragment.MapFragment
 import com.nextgis.mobile.util.AppUpdateManager
+import com.nextgis.mobile.util.StartupUpdateCheckScheduler
 import com.nextgis.mobile.util.DebugCompanionInstaller
 import com.nextgis.maplibui.service.LayerFillService
 import com.nextgis.mobile.util.AppSettingsConstants
@@ -172,30 +176,36 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
     private var ngwUrlImportInProgress = false
     private val startupUpdateCheckHandler = Handler(Looper.getMainLooper())
-    private var startupUpdateCheckPending = false
+    private var updateNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var crashRecoveryOffered = false
     private var companionCheckedThisLaunch = false
     private var recheckPermissionsOnResume = false
-    private val startupUpdateCheckRunnable = Runnable {
-        if (isFinishing || isDestroyed || !hasWindowFocus() || AppUpdateManager.isBusyOrPending(this)) {
-            return@Runnable
-        }
-        if (DebugCompanionInstaller.resume(this, null)) {
-            startupUpdateCheckPending = false
-            companionCheckedThisLaunch = true
-            return@Runnable
-        }
-        if (!companionCheckedThisLaunch) {
-            companionCheckedThisLaunch = true
-            if (DebugCompanionInstaller.offer(this, false)) {
-                startupUpdateCheckPending = false
-                return@Runnable
+    private val startupUpdateCheck = StartupUpdateCheckScheduler(object : StartupUpdateCheckScheduler.Host {
+        override fun now() = android.os.SystemClock.elapsedRealtime()
+        override fun isReady() = !isFinishing && !isDestroyed && hasWindowFocus() &&
+            lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
+        override fun isBusy() = AppUpdateManager.isBusyOrPending(this@MainActivity)
+        override fun continueCompanion(): Boolean {
+            if (DebugCompanionInstaller.resume(this@MainActivity, null)) {
+                companionCheckedThisLaunch = true
+                return true
             }
+            if (companionCheckedThisLaunch) return false
+            companionCheckedThisLaunch = true
+            return DebugCompanionInstaller.offer(this@MainActivity, false)
         }
-        if (!startupUpdateCheckPending) return@Runnable
-        startupUpdateCheckPending = false
-        AppUpdateManager.checkForUpdateAutomatically(this)
-    }
+        override fun check(completion: StartupUpdateCheckScheduler.Completion) =
+            AppUpdateManager.checkForUpdateAutomatically(this@MainActivity, completion)
+        override fun postDelayed(action: Runnable, delayMs: Long) {
+            startupUpdateCheckHandler.postDelayed(action, delayMs)
+        }
+        override fun removeCallbacks(action: Runnable) {
+            startupUpdateCheckHandler.removeCallbacks(action)
+        }
+        override fun log(event: String) {
+            HyperLog.v(Constants.TAG, "Updater startup $event focus=${hasWindowFocus()} lifecycle=${lifecycle.currentState}")
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         HyperLog.v(Constants.TAG, "MainActivity.onCreate")
@@ -217,7 +227,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             return
         }
 
-        startupUpdateCheckPending = savedInstanceState == null
+        HyperLog.v(Constants.TAG, "Updater startup activity_created restored=${savedInstanceState != null}")
+        startupUpdateCheck.restore(
+            savedInstanceState?.getString("startup_update_session") == StartupUpdateCheckScheduler.PROCESS_SESSION,
+            savedInstanceState?.getBoolean("startup_update_completed", false) == true
+        )
 
         setContentView(R.layout.activity_main)
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
@@ -240,6 +254,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
         mToolbar = findViewById(R.id.main_toolbar)
         setSupportActionBar(mToolbar)
+        mToolbar?.let { com.nextgis.maplibui.util.ToolbarTextFit.attach(it) }
         if (null != supportActionBar) {
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         }
@@ -701,7 +716,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             mapTrackTogglePending = false
             mTrackItem = null
             mapFragment?.refreshTrackStatusButton()
-            android.app.AlertDialog.Builder(this)
+            com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(this)
                 .setTitle(com.nextgis.maplibui.R.string.recording_location_disabled_title)
                 .setMessage(com.nextgis.maplibui.R.string.recording_location_disabled_message)
                 .setPositiveButton(com.nextgis.maplibui.R.string.action_settings) { _, _ ->
@@ -817,7 +832,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     private fun clearLog() {
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(R.string.clear_log)
             .setMessage(R.string.clear_log_message)
             .setPositiveButton(R.string.clear_log) { _, _ ->
@@ -849,7 +864,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     private fun clearLayerBackups() {
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(R.string.clear_layer_backups)
             .setMessage(R.string.clear_layer_backups_message)
             .setPositiveButton(R.string.clear_layer_backups) { _, _ ->
@@ -905,7 +920,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             }
             com.nextgis.maplibui.util.WalkSessionRecoveryPolicy.Action.OFFER_FOREIGN_MAP_RESET -> {
                 crashRecoveryOffered = true
-                AlertDialog.Builder(this)
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
                     .setTitle(com.nextgis.maplibui.R.string.walk_emergency_reset)
                     .setMessage(com.nextgis.maplibui.R.string.walk_foreign_map_message)
                     .setPositiveButton(com.nextgis.maplibui.R.string.walk_emergency_reset) { _, _ ->
@@ -922,7 +937,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 map.crashRecoveryWalkDialogShown = true
                 map.pauseInterruptedWalkForRecovery()
                 HyperLog.v(Constants.TAG, "CrashRecovery offering walk draft")
-                AlertDialog.Builder(this)
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
                     .setTitle(com.nextgis.maplibui.R.string.walkedit_interrupted_title)
                     .setMessage(com.nextgis.maplibui.R.string.walkedit_interrupted_message)
                     .setPositiveButton(com.nextgis.maplibui.R.string.walkedit_continue) { _, _ ->
@@ -957,7 +972,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
         crashRecoveryOffered = true
         HyperLog.v(Constants.TAG, "CrashRecovery offering manual geometry draft")
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(com.nextgis.maplibui.R.string.geometry_edit_interrupted_title)
             .setMessage(com.nextgis.maplibui.R.string.geometry_edit_interrupted_message)
             .setPositiveButton(com.nextgis.maplibui.R.string.geometry_edit_continue) { _, _ ->
@@ -998,7 +1013,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             Constants.TAG,
             "CrashRecovery offering form draft layer=${draft.layerId} feature=${draft.featureId}"
         )
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(com.nextgis.maplibui.R.string.form_draft_title)
             .setMessage(com.nextgis.maplibui.R.string.form_draft_message)
             .setPositiveButton(com.nextgis.maplibui.R.string.form_draft_continue) { _, _ ->
@@ -1019,7 +1034,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         val map = mapFragment ?: return false
         if (!map.hasPointCreationWithoutDraft()) return false
         crashRecoveryOffered = true
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(com.nextgis.maplibui.R.string.form_draft_title)
             .setMessage(com.nextgis.maplibui.R.string.walk_point_recovery)
             .setPositiveButton(com.nextgis.maplibui.R.string.form_draft_continue) { _, _ ->
@@ -1107,7 +1122,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         try {
             val fileName = "ng-logs.zip"
             if (temp == null) {
-                AlertDialog.Builder(this)
+                com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
                     .setMessage(com.nextgis.maplibui.R.string.error_file_create)
                     .setPositiveButton(com.nextgis.maplibui.R.string.ok, null)
                     .create()
@@ -1671,7 +1686,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 val s = SpannableString(message) // msg should have url to enable clicking
                 Linkify.addLinks(s, Linkify.ALL)
 
-                val builder = android.app.AlertDialog.Builder(this@MainActivity)
+                val builder = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(this@MainActivity)
                 builder.setMessage(s)
                     .setPositiveButton("ok", null)
                     .setTitle(title)
@@ -1735,7 +1750,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                         }
                         container.addView(checkBox)
 
-                        val builder = android.app.AlertDialog.Builder(this@MainActivity)
+                        val builder = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(this@MainActivity)
                         builder.setMessage(com.nextgis.maplibui.R.string.battery_optimization)
                             .setPositiveButton(com.nextgis.maplibui.R.string.battery_optimization_turnoff) { dialog, which ->
                                 if (checkBox.isChecked) {
@@ -1771,8 +1786,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
         if (AppUpdateManager.resumePendingInstallation(this)) {
             companionCheckedThisLaunch = true
-            startupUpdateCheckPending = false
-            startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
+            startupUpdateCheck.complete("installation_continuation")
         }
         val gisApp = application as IGISApplication
         if (gisApp.isLayerFillServiceBusy) {
@@ -1816,14 +1830,45 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
         maybeOfferCrashRecovery()
         if (SDCardUtils.isSDCardUsedAndExtracted(this)) {
-            val builder = android.app.AlertDialog.Builder(this@MainActivity)
+            val builder = com.nextgis.maplibui.util.FittedDialogs.nativeBuilder(this@MainActivity)
             builder.setMessage(com.nextgis.maplibui.R.string.no_sd_card_attention)
                 .setPositiveButton(com.nextgis.maplibui.R.string.ok, null)
                 .setTitle(com.nextgis.maplibui.R.string.sd_card)
             val alertDialog = builder.create()
             alertDialog.show()
         }
+        startupUpdateCheck.onResume()
+        watchUpdateNetwork()
+    }
 
+    private fun watchUpdateNetwork() {
+        if (updateNetworkCallback != null || startupUpdateCheck.isComplete) return
+        val connectivity = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return
+        val callback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) = networkChanged()
+            override fun onLost(network: Network) = networkChanged()
+            override fun onCapabilitiesChanged(network: Network, capabilities: NetworkCapabilities) = networkChanged()
+            private fun networkChanged() {
+                startupUpdateCheckHandler.post { startupUpdateCheck.onNetworkChanged() }
+            }
+        }
+        try {
+            connectivity.registerDefaultNetworkCallback(callback)
+            updateNetworkCallback = callback
+            HyperLog.v(Constants.TAG, "Updater startup network_watch_registered")
+        } catch (error: RuntimeException) {
+            HyperLog.w(Constants.TAG, "Updater startup network_watch_failed type=${error.javaClass.simpleName}", error)
+        }
+    }
+
+    private fun stopWatchingUpdateNetwork() {
+        val callback = updateNetworkCallback ?: return
+        updateNetworkCallback = null
+        try {
+            (getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager)?.unregisterNetworkCallback(callback)
+        } catch (error: RuntimeException) {
+            HyperLog.w(Constants.TAG, "Updater startup network_unwatch_failed type=${error.javaClass.simpleName}", error)
+        }
     }
 
     fun addNGWLayerByUrl() {
@@ -1833,7 +1878,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             inputType = android.text.InputType.TYPE_CLASS_TEXT or
                 android.text.InputType.TYPE_TEXT_VARIATION_URI
         }
-        AlertDialog.Builder(this)
+        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(R.string.action_add_by_url)
             .setView(input)
             .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -1968,13 +2013,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         if (hasFocus && lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) {
             backgroundLocationWarning.refresh()
         }
-        if (hasFocus) {
-            startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
-            startupUpdateCheckHandler.postDelayed(
-                startupUpdateCheckRunnable,
-                STARTUP_UPDATE_CHECK_DELAY_MS
-            )
-        }
+        startupUpdateCheck.onWindowFocusChanged(hasFocus)
     }
 
 
@@ -2010,12 +2049,16 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("startup_update_session", StartupUpdateCheckScheduler.PROCESS_SESSION)
+        outState.putBoolean("startup_update_completed", startupUpdateCheck.isComplete)
         outState.putInt("background_location_warning_state", backgroundLocationWarning.shownState)
         outState.putInt("background_location_warning_process", android.os.Process.myPid())
         super.onSaveInstanceState(outState)
     }
 
     override fun onPause() {
+        startupUpdateCheck.onPause()
+        stopWatchingUpdateNetwork()
         backgroundLocationWarning.close()
         trackModeMenu?.dismiss()
         try {
@@ -2092,7 +2135,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             val openSettings = previouslyRequested && requested.all {
                 !ActivityCompat.shouldShowRequestPermissionRationale(this, it)
             }
-            val builder = AlertDialog.Builder(activity).setTitle(title)
+            val builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity).setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(
                     if (openSettings) R.string.permission_open_settings
@@ -2128,7 +2171,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         protected const val PERMISSIONS_REQUEST_LOC_SILENT: Int = 6
         const val LOCATION_BACKGROUND_REQUEST: Int = 5
         protected const val TAG_FRAGMENT_PROGRESS: String = "layer_fill_dialog_fragment"
-        private const val STARTUP_UPDATE_CHECK_DELAY_MS: Long = 2500
 
         protected const val FILE_SELECT_CODE: Int = 555
         protected const val RELOAD_ACTIVITY_DATA: Int = 777
@@ -2138,7 +2180,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         backgroundLocationWarning.close()
         trackPowerWarning.close()
         HyperLog.v(Constants.TAG, "MainActivity.onDestroy")
-        startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
+        startupUpdateCheck.close()
+        stopWatchingUpdateNetwork()
         ngwUrlExecutor.shutdownNow()
         mMessageReceiver = null
         mTrackReceiver = null

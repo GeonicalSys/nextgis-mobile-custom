@@ -60,6 +60,8 @@ public final class AppDiagnostics {
 
     // Package-private seam for the isolated instrumentation Application, never a runtime setting.
     static void initialize(Context context, String dsn) {
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.initialize(context,
+                BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, BuildConfig.SOURCE_REVISION);
         if (dsn == null || dsn.trim().isEmpty()) return; // Explicit CI build without diagnostics.
         try {
             SentryAndroid.init(context, options -> {
@@ -166,6 +168,9 @@ public final class AppDiagnostics {
     static SentryEvent prepareForSend(SentryEvent event, long now, DiagnosticsHttpPolicy httpPolicy) {
         if (event.getTag("operation") == null) event.setTag("operation", LAST_OPERATION.get().name());
         if (!httpPolicy.shouldReport(event, now)) return null;
+        java.util.Map<String, Object> mapRuntime = com.nextgis.maplib.util.MapRuntimeDiagnostics
+                .forEvent(event.getTimestamp().getTime());
+        if (!mapRuntime.isEmpty()) event.getContexts().put("map_runtime", mapRuntime);
         return sanitize(event);
     }
 
