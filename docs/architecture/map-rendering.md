@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,19 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+## Сетевой курсор между обновлениями
+
+Карта и status panel используют display snapshot общего `GpsEventSource`.
+Последняя отображённая Wi-Fi/сотовая позиция не очищает `user-location-source`
+между редкими callbacks: исходный accuracy circle остаётся вокруг курсора,
+координаты — в панели, вместе с ±accuracy и возрастом измерения. Более новый
+свежий GPS заменяет её. Скрытый Network-кэш старше последнего GPS не возвращается
+при потере GPS. Снятие map listener при форме или сне не снимает app/service lease.
+Этот контракт не меняет layer order или tool hit testing. Для записи и создания
+геометрии сохранённая старая Network-точка не является свежим location snapshot.
+Подробности и проверки: [GPS pipeline](location-pipeline.md#автоматическое-получение-и-сетевое-положение).
+
 
 Touch queries marker/vertex/azimuth проходят через MapRuntimeDiagnostics:
 перед синхронным SDK вызовом записывается trace, независимый watcher фиксирует

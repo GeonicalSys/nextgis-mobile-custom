@@ -58,7 +58,7 @@ validation builds используют содержимое изменённых
 
 - [app #60](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/60), основной
   code commit `68065557ad1f81774fe8ac346423d859e8816ded`, base `my-maplibre`, Draft,
-  unmerged. Последующий docs commit добавляет только ссылки/матрицу; ancestry
+  unmerged. Последующие docs commits уточняют контракты и ссылки/матрицу; ancestry
   подтверждает присутствие code commit, а `git ls-tree` — два task pins ниже.
 - [maplib #52](https://github.com/GeonicalSys/android_maplib/pull/52), commit
   `725ebc6f02227582fe84bb12faa0d21579bf798c`, base `master`, Draft, unmerged.
@@ -73,3 +73,14 @@ validation builds используют содержимое изменённых
 удалённые merge commits → Squash Merge app. Перед выпуском повторить обязательный
 полный inventory/ancestry/content audit и release gates. Эта задача не сливает PR,
 не меняет версию и не публикует APK.
+
+Финальный fetch/preflight: Android checkouts и publisher чистые и синхронизированы
+со своими remote task branches. Task tips опережают target bases на два app commits
+до финального уточнения docs и по одному library commit; это незамерженные Draft
+dependencies. Desktop task к этому моменту также стал чистым отдельным commit,
+созданным вне этой GPS-задачи; его содержимое не менялось здесь.
+
+PR CI дополнительно проверяет полный base→task diff с `--enforce-diff`. Проверка
+потребовала обновить rendering contract для `MapFragment`, что добавлено вместе
+с пользовательским описанием автоматических GPS-отчётов. Тот же полный diff
+проверяется локально перед push; форматный validator без diff этой проверки не заменяет.
