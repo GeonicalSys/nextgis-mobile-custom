@@ -420,6 +420,11 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
 
 ## Диагностика
 
+Открытые GlitchTip issue и подтверждённые границы диагноза:
+[разбор 2026-10-13](../../docs/reference/glitchtip-triage-2026-10-13.md).
+У старого Debug AppExitInfo проверять source revision отдельно от времени доставки;
+handled HTTP/permission report не считать uncaught crash.
+
 - Карта/слои: сначала проверить callbacks `MapFragment` и состояние
   `GISApplication`, затем rendering docs.
 - Чёрная карта при видимых Android-кнопках после возврата с другого экрана:
