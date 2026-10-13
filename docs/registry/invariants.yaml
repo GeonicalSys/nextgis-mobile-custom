@@ -1002,6 +1002,22 @@ invariants:
     must_update_docs:
       - docs/runbooks/release-apk.md
       - app/docs/README.md
+  INV-UPDATER-AUTO-RETRY:
+    title: A skipped or failed startup update check remains pending
+    owners: [app]
+    statement: Request the branch manifest on an active INTERNET network without requiring Android VALIDATED; keep automatic checks pending through offline, request failures, lost focus, busy updater and process restoration. Retry only in a focused resumed window with bounded backoff; preserve successful completion only in the same process and log every scheduling decision and correlated HTTP outcome.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/test/java/com/nextgis/mobile/util/StartupUpdateCheckSchedulerTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkStateTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdatePendingInstallationTest.java
+    verify_smoke: [AUTO-UPDATER-CHECKS, SMOKE-SELF-UPDATE]
+    must_update_docs:
+      - docs/runbooks/release-apk.md
+      - app/docs/README.md
+      - app/docs/manifest.yaml
   INV-NGW-URL-IMPORT:
     title: Direct NGW URL import preserves account, permission and layer contracts
     owners: [maplib, maplibui, app]

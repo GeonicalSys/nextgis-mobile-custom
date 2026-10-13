@@ -198,6 +198,8 @@ public class MapFragment
 
     lateinit var mMapRef: WeakReference<MapViewOverlays>
     private var mapLibreMapView: MapLibreMapView? = null
+    private var defaultLogoMargins: IntArray? = null
+    private var defaultAttributionMargins: IntArray? = null
     @Volatile
     private var awaitingMapLibreFrameAfterResume = false
     private var mapLibreRenderRecoveryActive = false
@@ -261,8 +263,6 @@ public class MapFragment
 
     protected var mStatusSource: TextView? = null
     protected var mStatusAccuracy: TextView? = null
-    protected var mStatusSpeed: TextView? = null
-    protected var mStatusAltitude: TextView? = null
     protected var mStatusLatitude: TextView? = null
     protected var mStatusLongitude: TextView? = null
     protected var mZoom: TextView? = null
@@ -510,6 +510,10 @@ public class MapFragment
         mivZoomOut?.setOnClickListener(this)
 
         mStatusPanel = view.findViewById(R.id.fl_status_panel)
+        mStatusPanel?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateMapAttributionMargins() }
+        view.findViewById<View>(R.id.ll_ruler)?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateMapAttributionMargins() }
+        (view.findViewById<ViewGroup>(R.id.map_panels_stack))?.getChildAt(0)
+            ?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateMapAttributionMargins() }
         gnssHud = view.findViewById(R.id.gnss_hud)
         gnssHudQuality = view.findViewById(R.id.gnss_hud_quality)
         gnssHudDetail = view.findViewById(R.id.gnss_hud_detail)
@@ -666,6 +670,12 @@ public class MapFragment
 
         configureMapRotationGestures(mapboxMap, isMapRotationEnabled)
         mapboxMap.uiSettings.isCompassEnabled = false
+        mapboxMap.uiSettings.let { ui ->
+            defaultLogoMargins = intArrayOf(ui.logoMarginLeft, ui.logoMarginTop, ui.logoMarginRight, ui.logoMarginBottom)
+            defaultAttributionMargins = intArrayOf(ui.attributionMarginLeft, ui.attributionMarginTop,
+                ui.attributionMarginRight, ui.attributionMarginBottom)
+        }
+        updateMapAttributionMargins()
 
         val restoredBearing = if (isMapRotationEnabled) {
             try {
@@ -2311,6 +2321,8 @@ public class MapFragment
             mapLibreView.onDestroy()
         }
         mapLibreMapView = null
+        defaultLogoMargins = null
+        defaultAttributionMargins = null
 
         editLayerOverlay?.mBottomToolbar?.setOnClickListener(null)
         editLayerOverlay?.mBottomToolbar = null
@@ -3472,7 +3484,32 @@ public class MapFragment
 
             statusPanel.minimumHeight = bottom
             statusPanel.requestLayout()
+            updateMapAttributionMargins()
         }
+    }
+
+    private fun updateMapAttributionMargins() {
+        val mapView = mapLibreMapView ?: return
+        val root = mMapRelativeLayout ?: return
+        val ui = mapDrawableOrNull?.maplibreMap?.uiSettings ?: return
+        val logo = defaultLogoMargins ?: return
+        val attribution = defaultAttributionMargins ?: return
+        var availableBottom = root.height
+        for (id in intArrayOf(R.id.fl_status_panel, R.id.ll_ruler)) {
+            root.findViewById<View>(id)?.let { overlay ->
+                if (overlay.visibility == View.VISIBLE && overlay.height > 0)
+                    availableBottom = minOf(availableBottom, overlay.top)
+            }
+        }
+        val panels = root.findViewById<ViewGroup>(R.id.map_panels_stack)?.getChildAt(0)
+        if (panels != null && panels.visibility == View.VISIBLE && panels.height > 0) {
+            val panelLocation = IntArray(2); val rootLocation = IntArray(2)
+            panels.getLocationInWindow(panelLocation); root.getLocationInWindow(rootLocation)
+            availableBottom = minOf(availableBottom, panelLocation[1] - rootLocation[1])
+        }
+        val covered = (mapView.height - availableBottom).coerceAtLeast(0)
+        ui.setLogoMargins(logo[0], logo[1], logo[2], logo[3] + covered)
+        ui.setAttributionMargins(attribution[0], attribution[1], attribution[2], attribution[3] + covered)
     }
 
 
@@ -4953,17 +4990,6 @@ public class MapFragment
                 Locale.getDefault(),
                 "%.1f %s", location.accuracy, getString(com.nextgis.maplib.R.string.unit_meter)
             )
-            mStatusAltitude!!.text = String.format(
-                Locale.getDefault(),
-                "%.1f %s", location.altitude, getString(com.nextgis.maplib.R.string.unit_meter)
-            )
-            mStatusSpeed!!.text = String.format(
-                Locale.getDefault(),
-                "%.1f %s/%s",
-                location.speed * 3600 / 1000,
-                getString(com.nextgis.maplib.R.string.unit_kilometer),
-                getString(com.nextgis.maplib.R.string.unit_hour)
-            )
             mStatusLatitude!!.text =
                 formatCoordinate(
                     location.latitude,
@@ -4991,8 +5017,6 @@ public class MapFragment
         mStatusSource!!.setCompoundDrawables(null, null, null, null)
         mStatusSource!!.text = ""
         mStatusAccuracy!!.text = getString(com.nextgis.maplibui.R.string.n_a)
-        mStatusAltitude!!.text = getString(com.nextgis.maplibui.R.string.n_a)
-        mStatusSpeed!!.text = getString(com.nextgis.maplibui.R.string.n_a)
         mStatusLatitude!!.text = getString(com.nextgis.maplibui.R.string.n_a)
         mStatusLongitude!!.text = getString(com.nextgis.maplibui.R.string.n_a)
     }
@@ -5002,15 +5026,12 @@ public class MapFragment
         get() {
             mStatusLongitude!!.measure(0, 0)
             mStatusLatitude!!.measure(0, 0)
-            mStatusAltitude!!.measure(0, 0)
-            mStatusSpeed!!.measure(0, 0)
             mStatusAccuracy!!.measure(0, 0)
             mStatusSource!!.measure(0, 0)
 
             val totalWidth =
                 mStatusSource!!.measuredWidth + mStatusLongitude!!.measuredWidth +
-                        mStatusLatitude!!.measuredWidth + mStatusAccuracy!!.measuredWidth +
-                        mStatusSpeed!!.measuredWidth + mStatusAltitude!!.measuredWidth
+                        mStatusLatitude!!.measuredWidth + mStatusAccuracy!!.measuredWidth
 
             val metrics = DisplayMetrics()
             mActivity!!.windowManager.defaultDisplay.getMetrics(metrics)
@@ -5023,8 +5044,6 @@ public class MapFragment
     private fun defineTextViews(panel: View) {
         mStatusSource = panel.findViewById(R.id.tv_source)
         mStatusAccuracy = panel.findViewById(R.id.tv_accuracy)
-        mStatusSpeed = panel.findViewById(R.id.tv_speed)
-        mStatusAltitude = panel.findViewById(R.id.tv_altitude)
         mStatusLatitude = panel.findViewById(R.id.tv_latitude)
         mStatusLongitude = panel.findViewById(R.id.tv_longitude)
         mZoom = panel.findViewById(R.id.tv_zoom)

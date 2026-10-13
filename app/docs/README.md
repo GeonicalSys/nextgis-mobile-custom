@@ -21,6 +21,15 @@ last_verified: 2026-10-13
 touch targets проверяет `LargeTextLayoutTest`. Контракт:
 [крупный интерфейс](../../docs/architecture/ui-accessibility.md).
 
+Нижняя панель при обычном масштабе остаётся компактной: координаты/масштаб
+в первой строке, GPS/спутники и точность — во второй. Когда координаты переносятся,
+масштаб переходит к коротким GPS/точности и помещается с ними на одной строке.
+Высота и скорость удалены.
+Дополнительный 40 dp footer не резервируется; логотип/attribution поднимаются
+над нижними видимыми элементами. Прозрачные слоты свёрнутого меню добавления
+передают карте тапы и жесты. Native LargeTextLayoutTest проверяет стандартную
+высоту панели на разных DPI, полный touch stream и видимый плюс.
+
 Ручной sync без активной сети сообщает «Отсутствует подключение к интернету»
 до запуска очереди. При пропаже соединения диалог/уведомление ошибки использует
 тот же текст. LAN/VPN не требует внешнего validated Internet. Обход продолжает
@@ -357,7 +366,8 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   NextGIS Web/Collector или явный import поддерживаемого portable artifact, без
   чтения desktop workspace;
 - настройки приложения и Android permissions/services;
-- проверка и установка Lisa/Belka updates с автоматическим продолжением после
+- автоматическая проверка Lisa/Belka updates после запуска, включая восстановление
+  окна в новом процессе, с повтором при сетевом сбое; установка с продолжением после
   выдачи Android-разрешения на установку;
 - экспорт/очистка сохранённых layer backups.
 
@@ -446,6 +456,18 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   отключать проверку для обхода ошибки. Запись `Updater APK validation rejected`
   показывает этап отказа; нулевое число archive certificates на Android 9–10
   означает сбой обоих PackageManager-представлений подписи.
+- Обновление не предложено: сопоставить `Updater startup` (restore, focus,
+  busy/companion, retry) и `Updater check`/`Updater manifest` по `id`. Журнал
+  содержит branch, текущую/серверную версии, active/internet/validated и transports,
+  HTTP status, elapsedMs и exception со stack trace. Нет системного VALIDATED —
+  запрос всё равно выполняется при active+INTERNET; результат даёт сам сервер.
+  Неудачная/отложенная попытка сохраняется до валидного результата; повторы
+  выполняются только в resumed окне с фокусом через 10/30/120/300 секунд, после
+  изменения сети или Resume — через 2,5 секунды. Bundle completion принимается
+  только в том же процессе; rotation не повторяет уже показанное предложение.
+  Очищенный ошибочный/устаревший pending manifest не подавляет новую проверку.
+  Проверки: `StartupUpdateCheckSchedulerTest`, `AppUpdateNetworkStateTest`,
+  `AppUpdatePendingInstallationTest`.
 - После выдачи разрешения update не продолжился: проверить
   `AppUpdateManager.resumePendingInstallation()`, `app_update_state` и вызов из
   `MainActivity.onResume()`/`SettingsActivity.onResume()`.

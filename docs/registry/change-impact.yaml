@@ -698,6 +698,10 @@ triggers:
   - id: SELF-HOSTED-UPDATER
     paths:
       - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java
+      - app/src/test/java/com/nextgis/mobile/util/StartupUpdateCheckSchedulerTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkStateTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdatePendingInstallationTest.java
       - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
       - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
       - app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
@@ -706,13 +710,13 @@ triggers:
     owners: [app]
     read:
       - docs/runbooks/release-apk.md
-    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME]
+    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-UPDATER-AUTO-RETRY]
     must_update_docs:
       - docs/runbooks/release-apk.md
       - docs/registry/config-keys.yaml
       - app/docs/README.md
       - app/docs/manifest.yaml
-    verify: [SMOKE-SELF-UPDATE, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
+    verify: [AUTO-UPDATER-CHECKS, SMOKE-SELF-UPDATE, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE]
     strict_docs: true
   - id: NGW-URL-IMPORT
     paths:

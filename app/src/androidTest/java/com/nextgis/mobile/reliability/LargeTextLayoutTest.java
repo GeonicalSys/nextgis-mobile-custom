@@ -227,8 +227,8 @@ public class LargeTextLayoutTest {
             for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS) {
                 Context context = themed(scale, screen, dark);
                 ViewGroup status = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.status_panel, null);
-                int[] ids = {R.id.tv_latitude, R.id.tv_longitude, R.id.tv_zoom, R.id.tv_source, R.id.tv_accuracy, R.id.tv_altitude, R.id.tv_speed};
-                String[] values = {"59,762542° Ш.", "133,466473° Д.", "15,9z", "GPS: 23", "±123,4 м", "−1234,5 м", "123,4 км/ч"};
+                int[] ids = {R.id.tv_latitude, R.id.tv_longitude, R.id.tv_zoom, R.id.tv_source, R.id.tv_accuracy};
+                String[] values = {"59,762542° Ш.", "133,466473° Д.", "15,9z", "GPS: 23", "±123,4 м"};
                 for (int i = 0; i < ids.length; i++) ((TextView) status.findViewById(ids[i])).setText(values[i]);
                 layout(status, dp(context, screen[0]), dp(context, screen[1]));
                 textFits(status);
@@ -250,6 +250,122 @@ public class LargeTextLayoutTest {
                 RectF rect = bounds(rail, overflow);
                 assertTrue("Even a scaled overflow button fits", rect.left >= -1 && rect.top >= -1
                         && rect.right <= rail.getWidth() + 1 && rect.bottom <= rail.getHeight() + 1);
+            }
+        });
+    }
+
+    @Test public void ordinaryStatusKeepsCompactTwoRowsAtDifferentDisplayDensities() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (boolean dark : new boolean[]{false, true}) for (int density : new int[]{420, 540, 620}) {
+                Context context = themed(1f, new int[]{360, 640, density}, dark);
+                ViewGroup status = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.status_panel, null);
+                int[] ids = {R.id.tv_latitude, R.id.tv_longitude, R.id.tv_zoom, R.id.tv_source, R.id.tv_accuracy};
+                String[] values = {"43,344994° Ш.", "17,814115° Д.", "14,1z", "21", "3,1 м"};
+                for (int i = 0; i < ids.length; i++) ((TextView) status.findViewById(ids[i])).setText(values[i]);
+                ((TextView) status.findViewById(R.id.tv_source)).setCompoundDrawablesWithIntrinsicBounds(
+                        com.nextgis.maplibui.R.drawable.ic_location, 0, 0, 0);
+                layout(status, dp(context, 360), dp(context, 640));
+                textFits(status); actionsFit(status, ids);
+                RectF latitude = bounds(status, status.findViewById(R.id.tv_latitude));
+                RectF longitude = bounds(status, status.findViewById(R.id.tv_longitude));
+                RectF zoom = bounds(status, status.findViewById(R.id.tv_zoom));
+                RectF source = bounds(status, status.findViewById(R.id.tv_source));
+                RectF accuracy = bounds(status, status.findViewById(R.id.tv_accuracy));
+                assertEquals(latitude.centerY(), longitude.centerY(), 1f);
+                assertEquals(latitude.centerY(), zoom.centerY(), 1f);
+                assertTrue(source.top >= latitude.bottom - 1);
+                assertEquals(source.centerY(), accuracy.centerY(), 1f);
+                assertTrue("No density-triggered empty footer", status.getHeight() <= dp(context, 75));
+                int altitudeId = context.getResources().getIdentifier("tv_altitude", "id", context.getPackageName());
+                int speedId = context.getResources().getIdentifier("tv_speed", "id", context.getPackageName());
+                assertTrue(altitudeId == 0 || status.findViewById(altitudeId) == null);
+                assertTrue(speedId == 0 || status.findViewById(speedId) == null);
+                image(status, "status-compact-" + dark + "-" + density);
+            }
+        });
+    }
+
+    @Test public void shortStatusMetricsShareOneRowWhenCoordinatesWrap() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (boolean dark : new boolean[]{false, true}) for (int width : new int[]{280, 320}) {
+                Context context = themed(2f, new int[]{width, 640, 620}, dark);
+                ViewGroup status = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.status_panel, null);
+                int[] ids = {R.id.tv_latitude, R.id.tv_longitude, R.id.tv_zoom, R.id.tv_source, R.id.tv_accuracy};
+                String[] values = {"39,237255° Ш.", "-123,150032° Д.", "16,0z", "21", "5,0 м"};
+                for (int i = 0; i < ids.length; i++) ((TextView) status.findViewById(ids[i])).setText(values[i]);
+                ((TextView) status.findViewById(R.id.tv_source)).setCompoundDrawablesWithIntrinsicBounds(
+                        com.nextgis.maplibui.R.drawable.ic_location, 0, 0, 0);
+                layout(status, dp(context, width), dp(context, 640));
+                textFits(status); actionsFit(status, ids);
+                RectF zoom = bounds(status, status.findViewById(R.id.tv_zoom));
+                RectF source = bounds(status, status.findViewById(R.id.tv_source));
+                RectF accuracy = bounds(status, status.findViewById(R.id.tv_accuracy));
+                assertEquals("Zoom and GPS share the short metrics row", zoom.centerY(), source.centerY(), 1f);
+                assertEquals("Accuracy fits beside zoom and GPS", zoom.centerY(), accuracy.centerY(), 1f);
+                assertTrue(zoom.right <= source.left && source.right <= accuracy.left);
+                image(status, "status-short-metrics-" + dark + "-" + width);
+                // Data/width changes must restore the compact coordinates row without reinflation.
+                layout(status, dp(context, 900), dp(context, 640));
+                assertEquals(status.findViewById(R.id.status_coordinates), status.findViewById(R.id.tv_zoom).getParent());
+                layout(status, dp(context, width), dp(context, 640));
+                assertEquals(status.findViewById(R.id.status_metrics), status.findViewById(R.id.tv_zoom).getParent());
+            }
+        });
+    }
+
+    @Test public void collapsedCreationMenuPassesEmptyAreaTapsAndDragsToTheMap() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS) {
+                Context context = themed(scale, screen, dark);
+                LayoutInflater inflater = LayoutInflater.from(context).cloneInContext(context);
+                if ("true".equals(InstrumentationRegistry.getArguments().getString("legacyMenu"))) {
+                    inflater.setFactory2(new LayoutInflater.Factory2() {
+                        public View onCreateView(View parent, String name, Context ctx, android.util.AttributeSet attrs) {
+                            return name.equals("com.nextgis.mobile.view.MapActionsMenu")
+                                    ? new com.getbase.floatingactionbutton.FloatingActionsMenu(ctx, attrs) : null;
+                        }
+                        public View onCreateView(String name, Context ctx, android.util.AttributeSet attrs) {
+                            return onCreateView(null, name, ctx, attrs);
+                        }
+                    });
+                }
+                ViewGroup root = (ViewGroup) inflater.inflate(R.layout.layout_map_content, null);
+                root.findViewById(R.id.stylingProgress).setVisibility(View.GONE);
+                root.findViewById(R.id.mapViewMaplibre).setVisibility(View.GONE);
+                View map = new View(context);
+                java.util.List<Integer> events = new java.util.ArrayList<>();
+                map.setOnTouchListener((view, event) -> { events.add(event.getActionMasked()); return true; });
+                root.addView(map, 0, new android.widget.RelativeLayout.LayoutParams(-1, -1));
+                layout(root, dp(context, screen[0]), dp(context, screen[1]));
+                com.getbase.floatingactionbutton.FloatingActionsMenu menu = root.findViewById(R.id.multiple_actions);
+                assertFalse(menu.isExpanded());
+                // AnimatorProxy hides/translates the drawing but leaves the native hit rect.
+                RectF hiddenAction = bounds(root, root.findViewById(R.id.add_current_location));
+                float x = hiddenAction.centerX(), y = hiddenAction.centerY();
+                long now = android.os.SystemClock.uptimeMillis();
+                for (int action : new int[]{MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP}) {
+                    MotionEvent event = MotionEvent.obtain(now, now + events.size() * 20L, action,
+                            x, y + (action == MotionEvent.ACTION_DOWN ? 0 : dp(context, 8)), 0);
+                    root.dispatchTouchEvent(event); event.recycle();
+                }
+                assertEquals("Transparent collapsed slots pass the complete gesture to the map",
+                        java.util.Arrays.asList(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP), events);
+                View plus = menu.findViewById(R.id.fab_expand_menu_button);
+                assertNotNull("Collapsed menu retains its visible add button", plus);
+                java.util.List<Integer> buttonEvents = new java.util.ArrayList<>();
+                plus.setOnTouchListener((view, event) -> { buttonEvents.add(event.getActionMasked()); return false; });
+                events.clear();
+                RectF target = bounds(root, plus);
+                for (int action : new int[]{MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP}) {
+                    MotionEvent event = MotionEvent.obtain(now, now + 100, action, target.centerX(), target.centerY(), 0);
+                    root.dispatchTouchEvent(event); event.recycle();
+                }
+                assertEquals("The visible add button receives its displayed tap",
+                        java.util.Arrays.asList(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP), buttonEvents);
+                assertTrue("The add button consumes its own tap", events.isEmpty());
+                // Detached native geometry fixtures queue performClick until attachment.
+                assertTrue(plus.performClick());
+                assertTrue("The add button action still expands the menu", menu.isExpanded());
             }
         });
     }
@@ -401,7 +517,12 @@ public class LargeTextLayoutTest {
         android.content.SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
         boolean hadIntro = prefs.contains(AppSettingsConstants.KEY_PREF_INTRO);
         boolean oldIntro = prefs.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
-        assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true).commit());
+        String geoWarning = com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG;
+        boolean hadGeoWarning = prefs.contains(geoWarning), oldGeoWarning = prefs.getBoolean(geoWarning, true);
+        // This checks physical map/dialog actions, independently of the emulator's absent
+        // network-location provider. Location-policy warnings have their own native suite.
+        assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true)
+                .putBoolean(geoWarning, false).commit());
         androidx.core.os.LocaleListCompat oldLocales = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
         android.os.LocaleList oldPlatformLocales = Build.VERSION.SDK_INT >= 33
                 ? app.getSystemService(android.app.LocaleManager.class).getApplicationLocales() : null;
@@ -426,15 +547,24 @@ public class LargeTextLayoutTest {
                 if (!ready.get()) Thread.sleep(100);
             }
             assertTrue("Real map initialized", ready.get());
-            scenario.onActivity(activity -> activity.getMapFragment().setNewMode(MapFragment.MODE_AZIMUTH_POINTS));
+            // Notifications may cover the underlying map. Check their own text/actions,
+            // then exercise map controls independently after the warning's normal dismissal.
+            instrumentation.waitForIdleSync(); Thread.sleep(500);
             scenario.onActivity(activity -> {
-                int[] ids = {R.id.tv_latitude, R.id.tv_longitude, R.id.tv_source, R.id.tv_accuracy, R.id.tv_altitude, R.id.tv_speed};
-                String[] values = {"59,762542° Ш.", "133,466473° Д.", "GPS: 23", "±123,4 м", "−1234,5 м", "123,4 км/ч"};
-                for (int i = 0; i < ids.length; i++) {
-                    TextView value = activity.findViewById(ids[i]);
-                    if (value != null) value.setText(values[i]);
+                View warning = activity.findViewById(com.google.android.material.R.id.snackbar_text);
+                if (warning != null && warning.isShown()) {
+                    ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
+                    textFits((View) warning.getParent());
+                    actionsFit(decor, com.google.android.material.R.id.snackbar_text, com.google.android.material.R.id.snackbar_action);
                 }
             });
+            scenario.moveToState(androidx.lifecycle.Lifecycle.State.CREATED);
+            scenario.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED);
+            instrumentation.waitForIdleSync(); Thread.sleep(300);
+            scenario.onActivity(activity -> activity.getMapFragment().setNewMode(MapFragment.MODE_AZIMUTH_POINTS));
+            // Use live telemetry here. Injected strings are overwritten by the GPS callback
+            // and can move the panel after its touch bounds are captured. Synthetic matrices
+            // separately cover long coordinates and accuracy values without a live producer.
             instrumentation.waitForIdleSync(); Thread.sleep(300);
             java.util.concurrent.atomic.AtomicReference<RectF> closeBounds = new java.util.concurrent.atomic.AtomicReference<>();
             scenario.onActivity(activity -> {
@@ -452,7 +582,9 @@ public class LargeTextLayoutTest {
                 assertTrue("Close stays in the usable window", rect.left >= visible.left - 1 && rect.right <= visible.right + 1
                         && rect.top >= visible.top - 1 && rect.bottom <= visible.bottom + 1);
                 assertTrue("Close remains usable after fitting", rect.width() >= dp(activity, 20) && rect.height() >= dp(activity, 20));
-                closeBounds.set(rect);
+                int[] origin = new int[2]; decor.getLocationOnScreen(origin);
+                RectF physicalClose = new RectF(rect); physicalClose.offset(origin[0], origin[1]);
+                closeBounds.set(physicalClose);
                 ViewGroup rail = activity.findViewById(R.id.map_control_rail);
                 boolean reachable = false;
                 for (int i = 0; i < rail.getChildCount(); i++) {
@@ -551,6 +683,8 @@ public class LargeTextLayoutTest {
             android.content.SharedPreferences.Editor restore = prefs.edit();
             if (hadIntro) restore.putBoolean(AppSettingsConstants.KEY_PREF_INTRO, oldIntro);
             else restore.remove(AppSettingsConstants.KEY_PREF_INTRO);
+            if (hadGeoWarning) restore.putBoolean(geoWarning, oldGeoWarning);
+            else restore.remove(geoWarning);
             assertTrue(restore.commit());
             if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class).setApplicationLocales(oldPlatformLocales);
             else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(oldLocales));

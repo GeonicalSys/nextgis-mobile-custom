@@ -39,6 +39,9 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -127,6 +130,7 @@ import com.nextgis.mobile.R
 import com.nextgis.mobile.fragment.LayersFragment
 import com.nextgis.mobile.fragment.MapFragment
 import com.nextgis.mobile.util.AppUpdateManager
+import com.nextgis.mobile.util.StartupUpdateCheckScheduler
 import com.nextgis.mobile.util.DebugCompanionInstaller
 import com.nextgis.maplibui.service.LayerFillService
 import com.nextgis.mobile.util.AppSettingsConstants
@@ -172,30 +176,36 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
     private var ngwUrlImportInProgress = false
     private val startupUpdateCheckHandler = Handler(Looper.getMainLooper())
-    private var startupUpdateCheckPending = false
+    private var updateNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var crashRecoveryOffered = false
     private var companionCheckedThisLaunch = false
     private var recheckPermissionsOnResume = false
-    private val startupUpdateCheckRunnable = Runnable {
-        if (isFinishing || isDestroyed || !hasWindowFocus() || AppUpdateManager.isBusyOrPending(this)) {
-            return@Runnable
-        }
-        if (DebugCompanionInstaller.resume(this, null)) {
-            startupUpdateCheckPending = false
-            companionCheckedThisLaunch = true
-            return@Runnable
-        }
-        if (!companionCheckedThisLaunch) {
-            companionCheckedThisLaunch = true
-            if (DebugCompanionInstaller.offer(this, false)) {
-                startupUpdateCheckPending = false
-                return@Runnable
+    private val startupUpdateCheck = StartupUpdateCheckScheduler(object : StartupUpdateCheckScheduler.Host {
+        override fun now() = android.os.SystemClock.elapsedRealtime()
+        override fun isReady() = !isFinishing && !isDestroyed && hasWindowFocus() &&
+            lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
+        override fun isBusy() = AppUpdateManager.isBusyOrPending(this@MainActivity)
+        override fun continueCompanion(): Boolean {
+            if (DebugCompanionInstaller.resume(this@MainActivity, null)) {
+                companionCheckedThisLaunch = true
+                return true
             }
+            if (companionCheckedThisLaunch) return false
+            companionCheckedThisLaunch = true
+            return DebugCompanionInstaller.offer(this@MainActivity, false)
         }
-        if (!startupUpdateCheckPending) return@Runnable
-        startupUpdateCheckPending = false
-        AppUpdateManager.checkForUpdateAutomatically(this)
-    }
+        override fun check(completion: StartupUpdateCheckScheduler.Completion) =
+            AppUpdateManager.checkForUpdateAutomatically(this@MainActivity, completion)
+        override fun postDelayed(action: Runnable, delayMs: Long) {
+            startupUpdateCheckHandler.postDelayed(action, delayMs)
+        }
+        override fun removeCallbacks(action: Runnable) {
+            startupUpdateCheckHandler.removeCallbacks(action)
+        }
+        override fun log(event: String) {
+            HyperLog.v(Constants.TAG, "Updater startup $event focus=${hasWindowFocus()} lifecycle=${lifecycle.currentState}")
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         HyperLog.v(Constants.TAG, "MainActivity.onCreate")
@@ -217,7 +227,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             return
         }
 
-        startupUpdateCheckPending = savedInstanceState == null
+        HyperLog.v(Constants.TAG, "Updater startup activity_created restored=${savedInstanceState != null}")
+        startupUpdateCheck.restore(
+            savedInstanceState?.getString("startup_update_session") == StartupUpdateCheckScheduler.PROCESS_SESSION,
+            savedInstanceState?.getBoolean("startup_update_completed", false) == true
+        )
 
         setContentView(R.layout.activity_main)
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
@@ -1772,8 +1786,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
         if (AppUpdateManager.resumePendingInstallation(this)) {
             companionCheckedThisLaunch = true
-            startupUpdateCheckPending = false
-            startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
+            startupUpdateCheck.complete("installation_continuation")
         }
         val gisApp = application as IGISApplication
         if (gisApp.isLayerFillServiceBusy) {
@@ -1824,7 +1837,38 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             val alertDialog = builder.create()
             alertDialog.show()
         }
+        startupUpdateCheck.onResume()
+        watchUpdateNetwork()
+    }
 
+    private fun watchUpdateNetwork() {
+        if (updateNetworkCallback != null || startupUpdateCheck.isComplete) return
+        val connectivity = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return
+        val callback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) = networkChanged()
+            override fun onLost(network: Network) = networkChanged()
+            override fun onCapabilitiesChanged(network: Network, capabilities: NetworkCapabilities) = networkChanged()
+            private fun networkChanged() {
+                startupUpdateCheckHandler.post { startupUpdateCheck.onNetworkChanged() }
+            }
+        }
+        try {
+            connectivity.registerDefaultNetworkCallback(callback)
+            updateNetworkCallback = callback
+            HyperLog.v(Constants.TAG, "Updater startup network_watch_registered")
+        } catch (error: RuntimeException) {
+            HyperLog.w(Constants.TAG, "Updater startup network_watch_failed type=${error.javaClass.simpleName}", error)
+        }
+    }
+
+    private fun stopWatchingUpdateNetwork() {
+        val callback = updateNetworkCallback ?: return
+        updateNetworkCallback = null
+        try {
+            (getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager)?.unregisterNetworkCallback(callback)
+        } catch (error: RuntimeException) {
+            HyperLog.w(Constants.TAG, "Updater startup network_unwatch_failed type=${error.javaClass.simpleName}", error)
+        }
     }
 
     fun addNGWLayerByUrl() {
@@ -1969,13 +2013,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         if (hasFocus && lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) {
             backgroundLocationWarning.refresh()
         }
-        if (hasFocus) {
-            startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
-            startupUpdateCheckHandler.postDelayed(
-                startupUpdateCheckRunnable,
-                STARTUP_UPDATE_CHECK_DELAY_MS
-            )
-        }
+        startupUpdateCheck.onWindowFocusChanged(hasFocus)
     }
 
 
@@ -2011,12 +2049,16 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("startup_update_session", StartupUpdateCheckScheduler.PROCESS_SESSION)
+        outState.putBoolean("startup_update_completed", startupUpdateCheck.isComplete)
         outState.putInt("background_location_warning_state", backgroundLocationWarning.shownState)
         outState.putInt("background_location_warning_process", android.os.Process.myPid())
         super.onSaveInstanceState(outState)
     }
 
     override fun onPause() {
+        startupUpdateCheck.onPause()
+        stopWatchingUpdateNetwork()
         backgroundLocationWarning.close()
         trackModeMenu?.dismiss()
         try {
@@ -2129,7 +2171,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         protected const val PERMISSIONS_REQUEST_LOC_SILENT: Int = 6
         const val LOCATION_BACKGROUND_REQUEST: Int = 5
         protected const val TAG_FRAGMENT_PROGRESS: String = "layer_fill_dialog_fragment"
-        private const val STARTUP_UPDATE_CHECK_DELAY_MS: Long = 2500
 
         protected const val FILE_SELECT_CODE: Int = 555
         protected const val RELOAD_ACTIVITY_DATA: Int = 777
@@ -2139,7 +2180,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         backgroundLocationWarning.close()
         trackPowerWarning.close()
         HyperLog.v(Constants.TAG, "MainActivity.onDestroy")
-        startupUpdateCheckHandler.removeCallbacks(startupUpdateCheckRunnable)
+        startupUpdateCheck.close()
+        stopWatchingUpdateNetwork()
         ngwUrlExecutor.shutdownNow()
         mMessageReceiver = null
         mTrackReceiver = null

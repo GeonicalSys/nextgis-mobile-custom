@@ -1,10 +1,17 @@
 schema_version: 1
 tests:
+  AUTO-UPDATER-CHECKS:
+    type: automatic
+    scope: [app]
+    command: .\gradlew.bat :app:testLisaDebugUnitTest
+    expected: StartupUpdateCheckSchedulerTest reproduces network/request failures, focus and busy deferral, companion UI, restored process/window, foreground retry and late/duplicate callbacks. AppUpdateNetworkStateTest permits active INTERNET without VALIDATED and preserves the offline gate; AppUpdatePendingInstallationTest ensures cleared stale or rejected continuation cannot suppress a fresh check. Logs distinguish restore, skip, request, valid result and retry.
   SMOKE-LARGE-TEXT-UI:
     type: device
     scope: [app, maplibui]
     steps:
       - On an isolated Debug emulator run LargeTextLayoutTest with Russian text, both themes, fontScale 1.0/1.3/2.0, density 420/540/620 and portrait/landscape effective widths 280/320/360/568 dp.
+      - Check a compact ordinary two-row status panel at all display densities, no altitude/speed or empty footer; pass DOWN/MOVE/UP through collapsed menu slots and retain the visible add-button tap.
+      - When coordinates wrap, place short zoom/GPS/accuracy values together if they fit; restore the ordinary arrangement when width returns. Notifications may cover the map: check their own full text/actions, then check map controls separately after dismissal.
       - Verify complete azimuth instructions, correction values, settings titles/summaries, layer/resource names, login labels and GPS status; reject ellipsis, hidden lines and overlapping controls.
       - Verify Close and all correction actions stay inside the fitted panel and receive touches at their transformed visible positions.
       - Open the real settings menu and General/Map/Location/Tracks sections; verify every adapter row and the actual account/login/project/underlay screens in both orientations, retaining their existing list/form scrolling.
@@ -805,7 +812,7 @@ tests:
   SMOKE-SELF-UPDATE:
     type: device
     scope: [app]
-    steps: [Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, On Android 9 or 10 download a valid same-certificate update whose archive PackageManager may omit SigningInfo, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
+    steps: [Start offline and restore Internet without restarting the phone, Verify foreground retry and correlated skip or HTTP failure logs, Close and relaunch the app and recreate a restored window in a new process, Check the branch manifest for Lisa Release, Belka Release and Lisa Debug, On Android 9 or 10 download a valid same-certificate update whose archive PackageManager may omit SigningInfo, Test mismatched branch or channel and an APK URL outside the versioned branch path, Test mismatched versionName, size, checksum and certificate, Revoke Install unknown apps for the current variant, Download a valid artifact, Grant the requested special permission and return to the app]
     expected: Valid same-branch same-signature update, including the Android 9-10 legacy archive-signature fallback, reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL, integrity or certificate is rejected.
   SMOKE-NGW-URL-IMPORT:
     type: device

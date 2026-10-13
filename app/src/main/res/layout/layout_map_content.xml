@@ -237,7 +237,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end">
-            <com.getbase.floatingactionbutton.FloatingActionsMenu
+            <com.nextgis.mobile.view.MapActionsMenu
                 android:id="@+id/multiple_actions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -271,7 +271,7 @@
                     fab:fab_colorPressed="?attr/colorAccent"
                     fab:fab_icon="@drawable/ic_action_maps_place"
                     fab:fab_size="mini" />
-            </com.getbase.floatingactionbutton.FloatingActionsMenu>
+            </com.nextgis.mobile.view.MapActionsMenu>
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/add_point_by_tap"
                 android:layout_width="wrap_content"

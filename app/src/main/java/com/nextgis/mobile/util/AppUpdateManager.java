@@ -1,6 +1,6 @@
 /*
  * Project: NextGIS Mobile
- * Purpose: Manual application updates from the Geonical APK repository.
+ * Purpose: Branch-specific application updates from the Geonical APK repository.
  */
 
 package com.nextgis.mobile.util;
@@ -19,6 +19,7 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.os.Build;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 import okhttp3.CacheControl;
 import okhttp3.OkHttpClient;
@@ -71,7 +73,9 @@ public final class AppUpdateManager
     private static final ExecutorService IO_EXECUTOR = Executors.newSingleThreadExecutor();
     private static final AtomicBoolean UPDATE_CHECK_IN_PROGRESS = new AtomicBoolean(false);
     private static final AtomicBoolean UPDATE_DOWNLOAD_IN_PROGRESS = new AtomicBoolean(false);
+    private static final AtomicLong CHECK_SEQUENCE = new AtomicLong();
     private static final OkHttpClient MANIFEST_HTTP_CLIENT = new OkHttpClient.Builder()
+            .callTimeout(45, TimeUnit.SECONDS)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .build();
@@ -93,13 +97,18 @@ public final class AppUpdateManager
 
     public static void checkForUpdateAutomatically(Activity activity)
     {
-        if (!isActivityUsable(activity) || !hasValidatedInternet(activity)) {
-            return;
-        }
-        checkForUpdate(activity, false);
+        checkForUpdateAutomatically(activity, null);
     }
 
 
+    public static void checkForUpdateAutomatically(
+            Activity activity, StartupUpdateCheckScheduler.Completion completion)
+    {
+        checkForUpdate(activity, false, completion);
+    }
+
+
+    /** True only when an installation continuation actually starts, not for cleared stale state. */
     public static boolean resumePendingInstallation(Activity activity)
     {
         if (!isActivityUsable(activity)) {
@@ -110,9 +119,10 @@ public final class AppUpdateManager
         try {
             manifest = readPendingInstallation(activity);
         } catch (JSONException error) {
+            HyperLog.w(Constants.TAG, "Updater install_resume rejected reason=pending_manifest_parse", error);
             clearPendingInstallation(activity);
             showError(activity, error);
-            return true;
+            return false;
         }
         if (manifest == null) {
             return false;
@@ -120,30 +130,35 @@ public final class AppUpdateManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
                 && !activity.getPackageManager().canRequestPackageInstalls()) {
+            HyperLog.v(Constants.TAG, "Updater install_resume stopped reason=install_permission_denied");
             clearPendingInstallation(activity);
             Toast.makeText(
                     activity,
                     R.string.update_install_permission_not_granted,
                     Toast.LENGTH_LONG)
                     .show();
-            return true;
+            return false;
         }
 
         try {
             validateManifest(activity, manifest);
             if (manifest.versionCode <= BuildConfig.VERSION_CODE) {
+                HyperLog.v(Constants.TAG, "Updater install_resume stopped reason=already_installed"
+                        + " availableCode=" + manifest.versionCode + " currentCode=" + BuildConfig.VERSION_CODE);
                 clearPendingInstallation(activity);
-                return true;
+                return false;
             }
         } catch (IOException error) {
+            HyperLog.w(Constants.TAG, "Updater install_resume rejected reason=manifest_validation", error);
             clearPendingInstallation(activity);
             showError(activity, error);
-            return true;
+            return false;
         }
 
         // Consume the one-shot continuation before starting asynchronous work. If validation or
         // installation later fails, the normal updater UI remains the explicit retry path.
         clearPendingInstallation(activity);
+        HyperLog.v(Constants.TAG, "Updater install_resume started versionCode=" + manifest.versionCode);
         downloadAndInstall(activity, manifest);
         return true;
     }
@@ -151,10 +166,35 @@ public final class AppUpdateManager
 
     private static void checkForUpdate(Activity activity, boolean interactive)
     {
-        if (!isActivityUsable(activity)
-                || !UPDATE_CHECK_IN_PROGRESS.compareAndSet(false, true)) {
+        checkForUpdate(activity, interactive, null);
+    }
+
+
+    private static void checkForUpdate(Activity activity, boolean interactive,
+                                      StartupUpdateCheckScheduler.Completion completion)
+    {
+        String mode = interactive ? "manual" : "automatic";
+        if (!isActivityUsable(activity)) {
+            HyperLog.v(Constants.TAG, "Updater check skipped mode=" + mode + " reason=activity_unusable");
+            finishCheck(completion, false);
             return;
         }
+        NetworkState network = networkState(activity);
+        if (!interactive && !network.canRequest()) {
+            HyperLog.v(Constants.TAG, "Updater check skipped mode=" + mode + " reason=no_internet_network " + network);
+            finishCheck(completion, false);
+            return;
+        }
+        if (!UPDATE_CHECK_IN_PROGRESS.compareAndSet(false, true)) {
+            HyperLog.v(Constants.TAG, "Updater check skipped mode=" + mode + " reason=check_in_progress " + network);
+            finishCheck(completion, false);
+            return;
+        }
+        long checkId = CHECK_SEQUENCE.incrementAndGet();
+        long started = SystemClock.elapsedRealtime();
+        HyperLog.v(Constants.TAG, "Updater check started id=" + checkId + " mode=" + mode
+                + " branch=" + updateRepositoryBranch() + " currentVersion=" + BuildConfig.VERSION_NAME
+                + " currentCode=" + BuildConfig.VERSION_CODE + " " + network);
 
         ProgressDialog progressDialog = null;
         if (interactive) {
@@ -167,42 +207,75 @@ public final class AppUpdateManager
         ProgressDialog checkProgressDialog = progressDialog;
 
         IO_EXECUTOR.execute(() -> {
+            UpdateManifest result = null;
+            Exception failure = null;
             try {
-                UpdateManifest manifest = requestManifest(activity);
-                runOnUiThread(activity, () -> {
-                    dismiss(checkProgressDialog);
-                    if (manifest.versionCode <= BuildConfig.VERSION_CODE) {
-                        if (interactive) {
-                            com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
-                                    .setTitle(R.string.update_check)
-                                    .setMessage(R.string.update_no)
-                                    .setPositiveButton(android.R.string.ok, null)
-                                    .show();
-                        }
-                        return;
-                    }
-                    showUpdateAvailable(activity, manifest);
-                });
+                result = requestManifest(activity, checkId);
             } catch (Exception error) {
-                runOnUiThread(activity, () -> {
-                    dismiss(checkProgressDialog);
-                    if (interactive) {
-                        showError(activity, error);
-                    }
-                });
+                failure = error;
+                HyperLog.w(Constants.TAG, "Updater check failed id=" + checkId + " mode=" + mode
+                        + " elapsedMs=" + (SystemClock.elapsedRealtime() - started)
+                        + " type=" + error.getClass().getSimpleName() + " message=" + error.getMessage(), error);
             } finally {
                 UPDATE_CHECK_IN_PROGRESS.set(false);
             }
+            UpdateManifest manifest = result;
+            Exception checkError = failure;
+            activity.runOnUiThread(() -> {
+                if (!isActivityUsable(activity)) {
+                    HyperLog.v(Constants.TAG, "Updater check result_deferred id=" + checkId + " reason=activity_unusable");
+                    finishCheck(completion, false);
+                    return;
+                }
+                dismiss(checkProgressDialog);
+                if (checkError != null) {
+                    if (interactive) showError(activity, checkError);
+                    finishCheck(completion, false);
+                    return;
+                }
+                if (manifest.versionCode <= BuildConfig.VERSION_CODE) {
+                    HyperLog.v(Constants.TAG, "Updater check completed id=" + checkId + " result=current"
+                            + " availableCode=" + manifest.versionCode + " currentCode=" + BuildConfig.VERSION_CODE
+                            + " elapsedMs=" + (SystemClock.elapsedRealtime() - started));
+                    if (interactive) {
+                        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
+                                .setTitle(R.string.update_check)
+                                .setMessage(R.string.update_no)
+                                .setPositiveButton(android.R.string.ok, null)
+                                .show();
+                    }
+                    finishCheck(completion, true);
+                    return;
+                }
+                if (!interactive && !activity.hasWindowFocus()) {
+                    HyperLog.v(Constants.TAG, "Updater check result_deferred id=" + checkId
+                            + " reason=window_not_focused availableCode=" + manifest.versionCode);
+                    finishCheck(completion, false);
+                    return;
+                }
+                showUpdateAvailable(activity, manifest);
+                HyperLog.v(Constants.TAG, "Updater check completed id=" + checkId + " result=offer_shown"
+                        + " availableVersion=" + manifest.versionName + " availableCode=" + manifest.versionCode
+                        + " elapsedMs=" + (SystemClock.elapsedRealtime() - started));
+                finishCheck(completion, true);
+            });
         });
     }
 
 
-    private static UpdateManifest requestManifest(Activity activity)
+    private static void finishCheck(StartupUpdateCheckScheduler.Completion completion, boolean completed)
+    {
+        if (completion != null) completion.finish(completed);
+    }
+
+
+    private static UpdateManifest requestManifest(Activity activity, long checkId)
             throws IOException, JSONException
     {
         String branch = updateRepositoryBranch();
         String manifestUrl = AppSettingsConstants.APK_VERSION_UPDATE + "/" + branch
                 + "/manifest.json";
+        HyperLog.v(Constants.TAG, "Updater manifest request id=" + checkId + " url=" + manifestUrl);
         Request request = new Request.Builder()
                 .url(manifestUrl)
                 .header("User-Agent", "NextGIS-Mobile-Updater/" + BuildConfig.VERSION_NAME)
@@ -210,6 +283,7 @@ public final class AppUpdateManager
                 .build();
 
         try (Response response = MANIFEST_HTTP_CLIENT.newCall(request).execute()) {
+            HyperLog.v(Constants.TAG, "Updater manifest response id=" + checkId + " http=" + response.code());
             if (!response.isSuccessful()) {
                 throw new IOException("HTTP " + response.code() + " for " + manifestUrl);
             }
@@ -223,6 +297,10 @@ public final class AppUpdateManager
             UpdateManifest manifest =
                     UpdateManifest.fromJson(new JSONObject(readBodyLimited(body, MAX_MANIFEST_SIZE)));
             validateManifest(activity, manifest);
+            HyperLog.v(Constants.TAG, "Updater manifest validated id=" + checkId
+                    + " version=" + manifest.versionName + " versionCode=" + manifest.versionCode
+                    + " publishedAt=" + manifest.publishedAt + " branch=" + manifest.flavor
+                    + " channel=" + manifest.channel);
             return manifest;
         }
     }
@@ -769,22 +847,47 @@ public final class AppUpdateManager
     }
 
 
-    private static boolean hasValidatedInternet(Activity activity)
+    static final class NetworkState {
+        final boolean active, internet, validated, wifi, cellular, vpn;
+
+        NetworkState(boolean active, boolean internet, boolean validated,
+                     boolean wifi, boolean cellular, boolean vpn) {
+            this.active = active;
+            this.internet = internet;
+            this.validated = validated;
+            this.wifi = wifi;
+            this.cellular = cellular;
+            this.vpn = vpn;
+        }
+
+        boolean canRequest() {
+            return active && internet; // Server reachability is established by the HTTP request.
+        }
+
+        @Override public String toString() {
+            return "active=" + active + " internet=" + internet + " validated=" + validated
+                    + " wifi=" + wifi + " cellular=" + cellular + " vpn=" + vpn;
+        }
+    }
+
+
+    private static NetworkState networkState(Activity activity)
     {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
-        if (connectivityManager == null) {
-            return false;
+        try {
+            ConnectivityManager connectivity =
+                    (ConnectivityManager) activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
+            Network active = connectivity == null ? null : connectivity.getActiveNetwork();
+            NetworkCapabilities caps = active == null ? null : connectivity.getNetworkCapabilities(active);
+            return new NetworkState(active != null,
+                    caps != null && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET),
+                    caps != null && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED),
+                    caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI),
+                    caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR),
+                    caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN));
+        } catch (RuntimeException error) {
+            HyperLog.w(Constants.TAG, "Updater network_state_failed type=" + error.getClass().getSimpleName(), error);
+            return new NetworkState(false, false, false, false, false, false);
         }
-        Network activeNetwork = connectivityManager.getActiveNetwork();
-        if (activeNetwork == null) {
-            return false;
-        }
-        NetworkCapabilities capabilities =
-                connectivityManager.getNetworkCapabilities(activeNetwork);
-        return capabilities != null
-                && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
     }
 
 
