@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -34,6 +34,11 @@ Runner устанавливает/очищает только эту фикси�
 Related поддерживает область `styles`; она проверяет synthetic обычные векторы
 после сохранения rule JSON, native properties и pixels с bundled fonts/images.
 Configured local-vector-tiles исключены по режиму и GeoJsonSource guard.
+Графические проверки требуют host OpenGL: headless SwiftShader не отображает
+glyph/bitmap symbols. CI поднимает Xvfb/Mesa llvmpipe и сохраняет сведения о
+renderer; локальный runner использует `-gpu host`. В styles fixture стартовый
+geo-dialog отключён только в verification preferences, camera и скрытый
+underlay синхронизированы с моделью карты.
 SharedTracksTest проверяет общую историю и сохранённый switch recording guard.
 Пример: `tools\verify-mobile-tests.ps1 -Scope Related -Area tracks,styles`.
 Контракты: [треки](../architecture/shared-tracks.md),

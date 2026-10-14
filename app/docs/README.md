@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -13,6 +13,9 @@ MainApplication импортирует старые источники до от
 во время записи запрещён. SharedTracksTest проверяет общую историю и native
 отрисовку; VectorStyleRenderingTest использует обычные synthetic SQL/GeoJSON
 слои и исключает configured vector tiles. Related styles добавлен в каталог.
+Графический fixture отключает стартовый geo-dialog и синхронизирует camera и
+видимость underlay с моделью. CI использует Xvfb/Mesa host OpenGL вместо
+SwiftShader, который не отображает проверяемые подписи.
 
 ## Немедленная отправка и часы открытого проекта
 

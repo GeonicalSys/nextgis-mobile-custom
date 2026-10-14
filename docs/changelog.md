@@ -8,6 +8,13 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-15 — Графическое окружение CI для подписей
+
+- Native styles проверяются через host OpenGL под Xvfb/Mesa llvmpipe:
+  SwiftShader воспроизводит пустые подписи при корректных style props.
+- Fixture синхронизирует camera/underlay с моделью и отключает стартовый
+  geo-dialog только в disposable preferences. Pixel assertions сохранены.
+
 ## 2026-10-15 — Закреплены слитые библиотеки GPS
 
 - App указывает на Merge Commit maplib #52 и maplibui #37. Версия приложения

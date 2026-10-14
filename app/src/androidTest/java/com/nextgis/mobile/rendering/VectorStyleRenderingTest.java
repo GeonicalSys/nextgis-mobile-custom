@@ -17,13 +17,12 @@ import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.mapui.VectorLayerUI;
+import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
 import com.nextgis.mobile.util.VerificationEnvironment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.maplibre.android.camera.CameraUpdateFactory;
-import org.maplibre.android.geometry.LatLng;
 import org.maplibre.android.style.layers.PropertyFactory;
 import org.maplibre.android.style.layers.PropertyValue;
 import org.maplibre.android.style.layers.SymbolLayer;
@@ -65,11 +64,13 @@ public class VectorStyleRenderingTest {
         final GISApplication app=(GISApplication)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
         final SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(app);
         final boolean intro=prefs.getBoolean(AppSettingsConstants.KEY_PREF_INTRO,false), hadIntro=prefs.contains(AppSettingsConstants.KEY_PREF_INTRO);
+        final boolean geoDialog=prefs.getBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG,true),hadGeoDialog=prefs.contains(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
         final ActivityScenario<MainActivity> screen;
         final List<VectorLayerUI> layers=new ArrayList<>();
         Fixture() throws Exception {
             VerificationEnvironment.requireIsolated(app);assertTrue(VerificationEnvironment.isEmulator());
-            prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO,true).commit();
+            assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO,true)
+                    .putBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG,false).commit());
             screen=ActivityScenario.launch(MainActivity.class);
             AtomicBoolean ready=new AtomicBoolean();
             await(()->{
@@ -82,7 +83,10 @@ public class VectorStyleRenderingTest {
                     && !com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy());
             screen.onActivity(activity->{
                 MapDrawable map=(MapDrawable)app.getMap();
-                map.getMaplibreMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0,0),16));
+                // Keep delayed model redraws at the same camera and keep the
+                // built-in underlay hidden when native layers are rebuilt.
+                map.setZoomAndCenter(16,new GeoPoint(0,0),false,0);
+                map.setVisible(false);
                 // No real Web GIS layer is examined or modified by this fixture.
                 for(org.maplibre.android.style.layers.Layer layer:map.getMaplibreMap().getStyle().getLayers())
                     layer.setProperties(PropertyFactory.visibility("none"));
@@ -174,7 +178,8 @@ public class VectorStyleRenderingTest {
             return (SymbolLayer)((MapDrawable)app.getMap()).getMaplibreMap().getStyle().getLayer("symbol-nglayer-layer-"+layer.getId());
         }
         void zoom(double zoom) throws Exception {
-            screen.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMap().moveCamera(CameraUpdateFactory.zoomTo(zoom)));
+            screen.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+                map.setZoomAndCenter((float)zoom,map.getMaplibreCenter(),false,0);});
             AtomicBoolean settled=new AtomicBoolean();
             await(()->{screen.onActivity(activity->settled.set(Math.abs(((MapDrawable)app.getMap()).getMaplibreMap().getCameraPosition().zoom-zoom)<.001));return settled.get();});
             renderedFrame();
@@ -210,6 +215,7 @@ public class VectorStyleRenderingTest {
             screen.onActivity(activity->{for(VectorLayerUI layer:layers)assertTrue(layer.delete(false));app.getMap().save();});
             screen.close();SharedPreferences.Editor restore=prefs.edit();
             if(hadIntro)restore.putBoolean(AppSettingsConstants.KEY_PREF_INTRO,intro);else restore.remove(AppSettingsConstants.KEY_PREF_INTRO);
+            if(hadGeoDialog)restore.putBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG,geoDialog);else restore.remove(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
             assertTrue(restore.commit());
         }
     }
@@ -391,9 +397,10 @@ public class VectorStyleRenderingTest {
             other.setAlpha(0);other.setOutAlpha(0);category.setAlpha(0);category.setOutAlpha(0);
             LabelAttributes defaults=LabelAttributes.fromStyle(other);defaults.setLabelMinZoom(14);defaults.setLabelMaxZoom(18);defaults.setTextAllowOverlap(true);
             LabelAttributes labels=LabelAttributes.fromStyle(category);labels.setLabelMinZoom(10);labels.setLabelMaxZoom(20);
-            f.bind(layer,other,rule(layer,other,category));f.zoom(12);Thread.sleep(400);assertTrue(f.redPixels()>10);
-            f.zoom(19);Thread.sleep(400);assertTrue(f.redPixels()>10);
-            f.zoom(21);Thread.sleep(400);assertEquals(0,f.redPixels());
+            f.bind(layer,other,rule(layer,other,category));f.zoom(12);Thread.sleep(400);
+            assertTrue("Category label must be visible below Other's minimum zoom",f.redPixels()>10);
+            f.zoom(19);Thread.sleep(400);assertTrue("Category label must be visible above Other's maximum zoom",f.redPixels()>10);
+            f.zoom(21);Thread.sleep(400);assertEquals("Category label must disappear beyond its own maximum zoom",0,f.redPixels());
         }
     }
 

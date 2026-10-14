@@ -1,7 +1,7 @@
 ---
 title: Проверки обычных векторных стилей и подписей
 type: architecture
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/display/FieldStyleRule.java
   - maplib/src/main/java/com/nextgis/maplib/display/LabelAttributes.java
@@ -31,6 +31,16 @@ related_code:
 FieldStyleRule -> feature properties -> production MPLFeaturesUtils -> native
 MapLibre -> snapshot pixels. Шрифты и marker/pattern images берутся из bundled
 assets; реальные NGW accounts/данные/сервер не требуются.
+
+Pixel assertions требуют working host OpenGL. Headless `swiftshader_indirect`
+воспроизводит отсутствие подписей даже при правильных feature props, camera,
+native visibility и zoom limits; дополнительный sleep это не исправляет.
+CI запускает emulator `-gpu host` под Xvfb с Mesa llvmpipe; renderer information
+сохраняется в `graphics-host.txt`. Все 14 styles cases остаются обязательными,
+включая реальные pixels на zoom 12/19 и отсутствие за category max на 21.
+Fixture отключает только стартовый geo-dialog в disposable preferences,
+восстанавливает его после закрытия и меняет camera/underlay visibility через
+модель карты, чтобы delayed redraw не отменял подготовку.
 
 | Область | Покрытие |
 |---|---|
