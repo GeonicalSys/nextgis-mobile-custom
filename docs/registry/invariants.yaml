@@ -1,5 +1,19 @@
 schema_version: 1
 invariants:
+  INV-SCROLLING-DIALOG-VIEWPORT:
+    title: Nested adapter dialogs retain a bounded native viewport
+    owners: [app, maplibui]
+    statement: Custom setView dialogs containing AbsListView or RecyclerView must not have their whole body measured with UNSPECIFIED height by FittedPanelLayout. All eligible layers remain offered and reachable; enlarged lists may scroll normally.
+    related_code: [maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java, app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java]
+    verify_smoke: [SMOKE-LAYER-CHOOSER, AUTO-MOBILE-RELATED]
+    must_update_docs: [docs/architecture/ui-accessibility.md, docs/runbooks/automated-tests.md]
+  INV-MOBILE-PUBLICATION-ACCEPTANCE:
+    title: Publication requires current complete phone and emulator acceptance
+    owners: [app, maplibui, maplib]
+    statement: After ordinary work run related emulator checks. Before each publication after dependency closure and final code/version run Full and Check-Publication; every native case and core checks must pass for the current content. Only the separate verification APK is reset on a phone. Missing permitted test project requires asking the user.
+    related_code: [tools/run_mobile_tests.py, tools/mobile_test_support.py, tools/mobile_test_project.py, tools/mobile-test-plan.json, app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java]
+    verify_smoke: [AUTO-MOBILE-FULL, AUTO-MOBILE-PUBLICATION-GATE]
+    must_update_docs: [docs/runbooks/automated-tests.md, docs/runbooks/release-apk.md]
   INV-PROJECT-SYNC-COMPLETION:
     title: The open project clock confirms complete synchronization of that project
     owners: [app, maplib, maplibui]

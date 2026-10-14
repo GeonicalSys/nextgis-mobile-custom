@@ -33,6 +33,11 @@ import static org.junit.Assert.*;
 /** Native text geometry and visible action bounds; synthetic Debug emulator only. */
 @RunWith(AndroidJUnit4.class)
 public class LargeTextLayoutTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private static final int[][] SCREENS = {{360, 640, 420}, {320, 568, 540}, {568, 320, 540}, {280, 500, 620}};
 
     @Test public void retainedNetworkPositionFitsCompleteRussianAgeAndAccuracy() {
@@ -53,7 +58,8 @@ public class LargeTextLayoutTest {
     private static Context themed(float fontScale, int[] screen, boolean dark) {
         Context app = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertTrue(app.getPackageName().endsWith(".debug"));
-        assertTrue(Build.HARDWARE.equals("ranchu") || Build.HARDWARE.equals("goldfish"));
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
         Configuration config = new Configuration(app.getResources().getConfiguration());
         config.setLocale(new Locale("ru"));
         config.fontScale = fontScale;

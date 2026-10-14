@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -272,3 +272,15 @@ Prune не меняет `manifest.json` / `latest.apk` и не является 
 не собирать/не публиковать release APK и не давать команды публикации.
 [Архитектура](../architecture/project-scripts.md),
 [текущая проверка](../reference/project-scripts-verification.md).
+
+## Обязательная автоматическая приёмка перед публикацией
+
+После закрытия app/library зависимостей и последнего изменения версии/кода
+выполнить `tools\verify-mobile-tests.ps1 -Scope Full` на смартфоне и эмуляторе,
+затем `-Scope Check-Publication` непосредственно перед publisher dry-run.
+Related нужен после обычной доработки на эмуляторе и не заменяет эту приёмку.
+Failure, skip required case, неполный отчёт, отсутствие телефона или изменение
+source fingerprint блокируют публикацию. При отсутствии разрешённого проекта
+1403 сначала спросить пользователя о другом тестовом проекте.
+Порядок dependency closure и отдельное разрешение на публикацию сохраняются.
+Подробности: [автотесты](automated-tests.md).

@@ -1,7 +1,7 @@
 ---
 title: Пакеты правил мобильного проекта
 type: architecture
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/scripts
   - maplib/src/main/cpp
@@ -250,3 +250,16 @@ JS. Новый capability добавляется сначала в native broker
 удалённых merge commits → desktop publisher/активация правил → release gate.
 Draft PR и debug-эмулятор не означают выпуск APK. Отчёт:
 [проверки реализации](../reference/project-scripts-verification.md).
+
+## Последовательные изолированные вызовы на Android 16
+
+Full на Samsung воспроизвёл гонку после успешного первого QuickJS вызова:
+обычный повторный bind попадал в уже завершающийся isolated Service instance
+и терял соединение до callback. ProjectScriptClient на API 29+ использует
+bindIsolatedService с уникальным instanceName для каждого выполнения,
+main executor для ServiceConnection и обязательным unbind в finally.
+API 26–28 сохраняют штатный bindService fallback. Каждый вызов остаётся
+ограниченным watchdog/deadline, без accounts, files, network и разделяемого VM.
+Native ProjectScriptsTest на смартфоне проверяет повторные вызовы, отдельный
+UID, Unicode/fresh context, бесконечный цикл/OOM, SQLite history и настоящую
+форму. Сигнатуры ZIP/host API и server contract не меняются.

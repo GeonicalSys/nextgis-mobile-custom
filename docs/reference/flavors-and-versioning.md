@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -128,3 +128,12 @@ application ID или версию APK и не читает AccountManager в is
 пакета из Collector независима от версии приложения; неподдерживаемый API/capability
 отклоняется. Автоматические Sentry app-start metrics отключены из-за вызова до
 sandbox guard; crash reporting основного приложения сохранён.
+
+## Identity автоматических проверок
+
+`fieldVerificationChecks=true` — false-by-default test profile обычного Debug,
+без нового product flavor и без Release variants. Отдельные verification
+application/provider/account identities перечислены в [build matrix](build-matrix.md).
+Ни Lisa, ни Belka, ни обычный companion Debug не очищаются/переустанавливаются
+phone suites. Изменение версии после Full делает receipt неактуальным;
+перед публикацией требуются новый Full и Check-Publication.

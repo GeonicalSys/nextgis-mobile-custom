@@ -6,6 +6,8 @@ edges:
     scope: implementation
     purpose: UI, NGW import, sync orchestration and GISApplication base
     contracts:
+      - maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java
+      - app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java
       - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java
       - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
       - maplib/src/main/java/com/nextgis/maplib/gnss/GnssDevice.java

@@ -48,6 +48,11 @@ import static org.junit.Assert.*;
 /** Real standard/NGFP controls, SQLite and lifecycle on an isolated emulator; no NGW connection. */
 @RunWith(AndroidJUnit4.class)
 public class RequiredFieldsTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     @SuppressWarnings("unchecked")
     private static Map<String, IControl> controls(ModifyAttributesActivity activity) {
         try {

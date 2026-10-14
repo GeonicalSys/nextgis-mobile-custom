@@ -38,6 +38,11 @@ import static org.junit.Assert.*;
 /** Real Android notification/service lifecycle; isolated emulator, no accounts or network requests. */
 @RunWith(AndroidJUnit4.class)
 public class SyncNotificationsTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private Context context;
     private NotificationManager manager;
     private SharedPreferences preferences;
@@ -45,8 +50,8 @@ public class SyncNotificationsTest {
     private ServiceConnection connection;
 
     @Before public void setUp() {
-        assertTrue("Use an isolated emulator", Build.HARDWARE.equals("ranchu")
-                || Build.HARDWARE.equals("goldfish"));
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertTrue(context.getPackageName().endsWith(".debug"));
         manager = context.getSystemService(NotificationManager.class);

@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -755,3 +755,11 @@ ProjectSyncRunner сообщает выбранные неожиданные и�
 создают handled bug report. Это независимая SDK cache/WorkManager доставка;
 она не использует sync lease, не открывает GIS базу и не меняет pending pairs.
 [Контракт диагностики](error-reporting.md).
+
+## Изоляция verification account
+
+Opt-in verification Debug app имеет отдельный account type/provider authority.
+Phone integration получает только read-only snapshot layer policies
+разрешённого проекта; настоящие accounts/credentials/features не импортируются.
+Синхронизационные автоматические сценарии продолжают использовать synthetic
+loopback receivers. Обычные Lisa/Belka/Debug account identities не меняются.

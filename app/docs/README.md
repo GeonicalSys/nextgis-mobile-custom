@@ -714,3 +714,18 @@ callback, provider URI и service ticket до фактического заве�
 пользовательская инструкция: docs/guides/project-synchronization-user-guide.md.
 Перед изменениями читать оба документа. Нельзя заменить изоляцию временным
 переключением глобальной карты или prefs, либо закрыть БД по timeout при живом child.
+
+## Автоматическая приёмка на двух устройствах
+
+`tools/verify-mobile-tests.ps1` разделяет Related на эмуляторе и обязательный
+Full перед публикацией. Opt-in `fieldVerificationChecks=true` собирает только
+отдельную Debug identity «ЛИСА автотесты», собственные provider/account/storage
+и VerificationTestRunner. Static suites допустимы на явно выбранном смартфоне;
+GPS/radio/crash сценарии остаются на эмуляторе. Новый тест автоматически входит
+в required catalog, отсутствие маршрута блокирует runner. Полный receipt
+проверяется Check-Publication по содержимому всех четырёх checkout.
+
+LayerSelectionDialogTest проверяет три строки/геометрии и настоящие touches,
+36 enlarged UI profiles. ProjectLayerSelectionTest проверяет штатное создание
+со snapshot разрешённого проекта 1403; при отсутствии проекта нужно спросить
+пользователя. Команды и ограничения: [автотесты](../../docs/runbooks/automated-tests.md).

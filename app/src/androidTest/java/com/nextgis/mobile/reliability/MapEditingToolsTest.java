@@ -76,6 +76,13 @@ public class MapEditingToolsTest {
         oldIntro = preferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
         assertTrue(preferences.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true).commit());
         scenario = ActivityScenario.launch(MainActivity.class);
+        java.util.concurrent.atomic.AtomicReference<org.maplibre.android.maps.MapLibreMap> currentViewMap =
+                new java.util.concurrent.atomic.AtomicReference<>();
+        scenario.onActivity(activity -> {
+            org.maplibre.android.maps.MapView view = activity.findViewById(R.id.mapViewMaplibre);
+            assertNotNull(view);
+            view.getMapAsync(currentViewMap::set);
+        });
         long deadline = android.os.SystemClock.uptimeMillis() + 30000;
         AtomicBoolean ready = new AtomicBoolean();
         while (!ready.get() && android.os.SystemClock.uptimeMillis() < deadline) {
@@ -83,7 +90,11 @@ public class MapEditingToolsTest {
                 MapDrawable map = (MapDrawable) app.getMap();
                 ready.set(activity.getMapFragment() != null
                         && activity.getMapFragment().getEditLayerOverlay() != null
-                        && map.getMaplibreMap() != null && map.getMaplibreMap().getStyle() != null);
+                        // The shared map can still reference the preceding destroyed Activity.
+                        && map.getMaplibreMapView() == activity.findViewById(R.id.mapViewMaplibre)
+                        && map.getMaplibreMapView() != null && map.getMaplibreMapView().isAttachedToWindow()
+                        && currentViewMap.get() != null && map.getMaplibreMap() == currentViewMap.get()
+                        && map.getMaplibreMap().getStyle() != null);
             });
             if (!ready.get()) Thread.sleep(100);
         }

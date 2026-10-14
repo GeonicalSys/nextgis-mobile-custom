@@ -1880,3 +1880,20 @@ dispatch/queue/track packets закрывают потерю подключен�
 network guards. Повторная сверка official app/maplibui/maplib 2026-10-10
 подтвердила прежние upstream SHA, приведённые выше; это фиксация доставки,
 без новых runtime зависимостей или повышения версии.
+
+## Исправление chooser и автоматическая приёмка
+
+FittedDialogs — fork UI fitting; он теперь распознаёт scrolling adapters и в
+custom `setView`, сохраняя native bounded viewport. Это исправление fork
+регрессии, без изменения editability или NGW wire contract. Сверка official
+maplibui master: `29390d0331b9ef7cebcfadbc59d084c4de1e326c`.
+
+Fork добавляет isolated opt-in verification APK, phone/emulator routing,
+полную публикационную приёмку с source receipt и проверку разрешённого проекта
+1403 с запросом замены при отсутствии. Обычные release identities/версии и
+публичные серверные протоколы сохраняются.
+
+Phone acceptance дополнительно выявила fork script-client гонку повторного
+bind на Android 16. API 29+ теперь дают каждому QuickJS выполнению уникальный
+isolated service instance; прежняя sandbox/host/wire isolation сохраняется.
+Seven native script cases прошли на Samsung после исправления.

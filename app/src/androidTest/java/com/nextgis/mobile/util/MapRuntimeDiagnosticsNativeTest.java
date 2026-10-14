@@ -24,9 +24,15 @@ import static org.junit.Assert.*;
 /** Real observer thread and loopback backpressure; isolated Debug emulator only. */
 @RunWith(AndroidJUnit4.class)
 public class MapRuntimeDiagnosticsNativeTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private static void guard() {
         assertTrue(InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName().endsWith(".debug"));
-        assertTrue(Build.HARDWARE.equals("ranchu") || Build.HARDWARE.equals("goldfish"));
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
 
     @Test public void observerPersistsAQueryWhileTheMainThreadIsStillBlocked() throws Exception {

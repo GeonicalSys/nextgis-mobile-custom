@@ -26,6 +26,11 @@ import static org.junit.Assert.*;
 /** Exercises the real recycled row when navigating from accounts into a resource tree. */
 @RunWith(AndroidJUnit4.class)
 public class NgwResourceIconTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private static class Folder extends ResourceGroup {
         Folder(Connection connection) {
             super(1, connection);

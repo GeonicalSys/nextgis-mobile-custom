@@ -38,6 +38,11 @@ import static org.junit.Assert.*;
 /** An actual Save with an unreadable photo must stay open and resume without a duplicate object. */
 @RunWith(AndroidJUnit4.class)
 public class FormSaveRecoveryTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private void save(ModifyAttributesActivity activity) {
         PopupMenu menu = new PopupMenu(activity, new View(activity));
         activity.onOptionsItemSelected(menu.getMenu().add(0, R.id.menu_apply, 0, "Save"));

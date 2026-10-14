@@ -579,3 +579,10 @@ SQLite своего проекта без reload, выбора объектов 
 выбор категории FieldStyleRule. Выбор слоя не запускает геометрию или recorder
 до принятия категории; при простом стиле сразу продолжается исходный способ
 создания. Подробности: [тип объекта](feature-type-creation.md).
+
+## Приёмка consumer без изменения renderer
+
+Verification profile добавляет отдельную app identity и test Application,
+сохраняя MapLibre renderer/runtime dependencies. LocationOrbitTest и native
+map checks остаются частью Full на эмуляторе; firmware/RF accuracy искусственный
+маршрут не подтверждает. Порядок тестов: [автотесты](../runbooks/automated-tests.md).

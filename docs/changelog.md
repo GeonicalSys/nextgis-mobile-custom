@@ -8,6 +8,16 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-14 — Выбор всех слоёв и полная мобильная приёмка
+
+- Исправлен однорядный viewport custom chooser при enlarged text/display.
+- Добавлены isolated verification APK, phone/emulator routing, результаты всех
+  native cases и полный source receipt как условие публикации.
+- Related после доработки идёт на эмуляторе; Full перед публикацией — на обоих
+  устройствах. Интеграционный проект 1403 разрешён пользователем; отсутствие
+  проекта требует вопроса о замене. Registry, agent instructions и publisher
+  release gate согласованы.
+
 ## 2026-10-14 — Доставка сохранённых правок, часы проекта и независимый вынос
 
 - After-commit callbacks передают owning map в durable outbound worker; Save-флаги

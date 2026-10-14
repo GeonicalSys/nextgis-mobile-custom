@@ -34,6 +34,11 @@ import static org.junit.Assert.*;
 /** Uses a local rejecting endpoint: no account, real password or remote service is touched. */
 @RunWith(AndroidJUnit4.class)
 public class NGIDLoginTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     @Test public void firstLoginAcceptsUsernameAndNormalizesOnlyTheIdentifier() throws Exception {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(
                 InstrumentationRegistry.getInstrumentation().getTargetContext());

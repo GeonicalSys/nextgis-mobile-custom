@@ -38,6 +38,11 @@ import static org.junit.Assert.*;
 /** Standard templates only: no phone data, accounts, geometry rows or NGW connection metadata. */
 @RunWith(AndroidJUnit4.class)
 public class StandardFeatureTypesTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     @Test public void standardPointLineAndPolygonCategoriesHaveSymbolsAndCanonicalParents() throws Exception {
         JSONArray fixtures;
         try (java.io.InputStream stream = InstrumentationRegistry.getInstrumentation().getContext()

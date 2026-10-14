@@ -25,9 +25,19 @@ import static org.junit.Assert.*;
 /** A background scope on the main thread must not change the visible project's clock. */
 @RunWith(AndroidJUnit4.class)
 public class ProjectSyncDisplayNativeTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     @Test public void backgroundScopedCallbackStillShowsTheOpenProjectCompletion() throws Exception {
-        assertTrue("Isolated emulator only", "ranchu".equals(android.os.Build.HARDWARE) || "goldfish".equals(android.os.Build.HARDWARE));
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
         GISApplication app = (GISApplication) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+        android.preference.PreferenceManager.getDefaultSharedPreferences(app).edit()
+                .putBoolean(com.nextgis.mobile.util.AppSettingsConstants.KEY_PREF_INTRO,true)
+                .putBoolean("battery_dont_show_pref",true)
+                .putBoolean(com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG,false).commit();
         MapBase active = MapBase.getActiveInstance();
         SharedPreferences clocks = app.getSharedPreferences("full-project-sync-state", Context.MODE_PRIVATE);
         Map<String, ?> before = clocks.getAll();

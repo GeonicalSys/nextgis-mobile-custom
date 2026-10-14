@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -213,3 +213,18 @@ CI устанавливает эти pinned SDK packages. Сборка четы�
 ELF alignment. AGP/Kotlin/SDK/версии APK не изменены. Debug/native и обе release
 source sets проверяются до merge; APK release matrix выполняется после закрытия
 библиотечных PR. [Результаты](project-scripts-verification.md).
+
+## Отдельный opt-in verification APK
+
+`-PfieldVerificationChecks=true` создаёт только Debug application
+`com.nextgis.mobile.verification.debug`, provider
+`com.nextgis.mobile.verification.provider.debug`, account type
+`com.nextgis.account.verification.debug` и account token resource
+`com.nextgis.mobile.verification.account.debug`. Имя — «ЛИСА автотесты».
+Release variants для этого флага отключены; production DSN пуст.
+Version override обычного Debug и production Lisa/Belka не меняется.
+
+Перед публикацией [Full](../runbooks/automated-tests.md) собирает обычную version
+matrix, все core units, документацию и отдельные verification APK. Последующий
+Check-Publication связывает результат с текущим содержимым исходников.
+Незакрытая зависимость Draft PR по-прежнему блокирует выпуск.

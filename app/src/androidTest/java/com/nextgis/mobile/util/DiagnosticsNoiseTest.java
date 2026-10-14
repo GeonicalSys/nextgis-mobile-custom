@@ -34,11 +34,18 @@ import static org.junit.Assert.*;
 /** Separate invocations seed a synthetic backlog and then cold-start it; emulator only. */
 @RunWith(AndroidJUnit4.class)
 public class DiagnosticsNoiseTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private Context context() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertTrue(Build.HARDWARE.equals("ranchu") || Build.HARDWARE.equals("goldfish"));
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
         assertTrue(context.getPackageName().endsWith(".debug"));
-        assertTrue(context.getApplicationContext() instanceof DiagnosticsTestApplication);
+        assertTrue(context.getApplicationContext() instanceof DiagnosticsTestApplication
+                || context.getApplicationContext() instanceof VerificationTestApplication);
         return context;
     }
 

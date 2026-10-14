@@ -1,7 +1,7 @@
 ---
 title: Ручные проверки на Android-устройстве
 type: runbook
-last_verified: 2026-10-09
+last_verified: 2026-10-14
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -366,3 +366,18 @@ cold-start smoke ещё не выполнен.
 отметку без выключения отправки. Повторить после restart и смены активного проекта.
 При ошибке второго пакета первый подтверждён, остаток ещё не отправлен;
 совпадающие timestamps не должны подтверждать соседние строки.
+
+## Автоматический прогон на подключённом смартфоне
+
+[Runner](automated-tests.md) запускает статические native suites в отдельном
+verification APK смартфона, а movement/GPS/radio/crash suites — на эмуляторе.
+Это явно изолированное исключение для static classes из прежних emulator-only
+команд; ordinary Debug/production на физическом телефоне по-прежнему запрещены
+для mutating suites. Real RF, OEM энергосбережение и движение в лесу требуют
+отдельного полевого smoke и не измеряются искусственными GPS fixes.
+
+Полная приёмка проверяет штатный chooser по snapshot разрешённого проекта 1403.
+Если проект отсутствует, сначала спросить, какой проект разрешён для тестов.
+Не переносить credentials/features в synthetic fixture. Системные настройки
+телефона не меняются; временные radio/font/density настройки эмулятора
+восстанавливаются в finally.

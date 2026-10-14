@@ -389,6 +389,11 @@ variant_resources:
     source: app/build.gradle
     purpose: Variant-specific SyncAdapter account type; must equal nextgis_accounts_auth and MainApplication runtime type
 build_inputs:
+  fieldVerificationChecks:
+    owner: app
+    source: app/build.gradle
+    optional: true
+    purpose: False-by-default test-only Debug identity with separate package/provider/account/storage, empty production DSN and no Release variants; enables isolated phone and emulator verification.
   diagnosticDeliveryChecks:
     owner: app
     source: app/build.gradle
