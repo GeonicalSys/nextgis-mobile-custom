@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 related_code:
   - app/build.gradle
   - app/src/main
@@ -34,7 +34,9 @@ power в существующую диагностическую очередь.
 `fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4`, maplibui
 `29390d0331b9ef7cebcfadbc59d084c4de1e326c` проверены через GitHub API;
 новые app controller/service, shared background lease и recovery policy являются
-изменениями форка. Порядок merge: maplib, maplibui docs, app pins; версии не меняются.
+изменениями форка. App закрепляет fetched Merge Commit maplib #52
+`527291e0c426c8f32c06813cd799c81d87c6e542` и maplibui #37
+`ac19458c3fffa8d99fc820b4b6a729ae33b48856`. Версии не меняются.
 
 
 Форк добавляет MapRuntimeDiagnostics: независимое наблюдение синхронных touch
@@ -45,8 +47,9 @@ GitHub API 2026-10-13: official maplib
 `fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4` и official app
 `04d57c9fd843db6745c170147d6a2863da807352`
 не содержат MapRuntimeDiagnostics и SyncRecoveryJournal соответственно.
-App закрепляет fetched Merge Commit maplib #51
-`28a4300ae308c6f531c9b8073382f09c1d6ad052`, включающий #50
+App закрепляет fetched Merge Commit maplib #52
+`527291e0c426c8f32c06813cd799c81d87c6e542`, включающий #51
+`28a4300ae308c6f531c9b8073382f09c1d6ad052` и #50
 `6f398acb59d98fdb5a858754404646c3dfe73f4f`. Диагностическое дерево равно
 проверенному `f6735d2`; production VERSION_NAME — `3.1.2.29`.
 Lisa/Belka Release — `3.1.2.29` / `223`. Debug остаётся `3.1.2.23` / `218`.
@@ -60,7 +63,8 @@ GitHub API 2026-10-13: official app
 `04d57c9fd843db6745c170147d6a2863da807352`, maplibui
 `29390d0331b9ef7cebcfadbc59d084c4de1e326c`;
 официальная row_layer.xml сохраняет фиксированную listPreferredItemHeight,
-maxLines=2 и ellipsize=end. App закрепляет fetched Merge Commit maplibui #36
+maxLines=2 и ellipsize=end. App закрепляет fetched Merge Commit maplibui #37
+`ac19458c3fffa8d99fc820b4b6a729ae33b48856`, включающий #36
 `d5313944b9ca776819cfc3a28f99e5a691fe4a09`; дерево равно проверенному `5bab1d9f`.
 Контракт форка:
 [крупный интерфейс](../architecture/ui-accessibility.md).
