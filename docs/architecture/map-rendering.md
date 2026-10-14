@@ -32,6 +32,14 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+## Отдельные панели выноса и измерения
+
+MapFragment переключает layout_stakeout_panel и layout_azimuth_panel независимо.
+GPS callback обновляет только панель текущего режима. Вынос сохраняет compass/
+map-bearing стрелку, расстояние, точность и звук. В обоих измерениях отсутствуют
+стрелка, звук и GPS accuracy; временные MapLibre точки/линия и их перетаскивание
+сохраняются. FittedPanelLayout удерживает Close и коррекцию измерения в usable bounds.
+
 ## Сетевой курсор между обновлениями
 
 Карта и status panel используют display snapshot общего `GpsEventSource`.

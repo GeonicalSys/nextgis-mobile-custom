@@ -162,24 +162,68 @@ public class LargeTextLayoutTest {
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS) {
                 Context context = themed(scale, screen, dark);
-                ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_stakeout_panel, null);
+                ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_azimuth_panel, null);
                 panel.setVisibility(View.VISIBLE);
-                panel.findViewById(R.id.stakeout_sound).setVisibility(View.GONE);
-                ((TextView) panel.findViewById(R.id.stakeout_distance)).setText(R.string.azimuth_select_target);
+                assertNull(panel.findViewById(R.id.stakeout_sound));
+                assertNull(panel.findViewById(R.id.stakeout_direction));
+                assertNull(panel.findViewById(R.id.stakeout_details));
+                ((TextView) panel.findViewById(R.id.azimuth_distance)).setText(R.string.azimuth_select_target);
                 ((TextView) panel.findViewById(R.id.stakeout_correction_value)).setText("−180,0°");
                 int width = dp(context, screen[0] - 24), height = dp(context, screen[1] - 156);
                 layout(panel, width, height);
                 assertTrue("Panel respects the available map height", panel.getHeight() <= height);
                 textFits(panel);
-                TextView instruction = panel.findViewById(R.id.stakeout_distance);
+                TextView instruction = panel.findViewById(R.id.azimuth_distance);
                 for (int line = 0; line < instruction.getLayout().getLineCount() - 1; line++) {
                     int end = instruction.getLayout().getLineEnd(line);
                     assertTrue("Instructions wrap between complete words", Character.isWhitespace(instruction.getText().charAt(end - 1))
                             || (end < instruction.getText().length() && Character.isWhitespace(instruction.getText().charAt(end))));
                 }
-                actionsFit(panel, R.id.stakeout_stop, R.id.stakeout_correction_minus,
+                actionsFit(panel, R.id.azimuth_stop, R.id.stakeout_correction_minus,
                         R.id.stakeout_correction_plus, R.id.stakeout_correction_value, R.id.stakeout_correction_reset);
                 image(panel, "azimuth-" + dark + "-" + scale + "-" + screen[0]);
+            }
+        });
+    }
+
+    @Test public void independentStakeoutPanelRetainsGuidanceAndSoundAtLargeScales() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS) {
+                Context context = themed(scale, screen, dark);
+                ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_stakeout_panel, null);
+                panel.setVisibility(View.VISIBLE);
+                assertNull(panel.findViewById(R.id.azimuth_bearing));
+                assertNull(panel.findViewById(R.id.stakeout_correction_row));
+                assertNotNull(panel.findViewById(R.id.stakeout_direction));
+                TextView details = panel.findViewById(R.id.stakeout_details);
+                details.setText("Точность GPS ±123,4 м · северо-запад"); details.setVisibility(View.VISIBLE);
+                ((TextView) panel.findViewById(R.id.stakeout_distance)).setText("1 234,5 м\nТочка достигнута");
+                layout(panel, dp(context, screen[0] - 24), dp(context, screen[1] - 156));
+                textFits(panel); actionsFit(panel, R.id.stakeout_stop, R.id.stakeout_sound);
+                for (int id : new int[]{R.id.stakeout_stop, R.id.stakeout_sound}) {
+                    AtomicBoolean hit = new AtomicBoolean();
+                    panel.findViewById(id).setOnTouchListener((v, e) -> { hit.set(true); return true; });
+                    RectF target = bounds(panel, panel.findViewById(id));
+                    long now = android.os.SystemClock.uptimeMillis();
+                    MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, target.centerX(), target.centerY(), 0);
+                    MotionEvent up = MotionEvent.obtain(now, now + 10, MotionEvent.ACTION_UP, target.centerX(), target.centerY(), 0);
+                    panel.dispatchTouchEvent(down); panel.dispatchTouchEvent(up); down.recycle(); up.recycle();
+                    assertTrue("Stakeout action is reachable", hit.get());
+                }
+                image(panel, "stakeout-" + dark + "-" + scale + "-" + screen[0]);
+            }
+        });
+    }
+
+    @Test public void currentProjectSyncStatusFitsWhenNoVerifiedCompletionExists() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS) {
+                Context context = themed(scale, screen, dark);
+                ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.fragment_layers, null);
+                ((TextView) panel.findViewById(R.id.info)).setText(R.string.project_sync_never_completed);
+                layout(panel, dp(context, screen[0]), dp(context, screen[1]));
+                textFits(panel); actionsFit(panel, R.id.sync, R.id.new_layer);
+                image(panel, "project-sync-" + dark + "-" + scale + "-" + screen[0]);
             }
         });
     }
@@ -215,13 +259,13 @@ public class LargeTextLayoutTest {
     @Test public void fittedPanelKeepsTransformedActionTargetsTouchable() {
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             Context context = themed(2f, SCREENS[1], false);
-            ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_stakeout_panel, null);
+            ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_azimuth_panel, null);
             panel.setVisibility(View.VISIBLE);
             ((TextView) panel.findViewById(R.id.stakeout_correction_value)).setText("−180,0°");
             layout(panel, dp(context, 296), dp(context, 100));
-            actionsFit(panel, R.id.stakeout_stop, R.id.stakeout_sound, R.id.stakeout_correction_minus,
+            actionsFit(panel, R.id.azimuth_stop, R.id.stakeout_correction_minus,
                     R.id.stakeout_correction_plus, R.id.stakeout_correction_value, R.id.stakeout_correction_reset);
-            for (int id : new int[]{R.id.stakeout_stop, R.id.stakeout_sound, R.id.stakeout_correction_minus,
+            for (int id : new int[]{R.id.azimuth_stop, R.id.stakeout_correction_minus,
                     R.id.stakeout_correction_plus, R.id.stakeout_correction_value, R.id.stakeout_correction_reset}) {
                 View action = panel.findViewById(id);
                 AtomicBoolean hit = new AtomicBoolean();
@@ -614,10 +658,12 @@ public class LargeTextLayoutTest {
         boolean oldIntro = prefs.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
         String geoWarning = com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG;
         boolean hadGeoWarning = prefs.contains(geoWarning), oldGeoWarning = prefs.getBoolean(geoWarning, true);
+        String batteryWarning = "battery_dont_show_pref";
+        boolean hadBatteryWarning = prefs.contains(batteryWarning), oldBatteryWarning = prefs.getBoolean(batteryWarning, false);
         // This checks physical map/dialog actions, independently of the emulator's absent
         // network-location provider. Location-policy warnings have their own native suite.
         assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true)
-                .putBoolean(geoWarning, false).commit());
+                .putBoolean(geoWarning, false).putBoolean(batteryWarning, true).commit());
         androidx.core.os.LocaleListCompat oldLocales = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
         android.os.LocaleList oldPlatformLocales = Build.VERSION.SDK_INT >= 33
                 ? app.getSystemService(android.app.LocaleManager.class).getApplicationLocales() : null;
@@ -656,7 +702,25 @@ public class LargeTextLayoutTest {
             scenario.moveToState(androidx.lifecycle.Lifecycle.State.CREATED);
             scenario.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED);
             instrumentation.waitForIdleSync(); Thread.sleep(300);
-            scenario.onActivity(activity -> activity.getMapFragment().setNewMode(MapFragment.MODE_AZIMUTH_POINTS));
+            scenario.onActivity(activity -> {
+                MapFragment fragment = activity.getMapFragment();
+                fragment.setNewMode(MapFragment.MODE_AZIMUTH_CURRENT);
+                try {
+                    java.lang.reflect.Method update = MapFragment.class.getDeclaredMethod("updateStakeoutWidget",
+                            com.nextgis.mobile.stakeout.StakeoutController.UiState.class);
+                    update.setAccessible(true);
+                    update.invoke(fragment, new com.nextgis.mobile.stakeout.StakeoutController.UiState(
+                            false, 1234.5, 45f, 67f, 70f, 3f, 4321d, true, false, false));
+                } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+                ViewGroup measurement = activity.findViewById(R.id.azimuth_panel);
+                assertEquals(View.VISIBLE, measurement.getVisibility());
+                assertEquals(View.GONE, activity.findViewById(R.id.stakeout_panel).getVisibility());
+                assertNull(measurement.findViewById(R.id.stakeout_sound));
+                assertNull(measurement.findViewById(R.id.stakeout_direction));
+                assertNull(measurement.findViewById(R.id.stakeout_details));
+                assertFalse(((TextView) measurement.findViewById(R.id.azimuth_details)).getText().toString().contains("4321"));
+                fragment.setNewMode(MapFragment.MODE_AZIMUTH_POINTS);
+            });
             // Use live telemetry here. Injected strings are overwritten by the GPS callback
             // and can move the panel after its touch bounds are captured. Synthetic matrices
             // separately cover long coordinates and accuracy values without a live producer.
@@ -665,14 +729,14 @@ public class LargeTextLayoutTest {
             scenario.onActivity(activity -> {
                 ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
                 textFits(activity.findViewById(R.id.main_toolbar));
-                ViewGroup panel = activity.findViewById(R.id.stakeout_panel);
+                ViewGroup panel = activity.findViewById(R.id.azimuth_panel);
                 assertTrue(panel.isShown()); textFits(panel);
-                assertEquals("The actual instruction is Russian", "Выберите точку А", ((TextView) panel.findViewById(R.id.stakeout_distance)).getText().toString());
+                assertEquals("The actual instruction is Russian", "Выберите точку А", ((TextView) panel.findViewById(R.id.azimuth_distance)).getText().toString());
                 RectF panelRect = bounds(decor, panel), toolbarRect = bounds(decor, activity.findViewById(R.id.main_toolbar));
                 assertTrue("The guidance content stays below the toolbar", panelRect.top >= toolbarRect.bottom - 1);
-                actionsFit((ViewGroup) activity.findViewById(R.id.maprl), R.id.stakeout_stop,
+                actionsFit((ViewGroup) activity.findViewById(R.id.maprl), R.id.azimuth_stop,
                         R.id.stakeout_correction_minus, R.id.stakeout_correction_plus, R.id.stakeout_correction_reset);
-                RectF rect = bounds(decor, activity.findViewById(R.id.stakeout_stop));
+                RectF rect = bounds(decor, activity.findViewById(R.id.azimuth_stop));
                 android.graphics.Rect visible = new android.graphics.Rect(); decor.getWindowVisibleDisplayFrame(visible);
                 assertTrue("Close stays in the usable window", rect.left >= visible.left - 1 && rect.right <= visible.right + 1
                         && rect.top >= visible.top - 1 && rect.bottom <= visible.bottom + 1);
@@ -780,6 +844,8 @@ public class LargeTextLayoutTest {
             else restore.remove(AppSettingsConstants.KEY_PREF_INTRO);
             if (hadGeoWarning) restore.putBoolean(geoWarning, oldGeoWarning);
             else restore.remove(geoWarning);
+            if (hadBatteryWarning) restore.putBoolean(batteryWarning, oldBatteryWarning);
+            else restore.remove(batteryWarning);
             assertTrue(restore.commit());
             if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class).setApplicationLocales(oldPlatformLocales);
             else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(oldLocales));

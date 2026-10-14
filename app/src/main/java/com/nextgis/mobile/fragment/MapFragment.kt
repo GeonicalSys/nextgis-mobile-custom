@@ -276,7 +276,10 @@ public class MapFragment
     private var mStakeoutPanel: View? = null
     private var mStakeoutDirection: ImageView? = null
     private var mStakeoutDistance: TextView? = null
-    private var mStakeoutAzimuth: TextView? = null
+    private var mAzimuthPanel: View? = null
+    private var mAzimuthDistance: TextView? = null
+    private var mAzimuthBearing: TextView? = null
+    private var mAzimuthDetails: TextView? = null
     private var mStakeoutDetails: TextView? = null
     private var mStakeoutSound: ImageButton? = null
     private var mStakeoutStop: ImageButton? = null
@@ -287,7 +290,6 @@ public class MapFragment
     private var deviceHeadingProvider: DeviceHeadingProvider? = null
     private var azimuthStartPoint: GeoPoint? = null
     private var azimuthTargetPoint: GeoPoint? = null
-    private var azimuthStaticTrueBearing: Float? = null
     private val declinationCorrectionListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == StakeoutSettings.KEY_DECLINATION_CORRECTION) {
@@ -532,7 +534,11 @@ public class MapFragment
         mStakeoutPanel = view.findViewById(R.id.stakeout_panel)
         mStakeoutDirection = view.findViewById(R.id.stakeout_direction)
         mStakeoutDistance = view.findViewById(R.id.stakeout_distance)
-        mStakeoutAzimuth = view.findViewById(R.id.stakeout_azimuth)
+        mAzimuthPanel = view.findViewById(R.id.azimuth_panel)
+        mAzimuthDistance = view.findViewById(R.id.azimuth_distance)
+        mAzimuthBearing = view.findViewById(R.id.azimuth_bearing)
+        mAzimuthDetails = view.findViewById(R.id.azimuth_details)
+        view.findViewById<View>(R.id.azimuth_stop)?.setOnClickListener { setNewMode(MODE_NORMAL) }
         mStakeoutDetails = view.findViewById(R.id.stakeout_details)
         mStakeoutSound = view.findViewById(R.id.stakeout_sound)
         mStakeoutStop = view.findViewById(R.id.stakeout_stop)
@@ -1794,9 +1800,11 @@ public class MapFragment
         if (isLiveStakeoutMode(previousMode) && mode != previousMode) {
             mStakeoutController?.stop()
             mStakeoutPanel?.visibility = View.GONE
+            mAzimuthPanel?.visibility = View.GONE
             lastStakeoutUiState = null
         }
         if (isMapAzimuthMode(previousMode) && mode != previousMode) {
+            mAzimuthPanel?.visibility = View.GONE
             clearAzimuthMeasurement()
         }
         var askPerm = false
@@ -1868,6 +1876,7 @@ public class MapFragment
                     undoRedoOverlay!!.clearHistory()
                 mMapRef.get()!!.map!!.unselectFeatureFromView()
                 mStakeoutPanel?.visibility = View.GONE
+                mAzimuthPanel?.visibility = View.GONE
                 mScaleRulerLayout?.visibility = if (
                     mPreferences?.getBoolean(
                         AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER,
@@ -2001,7 +2010,7 @@ public class MapFragment
                 mStakeoutPanel?.visibility = View.VISIBLE
                 mScaleRulerLayout?.visibility = View.GONE
                 if (mStatusPanelMode != 0) mStatusPanel?.visibility = View.VISIBLE
-                bindDeclinationCorrectionRow()
+                mAzimuthPanel?.visibility = View.GONE
             }
 
             MODE_AZIMUTH_CURRENT, MODE_AZIMUTH_POINTS -> {
@@ -2011,13 +2020,10 @@ public class MapFragment
                 mFinishListener = View.OnClickListener { setNewMode(MODE_NORMAL) }
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_NONE
                 undoRedoOverlay!!.clearHistory()
-                mStakeoutPanel?.visibility = View.VISIBLE
-                mStakeoutSound?.visibility = View.GONE
-                mStakeoutDirection?.rotation = 0f
-                mStakeoutDirection?.alpha = 0.35f
-                mStakeoutAzimuth?.visibility = View.GONE
-                mStakeoutDetails?.visibility = View.GONE
-                mStakeoutDistance?.setText(
+                mAzimuthPanel?.visibility = View.VISIBLE
+                mAzimuthBearing?.visibility = View.GONE
+                mAzimuthDetails?.visibility = View.GONE
+                mAzimuthDistance?.setText(
                     if (mode == MODE_AZIMUTH_CURRENT) {
                         R.string.azimuth_select_target
                     } else {
@@ -5554,15 +5560,13 @@ public class MapFragment
         val target = mapPointFromScreen(screenX, screenY) ?: return
         azimuthStartPoint = null
         azimuthTargetPoint = target
-        azimuthStaticTrueBearing = null
-        mStakeoutDistance?.setText(R.string.stakeout_waiting_for_gps)
-        mStakeoutAzimuth?.visibility = View.GONE
-        mStakeoutDetails?.visibility = View.GONE
-        mStakeoutDirection?.alpha = 0.35f
-        mStakeoutSound?.visibility = View.VISIBLE
+
+        mAzimuthDistance?.setText(R.string.stakeout_waiting_for_gps)
+        mAzimuthBearing?.visibility = View.GONE
+        mAzimuthDetails?.visibility = View.GONE
         updateAzimuthOverlayFromLatestLocation()
         try {
-            mStakeoutController?.start(target)
+            mStakeoutController?.start(target, enableSound = false)
         } catch (exception: RuntimeException) {
             HyperLog.w(Constants.TAG, "Azimuth target initialization failed", exception)
             AppDiagnostics.report(AppDiagnostics.Operation.AZIMUTH, exception)
@@ -5575,18 +5579,16 @@ public class MapFragment
         if (azimuthStartPoint == null || azimuthTargetPoint != null) {
             azimuthStartPoint = point
             azimuthTargetPoint = null
-            azimuthStaticTrueBearing = null
+
             mapDrawableOrNull?.showAzimuthMeasurement(
                 point.toMapLibrePoint(),
                 null,
                 true,
                 false
             )
-            mStakeoutDistance?.setText(R.string.azimuth_select_end)
-            mStakeoutAzimuth?.visibility = View.GONE
-            mStakeoutDetails?.visibility = View.GONE
-            mStakeoutDirection?.rotation = 0f
-            mStakeoutDirection?.alpha = 0.35f
+            mAzimuthDistance?.setText(R.string.azimuth_select_end)
+            mAzimuthBearing?.visibility = View.GONE
+            mAzimuthDetails?.visibility = View.GONE
             return
         }
 
@@ -5621,18 +5623,13 @@ public class MapFragment
                 effectiveDeclination,
                 result.distanceMeters
             )
-            azimuthStaticTrueBearing = magneticBearing?.let {
-                normalizeBearing(result.bearingDegrees).toFloat()
-            }
             renderAzimuthDistance(result.distanceMeters)
             renderMagneticAzimuth(magneticBearing)
-            mStakeoutDetails?.text = getString(
+            mAzimuthDetails?.text = getString(
                 R.string.azimuth_declination_format,
                 formatAngle(effectiveDeclination.toDouble())
             )
-            mStakeoutDetails?.visibility = View.VISIBLE
-            mStakeoutSound?.visibility = View.GONE
-            updateStaticAzimuthArrowForMapBearing()
+            mAzimuthDetails?.visibility = View.VISIBLE
         } catch (exception: RuntimeException) {
             HyperLog.w(Constants.TAG, "Free-point azimuth calculation failed", exception)
             AppDiagnostics.report(AppDiagnostics.Operation.AZIMUTH, exception)
@@ -5664,7 +5661,7 @@ public class MapFragment
     private fun clearAzimuthMeasurement() {
         azimuthStartPoint = null
         azimuthTargetPoint = null
-        azimuthStaticTrueBearing = null
+
         mapDrawableOrNull?.clearAzimuthMeasurement()
     }
 
@@ -5675,14 +5672,14 @@ public class MapFragment
             maximumFractionDigits = if (distanceMeters < 10.0) 2 else 1
             minimumFractionDigits = if (distanceMeters < 10.0) 2 else 0
         }
-        mStakeoutDistance?.text = getString(
+        mAzimuthDistance?.text = getString(
             R.string.stakeout_distance_format,
             format.format(distanceMeters)
         )
     }
 
     private fun renderMagneticAzimuth(magneticBearing: Float?) {
-        mStakeoutAzimuth?.text = if (magneticBearing == null) {
+        mAzimuthBearing?.text = if (magneticBearing == null) {
             getString(R.string.azimuth_undefined)
         } else {
             getString(
@@ -5690,8 +5687,7 @@ public class MapFragment
                 formatAngle(magneticBearing.toDouble())
             )
         }
-        mStakeoutAzimuth?.visibility = View.VISIBLE
-        mStakeoutDirection?.alpha = if (magneticBearing == null) 0.35f else 1f
+        mAzimuthBearing?.visibility = View.VISIBLE
     }
 
     private fun formatAngle(value: Double): String =
@@ -5779,14 +5775,6 @@ public class MapFragment
         dialog.show()
     }
 
-    private fun updateStaticAzimuthArrowForMapBearing() {
-        val trueBearing = azimuthStaticTrueBearing ?: run {
-            mStakeoutDirection?.rotation = 0f
-            return
-        }
-        val mapBearing = mapDrawableOrNull?.maplibreMap?.cameraPosition?.bearing ?: 0.0
-        mStakeoutDirection?.rotation = normalizeBearing(trueBearing - mapBearing).toFloat()
-    }
 
     private fun startStakeout() {
         val layer = mSelectedLayer ?: return
@@ -5812,65 +5800,62 @@ public class MapFragment
 
     private fun updateStakeoutWidget(state: StakeoutController.UiState) {
         lastStakeoutUiState = state
-        if (!isLiveStakeoutMode(mode)) return
+        if (mode == MODE_AZIMUTH_CURRENT) {
+            mAzimuthPanel?.visibility = View.VISIBLE
+            mStakeoutPanel?.visibility = View.GONE
+            bindDeclinationCorrectionRow()
+            if (state.waitingForFix || state.distanceMeters == null) {
+                mAzimuthDistance?.setText(R.string.stakeout_waiting_for_gps)
+                mAzimuthBearing?.visibility = View.GONE
+                mAzimuthDetails?.visibility = View.GONE
+                return
+            }
+            renderAzimuthDistance(state.distanceMeters)
+            renderMagneticAzimuth(state.magneticBearingDegrees)
+            mAzimuthDetails?.text = getString(R.string.azimuth_declination_format,
+                formatAngle(state.declinationDegrees.toDouble()))
+            mAzimuthDetails?.visibility = View.VISIBLE
+            return
+        }
+        if (mode != MODE_STAKEOUT) return
         mStakeoutPanel?.visibility = View.VISIBLE
-        bindDeclinationCorrectionRow()
+        mAzimuthPanel?.visibility = View.GONE
         mStakeoutSound?.visibility = View.VISIBLE
         mStakeoutSound?.setImageResource(
-            if (state.muted) R.drawable.ic_stakeout_sound_off
-            else R.drawable.ic_stakeout_sound_on
-        )
+            if (state.muted) R.drawable.ic_stakeout_sound_off else R.drawable.ic_stakeout_sound_on)
         mStakeoutSound?.contentDescription = getString(
-            if (state.muted) R.string.stakeout_unmute else R.string.stakeout_mute
-        )
-
+            if (state.muted) R.string.stakeout_unmute else R.string.stakeout_mute)
         if (state.waitingForFix || state.distanceMeters == null) {
             mStakeoutDistance?.setText(R.string.stakeout_waiting_for_gps)
-            mStakeoutAzimuth?.visibility = View.GONE
             mStakeoutDetails?.visibility = View.GONE
             mStakeoutDirection?.alpha = 0.35f
             return
         }
-
         val format = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
             maximumFractionDigits = if (state.distanceMeters < 10.0) 2 else 1
             minimumFractionDigits = if (state.distanceMeters < 10.0) 2 else 0
         }
-        val distance = getString(
-            R.string.stakeout_distance_format,
-            format.format(state.distanceMeters)
-        )
-        mStakeoutDistance?.text = if (state.reached) {
-            "$distance\n${getString(R.string.stakeout_reached)}"
-        } else {
-            distance
-        }
-        renderMagneticAzimuth(state.magneticBearingDegrees)
+        val distance = getString(R.string.stakeout_distance_format, format.format(state.distanceMeters))
+        mStakeoutDistance?.text = if (state.reached) "$distance\n${getString(R.string.stakeout_reached)}" else distance
         val details = mutableListOf<String>()
         state.accuracyMeters?.let { accuracy ->
             val accuracyFormat = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
                 maximumFractionDigits = 3
                 minimumFractionDigits = 0
             }
-            details += getString(
-                R.string.stakeout_accuracy_format,
-                accuracyFormat.format(accuracy)
-            )
+            details += getString(R.string.stakeout_accuracy_format, accuracyFormat.format(accuracy))
         }
-        details += getString(
-            R.string.azimuth_declination_format,
-            formatAngle(state.declinationDegrees.toDouble())
-        )
+        if (!state.usesDeviceCompass) {
+            val directions = resources.getStringArray(R.array.stakeout_cardinal_directions)
+            val index = ((state.absoluteBearingDegrees + 22.5f) / 45f).toInt() % directions.size
+            details += directions[index]
+        }
         mStakeoutDetails?.text = details.joinToString(" · ")
         mStakeoutDetails?.visibility = if (details.isEmpty()) View.GONE else View.VISIBLE
-        mStakeoutDirection?.rotation = if (state.magneticBearingDegrees == null) {
-            0f
-        } else if (state.usesDeviceCompass) {
-            state.relativeBearingDegrees
-        } else {
-            val mapBearing = mapDrawableOrNull?.maplibreMap?.cameraPosition?.bearing ?: 0.0
-            normalizeBearing(state.absoluteBearingDegrees - mapBearing).toFloat()
-        }
+        mStakeoutDirection?.alpha = 1f
+        mStakeoutDirection?.rotation = if (state.usesDeviceCompass) state.relativeBearingDegrees
+            else normalizeBearing(state.absoluteBearingDegrees -
+                (mapDrawableOrNull?.maplibreMap?.cameraPosition?.bearing ?: 0.0)).toFloat()
     }
 
     private fun startLayerEditMode() {
@@ -6260,7 +6245,6 @@ public class MapFragment
             }
         }
         lastStakeoutUiState?.let { updateStakeoutWidget(it) }
-        if (mode == MODE_AZIMUTH_POINTS) updateStaticAzimuthArrowForMapBearing()
     }
 
     private inner class MessageStyling : BroadcastReceiver() {

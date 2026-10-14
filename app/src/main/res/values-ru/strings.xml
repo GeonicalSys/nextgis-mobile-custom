@@ -404,4 +404,6 @@
     <string name="sync_all_projects_summary">Ручная синхронизация и запуск по расписанию охватывают все загруженные проекты. Если выключить, синхронизируется только открытый проект.</string>
     <string name="project_sync_incomplete_title">Синхронизация не завершена</string>
     <string name="project_sync_incomplete">Не удалось завершить синхронизацию проектов: %1$s. Изменения сохранены на устройстве. Повторите попытку позже.</string>
+    <string name="project_sync_never_completed">Полная синхронизация ещё не выполнена</string>
+    <string name="azimuth_close">Закрыть измерение азимута</string>
 </resources>

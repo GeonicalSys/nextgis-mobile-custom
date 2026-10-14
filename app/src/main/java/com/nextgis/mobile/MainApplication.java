@@ -161,6 +161,7 @@ public class MainApplication extends GISApplication
             backgroundLocationController = new com.nextgis.mobile.location.BackgroundLocationController(this);
             backgroundLocationController.start();
             com.nextgis.maplibui.mapui.TrackWorker.scheduleAll(this);
+            com.nextgis.maplibui.mapui.LocalChangesWorker.scheduleAll(this);
             if (LegacyUnderlayMigrationContract.shouldScheduleSharedCatalogMigration(
                     deferLegacyDebugWorkspace)) {
                 com.nextgis.maplibui.util.SharedUnderlayProjects.scheduleMigration(this);

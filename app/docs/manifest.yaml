@@ -9,6 +9,16 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectSyncDisplayNativeTest.java
+    responsibility: Verify a scoped background callback still displays the active project clock in the actual layer drawer.
+  - path: app/src/main/res/layout/layout_azimuth_panel.xml
+    responsibility: Separate magnetic measurement controls from stakeout arrow, accuracy and sound while keeping enlarged text and Close reachable.
+  - path: app/src/main/res/layout/layout_stakeout_panel.xml
+    responsibility: Restore historical independent guidance panel with direction, distance, accuracy, sound and Close.
+  - path: app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+    responsibility: Persist owning-project completion only after all required accounts, child jobs, ready outbox and cleanup succeed.
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LocalChangesUploadTest.java
+    responsibility: Verify real saved line delivery, disabled full schedule, offline/HTTP retry, draft exclusion and background workspace isolation on a loopback emulator.
   - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt
     responsibility: Keep foreground GPS active on every app Activity even with background disabled; own the separate default-enabled service through a two-hour monotonic inactivity timer and immediate preference reconciliation.
   - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt

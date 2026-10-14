@@ -38,6 +38,52 @@ related_code:
 
 # NGW sync, локальное хранение и восстановление
 
+## Быстрая отправка правок и часы полного проекта
+
+`NGWVectorLayer` сообщает `IGISApplication.onLocalChangesCommitted(owningMap)`
+после managed commit feature/outbox и снятия Save-флагов. Rollback не планирует
+отправку. `FeatureChanges.getChangeCount/getFirstChangeFromRecordId` учитывают
+отдельные TEMP/NOT_SYNC строки всего feature и конкретного attachment: черновик
+не становится готовым только потому, что NEW/CHANGED записан другой строкой.
+Это правило используется и полным SyncAdapter. Очередь и файлы не очищаются
+при отсутствии сети или неуспешном ответе сервера.
+
+`LocalChangesWorker` объединяет события одного owning map за секунду и сохраняет
+one-off работу с `NetworkType.CONNECTED`. APPEND_OR_REPLACE оставляет следующий
+проход для commit, пришедшего во время отправки. Expedited-запуск Android 12+
+имеет fallback без expedited quota; Android всё ещё может отложить исполнение.
+Старт приложения восстанавливает задания всех зарегистрированных проектов,
+а отдельный 15-минутный periodic job подбирает очередь после пропущенных событий.
+Эта отправка не зависит от включения расписания account sync, но соблюдает
+SYNC_NONE, remote read-only и направление to-server. Отправляются готовые
+создания, изменения, удаления и вложения штатным sendLocalChanges; полного
+pull данных/форм/состава проекта нет. TrackWorker сохраняет свою независимую доставку.
+
+Глобальный DATA_SYNC lease, SyncWorkspaceSession и ожидание дочерних работ
+сохраняют owning map; фоновые карты не меняют mMap или active preferences.
+Потеря сети/ошибка дают retry, не успешное подтверждение очереди.
+
+`ProjectSyncState` хранит подтверждённый full-sync clock по canonical map path
+в full-project-sync-state. `ProjectSyncRunner` пишет его после всех account
+проходов текущего проекта, ожидания children, проверки отсутствия готовых
+local edits и успешной очистки session. Ошибка, отмена, layer-only запуск,
+другая account и track-only обмен не обновляют project clock. Для проекта с
+несколькими account полный запуск должен охватить их все. Успех другого проекта
+может быть сохранён независимо от ошибки одного проекта общей очереди.
+
+`LayersFragment` читает MapBase.getActiveInstance и только clock видимой карты,
+включая вызов внутри фонового SyncWorkspaceSession на UI thread; до первого подтверждённого
+полного прохода показывает «Полная синхронизация ещё не выполнена». Старый global
+last_sync_timestamp не мигрируется: он мог означать чужой account или только трек.
+Быстрые local/track uploads часы не пишут. Tracked NGW pull также использует
+owning project clock; неизвестный clock даёт since=0, не watermark чужой карты.
+Account summary сохраняет отдельный legacy account clock после полной очереди.
+
+Регрессии: ProjectSyncStateTest, LocalChangesCommitTest, ProjectSyncRunnerTest,
+ProjectSyncDisplayNativeTest (реальный drawer в background scope),
+LocalChangesUploadTest (сохранённая линия, offline/503 retry, edit/delete,
+TEMP Save и равные layer paths разных проектов; только isolated emulator/loopback).
+
 Перед ручным запуском `LayersFragment` проверяет `NetworkUtil.isNetworkAvailable`.
 При отсутствии активного connected network он показывает «Отсутствует подключение
 к интернету» и не начинает service, очередь, track work или flip offline-sync mode.

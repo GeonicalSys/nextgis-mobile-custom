@@ -94,11 +94,13 @@ class StakeoutController(
     private var resourcesActive = false
     private var foregroundSessionId: String? = null
     private var muted = false
+    private var soundAllowed = true
 
     val isActive: Boolean
         get() = active
 
-    fun start(geometry: GeoGeometry) {
+    @JvmOverloads
+    fun start(geometry: GeoGeometry, enableSound: Boolean = true) {
         stopInternal(clearListener = false)
         target = StakeoutGeometryTarget(geometry)
         thresholds = StakeoutSettings.loadThresholds(preferences)
@@ -108,9 +110,10 @@ class StakeoutController(
             thresholds.near,
             thresholds.reached
         )
-        if (audioCue == null) audioCue = StakeoutAudioCue()
+        soundAllowed = enableSound
+        if (soundAllowed && audioCue == null) audioCue = StakeoutAudioCue()
         active = true
-        muted = !preferences.getBoolean(StakeoutSettings.KEY_SOUND_ENABLED, true)
+        muted = !soundAllowed || !preferences.getBoolean(StakeoutSettings.KEY_SOUND_ENABLED, true)
         waitingForFix = true
         startActiveResources()
         publishLatestState()
@@ -156,6 +159,7 @@ class StakeoutController(
     }
 
     fun toggleMuted() {
+        if (!soundAllowed) return
         muted = !muted
         if (muted) audioCue?.stop()
         publishLatestState()

@@ -1,5 +1,22 @@
 schema_version: 1
 invariants:
+  INV-PROJECT-SYNC-COMPLETION:
+    title: The open project clock confirms complete synchronization of that project
+    owners: [app, maplib, maplibui]
+    statement: >
+      Full completion is stored by canonical workspace path only after required project accounts,
+      child jobs, ready local changes and cleanup succeed. Wrong-account, track-only, layer-only,
+      failed and cancelled passes never advance it. Fast outbound uploads are independent of account
+      schedules and never write full completion clocks. Separate feature and attachment Save flags
+      exclude all corresponding queued edits until Save; after-commit events retain their owning map.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
+      - maplib/src/main/java/com/nextgis/maplib/util/FeatureChanges.java
+      - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java
+      - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+      - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-MULTI-ACCOUNT-SYNC]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/guides/project-synchronization-user-guide.md]
   INV-UI-VISIBLE-BOUNDS:
     title: Enlarged system text and display sizes retain full labels and reachable actions
     owners: [app, maplibui]

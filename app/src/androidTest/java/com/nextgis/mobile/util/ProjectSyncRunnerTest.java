@@ -95,7 +95,7 @@ public class ProjectSyncRunnerTest {
         private static String SettingsConstantsKey() { return com.nextgis.maplib.util.SettingsConstants.KEY_PREF_MAP; }
         NGWVectorLayer layer(MapContentProviderHelper map,String name) throws Exception {
             NGWVectorLayer layer=new com.nextgis.maplibui.mapui.NGWVectorLayerUI(app,new File(map.getPath(),LAYER));
-            layer.setName(name);map.addLayer(layer);layer.beginBulkImport();
+            layer.setName(name);layer.setAccountName(ACCOUNT.name);map.addLayer(layer);layer.beginBulkImport();
             layer.create(GeoConstants.GTPoint,Collections.singletonList(new Field(GeoConstants.FTString,"name","Name")));
             ContentValues row=new ContentValues();row.put(Constants.FIELD_GEOM,new GeoPoint(1,2).toBlob());row.put("name",name);
             assertTrue(layer.insertAddChanges(row)>=0);layer.endBulkImport();assertTrue(layer.save());assertTrue(map.save());return layer;
@@ -116,6 +116,56 @@ public class ProjectSyncRunnerTest {
     }
     private static NGWVectorLayer layer(GISApplication app) {
         return (NGWVectorLayer)MapContentProviderHelper.getVectorLayerByPath((MapContentProviderHelper)app.getMap(),LAYER);
+    }
+    @Test public void fullCompletionIsOwnedByProjectAndFailuresDoNotAdvanceItsClock() throws Exception {
+        try (Fixture f = new Fixture()) {
+            String a = f.active.getPath().getCanonicalPath();
+            String b = new File(f.created.get(0).getMapPath()).getCanonicalPath();
+            String c = new File(f.created.get(1).getMapPath()).getCanonicalPath();
+            com.nextgis.maplib.util.ProjectSyncState.markComplete(f.app, a, 1000);
+            com.nextgis.maplib.util.ProjectSyncState.markComplete(f.app, b, 2000);
+            com.nextgis.maplib.util.ProjectSyncState.markComplete(f.app, c, 3000);
+            SyncResult result = new SyncResult();
+            f.run(new Bundle(), (account,e,u,p,r) -> {
+                if ("B".equals(layer(f.app).getName())) r.stats.numIoExceptions++;
+            }, result);
+            assertTrue(result.hasError());
+            assertTrue(com.nextgis.maplib.util.ProjectSyncState.lastComplete(f.app, a) > 1000);
+            assertEquals(2000, com.nextgis.maplib.util.ProjectSyncState.lastComplete(f.app, b));
+            assertTrue(com.nextgis.maplib.util.ProjectSyncState.lastComplete(f.app, c) > 3000);
+        }
+    }
+    @Test public void unrelatedAccountAndSingleLayerPassCannotAdvanceFullProjectTime() throws Exception {
+        try (Fixture f = new Fixture()) {
+            f.prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_SYNC_ALL_PROJECTS, false).commit();
+            String path = f.active.getPath().getCanonicalPath();
+            com.nextgis.maplib.util.ProjectSyncState.markComplete(f.app, path, 1234);
+            Account other = new Account("other-server", "offline-test");
+            ProjectSyncRunner.run(f.app, Collections.singletonList(other), new Bundle(), f.app.getAuthority(), null,
+                    new SyncResult(), (account,e,u,p,r) -> { });
+            assertEquals(1234, com.nextgis.maplib.util.ProjectSyncState.lastComplete(f.app, path));
+            Bundle oneLayer = new Bundle();
+            oneLayer.putString(com.nextgis.maplib.datasource.ngw.SyncAdapter.ACTION_LPATH, LAYER);
+            f.run(oneLayer, (account,e,u,p,r) -> { }, new SyncResult());
+            assertEquals(1234, com.nextgis.maplib.util.ProjectSyncState.lastComplete(f.app, path));
+        }
+    }
+    @Test public void readySavedLineLeftInOutboxMakesAnOtherwiseSuccessfulPassIncomplete() throws Exception {
+        try (Fixture f = new Fixture()) {
+            f.prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_SYNC_ALL_PROJECTS, false).commit();
+            org.json.JSONObject config = f.a.toJSON();
+            config.put("ngw_layer_type", com.nextgis.maplib.datasource.ngw.Connection.NGWResourceTypePostgisLayer);
+            config.put("sync_type", Constants.SYNC_ALL); f.a.fromJSON(config);
+            com.nextgis.maplib.util.FeatureChanges.add(f.active.getDatabase(false),
+                    f.a.getChangeTableName(), 10000000, Constants.CHANGE_OPERATION_NEW);
+            String path = f.active.getPath().getCanonicalPath();
+            com.nextgis.maplib.util.ProjectSyncState.markComplete(f.app, path, 1234);
+            SyncResult result = new SyncResult();
+            f.run(new Bundle(), (account,e,u,p,r) -> { }, result);
+            assertTrue("Success must include delivery of ready local changes", result.hasError());
+            assertEquals(1234, com.nextgis.maplib.util.ProjectSyncState.lastComplete(f.app, path));
+            assertEquals(1, SyncRecoveryJournal.load(f.app).length());
+        }
     }
     @Test public void disconnectedBackgroundRetainsQueueWithoutStartingAndRunsAfterReconnect() throws Exception {
         try (Fixture f = new Fixture()) {

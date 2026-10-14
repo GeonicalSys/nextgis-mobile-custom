@@ -238,7 +238,7 @@ preferences:
     type: string_decimal_degrees
     default: "0"
     source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
-    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат) and the live/static azimuth widget
+    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат) and the independent live/static azimuth panel; no correction row in stakeout guidance
     purpose: East-positive offset added to WMM2025 declination while converting true bearing to magnetic azimuth; persists until the user changes or resets it to 0; the widget declination line shows D+C
   check_updates:
     owner: app

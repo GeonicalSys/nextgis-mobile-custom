@@ -18,6 +18,16 @@ related_code:
 
 # Crash recovery and durable drafts
 
+## Повтор доставки после сохранения
+
+After-commit scheduling LocalChangesWorker не публикуется при rollback. Durable
+SQLite outbox и network-constrained WorkManager сохраняют принятые локальные
+правки при process death/offline/HTTP failure; startup плюс periodic recovery
+подбирают пропущенные события. TEMP/NOT_SYNC отдельными строками блокируют все
+изменения соответствующего feature/attachment до Save. Новый full-project clock
+не восстанавливается из старого global timestamp: только завершённая полная
+owning-project очередь даёт подтверждённое время.
+
 ## Автоматический GPS и восстановление записи
 
 Автоматический background GPS не создаёт track/walk intent или геометрический

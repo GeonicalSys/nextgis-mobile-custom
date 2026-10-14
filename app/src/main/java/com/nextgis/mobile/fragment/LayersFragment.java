@@ -338,11 +338,13 @@ public class LayersFragment
             return;
         }
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_MULTI_PROCESS);
-        long timeStamp = sharedPreferences.getLong(SettingsConstants.KEY_PREF_LAST_SYNC_TIMESTAMP, 0);
+        // A scoped background callback must never change the clock of the map shown in the UI.
+        com.nextgis.maplib.map.MapBase map = com.nextgis.maplib.map.MapBase.getActiveInstance();
+        long timeStamp = com.nextgis.maplib.util.ProjectSyncState.lastComplete(getContext(),
+                map == null ? null : map.getPath().getAbsolutePath());
         if (timeStamp > 0) {
             mInfoText.setText(ControlHelper.getSyncTime(getContext(), timeStamp));
-        }
+        } else mInfoText.setText(R.string.project_sync_never_completed);
     }
 
 
