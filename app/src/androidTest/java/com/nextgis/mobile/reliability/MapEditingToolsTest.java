@@ -638,6 +638,7 @@ public class MapEditingToolsTest {
             scenario.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
                 ready.set(current.get()!=null && map.getMaplibreMap()==current.get()
                         && map.getMaplibreMapView()==activity.findViewById(R.id.mapViewMaplibre)
+                        && activity.getMapFragment().getMMapRef().get().getMap()==map
                         && current.get().getStyle()!=null && current.get().getStyle().getSource("track-line-source")!=null);});
             if(!ready.get())Thread.sleep(40);
         }while(!ready.get() && android.os.SystemClock.uptimeMillis()<deadline);
@@ -764,7 +765,6 @@ public class MapEditingToolsTest {
             assertNotNull(draft); assertEquals(walkId, draft.walkSessionId);
             assertCategory(expected, com.nextgis.maplibui.util.FeatureFormDraftStore.controlStateToBundle(draft));
             if (walkId == null) {
-                assertCameraAtCreationFix();
                 GeoPoint point = (GeoPoint) com.nextgis.maplibui.util.FeatureFormDraftStore.geometryFromSnapshot(draft);
                 GeoPoint expectedPoint = new GeoPoint(37, 55); expectedPoint.setCRS(GeoConstants.CRS_WGS84);
                 assertTrue(expectedPoint.project(GeoConstants.CRS_WEB_MERCATOR));
@@ -786,6 +786,9 @@ public class MapEditingToolsTest {
                 if (!saved.get()) Thread.sleep(40);
             }
             assertTrue("Category form did not finish saving", saved.get());
+            // The form stops the map's SurfaceView. Validate its camera when the
+            // actual map is visible again, after the form's successful handoff.
+            if(walkId==null)assertCameraAtCreationFix();
             VectorLayerUI layer = layers.get(layers.size() - 1); assertEquals(1, layer.getCount());
             try (android.database.Cursor row = layer.query(null, null, null, null, null)) {
                 assertTrue(row.moveToFirst());
