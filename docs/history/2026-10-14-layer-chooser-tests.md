@@ -65,3 +65,29 @@ marker перед проверкой real project clock.
 Повторный прогон обнаружил чувствительность fake current-location сценария
 к первому emulator fix и отложенной активации меню. Fixture явно подаёт fix
 перед выбором категории и ждёт enabled действие; исходные assertions сохранены.
+
+## Итоговая приёмка
+
+Full на runtime tip `fbbcf31a282437126b1967f0d3f28a31cb6fe73f` завершён
+2026-10-14: все 177 обязательных native cases прошли — 99 на Samsung API 36,
+73 на API 36 эмуляторе и пять фаз diagnostic delivery. Проверка отказа в
+location permission выполнена отдельным запуском после отзыва разрешения;
+пропуск в запуске с выданным разрешением не заменяет её результат.
+Все 36 chooser UI profiles прошли. Core unit suites: maplib 550,
+maplibui 92, app 126, всего 768; runner 16, documentation tools семь,
+publisher 23. Обычная Lisa Debug/Lisa Release/Belka Release version matrix
+сохранила application IDs и версии.
+
+`Check-Publication` подтвердил актуальность receipt с fingerprint
+`ceeb44d0929d03c81621b5407a5102bffb4f16a5257a2a31e1f7ac9a0d010820`.
+Receipt хранится локально в игнорируемом `build/verification/full-passed.json`;
+сырые телефонные материалы не публикуются. Regression CI на том же runtime
+tip также [прошёл](https://github.com/GeonicalSys/nextgis-mobile-custom/actions/runs/38558488340).
+Последующие doc-only записи не меняют проверенное содержимое кода.
+
+Legacy CI теперь выдаёт background location permission после первоначальной
+установки, повторной установки тестового APK и восстановления после denied
+сценария. Map/layers CI проходит тем же изолированным runner после восстановления
+обычных UI defaults. Production APK телефона не переустанавливался; merge и
+публикация остаются вне этой задачи. После закрытия зависимостей и последнего
+изменения release content перед публикацией требуется новый Full.

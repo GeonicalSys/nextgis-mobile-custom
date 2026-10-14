@@ -1897,3 +1897,13 @@ Phone acceptance дополнительно выявила fork script-client г
 bind на Android 16. API 29+ теперь дают каждому QuickJS выполнению уникальный
 isolated service instance; прежняя sandbox/host/wire isolation сохраняется.
 Seven native script cases прошли на Samsung после исправления.
+
+Fork test fixtures ожидают attached MapView с готовым текущим MapLibre instance,
+явный synthetic fix и enabled creation action. Stateful map/sync cases получают
+отдельный процесс и чистую verification базу; diagnostic restart chain сохраняет
+данные намеренно. Legacy CI повторно выдаёт background location permission после
+переустановки и denied сценария, а map/layers проверяет тем же runner. Эти
+изменения стабилизируют проверку Android lifecycle и не меняют production GPS
+permissions или поведение карты. Полный phone/emulator прогон подтвердил все
+177 native cases и 36 chooser UI profiles; доказательства и границы проверки
+приведены в [истории приёмки](../history/2026-10-14-layer-chooser-tests.md).
