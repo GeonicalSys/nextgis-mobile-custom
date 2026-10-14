@@ -101,7 +101,6 @@ jobs:
             adb shell settings put system font_scale 2.0
             adb shell wm density 620
             adb shell settings put system user_rotation 0
-            python3 tools/run_mobile_tests.py --scope related --area map --area layers --output build/ci-verification
             adb shell am force-stop com.nextgis.mobile.debug
             adb shell am instrument -w -r -e uiOrientation portrait -e dialogStyle native -e class com.nextgis.mobile.reliability.LargeTextLayoutTest#realMapCloseAndDialogActionsStayReachable com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner > build/large-text-real-0-native.log
             cat build/large-text-real-0-native.log
@@ -127,6 +126,7 @@ jobs:
             adb shell settings put system font_scale 1.0
             adb shell wm density reset
             adb shell settings put system user_rotation 0
+            python3 tools/run_mobile_tests.py --scope related --area map --area layers --output build/ci-verification
       - name: Store test reports
         if: always()
         uses: actions/upload-artifact@v4
