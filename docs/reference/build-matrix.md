@@ -234,3 +234,7 @@ APK. Stateful map cases идут по одному методу, chooser пол�
 ProjectLayerSelectionTest требует разрешённый проект физического телефона и
 выполняется только local Full; emulator-only CI его не запрашивает.
 Обычные legacy UI/track этапы и их identities сохраняются.
+
+Legacy UI этап выдаёт ACCESS_BACKGROUND_LOCATION после fine/coarse grants:
+иначе новый GPS owner вызывает системное предупреждение, закрывающее touch
+targets теста. Устройства пользователей этот CI шаг не затрагивает.
