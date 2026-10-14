@@ -29,6 +29,16 @@ Runner устанавливает/очищает только эту фикси�
 В phone suites нет переключений radios, глобального font/display или настоящего
 движения. Требующие этих воздействий сценарии идут на эмулятор.
 
+## Треки и обычные стили
+
+Related поддерживает область `styles`; она проверяет synthetic обычные векторы
+после сохранения rule JSON, native properties и pixels с bundled fonts/images.
+Configured local-vector-tiles исключены по режиму и GeoJsonSource guard.
+SharedTracksTest проверяет общую историю и сохранённый switch recording guard.
+Пример: `tools\verify-mobile-tests.ps1 -Scope Related -Area tracks,styles`.
+Контракты: [треки](../architecture/shared-tracks.md),
+[матрица стилей](../architecture/classic-style-verification.md).
+
 ## После доработки
 
 ```powershell
@@ -37,7 +47,7 @@ Runner устанавливает/очищает только эту фикси�
 
 Это собирает verification APK, выбирает/запускает read-only API 36 эмулятор,
 выполняет нужные классы и для выбора слоёв проверяет крупный интерфейс.
-Области: `layers`, `forms`, `sync`, `location`, `tracks`, `map`, `scripts`,
+Области: `layers`, `forms`, `sync`, `location`, `tracks`, `styles`, `map`, `scripts`,
 `diagnostics`. Можно передать несколько `-Area`, явный `-EmulatorSerial`,
 `-Avd`, `-SdkPath`, `-PythonPath` и `-OutputPath`. Для локального повтора уже
 собранного тестового APK существует `-SkipBuild`; он не разрешён для Full.
@@ -147,3 +157,9 @@ Emulator-only Android reliability CI запускает связанные map/l
 через этот же runner, вместо наследования map state между методами. Проверка
 разрешённого телефонного проекта остаётся обязательной в local Full и не
 подменяется CI.
+
+CI reliability invokes Related map/layers/tracks/styles. SharedTracksTest runs
+only through its per-method verification profile; the broad legacy CI package
+excludes it. The loopback delivery suite now requires nine successful cases,
+including the delayed-ACK/replacement-point scenario. Current Full catalog has
+194 required native cases; historical 177-case receipts cannot admit this runtime.

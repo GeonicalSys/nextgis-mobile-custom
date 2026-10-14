@@ -8,6 +8,18 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-14 — Общая история треков и native проверки стилей
+
+- SharedTrackStore переносит проектные истории/очереди в общую базу, сохраняя
+  исходники и переключение-запрет при записи; один слой на каждой карте.
+- Исправлены наследование всех optional labels и explicit false/default при
+  rule JSON reload. Native styles матрица исключает configured local-vector-tiles.
+- Native constant label/icon/line/fill settings получают фильтрованные rendering
+  children; category curves и custom dashes проверяются реальной отрисовкой.
+- Исправлен SDF-порог встроенных маркеров: тонкий крест больше не исчезает.
+- Новые migration/common-history/style cases включены в Related/Full каталог.
+  Ранее выполненный Full receipt больше не соответствует новому runtime.
+
 ## 2026-10-14 — Выбор всех слоёв и полная мобильная приёмка
 
 - Исправлен однорядный viewport custom chooser при enlarged text/display.

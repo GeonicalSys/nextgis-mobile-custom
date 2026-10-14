@@ -120,6 +120,24 @@ public class LargeTextLayoutTest {
         return result;
     }
 
+    private static void awaitInputWindow(ActivityScenario<MainActivity> scenario,
+            java.util.function.Supplier<View> window) throws Exception {
+        AtomicBoolean focused = new AtomicBoolean();
+        long deadline = android.os.SystemClock.uptimeMillis() + 15000;
+        while (!focused.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+            scenario.onActivity(activity -> {
+                View decor = window.get();
+                focused.set(decor.isAttachedToWindow() && decor.hasWindowFocus() && !decor.isLayoutRequested());
+            });
+            if (!focused.get()) Thread.sleep(50);
+        }
+        assertTrue("The physical tap requires the current application's input window", focused.get());
+        java.util.concurrent.CountDownLatch frame = new java.util.concurrent.CountDownLatch(1);
+        scenario.onActivity(activity -> window.get().postOnAnimation(frame::countDown));
+        assertTrue("The rotated input window must commit a frame", frame.await(5, java.util.concurrent.TimeUnit.SECONDS));
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    }
+
     private static void actionsFit(ViewGroup root, int... ids) {
         for (int id : ids) {
             View action = root.findViewById(id);
@@ -731,6 +749,9 @@ public class LargeTextLayoutTest {
             // and can move the panel after its touch bounds are captured. Synthetic matrices
             // separately cover long coordinates and accuracy values without a live producer.
             instrumentation.waitForIdleSync(); Thread.sleep(300);
+            java.util.concurrent.atomic.AtomicReference<View> activeWindow = new java.util.concurrent.atomic.AtomicReference<>();
+            scenario.onActivity(activity -> activeWindow.set(activity.getWindow().getDecorView()));
+            awaitInputWindow(scenario, activeWindow::get);
             java.util.concurrent.atomic.AtomicReference<RectF> closeBounds = new java.util.concurrent.atomic.AtomicReference<>();
             scenario.onActivity(activity -> {
                 ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();

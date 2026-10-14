@@ -1,0 +1,3 @@
+<resources>
+    <string name="shared_tracks_migration_failed">Some track history could not be transferred. Your original data is preserved. Restart the application to retry.</string>
+</resources>

@@ -621,11 +621,17 @@ fallback. Успешное удаление не пытается открыть
 слоями и историей треков; уже выбранный корректный проект при этом не
 переключается.
 
-Каждый проект имеет собственную историю треков. Список, отображение на карте,
-экспорт и новая запись сразу переключаются на базу выбранного проекта без
-перезапуска приложения. Перейти в другой проект во время записи трека нельзя:
-сначала пользователь завершает текущий трек, поэтому один маршрут не может
-случайно разделиться между двумя проектами.
+Все проекты установки используют одну историю треков: список, карта, GPX,
+цвет/видимость и отправка читают общую базу. Старые проектные истории и очереди
+переносятся с сохранением исходников; удаление проекта сохраняет треки. Переключение
+во время записи остаётся запрещённым. Проверки стилей обычных векторов используют
+synthetic SQL/GeoJSON и native pixels; configured local-vector-tiles исключены.
+
+14 октября official maplib проверен GitHub API на master
+[`fcddbd2`](https://github.com/nextgis/android_maplib/commit/fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4):
+TrackLayer читает mMap.getDatabase; application-owned shared store там отсутствует.
+Канонические контракты: [треки](../architecture/shared-tracks.md),
+[стили и подписи](../architecture/classic-style-verification.md).
 
 Перед началом приложение убеждается, что сервер отдал описание проекта целиком.
 Если один из ресурсов не прочитан, импорт отменяется, а не создаёт внешне
@@ -946,7 +952,9 @@ per-feature props и data-driven `text-opacity` (разные категории
 (zoom-stops, scale-with-zoom, opacity подписей, clamp SymbolLayer) и merge для
 type-default полей категории (зум подписей, stops, флаги scale, opacity=255,
 шаблон/поле, иконка, dash array и т.п.). Кривая zoom-stops на слое одна
-(позиции stops не data-driven); флаг scale per-feature с default из прочих.
+(ordinary GeoJSON категории могут иметь свои кривые: общий top-level interpolate
+с объединением breakpoints выбирает per-feature multiplier); explicit scale=false
+и explicit cleared curve сохраняются. Configured tile renderer не расширяется.
 Сопоставление значений можно делать без учёта регистра (`key_ignore_case`).
 При рендеринге расширенные свойства (включая `labelminzoom`/`labelmaxzoom`)
 записываются в GeoJSON feature props и участвуют в per-feature стилизации

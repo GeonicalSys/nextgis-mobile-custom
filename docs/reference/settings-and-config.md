@@ -19,6 +19,15 @@ related_code:
 
 # Настройки и конфигурационные ключи
 
+## Общие треки и настройки подписей
+
+История и видимость слоя «Мои треки» общие для установки, включая новые проекты.
+track_send и registration gate прежние. tracks_temp.track_map теперь указывает
+на общий каталог; URI активного сеанса переводится после миграции.
+У обычных rule-style слоёв explicit false/default optional label settings
+сохраняются при reload; отсутствующие наследуются из Other.
+[Треки](../architecture/shared-tracks.md), [матрица стилей](../architecture/classic-style-verification.md).
+
 ## Расписание и быстрая отправка
 
 Выключение расписания NGW account отключает полные scheduled проходы.

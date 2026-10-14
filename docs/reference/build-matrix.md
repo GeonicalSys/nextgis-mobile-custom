@@ -9,6 +9,8 @@ related_code:
   - maplib/build.gradle
   - maplibui/build.gradle
   - tools/verify-apk-version-matrix.ps1
+  - tools/mobile-test-plan.json
+  - .github/workflows/android-reliability.yml
 ---
 
 # Матрица сборки и версий
@@ -40,11 +42,11 @@ TrackUploadTest проверяет отметку строки «Мои трек
 индикатора со всеми строками слоёв. Он не предполагает, что другой тест не
 оставил неотправленные изменения векторного слоя: выключение отправки треков
 не должно скрывать такие изменения. Это исправление изоляции native fixture.
-В CI остальные 123 reliability-теста выполняются через connected tests, затем
-после удаления UTP и новой установки Debug/test APK все восемь TrackUploadTest
+В CI остальные reliability-тесты выполняются через connected tests, затем
+после удаления UTP и новой установки Debug/test APK все девять TrackUploadTest
 запускаются отдельным instrumentation pass. Остаточный отправитель из recorder
 fixtures иначе конкурирует с тестом за loopback HTTP и вызывает долгие таймауты.
-Проверка требует `OK (8 tests)` и сохраняет `build/track-delivery.log`; ни одна
+Проверка требует `OK (9 tests)` и сохраняет `build/track-delivery.log`; ни одна
 проверка отправки не пропускается. Перед отдельной проверкой отказа GPS процесс
 Debug останавливается. Граница изоляции действует только в CI на его эмуляторе.
 При подключении EmulatorNetworkFixture ждёт именно активный connected Wi-Fi.
@@ -55,6 +57,19 @@ Debug останавливается. Граница изоляции дейст
 тест изменит его обратно. Принятая shell-команда ещё не означает готовность radios.
 `BuildConfig.SOURCE_REVISION` фиксирует Git HEAD и dirty marker для багрепортов;
 изменение этого поля не повышает versionName/versionCode.
+
+Общая база треков и матрица обычных стилей проверяются через isolated verification
+APK. Stateful SharedTracksTest и VectorStyleRenderingTest очищают verification
+данные между методами; broad connected reliability pass исключает SharedTracksTest,
+а затем штатный runner выполняет области map/layers/tracks/styles с дедупликацией.
+Styles проверяют собственные SQL/GeoJSON слои и фактические пиксели; настроенные
+в Web GIS vector-tile слои явно исключены. Текущий Full каталог содержит 194
+обязательных native cases. Предыдущий Full не подтверждает это новое содержимое;
+после merge библиотек и обновления root pins перед публикацией нужен новый Full.
+В этой задаче локально прошли 779 core unit tests и обе release validation builds,
+без изменения версий и установки production APK. Контракты:
+[общие треки](../architecture/shared-tracks.md),
+[обычные стили](../architecture/classic-style-verification.md).
 
 Текущий production выпуск — `3.1.2.29` / `223`, Debug — `3.1.2.23` / `218`.
 Публикация обеих release: maplib #49 (Merge Commit) → fetched pin в app #58 →

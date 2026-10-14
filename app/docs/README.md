@@ -6,6 +6,14 @@ last_verified: 2026-10-14
 
 # app — Android-приложение Lisa/Belka
 
+## Общая история треков и проверки обычных стилей
+
+«Мои треки» — общая история установки, одно служебное представление на карте.
+MainApplication импортирует старые источники до открытия map helpers. Switch
+во время записи запрещён. SharedTracksTest проверяет общую историю и native
+отрисовку; VectorStyleRenderingTest использует обычные synthetic SQL/GeoJSON
+слои и исключает configured vector tiles. Related styles добавлен в каталог.
+
 ## Немедленная отправка и часы открытого проекта
 
 MainApplication восстанавливает LocalChangesWorker всех downloaded workspaces.
@@ -729,3 +737,11 @@ LayerSelectionDialogTest проверяет три строки/геометри
 36 enlarged UI profiles. ProjectLayerSelectionTest проверяет штатное создание
 со snapshot разрешённого проекта 1403; при отсутствии проекта нужно спросить
 пользователя. Команды и ограничения: [автотесты](../../docs/runbooks/automated-tests.md).
+
+Shared track/style native fixtures, MapEditingToolsTest and WalkCheckpointTest
+wait for startup underlay migration to finish before acquiring recording leases.
+TrackPersistenceTest disables sending while synthetic shared points exist, then
+cleans its rows before restoring the preference.
+
+LargeTextLayoutTest awaits the focused input window and a committed frame before
+physical map taps after rotation, retaining actual touch/visible geometry checks.

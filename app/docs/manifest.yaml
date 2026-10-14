@@ -9,6 +9,10 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java
+    responsibility: Verify common history, native map snapshot, visibility, project deletion and retained recording switch guard.
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
+    responsibility: Verify classic SQL/rule JSON/GeoJSON/native paint and labels with snapshots; reject configured local-vector-tiles sources.
   - path: tools/run_mobile_tests.py
     responsibility: Route complete static phone and simulated emulator acceptance, verify native results and source receipts, and require an explicitly permitted project.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java

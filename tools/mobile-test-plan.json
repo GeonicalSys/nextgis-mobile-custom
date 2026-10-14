@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "isolated_methods": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest"],
+  "isolated_methods": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest"],
   "phone": [
     "com.nextgis.mobile.reliability.CascadingFormsTest",
     "com.nextgis.mobile.reliability.ConditionalRequiredFieldsTest",
@@ -37,7 +37,9 @@
     "com.nextgis.mobile.reliability.TrackUploadTest",
     "com.nextgis.mobile.reliability.WalkCheckpointTest",
     "com.nextgis.mobile.rendering.LocationOrbitTest",
-    "com.nextgis.mobile.util.ProjectSyncRunnerTest"
+    "com.nextgis.mobile.util.ProjectSyncRunnerTest",
+    "com.nextgis.mobile.reliability.SharedTracksTest",
+    "com.nextgis.mobile.rendering.VectorStyleRenderingTest"
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "areas": {
@@ -45,9 +47,10 @@
     "forms": ["com.nextgis.mobile.reliability.CascadingFormsTest", "com.nextgis.mobile.reliability.ConditionalRequiredFieldsTest", "com.nextgis.mobile.reliability.RequiredFieldsTest", "com.nextgis.mobile.reliability.FormAppearanceTest", "com.nextgis.mobile.reliability.FormSaveRecoveryTest", "com.nextgis.mobile.reliability.StandardFeatureTypesTest", "com.nextgis.mobile.reliability.SignatureCheckpointTest"],
     "sync": ["com.nextgis.mobile.reliability.LocalChangesUploadTest", "com.nextgis.mobile.reliability.LayerPendingChangesTest", "com.nextgis.mobile.reliability.ProjectSyncDisplayNativeTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SyncNotificationsTest"],
     "location": ["com.nextgis.mobile.reliability.BackgroundGpsNativeTest", "com.nextgis.mobile.reliability.BackgroundLocationWarningTest", "com.nextgis.mobile.reliability.StakeoutForegroundServiceTest", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest", "com.nextgis.mobile.rendering.LocationOrbitTest"],
-    "tracks": ["com.nextgis.mobile.reliability.TrackPersistenceTest", "com.nextgis.mobile.reliability.TrackerStopRecoveryTest", "com.nextgis.mobile.reliability.TrackRecordingModesTest", "com.nextgis.mobile.reliability.TrackPowerWarningTest", "com.nextgis.mobile.reliability.TrackUploadTest", "com.nextgis.mobile.reliability.WalkCheckpointTest"],
-    "map": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest"],
+    "tracks": ["com.nextgis.mobile.reliability.TrackPersistenceTest", "com.nextgis.mobile.reliability.TrackerStopRecoveryTest", "com.nextgis.mobile.reliability.TrackRecordingModesTest", "com.nextgis.mobile.reliability.TrackPowerWarningTest", "com.nextgis.mobile.reliability.TrackUploadTest", "com.nextgis.mobile.reliability.WalkCheckpointTest", "com.nextgis.mobile.reliability.SharedTracksTest"],
+    "map": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest"],
     "scripts": ["com.nextgis.mobile.reliability.ProjectScriptsTest"],
-    "diagnostics": ["com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest"]
+    "diagnostics": ["com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest"],
+    "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest"]
   }
 }

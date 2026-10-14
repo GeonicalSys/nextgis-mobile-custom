@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: SHARED-TRACKS-AND-CLASSIC-STYLES
+    paths: [maplib/src/main/java/com/nextgis/maplib/map/SharedTrackStore.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedTrackProjects.java, maplib/src/main/java/com/nextgis/maplib/display/LabelAttributes.java, maplib/src/main/java/com/nextgis/maplib/display/FieldStyleRule.java, maplib/src/main/java/com/nextgis/maplib/display/Style.java, maplib/src/main/java/com/nextgis/maplib/map/RuleLabelLayouts.java, maplib/src/main/java/com/nextgis/maplib/map/RuleGeometryLayouts.java, maplib/src/main/java/com/nextgis/maplib/display/MplStyleMapper.java, maplib/src/main/java/com/nextgis/maplib/display/MarkerIconRegistry.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/LineLayerFactory.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/MplLayerBuildContext.java, maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/PointLayerFactory.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonLayerFactory.java, app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java]
+    owners: [app, maplib, maplibui]
+    read: [docs/architecture/shared-tracks.md, docs/architecture/classic-style-verification.md]
+    invariants: [INV-SHARED-TRACKS, INV-CLASSIC-RULE-LABELS, INV-TRACK-RETRY, INV-COLLECTOR-ISOLATION]
+    must_update_docs: [docs/architecture/shared-tracks.md, docs/architecture/classic-style-verification.md, docs/architecture/collector-projects.md, docs/registry/invariants.yaml, docs/runbooks/automated-tests.md, docs/reference/official-differences.md, app/docs/manifest.yaml, maplib/docs/manifest.yaml, maplibui/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-APP-RELEASES, AUTO-MOBILE-RELATED]
+    strict_docs: true
   - id: LAYER-CHOOSER-AND-MOBILE-ACCEPTANCE
     paths: [maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java, app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java, app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestApplication.java, app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java, app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java, tools/run_mobile_tests.py, tools/mobile_test_support.py, tools/mobile_test_project.py, tools/mobile-test-plan.json, tools/verify-mobile-tests.ps1, tools/tests]
     owners: [app, maplibui, maplib]

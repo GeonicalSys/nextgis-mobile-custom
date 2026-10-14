@@ -32,6 +32,13 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+## Матрица обычных стилей
+
+[Native матрица](classic-style-verification.md) проверяет обычный GeoJSON renderer
+и подписи после rule JSON reload. Configured local-vector-tiles исключены по
+render-mode/source, их поддержка не расширяется. Explicit optional label settings
+сохраняются и наследуют Other только при отсутствии ключа.
+
 ## Отдельные панели выноса и измерения
 
 MapFragment переключает layout_stakeout_panel и layout_azimuth_panel независимо.
@@ -119,8 +126,8 @@ merge library dependencies и проверки их точного включе�
 
 Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
 читает записи/сегменты в общей фоновой очереди, по одной активной и одной
-отложенной задаче каждого вида. Чтение привязано к SQLite исходного workspace,
-не к текущему ContentProvider и не к mutable cache `TrackLayer`. Main thread
+отложенной задаче каждого вида. Чтение использует общую SQLite SharedTrackStore, независимо от project
+ContentProvider и mutable cache `TrackLayer` ([контракт](shared-tracks.md)). Main thread
 только устанавливает готовый GeoJSON, проверив identity карты, view и style.
 Ошибка чтения сохраняет предыдущую отрисовку; устаревший результат отбрасывается.
 Завершённые видимые треки остаются отдельно от незавершённых, сегменты не

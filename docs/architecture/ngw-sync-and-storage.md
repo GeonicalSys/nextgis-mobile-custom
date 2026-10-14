@@ -691,16 +691,15 @@ false отзывает matching подтверждение. HTTP/сетевая 
 и не меняет track_send, sent или расписание повторов. При смене сервера/UID
 подтверждение другого endpoint не применяется. UI читает cache без сети.
 
-Живой recorder и TrackWorker используют TrackUploader и один delivery lock.
+Живой recorder и TrackWorker используют общую private tracks.db через
+SharedTrackStore, TrackUploader и один delivery lock. [Общая история](shared-tracks.md).
 Пакет содержит до 100 точек; после успешного ответа /packet подтверждаются
-только rowid этого пакета в той же owning-map базе, а не все совпавшие timestamps.
-Новые точки и неуспешные пакеты сохраняют sent=0. WorkManager хранит canonical
-map path и отдельные unique immediate/15-minute periodic jobs для каждого проекта,
-с network constraint. После Stop и startup доставка продолжается, даже если
-теперь открыт другой проект; удалённый или незарегистрированный чужой workspace
-не заменяется активной картой. Background map открывается через SyncWorkspaceSession
-без переключения mMap/preferences и закрывается под DATA_SYNC lease. Android
-может отложить background work при ограничениях питания/сети.
+только IDs этого пакета в общей БД. Новые точки и ошибки сохраняют sent=0.
+WorkManager использует одну unique immediate/15-minute periodic очередь установки
+с network constraint. Старые project jobs перепланируют общую работу и не читают
+проектные rollback-таблицы. После Stop/startup доставка сохраняется при другой
+открытой карте и удалении проекта; project lease и SyncWorkspaceSession для
+треков больше не требуются. Full-project clock остаётся проектным.
 
 Контракт Tracker Hub: [registered и packet](https://docs.nextgis.com/tracker_hub_dev/source/main.html).
 

@@ -18,6 +18,13 @@ related_code:
 
 # Crash recovery and durable drafts
 
+## Shared track migration
+
+The durable spool, UUID insert journal and current track URI move to the shared
+store before map database upgrades. Migration includes pending points in the same
+target transaction and retains the source spool. A failed Stop closes only its
+current global track ID. Details: [shared tracks](shared-tracks.md).
+
 ## Повтор доставки после сохранения
 
 After-commit scheduling LocalChangesWorker не публикуется при rollback. Durable
@@ -76,7 +83,7 @@ intent or used to close a track. Existing segment and durable Stop rules apply.
 | Concern | Behavior |
 |---------|----------|
 | Recording mode | `track_recording_mode` is checkpointed before permissions/start and retained across process death, reboot and split. Missing/unknown values retain mixed recording. Pedestrian speed rejection occurs before sampling/queueing, closes the accepted tail and resumes in a new persisted segment; Stop cannot flush rejected vehicle fixes. See location pipeline for threshold and fallback. |
-| Point durability | Each sampled, validated GNSS point is queued in owning-map AtomicFile storage before a serial idempotent SQLite insert; filter/sampling tails are flushed before Stop. Pending files are acknowledged only after database commit |
+| Point durability | Each sampled, validated GNSS point is queued in application-owned shared-track AtomicFile storage before a serial idempotent SQLite insert; filter/sampling tails are flushed before Stop. Pending files are acknowledged only after database commit |
 | GPS validation | Shared `LocationTrackFilter` retains valid movement through 160 km/h, rejects invalid/old/inaccurate fixes and isolated material spikes, and drains its delayed two-fix buffer on stop or before a long-gap segment reset |
 | Provider ownership | Application-owned GpsEventSource; GPS (chip, mock or native NMEA) for display with Network only as GPS-absent fallback; GNSS chip, mock receiver extras or native NMEA for track/walk recording |
 | GPS gaps | Database v6 persists trackpoints.segment; gaps survive map reload and GPX export. Walk flushes accepted points, resets its sampler and automatically accepts the next usable fix without setting gps_paused |

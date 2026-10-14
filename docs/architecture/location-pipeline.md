@@ -33,6 +33,12 @@ related_code:
 
 # Текущая позиция и запись GPS
 
+## Общая база записи
+
+TrackerService сохраняет точки и очередь в SharedTrackStore вне workspace.
+Режим записи, acquisition, GPS filters и segment rules сохраняются; switch
+во время записи остаётся запрещённым. [Контракт](shared-tracks.md).
+
 ## Автоматическое получение и сетевое положение
 
 `BackgroundLocationController` запускает location foreground service при открытии

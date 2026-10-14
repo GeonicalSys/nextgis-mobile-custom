@@ -99,6 +99,13 @@ public class MapEditingToolsTest {
             if (!ready.get()) Thread.sleep(100);
         }
         assertTrue("MapLibre did not initialize", ready.get());
+        deadline = android.os.SystemClock.uptimeMillis() + 30000;
+        while ((com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending()
+                || com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy())
+                && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(50);
+        assertFalse("Startup migration still owns project operations",
+                com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending()
+                        || com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy());
     }
 
     @After public void tearDown() {
@@ -492,9 +499,20 @@ public class MapEditingToolsTest {
                 com.nextgis.maplib.display.FieldStyleRule rule=new com.nextgis.maplib.display.FieldStyleRule(layer);
                 rule.setKey("typeobj");rule.setStyle("tree",symbol);
                 layer.setRenderer(new com.nextgis.maplib.display.RuleFeatureRenderer(layer,rule,symbol));map.save();
-                activity.getMapFragment().onFinishChooseLayerDialog(MapFragment.EDIT_LAYER,layer,false,false);
-                assertEquals(MapFragment.MODE_NORMAL,mode(activity));
             } catch(Exception error) { throw new AssertionError(error); }
+        });
+        AtomicBoolean sourceReady=new AtomicBoolean();
+        long sourceDeadline=android.os.SystemClock.uptimeMillis()+30000;
+        while(!sourceReady.get() && android.os.SystemClock.uptimeMillis()<sourceDeadline){
+            scenario.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+                sourceReady.set(map.getMaplibreMap().getStyle().getSource(layers.get(0).getPath().toString())
+                        instanceof org.maplibre.android.style.sources.GeoJsonSource);});
+            if(!sourceReady.get())Thread.sleep(40);
+        }
+        assertTrue("A hot-added layer must acquire its current-style source",sourceReady.get());
+        scenario.onActivity(activity->{
+            activity.getMapFragment().onFinishChooseLayerDialog(MapFragment.EDIT_LAYER,layers.get(0),false,false);
+            assertEquals(MapFragment.MODE_NORMAL,mode(activity));
         });
         AtomicBoolean ready=new AtomicBoolean();
         long deadline=android.os.SystemClock.uptimeMillis()+20000;

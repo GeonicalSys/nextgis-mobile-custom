@@ -1,5 +1,19 @@
 schema_version: 1
 invariants:
+  INV-SHARED-TRACKS:
+    title: One installation owns track history independently of project workspaces
+    owners: [app, maplib, maplibui]
+    statement: All projects use one private track database, durable spool and shared layer visibility. Legacy histories, sent flags, segments, UUID acknowledgements and pending points migrate transactionally without deleting sources; source provenance prevents duplicate bootstrap copies and deleted history reimport. Project deletion retains common tracks. Recording project-switch guards remain enabled.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/map/SharedTrackStore.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedTrackProjects.java, app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, AUTO-MOBILE-RELATED]
+    must_update_docs: [docs/architecture/shared-tracks.md, docs/architecture/collector-projects.md]
+  INV-CLASSIC-RULE-LABELS:
+    title: Explicit ordinary-vector rule label settings survive reload and reach native rendering
+    owners: [maplib, app]
+    statement: Optional labels inherit Other only when absent; explicit false, default and empty values retain their meaning across JSON and clone. Native verification covers classic SQL/GeoJSON styles and rendered pixels with configured local-vector-tiles explicitly excluded by render mode and source kind; it must not expand tile renderer capabilities.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/display/LabelAttributes.java, maplib/src/main/java/com/nextgis/maplib/display/FieldStyleRule.java, app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, AUTO-MOBILE-RELATED]
+    must_update_docs: [docs/architecture/classic-style-verification.md, docs/architecture/map-rendering.md]
   INV-SCROLLING-DIALOG-VIEWPORT:
     title: Nested adapter dialogs retain a bounded native viewport
     owners: [app, maplibui]
@@ -50,9 +64,9 @@ invariants:
     verify_smoke: [SMOKE-LARGE-TEXT-UI, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-DEBUG]
     must_update_docs: [docs/architecture/ui-accessibility.md, app/docs/README.md, maplibui/docs/README.md]
   INV-TRACK-DELIVERY:
-    title: Track upload intent survives registration delays and acknowledgements stay in the owning workspace
+    title: Track upload intent survives registration delays and acknowledgements stay in the common database
     owners: [maplib, maplibui, app]
-    statement: Upload defaults to enabled with one-time legacy migration and later explicit opt-out. Registration and network failure never clear upload intent or unsent points. Live and durable delivery serialize packets, acknowledge only accepted rowids in the captured track database, and never resolve a queued background owner to the active map. Pending track badges require enabled upload and confirmed registration for the exact server/UID; unknown or explicitly unregistered devices have no track badge. Transport failure retains known registration, while successful packet acknowledgement removes pending rows.
+    statement: Upload defaults to enabled with one-time legacy migration and later explicit opt-out. Registration and network failure never clear upload intent or unsent points. Live and durable delivery serialize packets, acknowledge only accepted rowids in the application-owned shared track database. Legacy project jobs retire without opening project databases; common delivery takes no project lease. Pending track badges require enabled upload and confirmed registration for the exact server/UID; unknown or explicitly unregistered devices have no track badge. Transport failure retains known registration, while successful packet acknowledgement removes pending rows.
     related_code: [maplib/src/main/java/com/nextgis/maplib/util/TrackSendSettings.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackUploader.java, maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackWorker.java, app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java]
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-TRACK-DELIVERY]
     must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/reference/settings-and-config.md, docs/guides/project-synchronization-user-guide.md]
@@ -132,10 +146,10 @@ invariants:
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-RELIABILITY-FAILURES]
     must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/crash-recovery.md]
   INV-TRACK-RETRY:
-    title: Failed track writes and Stop retain the owning-map tail
+    title: Failed track writes and Stop retain the shared-store tail
     owners: [maplib, maplibui, app]
     statement: >
-      Sampled points enter a bounded ordered owning-map queue before idempotent UUID SQLite insert.
+      Sampled points enter a bounded ordered application-owned shared-track queue before idempotent UUID SQLite insert.
       A failed write retains the point; pending files are removed only after commit. Stop intent,
       track row and recording flag survive until the full tail drains and session closure commits.
       Corrupt checkpoints block silent recovery. Disk-full RAM fallback cannot survive process death
@@ -480,8 +494,8 @@ invariants:
     statement: >
       The first map must belong to an active registered local project; a pre-registry standalone
       map is copied once into that isolated workspace without deleting its rollback source.
-      Project identity, type, map path, layers and tracks must not leak between Web GIS or local
-      projects. ContentProvider operations resolve the active map after every in-process switch,
+      Project identity, type, map path, vector layers and drafts must not leak between Web GIS or local
+      projects. Tracks intentionally share one application-owned store under INV-SHARED-TRACKS. ContentProvider operations resolve the active map after every in-process switch,
       while layer create/insert/schema/delete operations resolve the map that owns the layer through
       its parent chain and open layers.db beside that map file. A Collector task whose project UID
       does not match its target group must touch neither files nor SQLite. Deletion may remove only
