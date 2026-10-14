@@ -142,3 +142,8 @@ script services не получают основную GIS Application initializ
 ProjectSyncRunnerTest также использует per-method isolation: изменения схемы
 и outbox одной фикстуры не наследуются следующим сценарием. Межпроцессная
 диагностическая цепочка остаётся исключением и сохраняет данные намеренно.
+
+Emulator-only Android reliability CI запускает связанные map/layers проверки
+через этот же runner, вместо наследования map state между методами. Проверка
+разрешённого телефонного проекта остаётся обязательной в local Full и не
+подменяется CI.

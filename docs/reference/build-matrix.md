@@ -228,3 +228,9 @@ Version override обычного Debug и production Lisa/Belka не меняе
 matrix, все core units, документацию и отдельные verification APK. Последующий
 Check-Publication связывает результат с текущим содержимым исходников.
 Незакрытая зависимость Draft PR по-прежнему блокирует выпуск.
+
+Android reliability CI отдельно вызывает Related для map/layers на verification
+APK. Stateful map cases идут по одному методу, chooser получает 36 UI profiles.
+ProjectLayerSelectionTest требует разрешённый проект физического телефона и
+выполняется только local Full; emulator-only CI его не запрашивает.
+Обычные legacy UI/track этапы и их identities сохраняются.
