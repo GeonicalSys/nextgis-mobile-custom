@@ -39,6 +39,12 @@ related_code:
 render-mode/source, их поддержка не расширяется. Explicit optional label settings
 сохраняются и наследуют Other только при отсутствии ключа.
 
+При создании точки/геометрии по GPS центр меняется через MapDrawable.setZoomAndCenter:
+native камера и zoomSaved/centerSaved обновляются вместе с сохранением дробного
+зума. Прямой native moveCamera оставлял старый центр в модели, и отложенная
+750 ms MapView.invalidate возвращала его после пересоздания экрана/формы.
+MapEditingToolsTest вызывает эту перерисовку и проверяет видимую камеру после формы.
+
 ## Отдельные панели выноса и измерения
 
 MapFragment переключает layout_stakeout_panel и layout_azimuth_panel независимо.

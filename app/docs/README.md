@@ -748,3 +748,5 @@ physical map taps after rotation, retaining actual touch/visible geometry checks
 MapEditingToolsTest waits for the recreated MapView's own map and sources before
 creation actions, then checks camera coordinates after the form returns to the
 visible map instead of reading a stopped SurfaceView. Geometry and saved SQL values remain checked.
+Creation pans update native and model camera state together; regression checks
+invoke the delayed legacy redraw and preserve the actual GPS centre and fractional zoom.

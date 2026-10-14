@@ -639,13 +639,25 @@ public class MapEditingToolsTest {
                 ready.set(current.get()!=null && map.getMaplibreMap()==current.get()
                         && map.getMaplibreMapView()==activity.findViewById(R.id.mapViewMaplibre)
                         && activity.getMapFragment().getMMapRef().get().getMap()==map
+                        && map.getMaplibreMapView().getForeground()==null
                         && current.get().getStyle()!=null && current.get().getStyle().getSource("track-line-source")!=null);});
             if(!ready.get())Thread.sleep(40);
         }while(!ready.get() && android.os.SystemClock.uptimeMillis()<deadline);
         assertTrue("The recreated map must apply its own sources before creation",ready.get());
+        java.util.concurrent.CountDownLatch frame=new java.util.concurrent.CountDownLatch(1);
+        org.maplibre.android.maps.MapView.OnDidFinishRenderingFrameListener rendered=(fully,encoding,rendering)->frame.countDown();
+        scenario.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+            map.getMaplibreMapView().addOnDidFinishRenderingFrameListener(rendered);map.getMaplibreMap().triggerRepaint();});
+        try{assertTrue("The recreated camera must render before creation",frame.await(15,java.util.concurrent.TimeUnit.SECONDS));}
+        finally{scenario.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMapView().removeOnDidFinishRenderingFrameListener(rendered));}
     }
 
     private void assertCameraAtCreationFix() throws Exception {
+        // Exercise the actual 750 ms legacy redraw which used to restore the
+        // previous centre after a direct native-only camera move.
+        scenario.onActivity(activity->activity.getMapFragment().getMMapRef().get().scheduleInvalidate());
+        Thread.sleep(com.nextgis.maplibui.mapui.MapView.DISPLAY_REDRAW_TIMEOUT+250);
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         java.util.concurrent.atomic.AtomicReference<org.maplibre.android.camera.CameraPosition> last=new java.util.concurrent.atomic.AtomicReference<>();
         long deadline=android.os.SystemClock.uptimeMillis()+10000;
         do{
@@ -738,7 +750,11 @@ public class MapEditingToolsTest {
             android.widget.ListView list = ((androidx.appcompat.app.AlertDialog) dialog.requireDialog()).getListView();
             selected[0] = ((com.nextgis.maplibui.util.FeatureTypeDefaults.Choice) list.getItemAtPosition(0)).state;
             assertEquals(0, layers.get(layers.size() - 1).getCount());
-            if (accept) assertTrue(list.performItemClick(list.getChildAt(0), 0, 0));
+            if (accept) {
+                assertTrue(list.performItemClick(list.getChildAt(0), 0, 0));
+                android.util.Log.i("CreationCameraTrace","after category camera="
+                        +((MapDrawable)app.getMap()).getMaplibreMap().getCameraPosition());
+            }
             else ((androidx.appcompat.app.AlertDialog) dialog.requireDialog()).getButton(android.content.DialogInterface.BUTTON_NEGATIVE).performClick();
         });
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();

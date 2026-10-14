@@ -626,6 +626,8 @@ fallback. Успешное удаление не пытается открыть
 переносятся с сохранением исходников; удаление проекта сохраняет треки. Переключение
 во время записи остаётся запрещённым. Проверки стилей обычных векторов используют
 synthetic SQL/GeoJSON и native pixels; configured local-vector-tiles исключены.
+Регрессия GPS-создания синхронизирует native камеру с сохранённой моделью:
+750 ms legacy redraw больше не возвращает прежний центр после формы/пересоздания.
 
 14 октября official maplib проверен GitHub API на master
 [`fcddbd2`](https://github.com/nextgis/android_maplib/commit/fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4):

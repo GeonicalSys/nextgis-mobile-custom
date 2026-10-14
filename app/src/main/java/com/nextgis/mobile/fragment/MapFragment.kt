@@ -4017,11 +4017,11 @@ public class MapFragment
 
     /** Pan to the actual creation anchor without changing the user's zoom. */
     private fun centerMapAtCreationPoint(point: GeoPoint) {
-        val geographic = point.copy() as GeoPoint
-        if (!geographic.project(GeoConstants.CRS_WGS84)) return
-        mMapRef.get()?.map?.maplibreMap?.moveCamera(
-            CameraUpdateFactory.newLatLng(LatLng(geographic.y, geographic.x))
-        )
+        val map = mMapRef.get()?.map ?: return
+        val zoom = map.maplibreMap?.cameraPosition?.zoom?.toFloat() ?: map.zoomSaved
+        // MapView's delayed invalidate reapplies zoomSaved/centerSaved. Keep the
+        // model and native camera together so it cannot undo this creation pan.
+        map.setZoomAndCenter(zoom, point.copy() as GeoPoint, false, 0)
     }
 
     private fun applyInitialWalkGeometryAtStartLocation(): Boolean {
