@@ -61,3 +61,7 @@ Unicode, отдельный UID, fresh VM, loops/OOM и реальную фор�
 Application также сохраняет ранний isolated-process guard до чтения prefs.
 Fixture строит слой до добавления в видимую карту и выставляет own intro
 marker перед проверкой real project clock.
+
+Повторный прогон обнаружил чувствительность fake current-location сценария
+к первому emulator fix и отложенной активации меню. Fixture явно подаёт fix
+перед выбором категории и ждёт enabled действие; исходные assertions сохранены.

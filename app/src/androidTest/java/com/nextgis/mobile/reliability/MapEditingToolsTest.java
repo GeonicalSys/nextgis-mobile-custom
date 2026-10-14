@@ -639,10 +639,19 @@ public class MapEditingToolsTest {
         });
     }
 
-    private void clickCreationAction(int id) {
+    private void clickCreationAction(int id) throws Exception {
         scenario.onActivity(activity -> ((com.getbase.floatingactionbutton.FloatingActionsMenu)
                 activity.findViewById(R.id.multiple_actions)).expand());
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        AtomicBoolean enabled = new AtomicBoolean();
+        long deadline = android.os.SystemClock.uptimeMillis() + 10_000;
+        while (!enabled.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+            scenario.onActivity(activity -> {
+                View action = activity.findViewById(id);
+                enabled.set(action != null && action.isShown() && action.isEnabled());
+            });
+            if (!enabled.get()) Thread.sleep(40);
+        }
         scenario.onActivity(activity -> {
             View action = activity.findViewById(id);
             assertTrue("Creation action disabled: " + id, action.isEnabled());
@@ -770,6 +779,7 @@ public class MapEditingToolsTest {
     @Test public void cancellingLocationCategoryReleasesPointLockDuringBackgroundWalk() throws Exception {
         scenario.onActivity(activity -> beginWalk(activity, true, Constants.NOT_FOUND));
         addStandardCategoryLayer(GeoConstants.GTPoint);
+        supplyCurrentFix();
         String walkId = com.nextgis.maplibui.util.WalkSessionStore.load(app).id;
         clickCreationAction(R.id.add_current_location);
         assertTrue(com.nextgis.maplibui.util.WalkSessionStore.load(app).isPointActive());

@@ -238,3 +238,6 @@ ProjectLayerSelectionTest требует разрешённый проект ф�
 Legacy UI этап выдаёт ACCESS_BACKGROUND_LOCATION после fine/coarse grants:
 иначе новый GPS owner вызывает системное предупреждение, закрывающее touch
 targets теста. Устройства пользователей этот CI шаг не затрагивает.
+
+Background grant в CI повторяется после UTP reinstall и после deny-location
+сценария, поскольку удаление APK/отзыв fine-coarse снимает и этот grant.
