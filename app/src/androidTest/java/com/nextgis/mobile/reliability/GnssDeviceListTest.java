@@ -17,6 +17,11 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class GnssDeviceListTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     @Test public void sameNamesDisplayDifferentMeasuredSignals() {
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();

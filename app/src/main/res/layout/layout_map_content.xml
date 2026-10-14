@@ -220,6 +220,7 @@
             android:orientation="vertical"
             android:layout_gravity="bottom">
             <include layout="@layout/layout_stakeout_panel" />
+            <include layout="@layout/layout_azimuth_panel" />
             <com.nextgis.maplibui.view.WalkRecordingPanel
                 android:id="@+id/walk_recording_panel"
                 android:layout_width="match_parent"

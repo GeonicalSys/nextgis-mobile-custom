@@ -1,7 +1,7 @@
 ---
 title: Чеклист изменения Android-форка
 type: guide
-last_verified: 2026-07-23
+last_verified: 2026-10-14
 related_code:
   - AGENTS.md
   - docs/registry/change-impact.yaml
@@ -46,3 +46,16 @@ related_code:
 - [ ] `last_verified` и `docs/changelog.md` обновлены для central docs.
 - [ ] Validator и docs tests проходят.
 - [ ] В финальном ответе разделены фактически выполненные и оставшиеся проверки.
+
+## Проверки доработки и публикации
+
+- После доработки — `tools\verify-mobile-tests.ps1 -Scope Related -Area <область>`
+  на эмуляторе; полный прогон после каждой правки не требуется.
+- До публикации, после последней версии/кода и dependency closure — Full на
+  смартфоне и эмуляторе, затем Check-Publication. Required native skips и старый
+  source receipt не подтверждают готовность.
+- Новый native класс классифицировать в `tools/mobile-test-plan.json`.
+- Если разрешённый проект 1403 не найден, спросить пользователя о замене,
+  не выбирать другой проект самостоятельно.
+
+Команды и изоляция: [автотесты](../runbooks/automated-tests.md).

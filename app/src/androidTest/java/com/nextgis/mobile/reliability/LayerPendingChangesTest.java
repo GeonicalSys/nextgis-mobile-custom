@@ -36,6 +36,11 @@ import static org.junit.Assert.*;
 /** Real drawer, worker and synthetic SQLite outbox; no account or network writes. */
 @RunWith(AndroidJUnit4.class)
 public class LayerPendingChangesTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private static LayersListAdapter adapter(MainActivity activity) {
         try {
             LayersFragment fragment=(LayersFragment)activity.getSupportFragmentManager().findFragmentById(R.id.layers);

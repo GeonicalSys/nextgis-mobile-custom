@@ -1,5 +1,28 @@
 schema_version: 1
 tests:
+  AUTO-MOBILE-RELATED:
+    type: automatic
+    scope: [app, maplibui, maplib]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area layers
+    expected: Affected native cases pass on the isolated emulator; layers adds 36 real UI profiles. Other areas are listed in mobile-test-plan.json.
+  AUTO-MOBILE-FULL:
+    type: automatic
+    scope: [app, maplibui, maplib]
+    command: tools\verify-mobile-tests.ps1 -Scope Full
+    expected: Core units, runner units, docs, version matrix, every phone/emulator native case, permitted-project integration, diagnostics recovery and 36 UI profiles pass. Missing permitted project asks the user; no other project is chosen automatically.
+  AUTO-MOBILE-PUBLICATION-GATE:
+    type: automatic
+    scope: [app, maplibui, maplib]
+    command: tools\verify-mobile-tests.ps1 -Scope Check-Publication
+    expected: Only a complete full receipt matching current code/test content of all four checkouts is accepted; related, skip, incomplete or stale results fail.
+  SMOKE-LAYER-CHOOSER:
+    type: device
+    scope: [app, maplibui]
+    command: Run layers Related on emulator and Full on the explicitly selected verification phone
+    steps:
+      - Run the layers area on the isolated emulator and verify actual selection of point, line, polygon and Cancel in all 36 UI profiles.
+      - Run Full on the explicitly selected verification phone with permitted project 1403 or ask the user to select a replacement if absent.
+    expected: Three eligible geometry rows have a multi-row viewport, every geometry and Cancel receive actual touches; permitted project creation offers every editable layer and excludes read-only layers. Enlarged landscape may scroll but the last row remains reachable.
   AUTO-UPDATER-CHECKS:
     type: automatic
     scope: [app]

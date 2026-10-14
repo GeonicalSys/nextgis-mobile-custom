@@ -1,12 +1,63 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-13
+last_verified: 2026-10-15
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-15 — Закреплены слитые библиотеки GPS
+
+- App указывает на Merge Commit maplib #52 и maplibui #37. Версия приложения
+  не менялась.
+
+## 2026-10-14 — Общая история треков и native проверки стилей
+
+- SharedTrackStore переносит проектные истории/очереди в общую базу, сохраняя
+  исходники и переключение-запрет при записи; один слой на каждой карте.
+- Исправлены наследование всех optional labels и explicit false/default при
+  rule JSON reload. Native styles матрица исключает configured local-vector-tiles.
+- Native constant label/icon/line/fill settings получают фильтрованные rendering
+  children; category curves и custom dashes проверяются реальной отрисовкой.
+- Исправлен SDF-порог встроенных маркеров: тонкий крест больше не исчезает.
+- Новые migration/common-history/style cases включены в Related/Full каталог.
+  Ранее выполненный Full receipt больше не соответствует новому runtime.
+
+## 2026-10-14 — Выбор всех слоёв и полная мобильная приёмка
+
+- Исправлен однорядный viewport custom chooser при enlarged text/display.
+- Добавлены isolated verification APK, phone/emulator routing, результаты всех
+  native cases и полный source receipt как условие публикации.
+- Related после доработки идёт на эмуляторе; Full перед публикацией — на обоих
+  устройствах. Интеграционный проект 1403 разрешён пользователем; отсутствие
+  проекта требует вопроса о замене. Registry, agent instructions и publisher
+  release gate согласованы.
+
+## 2026-10-14 — Доставка сохранённых правок, часы проекта и независимый вынос
+
+- After-commit callbacks передают owning map в durable outbound worker; Save-флаги
+  всего объекта/вложения блокируют отправку незавершённой формы.
+- Часы полной синхронизации разделены по проектам и не меняются от чужого account,
+  layer-only или быстрой доставки. Пользовательское руководство и module packs обновлены.
+- Окно выноса восстановлено по b4c860d и отделено от магнитного измерения; native
+  layout/touch matrix проверяет самостоятельные панели и статус полного проекта.
+
+## 2026-10-14 — Автоматический GPS и диагностика восстановления
+
+- Описаны default-enabled background owner, двухчасовой timeout и независимость
+  записи/наведения; добавлен preference в config registry и новый change-impact.
+- Display Network retention сохраняет исходные timestamp/accuracy и показывает
+  возраст; recording/fresh getters не принимают эти устаревшие точки.
+- Recovery snapshots используют существующую offline diagnostic queue; обновлены
+  module packs, invariants, dependencies и сравнение с актуальным official master.
+- Зафиксированы непрерывность GPS в формах даже при выключенном фоне, native
+  экран/таймер/recorder проверки, 36 реальных settings-профилей и 24 status-профиля;
+  результаты и Draft dependency matrix сохранены в `history/2026-10-14-background-gps.md`.
+- Rendering contract описывает постоянный сетевой курсор/accuracy circle;
+  пользовательское руководство объясняет автоматические GPS-отчёты и очередь без связи.
+
 
 ## 2026-10-13 — Production выпуск ЛИСА/БЕЛКА 3.1.2.29
 

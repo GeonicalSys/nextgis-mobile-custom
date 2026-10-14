@@ -39,6 +39,11 @@ import static org.junit.Assert.*;
 /** Real native rendering with synthetic offline values; do not run on a working phone. */
 @RunWith(AndroidJUnit4.class)
 public class FormAppearanceTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     @SuppressWarnings("unchecked") private static Map<String,IControl> controls(ModifyAttributesActivity activity) {
         try {
             java.lang.reflect.Field field = ModifyAttributesActivity.class.getDeclaredField("mFields");

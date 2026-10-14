@@ -39,6 +39,8 @@ public class TrackPersistenceTest {
     private PendingTrackPoints queue;
     private long session;
     private Uri points;
+    private android.content.SharedPreferences preferences;
+    private boolean hadSending, previousSending;
 
     private static class TestMap extends MapContentProviderHelper {
         TestMap(Context app, File path) { super(app, path, ((IGISApplication) app).getLayerFactory()); }
@@ -47,6 +49,11 @@ public class TrackPersistenceTest {
 
     @Before public void setUp() throws Exception {
         Context app = InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(app);
+        preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(app);
+        hadSending = preferences.contains("track_send");
+        previousSending = preferences.getBoolean("track_send", true);
+        assertTrue(preferences.edit().putBoolean("track_send", false).commit());
         String authority = ((IGISApplication) app).getAuthority();
         points = Uri.parse("content://" + authority + "/trackpoints");
         try { previous = MapBase.getInstance(); } catch (IllegalArgumentException ignored) { }
@@ -55,7 +62,9 @@ public class TrackPersistenceTest {
         map = new TestMap(app, new File(root, "test.ngm"));
         layer = new TrackLayer(app, new File(root, "tracks"));
         map.addLayer(layer);
-        db = map.getDatabase(false);
+        db = layer.getDatabase(false);
+        db.delete("trackpoints", null, null);
+        db.delete("tracks", null, null);
         ContentValues track = new ContentValues();
         track.put(TrackLayer.FIELD_NAME, "test");
         track.put(TrackLayer.FIELD_START, 1L);
@@ -67,8 +76,19 @@ public class TrackPersistenceTest {
 
     @After public void tearDown() {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        if (db != null) {
+            db.execSQL("DROP TRIGGER IF EXISTS fail_point");
+            db.delete("trackpoints", "session=?", new String[]{Long.toString(session)});
+            db.delete("tracks", "_id=?", new String[]{Long.toString(session)});
+            com.nextgis.maplib.map.SharedTrackStore.get(layer.getContext()).changed();
+        }
         TestMap.restore(previous);
-        if (db != null) db.close();
+        if (map != null) map.getDatabase(false).close();
+        if (preferences != null) {
+            android.content.SharedPreferences.Editor restore = preferences.edit();
+            if (hadSending) restore.putBoolean("track_send", previousSending); else restore.remove("track_send");
+            assertTrue(restore.commit());
+        }
     }
 
     private ContentValues point(long time, int segment) {

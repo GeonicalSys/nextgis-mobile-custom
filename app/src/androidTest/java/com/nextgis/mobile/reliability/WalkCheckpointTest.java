@@ -31,6 +31,13 @@ import static org.junit.Assert.*;
 public class WalkCheckpointTest {
     @Test public void longWalkCheckpointAndTerminalFenceOnNativePreferences() throws Exception {
         Context app = InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+        long readyDeadline = SystemClock.uptimeMillis() + 30000;
+        while ((com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending()
+                || com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy())
+                && SystemClock.uptimeMillis() < readyDeadline) Thread.sleep(50);
+        assertFalse("Startup migration must finish before creating the isolated walk",
+                com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending()
+                        || com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy());
         SharedPreferences testPreferences = app.getSharedPreferences("walk_benchmark_" + UUID.randomUUID(), Context.MODE_PRIVATE);
         Context isolated = new ContextWrapper(app) {
             @Override public SharedPreferences getSharedPreferences(String name, int mode) {

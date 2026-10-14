@@ -55,6 +55,11 @@ import java.util.concurrent.atomic.AtomicReference;
 /** Real QuickJS/JNI/Binder/SQLite; synthetic local data only, never connected PostGIS writes. */
 @RunWith(AndroidJUnit4.class)
 public class ProjectScriptsTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private final GISApplication app = (GISApplication) InstrumentationRegistry.getInstrumentation()
             .getTargetContext().getApplicationContext();
     private static final String[] ALIASES = {"audit_vyvozka", "audit_roads", "audit_logging", "audit_forestry",
@@ -132,10 +137,10 @@ public class ProjectScriptsTest {
                 layer.setRemoteId(100+i);
                 layer.setLayerOriginMetadata(LayerOriginMetadata.collectorLayer(metadata.getProjectUid(),i,0));
                 layer.setSyncType(Constants.SYNC_NONE);
-                group.addLayer(layer);
                 layer.create(GeoConstants.GTPoint,Arrays.asList(new Field(GeoConstants.FTString,"contractor","Подрядчик"),
                         new Field(GeoConstants.FTString,"issue","Замечания"),new Field(GeoConstants.FTDate,"date_audit","Дата")));
                 layer.setIsEditable(true);
+                group.addLayer(layer);
                 layers.add(layer); bindings.put(ALIASES[i],100+i);
             }
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();

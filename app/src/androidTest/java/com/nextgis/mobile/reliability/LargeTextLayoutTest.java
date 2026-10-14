@@ -33,12 +33,33 @@ import static org.junit.Assert.*;
 /** Native text geometry and visible action bounds; synthetic Debug emulator only. */
 @RunWith(AndroidJUnit4.class)
 public class LargeTextLayoutTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private static final int[][] SCREENS = {{360, 640, 420}, {320, 568, 540}, {568, 320, 540}, {280, 500, 620}};
+
+    @Test public void retainedNetworkPositionFitsCompleteRussianAgeAndAccuracy() {
+        for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS)
+            for (boolean dark : new boolean[]{false, true}) {
+                Context context = themed(scale, screen, dark);
+                View panel = LayoutInflater.from(context).inflate(R.layout.status_panel, null);
+                ((TextView) panel.findViewById(R.id.tv_latitude)).setText("59.998448° С");
+                ((TextView) panel.findViewById(R.id.tv_longitude)).setText("34.349237° В");
+                ((TextView) panel.findViewById(R.id.tv_source)).setText(context.getString(R.string.location_network_age, 7200L));
+                ((TextView) panel.findViewById(R.id.tv_accuracy)).setText(context.getString(R.string.location_reported_accuracy, 4214f, "м"));
+                layout(panel, dp(context, screen[0]), dp(context, screen[1]));
+                textFits(panel);
+                image(panel, "network-age-" + scale + "-" + screen[0] + "-" + dark);
+            }
+    }
 
     private static Context themed(float fontScale, int[] screen, boolean dark) {
         Context app = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertTrue(app.getPackageName().endsWith(".debug"));
-        assertTrue(Build.HARDWARE.equals("ranchu") || Build.HARDWARE.equals("goldfish"));
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
         Configuration config = new Configuration(app.getResources().getConfiguration());
         config.setLocale(new Locale("ru"));
         config.fontScale = fontScale;
@@ -99,6 +120,24 @@ public class LargeTextLayoutTest {
         return result;
     }
 
+    private static void awaitInputWindow(ActivityScenario<MainActivity> scenario,
+            java.util.function.Supplier<View> window) throws Exception {
+        AtomicBoolean focused = new AtomicBoolean();
+        long deadline = android.os.SystemClock.uptimeMillis() + 15000;
+        while (!focused.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+            scenario.onActivity(activity -> {
+                View decor = window.get();
+                focused.set(decor.isAttachedToWindow() && decor.hasWindowFocus() && !decor.isLayoutRequested());
+            });
+            if (!focused.get()) Thread.sleep(50);
+        }
+        assertTrue("The physical tap requires the current application's input window", focused.get());
+        java.util.concurrent.CountDownLatch frame = new java.util.concurrent.CountDownLatch(1);
+        scenario.onActivity(activity -> window.get().postOnAnimation(frame::countDown));
+        assertTrue("The rotated input window must commit a frame", frame.await(5, java.util.concurrent.TimeUnit.SECONDS));
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    }
+
     private static void actionsFit(ViewGroup root, int... ids) {
         for (int id : ids) {
             View action = root.findViewById(id);
@@ -147,24 +186,68 @@ public class LargeTextLayoutTest {
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS) {
                 Context context = themed(scale, screen, dark);
-                ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_stakeout_panel, null);
+                ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_azimuth_panel, null);
                 panel.setVisibility(View.VISIBLE);
-                panel.findViewById(R.id.stakeout_sound).setVisibility(View.GONE);
-                ((TextView) panel.findViewById(R.id.stakeout_distance)).setText(R.string.azimuth_select_target);
+                assertNull(panel.findViewById(R.id.stakeout_sound));
+                assertNull(panel.findViewById(R.id.stakeout_direction));
+                assertNull(panel.findViewById(R.id.stakeout_details));
+                ((TextView) panel.findViewById(R.id.azimuth_distance)).setText(R.string.azimuth_select_target);
                 ((TextView) panel.findViewById(R.id.stakeout_correction_value)).setText("−180,0°");
                 int width = dp(context, screen[0] - 24), height = dp(context, screen[1] - 156);
                 layout(panel, width, height);
                 assertTrue("Panel respects the available map height", panel.getHeight() <= height);
                 textFits(panel);
-                TextView instruction = panel.findViewById(R.id.stakeout_distance);
+                TextView instruction = panel.findViewById(R.id.azimuth_distance);
                 for (int line = 0; line < instruction.getLayout().getLineCount() - 1; line++) {
                     int end = instruction.getLayout().getLineEnd(line);
                     assertTrue("Instructions wrap between complete words", Character.isWhitespace(instruction.getText().charAt(end - 1))
                             || (end < instruction.getText().length() && Character.isWhitespace(instruction.getText().charAt(end))));
                 }
-                actionsFit(panel, R.id.stakeout_stop, R.id.stakeout_correction_minus,
+                actionsFit(panel, R.id.azimuth_stop, R.id.stakeout_correction_minus,
                         R.id.stakeout_correction_plus, R.id.stakeout_correction_value, R.id.stakeout_correction_reset);
                 image(panel, "azimuth-" + dark + "-" + scale + "-" + screen[0]);
+            }
+        });
+    }
+
+    @Test public void independentStakeoutPanelRetainsGuidanceAndSoundAtLargeScales() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS) {
+                Context context = themed(scale, screen, dark);
+                ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_stakeout_panel, null);
+                panel.setVisibility(View.VISIBLE);
+                assertNull(panel.findViewById(R.id.azimuth_bearing));
+                assertNull(panel.findViewById(R.id.stakeout_correction_row));
+                assertNotNull(panel.findViewById(R.id.stakeout_direction));
+                TextView details = panel.findViewById(R.id.stakeout_details);
+                details.setText("Точность GPS ±123,4 м · северо-запад"); details.setVisibility(View.VISIBLE);
+                ((TextView) panel.findViewById(R.id.stakeout_distance)).setText("1 234,5 м\nТочка достигнута");
+                layout(panel, dp(context, screen[0] - 24), dp(context, screen[1] - 156));
+                textFits(panel); actionsFit(panel, R.id.stakeout_stop, R.id.stakeout_sound);
+                for (int id : new int[]{R.id.stakeout_stop, R.id.stakeout_sound}) {
+                    AtomicBoolean hit = new AtomicBoolean();
+                    panel.findViewById(id).setOnTouchListener((v, e) -> { hit.set(true); return true; });
+                    RectF target = bounds(panel, panel.findViewById(id));
+                    long now = android.os.SystemClock.uptimeMillis();
+                    MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, target.centerX(), target.centerY(), 0);
+                    MotionEvent up = MotionEvent.obtain(now, now + 10, MotionEvent.ACTION_UP, target.centerX(), target.centerY(), 0);
+                    panel.dispatchTouchEvent(down); panel.dispatchTouchEvent(up); down.recycle(); up.recycle();
+                    assertTrue("Stakeout action is reachable", hit.get());
+                }
+                image(panel, "stakeout-" + dark + "-" + scale + "-" + screen[0]);
+            }
+        });
+    }
+
+    @Test public void currentProjectSyncStatusFitsWhenNoVerifiedCompletionExists() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS) {
+                Context context = themed(scale, screen, dark);
+                ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.fragment_layers, null);
+                ((TextView) panel.findViewById(R.id.info)).setText(R.string.project_sync_never_completed);
+                layout(panel, dp(context, screen[0]), dp(context, screen[1]));
+                textFits(panel); actionsFit(panel, R.id.sync, R.id.new_layer);
+                image(panel, "project-sync-" + dark + "-" + scale + "-" + screen[0]);
             }
         });
     }
@@ -200,13 +283,13 @@ public class LargeTextLayoutTest {
     @Test public void fittedPanelKeepsTransformedActionTargetsTouchable() {
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             Context context = themed(2f, SCREENS[1], false);
-            ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_stakeout_panel, null);
+            ViewGroup panel = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_azimuth_panel, null);
             panel.setVisibility(View.VISIBLE);
             ((TextView) panel.findViewById(R.id.stakeout_correction_value)).setText("−180,0°");
             layout(panel, dp(context, 296), dp(context, 100));
-            actionsFit(panel, R.id.stakeout_stop, R.id.stakeout_sound, R.id.stakeout_correction_minus,
+            actionsFit(panel, R.id.azimuth_stop, R.id.stakeout_correction_minus,
                     R.id.stakeout_correction_plus, R.id.stakeout_correction_value, R.id.stakeout_correction_reset);
-            for (int id : new int[]{R.id.stakeout_stop, R.id.stakeout_sound, R.id.stakeout_correction_minus,
+            for (int id : new int[]{R.id.azimuth_stop, R.id.stakeout_correction_minus,
                     R.id.stakeout_correction_plus, R.id.stakeout_correction_value, R.id.stakeout_correction_reset}) {
                 View action = panel.findViewById(id);
                 AtomicBoolean hit = new AtomicBoolean();
@@ -429,6 +512,73 @@ public class LargeTextLayoutTest {
         }
     }
 
+    @Test public void realLocationSettingsShowCompleteBackgroundGpsSwitch() throws Exception {
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Context app = instrumentation.getTargetContext();
+        // Assert emulator/debug isolation before changing local preferences or locale.
+        themed(1f, SCREENS[0], false);
+        android.content.SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(app);
+        String gpsKey = com.nextgis.mobile.location.BackgroundLocationPolicy.PREFERENCE;
+        String themeKey = com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_THEME;
+        boolean hadGps = preferences.contains(gpsKey), oldGps = preferences.getBoolean(gpsKey, true);
+        boolean hadTheme = preferences.contains(themeKey);
+        String oldTheme = preferences.getString(themeKey, "light");
+        String theme = "dark".equals(InstrumentationRegistry.getArguments().getString("uiTheme")) ? "dark" : "light";
+        preferences.edit().remove(gpsKey).putString(themeKey, theme).commit();
+        androidx.core.os.LocaleListCompat oldLocales = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
+        android.os.LocaleList oldPlatformLocales = Build.VERSION.SDK_INT >= 33
+                ? app.getSystemService(android.app.LocaleManager.class).getApplicationLocales() : null;
+        if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class)
+                .setApplicationLocales(android.os.LocaleList.forLanguageTags("ru"));
+        else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
+                androidx.core.os.LocaleListCompat.forLanguageTags("ru")));
+        boolean landscape = "landscape".equals(InstrumentationRegistry.getArguments().getString("uiOrientation"));
+        int expected = landscape ? Configuration.ORIENTATION_LANDSCAPE : Configuration.ORIENTATION_PORTRAIT;
+        try (ActivityScenario<com.nextgis.mobile.activity.SettingsActivity> scenario =
+                     ActivityScenario.launch(com.nextgis.mobile.activity.SettingsActivity.class)) {
+            scenario.onActivity(activity -> activity.setRequestedOrientation(landscape
+                    ? android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    : android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT));
+            AtomicBoolean ready = new AtomicBoolean();
+            long deadline = android.os.SystemClock.uptimeMillis() + 10_000;
+            while (!ready.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+                scenario.onActivity(activity -> ready.set(activity.getResources().getConfiguration().orientation == expected
+                        && "ru".equals(activity.getResources().getConfiguration().getLocales().get(0).getLanguage())));
+                if (!ready.get()) Thread.sleep(100);
+            }
+            assertTrue("Russian settings reached requested orientation", ready.get());
+            String root = "com.nextgis.mobile.PREFS_LOCATION";
+            scenario.onActivity(activity -> {
+                android.os.Bundle args = new android.os.Bundle();
+                args.putString(androidx.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, root);
+                activity.replaceSettingsFragment(args);
+                activity.getSupportFragmentManager().executePendingTransactions();
+            });
+            instrumentation.waitForIdleSync(); Thread.sleep(300);
+            scenario.onActivity(activity -> {
+                androidx.preference.PreferenceFragmentCompat fragment = (androidx.preference.PreferenceFragmentCompat)
+                        activity.getSupportFragmentManager().findFragmentByTag(root);
+                assertNotNull(fragment);
+                androidx.preference.SwitchPreferenceCompat background = fragment.findPreference(gpsKey);
+                assertNotNull("Real location screen includes background switch", background);
+                assertTrue("Background GPS defaults on", background.isChecked());
+                preferenceRowsFit(fragment);
+                textFits(activity.findViewById(com.nextgis.maplibui.R.id.main_toolbar));
+                Configuration config = activity.getResources().getConfiguration();
+                image(activity.getWindow().getDecorView(), "background-settings-" + theme + "-"
+                        + config.fontScale + "-" + config.densityDpi + "-" + expected);
+            });
+        } finally {
+            android.content.SharedPreferences.Editor restore = preferences.edit();
+            if (hadGps) restore.putBoolean(gpsKey, oldGps); else restore.remove(gpsKey);
+            if (hadTheme) restore.putString(themeKey, oldTheme); else restore.remove(themeKey);
+            restore.commit();
+            if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class)
+                    .setApplicationLocales(oldPlatformLocales);
+            else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(oldLocales));
+        }
+    }
+
     @Test public void realSettingsAndSecondaryScreensRetainCompleteLabels() throws Exception {
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         Context app = instrumentation.getTargetContext();
@@ -532,10 +682,12 @@ public class LargeTextLayoutTest {
         boolean oldIntro = prefs.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
         String geoWarning = com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG;
         boolean hadGeoWarning = prefs.contains(geoWarning), oldGeoWarning = prefs.getBoolean(geoWarning, true);
+        String batteryWarning = "battery_dont_show_pref";
+        boolean hadBatteryWarning = prefs.contains(batteryWarning), oldBatteryWarning = prefs.getBoolean(batteryWarning, false);
         // This checks physical map/dialog actions, independently of the emulator's absent
         // network-location provider. Location-policy warnings have their own native suite.
         assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true)
-                .putBoolean(geoWarning, false).commit());
+                .putBoolean(geoWarning, false).putBoolean(batteryWarning, true).commit());
         androidx.core.os.LocaleListCompat oldLocales = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
         android.os.LocaleList oldPlatformLocales = Build.VERSION.SDK_INT >= 33
                 ? app.getSystemService(android.app.LocaleManager.class).getApplicationLocales() : null;
@@ -574,23 +726,44 @@ public class LargeTextLayoutTest {
             scenario.moveToState(androidx.lifecycle.Lifecycle.State.CREATED);
             scenario.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED);
             instrumentation.waitForIdleSync(); Thread.sleep(300);
-            scenario.onActivity(activity -> activity.getMapFragment().setNewMode(MapFragment.MODE_AZIMUTH_POINTS));
+            scenario.onActivity(activity -> {
+                MapFragment fragment = activity.getMapFragment();
+                fragment.setNewMode(MapFragment.MODE_AZIMUTH_CURRENT);
+                try {
+                    java.lang.reflect.Method update = MapFragment.class.getDeclaredMethod("updateStakeoutWidget",
+                            com.nextgis.mobile.stakeout.StakeoutController.UiState.class);
+                    update.setAccessible(true);
+                    update.invoke(fragment, new com.nextgis.mobile.stakeout.StakeoutController.UiState(
+                            false, 1234.5, 45f, 67f, 70f, 3f, 4321d, true, false, false));
+                } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+                ViewGroup measurement = activity.findViewById(R.id.azimuth_panel);
+                assertEquals(View.VISIBLE, measurement.getVisibility());
+                assertEquals(View.GONE, activity.findViewById(R.id.stakeout_panel).getVisibility());
+                assertNull(measurement.findViewById(R.id.stakeout_sound));
+                assertNull(measurement.findViewById(R.id.stakeout_direction));
+                assertNull(measurement.findViewById(R.id.stakeout_details));
+                assertFalse(((TextView) measurement.findViewById(R.id.azimuth_details)).getText().toString().contains("4321"));
+                fragment.setNewMode(MapFragment.MODE_AZIMUTH_POINTS);
+            });
             // Use live telemetry here. Injected strings are overwritten by the GPS callback
             // and can move the panel after its touch bounds are captured. Synthetic matrices
             // separately cover long coordinates and accuracy values without a live producer.
             instrumentation.waitForIdleSync(); Thread.sleep(300);
+            java.util.concurrent.atomic.AtomicReference<View> activeWindow = new java.util.concurrent.atomic.AtomicReference<>();
+            scenario.onActivity(activity -> activeWindow.set(activity.getWindow().getDecorView()));
+            awaitInputWindow(scenario, activeWindow::get);
             java.util.concurrent.atomic.AtomicReference<RectF> closeBounds = new java.util.concurrent.atomic.AtomicReference<>();
             scenario.onActivity(activity -> {
                 ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
                 textFits(activity.findViewById(R.id.main_toolbar));
-                ViewGroup panel = activity.findViewById(R.id.stakeout_panel);
+                ViewGroup panel = activity.findViewById(R.id.azimuth_panel);
                 assertTrue(panel.isShown()); textFits(panel);
-                assertEquals("The actual instruction is Russian", "Выберите точку А", ((TextView) panel.findViewById(R.id.stakeout_distance)).getText().toString());
+                assertEquals("The actual instruction is Russian", "Выберите точку А", ((TextView) panel.findViewById(R.id.azimuth_distance)).getText().toString());
                 RectF panelRect = bounds(decor, panel), toolbarRect = bounds(decor, activity.findViewById(R.id.main_toolbar));
                 assertTrue("The guidance content stays below the toolbar", panelRect.top >= toolbarRect.bottom - 1);
-                actionsFit((ViewGroup) activity.findViewById(R.id.maprl), R.id.stakeout_stop,
+                actionsFit((ViewGroup) activity.findViewById(R.id.maprl), R.id.azimuth_stop,
                         R.id.stakeout_correction_minus, R.id.stakeout_correction_plus, R.id.stakeout_correction_reset);
-                RectF rect = bounds(decor, activity.findViewById(R.id.stakeout_stop));
+                RectF rect = bounds(decor, activity.findViewById(R.id.azimuth_stop));
                 android.graphics.Rect visible = new android.graphics.Rect(); decor.getWindowVisibleDisplayFrame(visible);
                 assertTrue("Close stays in the usable window", rect.left >= visible.left - 1 && rect.right <= visible.right + 1
                         && rect.top >= visible.top - 1 && rect.bottom <= visible.bottom + 1);
@@ -698,6 +871,8 @@ public class LargeTextLayoutTest {
             else restore.remove(AppSettingsConstants.KEY_PREF_INTRO);
             if (hadGeoWarning) restore.putBoolean(geoWarning, oldGeoWarning);
             else restore.remove(geoWarning);
+            if (hadBatteryWarning) restore.putBoolean(batteryWarning, oldBatteryWarning);
+            else restore.remove(batteryWarning);
             assertTrue(restore.commit());
             if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class).setApplicationLocales(oldPlatformLocales);
             else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(oldLocales));

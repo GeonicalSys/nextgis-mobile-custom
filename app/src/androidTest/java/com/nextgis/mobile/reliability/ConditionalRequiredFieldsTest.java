@@ -43,6 +43,11 @@ import static org.junit.Assert.*;
 /** Real offline NGFP forms/SQLite; never run on a user's device or connected project. */
 @RunWith(AndroidJUnit4.class)
 public class ConditionalRequiredFieldsTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     @SuppressWarnings("unchecked") private static Map<String,IControl> controls(ModifyAttributesActivity activity) {
         try {
             java.lang.reflect.Field field=ModifyAttributesActivity.class.getDeclaredField("mFields");

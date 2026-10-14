@@ -146,6 +146,8 @@ public final class ProjectSyncRunner {
                 MapContentProviderHelper map = null;
                 SyncWorkspaceSession session = null;
                 boolean background = false;
+                boolean fullProjectComplete = false;
+                java.util.Set<String> requiredAccounts = java.util.Collections.emptySet();
                 try {
                     MapBase active = app.getMap();
                     background = !target.path.equals(active.getPath().getCanonicalPath());
@@ -165,6 +167,8 @@ public final class ProjectSyncRunner {
                         if (app.hasCollectorImportBatchRegistered() || session.hasFailed()) {
                             throw new IOException("Unfinished project import could not be repaired");
                         }
+                        boolean projectComplete = true;
+                        java.util.Set<String> completedAccounts = new java.util.HashSet<>();
                         for (Account account : accounts) {
                             if (Thread.currentThread().isInterrupted() || session.isCancelled()) break;
                             SyncResult part = new SyncResult();
@@ -179,6 +183,9 @@ public final class ProjectSyncRunner {
                                 HyperLog.e(Constants.TAG, "Project account sync failed project=" + target.key(), error);
                             }
                             interrupted |= awaitChildren(session, lease);
+                            // No successful result may hide ready local edits still left in this account's outbox.
+                            if (!part.hasError() && com.nextgis.maplibui.mapui.LocalChangesWorker.hasPending(map, account.name))
+                                part.stats.numIoExceptions++;
                             boolean complete = !part.hasError() && !session.hasFailed()
                                     && !session.isCancelled() && !interrupted && !Thread.currentThread().isInterrupted()
                                     && !app.hasCollectorImportBatchRegistered();
@@ -187,11 +194,22 @@ public final class ProjectSyncRunner {
                                 complete = false;
                             }
                             if (!complete && !failedProjects.contains(target.name)) failedProjects.add(target.name);
+                            projectComplete &= complete;
+                            if (complete) completedAccounts.add(account.name);
                             aggregate(result, part);
                             if (session.isCancelled() || interrupted) break;
                         }
+                        requiredAccounts =
+                                com.nextgis.maplibui.mapui.LocalChangesWorker.projectAccounts(map);
+                        boolean fullProject = requested.getString(
+                                com.nextgis.maplib.datasource.ngw.SyncAdapter.ACTION_LPATH) == null
+                                && !requiredAccounts.isEmpty() && completedAccounts.containsAll(requiredAccounts);
+                        fullProjectComplete = projectComplete && fullProject && !session.hasFailed()
+                                && !session.isCancelled() && !interrupted
+                                && !com.nextgis.maplibui.mapui.LocalChangesWorker.hasPending(map, null);
                     }
                 } catch (Exception error) {
+                    fullProjectComplete = false;
                     if (error instanceof InterruptedException) interrupted = true;
                     else {
                         result.stats.numIoExceptions++;
@@ -200,14 +218,33 @@ public final class ProjectSyncRunner {
                         AppDiagnostics.report(AppDiagnostics.Operation.SYNC, error);
                     }
                 } finally {
-                    if (session != null) {
-                        interrupted |= awaitChildren(session, lease);
-                        session.close();
+                    try {
+                        if (session != null) {
+                            interrupted |= awaitChildren(session, lease);
+                            fullProjectComplete &= !session.hasFailed() && !session.isCancelled();
+                            session.close();
+                        }
+                        if (background && map != null) map.closeSyncWorkspace();
+                        // Restore only runtime bookkeeping for the open project, retaining every journal.
+                        onMain(app::prepareProjectSyncState);
+                    } catch (Exception error) {
+                        fullProjectComplete = false;
+                        result.stats.numIoExceptions++;
+                        if (!failedProjects.contains(target.name)) failedProjects.add(target.name);
+                        HyperLog.e(Constants.TAG, "Project sync cleanup failed project=" + target.key(), error);
                     }
-                    if (background && map != null) map.closeSyncWorkspace();
-                    // Restore only runtime bookkeeping for the open project, retaining every journal.
-                    try { onMain(app::prepareProjectSyncState); }
-                    catch (Exception error) { result.stats.numIoExceptions++; }
+                }
+                // Persist only after all child jobs and cleanup have finished successfully.
+                if (fullProjectComplete && !interrupted && !Thread.currentThread().isInterrupted()
+                        && generation == NgwSyncIo.captureGeneration()) {
+                    long now = System.currentTimeMillis();
+                    if (!com.nextgis.maplib.util.ProjectSyncState.markComplete(context, target.path, now))
+                        throw new IOException("Cannot persist full project sync completion");
+                    android.content.SharedPreferences.Editor clock = context.getSharedPreferences(
+                            Constants.PREFERENCES, Context.MODE_PRIVATE).edit();
+                    for (String account : requiredAccounts)
+                        clock.putLong(SettingsConstants.KEY_PREF_LAST_SYNC_TIMESTAMP + "_" + account.hashCode(), now);
+                    clock.apply();
                 }
                 if (interrupted || generation != NgwSyncIo.captureGeneration()) break;
             }

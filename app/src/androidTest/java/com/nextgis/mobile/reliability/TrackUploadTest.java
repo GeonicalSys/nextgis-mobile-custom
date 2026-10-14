@@ -2,6 +2,7 @@ package com.nextgis.mobile.reliability;
 
 import android.content.*;
 import android.database.DatabaseUtils;
+import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -51,6 +52,7 @@ public class TrackUploadTest {
         volatile boolean registered = true;
         volatile int registrationCode = 200;
         final java.util.concurrent.atomic.AtomicInteger registrationChecks = new java.util.concurrent.atomic.AtomicInteger();
+        volatile Runnable beforePacketReply;
         Endpoint(int... codes) throws Exception {
             server.setSoTimeout(90000);
             new Thread(() -> {
@@ -72,7 +74,11 @@ public class TrackUploadTest {
                             code = registrationCode;
                             registrationChecks.incrementAndGet();
                         }
-                        else { counts.add(new JSONArray(new String(body, 0, read)).length()); code = codes[index++]; }
+                        else {
+                            counts.add(new JSONArray(new String(body, 0, read)).length()); code = codes[index++];
+                            Runnable hook = beforePacketReply; beforePacketReply = null;
+                            if (hook != null) hook.run();
+                        }
                         socket.getOutputStream().write(("HTTP/1.1 " + code + " Result\r\nContent-Length: " + response.length()
                                 + "\r\nConnection: close\r\n\r\n" + response).getBytes(StandardCharsets.US_ASCII));
                         socket.getOutputStream().flush();
@@ -126,7 +132,7 @@ public class TrackUploadTest {
             }
             return id;
         }
-        long sent() { return DatabaseUtils.longForQuery(map.getDatabase(true),
+        long sent() { return DatabaseUtils.longForQuery(layer.getDatabase(true),
                 "SELECT count(*) FROM trackpoints WHERE session = ? AND sent = 1", new String[]{Long.toString(trackId)}); }
         void badge(boolean expected) throws Exception {
             AtomicBoolean matches = new AtomicBoolean(); long deadline = android.os.SystemClock.uptimeMillis() + 10000;
@@ -223,6 +229,30 @@ public class TrackUploadTest {
         }
     }
 
+    @Test public void delayedAcknowledgementCannotMarkReplacementTrackPointAsSent() throws Exception {
+        try (Fixture f = new Fixture(1); Endpoint hub = new Endpoint(200)) {
+            java.util.concurrent.atomic.AtomicLong replacement = new java.util.concurrent.atomic.AtomicLong(-1);
+            f.hub(hub);
+            hub.beforePacketReply = () -> {
+                f.layer.delete(Uri.parse("content://" + f.app.getAuthority() + "/tracks"), "_id=?", new String[]{Long.toString(f.trackId)});
+                replacement.set(Fixture.insert(f.layer, 1, f.app));
+                assertTrue(f.prefs.edit().putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false).commit());
+            };
+            try {
+                assertFalse(TrackWorker.uploadShared(f.app));
+                assertEquals(Collections.singletonList(1), hub.packets.get(5, TimeUnit.SECONDS));
+                assertTrue(replacement.get() > 0);
+                try (Cursor rows = f.layer.getDatabase(true).rawQuery("SELECT sent FROM trackpoints WHERE session=?",
+                        new String[]{Long.toString(replacement.get())})) {
+                    assertTrue(rows.moveToFirst()); assertEquals("The old packet cannot acknowledge a newly inserted point", 0, rows.getInt(0));
+                }
+                assertTrue(TrackUploader.hasPending(f.app));
+            } finally {
+                if (replacement.get() > 0) f.layer.delete(Uri.parse("content://" + f.app.getAuthority() + "/tracks"), "_id=?", new String[]{Long.toString(replacement.get())});
+            }
+        }
+    }
+
     @Test public void scheduledDeliveryRetriesAfterRegistrationWithoutOpeningSettings() throws Exception {
         try (Fixture f = new Fixture(2); Endpoint hub = new Endpoint(200)) {
             hub.registered = false; f.hub(hub);
@@ -292,7 +322,7 @@ public class TrackUploadTest {
         }
     }
 
-    @Test public void queuedProjectUploadsItsOwnTrackWhileAnotherMapIsActive() throws Exception {
+    @Test public void queuedLegacyRequestUploadsSharedTracksWithoutChangingActiveMap() throws Exception {
         try (Fixture f = new Fixture(1); Endpoint hub = new Endpoint(200)) {
             File registry = new File(f.app.getExternalFilesDir(SettingsConstants.KEY_PREF_MAP), "collector_projects/collector_projects_registry.json");
             byte[] before = registry.isFile() ? Files.readAllBytes(registry.toPath()) : null;
@@ -302,19 +332,37 @@ public class TrackUploadTest {
             MapDrawable other = new MapDrawable(android.graphics.Bitmap.createBitmap(1,1,android.graphics.Bitmap.Config.ARGB_8888),
                     f.app, file, f.app.getLayerFactory(), false);
             other.setName(project.getName());
+            long otherTrackId = -1;
             try {
                 try (SyncWorkspaceSession owner = new SyncWorkspaceSession(other); SyncWorkspaceSession.Scope scope = owner.enter()) {
                     TrackLayerUI tracks = new TrackLayerUI(f.app, new File(other.getPath(), TrackLayer.TABLE_TRACKS));
-                    tracks.setName("Isolated tracks"); other.addLayer(tracks); Fixture.insert(tracks, 1, f.app);
+                    tracks.setName("Isolated tracks"); other.addLayer(tracks); otherTrackId = Fixture.insert(tracks, 1, f.app);
                     assertTrue(tracks.save()); assertTrue(other.save());
                 }
                 other.closeSyncWorkspace(); other = null;
                 f.hub(hub);
                 assertTrue(TrackWorker.uploadProject(f.app, new File(project.getMapPath()).getCanonicalPath()));
-                assertSame(f.map, f.app.getMap()); assertSame(f.map, MapBase.getActiveInstance()); assertEquals(0, f.sent());
-                assertTrue(TrackUploader.hasPending(f.app, f.layer));
-                assertEquals(Collections.singletonList(1), hub.packets.get(5, TimeUnit.SECONDS));
+                assertSame(f.map, f.app.getMap()); assertSame(f.map, MapBase.getActiveInstance()); assertEquals(1, f.sent());
+                assertFalse(TrackUploader.hasPending(f.app, f.layer));
+                assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
+                assertTrue(f.prefs.edit().putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false).commit());
+                androidx.work.PeriodicWorkRequest legacy=new androidx.work.PeriodicWorkRequest.Builder(
+                        TrackWorker.class,15,TimeUnit.MINUTES).setInputData(new androidx.work.Data.Builder()
+                        .putString("track_upload_map",new File(project.getMapPath()).getCanonicalPath())
+                        .putBoolean("track_upload_periodic",true).build()).addTag(TrackWorker.WORK_TAG).build();
+                WorkManager work=WorkManager.getInstance(f.app);
+                work.enqueue(legacy).getResult().get(10,TimeUnit.SECONDS);
+                long deadline=android.os.SystemClock.uptimeMillis()+30000;
+                androidx.work.WorkInfo info;
+                do{
+                    info=work.getWorkInfoById(legacy.getId()).get(10,TimeUnit.SECONDS);
+                    if(info!=null && info.getState()==androidx.work.WorkInfo.State.CANCELLED)break;
+                    Thread.sleep(100);
+                }while(android.os.SystemClock.uptimeMillis()<deadline);
+                assertNotNull(info);assertEquals("Retired periodic project work must not recur",
+                        androidx.work.WorkInfo.State.CANCELLED,info.getState());
             } finally {
+                if (otherTrackId >= 0) f.layer.delete(Uri.parse("content://" + f.app.getAuthority() + "/tracks"), "_id=?", new String[]{Long.toString(otherTrackId)});
                 if (other != null) other.closeSyncWorkspace();
                 FileUtil.deleteRecursive(new File(project.getMapPath()));
                 if (before == null) registry.delete(); else Files.write(registry.toPath(), before);

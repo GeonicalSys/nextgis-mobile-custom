@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -37,6 +37,52 @@ related_code:
 ---
 
 # NGW sync, локальное хранение и восстановление
+
+## Быстрая отправка правок и часы полного проекта
+
+`NGWVectorLayer` сообщает `IGISApplication.onLocalChangesCommitted(owningMap)`
+после managed commit feature/outbox и снятия Save-флагов. Rollback не планирует
+отправку. `FeatureChanges.getChangeCount/getFirstChangeFromRecordId` учитывают
+отдельные TEMP/NOT_SYNC строки всего feature и конкретного attachment: черновик
+не становится готовым только потому, что NEW/CHANGED записан другой строкой.
+Это правило используется и полным SyncAdapter. Очередь и файлы не очищаются
+при отсутствии сети или неуспешном ответе сервера.
+
+`LocalChangesWorker` объединяет события одного owning map за секунду и сохраняет
+one-off работу с `NetworkType.CONNECTED`. APPEND_OR_REPLACE оставляет следующий
+проход для commit, пришедшего во время отправки. Expedited-запуск Android 12+
+имеет fallback без expedited quota; Android всё ещё может отложить исполнение.
+Старт приложения восстанавливает задания всех зарегистрированных проектов,
+а отдельный 15-минутный periodic job подбирает очередь после пропущенных событий.
+Эта отправка не зависит от включения расписания account sync, но соблюдает
+SYNC_NONE, remote read-only и направление to-server. Отправляются готовые
+создания, изменения, удаления и вложения штатным sendLocalChanges; полного
+pull данных/форм/состава проекта нет. TrackWorker сохраняет свою независимую доставку.
+
+Глобальный DATA_SYNC lease, SyncWorkspaceSession и ожидание дочерних работ
+сохраняют owning map; фоновые карты не меняют mMap или active preferences.
+Потеря сети/ошибка дают retry, не успешное подтверждение очереди.
+
+`ProjectSyncState` хранит подтверждённый full-sync clock по canonical map path
+в full-project-sync-state. `ProjectSyncRunner` пишет его после всех account
+проходов текущего проекта, ожидания children, проверки отсутствия готовых
+local edits и успешной очистки session. Ошибка, отмена, layer-only запуск,
+другая account и track-only обмен не обновляют project clock. Для проекта с
+несколькими account полный запуск должен охватить их все. Успех другого проекта
+может быть сохранён независимо от ошибки одного проекта общей очереди.
+
+`LayersFragment` читает MapBase.getActiveInstance и только clock видимой карты,
+включая вызов внутри фонового SyncWorkspaceSession на UI thread; до первого подтверждённого
+полного прохода показывает «Полная синхронизация ещё не выполнена». Старый global
+last_sync_timestamp не мигрируется: он мог означать чужой account или только трек.
+Быстрые local/track uploads часы не пишут. Tracked NGW pull также использует
+owning project clock; неизвестный clock даёт since=0, не watermark чужой карты.
+Account summary сохраняет отдельный legacy account clock после полной очереди.
+
+Регрессии: ProjectSyncStateTest, LocalChangesCommitTest, ProjectSyncRunnerTest,
+ProjectSyncDisplayNativeTest (реальный drawer в background scope),
+LocalChangesUploadTest (сохранённая линия, offline/503 retry, edit/delete,
+TEMP Save и равные layer paths разных проектов; только isolated emulator/loopback).
 
 Перед ручным запуском `LayersFragment` проверяет `NetworkUtil.isNetworkAvailable`.
 При отсутствии активного connected network он показывает «Отсутствует подключение
@@ -645,16 +691,15 @@ false отзывает matching подтверждение. HTTP/сетевая 
 и не меняет track_send, sent или расписание повторов. При смене сервера/UID
 подтверждение другого endpoint не применяется. UI читает cache без сети.
 
-Живой recorder и TrackWorker используют TrackUploader и один delivery lock.
+Живой recorder и TrackWorker используют общую private tracks.db через
+SharedTrackStore, TrackUploader и один delivery lock. [Общая история](shared-tracks.md).
 Пакет содержит до 100 точек; после успешного ответа /packet подтверждаются
-только rowid этого пакета в той же owning-map базе, а не все совпавшие timestamps.
-Новые точки и неуспешные пакеты сохраняют sent=0. WorkManager хранит canonical
-map path и отдельные unique immediate/15-minute periodic jobs для каждого проекта,
-с network constraint. После Stop и startup доставка продолжается, даже если
-теперь открыт другой проект; удалённый или незарегистрированный чужой workspace
-не заменяется активной картой. Background map открывается через SyncWorkspaceSession
-без переключения mMap/preferences и закрывается под DATA_SYNC lease. Android
-может отложить background work при ограничениях питания/сети.
+только IDs этого пакета в общей БД. Новые точки и ошибки сохраняют sent=0.
+WorkManager использует одну unique immediate/15-minute periodic очередь установки
+с network constraint. Старые project jobs перепланируют общую работу и не читают
+проектные rollback-таблицы. После Stop/startup доставка сохраняется при другой
+открытой карте и удалении проекта; project lease и SyncWorkspaceSession для
+треков больше не требуются. Full-project clock остаётся проектным.
 
 Контракт Tracker Hub: [registered и packet](https://docs.nextgis.com/tracker_hub_dev/source/main.html).
 
@@ -709,3 +754,11 @@ ProjectSyncRunner сообщает выбранные неожиданные и�
 создают handled bug report. Это независимая SDK cache/WorkManager доставка;
 она не использует sync lease, не открывает GIS базу и не меняет pending pairs.
 [Контракт диагностики](error-reporting.md).
+
+## Изоляция verification account
+
+Opt-in verification Debug app имеет отдельный account type/provider authority.
+Phone integration получает только read-only snapshot layer policies
+разрешённого проекта; настоящие accounts/credentials/features не импортируются.
+Синхронизационные автоматические сценарии продолжают использовать synthetic
+loopback receivers. Обычные Lisa/Belka/Debug account identities не меняются.

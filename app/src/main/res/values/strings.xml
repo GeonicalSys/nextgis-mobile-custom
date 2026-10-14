@@ -404,4 +404,6 @@
     <string name="sync_all_projects_summary">Manual and scheduled synchronization includes every downloaded project. When off, only the open project is synchronized.</string>
     <string name="project_sync_incomplete_title">Synchronization incomplete</string>
     <string name="project_sync_incomplete">Could not finish synchronization for: %1$s. Changes are kept on the device. Try again later.</string>
+    <string name="project_sync_never_completed">No completed full synchronization yet</string>
+    <string name="azimuth_close">Close azimuth measurement</string>
 </resources>

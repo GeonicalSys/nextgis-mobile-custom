@@ -76,7 +76,7 @@ public class TrackRecordingModesTest {
             await(() -> app.getMap() != null);
             MapContentProviderHelper map = (MapContentProviderHelper) app.getMap();
             layer = (TrackLayer) MapContentProviderHelper.getVectorLayerByPath(map, TrackLayer.TABLE_TRACKS);
-            SQLiteDatabase db = map.getDatabase(false);
+            SQLiteDatabase db = layer.getDatabase(false);
             assertNotNull(layer);
             scenario.onActivity(activity -> {
                 // A receiver without an endpoint stops system/provider traffic before Start.

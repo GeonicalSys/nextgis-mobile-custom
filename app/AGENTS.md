@@ -14,6 +14,15 @@
 preferences, release и updater. Он не должен переносить GIS/storage реализацию
 из `maplib`/`maplibui`.
 
+Проверки без движения доступны на смартфоне только в opt-in verification APK:
+`-PfieldVerificationChecks=true`, отдельные application/provider/account IDs,
+VerificationTestRunner и синтетический workspace. Команды и полная release gate:
+[`../docs/runbooks/automated-tests.md`](../docs/runbooks/automated-tests.md).
+Related на эмуляторе обязателен после доработки; Full на смартфоне и эмуляторе
+обязателен перед публикацией, Check-Publication сверяет актуальность результата.
+Не менять системные настройки рабочего смартфона и не запускать mutating suites
+в production либо обычном Debug-профиле.
+
 Любая правка панелей, диалогов и подписей проходит проверки крупного шрифта
 и display size из корневого AGENTS.md. Для карты особенно проверять полные
 инструкции азимута/выноса, числовую коррекцию, GPS-статус и предупреждения,
@@ -106,7 +115,8 @@ Central cross-module docs обновляй в той же root-задаче.
 
 NGFP-формы: читать `../docs/architecture/conditional-form-rules.md`. Native
 regression-тесты `CascadingFormsTest` и `ConditionalRequiredFieldsTest` запускаются
-только на изолированном эмуляторе; никогда не запускать suite на рабочем телефоне.
+на изолированном эмуляторе или в отдельном verification APK смартфона;
+production и обычный Debug смартфона не используются.
 Проверять публичный запуск формы со связанным meta, вкладки, Save/Back Save,
 pin черновика и отсутствие SQLite-записи при нарушении условий.
 FormAppearanceTest проверяет обе темы, перенос выбранного имени и нижний Save.
@@ -135,3 +145,8 @@ journals разделены по canonical map path. Проверять cancella
 IDs, сохранность draft и реальный fill на изолированном эмуляторе.
 Подписи разделённых double_combobox брать из meta.fields keyname/display_name,
 затем layer alias; field key используется только при отсутствии обоих.
+
+Разрешённый интеграционный проект — 1403 «Для инженеров Геоникл».
+ProjectLayerSelectionTest использует read-only policy snapshot этого проекта
+в отдельной verification базе. При отсутствии/неоднозначности проекта спросить
+пользователя о разрешённом замещающем проекте. Не выбирать первый доступный.

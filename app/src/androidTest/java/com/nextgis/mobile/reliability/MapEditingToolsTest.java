@@ -76,6 +76,13 @@ public class MapEditingToolsTest {
         oldIntro = preferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
         assertTrue(preferences.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true).commit());
         scenario = ActivityScenario.launch(MainActivity.class);
+        java.util.concurrent.atomic.AtomicReference<org.maplibre.android.maps.MapLibreMap> currentViewMap =
+                new java.util.concurrent.atomic.AtomicReference<>();
+        scenario.onActivity(activity -> {
+            org.maplibre.android.maps.MapView view = activity.findViewById(R.id.mapViewMaplibre);
+            assertNotNull(view);
+            view.getMapAsync(currentViewMap::set);
+        });
         long deadline = android.os.SystemClock.uptimeMillis() + 30000;
         AtomicBoolean ready = new AtomicBoolean();
         while (!ready.get() && android.os.SystemClock.uptimeMillis() < deadline) {
@@ -83,11 +90,22 @@ public class MapEditingToolsTest {
                 MapDrawable map = (MapDrawable) app.getMap();
                 ready.set(activity.getMapFragment() != null
                         && activity.getMapFragment().getEditLayerOverlay() != null
-                        && map.getMaplibreMap() != null && map.getMaplibreMap().getStyle() != null);
+                        // The shared map can still reference the preceding destroyed Activity.
+                        && map.getMaplibreMapView() == activity.findViewById(R.id.mapViewMaplibre)
+                        && map.getMaplibreMapView() != null && map.getMaplibreMapView().isAttachedToWindow()
+                        && currentViewMap.get() != null && map.getMaplibreMap() == currentViewMap.get()
+                        && map.getMaplibreMap().getStyle() != null);
             });
             if (!ready.get()) Thread.sleep(100);
         }
         assertTrue("MapLibre did not initialize", ready.get());
+        deadline = android.os.SystemClock.uptimeMillis() + 30000;
+        while ((com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending()
+                || com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy())
+                && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(50);
+        assertFalse("Startup migration still owns project operations",
+                com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending()
+                        || com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy());
     }
 
     @After public void tearDown() {
@@ -481,9 +499,20 @@ public class MapEditingToolsTest {
                 com.nextgis.maplib.display.FieldStyleRule rule=new com.nextgis.maplib.display.FieldStyleRule(layer);
                 rule.setKey("typeobj");rule.setStyle("tree",symbol);
                 layer.setRenderer(new com.nextgis.maplib.display.RuleFeatureRenderer(layer,rule,symbol));map.save();
-                activity.getMapFragment().onFinishChooseLayerDialog(MapFragment.EDIT_LAYER,layer,false,false);
-                assertEquals(MapFragment.MODE_NORMAL,mode(activity));
             } catch(Exception error) { throw new AssertionError(error); }
+        });
+        AtomicBoolean sourceReady=new AtomicBoolean();
+        long sourceDeadline=android.os.SystemClock.uptimeMillis()+30000;
+        while(!sourceReady.get() && android.os.SystemClock.uptimeMillis()<sourceDeadline){
+            scenario.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+                sourceReady.set(map.getMaplibreMap().getStyle().getSource(layers.get(0).getPath().toString())
+                        instanceof org.maplibre.android.style.sources.GeoJsonSource);});
+            if(!sourceReady.get())Thread.sleep(40);
+        }
+        assertTrue("A hot-added layer must acquire its current-style source",sourceReady.get());
+        scenario.onActivity(activity->{
+            activity.getMapFragment().onFinishChooseLayerDialog(MapFragment.EDIT_LAYER,layers.get(0),false,false);
+            assertEquals(MapFragment.MODE_NORMAL,mode(activity));
         });
         AtomicBoolean ready=new AtomicBoolean();
         long deadline=android.os.SystemClock.uptimeMillis()+20000;
@@ -601,13 +630,46 @@ public class MapEditingToolsTest {
                 CameraUpdateFactory.newLatLngZoom(new LatLng(-10, -15), 11.5)));
     }
 
-    private void assertCameraAtCreationFix() {
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
-            org.maplibre.android.camera.CameraPosition camera = ((MapDrawable) app.getMap()).getMaplibreMap().getCameraPosition();
-            assertEquals(55, camera.target.getLatitude(), .00001);
-            assertEquals(37, camera.target.getLongitude(), .00001);
-            assertEquals(11.5, camera.zoom, .00001);
-        });
+    private void awaitRecreatedMap() throws Exception {
+        java.util.concurrent.atomic.AtomicReference<org.maplibre.android.maps.MapLibreMap> current=new java.util.concurrent.atomic.AtomicReference<>();
+        scenario.onActivity(activity->((org.maplibre.android.maps.MapView)activity.findViewById(R.id.mapViewMaplibre)).getMapAsync(current::set));
+        AtomicBoolean ready=new AtomicBoolean();long deadline=android.os.SystemClock.uptimeMillis()+30000;
+        do{
+            scenario.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+                ready.set(current.get()!=null && map.getMaplibreMap()==current.get()
+                        && map.getMaplibreMapView()==activity.findViewById(R.id.mapViewMaplibre)
+                        && activity.getMapFragment().getMMapRef().get().getMap()==map
+                        && map.getMaplibreMapView().getForeground()==null
+                        && current.get().getStyle()!=null && current.get().getStyle().getSource("track-line-source")!=null);});
+            if(!ready.get())Thread.sleep(40);
+        }while(!ready.get() && android.os.SystemClock.uptimeMillis()<deadline);
+        assertTrue("The recreated map must apply its own sources before creation",ready.get());
+        java.util.concurrent.CountDownLatch frame=new java.util.concurrent.CountDownLatch(1);
+        org.maplibre.android.maps.MapView.OnDidFinishRenderingFrameListener rendered=(fully,encoding,rendering)->frame.countDown();
+        scenario.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+            map.getMaplibreMapView().addOnDidFinishRenderingFrameListener(rendered);map.getMaplibreMap().triggerRepaint();});
+        try{assertTrue("The recreated camera must render before creation",frame.await(15,java.util.concurrent.TimeUnit.SECONDS));}
+        finally{scenario.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMapView().removeOnDidFinishRenderingFrameListener(rendered));}
+    }
+
+    private void assertCameraAtCreationFix() throws Exception {
+        // Exercise the actual 750 ms legacy redraw which used to restore the
+        // previous centre after a direct native-only camera move.
+        scenario.onActivity(activity->activity.getMapFragment().getMMapRef().get().scheduleInvalidate());
+        Thread.sleep(com.nextgis.maplibui.mapui.MapView.DISPLAY_REDRAW_TIMEOUT+250);
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        java.util.concurrent.atomic.AtomicReference<org.maplibre.android.camera.CameraPosition> last=new java.util.concurrent.atomic.AtomicReference<>();
+        long deadline=android.os.SystemClock.uptimeMillis()+10000;
+        do{
+            InstrumentationRegistry.getInstrumentation().runOnMainSync(()->last.set(((MapDrawable)app.getMap()).getMaplibreMap().getCameraPosition()));
+            org.maplibre.android.camera.CameraPosition camera=last.get();
+            if(Math.abs(camera.target.getLatitude()-55)<.00001 && Math.abs(camera.target.getLongitude()-37)<.00001
+                    && Math.abs(camera.zoom-11.5)<.00001)return;
+            Thread.sleep(40);
+        }while(android.os.SystemClock.uptimeMillis()<deadline);
+        assertEquals(55,last.get().target.getLatitude(),.00001);
+        assertEquals(37,last.get().target.getLongitude(),.00001);
+        assertEquals(11.5,last.get().zoom,.00001);
     }
 
     private void supplyCurrentFix() {
@@ -628,10 +690,19 @@ public class MapEditingToolsTest {
         });
     }
 
-    private void clickCreationAction(int id) {
+    private void clickCreationAction(int id) throws Exception {
         scenario.onActivity(activity -> ((com.getbase.floatingactionbutton.FloatingActionsMenu)
                 activity.findViewById(R.id.multiple_actions)).expand());
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        AtomicBoolean enabled = new AtomicBoolean();
+        long deadline = android.os.SystemClock.uptimeMillis() + 10_000;
+        while (!enabled.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+            scenario.onActivity(activity -> {
+                View action = activity.findViewById(id);
+                enabled.set(action != null && action.isShown() && action.isEnabled());
+            });
+            if (!enabled.get()) Thread.sleep(40);
+        }
         scenario.onActivity(activity -> {
             View action = activity.findViewById(id);
             assertTrue("Creation action disabled: " + id, action.isEnabled());
@@ -679,7 +750,11 @@ public class MapEditingToolsTest {
             android.widget.ListView list = ((androidx.appcompat.app.AlertDialog) dialog.requireDialog()).getListView();
             selected[0] = ((com.nextgis.maplibui.util.FeatureTypeDefaults.Choice) list.getItemAtPosition(0)).state;
             assertEquals(0, layers.get(layers.size() - 1).getCount());
-            if (accept) assertTrue(list.performItemClick(list.getChildAt(0), 0, 0));
+            if (accept) {
+                assertTrue(list.performItemClick(list.getChildAt(0), 0, 0));
+                android.util.Log.i("CreationCameraTrace","after category camera="
+                        +((MapDrawable)app.getMap()).getMaplibreMap().getCameraPosition());
+            }
             else ((androidx.appcompat.app.AlertDialog) dialog.requireDialog()).getButton(android.content.DialogInterface.BUTTON_NEGATIVE).performClick();
         });
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
@@ -706,7 +781,6 @@ public class MapEditingToolsTest {
             assertNotNull(draft); assertEquals(walkId, draft.walkSessionId);
             assertCategory(expected, com.nextgis.maplibui.util.FeatureFormDraftStore.controlStateToBundle(draft));
             if (walkId == null) {
-                assertCameraAtCreationFix();
                 GeoPoint point = (GeoPoint) com.nextgis.maplibui.util.FeatureFormDraftStore.geometryFromSnapshot(draft);
                 GeoPoint expectedPoint = new GeoPoint(37, 55); expectedPoint.setCRS(GeoConstants.CRS_WGS84);
                 assertTrue(expectedPoint.project(GeoConstants.CRS_WEB_MERCATOR));
@@ -728,6 +802,9 @@ public class MapEditingToolsTest {
                 if (!saved.get()) Thread.sleep(40);
             }
             assertTrue("Category form did not finish saving", saved.get());
+            // The form stops the map's SurfaceView. Validate its camera when the
+            // actual map is visible again, after the form's successful handoff.
+            if(walkId==null)assertCameraAtCreationFix();
             VectorLayerUI layer = layers.get(layers.size() - 1); assertEquals(1, layer.getCount());
             try (android.database.Cursor row = layer.query(null, null, null, null, null)) {
                 assertTrue(row.moveToFirst());
@@ -748,6 +825,7 @@ public class MapEditingToolsTest {
         scenario.onActivity(activity -> assertEquals(MapFragment.MODE_NORMAL, mode(activity)));
         clickCreationAction(R.id.add_current_location);
         scenario.recreate();
+        awaitRecreatedMap();
         supplyCurrentFix(); moveCameraAway();
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
@@ -759,6 +837,7 @@ public class MapEditingToolsTest {
     @Test public void cancellingLocationCategoryReleasesPointLockDuringBackgroundWalk() throws Exception {
         scenario.onActivity(activity -> beginWalk(activity, true, Constants.NOT_FOUND));
         addStandardCategoryLayer(GeoConstants.GTPoint);
+        supplyCurrentFix();
         String walkId = com.nextgis.maplibui.util.WalkSessionStore.load(app).id;
         clickCreationAction(R.id.add_current_location);
         assertTrue(com.nextgis.maplibui.util.WalkSessionStore.load(app).isPointActive());
@@ -801,6 +880,7 @@ public class MapEditingToolsTest {
         line.add(new GeoPoint(line.getPoint(0).getX() + 10, line.getPoint(0).getY() + 10));
         assertTrue(com.nextgis.maplibui.util.WalkSessionStore.updateGeometry(app, walk.id, line, 2, true));
         scenario.recreate();
+        awaitRecreatedMap();
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
                 com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(), null, false);

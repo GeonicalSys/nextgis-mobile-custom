@@ -51,6 +51,11 @@ import static org.junit.Assert.*;
 /** Actual NGFP controls, durable draft, SQLite and recreation on an isolated offline emulator. */
 @RunWith(AndroidJUnit4.class)
 public class CascadingFormsTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private static void write(File file,String text) throws Exception {
         Files.write(file.toPath(),text.getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }

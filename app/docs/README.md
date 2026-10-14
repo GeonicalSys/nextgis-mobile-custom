@@ -1,10 +1,50 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 ---
 
 # app — Android-приложение Lisa/Belka
+
+## Общая история треков и проверки обычных стилей
+
+«Мои треки» — общая история установки, одно служебное представление на карте.
+MainApplication импортирует старые источники до открытия map helpers. Switch
+во время записи запрещён. SharedTracksTest проверяет общую историю и native
+отрисовку; VectorStyleRenderingTest использует обычные synthetic SQL/GeoJSON
+слои и исключает configured vector tiles. Related styles добавлен в каталог.
+
+## Немедленная отправка и часы открытого проекта
+
+MainApplication восстанавливает LocalChangesWorker всех downloaded workspaces.
+Отдельный worker отправляет saved edits/outbox без полного sync и без изменения
+его времени. ProjectSyncRunner подтверждает clock только после полного успеха
+owning project со всеми account/children и пустой готовой очередью. LayersFragment
+показывает ProjectSyncState активной карты и явное отсутствие подтверждения;
+не использует старый общий timestamp. См. project-synchronization-user-guide.
+
+Азимут и вынос имеют отдельные layout_azimuth_panel/layout_stakeout_panel.
+Первый содержит расстояние, магнитный азимут, склонение и коррекцию, без стрелки,
+звука или точности GPS; live measurement запускает controller без звука.
+Второй восстанавливает состав исходного выноса b4c860d (2026-08-15): стрелка,
+расстояние, точность, стороны света без компаса, звук и Close. Магнитных чисел и
+строки коррекции в окне выноса нет; compass guidance/пороги сохраняются.
+Обе панели используют адаптивное вписывание и независимые видимые действия.
+
+## GPS после запуска и диагностика восстановления
+
+«GPS в фоне» включён по умолчанию и запускает отдельный location foreground service
+после открытия приложения. Гашение экрана и формы не снимают shared GPS lease;
+через два часа вне приложения lease и тихое уведомление исчезают. Возврат
+возобновляет получение. Выключение опции снимает только lease сервиса: открытые
+экраны приложения, включая формы, продолжают владеть GPS через контроллер.
+Track/Walk/stakeout сохраняют независимые lease.
+Долгое восстановление автоматически попадает в существующую очередь диагностики
+с raw/filtered/GNSS/power snapshot. Сетевая точка между обновлениями остаётся
+видимой с ±accuracy и приблизительным возрастом, сохраняя исходный timestamp.
+Проверки: BackgroundLocationPolicyTest, BackgroundGpsNativeTest и native
+LargeTextLayoutTest для возраста сетевого измерения и настройки местоположения.
+
 
 Завершение перетаскивания слоёв безопасно обрабатывает строку, ушедшую за
 пределы видимой части списка, или обновлённый список. Если анимации не к чему
@@ -242,16 +282,14 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   и упрощённый импорт каждой координаты KML/GPX как отдельной точки одного слоя;
   выбор слоя для нового объекта не скрывает выключенные редактируемые слои, а выбранный
   выключенный слой автоматически становится видимым и сохраняет это состояние;
-- вынос выбранной точки, линии или границы полигона и отдельные измерения
-  «текущее положение → точка»/«точка A → точка B»: виджет показывает стрелку,
-  геодезическое расстояние, числовой магнитный азимут по WMM2025 и переданную
-  Android-точность без имени объекта/источника; магнитный rotation-vector heading
-  сглаживается круговым фильтром, а без компаса стрелка учитывает bearing явно
-  повёрнутой карты; свободные точки/линия являются временным MapLibre-overlay,
-  точки A/B и live-цель корректируются перетаскиванием;
-  виджет показывает эффективное склонение `D + C` и отдельно сохраняемую коррекцию `C`;
-  темп мягкого звука задаётся четырьмя порогами и не блокируется грубой accuracy-заглушкой
-  mock-поставщика; foreground service сохраняет GPS и звук при выключенном экране;
+- вынос выбранной точки, линии или границы полигона показывает собственную
+  стрелку, расстояние, Android-точность, звук и Close. Числовой магнитный азимут
+  и коррекция находятся в отдельной панели измерений «текущее положение → точка»/
+  «точка A → точка B», без звука, стрелки и GPS-точности. Геодезия WGS84 и WMM2025
+  сохраняются; compass heading сглаживается круговым фильтром, без компаса
+  стрелка выноса учитывает поворот карты. A/B и live-цель перетаскиваются;
+  временная линия не записывается в проект. Пороги звука и отдельные GPS lease
+  выноса продолжают работать при выключенном экране;
 - обычный азимут и вынос не требуют Bluetooth-разрешений. При отказе Android
   запустить измерение приложение показывает сообщение, завершает live-режим и
   освобождает GPS, звук и уведомление; после выдачи доступа к местоположению
@@ -684,3 +722,31 @@ callback, provider URI и service ticket до фактического заве�
 пользовательская инструкция: docs/guides/project-synchronization-user-guide.md.
 Перед изменениями читать оба документа. Нельзя заменить изоляцию временным
 переключением глобальной карты или prefs, либо закрыть БД по timeout при живом child.
+
+## Автоматическая приёмка на двух устройствах
+
+`tools/verify-mobile-tests.ps1` разделяет Related на эмуляторе и обязательный
+Full перед публикацией. Opt-in `fieldVerificationChecks=true` собирает только
+отдельную Debug identity «ЛИСА автотесты», собственные provider/account/storage
+и VerificationTestRunner. Static suites допустимы на явно выбранном смартфоне;
+GPS/radio/crash сценарии остаются на эмуляторе. Новый тест автоматически входит
+в required catalog, отсутствие маршрута блокирует runner. Полный receipt
+проверяется Check-Publication по содержимому всех четырёх checkout.
+
+LayerSelectionDialogTest проверяет три строки/геометрии и настоящие touches,
+36 enlarged UI profiles. ProjectLayerSelectionTest проверяет штатное создание
+со snapshot разрешённого проекта 1403; при отсутствии проекта нужно спросить
+пользователя. Команды и ограничения: [автотесты](../../docs/runbooks/automated-tests.md).
+
+Shared track/style native fixtures, MapEditingToolsTest and WalkCheckpointTest
+wait for startup underlay migration to finish before acquiring recording leases.
+TrackPersistenceTest disables sending while synthetic shared points exist, then
+cleans its rows before restoring the preference.
+
+LargeTextLayoutTest awaits the focused input window and a committed frame before
+physical map taps after rotation, retaining actual touch/visible geometry checks.
+MapEditingToolsTest waits for the recreated MapView's own map and sources before
+creation actions, then checks camera coordinates after the form returns to the
+visible map instead of reading a stopped SurfaceView. Geometry and saved SQL values remain checked.
+Creation pans update native and model camera state together; regression checks
+invoke the delayed legacy redraw and preserve the actual GPS centre and fractional zoom.

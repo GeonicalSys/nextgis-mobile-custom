@@ -68,6 +68,21 @@ class StakeoutForegroundServiceTest {
             ComponentName(app, StakeoutForegroundService::class.java), 0)
         assertEquals(ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION, service.foregroundServiceType)
     }
+    @Test fun liveAzimuthHasNoSoundAndPreservesTheStakeoutSoundPreference() {
+        assumeTrue(hasLocationPermission())
+        preferences.edit().putBoolean(StakeoutSettings.KEY_SOUND_ENABLED, true).commit()
+        ActivityScenario.launch(AboutActivity::class.java).use {
+            val controller = controller(app, AtomicInteger())
+            onMain { controller.setForeground(true); controller.start(target(), enableSound = false) }
+            await { serviceIsForeground() }
+            assertTrue(onMain { privateField(controller, "muted") as Boolean })
+            onMain { controller.toggleMuted() }
+            assertTrue(onMain { privateField(controller, "muted") as Boolean })
+            assertTrue(preferences.getBoolean(StakeoutSettings.KEY_SOUND_ENABLED, false))
+            onMain { controller.start(target()) }
+            assertFalse(onMain { privateField(controller, "muted") as Boolean })
+        }
+    }
 
     @Test fun liveGuidanceWithoutBluetoothSurvivesBackgroundAndReleasesGps() {
         assumeTrue(hasLocationPermission())

@@ -30,6 +30,11 @@ import static org.junit.Assert.*;
 /** Real SQLite fault injection; never opens an existing project or connects to NGW. */
 @RunWith(AndroidJUnit4.class)
 public class FeaturePersistenceTest {
+    @org.junit.Before public void requireVerificationWorkspace() {
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     private MapBase previous;
     private TestMap map;
     private NGWVectorLayer layer;

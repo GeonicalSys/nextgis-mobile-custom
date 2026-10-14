@@ -93,6 +93,7 @@ public class MainApplication extends GISApplication
 {
     public static final String LAYER_OSM = "osm";
     public static final String LAYER_TRACKS = "tracks";
+    private com.nextgis.mobile.location.BackgroundLocationController backgroundLocationController;
 
     @Override
     public void onCreate() {
@@ -144,7 +145,18 @@ public class MainApplication extends GISApplication
             HyperLog.i(TAG, "Debug legacy workspace kept in place for underlay migration");
         }
 
+        boolean trackMigrationFailed = false;
+        if (isDefaultApplicationProcess()) {
+            // Read legacy track schemas before opening map helpers can upgrade those databases.
+            try { com.nextgis.maplibui.util.SharedTrackProjects.prepare(this); }
+            catch (java.io.IOException | RuntimeException error) {
+                HyperLog.w(TAG, "Shared track migration deferred; legacy sources retained", error);
+                trackMigrationFailed = true;
+            }
+        }
         super.onCreate();
+        if (trackMigrationFailed) android.widget.Toast.makeText(this,
+                R.string.shared_tracks_migration_failed, android.widget.Toast.LENGTH_LONG).show();
 
         final String appVersionLog = "NextGIS Mobile versionName=" + BuildConfig.VERSION_NAME
                 + " versionCode=" + BuildConfig.VERSION_CODE;
@@ -157,7 +169,10 @@ public class MainApplication extends GISApplication
         NGWUtil.UUID = TrackerService.getUid(this);
 
         if (isDefaultApplicationProcess()) {
+            backgroundLocationController = new com.nextgis.mobile.location.BackgroundLocationController(this);
+            backgroundLocationController.start();
             com.nextgis.maplibui.mapui.TrackWorker.scheduleAll(this);
+            com.nextgis.maplibui.mapui.LocalChangesWorker.scheduleAll(this);
             if (LegacyUnderlayMigrationContract.shouldScheduleSharedCatalogMigration(
                     deferLegacyDebugWorkspace)) {
                 com.nextgis.maplibui.util.SharedUnderlayProjects.scheduleMigration(this);
@@ -306,9 +321,24 @@ public class MainApplication extends GISApplication
             TrackLayerUI trackLayer =
                     new TrackLayerUI(getApplicationContext(), mMap.createLayerStorage(LAYER_TRACKS));
             trackLayer.setName(trackLayerName);
-            trackLayer.setVisible(true);
+            trackLayer.setVisible(trackLayer.isVisible());
             mMap.addLayer(trackLayer);
             mapChanged = true;
+        } else {
+            // Every project has one view of the same store; remove duplicate views, not their files.
+            ILayer sharedTracks = allTracks.get(0);
+            for (int i = 1; i < allTracks.size(); i++) {
+                ILayer duplicate = allTracks.get(i);
+                if (duplicate.getParent() instanceof LayerGroup) {
+                    ((LayerGroup) duplicate.getParent()).removeLayer(duplicate);
+                    mapChanged = true;
+                }
+            }
+            if (sharedTracks.getParent() != mMap && sharedTracks.getParent() instanceof LayerGroup) {
+                ((LayerGroup) sharedTracks.getParent()).removeLayer(sharedTracks);
+                mMap.addLayer(sharedTracks);
+                mapChanged = true;
+            }
         }
 
         List<ILayer> tracks = new ArrayList<>();

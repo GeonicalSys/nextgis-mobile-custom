@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-13
+last_verified: 2026-10-15
 related_code:
   - app/build.gradle
   - app/src/main
@@ -13,6 +13,32 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Быстрая доставка и время полного проекта
+
+В fork сохранённые правки NGW отправляются отдельным LocalChangesWorker сразу
+после commit при доступной сети, независимо от расписания полного account sync.
+Offline/HTTP ошибки сохраняют очередь, TEMP/NOT_SYNC ждут Save. Время списка
+слоёв принадлежит открытому проекту и подтверждается только полной успешной
+очередью этого проекта; чужие accounts и быстрые local/track uploads его не пишут.
+Это consumer-only изменение, без нового NGW/Collector wire format.
+
+## Автоматический background GPS и удержание Network — 2026-10-14
+
+Форк запускает отдельный не записывающий location foreground service с открытия
+приложения. Настройка `background_gps_enabled` default true; таймер — два часа вне
+приложения, независимый от Track/Walk/stakeout. Последняя Network-точка сохраняется
+с timestamp, ±accuracy и возрастом, не превращаясь в свежий recording fix.
+Долгое восстановление автоматически даёт bounded warning snapshot GNSS/raw/filter/
+power в существующую диагностическую очередь. Официальный app master
+`04d57c9fd843db6745c170147d6a2863da807352`, maplib
+`fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4`, maplibui
+`29390d0331b9ef7cebcfadbc59d084c4de1e326c` проверены через GitHub API;
+новые app controller/service, shared background lease и recovery policy являются
+изменениями форка. App закрепляет fetched Merge Commit maplib #52
+`527291e0c426c8f32c06813cd799c81d87c6e542` и maplibui #37
+`ac19458c3fffa8d99fc820b4b6a729ae33b48856`. Версии не меняются.
+
+
 Форк добавляет MapRuntimeDiagnostics: независимое наблюдение синхронных touch
 queries, bounded atomic snapshot для delayed AppExitInfo, этапы/нагрузка локальных
 тайлов и точные queue_full/heap_headroom headers. Sync enqueue передаёт исходную
@@ -21,8 +47,9 @@ GitHub API 2026-10-13: official maplib
 `fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4` и official app
 `04d57c9fd843db6745c170147d6a2863da807352`
 не содержат MapRuntimeDiagnostics и SyncRecoveryJournal соответственно.
-App закрепляет fetched Merge Commit maplib #51
-`28a4300ae308c6f531c9b8073382f09c1d6ad052`, включающий #50
+App закрепляет fetched Merge Commit maplib #52
+`527291e0c426c8f32c06813cd799c81d87c6e542`, включающий #51
+`28a4300ae308c6f531c9b8073382f09c1d6ad052` и #50
 `6f398acb59d98fdb5a858754404646c3dfe73f4f`. Диагностическое дерево равно
 проверенному `f6735d2`; production VERSION_NAME — `3.1.2.29`.
 Lisa/Belka Release — `3.1.2.29` / `223`. Debug остаётся `3.1.2.23` / `218`.
@@ -36,7 +63,8 @@ GitHub API 2026-10-13: official app
 `04d57c9fd843db6745c170147d6a2863da807352`, maplibui
 `29390d0331b9ef7cebcfadbc59d084c4de1e326c`;
 официальная row_layer.xml сохраняет фиксированную listPreferredItemHeight,
-maxLines=2 и ellipsize=end. App закрепляет fetched Merge Commit maplibui #36
+maxLines=2 и ellipsize=end. App закрепляет fetched Merge Commit maplibui #37
+`ac19458c3fffa8d99fc820b4b6a729ae33b48856`, включающий #36
 `d5313944b9ca776819cfc3a28f99e5a691fe4a09`; дерево равно проверенному `5bab1d9f`.
 Контракт форка:
 [крупный интерфейс](../architecture/ui-accessibility.md).
@@ -508,7 +536,7 @@ rotate распознаются параллельно с порогом пов�
 **Связь с выносом.** Компасный режим стрелки остаётся независимым от камеры и
 сравнивает магнитный азимут с магнитным heading телефона. Если компаса нет,
 экранная стрелка вычитает bearing карты из истинного курса, поэтому не врёт
-после разрешённого поворота; числовой магнитный азимут остаётся доступен.
+после разрешённого поворота; числовой магнитный азимут доступен в отдельном измерении.
 
 ### Локальный GeoJSON с распространёнными именами WGS 84
 
@@ -597,11 +625,19 @@ fallback. Успешное удаление не пытается открыть
 слоями и историей треков; уже выбранный корректный проект при этом не
 переключается.
 
-Каждый проект имеет собственную историю треков. Список, отображение на карте,
-экспорт и новая запись сразу переключаются на базу выбранного проекта без
-перезапуска приложения. Перейти в другой проект во время записи трека нельзя:
-сначала пользователь завершает текущий трек, поэтому один маршрут не может
-случайно разделиться между двумя проектами.
+Все проекты установки используют одну историю треков: список, карта, GPX,
+цвет/видимость и отправка читают общую базу. Старые проектные истории и очереди
+переносятся с сохранением исходников; удаление проекта сохраняет треки. Переключение
+во время записи остаётся запрещённым. Проверки стилей обычных векторов используют
+synthetic SQL/GeoJSON и native pixels; configured local-vector-tiles исключены.
+Регрессия GPS-создания синхронизирует native камеру с сохранённой моделью:
+750 ms legacy redraw больше не возвращает прежний центр после формы/пересоздания.
+
+14 октября official maplib проверен GitHub API на master
+[`fcddbd2`](https://github.com/nextgis/android_maplib/commit/fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4):
+TrackLayer читает mMap.getDatabase; application-owned shared store там отсутствует.
+Канонические контракты: [треки](../architecture/shared-tracks.md),
+[стили и подписи](../architecture/classic-style-verification.md).
 
 Перед началом приложение убеждается, что сервер отдал описание проекта целиком.
 Если один из ресурсов не прочитан, импорт отменяется, а не создаёт внешне
@@ -922,7 +958,9 @@ per-feature props и data-driven `text-opacity` (разные категории
 (zoom-stops, scale-with-zoom, opacity подписей, clamp SymbolLayer) и merge для
 type-default полей категории (зум подписей, stops, флаги scale, opacity=255,
 шаблон/поле, иконка, dash array и т.п.). Кривая zoom-stops на слое одна
-(позиции stops не data-driven); флаг scale per-feature с default из прочих.
+(ordinary GeoJSON категории могут иметь свои кривые: общий top-level interpolate
+с объединением breakpoints выбирает per-feature multiplier); explicit scale=false
+и explicit cleared curve сохраняются. Configured tile renderer не расширяется.
 Сопоставление значений можно делать без учёта регистра (`key_ignore_case`).
 При рендеринге расширенные свойства (включая `labelminzoom`/`labelmaxzoom`)
 записываются в GeoJSON feature props и участвуют в per-feature стилизации
@@ -1229,7 +1267,7 @@ pipe перестал отдавать байты, приложение закр
 ### Магнитный азимут, расстояние и вынос координат
 
 **Что это.** Для выбранной точки, линии или полигона запускается foreground-режим
-«Слежение». Он показывает магнитный азимут и расстояние до ближайшей точки объекта
+«Слежение». Он показывает стрелку, точность GPS и расстояние до ближайшей точки объекта
 и подаёт мягкие звуковые сигналы с возрастающим темпом. Для полигона целью является
 ближайшая внешняя или внутренняя граница, в том числе при нахождении внутри. На
 карте также есть самостоятельный инструмент для измерения от текущего положения
@@ -1244,10 +1282,11 @@ pipe перестал отдавать байты, приложение закр
 нажимает «Слежение» либо открывает общую кнопку «Измерения» и выбирает
 «Азимут от местоположения»/«Азимут между точками», затем указывает одну/две точки.
 В том же меню доступна «Линейка»; отдельные кнопки объединены, режим выбирается
-одним нажатием в меню. Настройка линейки скрывает только её пункт, сохраняя азимут. Виджет внизу карты содержит стрелку, расстояние, числовой магнитный
-азимут, эффективное склонение `D + C`, отдельную сохраняемую коррекцию `C`, а для live-режимов — переданную Android-точность,
-временное отключение звука и завершение; название объекта и provider не
-дублируются. Пороги настраиваются в разделе местоположения, по умолчанию `5 / 1 / 0,5 / 0,1 м`.
+одним нажатием в меню. Настройка линейки скрывает только её пункт, сохраняя азимут. Вынос имеет отдельную панель со стрелкой, расстоянием,
+Android-точностью, звуком и Close, без числового магнитного азимута. Измерение
+имеет собственную панель с расстоянием, магнитным азимутом, D+C и коррекцией C;
+стрелки, звука и GPS-точности в ней нет. Live-измерение запускает controller
+без звука, сохраняя предпочтение обычного выноса. Пороги настраиваются в разделе местоположения, по умолчанию `5 / 1 / 0,5 / 0,1 м`.
 Звуковые зоны выбираются по расстоянию и не глушатся грубой accuracy-заглушкой mock-поставщика;
 финальный сигнал требует два свежих GPS/mock-fix внутри допуска. Network-fix не включает точные
 звуковые зоны. Истинный начальный курс считается на WGS84, затем восточное
@@ -1855,3 +1894,30 @@ dispatch/queue/track packets закрывают потерю подключен�
 network guards. Повторная сверка official app/maplibui/maplib 2026-10-10
 подтвердила прежние upstream SHA, приведённые выше; это фиксация доставки,
 без новых runtime зависимостей или повышения версии.
+
+## Исправление chooser и автоматическая приёмка
+
+FittedDialogs — fork UI fitting; он теперь распознаёт scrolling adapters и в
+custom `setView`, сохраняя native bounded viewport. Это исправление fork
+регрессии, без изменения editability или NGW wire contract. Сверка official
+maplibui master: `29390d0331b9ef7cebcfadbc59d084c4de1e326c`.
+
+Fork добавляет isolated opt-in verification APK, phone/emulator routing,
+полную публикационную приёмку с source receipt и проверку разрешённого проекта
+1403 с запросом замены при отсутствии. Обычные release identities/версии и
+публичные серверные протоколы сохраняются.
+
+Phone acceptance дополнительно выявила fork script-client гонку повторного
+bind на Android 16. API 29+ теперь дают каждому QuickJS выполнению уникальный
+isolated service instance; прежняя sandbox/host/wire isolation сохраняется.
+Seven native script cases прошли на Samsung после исправления.
+
+Fork test fixtures ожидают attached MapView с готовым текущим MapLibre instance,
+явный synthetic fix и enabled creation action. Stateful map/sync cases получают
+отдельный процесс и чистую verification базу; diagnostic restart chain сохраняет
+данные намеренно. Legacy CI повторно выдаёт background location permission после
+переустановки и denied сценария, а map/layers проверяет тем же runner. Эти
+изменения стабилизируют проверку Android lifecycle и не меняют production GPS
+permissions или поведение карты. Полный phone/emulator прогон подтвердил все
+177 native cases и 36 chooser UI profiles; доказательства и границы проверки
+приведены в [истории приёмки](../history/2026-10-14-layer-chooser-tests.md).

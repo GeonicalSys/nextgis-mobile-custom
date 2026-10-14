@@ -42,6 +42,10 @@ def productionVersionCode = 223
 def productionVersionName = '3.1.2.29'
 def debugVersionCode = 218
 def debugVersionName = '3.1.2.23'
+def fieldVerificationChecks = providers.gradleProperty('fieldVerificationChecks')
+        .getOrElse('false').toBoolean()
+def debugProvider = fieldVerificationChecks ? 'com.nextgis.mobile.verification.provider.debug' : 'com.nextgis.mobile.provider.debug'
+def debugAccount = fieldVerificationChecks ? 'com.nextgis.account.verification.debug' : 'com.nextgis.account.debug'
 
 // Error reports must identify the source even when a test APK keeps the same version number.
 def sourceRevision = providers.exec {
@@ -89,7 +93,10 @@ android {
     // DO NOT PUBLIC the file 'sentry.properties' !!!
     File sentryPropFile = rootProject.file('sentry.properties')
     String sentryDsn = ""
-    if (sentryPropFile.exists()) {
+    if (fieldVerificationChecks) {
+        // The isolated verification APK never embeds the production diagnostics endpoint.
+        sentryDsn = ''
+    } else if (sentryPropFile.exists()) {
         Properties sentryProp = new Properties()
         sentryProp.load(sentryPropFile.newDataInputStream())
         sentryDsn = sentryProp.get("sentry.dsn")
@@ -108,7 +115,7 @@ android {
         compileSdk 36
         targetSdkVersion 36
         // The opt-in delivery runner uses a synthetic DSN and rejects physical/non-Debug devices.
-        testInstrumentationRunner providers.gradleProperty('diagnosticDeliveryChecks')
+        testInstrumentationRunner fieldVerificationChecks ? 'com.nextgis.mobile.util.VerificationTestRunner' : providers.gradleProperty('diagnosticDeliveryChecks')
                 .getOrElse('false').toBoolean()
                 ? 'com.nextgis.mobile.util.DiagnosticsTestRunner'
                 : 'androidx.test.runner.AndroidJUnitRunner'
@@ -117,6 +124,7 @@ android {
         versionName productionVersionName
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
         buildConfigField "String", "SOURCE_REVISION", "\"${sourceRevision}\""
+        buildConfigField 'boolean', 'FIELD_VERIFICATION', fieldVerificationChecks.toString()
 
         def props = new Properties()
         file("../local.properties").withInputStream { props.load(it) }
@@ -186,17 +194,17 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            applicationIdSuffix '.debug'
+            applicationIdSuffix fieldVerificationChecks ? '.verification.debug' : '.debug'
             manifestPlaceholders = [updateFlavor: "debug"]
-            resValue 'string', 'APP_NAME', 'ЛИСА тест'
-            resValue 'string', 'app_name', 'ЛИСА тест'
+            resValue 'string', 'APP_NAME', fieldVerificationChecks ? 'ЛИСА автотесты' : 'ЛИСА тест'
+            resValue 'string', 'app_name', fieldVerificationChecks ? 'ЛИСА автотесты' : 'ЛИСА тест'
             resValue 'string', 'SENTRY_DSN', sentryDsn
-            resValue 'string', 'provider_auth', 'com.nextgis.mobile.provider.debug'
-            resValue 'string', 'nextgis_mobile_accounts_auth', 'com.nextgis.mobile.account.debug'
-            resValue 'string', 'nextgis_accounts_auth', 'com.nextgis.account.debug'
-            resValue 'string', 'nextgis_accounts_auth_type', 'com.nextgis.account.debug'
-            buildConfigField "String", "providerAuth", '"com.nextgis.mobile.provider.debug"'
-            buildConfigField "String", "nextgismobile_accounts_auth", '"com.nextgis.account.debug"'
+            resValue 'string', 'provider_auth', debugProvider
+            resValue 'string', 'nextgis_mobile_accounts_auth', fieldVerificationChecks ? 'com.nextgis.mobile.verification.account.debug' : 'com.nextgis.mobile.account.debug'
+            resValue 'string', 'nextgis_accounts_auth', debugAccount
+            resValue 'string', 'nextgis_accounts_auth_type', debugAccount
+            buildConfigField "String", "providerAuth", "\"${debugProvider}\""
+            buildConfigField "String", "nextgismobile_accounts_auth", "\"${debugAccount}\""
             debuggable true
         }
     }
@@ -220,6 +228,10 @@ android {
 
 // There is one internal build: lisaDebug. Belka is a production brand only.
 androidComponents {
+    beforeVariants(selector().withBuildType("release")) { variantBuilder ->
+        // This opt-in identity is for tests only; it must never produce a release artifact.
+        if (fieldVerificationChecks) variantBuilder.enable = false
+    }
     beforeVariants(selector().withBuildType("debug")) { variantBuilder ->
         if (variantBuilder.productFlavors.any { it.second == "belka" }) {
             variantBuilder.enable = false

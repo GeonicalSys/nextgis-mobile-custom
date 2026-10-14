@@ -152,7 +152,7 @@ public class TrackPowerWarningTest {
                 await("Map ready", () -> app.getMap() != null);
                 MapContentProviderHelper map = (MapContentProviderHelper) app.getMap();
                 layer = (TrackLayer) MapContentProviderHelper.getVectorLayerByPath(map, TrackLayer.TABLE_TRACKS);
-                SQLiteDatabase db = map.getDatabase(false);
+                SQLiteDatabase db = layer.getDatabase(false);
                 scenario.onActivity(TrackerService::start_stop_tracking_GetIconWithTitle);
                 await("Recording started", TrackerService::isTrackRecordingActive);
                 trackUri = Uri.parse(temp.getString("track_uri", ""));

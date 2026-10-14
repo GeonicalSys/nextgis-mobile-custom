@@ -70,9 +70,9 @@ public class TrackerStopRecoveryTest {
             MapContentProviderHelper map = (MapContentProviderHelper) app.getMap();
             layer = (TrackLayer) MapContentProviderHelper.getVectorLayerByPath(map, TrackLayer.TABLE_TRACKS);
             assertNotNull(layer);
-            db = map.getDatabase(false);
+            db = layer.getDatabase(false);
             assertEquals(0, DatabaseUtils.longForQuery(db, "SELECT count(*) FROM tracks WHERE end IS NULL OR end = ''", null));
-            PendingTrackPoints queue = new PendingTrackPoints(map.getPath());
+            PendingTrackPoints queue = new PendingTrackPoints(com.nextgis.maplib.map.SharedTrackStore.get(app).getDirectory());
             assertEquals(0, queue.size());
             Uri tracks = Uri.parse("content://" + app.getAuthority() + "/tracks");
             ContentValues track = new ContentValues();
@@ -94,7 +94,7 @@ public class TrackerStopRecoveryTest {
             db.execSQL("CREATE TRIGGER " + trigger + " BEFORE INSERT ON trackpoints WHEN NEW.session = "
                     + id + " BEGIN SELECT RAISE(ABORT, 'injected full storage'); END");
             assertTrue(temporary.edit().putString("track_uri", trackUri.toString())
-                    .putString("track_map", map.getPath().getAbsolutePath()).commit());
+                    .putString("track_map", com.nextgis.maplib.map.SharedTrackStore.get(app).getDirectory().getAbsolutePath()).commit());
             TrackerService.setTrackRecordingEnabled(app, true);
             scenario.onActivity(TrackerService::ensureRecordingRunningIfEnabled);
             AtomicBoolean failed = new AtomicBoolean();
@@ -103,13 +103,13 @@ public class TrackerStopRecoveryTest {
             AtomicBoolean stopping = new AtomicBoolean();
             await(stopping, 15000, () -> stopping.set(temporary.contains("pending_stop")));
             assertTrue(TrackerService.isTrackRecordingEnabled(app));
-            assertEquals(2, new PendingTrackPoints(map.getPath()).size());
+            assertEquals(2, new PendingTrackPoints(com.nextgis.maplib.map.SharedTrackStore.get(app).getDirectory()).size());
             assertEquals(0, DatabaseUtils.longForQuery(db, "SELECT count(*) FROM trackpoints WHERE session = ?", new String[] { Long.toString(id) }));
             assertEquals(1, DatabaseUtils.longForQuery(db, "SELECT count(*) FROM tracks WHERE _id = ? AND end IS NULL", new String[] { Long.toString(id) }));
             db.execSQL("DROP TRIGGER " + trigger);
             AtomicBoolean stopped = new AtomicBoolean();
             await(stopped, 20000, () -> stopped.set(TrackerService.getRecordingState(app) == TrackerService.RecordingState.STOPPED));
-            assertEquals(0, new PendingTrackPoints(map.getPath()).size());
+            assertEquals(0, new PendingTrackPoints(com.nextgis.maplib.map.SharedTrackStore.get(app).getDirectory()).size());
             assertFalse(temporary.contains("pending_stop"));
             assertFalse(temporary.contains("track_uri"));
             try (Cursor points = db.rawQuery("SELECT time, segment FROM trackpoints WHERE session = ? ORDER BY rowid", new String[] { Long.toString(id) })) {

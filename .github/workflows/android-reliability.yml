@@ -69,11 +69,14 @@ jobs:
             adb shell appops set com.nextgis.mobile.debug MANAGE_EXTERNAL_STORAGE allow
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
+            adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_BACKGROUND_LOCATION
             adb shell pm grant com.nextgis.mobile.debug android.permission.GET_ACCOUNTS
             adb shell pm grant com.nextgis.mobile.debug android.permission.POST_NOTIFICATIONS
             adb shell cmd location set-location-enabled true
             adb shell svc wifi disable
-            ./gradlew -PciReliabilityChecks=true :app:connectedLisaDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.nextgis.mobile.reliability -Pandroid.testInstrumentationRunnerArguments.notClass=com.nextgis.mobile.reliability.TrackUploadTest --console=plain
+            # The physical-project case belongs to local Full. Map/chooser checks use the
+            # verification runner below, including clean per-method map fixtures and UI profiles.
+            ./gradlew -PciReliabilityChecks=true :app:connectedLisaDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.nextgis.mobile.reliability -Pandroid.testInstrumentationRunnerArguments.notClass=com.nextgis.mobile.reliability.TrackUploadTest,com.nextgis.mobile.reliability.ProjectLayerSelectionTest,com.nextgis.mobile.reliability.MapEditingToolsTest,com.nextgis.mobile.reliability.SharedTracksTest,com.nextgis.mobile.reliability.LayerSelectionDialogTest --console=plain
             # UTP removes both packages. Reinstall so recorder fixtures cannot leave a live sender
             # competing with the loopback hub's deterministic packet responses.
             adb install -r "$LISA_DEBUG_APK"
@@ -83,9 +86,10 @@ jobs:
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
             adb shell pm grant com.nextgis.mobile.debug android.permission.GET_ACCOUNTS
+            adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_BACKGROUND_LOCATION
             adb shell am instrument -w -r -e class com.nextgis.mobile.reliability.TrackUploadTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner > build/track-delivery.log
             cat build/track-delivery.log
-            python3 -c "from pathlib import Path; text = Path('build/track-delivery.log').read_text(); assert 'OK (8 tests)' in text and 'FAILURES!!!' not in text and 'Process crashed' not in text, text"
+            python3 -c "from pathlib import Path; text = Path('build/track-delivery.log').read_text(); assert 'OK (9 tests)' in text and 'FAILURES!!!' not in text and 'Process crashed' not in text, text"
             adb shell am force-stop com.nextgis.mobile.debug
             adb shell pm revoke com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
             adb shell pm revoke com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
@@ -94,6 +98,7 @@ jobs:
             python3 -c "from pathlib import Path; text = Path('build/stakeout-location-denied.log').read_text(); assert 'OK (1 test)' in text and 'FAILURES!!!' not in text and 'Process crashed' not in text, text"
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_COARSE_LOCATION
             adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_FINE_LOCATION
+            adb shell pm grant com.nextgis.mobile.debug android.permission.ACCESS_BACKGROUND_LOCATION
             # Check real windows with the keyboard closed, including Close and dialog actions.
             adb shell settings put system accelerometer_rotation 0
             adb shell settings put system font_scale 2.0
@@ -124,6 +129,7 @@ jobs:
             adb shell settings put system font_scale 1.0
             adb shell wm density reset
             adb shell settings put system user_rotation 0
+            python3 tools/run_mobile_tests.py --scope related --area map --area layers --area tracks --area styles --output build/ci-verification
       - name: Store test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -139,4 +145,5 @@ jobs:
             build/track-delivery.log
             build/large-text-real-*.log
             build/large-text-qa.tar.gz
+            build/ci-verification
           if-no-files-found: ignore

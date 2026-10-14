@@ -1,5 +1,12 @@
 schema_version: 1
 preferences:
+  background_gps_enabled:
+    owner: app
+    type: boolean
+    default: true
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_location.xml
+    purpose: Continue automatic GPS outside the app for up to two hours; foreground screens and forms keep GPS with this disabled, and explicit recording/guidance owners remain independent.
   show_sync:
     owner: app
     type: boolean
@@ -31,11 +38,16 @@ preferences:
     default: false
     source: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
     purpose: Suppress only the legacy Doze exemption prompt; never suppress a current Battery Saver restriction or launch/resume background-location warning.
+  shared-track-layer:
+    owner: maplib
+    type: shared_preferences_file
+    source: maplib/src/main/java/com/nextgis/maplib/map/SharedTrackStore.java
+    purpose: One persistent visible flag for the My Tracks layer in every project; does not change recording intent.
   tracks_temp:
     owner: maplibui
     type: shared_preferences_file
     source: maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
-    purpose: Owning track_uri, track_map and pending_stop retain Stop intent until the ordered queue and session closure commit.
+    purpose: Global track_uri, shared-store track_map and pending_stop retain Stop intent until the ordered queue and session closure commit.
   location_source:
     owner: app
     type: string
@@ -231,7 +243,7 @@ preferences:
     type: string_decimal_degrees
     default: "0"
     source: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java
-    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат) and the live/static azimuth widget
+    ui: app/src/main/res/xml/preferences_location.xml (Местоположение → Вынос координат) and the independent live/static azimuth panel; no correction row in stakeout guidance
     purpose: East-positive offset added to WMM2025 declination while converting true bearing to magnetic azimuth; persists until the user changes or resets it to 0; the widget declination line shows D+C
   check_updates:
     owner: app
@@ -382,6 +394,11 @@ variant_resources:
     source: app/build.gradle
     purpose: Variant-specific SyncAdapter account type; must equal nextgis_accounts_auth and MainApplication runtime type
 build_inputs:
+  fieldVerificationChecks:
+    owner: app
+    source: app/build.gradle
+    optional: true
+    purpose: False-by-default test-only Debug identity with separate package/provider/account/storage, empty production DSN and no Release variants; enables isolated phone and emulator verification.
   diagnosticDeliveryChecks:
     owner: app
     source: app/build.gradle
@@ -434,12 +451,12 @@ storage:
     purpose: Cache authoritative feature_layer.fields[].required for offline form validation; absent means false, changes refresh metadata without SQLite rebuild.
   feature-save-journal:
     owner: maplib
-    location_name: ngm_feature_save_journal in owning layers.db
+    location_name: ngm_feature_save_journal in owning vector DB or application track DB
     source: maplib/src/main/java/com/nextgis/maplib/util/FeatureSaveJournal.java
     purpose: Local layer-operation UUID to row-id mapping reconciles lost feature/attachment insert replies; no NGW schema change.
   pending-track-points:
     owner: maplib
-    location_name: pending-track-points directory inside owning map workspace
+    location_name: private files/shared-tracks/pending-track-points directory
     source: maplib/src/main/java/com/nextgis/maplib/util/PendingTrackPoints.java
     purpose: Capacity2048 ordered UUID AtomicFile JSON queue; corrupt entries retained; acknowledged only after idempotent SQLite insert.
   updater-pending-install:

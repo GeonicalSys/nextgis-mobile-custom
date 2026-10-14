@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -9,6 +9,8 @@ related_code:
   - maplib/build.gradle
   - maplibui/build.gradle
   - tools/verify-apk-version-matrix.ps1
+  - tools/mobile-test-plan.json
+  - .github/workflows/android-reliability.yml
 ---
 
 # Матрица сборки и версий
@@ -40,11 +42,11 @@ TrackUploadTest проверяет отметку строки «Мои трек
 индикатора со всеми строками слоёв. Он не предполагает, что другой тест не
 оставил неотправленные изменения векторного слоя: выключение отправки треков
 не должно скрывать такие изменения. Это исправление изоляции native fixture.
-В CI остальные 123 reliability-теста выполняются через connected tests, затем
-после удаления UTP и новой установки Debug/test APK все восемь TrackUploadTest
+В CI остальные reliability-тесты выполняются через connected tests, затем
+после удаления UTP и новой установки Debug/test APK все девять TrackUploadTest
 запускаются отдельным instrumentation pass. Остаточный отправитель из recorder
 fixtures иначе конкурирует с тестом за loopback HTTP и вызывает долгие таймауты.
-Проверка требует `OK (8 tests)` и сохраняет `build/track-delivery.log`; ни одна
+Проверка требует `OK (9 tests)` и сохраняет `build/track-delivery.log`; ни одна
 проверка отправки не пропускается. Перед отдельной проверкой отказа GPS процесс
 Debug останавливается. Граница изоляции действует только в CI на его эмуляторе.
 При подключении EmulatorNetworkFixture ждёт именно активный connected Wi-Fi.
@@ -55,6 +57,19 @@ Debug останавливается. Граница изоляции дейст
 тест изменит его обратно. Принятая shell-команда ещё не означает готовность radios.
 `BuildConfig.SOURCE_REVISION` фиксирует Git HEAD и dirty marker для багрепортов;
 изменение этого поля не повышает versionName/versionCode.
+
+Общая база треков и матрица обычных стилей проверяются через isolated verification
+APK. Stateful SharedTracksTest и VectorStyleRenderingTest очищают verification
+данные между методами; broad connected reliability pass исключает SharedTracksTest,
+а затем штатный runner выполняет области map/layers/tracks/styles с дедупликацией.
+Styles проверяют собственные SQL/GeoJSON слои и фактические пиксели; настроенные
+в Web GIS vector-tile слои явно исключены. Текущий Full каталог содержит 194
+обязательных native cases. Предыдущий Full не подтверждает это новое содержимое;
+после merge библиотек и обновления root pins перед публикацией нужен новый Full.
+В этой задаче локально прошли 779 core unit tests и обе release validation builds,
+без изменения версий и установки production APK. Контракты:
+[общие треки](../architecture/shared-tracks.md),
+[обычные стили](../architecture/classic-style-verification.md).
 
 Текущий production выпуск — `3.1.2.29` / `223`, Debug — `3.1.2.23` / `218`.
 Публикация обеих release: maplib #49 (Merge Commit) → fetched pin в app #58 →
@@ -213,3 +228,31 @@ CI устанавливает эти pinned SDK packages. Сборка четы�
 ELF alignment. AGP/Kotlin/SDK/версии APK не изменены. Debug/native и обе release
 source sets проверяются до merge; APK release matrix выполняется после закрытия
 библиотечных PR. [Результаты](project-scripts-verification.md).
+
+## Отдельный opt-in verification APK
+
+`-PfieldVerificationChecks=true` создаёт только Debug application
+`com.nextgis.mobile.verification.debug`, provider
+`com.nextgis.mobile.verification.provider.debug`, account type
+`com.nextgis.account.verification.debug` и account token resource
+`com.nextgis.mobile.verification.account.debug`. Имя — «ЛИСА автотесты».
+Release variants для этого флага отключены; production DSN пуст.
+Version override обычного Debug и production Lisa/Belka не меняется.
+
+Перед публикацией [Full](../runbooks/automated-tests.md) собирает обычную version
+matrix, все core units, документацию и отдельные verification APK. Последующий
+Check-Publication связывает результат с текущим содержимым исходников.
+Незакрытая зависимость Draft PR по-прежнему блокирует выпуск.
+
+Android reliability CI отдельно вызывает Related для map/layers на verification
+APK. Stateful map cases идут по одному методу, chooser получает 36 UI profiles.
+ProjectLayerSelectionTest требует разрешённый проект физического телефона и
+выполняется только local Full; emulator-only CI его не запрашивает.
+Обычные legacy UI/track этапы и их identities сохраняются.
+
+Legacy UI этап выдаёт ACCESS_BACKGROUND_LOCATION после fine/coarse grants:
+иначе новый GPS owner вызывает системное предупреждение, закрывающее touch
+targets теста. Устройства пользователей этот CI шаг не затрагивает.
+
+Background grant в CI повторяется после UTP reinstall и после deny-location
+сценария, поскольку удаление APK/отзыв fine-coarse снимает и этот grant.

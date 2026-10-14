@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,40 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+## Матрица обычных стилей
+
+[Native матрица](classic-style-verification.md) проверяет обычный GeoJSON renderer
+и подписи после rule JSON reload. Configured local-vector-tiles исключены по
+render-mode/source, их поддержка не расширяется. Explicit optional label settings
+сохраняются и наследуют Other только при отсутствии ключа.
+
+При создании точки/геометрии по GPS центр меняется через MapDrawable.setZoomAndCenter:
+native камера и zoomSaved/centerSaved обновляются вместе с сохранением дробного
+зума. Прямой native moveCamera оставлял старый центр в модели, и отложенная
+750 ms MapView.invalidate возвращала его после пересоздания экрана/формы.
+MapEditingToolsTest вызывает эту перерисовку и проверяет видимую камеру после формы.
+
+## Отдельные панели выноса и измерения
+
+MapFragment переключает layout_stakeout_panel и layout_azimuth_panel независимо.
+GPS callback обновляет только панель текущего режима. Вынос сохраняет compass/
+map-bearing стрелку, расстояние, точность и звук. В обоих измерениях отсутствуют
+стрелка, звук и GPS accuracy; временные MapLibre точки/линия и их перетаскивание
+сохраняются. FittedPanelLayout удерживает Close и коррекцию измерения в usable bounds.
+
+## Сетевой курсор между обновлениями
+
+Карта и status panel используют display snapshot общего `GpsEventSource`.
+Последняя отображённая Wi-Fi/сотовая позиция не очищает `user-location-source`
+между редкими callbacks: исходный accuracy circle остаётся вокруг курсора,
+координаты — в панели, вместе с ±accuracy и возрастом измерения. Более новый
+свежий GPS заменяет её. Скрытый Network-кэш старше последнего GPS не возвращается
+при потере GPS. Снятие map listener при форме или сне не снимает app/service lease.
+Этот контракт не меняет layer order или tool hit testing. Для записи и создания
+геометрии сохранённая старая Network-точка не является свежим location snapshot.
+Подробности и проверки: [GPS pipeline](location-pipeline.md#автоматическое-получение-и-сетевое-положение).
+
 
 Touch queries marker/vertex/azimuth проходят через MapRuntimeDiagnostics:
 перед синхронным SDK вызовом записывается trace, независимый watcher фиксирует
@@ -98,8 +132,8 @@ merge library dependencies и проверки их точного включе�
 
 Incremental track reload (`reloadCurrentTrackToMap`, `reloadTrackListToMap`)
 читает записи/сегменты в общей фоновой очереди, по одной активной и одной
-отложенной задаче каждого вида. Чтение привязано к SQLite исходного workspace,
-не к текущему ContentProvider и не к mutable cache `TrackLayer`. Main thread
+отложенной задаче каждого вида. Чтение использует общую SQLite SharedTrackStore, независимо от project
+ContentProvider и mutable cache `TrackLayer` ([контракт](shared-tracks.md)). Main thread
 только устанавливает готовый GeoJSON, проверив identity карты, view и style.
 Ошибка чтения сохраняет предыдущую отрисовку; устаревший результат отбрасывается.
 Завершённые видимые треки остаются отдельно от незавершённых, сегменты не
@@ -558,3 +592,10 @@ SQLite своего проекта без reload, выбора объектов 
 выбор категории FieldStyleRule. Выбор слоя не запускает геометрию или recorder
 до принятия категории; при простом стиле сразу продолжается исходный способ
 создания. Подробности: [тип объекта](feature-type-creation.md).
+
+## Приёмка consumer без изменения renderer
+
+Verification profile добавляет отдельную app identity и test Application,
+сохраняя MapLibre renderer/runtime dependencies. LocationOrbitTest и native
+map checks остаются частью Full на эмуляторе; firmware/RF accuracy искусственный
+маршрут не подтверждает. Порядок тестов: [автотесты](../runbooks/automated-tests.md).
