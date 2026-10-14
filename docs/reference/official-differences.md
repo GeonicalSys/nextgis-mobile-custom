@@ -83,6 +83,11 @@ Wi-Fi, исключая исчезающее mobile-data соединение п
 и завершения восстановления Wi-Fi adapter перед следующим тестом.
 Это только тестовое окружение; production проверки сети и доставка прежние.
 
+Native матрица обычных стилей и подписей использует host OpenGL; в CI его
+предоставляет Mesa llvmpipe под Xvfb. Headless SwiftShader возвращает пустые
+glyph/bitmap symbols при корректных настройках. Все 14 styles cases и pixel
+assertions сохранены; configured Web GIS vector-tile слои исключены.
+
 Форк безопасно завершает перетаскивание слоёв, если fling или обновление списка
 убрали перетаскиваемую строку из видимой части. Cancel сбрасывает hover и ожидание
 scroll idle. GitHub API 2026-10-10: official app master
