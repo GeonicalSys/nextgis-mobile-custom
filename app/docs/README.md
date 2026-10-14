@@ -745,3 +745,6 @@ cleans its rows before restoring the preference.
 
 LargeTextLayoutTest awaits the focused input window and a committed frame before
 physical map taps after rotation, retaining actual touch/visible geometry checks.
+MapEditingToolsTest waits for the recreated MapView's own map and sources before
+creation actions, then awaits the requested camera coordinates instead of reading
+the previous asynchronous camera state. Geometry and saved SQL values remain checked.

@@ -630,13 +630,33 @@ public class MapEditingToolsTest {
                 CameraUpdateFactory.newLatLngZoom(new LatLng(-10, -15), 11.5)));
     }
 
-    private void assertCameraAtCreationFix() {
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
-            org.maplibre.android.camera.CameraPosition camera = ((MapDrawable) app.getMap()).getMaplibreMap().getCameraPosition();
-            assertEquals(55, camera.target.getLatitude(), .00001);
-            assertEquals(37, camera.target.getLongitude(), .00001);
-            assertEquals(11.5, camera.zoom, .00001);
-        });
+    private void awaitRecreatedMap() throws Exception {
+        java.util.concurrent.atomic.AtomicReference<org.maplibre.android.maps.MapLibreMap> current=new java.util.concurrent.atomic.AtomicReference<>();
+        scenario.onActivity(activity->((org.maplibre.android.maps.MapView)activity.findViewById(R.id.mapViewMaplibre)).getMapAsync(current::set));
+        AtomicBoolean ready=new AtomicBoolean();long deadline=android.os.SystemClock.uptimeMillis()+30000;
+        do{
+            scenario.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+                ready.set(current.get()!=null && map.getMaplibreMap()==current.get()
+                        && map.getMaplibreMapView()==activity.findViewById(R.id.mapViewMaplibre)
+                        && current.get().getStyle()!=null && current.get().getStyle().getSource("track-line-source")!=null);});
+            if(!ready.get())Thread.sleep(40);
+        }while(!ready.get() && android.os.SystemClock.uptimeMillis()<deadline);
+        assertTrue("The recreated map must apply its own sources before creation",ready.get());
+    }
+
+    private void assertCameraAtCreationFix() throws Exception {
+        java.util.concurrent.atomic.AtomicReference<org.maplibre.android.camera.CameraPosition> last=new java.util.concurrent.atomic.AtomicReference<>();
+        long deadline=android.os.SystemClock.uptimeMillis()+10000;
+        do{
+            InstrumentationRegistry.getInstrumentation().runOnMainSync(()->last.set(((MapDrawable)app.getMap()).getMaplibreMap().getCameraPosition()));
+            org.maplibre.android.camera.CameraPosition camera=last.get();
+            if(Math.abs(camera.target.getLatitude()-55)<.00001 && Math.abs(camera.target.getLongitude()-37)<.00001
+                    && Math.abs(camera.zoom-11.5)<.00001)return;
+            Thread.sleep(40);
+        }while(android.os.SystemClock.uptimeMillis()<deadline);
+        assertEquals(55,last.get().target.getLatitude(),.00001);
+        assertEquals(37,last.get().target.getLongitude(),.00001);
+        assertEquals(11.5,last.get().zoom,.00001);
     }
 
     private void supplyCurrentFix() {
@@ -786,6 +806,7 @@ public class MapEditingToolsTest {
         scenario.onActivity(activity -> assertEquals(MapFragment.MODE_NORMAL, mode(activity)));
         clickCreationAction(R.id.add_current_location);
         scenario.recreate();
+        awaitRecreatedMap();
         supplyCurrentFix(); moveCameraAway();
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
@@ -840,6 +861,7 @@ public class MapEditingToolsTest {
         line.add(new GeoPoint(line.getPoint(0).getX() + 10, line.getPoint(0).getY() + 10));
         assertTrue(com.nextgis.maplibui.util.WalkSessionStore.updateGeometry(app, walk.id, line, 2, true));
         scenario.recreate();
+        awaitRecreatedMap();
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
                 com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(), null, false);
