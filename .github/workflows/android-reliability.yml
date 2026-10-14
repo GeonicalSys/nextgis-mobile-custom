@@ -17,6 +17,10 @@ jobs:
   regression:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      DISPLAY: ':99'
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      GALLIUM_DRIVER: llvmpipe
     steps:
       - uses: actions/checkout@v4
         with:
@@ -54,6 +58,21 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+      - name: Prepare host OpenGL for native glyph and image assertions
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb xauth mesa-utils libgl1-mesa-dri libglx-mesa0
+          mkdir -p build
+          Xvfb :99 -screen 0 1280x1024x24 -ac +extension GLX +render -noreset > build/xvfb.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if glxinfo -B > build/graphics-host.txt 2>&1; then
+              cat build/graphics-host.txt
+              exit 0
+            fi
+            sleep 1
+          done
+          cat build/graphics-host.txt
+          exit 1
       - name: Native SQLite, track Stop, map tools and login regression
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -62,7 +81,7 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -no-audio -no-snapshot -gpu swiftshader_indirect -no-boot-anim
+          emulator-options: -no-window -no-audio -no-snapshot -gpu host -no-boot-anim
           script: |
             adb install -r "$LISA_DEBUG_APK"
             adb shell cmd locale set-app-locales com.nextgis.mobile.debug --locales ru
@@ -136,6 +155,8 @@ jobs:
         with:
           name: android-reliability-reports
           path: |
+            build/graphics-host.txt
+            build/xvfb.log
             app/build/reports/tests
             app/build/reports/androidTests
             app/build/outputs/androidTest-results

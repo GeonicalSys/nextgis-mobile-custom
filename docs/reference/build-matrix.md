@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -63,7 +63,11 @@ APK. Stateful SharedTracksTest и VectorStyleRenderingTest очищают verifi
 данные между методами; broad connected reliability pass исключает SharedTracksTest,
 а затем штатный runner выполняет области map/layers/tracks/styles с дедупликацией.
 Styles проверяют собственные SQL/GeoJSON слои и фактические пиксели; настроенные
-в Web GIS vector-tile слои явно исключены. Текущий Full каталог содержит 194
+в Web GIS vector-tile слои явно исключены. CI использует `-gpu host`, Xvfb и
+Mesa llvmpipe: прежний `swiftshader_indirect` не рисует glyph/bitmap symbols,
+поэтому его пустой снимок не проверяет настройки подписей. `graphics-host.txt`
+и `xvfb.log` входят в artifacts; styles cases и pixel assertions не исключаются.
+Текущий Full каталог содержит 194
 обязательных native cases. Предыдущий Full не подтверждает это новое содержимое;
 после merge библиотек и обновления root pins перед публикацией нужен новый Full.
 В этой задаче локально прошли 779 core unit tests и обе release validation builds,
