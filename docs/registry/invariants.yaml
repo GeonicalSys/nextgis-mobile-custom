@@ -1260,3 +1260,23 @@ invariants:
       - docs/architecture/map-rendering.md
       - docs/reference/official-differences.md
       - maplib/docs/README.md
+  INV-LOCAL-VECTOR-TILE-LABELS:
+    title: One interior label per original tiled polygon without another object layer
+    owners: [maplib, app]
+    statement: >
+      Local polygon tiles retain unlabelled polygon fragments and at most one marked Point label
+      record per original feature at each canonical zoom in the same features source-layer.
+      The anchor is calculated before clipping on the largest usable original part with holes,
+      checked after MVT rounding, and assigned to exactly one unbuffered owner tile. No global
+      point collection, additional object layer, source or native style layer is allocated.
+      Geometry without a representable interior anchor at a zoom has no label there; normal
+      collision and visibility rules still apply. Original feature identity and local identify remain.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileLabelAnchor.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileEncoder.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+      - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileLabelsTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MOBILE-RELATED, SMOKE-POLYGON-LABEL-ANCHOR]
+    must_update_docs: [docs/architecture/map-rendering.md, maplib/docs/README.md, docs/reference/official-differences.md]

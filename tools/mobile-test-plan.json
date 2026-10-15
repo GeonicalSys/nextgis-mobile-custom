@@ -39,7 +39,8 @@
     "com.nextgis.mobile.rendering.LocationOrbitTest",
     "com.nextgis.mobile.util.ProjectSyncRunnerTest",
     "com.nextgis.mobile.reliability.SharedTracksTest",
-    "com.nextgis.mobile.rendering.VectorStyleRenderingTest"
+    "com.nextgis.mobile.rendering.VectorStyleRenderingTest",
+    "com.nextgis.mobile.rendering.LocalVectorTileLabelTest"
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "areas": {
@@ -48,7 +49,7 @@
     "sync": ["com.nextgis.mobile.reliability.LocalChangesUploadTest", "com.nextgis.mobile.reliability.LayerPendingChangesTest", "com.nextgis.mobile.reliability.ProjectSyncDisplayNativeTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SyncNotificationsTest"],
     "location": ["com.nextgis.mobile.reliability.BackgroundGpsNativeTest", "com.nextgis.mobile.reliability.BackgroundLocationWarningTest", "com.nextgis.mobile.reliability.StakeoutForegroundServiceTest", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest", "com.nextgis.mobile.rendering.LocationOrbitTest"],
     "tracks": ["com.nextgis.mobile.reliability.TrackPersistenceTest", "com.nextgis.mobile.reliability.TrackerStopRecoveryTest", "com.nextgis.mobile.reliability.TrackRecordingModesTest", "com.nextgis.mobile.reliability.TrackPowerWarningTest", "com.nextgis.mobile.reliability.TrackUploadTest", "com.nextgis.mobile.reliability.WalkCheckpointTest", "com.nextgis.mobile.reliability.SharedTracksTest"],
-    "map": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest"],
+    "map": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocalVectorTileLabelTest"],
     "scripts": ["com.nextgis.mobile.reliability.ProjectScriptsTest"],
     "diagnostics": ["com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest"],
     "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest"]

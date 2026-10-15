@@ -50,6 +50,11 @@ isolated SharedTracksTest в Related tracks/map и emulator Full автомат�
 
 ## После доработки
 
+Отдельный `LocalVectorTileLabelTest` в Related `map` проверяет локальные MVT:
+одна подпись исходного квартала на границе тайлов, zoom/style reapply, реальные
+пиксели текста/заливки/контура и один VectorSource с прежними тремя style layers.
+Это не часть матрицы classic стилей. Общий native каталог содержит 198 cases.
+
 ```powershell
 .\tools\verify-mobile-tests.ps1 -Scope Related -Area layers
 ```
