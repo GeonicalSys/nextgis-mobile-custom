@@ -42,7 +42,7 @@ underlay синхронизированы с моделью карты.
 SharedTracksTest проверяет общую историю и сохранённый switch recording guard.
 Дополнительно проверяются `layers.db` из настоящего DatabaseHelper, сохранность
 новых треков при импорте старой истории и recovery owner/URI/pending Stop при
-обновлении и импорт из нескольких неактивных проектов с одинаковыми ID. Full каталог содержит 197 cases; новые методы входят через существующий
+обновлении и импорт из нескольких неактивных проектов с одинаковыми ID. Full каталог содержит 198 cases; новые методы входят через существующий
 isolated SharedTracksTest в Related tracks/map и emulator Full автоматически.
 Пример: `tools\verify-mobile-tests.ps1 -Scope Related -Area tracks,styles`.
 Контракты: [треки](../architecture/shared-tracks.md),
