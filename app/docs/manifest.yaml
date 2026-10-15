@@ -9,6 +9,8 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/location/LocationDisplayAccuracy.java
+    responsibility: Apply a render-only 3 m phone GPS floor shared by the status panel and circle; preserve external, mock, NMEA and Network accuracy and every input fix.
   - path: app/src/main/java/com/nextgis/mobile/activity/AboutActivity.java
     responsibility: Show Geonical help contacts and user guide with no Telegram action; open the Geonical contact page from About.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java

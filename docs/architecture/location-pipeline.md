@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -32,6 +32,18 @@ related_code:
 ---
 
 # Текущая позиция и запись GPS
+
+## Нижний порог отображения встроенного GPS — 2026-10-15
+
+`LocationDisplayAccuracy` в app вычисляет `max(3 м, accuracy)` только для
+встроенного GPS. `MapFragment` использует результат для числа в нижней панели
+и метрического круга MapLibre. Исходный `Location` не меняется: фильтры,
+порог записи, трек/обход, координаты и временные метки получают прежние значения.
+External input, native NMEA, mock GPS и Network сохраняют свою accuracy.
+Неизвестная или невалидная accuracy не подменяется числом 3 м.
+Новых подписей, процентов доверия и настроек интерфейса нет.
+Related `-Area accuracy`: реальная панель/GeoJSON круга, сохранность входного fix,
+внешний NMEA/mock и Network; русская панель в 36 enlarged UI profiles.
 
 ## Общая база записи
 

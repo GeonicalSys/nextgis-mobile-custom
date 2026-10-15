@@ -52,7 +52,7 @@ SharedTracksTest проверяет общую историю и сохранё�
 
 Это собирает verification APK, выбирает/запускает read-only API 36 эмулятор,
 выполняет нужные классы и для выбора слоёв проверяет крупный интерфейс.
-Области: `help` (ссылки помощи и крупный интерфейс), `layers`, `forms`, `sync`, `location`, `tracks`, `styles`, `map`, `scripts`,
+Области: `accuracy` (порог встроенного GPS в панели/круге и крупный интерфейс), `help` (ссылки помощи и крупный интерфейс), `layers`, `forms`, `sync`, `location`, `tracks`, `styles`, `map`, `scripts`,
 `diagnostics`. Можно передать несколько `-Area`, явный `-EmulatorSerial`,
 `-Avd`, `-SdkPath`, `-PythonPath` и `-OutputPath`. Для локального повтора уже
 собранного тестового APK существует `-SkipBuild`; он не разрешён для Full.
