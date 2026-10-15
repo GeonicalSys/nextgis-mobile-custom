@@ -6,6 +6,24 @@ last_verified: 2026-10-15
 
 # app — Android-приложение Lisa/Belka
 
+## Отображение точности встроенного GPS
+
+В нижней панели и круге карты встроенный GPS имеет нижний порог 3 м:
+0,5 м отображаются как 3 м, 8 м остаются 8 м. Общий helper
+`LocationDisplayAccuracy` не меняет `Location`, координаты, фильтры или запись.
+Внешний input, native NMEA/mock GPS и Network сохраняют свои значения.
+Related `-Area accuracy` проверяет панель и реальный круг MapLibre, неизменность
+исходного fix и обе темы/ориентации при крупном интерфейсе.
+
+## Контакты и руководство пользователя
+
+Вкладка «Помощь» в ЛИСА и БЕЛКА показывает geonical.system@yandex.ru,
+https://geonical-system.ru/ и «Руководство пользователя» со ссылкой
+https://wiki-geonical.ru/books/mobilnoe-prilozenie. Telegram удалён вместе
+с обработчиком. «Связаться с нами» в «О программе» открывает
+https://geonical-system.ru/contact/ во всех локализациях.
+Проверка: Related `-Area help`, ссылки и крупный интерфейс в обеих темах/ориентациях.
+
 ## Одна подпись квартала в локальных тайлах
 
 `LocalVectorTileLabelTest` проверяет синтетический NGW-backed SQLite слой через

@@ -32,6 +32,14 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+## Круг точности встроенного GPS
+
+App-side `LocationDisplayAccuracy` передаёт в `MapDrawable.updateLocation`
+радиус не меньше 3 м для встроенного GPS. То же значение выводится в нижней
+панели. MapDrawable, метрическая геометрия, центр маркера и прозрачное отверстие
+сохраняют прежнюю реализацию. Внешний NMEA/mock GPS и Network не получают порога.
+Контракт источников и проверок: [GPS pipeline](location-pipeline.md).
+
 ## Матрица обычных стилей
 
 [Native матрица](classic-style-verification.md) проверяет обычный GeoJSON renderer

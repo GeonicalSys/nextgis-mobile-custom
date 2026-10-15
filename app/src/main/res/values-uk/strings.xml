@@ -117,8 +117,7 @@
     <string name="action_support">Підтримка</string>
     <string name="app_support">Будь ласка напишіть нам, якщо у вас виникли питання, повідомлення про помилки або пропозиції до функціоналу. Доступна комерційна підтримка.</string>
     <string name="email">Електронна пошта</string>
-    <string name="email_src">info@nextgis.com</string>
-    <string name="telegram">Telegram</string>
+    <string name="email_src">geonical.system@yandex.ru</string>
     <string name="github">Github</string>
     <string name="github_src">http://github.com/nextgis/android_gisapp/issues</string>
     <string name="web">Наш сайт</string>

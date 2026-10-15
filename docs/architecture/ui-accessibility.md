@@ -1,7 +1,7 @@
 ---
 title: Адаптация интерфейса к крупному шрифту и размеру отображения
 type: architecture
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java
   - maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java
@@ -17,6 +17,23 @@ related_code:
 ---
 
 # Крупный интерфейс
+
+## Число точности встроенного GPS
+
+Нижняя панель сохраняет существующий числовой формат; встроенный GPS показывает
+не меньше 3 м. Внешний приёмник и Network сохраняют точность источника.
+`phoneAccuracyFloorFitsRussianPanelAtLargeScales` проверяет полный русский текст
+и видимые границы числа в 36 профилях шрифта/экрана/темы/ориентации.
+Проверка `LocationOrbitTest` сопоставляет число с геодезическим радиусом
+настоящего MapLibre source и проверяет неизменность входной координаты.
+
+## Ссылки разделов помощи и информации
+
+Оба экрана сохраняют вертикальную прокрутку и многострочные подписи.
+Native `LargeTextLayoutTest#geonicalHelpLinksFitAndKeepTheirDestinations` проверяет
+полный русский текст и URLSpan почты/сайта/руководства/контактов в обеих темах,
+portrait/landscape, fontScale 1/1.3/2 и ширинах 360/320/280 dp.
+Запуск связанной проверки: `tools/verify-mobile-tests.ps1 -Scope Related -Area help`.
 
 ## Независимые панели наведения и статус синхронизации
 

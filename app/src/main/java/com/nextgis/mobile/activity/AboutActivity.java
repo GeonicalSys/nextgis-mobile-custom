@@ -23,7 +23,6 @@
 
 package com.nextgis.mobile.activity;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -42,11 +41,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplibui.activity.NGActivity;
-import com.nextgis.maplibui.util.ControlHelper;
 import com.nextgis.mobile.BuildConfig;
 import com.nextgis.mobile.R;
 
@@ -192,21 +189,6 @@ public class AboutActivity extends NGActivity implements ViewPager.OnPageChangeL
             final Context context = getContext();
             if (context == null) return null;
             final View v = View.inflate(context, R.layout.fragment_contacts, null);
-
-            TextView telegram = (TextView) v.findViewById(R.id.telegram);
-            ControlHelper.highlightText(telegram);
-            telegram.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        String telegramPart = getString(R.string.telegram_prompt);
-                        Intent telegram = new Intent(Intent.ACTION_VIEW, Uri.parse("tg://resolve?domain=" + telegramPart));
-                        startActivity(telegram);
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(context, R.string.not_installed, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
 
             return v;
         }

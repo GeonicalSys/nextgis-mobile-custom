@@ -40,6 +40,58 @@ public class LargeTextLayoutTest {
 
     private static final int[][] SCREENS = {{360, 640, 420}, {320, 568, 540}, {568, 320, 540}, {280, 500, 620}};
 
+    @Test public void phoneAccuracyFloorFitsRussianPanelAtLargeScales() {
+        int[][] screens = {{360, 640, 420}, {640, 360, 420}, {320, 568, 540},
+                {568, 320, 540}, {280, 500, 620}, {500, 280, 620}};
+        android.location.Location fix = new android.location.Location("gps");
+        fix.setAccuracy(.5f);
+        for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : screens)
+            for (boolean dark : new boolean[]{false, true}) {
+                Context context = themed(scale, screen, dark);
+                View panel = LayoutInflater.from(context).inflate(R.layout.status_panel, null);
+                ((TextView) panel.findViewById(R.id.tv_latitude)).setText("59,998448° Ш.");
+                ((TextView) panel.findViewById(R.id.tv_longitude)).setText("133,349237° Д.");
+                ((TextView) panel.findViewById(R.id.tv_source)).setText("23");
+                ((TextView) panel.findViewById(R.id.tv_accuracy)).setText(context.getString(
+                        R.string.location_reported_accuracy,
+                        com.nextgis.mobile.location.LocationDisplayAccuracy.meters(fix, false), "м"));
+                layout(panel, dp(context, screen[0]), dp(context, screen[1]));
+                textFits(panel);
+                actionsFit((ViewGroup) panel, new int[]{R.id.tv_accuracy});
+                assertEquals(.5f, fix.getAccuracy(), 0f);
+            }
+    }
+
+    @Test public void geonicalHelpLinksFitAndKeepTheirDestinations() {
+        int[][] screens = {{360, 640, 420}, {640, 360, 420}, {320, 568, 540},
+                {568, 320, 540}, {280, 500, 620}, {500, 280, 620}};
+        for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : screens)
+            for (boolean dark : new boolean[]{false, true}) {
+                Context context = themed(scale, screen, dark);
+                View help = LayoutInflater.from(context).inflate(R.layout.fragment_contacts, null);
+                layout(help, dp(context, screen[0]), dp(context, screen[1]));
+                textFits(help);
+                assertLink(help.findViewById(R.id.email), "mailto:geonical.system@yandex.ru");
+                assertLink(help.findViewById(R.id.web), "https://geonical-system.ru/");
+                assertLink(help.findViewById(R.id.manual_url_view),
+                        "https://wiki-geonical.ru/books/mobilnoe-prilozenie");
+                assertEquals("Руководство пользователя", context.getString(R.string.manual));
+                View about = LayoutInflater.from(context).inflate(R.layout.fragment_about, null);
+                layout(about, dp(context, screen[0]), dp(context, screen[1]));
+                textFits(about);
+                assertLink(about.findViewById(R.id.contacts), "https://geonical-system.ru/contact/");
+                image(help, "geonical-help-" + scale + "-" + screen[0] + "-" + dark);
+            }
+    }
+
+    private static void assertLink(TextView view, String destination) {
+        assertTrue(view.getText() instanceof android.text.Spanned);
+        android.text.Spanned text = (android.text.Spanned) view.getText();
+        android.text.style.URLSpan[] links = text.getSpans(0, text.length(), android.text.style.URLSpan.class);
+        assertEquals("One actionable destination for " + view.getText(), 1, links.length);
+        assertEquals(destination, links[0].getURL());
+    }
+
     @Test public void retainedNetworkPositionFitsCompleteRussianAgeAndAccuracy() {
         for (float scale : new float[]{1f, 1.3f, 2f}) for (int[] screen : SCREENS)
             for (boolean dark : new boolean[]{false, true}) {

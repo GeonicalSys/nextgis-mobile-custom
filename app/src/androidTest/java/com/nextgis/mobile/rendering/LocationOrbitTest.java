@@ -46,6 +46,82 @@ import static org.junit.Assert.*;
 public class LocationOrbitTest {
     private static final Point FIX = Point.fromLngLat(21.0095, 52.23035);
 
+    @Test public void phoneAccuracyFloorMatchesThePanelAndNativeCircleWithoutChangingFixes() throws Exception {
+        GISApplication app = (GISApplication) InstrumentationRegistry.getInstrumentation()
+                .getTargetContext().getApplicationContext();
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(app);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(app);
+        boolean hadIntro = preferences.contains(AppSettingsConstants.KEY_PREF_INTRO);
+        boolean oldIntro = preferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
+        boolean hadGeoDialog = preferences.contains(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
+        boolean oldGeoDialog = preferences.getBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG, true);
+        boolean hadPanel = preferences.contains(SettingsConstantsUI.KEY_PREF_SHOW_STATUS_PANEL);
+        String oldPanel = preferences.getString(SettingsConstantsUI.KEY_PREF_SHOW_STATUS_PANEL, "1");
+        assertTrue(preferences.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true)
+                .putBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG, false)
+                .putString(SettingsConstantsUI.KEY_PREF_SHOW_STATUS_PANEL, "3").commit());
+        try (ActivityScenario<MainActivity> screen = ActivityScenario.launch(MainActivity.class)) {
+            await(screen, () -> ((MapDrawable) app.getMap()).getMaplibreMap() != null
+                    && ((MapDrawable) app.getMap()).getMaplibreMap().getStyle() != null);
+            screen.onActivity(activity -> {
+                app.getGpsEventSource().removeListener(activity.getMapFragment());
+                ((MapDrawable) app.getMap()).getMaplibreMap().moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(new LatLng(FIX.latitude(), FIX.longitude()), 22));
+            });
+            for (int kind = 0; kind < 5; kind++) {
+                android.location.Location fix = new android.location.Location(kind == 3 ? "network" : "gps");
+                fix.setLatitude(FIX.latitude()); fix.setLongitude(FIX.longitude());
+                fix.setAccuracy(kind == 1 ? 8f : .5f);
+                fix.setTime(System.currentTimeMillis());
+                fix.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+                if (kind == 2) {
+                    android.os.Bundle extras = new android.os.Bundle();
+                    extras.putBoolean(com.nextgis.maplib.util.ExternalGnssFixPolicy.EXTRA_NATIVE_NMEA, true);
+                    fix.setExtras(extras);
+                }
+                if (kind == 4) fix.setMock(true);
+                float rawAccuracy = fix.getAccuracy();
+                float expected = kind == 0 ? 3f : rawAccuracy;
+                screen.onActivity(activity -> {
+                    activity.getMapFragment().onLocationChanged(fix);
+                    android.widget.TextView accuracy = activity.findViewById(com.nextgis.mobile.R.id.tv_accuracy);
+                    assertEquals(activity.getString(com.nextgis.mobile.R.string.location_reported_accuracy,
+                            expected, activity.getString(com.nextgis.maplib.R.string.unit_meter)), accuracy.getText().toString());
+                    assertEquals("Display must preserve provider accuracy", rawAccuracy, fix.getAccuracy(), 0f);
+                    assertEquals(FIX.latitude(), fix.getLatitude(), 0d);
+                    assertEquals(FIX.longitude(), fix.getLongitude(), 0d);
+                });
+                await(screen, () -> Math.abs(accuracyCircleRadius((MapDrawable) app.getMap()) - expected) < .08);
+            }
+        } finally {
+            SharedPreferences.Editor restore = preferences.edit();
+            if (hadIntro) restore.putBoolean(AppSettingsConstants.KEY_PREF_INTRO, oldIntro);
+            else restore.remove(AppSettingsConstants.KEY_PREF_INTRO);
+            if (hadGeoDialog) restore.putBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG, oldGeoDialog);
+            else restore.remove(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
+            if (hadPanel) restore.putString(SettingsConstantsUI.KEY_PREF_SHOW_STATUS_PANEL, oldPanel);
+            else restore.remove(SettingsConstantsUI.KEY_PREF_SHOW_STATUS_PANEL);
+            assertTrue(restore.commit());
+        }
+    }
+
+    private static double accuracyCircleRadius(MapDrawable map) {
+        GeoJsonSource source = map.getMaplibreMap().getStyle().getSourceAs("user-location-source");
+        if (source == null) return Double.NaN;
+        double radius = Double.NaN;
+        for (Feature feature : source.querySourceFeatures(null)) {
+            if (!feature.hasProperty("role") || !"accuracy".equals(feature.getStringProperty("role"))) continue;
+            // Source queries can return multiple clipped native tiles; inspect their outer arcs.
+            for (Point edge : ((Polygon) feature.geometry()).coordinates().get(0)) {
+                float[] distance = new float[1];
+                android.location.Location.distanceBetween(FIX.latitude(), FIX.longitude(),
+                        edge.latitude(), edge.longitude(), distance);
+                radius = Double.isNaN(radius) ? distance[0] : Math.max(radius, distance[0]);
+            }
+        }
+        return radius;
+    }
+
     @Test public void orbitUsesCompassThenCourseWithACenteredAnchorAndVisibleSector() throws Exception {
         assertTrue("Use only an isolated emulator", android.os.Build.MODEL.contains("sdk")
                 || android.os.Build.FINGERPRINT.startsWith("generic"));

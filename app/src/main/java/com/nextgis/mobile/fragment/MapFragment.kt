@@ -152,6 +152,7 @@ import com.nextgis.mobile.stakeout.StakeoutSettings
 import com.nextgis.mobile.stakeout.MagneticAzimuthCalculator
 import com.nextgis.mobile.stakeout.WorldMagneticModel2025
 import com.nextgis.mobile.location.DeviceHeadingProvider
+import com.nextgis.mobile.location.LocationDisplayAccuracy
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import org.maplibre.android.camera.CameraPosition
@@ -4870,7 +4871,7 @@ public class MapFragment
             Point.fromLngLat(location.longitude, location.latitude),
             isStanding,
             if (location.hasBearing()) location.bearing else 0f,
-            location.accuracy,
+            displayAccuracy(location),
             heading?.trueDegrees,
             heading?.halfAngleDegrees
         )
@@ -4956,6 +4957,9 @@ public class MapFragment
         if (location == null) onLocationUnavailable() else onLocationChanged(location)
     }
 
+    private fun displayAccuracy(location: Location): Float =
+        LocationDisplayAccuracy.meters(location, mGpsEventSource?.isExternalInput == true)
+
     private fun fillStatusPanel(location: Location?) {
         if (mStatusPanelMode == 0 || mStatusPanel == null || mActivity == null) return
 
@@ -5000,7 +5004,7 @@ public class MapFragment
             }
 
             mStatusAccuracy!!.text = getString(R.string.location_reported_accuracy,
-                location.accuracy, getString(com.nextgis.maplib.R.string.unit_meter))
+                displayAccuracy(location), getString(com.nextgis.maplib.R.string.unit_meter))
             mStatusLatitude!!.text =
                 formatCoordinate(
                     location.latitude,

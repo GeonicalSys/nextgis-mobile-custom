@@ -13,6 +13,25 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Порог 3 м для отображения встроенного GPS — 2026-10-15
+
+App ограничивает снизу только отображаемую accuracy встроенного GPS в панели
+и круге карты. External input, native NMEA/mock GPS, Network и обработка
+координат не меняются. Official app master
+`04d57c9fd843db6745c170147d6a2863da807352` проверен через GitHub API
+2026-10-15: MapFragment.kt выводит `location.accuracy` непосредственно.
+Helper и нижний порог принадлежат app, версии и submodule pointers сохраняются.
+
+## Контакты Геоникл — 2026-10-15
+
+ЛИСА/БЕЛКА используют контакты Геоникл и собственное руководство пользователя
+вместо контактов NextGIS; Telegram удалён. Ссылка «Связаться с нами» ведёт
+на страницу контактов Геоникл. Точные адреса: app/docs/README.md.
+Official app master `04d57c9fd843db6745c170147d6a2863da807352` проверен
+через GitHub API 2026-10-15: русские contacts/email_src/web_src/manual_url
+по-прежнему относятся к NextGIS, присутствует telegram_src. Изменение только app,
+версии и library pins сохраняются.
+
 ## Одна подпись квартала в локальных MVT — 2026-10-15
 
 Форк вычисляет одну внутреннюю точку исходного Polygon/MultiPolygon до clipping,

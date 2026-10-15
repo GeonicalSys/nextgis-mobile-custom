@@ -44,6 +44,8 @@
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "areas": {
+    "accuracy": ["com.nextgis.mobile.rendering.LocationOrbitTest#phoneAccuracyFloorMatchesThePanelAndNativeCircleWithoutChangingFixes", "com.nextgis.mobile.reliability.LargeTextLayoutTest#phoneAccuracyFloorFitsRussianPanelAtLargeScales"],
+    "help": ["com.nextgis.mobile.reliability.LargeTextLayoutTest#geonicalHelpLinksFitAndKeepTheirDestinations"],
     "layers": ["com.nextgis.mobile.reliability.LayerSelectionDialogTest", "com.nextgis.mobile.reliability.NgwResourceIconTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest#realMapCloseAndDialogActionsStayReachable"],
     "forms": ["com.nextgis.mobile.reliability.CascadingFormsTest", "com.nextgis.mobile.reliability.ConditionalRequiredFieldsTest", "com.nextgis.mobile.reliability.RequiredFieldsTest", "com.nextgis.mobile.reliability.FormAppearanceTest", "com.nextgis.mobile.reliability.FormSaveRecoveryTest", "com.nextgis.mobile.reliability.StandardFeatureTypesTest", "com.nextgis.mobile.reliability.SignatureCheckpointTest"],
     "sync": ["com.nextgis.mobile.reliability.LocalChangesUploadTest", "com.nextgis.mobile.reliability.LayerPendingChangesTest", "com.nextgis.mobile.reliability.ProjectSyncDisplayNativeTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SyncNotificationsTest"],
