@@ -276,6 +276,7 @@ tests:
     steps:
       - Open a map with labeled concave Polygon, holed Polygon and disjoint MultiPolygon features
       - Inspect each label after cold start, zoom changes and a style reload
+      - For local_vector_tiles, pan across tile seams and verify one label, one VectorSource and the existing fill/outline/symbol style layers
     expected: Each label anchor lies in the polygon fill or one MultiPolygon part, never in a hole or the gap between parts.
   SMOKE-MAP-OPENGL-COMPATIBILITY:
     type: device

@@ -42,13 +42,18 @@ underlay синхронизированы с моделью карты.
 SharedTracksTest проверяет общую историю и сохранённый switch recording guard.
 Дополнительно проверяются `layers.db` из настоящего DatabaseHelper, сохранность
 новых треков при импорте старой истории и recovery owner/URI/pending Stop при
-обновлении и импорт из нескольких неактивных проектов с одинаковыми ID. Full каталог содержит 197 cases; новые методы входят через существующий
+обновлении и импорт из нескольких неактивных проектов с одинаковыми ID. Full каталог содержит 198 cases; новые методы входят через существующий
 isolated SharedTracksTest в Related tracks/map и emulator Full автоматически.
 Пример: `tools\verify-mobile-tests.ps1 -Scope Related -Area tracks,styles`.
 Контракты: [треки](../architecture/shared-tracks.md),
 [матрица стилей](../architecture/classic-style-verification.md).
 
 ## После доработки
+
+Отдельный `LocalVectorTileLabelTest` в Related `map` проверяет локальные MVT:
+одна подпись исходного квартала на границе тайлов, zoom/style reapply, реальные
+пиксели текста/заливки/контура и один VectorSource с прежними тремя style layers.
+Это не часть матрицы classic стилей. Общий native каталог содержит 198 cases.
 
 ```powershell
 .\tools\verify-mobile-tests.ps1 -Scope Related -Area layers
