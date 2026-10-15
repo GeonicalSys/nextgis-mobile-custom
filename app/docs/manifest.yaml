@@ -14,9 +14,11 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/activity/AboutActivity.java
     responsibility: Show Geonical help contacts and user guide with no Telegram action; open the Geonical contact page from About.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java
-    responsibility: Verify common history, native map snapshot, visibility, project deletion and retained recording switch guard.
+    responsibility: Verify real layers.db legacy migration beside new tracks, exact row values, checkpoint/pending Stop recovery, common history/map visibility, project deletion and retained recording switch guard.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
     responsibility: Verify classic SQL/rule JSON/GeoJSON/native paint and labels on host OpenGL; prepare model camera/visibility and suppress the disposable startup geo-dialog; reject configured local-vector-tiles sources.
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
+    responsibility: Verify one interior label across MVT seams and zoom/style reapply through the real local tile provider, with glyph/fill/outline pixels and no added source or style layer.
   - path: tools/run_mobile_tests.py
     responsibility: Route complete static phone and simulated emulator acceptance, verify native results and source receipts, and require an explicitly permitted project.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java

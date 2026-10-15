@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -37,6 +37,12 @@ related_code:
 ---
 
 # NGW sync, локальное хранение и восстановление
+
+Миграция общей истории читает настоящий проектный `layers.db`: расширение
+добавляет DatabaseContext к логическому имени `layers`. Общий resolver имени
+не открывает/не создаёт источник. Пропущенные первым обновлением истории
+переносятся рядом с новыми треками; atomic checkpoint читается без изменения
+исходных `.bak`/`.new` файлов. См. [общее хранилище](shared-tracks.md).
 
 ## Быстрая отправка правок и часы полного проекта
 

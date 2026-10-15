@@ -4,6 +4,8 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -12,12 +14,16 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.nextgis.maplib.api.ILayer;
 import com.nextgis.maplib.map.*;
+import com.nextgis.maplib.datasource.DatabaseHelper;
 import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.FeatureSaveJournal;
+import com.nextgis.maplib.util.PendingTrackPoints;
 import com.nextgis.maplib.util.FileUtil;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.service.TrackerService;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
+import com.nextgis.maplibui.util.SharedTrackProjects;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
 import com.nextgis.mobile.util.VerificationEnvironment;
@@ -175,6 +181,186 @@ public class SharedTracksTest {
             f.switchTo(f.other);
             try(Cursor rows=f.app.getContentResolver().query(f.uri(),new String[]{FIELD_END},FIELD_ID+"=?",new String[]{Long.toString(id)},null)) {
                 assertNotNull(rows);assertTrue(rows.moveToFirst());assertFalse(rows.isNull(0));
+            }
+        }
+    }
+
+    private static File seedLegacyDatabase(Fixture f, boolean unfinished) throws Exception {
+        return seedLegacyDatabase(f,f.other,unfinished,
+                "true".equals(InstrumentationRegistry.getArguments().getString("legacyTrackFixture")));
+    }
+
+    private static File seedLegacyDatabase(Fixture f, CollectorProjectRegistry.ProjectInfo project,
+                                           boolean unfinished, boolean externalFixture) throws Exception {
+        File file = new File(project.getMapPath(),"layers.db");
+        if (externalFixture) {
+            assertFalse("External history fixture is for the completed-history case",unfinished);
+            File fixture = new File(f.app.getExternalFilesDir(null),"legacy-tracks-fixture.db");
+            assertTrue("Explicit local track-only fixture is missing",fixture.isFile());
+            assertFalse("Never overwrite an existing project database",file.exists());
+            Files.copy(fixture.toPath(),file.toPath());
+            return file;
+        }
+        try (DatabaseHelper helper=new DatabaseHelper(f.app,new File(project.getMapPath(),"layers"),null,6)) {
+            SQLiteDatabase db=helper.getWritableDatabase();
+            assertEquals(file.getAbsolutePath(),db.getPath());
+            db.execSQL("CREATE TABLE tracks(_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,start INTEGER NOT NULL,end INTEGER,color TEXT,visible INTEGER NOT NULL)");
+            db.execSQL("CREATE TABLE trackpoints(lon REAL NOT NULL,lat REAL NOT NULL,ele REAL,fix TEXT,sat INTEGER,speed REAL,accuracy REAL,bearing REAL,segment INTEGER NOT NULL DEFAULT 0,time INTEGER NOT NULL,sent INTEGER NOT NULL,session INTEGER NOT NULL)");
+            db.execSQL("INSERT INTO tracks VALUES(1,'Legacy history',100,?,123,1)",new Object[]{unfinished?null:900});
+            for(int index=0;index<2;index++) db.insertOrThrow(TABLE_TRACKPOINTS,null,legacyPoint(100+index,index,index));
+        }
+        return file;
+    }
+
+    private static ContentValues legacyPoint(long time,int sent,int segment) {
+        ContentValues point=new ContentValues(); point.put(FIELD_SESSION,1);
+        point.put(FIELD_LON,3339584.7);point.put(FIELD_LAT,8399737.9);
+        point.put(FIELD_TIMESTAMP,time);point.put(FIELD_SENT,sent);point.put(FIELD_SEGMENT,segment);
+        point.put(FIELD_ELE,12.5);point.put(FIELD_FIX,"3d");point.put(FIELD_SAT,9);
+        point.put(FIELD_SPEED,1.25);point.put(FIELD_ACCURACY,4.5);point.put(FIELD_BEARING,90.5);
+        return point;
+    }
+
+    private static void assertSameValues(Cursor expected,Cursor actual) {
+        for(String name:expected.getColumnNames()) {
+            if(FIELD_ID.equals(name)||FIELD_SESSION.equals(name))continue;
+            int source=expected.getColumnIndexOrThrow(name),target=actual.getColumnIndexOrThrow(name);
+            assertEquals(name,expected.getType(source),actual.getType(target));
+            switch(expected.getType(source)) {
+                case Cursor.FIELD_TYPE_NULL:assertTrue(name,actual.isNull(target));break;
+                case Cursor.FIELD_TYPE_INTEGER:assertEquals(name,expected.getLong(source),actual.getLong(target));break;
+                case Cursor.FIELD_TYPE_FLOAT:assertEquals(name,expected.getDouble(source),actual.getDouble(target),0);break;
+                default:assertEquals(name,expected.getString(source),actual.getString(target));
+            }
+        }
+    }
+
+    @Test public void completedLegacyHistoryAppearsBesideTracksRecordedAfterUpdate() throws Exception {
+        try(Fixture f=new Fixture()) {
+            long fresh=f.addTrack();
+            File file;byte[] sourceBefore;
+            // Publish a complete legacy fixture before a queued worker can inspect it.
+            synchronized(SharedTrackProjects.class) {
+                file=seedLegacyDatabase(f,false);sourceBefore=Files.readAllBytes(file.toPath());
+                SharedTrackProjects.prepare(f.app);
+            }
+            SharedTrackStore store=SharedTrackStore.get(f.app);
+            try(SQLiteDatabase legacy=SQLiteDatabase.openDatabase(file.getPath(),null,SQLiteDatabase.OPEN_READONLY)) {
+                long tracks=DatabaseUtils.queryNumEntries(legacy,TABLE_TRACKS),points=DatabaseUtils.queryNumEntries(legacy,TABLE_TRACKPOINTS);
+                assertTrue(tracks>0);assertTrue(points>0);
+                SharedTrackProjects.prepare(f.app);SharedTrackProjects.prepare(f.app);
+                assertTrue(f.original.isActive(f.app));
+                assertEquals(tracks+1,DatabaseUtils.queryNumEntries(store.getDatabase(true),TABLE_TRACKS));
+                assertEquals(points+2,DatabaseUtils.queryNumEntries(store.getDatabase(true),TABLE_TRACKPOINTS));
+                try(Cursor histories=legacy.query(TABLE_TRACKS,null,null,null,null,null,FIELD_ID)) {
+                    while(histories.moveToNext()) {
+                        long old=histories.getLong(histories.getColumnIndexOrThrow(FIELD_ID));
+                        long id=store.migratedTrackId(new File(f.other.getMapPath()),old);
+                        assertNotEquals(fresh,id);f.added.add(id);
+                        try(Cursor migrated=store.getDatabase(true).query(TABLE_TRACKS,null,FIELD_ID+"=?",new String[]{Long.toString(id)},null,null,null)) {
+                            assertTrue(migrated.moveToFirst());assertSameValues(histories,migrated);
+                        }
+                        try(Cursor original=legacy.query(TABLE_TRACKPOINTS,null,FIELD_SESSION+"=?",new String[]{Long.toString(old)},null,null,"rowid");
+                            Cursor migrated=store.getDatabase(true).query(TABLE_TRACKPOINTS,null,FIELD_SESSION+"=?",new String[]{Long.toString(id)},null,null,FIELD_ID)) {
+                            assertEquals(original.getCount(),migrated.getCount());
+                            while(original.moveToNext()){assertTrue(migrated.moveToNext());assertSameValues(original,migrated);}
+                        }
+                    }
+                }
+                android.util.Log.i("LegacyTrackRecovery","Verified all fields: tracks="+tracks+" points="+points);
+            }
+            assertArrayEquals(sourceBefore,Files.readAllBytes(file.toPath()));
+            f.assertTrack(fresh,123);f.assertRendered();f.switchTo(f.other);f.assertTrack(fresh,123);f.assertRendered();
+        }
+    }
+
+    @Test public void interruptedRecordingMigratesItsCheckpointAndPendingStopWithoutLosingPoints() throws Exception {
+        try(Fixture f=new Fixture()) {
+            long fresh=f.addTrack();File workspace=new File(f.other.getMapPath());
+            SharedPreferences temp=f.app.getSharedPreferences(TrackerService.TEMP_PREFERENCES,0);
+            long recovered;
+            synchronized(SharedTrackProjects.class) {
+                File file=seedLegacyDatabase(f,true);PendingTrackPoints queue=new PendingTrackPoints(workspace);
+                queue.append(legacyPoint(200,0,2));queue.append(legacyPoint(201,0,3));
+                try(SQLiteDatabase legacy=SQLiteDatabase.openDatabase(file.getPath(),null,SQLiteDatabase.OPEN_READWRITE)) {
+                    queue.replay((operation,values)->{
+                        if(values.getAsLong(FIELD_TIMESTAMP)==200) {
+                            long row=legacy.insertOrThrow(TABLE_TRACKPOINTS,null,values);
+                            FeatureSaveJournal.record(legacy,TABLE_TRACKPOINTS,operation,row);
+                        }
+                        return 1;
+                    });
+                }
+                assertTrue(temp.edit().putString("track_map",workspace.getAbsolutePath())
+                        .putString("track_uri",ContentUris.withAppendedId(f.uri(),1).toString())
+                        .putString("pending_stop",TrackerService.ACTION_STOP).commit());
+                TrackerService.setTrackRecordingEnabled(f.app,true);assertTrue(TrackerService.isTrackRecordingEnabled(f.app));
+                SharedTrackProjects.prepare(f.app);SharedTrackProjects.prepare(f.app);
+                recovered=SharedTrackStore.get(f.app).migratedTrackId(workspace,1);assertNotEquals(fresh,recovered);f.added.add(recovered);
+            }
+            assertEquals(recovered,ContentUris.parseId(Uri.parse(temp.getString("track_uri",null))));
+            assertEquals(SharedTrackStore.get(f.app).getDirectory().getAbsolutePath(),temp.getString("track_map",null));
+            assertEquals(TrackerService.ACTION_STOP,temp.getString("pending_stop",null));assertTrue(f.original.isActive(f.app));
+            f.screen.onActivity(TrackerService::ensureRecordingRunningIfEnabled);
+            await(()->TrackerService.getRecordingState(f.app)==TrackerService.RecordingState.STOPPED);
+            try(Cursor points=SharedTrackStore.get(f.app).getDatabase(true).query(TABLE_TRACKPOINTS,null,FIELD_SESSION+"=?",new String[]{Long.toString(recovered)},null,null,FIELD_ID)) {
+                assertEquals(4,points.getCount());
+                for(int index=0;index<4;index++){assertTrue(points.moveToNext());assertEquals(index,points.getInt(points.getColumnIndexOrThrow(FIELD_SEGMENT)));}
+            }
+            try(Cursor track=SharedTrackStore.get(f.app).getDatabase(true).query(TABLE_TRACKS,null,FIELD_ID+"=?",new String[]{Long.toString(recovered)},null,null,null)) {
+                assertTrue(track.moveToFirst());assertTrue(track.getLong(track.getColumnIndexOrThrow(FIELD_END))>900);
+            }
+            assertFalse(temp.contains("track_uri"));assertFalse(temp.contains("pending_stop"));
+            assertEquals(2,new PendingTrackPoints(workspace).size());f.assertTrack(fresh,123);
+        }
+    }
+
+    @Test public void allProjectsImportCollidingTrackIdsWithoutActivatingTheirMaps() throws Exception {
+        try(Fixture f=new Fixture()) {
+            CollectorProjectRegistry.ProjectInfo third=CollectorProjectRegistry.createLocalProject(f.app,"More legacy tracks");
+            assertNotNull(third);
+            try {
+                long fresh=f.addTrack();
+                File[] sources;byte[][] before;
+                synchronized(SharedTrackProjects.class) {
+                    sources=new File[]{seedLegacyDatabase(f,f.other,false,false),seedLegacyDatabase(f,third,false,false)};
+                    try(SQLiteDatabase legacy=SQLiteDatabase.openDatabase(sources[1].getPath(),null,SQLiteDatabase.OPEN_READWRITE)) {
+                        legacy.execSQL("UPDATE tracks SET name='Another project history',color=456");
+                        legacy.execSQL("UPDATE trackpoints SET time=time+1000,segment=segment+2");
+                    }
+                    before=new byte[][]{Files.readAllBytes(sources[0].toPath()),Files.readAllBytes(sources[1].toPath())};
+                    SharedTrackProjects.prepare(f.app);
+                }
+                SharedTrackStore store=SharedTrackStore.get(f.app);
+                long first=store.migratedTrackId(sources[0].getParentFile(),1);
+                long second=store.migratedTrackId(sources[1].getParentFile(),1);
+                assertTrue(first>0);assertTrue(second>0);
+                f.added.add(first);f.added.add(second);
+                assertNotEquals(first,second);assertNotEquals(fresh,first);assertNotEquals(fresh,second);
+                SharedTrackProjects.prepare(f.app);SharedTrackProjects.prepare(f.app);
+                assertTrue("Migration must not activate an inactive project",f.original.isActive(f.app));
+                assertEquals(3,DatabaseUtils.queryNumEntries(store.getDatabase(true),TABLE_TRACKS));
+                assertEquals(6,DatabaseUtils.queryNumEntries(store.getDatabase(true),TABLE_TRACKPOINTS));
+                for(int index=0;index<sources.length;index++) {
+                    assertArrayEquals(before[index],Files.readAllBytes(sources[index].toPath()));
+                    long id=index==0?first:second;
+                    try(SQLiteDatabase legacy=SQLiteDatabase.openDatabase(sources[index].getPath(),null,SQLiteDatabase.OPEN_READONLY);
+                        Cursor track=legacy.query(TABLE_TRACKS,null,null,null,null,null,null);
+                        Cursor migrated=store.getDatabase(true).query(TABLE_TRACKS,null,FIELD_ID+"=?",new String[]{Long.toString(id)},null,null,null);
+                        Cursor points=legacy.query(TABLE_TRACKPOINTS,null,null,null,null,null,"rowid");
+                        Cursor imported=store.getDatabase(true).query(TABLE_TRACKPOINTS,null,FIELD_SESSION+"=?",new String[]{Long.toString(id)},null,null,FIELD_ID)) {
+                        assertTrue(track.moveToFirst());assertTrue(migrated.moveToFirst());assertSameValues(track,migrated);
+                        assertEquals(points.getCount(),imported.getCount());
+                        while(points.moveToNext()){assertTrue(imported.moveToNext());assertSameValues(points,imported);}
+                    }
+                }
+                f.assertTrack(fresh,123);f.switchTo(f.other);
+                assertTrue(f.layer().getTracks().containsKey((int)first));assertTrue(f.layer().getTracks().containsKey((int)second));
+                f.switchTo(third);f.assertTrack(fresh,123);
+                assertTrue(f.layer().getTracks().containsKey((int)first));assertTrue(f.layer().getTracks().containsKey((int)second));
+            } finally {
+                f.switchTo(f.original);
+                FileUtil.deleteRecursive(new File(third.getMapPath()));
             }
         }
     }
