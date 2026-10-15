@@ -60,6 +60,8 @@ public class LocalVectorTileLabelTest {
                     && !com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy());
             screen.onActivity(activity->{try {
                 MapDrawable map=(MapDrawable)app.getMap();
+                // Synthetic camera coordinates must not be replaced by the emulator's first fix.
+                app.getGpsEventSource().removeListener(activity.getMapFragment());
                 map.setZoomAndCenter(12,new GeoPoint(0,0),false,0);map.setVisible(false);
                 for(org.maplibre.android.style.layers.Layer nativeLayer:map.getMaplibreMap().getStyle().getLayers())
                     nativeLayer.setProperties(PropertyFactory.visibility("none"));
@@ -130,19 +132,45 @@ public class LocalVectorTileLabelTest {
                     Point point=(Point)label.geometry();
                     assertEquals(0,point.longitude(),.00001);assertEquals(0,point.latitude(),.00001);
                     renderedFrame(screen,app);
-                    CountDownLatch done=new CountDownLatch(1);AtomicReference<Bitmap> image=new AtomicReference<>();
+                    AtomicReference<Bitmap> image=new AtomicReference<>();
+                    int red=0,green=0,blue=0;
+                    long imageDeadline=SystemClock.uptimeMillis()+30000;
+                    do {
+                    CountDownLatch done=new CountDownLatch(1);
+                    Bitmap previous=image.get();
                     screen.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMap().snapshot(bitmap->{image.set(bitmap);done.countDown();}));
                     assertTrue(done.await(10,TimeUnit.SECONDS));assertNotNull(image.get());
-                    int red=0,green=0,blue=0;
+                    if(previous!=null)previous.recycle();
+                    red=0;green=0;blue=0;
                     for(int y=0;y<image.get().getHeight();y++)for(int x=0;x<image.get().getWidth();x++) {
                         int pixel=image.get().getPixel(x,y);
                         if(Color.red(pixel)>150 && Color.green(pixel)<90 && Color.blue(pixel)<90)red++;
                         if(Color.green(pixel)>150 && Color.red(pixel)<90 && Color.blue(pixel)<90)green++;
                         if(Color.blue(pixel)>150 && Color.red(pixel)<90 && Color.green(pixel)<90)blue++;
                     }
-                    assertTrue("Label glyphs must actually render",red>10);
+                    if(red>10 && green>100 && (zoom!=12 || blue>10))break;
+                    screen.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMap().triggerRepaint());
+                    Thread.sleep(100);
+                    } while(SystemClock.uptimeMillis()<imageDeadline);
+                    AtomicReference<String> pixelState=new AtomicReference<>("");
+                    if(red<=10) {
+                        try(java.io.FileOutputStream file=new java.io.FileOutputStream(new File(app.getCacheDir(),"tile-labels-failed.png"))) {
+                            image.get().compress(Bitmap.CompressFormat.PNG,100,file);
+                        }
+                        screen.onActivity(activity->{org.maplibre.android.maps.Style actual=((MapDrawable)app.getMap()).getMaplibreMap().getStyle();
+                            SymbolLayer text=actual.getLayerAs("symbol-nglayer-layer-"+layer.getId());
+                            pixelState.set("camera="+((MapDrawable)app.getMap()).getMaplibreMap().getCameraPosition()
+                                    +" visibility="+text.getVisibility().getValue()+" color="+text.getTextColor().getValue()
+                                    +" min="+text.getMinZoom()+" max="+text.getMaxZoom()+" opacity="+text.getTextOpacity());
+                            System.out.println("Tile pixels at zoom="+zoom+" color="+text.getTextColor()+" size="+text.getTextSize()
+                                    +" opacity="+text.getTextOpacity()+" font="+text.getTextFont());
+                            for(org.maplibre.android.style.layers.Layer current:actual.getLayers())System.out.println("Style order: "+current.getId());
+                        });
+                    }
+                    assertTrue("Label glyphs must actually render; zoom="+zoom+" red="+red+" green="+green+" blue="+blue+" "+pixelState.get(),red>10);
                     assertTrue("Polygon fill must remain",green>100);
                     if(zoom==12)assertTrue("Polygon outline must remain",blue>10);
+                    image.get().recycle();
                 }
             } finally {
                 screen.onActivity(activity->{LocalVectorTileServer.getInstance().unregisterLayer(layer.getId());
