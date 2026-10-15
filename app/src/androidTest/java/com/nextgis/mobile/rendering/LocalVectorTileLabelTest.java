@@ -129,6 +129,7 @@ public class LocalVectorTileLabelTest {
                     assertEquals("51",label.getStringProperty(MplFeatureStyleProps.SIGNATURE));
                     Point point=(Point)label.geometry();
                     assertEquals(0,point.longitude(),.00001);assertEquals(0,point.latitude(),.00001);
+                    renderedFrame(screen,app);
                     CountDownLatch done=new CountDownLatch(1);AtomicReference<Bitmap> image=new AtomicReference<>();
                     screen.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMap().snapshot(bitmap->{image.set(bitmap);done.countDown();}));
                     assertTrue(done.await(10,TimeUnit.SECONDS));assertNotNull(image.get());
@@ -154,6 +155,26 @@ public class LocalVectorTileLabelTest {
             }
             assertTrue(restore.commit());
         }
+    }
+
+    private static void renderedFrame(ActivityScenario<MainActivity> screen,GISApplication app) throws Exception {
+        // Native queries can already describe the new placement while the GPU still shows an
+        // earlier frame. Fence current source/camera idle, then a fresh fully rendered frame.
+        CountDownLatch idle=new CountDownLatch(1);
+        org.maplibre.android.maps.MapView.OnDidBecomeIdleListener idleListener=idle::countDown;
+        screen.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+            map.getMaplibreMapView().addOnDidBecomeIdleListener(idleListener);
+            map.getMaplibreMap().triggerRepaint();});
+        try {assertTrue("Tile source and placement must become idle",idle.await(30,TimeUnit.SECONDS));}
+        finally {screen.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMapView().removeOnDidBecomeIdleListener(idleListener));}
+        CountDownLatch frame=new CountDownLatch(1);
+        org.maplibre.android.maps.MapView.OnDidFinishRenderingFrameListener listener=
+                (fully,encoding,rendering)->{if(fully)frame.countDown();};
+        screen.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+            map.getMaplibreMapView().addOnDidFinishRenderingFrameListener(listener);
+            map.getMaplibreMap().triggerRepaint();});
+        try {assertTrue("Tile glyphs must finish rendering",frame.await(15,TimeUnit.SECONDS));}
+        finally {screen.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMapView().removeOnDidFinishRenderingFrameListener(listener));}
     }
 
     private static void bind(MapDrawable map,NGWVectorLayerUI layer) {
