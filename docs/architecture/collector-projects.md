@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-10-10
+last_verified: 2026-10-15
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -38,6 +38,11 @@ related_code:
 ---
 
 # Collector projects, composition sync и backups
+
+Общий перенос треков читает `layers.db` через тот же resolver DatabaseContext,
+что штатный DatabaseHelper. Пропущенные при первом обновлении истории остаются
+в исходниках и импортируются повторной подготовкой; новые общие треки сохраняются.
+Перед удалением проекта действует тот же обязательный import gate.
 
 ## Поток импорта
 
