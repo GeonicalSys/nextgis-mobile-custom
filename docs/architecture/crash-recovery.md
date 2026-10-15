@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -24,6 +24,12 @@ The durable spool, UUID insert journal and current track URI move to the shared
 store before map database upgrades. Migration includes pending points in the same
 target transaction and retains the source spool. A failed Stop closes only its
 current global track ID. Details: [shared tracks](shared-tracks.md).
+
+Migration resolves the real `layers.db` through DatabaseContext. Atomic checkpoint
+recovery reads `.bak`/complete `.new` without repairing or deleting the source
+files. UUID acknowledgements prevent duplicate tail points. An injected target
+failure rolls back rows, mappings and completion; retry preserves both old and
+post-update tracks. Native recovery verifies remapped URI/owner and pending Stop.
 
 ## Повтор доставки после сохранения
 

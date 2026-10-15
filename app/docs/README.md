@@ -13,6 +13,9 @@ MainApplication импортирует старые источники до от
 во время записи запрещён. SharedTracksTest проверяет общую историю и native
 отрисовку; VectorStyleRenderingTest использует обычные synthetic SQL/GeoJSON
 слои и исключает configured vector tiles. Related styles добавлен в каталог.
+Исправление переноса читает настоящий `layers.db` и повторяет пропущенную
+историю рядом с новыми общими треками. Native SharedTracksTest проверяет все
+поля исходника, remap незавершённого сеанса и pending Stop после обновления.
 Графический fixture отключает стартовый geo-dialog и синхронизирует camera и
 видимость underlay с моделью. CI использует Xvfb/Mesa host OpenGL вместо
 SwiftShader, который не отображает проверяемые подписи.

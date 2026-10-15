@@ -13,6 +13,19 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Восстановление старой истории после перехода на общие треки — 2026-10-15
+
+Мигратор форка читает фактический `layers.db` через DatabaseContext. Первый
+rollout искал логическое имя без расширения и мог пропустить сохранённую историю;
+исправление повторяет импорт рядом с новыми общими треками. Atomic backup/new
+checkpoint читается без изменения источника, lost ACK не дублирует точки,
+pending Stop сохраняет remap восстановленного сеанса. Wire format NGW не меняется.
+GitHub API 2026-10-15: official app master
+`31381f7901d6508f09b223cfb8f557b6a616d282`, maplib
+`fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4`, maplibui
+`29390d0331b9ef7cebcfadbc59d084c4de1e326c`; дерево official maplib содержит
+TrackLayer, но не SharedTrackStore. Эта миграция относится к общему хранилищу форка.
+
 ## Быстрая доставка и время полного проекта
 
 В fork сохранённые правки NGW отправляются отдельным LocalChangesWorker сразу

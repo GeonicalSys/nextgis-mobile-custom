@@ -10,7 +10,7 @@ entrypoints:
   - app/src/main/AndroidManifest.xml
 key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java
-    responsibility: Verify common history, native map snapshot, visibility, project deletion and retained recording switch guard.
+    responsibility: Verify real layers.db legacy migration beside new tracks, exact row values, checkpoint/pending Stop recovery, common history/map visibility, project deletion and retained recording switch guard.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
     responsibility: Verify classic SQL/rule JSON/GeoJSON/native paint and labels on host OpenGL; prepare model camera/visibility and suppress the disposable startup geo-dialog; reject configured local-vector-tiles sources.
   - path: tools/run_mobile_tests.py
