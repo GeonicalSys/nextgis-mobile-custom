@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-15
+last_verified: 2026-10-17
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,15 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Подпись OSM и уведомление MapLibre — 2026-10-17
+
+Форк скрывает значок и кнопку сведений MapLibre на карте. При включённом
+штатном слое OSM показывает короткую ссылку «© OpenStreetMap» над статусом;
+при выключенном слое подпись скрыта. BSD 2-Clause MapLibre сохранён в диалоге
+«Лицензии». Изменены app layout, MapFragment и AboutActivity; библиотеки,
+источники тайлов и лицензии карт не менялись. Проверки крупного интерфейса
+учитывают новую строку. [Поведение карты](../architecture/map-rendering.md).
 
 ## Порог 3 м для отображения встроенного GPS — 2026-10-15
 
