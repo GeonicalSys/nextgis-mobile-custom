@@ -1,5 +1,12 @@
 schema_version: 1
 invariants:
+  INV-MOBILE-USAGE:
+    title: Usage statistics preserve offline ownership and never collect foreground duration
+    owners: [app]
+    statement: Release-only usage events have durable UUID and monotonic installation sequence in backup-excluded SQLite. Capture UI event time and owner before asynchronous storage; never substitute the upload-time project. Background workers do not count as openings. Retry immutable events and delete only explicitly acknowledged IDs from the sent batch. Device metadata and project inventory never read passwords, feature rows, GPS or crash storage. No foreground-duration events or timers are collected. Debug and verification never embed production usage credentials.
+    related_code: [app/src/main/java/com/nextgis/mobile/usage, app/src/main/java/com/nextgis/mobile/MainApplication.java]
+    verify_smoke: [AUTO-MOBILE-USAGE]
+    must_update_docs: [docs/architecture/mobile-usage.md]
   INV-SHARED-TRACKS:
     title: One installation owns track history independently of project workspaces
     owners: [app, maplib, maplibui]

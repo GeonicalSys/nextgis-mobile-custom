@@ -169,6 +169,7 @@ public class MainApplication extends GISApplication
         NGWUtil.UUID = TrackerService.getUid(this);
 
         if (isDefaultApplicationProcess()) {
+            com.nextgis.mobile.usage.UsageAnalytics.start(this);
             backgroundLocationController = new com.nextgis.mobile.location.BackgroundLocationController(this);
             backgroundLocationController.start();
             com.nextgis.maplibui.mapui.TrackWorker.scheduleAll(this);

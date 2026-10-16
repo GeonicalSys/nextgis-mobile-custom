@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-MOBILE-USAGE:
+    type: automatic
+    scope: [app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area usage
+    expected: Isolated native outbox restart, exact ACK, HTTP 503 retention/retry and absent duration fields pass; production reporting stays disabled in verification.
   AUTO-MOBILE-RELATED:
     type: automatic
     scope: [app, maplibui, maplib]

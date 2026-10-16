@@ -1,7 +1,7 @@
 ---
 title: GeonicalSystem NextGIS Mobile — документация
 type: index
-last_verified: 2026-10-11
+last_verified: 2026-10-17
 related_code:
   - settings.gradle
   - .gitmodules
@@ -17,6 +17,7 @@ related_code:
 
 | Задача | Начать с |
 |---|---|
+| Устройства, учётные записи, проекты и запуски | [architecture/mobile-usage.md](architecture/mobile-usage.md) |
 | Первый раз в проекте | [START-HERE.md](START-HERE.md) |
 | Связь с `standart_profiles` и QGIS Plugins | [architecture/lisa-ecosystem.md](architecture/lisa-ecosystem.md) |
 | Изменение кода | [guides/change-checklist.md](guides/change-checklist.md) |

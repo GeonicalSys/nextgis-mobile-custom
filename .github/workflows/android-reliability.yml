@@ -148,7 +148,7 @@ jobs:
             adb shell settings put system font_scale 1.0
             adb shell wm density reset
             adb shell settings put system user_rotation 0
-            python3 tools/run_mobile_tests.py --scope related --area map --area layers --area tracks --area styles --output build/ci-verification
+            python3 tools/run_mobile_tests.py --scope related --area map --area layers --area tracks --area styles --area usage --output build/ci-verification
       - name: Store test reports
         if: always()
         uses: actions/upload-artifact@v4

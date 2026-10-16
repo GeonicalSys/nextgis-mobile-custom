@@ -13,6 +13,15 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Централизованная статистика — 2026-10-17
+
+Release форка имеет собственный backup-excluded offline outbox и HTTPS
+приёмник Геоникл для устройств, WebGIS accounts, проектов и дат открытий.
+Длительность работы не собирается, Debug/verification не отправляют события.
+Official app master `04d57c9fd843db6745c170147d6a2863da807352` повторно проверен
+через GitHub API 2026-10-17; пакет com.nextgis.mobile.usage и собственный
+серверный контракт Геоникл принадлежат форку. [Контракт](../architecture/mobile-usage.md).
+
 ## Подпись OSM и уведомление MapLibre — 2026-10-17
 
 Форк скрывает значок и кнопку сведений MapLibre на карте. При включённом

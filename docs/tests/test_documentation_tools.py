@@ -37,7 +37,7 @@ class DocumentationToolsTest(unittest.TestCase):
         )
         self.assertEqual(
             set(registry["systems"]),
-            {"mobile-app", "desktop-profiles", "qgis-plugins"},
+            {"mobile-app", "desktop-profiles", "qgis-plugins", "mobile-usage-server"},
         )
         contract_ids = {item["id"] for item in registry["contracts"]}
         boundary_ids = {item["id"] for item in registry["boundaries"]}
