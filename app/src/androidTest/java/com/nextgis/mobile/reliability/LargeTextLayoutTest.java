@@ -501,6 +501,18 @@ public class LargeTextLayoutTest {
                 // Detached native geometry fixtures queue performClick until attachment.
                 assertTrue(plus.performClick());
                 assertTrue("The add button action still expands the menu", menu.isExpanded());
+                TextView osm = root.findViewById(R.id.osm_attribution);
+                assertEquals(View.GONE, osm.getVisibility());
+                osm.setVisibility(View.VISIBLE);
+                layout(root, dp(context, screen[0]), dp(context, screen[1]));
+                RectF credit = bounds(root, osm);
+                RectF status = bounds(root, root.findViewById(R.id.fl_status_panel));
+                RectF ruler = bounds(root, root.findViewById(R.id.ll_ruler));
+                assertEquals("OSM credit stays one line", 1, osm.getLineCount());
+                assertTrue("OSM credit stays at the left edge", credit.left <= dp(context, 8));
+                assertTrue("OSM credit sits on the status panel", credit.bottom <= status.top + 1);
+                assertFalse("OSM credit does not cover the scale ruler", RectF.intersects(credit, ruler));
+                osm.setVisibility(View.GONE);
             }
         });
     }
