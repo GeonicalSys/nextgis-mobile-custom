@@ -36,6 +36,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -150,9 +151,15 @@ public class AboutActivity extends NGActivity implements ViewPager.OnPageChangeL
             v.findViewById(R.id.creditsInto).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    CharSequence notice = TextUtils.concat(
+                            activity.getText(R.string.credits),
+                            "\n\n",
+                            activity.getText(R.string.credits_maplibre_note),
+                            "\n\n",
+                            activity.getText(R.string.credits_maplibre));
                     AlertDialog builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
                             .setTitle(R.string.credits_intro)
-                            .setMessage(R.string.credits)
+                            .setMessage(notice)
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
 

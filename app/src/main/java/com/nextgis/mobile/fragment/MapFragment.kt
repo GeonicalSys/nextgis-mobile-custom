@@ -26,6 +26,7 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.DialogInterface
@@ -199,8 +200,8 @@ public class MapFragment
 
     lateinit var mMapRef: WeakReference<MapViewOverlays>
     private var mapLibreMapView: MapLibreMapView? = null
-    private var defaultLogoMargins: IntArray? = null
-    private var defaultAttributionMargins: IntArray? = null
+    private var mapCornerStack: View? = null
+    private var osmAttribution: TextView? = null
     @Volatile
     private var awaitingMapLibreFrameAfterResume = false
     private var mapLibreRenderRecoveryActive = false
@@ -514,10 +515,13 @@ public class MapFragment
         mivZoomOut?.setOnClickListener(this)
 
         mStatusPanel = view.findViewById(R.id.fl_status_panel)
-        mStatusPanel?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateMapAttributionMargins() }
-        view.findViewById<View>(R.id.ll_ruler)?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateMapAttributionMargins() }
+        mStatusPanel?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateOsmCreditPosition() }
         (view.findViewById<ViewGroup>(R.id.map_panels_stack))?.getChildAt(0)
-            ?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateMapAttributionMargins() }
+            ?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateOsmCreditPosition() }
+        mapCornerStack = view.findViewById(R.id.map_corner_stack)
+        osmAttribution = view.findViewById(R.id.osm_attribution)
+        osmAttribution?.setOnClickListener { openOsmCopyright() }
+        refreshOsmCredit()
         gnssHud = view.findViewById(R.id.gnss_hud)
         gnssHudQuality = view.findViewById(R.id.gnss_hud_quality)
         gnssHudDetail = view.findViewById(R.id.gnss_hud_detail)
@@ -678,12 +682,9 @@ public class MapFragment
 
         configureMapRotationGestures(mapboxMap, isMapRotationEnabled)
         mapboxMap.uiSettings.isCompassEnabled = false
-        mapboxMap.uiSettings.let { ui ->
-            defaultLogoMargins = intArrayOf(ui.logoMarginLeft, ui.logoMarginTop, ui.logoMarginRight, ui.logoMarginBottom)
-            defaultAttributionMargins = intArrayOf(ui.attributionMarginLeft, ui.attributionMarginTop,
-                ui.attributionMarginRight, ui.attributionMarginBottom)
-        }
-        updateMapAttributionMargins()
+        mapboxMap.uiSettings.isLogoEnabled = false
+        mapboxMap.uiSettings.isAttributionEnabled = false
+        refreshOsmCredit()
 
         val restoredBearing = if (isMapRotationEnabled) {
             try {
@@ -2332,8 +2333,9 @@ public class MapFragment
             mapLibreView.onDestroy()
         }
         mapLibreMapView = null
-        defaultLogoMargins = null
-        defaultAttributionMargins = null
+        osmAttribution?.setOnClickListener(null)
+        osmAttribution = null
+        mapCornerStack = null
 
         editLayerOverlay?.mBottomToolbar?.setOnClickListener(null)
         editLayerOverlay?.mBottomToolbar = null
@@ -2430,7 +2432,7 @@ public class MapFragment
     }
 
     override fun onLayerVisibleChanged(id: Int) {
-        // no need
+        refreshOsmCredit()
     }
 
     override fun onLayerChangedFeatureId(
@@ -3338,6 +3340,7 @@ public class MapFragment
         if (null != mMapRef.get()) {
             mMapRef.get()!!.map.setBackground(mApp!!.mapBackground)
             mMapRef.get()!!.addListener(this)
+            refreshOsmCredit()
         }
 
         val coordinatesFormat =
@@ -3497,32 +3500,55 @@ public class MapFragment
 
             statusPanel.minimumHeight = bottom
             statusPanel.requestLayout()
-            updateMapAttributionMargins()
+            updateOsmCreditPosition()
         }
     }
 
-    private fun updateMapAttributionMargins() {
-        val mapView = mapLibreMapView ?: return
+    private fun refreshOsmCredit() {
+        val credit = osmAttribution ?: return
+        if (!::mMapRef.isInitialized) return
+        val layer = mMapRef.get()?.map?.getLayerByPathName(MainApplication.LAYER_OSM)
+        credit.visibility = if (layer is Layer && layer.isVisible) View.VISIBLE else View.GONE
+        credit.post { updateOsmCreditPosition() }
+    }
+
+    private fun updateOsmCreditPosition() {
+        val stack = mapCornerStack ?: return
         val root = mMapRelativeLayout ?: return
-        val ui = mapDrawableOrNull?.maplibreMap?.uiSettings ?: return
-        val logo = defaultLogoMargins ?: return
-        val attribution = defaultAttributionMargins ?: return
-        var availableBottom = root.height
-        for (id in intArrayOf(R.id.fl_status_panel, R.id.ll_ruler)) {
-            root.findViewById<View>(id)?.let { overlay ->
-                if (overlay.visibility == View.VISIBLE && overlay.height > 0)
-                    availableBottom = minOf(availableBottom, overlay.top)
+        val creditVisible = osmAttribution?.visibility == View.VISIBLE
+        val status = root.findViewById<View>(R.id.fl_status_panel)
+        val statusTop = if (status != null && status.visibility == View.VISIBLE && status.height > 0) {
+            status.top
+        } else {
+            root.height
+        }
+        var limit = statusTop
+        if (creditVisible) {
+            val panels = root.findViewById<ViewGroup>(R.id.map_panels_stack)?.getChildAt(0)
+            if (panels != null && panels.visibility == View.VISIBLE && panels.height > 0) {
+                val panelLocation = IntArray(2)
+                val rootLocation = IntArray(2)
+                panels.getLocationInWindow(panelLocation)
+                root.getLocationInWindow(rootLocation)
+                limit = minOf(limit, panelLocation[1] - rootLocation[1])
             }
         }
-        val panels = root.findViewById<ViewGroup>(R.id.map_panels_stack)?.getChildAt(0)
-        if (panels != null && panels.visibility == View.VISIBLE && panels.height > 0) {
-            val panelLocation = IntArray(2); val rootLocation = IntArray(2)
-            panels.getLocationInWindow(panelLocation); root.getLocationInWindow(rootLocation)
-            availableBottom = minOf(availableBottom, panelLocation[1] - rootLocation[1])
+        val lift = if (creditVisible) (statusTop - limit).coerceAtLeast(0) else 0
+        val lp = stack.layoutParams as? RelativeLayout.LayoutParams ?: return
+        if (lp.bottomMargin != lift) {
+            lp.bottomMargin = lift
+            stack.layoutParams = lp
         }
-        val covered = (mapView.height - availableBottom).coerceAtLeast(0)
-        ui.setLogoMargins(logo[0], logo[1], logo[2], logo[3] + covered)
-        ui.setAttributionMargins(attribution[0], attribution[1], attribution[2], attribution[3] + covered)
+    }
+
+    private fun openOsmCopyright() {
+        val page = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.osm_copyright_url)))
+        try {
+            startActivity(page)
+        } catch (_: ActivityNotFoundException) {
+            val host = context ?: return
+            Toast.makeText(host, R.string.osm_copyright_unavailable, Toast.LENGTH_SHORT).show()
+        }
     }
 
 
