@@ -1,12 +1,19 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-16
+last_verified: 2026-10-17
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-17 — Централизованная статистика мобильного приложения
+
+- Описаны backup-excluded offline outbox, точные ACK и connected retry.
+- Добавлены учёт устройств, WebGIS accounts/projects и видимых открытий.
+- Длительность foreground исключена по запросу владельца; Debug/verification
+  не содержат production endpoint/token. Сервер и протокол принадлежат lisa/server.
 
 ## 2026-10-16 — Подпись OSM вместо значка MapLibre
 

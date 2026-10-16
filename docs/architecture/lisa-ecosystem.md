@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-10-08
+last_verified: 2026-10-17
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -12,6 +12,14 @@ related_code:
 ---
 
 # Экосистема ЛИСА — desktop, плагины и Android
+
+## Статистика мобильного приложения
+
+Отдельная интеграция связывает production Android с HTTPS сервисом
+`apps-geonical.ru/mobile-stats/`, owner `C:\dev\lisa\server\mobile_usage`.
+Собираются устройства, WebGIS accounts/projects и даты открытий, с offline
+outbox и точными ACK. Длительность работы не собирается. NextGIS Web, данные
+объектов и desktop tenant DB не меняются. [Контракт](mobile-usage.md).
 
 ## Владение
 

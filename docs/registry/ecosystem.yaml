@@ -1,5 +1,13 @@
 schema_version: 1
 systems:
+  mobile-usage-server:
+    title: Geonical mobile usage statistics
+    kind: external_workspace
+    location: C:/dev/lisa/server/mobile_usage
+    origin: https://github.com/GeonicalSys/lisa.git
+    docs_entry: README.md
+    docs_url: https://github.com/GeonicalSys/lisa/blob/main/server/mobile_usage/README.md
+    source_of_truth: Versioned HTTPS mobile usage protocol, durable analytics database and private reports; no foreground duration.
   mobile-app:
     title: GeonicalSystem NextGIS Mobile
     kind: workspace

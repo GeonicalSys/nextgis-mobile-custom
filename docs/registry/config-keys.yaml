@@ -394,6 +394,12 @@ variant_resources:
     source: app/build.gradle
     purpose: Variant-specific SyncAdapter account type; must equal nextgis_accounts_auth and MainApplication runtime type
 build_inputs:
+  usage.properties:
+    owner: app
+    source: usage.properties
+    secret_values_forbidden: true
+    optional: true
+    purpose: Private release-only HTTPS usage.endpoint and write-only usage.uploadToken. Debug and field verification embed empty values; no foreground duration collection.
   fieldVerificationChecks:
     owner: app
     source: app/build.gradle

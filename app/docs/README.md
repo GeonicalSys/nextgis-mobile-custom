@@ -1,10 +1,18 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-16
+last_verified: 2026-10-17
 ---
 
 # app — Android-приложение Lisa/Belka
+
+## Статистика использования
+
+Release с локальным `usage.properties` передаёт модель/ID устройства,
+аккаунты, состав проектов и даты открытий в отдельный серверный сервис.
+Offline outbox сохраняет UUID/seq до подтверждения; Debug и verification
+не отправляют production-статистику. Длительность работы не собирается.
+[Контракт и ограничения](../../docs/architecture/mobile-usage.md).
 
 ## Отображение точности встроенного GPS
 

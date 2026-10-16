@@ -79,6 +79,19 @@ if (geonicalSigningPropertyCount > 0
 def geonicalSigningConfigured =
         geonicalSigningPropertyCount == geonicalSigningPropertyNames.size()
 
+// Write-only analytics credentials are local build inputs, never committed.
+def usageProperties = new Properties()
+def usagePropertiesFile = rootProject.file('usage.properties')
+if (usagePropertiesFile.exists()) {
+    usagePropertiesFile.withInputStream { usageProperties.load(it) }
+}
+def usageEndpoint = usageProperties.getProperty('usage.endpoint', '')
+def usageUploadToken = usageProperties.getProperty('usage.uploadToken', '')
+if (usageEndpoint && !(usageEndpoint.startsWith('https://') && usageUploadToken)) {
+    throw new GradleException('Usage reporting requires an HTTPS endpoint and upload token')
+}
+def usageLiteral = { value -> groovy.json.JsonOutput.toJson(value) }
+
 
 android {
     namespace "com.nextgis.mobile"
@@ -125,6 +138,8 @@ android {
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
         buildConfigField "String", "SOURCE_REVISION", "\"${sourceRevision}\""
         buildConfigField 'boolean', 'FIELD_VERIFICATION', fieldVerificationChecks.toString()
+        buildConfigField 'String', 'USAGE_ENDPOINT', usageLiteral(fieldVerificationChecks ? '' : usageEndpoint)
+        buildConfigField 'String', 'USAGE_UPLOAD_TOKEN', usageLiteral(fieldVerificationChecks ? '' : usageUploadToken)
 
         def props = new Properties()
         file("../local.properties").withInputStream { props.load(it) }
@@ -191,6 +206,9 @@ android {
             }
         }
         debug {
+            // Debug and verification never send test activity to the production receiver.
+            buildConfigField 'String', 'USAGE_ENDPOINT', '""'
+            buildConfigField 'String', 'USAGE_UPLOAD_TOKEN', '""'
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

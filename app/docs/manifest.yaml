@@ -2,13 +2,25 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-16
+last_verified: 2026-10-17
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/usage/UsageAnalytics.java
+    responsibility: Collect visible opening timestamps and account/project inventory without foreground duration; observe registry changes off the UI thread.
+  - path: app/src/main/java/com/nextgis/mobile/usage/UsageStore.java
+    responsibility: Persist installation identity, immutable event UUID/sequence and snapshot checkpoint in backup-excluded SQLite before delivery.
+  - path: app/src/main/java/com/nextgis/mobile/usage/UsageDelivery.java
+    responsibility: Deliver bounded HTTPS batches, reject redirects and acknowledge only confirmed requested event IDs.
+  - path: app/src/main/java/com/nextgis/mobile/usage/UsageUploadWorker.java
+    responsibility: Retry the independent usage queue with connected immediate and periodic WorkManager jobs.
+  - path: app/src/main/java/com/nextgis/mobile/usage/UsageOpenPolicy.java
+    responsibility: Distinguish a cold visible opening, Activity transfer and later return without collecting duration.
+  - path: app/src/androidTest/java/com/nextgis/mobile/usage/UsageDeliveryTest.java
+    responsibility: Verify private outbox restart, exact ACK and retained HTTP 503 followed by idempotent delivery using a synthetic loopback server.
   - path: app/src/main/java/com/nextgis/mobile/location/LocationDisplayAccuracy.java
     responsibility: Apply a render-only 3 m phone GPS floor shared by the status panel and circle; preserve external, mock, NMEA and Network accuracy and every input fix.
   - path: app/src/main/java/com/nextgis/mobile/activity/AboutActivity.java
