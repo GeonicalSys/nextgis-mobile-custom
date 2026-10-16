@@ -33,6 +33,8 @@ Related `-Area usage` на изолированном API 36 emulator прошё
 успешны (сначала два, затем три case); причина раннего сбоя не установлена.
 Физический телефон не использовался. Production endpoint/token отключены
 в verification APK; native тесты не отправляют данные на рабочий сервер.
+Область usage также добавлена в GitHub regression runner; случайная привязка
+этих тестов к области location удалена.
 
 Серверные проверки в owner `lisa/server/mobile_usage`: десять unit/HTTP тестов,
 реальные HTTPS ingest/повтор, закрытый отчёт, история после restart только

@@ -12,6 +12,7 @@ related_code:
 
 - Описаны backup-excluded offline outbox, точные ACK и connected retry.
 - Добавлены учёт устройств, WebGIS accounts/projects и видимых открытий.
+- Native usage cases включены в изолированный GitHub regression runner.
 - Длительность foreground исключена по запросу владельца; Debug/verification
   не содержат production endpoint/token. Сервер и протокол принадлежат lisa/server.
 
