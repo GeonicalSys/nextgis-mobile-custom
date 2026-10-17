@@ -8,6 +8,12 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-17 — Подготовка проектов после стартовой миграции
+
+- Native sync fixture ожидает pending миграцию подложек и активные workspace
+  operations, чтобы создание проекта не совпадало с UNDERLAY_MIGRATION lease.
+- Ожидание ограничено 30 секундами, timeout завершает тест ошибкой.
+
 ## 2026-10-17 — Независимые графические fixtures GPS
 
 - Full запускает оба метода LocationOrbitTest с отдельными process/workspace,

@@ -57,6 +57,19 @@ public class ProjectSyncRunnerTest {
     private EmulatorNetworkFixture network;
 
     @Before public void connectedFixture() throws Exception {
+        // MainApplication schedules the real underlay migration three seconds after startup.
+        // Wait for its pending marker as well as active leases: an idle instant before the
+        // delayed callback does not make project creation safe.
+        long deadline = android.os.SystemClock.uptimeMillis() + 30_000;
+        while ((com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending()
+                || ProjectOperationCoordinator.isBusy())
+                && android.os.SystemClock.uptimeMillis() < deadline) {
+            Thread.sleep(50);
+        }
+        assertFalse("Startup underlay migration must finish before creating sync fixtures",
+                com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending());
+        assertFalse("Startup workspace operations must finish before creating sync fixtures",
+                ProjectOperationCoordinator.isBusy());
         network = new EmulatorNetworkFixture(InstrumentationRegistry.getInstrumentation().getTargetContext());
         network.connected(true);
     }
