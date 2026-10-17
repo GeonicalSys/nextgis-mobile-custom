@@ -63,7 +63,7 @@ isolated SharedTracksTest в Related tracks/map и emulator Full автомат�
 выполняет нужные классы и для выбора слоёв проверяет крупный интерфейс.
 Область `gps-recovery` проверяет GPS episode snapshots, парное восстановление и bounded listener retry, затем native background lifecycle; новые cases включены в Full.
 
-Области: `accuracy` (порог встроенного GPS в панели/круге и крупный интерфейс), `help` (ссылки помощи и крупный интерфейс), `layers`, `forms`, `sync`, `location`, `tracks`, `styles`, `map`, `scripts`,
+Области: `cursor` (графический smoke курсора поверх синего трека), `accuracy` (порог встроенного GPS в панели/круге и крупный интерфейс), `help` (ссылки помощи и крупный интерфейс), `layers`, `forms`, `sync`, `location`, `tracks`, `styles`, `map`, `scripts`,
 `diagnostics`. Можно передать несколько `-Area`, явный `-EmulatorSerial`,
 `-Avd`, `-SdkPath`, `-PythonPath` и `-OutputPath`. Для локального повтора уже
 собранного тестового APK существует `-SkipBuild`; он не разрешён для Full.
