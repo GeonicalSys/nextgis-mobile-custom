@@ -61,7 +61,7 @@ Debug останавливается. Граница изоляции дейст
 Общая база треков и матрица обычных стилей проверяются через isolated verification
 APK. Stateful SharedTracksTest и VectorStyleRenderingTest очищают verification
 данные между методами; broad connected reliability pass исключает SharedTracksTest,
-а затем штатный runner выполняет области map/layers/tracks/styles/usage с дедупликацией.
+а затем штатный runner выполняет области map/layers/tracks/styles/usage/bugreports с дедупликацией.
 UsageDeliveryTest проверяет долговечную очередь, точные ACK, HTTP 503/retry и
 снимок аккаунтов/проектов на этом же изолированном эмуляторе. Production
 endpoint/token в verification APK отсутствуют; длительность не собирается.
@@ -70,7 +70,7 @@ Styles проверяют собственные SQL/GeoJSON слои и фак�
 Mesa llvmpipe: прежний `swiftshader_indirect` не рисует glyph/bitmap symbols,
 поэтому его пустой снимок не проверяет настройки подписей. `graphics-host.txt`
 и `xvfb.log` входят в artifacts; styles cases и pixel assertions не исключаются.
-Текущий Full каталог содержит 204
+Текущий Full каталог содержит 207
 обязательных native cases. Предыдущий Full не подтверждает это новое содержимое;
 после merge библиотек и обновления root pins перед публикацией нужен новый Full.
 В этой задаче локально прошли 779 core unit tests и обе release validation builds,
@@ -263,3 +263,9 @@ targets теста. Устройства пользователей этот CI 
 
 Background grant в CI повторяется после UTP reinstall и после deny-location
 сценария, поскольку удаление APK/отзыв fine-coarse снимает и этот grant.
+
+GlitchTip triage 2026-10-17 добавил две emulator disk-journal регрессии и startup
+observer regression. Related bugreports выполняется штатным CI после connected
+suite. Диагностика contract 3 не повышает release/debug versions; выпуск APK
+не входит в этот разбор. Linked library/root Draft PR имеют незакрытую
+зависимость до Merge Commit maplib и замены временного feature pin в root.

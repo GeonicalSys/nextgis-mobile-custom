@@ -77,6 +77,53 @@ public class MapRuntimeDiagnosticsNativeTest {
         }
     }
 
+    @Test public void startupObserverAndCachedReportKeepTheBlockedPhaseAndOriginalBuild() throws Exception {
+        guard();
+        File journal = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir(),
+                "map-runtime-diagnostics.json");
+        CountDownLatch entered = new CountDownLatch(1), release = new CountDownLatch(1), exited = new CountDownLatch(1);
+        String phase = "synthetic_startup_" + java.util.UUID.randomUUID();
+        new Handler(Looper.getMainLooper()).post(() -> {
+            MapRuntimeDiagnostics.Trace startup = MapRuntimeDiagnostics.beginStartup(); startup.phase(phase);
+            entered.countDown();
+            try { release.await(4, TimeUnit.SECONDS); }
+            catch (InterruptedException error) { Thread.currentThread().interrupt(); }
+            finally { startup.finish(0, null); exited.countDown(); }
+        });
+        try {
+            assertTrue(entered.await(5, TimeUnit.SECONDS));
+            long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(3);
+            JSONObject captured = null;
+            while (System.nanoTime() < deadline) {
+                if (journal.isFile()) {
+                    JSONObject data = new JSONObject(new String(Files.readAllBytes(journal.toPath()), StandardCharsets.UTF_8));
+                    JSONObject startup = data.optJSONObject("startup");
+                    if (startup != null && phase.equals(startup.optString("phase"))) { captured = data; break; }
+                }
+                Thread.sleep(30);
+            }
+            assertNotNull("Startup is recorded independently before the UI returns", captured);
+            assertEquals(1, exited.getCount());
+            JSONObject startup = captured.getJSONObject("startup");
+            assertFalse(startup.getBoolean("finished")); assertTrue(startup.getJSONArray("thread_stack").length() > 0);
+            io.sentry.SentryEvent event = new io.sentry.SentryEvent();
+            event.setTimestamp(new java.util.Date(startup.getLong("observed_at_ms")));
+            event.setRelease("original@1+2"); event.setTag("source_revision", "original-source");
+            io.sentry.SentryOptions options = io.sentry.Sentry.getCurrentScopes().getOptions();
+            io.sentry.Hint hint = io.sentry.util.HintUtils.createWithTypeCheckHint(
+                    new io.sentry.android.core.AnrV2Integration.AnrV2Hint(1000,
+                            io.sentry.NoOpLogger.getInstance(), startup.getLong("observed_at_ms"), true, true));
+            event = options.getBeforeSend().execute(event, hint);
+            java.util.Map<?, ?> runtime = (java.util.Map<?, ?>) event.getContexts().get("map_runtime");
+            assertEquals(phase, ((java.util.Map<?, ?>) runtime.get("startup")).get("phase"));
+            assertEquals("original@1+2", event.getRelease()); assertEquals("original-source", event.getTag("source_revision"));
+            assertNull("The next process operation must not be assigned to a historical ANR", event.getTag("operation"));
+            assertNotNull(event.getContexts().get("report_origin"));
+        } finally {
+            release.countDown(); assertTrue(exited.await(5, TimeUnit.SECONDS));
+        }
+    }
+
     @Test public void anActuallyFullQueueReturnsTheReasonAndCorrelationId() throws Exception {
         guard();
         LocalVectorTileServer server = LocalVectorTileServer.getInstance();

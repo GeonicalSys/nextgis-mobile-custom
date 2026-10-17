@@ -797,3 +797,10 @@ creation actions, then checks camera coordinates after the form returns to the
 visible map instead of reading a stopped SurfaceView. Geometry and saved SQL values remain checked.
 Creation pans update native and model camera state together; regression checks
 invoke the delayed legacy redraw and preserve the actual GPS centre and fractional zoom.
+
+Разбор 2026-10-17: SyncJournalCommit выполняет durable enqueue/ACK на собственном
+writer и сохраняет caller cancellation. PersistenceFailure сохраняет structured
+sync_journal и cause. Contract 3 резервирует payload budget, actual SDK scope tags
+для NDK и фиксирует startup stages. Cached/Backfillable reports сохраняют original
+identity; report_origin содержит отправителя. Related bugreports включён в CI.
+[Группы и ограничения вывода](../../docs/reference/glitchtip-triage-2026-10-17.md).

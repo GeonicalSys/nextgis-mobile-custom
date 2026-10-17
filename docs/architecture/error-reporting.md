@@ -1,7 +1,7 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-14
+last_verified: 2026-10-17
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -137,7 +137,7 @@ attachments отключены. GlitchTip 6.2.6 не хранит generic ZIP/sc
 учётные записи, геометрию, атрибуты формы или файлы фотографий из crash callback.
 `save_log`/`verbose_log` управляют локальным экспортом и не отключают error reports.
 
-Контракт `diagnostics_contract=2` сохраняет содержимое уже собранного события:
+Контракт `diagnostics_contract=3` сохраняет содержимое уже собранного события:
 URL с путём и исходным userinfo, отдельные query/fragment, метод, HTTP headers/cookies,
 response status/headers, доступные request/response data, extras, custom contexts,
 user и breadcrumbs, variables/absolute paths/source context в frames. Пароли,
@@ -153,7 +153,12 @@ user и breadcrumbs, variables/absolute paths/source context в frames. Паро
 и 64 элементами каждой коллекции. Циклы заменяются маркером; неизвестные объекты
 не обходятся reflection и не вызывают произвольный toString. Основной stack,
 номер строки, устройство и URL не удаляются при исчерпании бюджета дополнительных
-данных. Пустые значения и типы чисел/boolean сохраняются.
+данных. Пустые значения и типы чисел/boolean сохраняются. Бюджет разделён: 16 KiB/128 узлов
+для report_origin, sync_journal, gps_recovery и map_runtime (в этом порядке),
+8 KiB/64 для остальных данных, 4 KiB/16 для дополнительных полей stack и
+4 KiB/48 для breadcrumbs. Последние операции/lifecycle получают бюджет первыми;
+порядок breadcrumbs в событии сохраняется. Большие HTTP headers или frame vars
+не вытесняют GPS-контекст и последние действия. Typed native os_linux сохраняется.
 
 Selected handled failures вызывают `AppDiagnostics.report`: ошибки очереди
 sync, расчёта азимута/выноса и foreground запуска. Обычные offline/timeouts и
@@ -207,3 +212,29 @@ deliverWhenNetworkReturns. Отдельный workerRetriesTemporaryServerFailur
 синтетически создают 6000 строк (~12 MB), затем проверяют cold start/локальный журнал
 и SDK BeforeSend с 28 повторными 503. Требуются тот же opt-in runner, явный test DSN
 и изолированный эмулятор. Рабочий телефон используется только для чтения диагностики.
+
+## Разбор 2026-10-17 и исторические ANR
+
+Независимый map-runtime observer наблюдает также startup после script guard:
+инициализацию SDK, account/user-agent, preferences/локальный журнал, underlay,
+Collector bootstrap, shared-track migration, GISApplication load, upgrade и workers.
+Записываются только фиксированные имена этапов, elapsed/stage times и Java stack
+заблокированного потока; быстрый успешный старт не пишет снимок. Это диагностика
+ошибок запуска, не сбор длительности работы пользователя.
+
+Прежний journal читается bounded writer до первой записи нового процесса и
+сохраняется в памяти: новый медленный старт не стирает контекст delayed AppExitInfo.
+Общий файл остаётся до 16 KiB; при переполнении удаляется старейшее наблюдение.
+Идентичность snapshot соответствует исходному процессу. Cached и Backfillable
+(Android AnrV2Hint) события не получают текущую operation. Их исходные release/tags
+сохраняются, отдельно report_origin содержит reporter_version/build/revision.
+Отсутствующая в старом отчёте исходная версия не восстанавливается догадкой.
+
+brand/source_revision/diagnostics_contract устанавливаются и в actual SDK scope
+с enableScopeSync: options tags сами по себе не поступают NDK scope observer в
+закреплённом SDK 8.37.1. Версия SDK и обработчики native crash не меняются.
+
+Sync PersistenceFailure добавляет sync_journal: phase, projects/accounts, before/after,
+bytes, storage_available_bytes, caller_interrupted_at_entry/caller_interrupted и
+write_mode=owned_thread. Причина IOException сохраняется, сами пары и credentials
+не копируются. [Результаты разбора](../reference/glitchtip-triage-2026-10-17.md).

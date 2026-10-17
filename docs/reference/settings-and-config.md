@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-14
+last_verified: 2026-10-17
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -292,3 +292,13 @@ track_registered_device хранит SHA-256 точной пары сервер/
 До подтверждения или после registered=false отметка скрыта. Сетевые ошибки
 сохраняют прежнее подтверждение; смена сервера/UID требует своего подтверждения.
 Контракт: [доставка трека](../architecture/ngw-sync-and-storage.md#доставка-трека-и-регистрация-uid).
+
+## Диагностика после разбора 2026-10-17
+
+diagnostics_contract=3 сохраняет прежнюю политику содержимого и общий bounded
+budget, резервируя место для последних действий и GPS/startup/sync context.
+map-runtime-diagnostics остаётся приватным журналом до 16 KiB; добавлен startup
+и сохранение предыдущего процесса до новых записей. sync_recovery_journal
+сохраняет прежние ключи/формат и использует подтверждённую запись собственным
+disk writer с восстановлением interrupt вызывающего потока. Пользовательских
+переключателей или новых credentials нет; учёт длительности работы не добавлен.

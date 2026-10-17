@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-15
+last_verified: 2026-10-17
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -177,3 +177,14 @@ only through its per-method verification profile; the broad legacy CI package
 excludes it. The loopback delivery suite now requires nine successful cases,
 including the delayed-ACK/replacement-point scenario. Current Full catalog has
 194 required native cases; historical 177-case receipts cannot admit this runtime.
+
+## Регрессии из GlitchTip — 2026-10-17
+
+`tools/verify-mobile-tests.ps1 -Scope Related -Area bugreports` запускает isolated
+SyncRecoveryJournalNativeTest, MapRuntimeDiagnosticsNativeTest и DiagnosticsNoiseTest.
+Проверяются interrupted disk enqueue/ACK, blocked startup/query, реальная local
+queue_full, envelope HTTP details и cold-start backlog. Runner выполняет seed и
+restart отдельно, а остальные HTTP cases — с чистым cache. Область включена в
+штатный GitHub related runner; дублирующиеся cases map/bugreports не повторяются.
+Full catalogue содержит 207 native cases; прежние Full receipts это новое
+содержимое не подтверждают. APK пока не опубликован.

@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-15
+last_verified: 2026-10-17
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -768,3 +768,16 @@ Phone integration получает только read-only snapshot layer policie
 разрешённого проекта; настоящие accounts/credentials/features не импортируются.
 Синхронизационные автоматические сценарии продолжают использовать synthetic
 loopback receivers. Обычные Lisa/Belka/Debug account identities не меняются.
+
+## Отмена потока и подтверждение recovery journal — 2026-10-17
+
+enqueue, complete и миграция pending sync journal выполняют SharedPreferences.commit
+на одном собственном disk writer. Вызывающий поток ждёт подтверждения долговечной
+записи, даже если отменён, и возвращает флаг interrupt перед выходом. Сетевые проходы
+после отмены этим не возобновляются. Общий synchronized read/merge/write сохраняется;
+нет apply() вместо commit и нет удаления остальных project/account pairs.
+Настоящий commit=false остаётся ошибкой, с исходной причиной и structured sync_journal.
+Две native регрессии проверяют физический shared_prefs XML на API 36: interrupted
+enqueue и acknowledgment одной пары при сохранении другой. Оба сценария падали
+на исходном коде. Это воспроизводимая причина части ошибок, а не доказательство
+одинаковой причины всех исторических групп 64/76/77.

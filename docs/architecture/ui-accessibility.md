@@ -1,7 +1,7 @@
 ---
 title: Адаптация интерфейса к крупному шрифту и размеру отображения
 type: architecture
-last_verified: 2026-10-16
+last_verified: 2026-10-17
 related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java
   - maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java
@@ -178,3 +178,7 @@ scale 1.15 на телефоне, хотя adapter и фильтр содерж�
 В узком landscape крупный список может прокручиваться; последняя строка должна
 оставаться достижимой. Полный прогон добавляет реальные layer policies
 разрешённого Collector проекта через штатную кнопку создания.
+
+Область Related bugreports (2026-10-17) проверяет disk journal и error diagnostics
+на изолированном эмуляторе. Она не меняет размеры/темы интерфейса; полный UI matrix
+и phone acceptance перед публикацией остаются обязательными.

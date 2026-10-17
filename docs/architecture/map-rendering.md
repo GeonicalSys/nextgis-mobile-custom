@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-16
+last_verified: 2026-10-17
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -629,3 +629,14 @@ Verification profile добавляет отдельную app identity и test 
 сохраняя MapLibre renderer/runtime dependencies. LocationOrbitTest и native
 map checks остаются частью Full на эмуляторе; firmware/RF accuracy искусственный
 маршрут не подтверждает. Порядок тестов: [автотесты](../runbooks/automated-tests.md).
+
+## Startup snapshot и delayed ANR — 2026-10-17
+
+MapRuntimeDiagnostics.beginStartup использует тот же независимый observer, что
+query/tile diagnostics. MainApplication отмечает фиксированные bootstrap stages;
+наблюдатель не вызывает GIS, SQLite или renderer. Старый process snapshot читается
+до первой новой записи, а общий journal startup/query/tile ограничен 16 KiB с
+удалением старейшей записи. SDK cached/Backfillable события сопоставляются по их
+времени, без подмены исходной сборки текущим reporter. Задержки загрузки R-tree и
+native SIGABRT требуют новых данных; алгоритмы загрузки карты и лимиты local tiles
+по прежним несимволицированным стекам не меняются.

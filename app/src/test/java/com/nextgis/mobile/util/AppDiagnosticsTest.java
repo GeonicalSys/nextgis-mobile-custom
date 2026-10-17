@@ -62,4 +62,68 @@ public class AppDiagnosticsTest {
         assertEquals("ModifyAttributesActivity", screen.getData("screen"));
         assertEquals("private person", screen.getData("field_value"));
     }
+
+    @Test public void largeRequestsAndStackVariablesCannotEraseGpsOrTheLatestOperation() {
+        SentryEvent event = new SentryEvent();
+        Request request = new Request();
+        java.util.Map<String, String> headers = new java.util.LinkedHashMap<>();
+        for (int i = 0; i < 100; i++) headers.put("synthetic-" + i, "v".repeat(1000));
+        request.setHeaders(headers); event.setRequest(request);
+        List<SentryStackFrame> frames = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            SentryStackFrame frame = new SentryStackFrame();
+            frame.setVars(java.util.Map.of("large", "x".repeat(1000))); frames.add(frame);
+        }
+        SentryException exception = new SentryException();
+        exception.setStacktrace(new SentryStackTrace(frames)); event.setExceptions(new ArrayList<>(List.of(exception)));
+        event.getContexts().put("gps_recovery", java.util.Map.of("raw_fresh", false, "used_satellites", 0));
+        List<Breadcrumb> breadcrumbs = new ArrayList<>();
+        for (int i = 0; i < 79; i++) {
+            Breadcrumb old = new Breadcrumb(); old.setCategory("http");
+            old.setData("url", "https://synthetic.example/" + "q".repeat(1000)); breadcrumbs.add(old);
+        }
+        Breadcrumb latest = new Breadcrumb(); latest.setCategory("lisa.operation");
+        latest.setData("operation", "LOCATION"); latest.setData("phase", "READY"); breadcrumbs.add(latest);
+        event.setBreadcrumbs(breadcrumbs);
+        for (int replay = 0; replay < 2; replay++) {
+            AppDiagnostics.sanitize(event);
+            assertEquals(0, ((java.util.Map<?, ?>) event.getContexts().get("gps_recovery")).get("used_satellites"));
+            assertEquals("LOCATION", latest.getData("operation"));
+            assertEquals("READY", latest.getData("phase"));
+            assertSame(latest, event.getBreadcrumbs().get(79));
+        }
+    }
+
+    @Test public void replayPreservesOriginalIdentityAndDoesNotInventAnOldOperation() {
+        AppDiagnostics.operation(AppDiagnostics.Operation.SYNC, AppDiagnostics.Phase.START);
+        SentryEvent event = new SentryEvent(); event.setTimestamp(new java.util.Date(1));
+        event.setRelease("original@1+2"); event.setTag("source_revision", "original-source");
+        AppDiagnostics.prepareCachedForSend(event);
+        assertEquals("original@1+2", event.getRelease());
+        assertEquals("original-source", event.getTag("source_revision")); assertNull(event.getTag("operation"));
+        assertEquals(com.nextgis.mobile.BuildConfig.SOURCE_REVISION,
+                ((java.util.Map<?, ?>) event.getContexts().get("report_origin")).get("reporter_revision"));
+    }
+
+    @Test public void nativeOsAliasRemainsTypedForTheSdkSerializer() {
+        SentryEvent event = new SentryEvent(); io.sentry.protocol.OperatingSystem os = new io.sentry.protocol.OperatingSystem();
+        os.setName("Linux"); os.setKernelVersion("synthetic-kernel"); event.getContexts().put("os_linux", os);
+        AppDiagnostics.sanitize(event);
+        assertSame(os, event.getContexts().get("os_linux"));
+    }
+
+    @Test public void buildIdentityReachesScopeObserversUsedByNativeReporting() {
+        io.sentry.android.core.SentryAndroidOptions options = new io.sentry.android.core.SentryAndroidOptions();
+        options.setEnableScopeSync(true);
+        java.util.Map<String, String> nativeTags = new HashMap<>();
+        options.addScopeObserver((io.sentry.IScopeObserver) java.lang.reflect.Proxy.newProxyInstance(
+                getClass().getClassLoader(), new Class[]{io.sentry.IScopeObserver.class}, (proxy, method, args) -> {
+                    if ("setTag".equals(method.getName())) nativeTags.put((String) args[0], (String) args[1]);
+                    return null;
+                }));
+        AppDiagnostics.applyBuildIdentity(new io.sentry.Scope(options));
+        assertEquals(com.nextgis.mobile.BuildConfig.FLAVOR, nativeTags.get("brand"));
+        assertEquals(com.nextgis.mobile.BuildConfig.SOURCE_REVISION, nativeTags.get("source_revision"));
+        assertEquals("3", nativeTags.get("diagnostics_contract"));
+    }
 }

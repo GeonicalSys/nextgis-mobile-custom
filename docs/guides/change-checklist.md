@@ -1,7 +1,7 @@
 ---
 title: Чеклист изменения Android-форка
 type: guide
-last_verified: 2026-10-14
+last_verified: 2026-10-17
 related_code:
   - AGENTS.md
   - docs/registry/change-impact.yaml
@@ -59,3 +59,9 @@ related_code:
   не выбирать другой проект самостоятельно.
 
 Команды и изоляция: [автотесты](../runbooks/automated-tests.md).
+
+При обработке error reports отдельно отмечать воспроизведение, исправление,
+диагностическое улучшение и выпуск. Для delayed AppExitInfo сверять исходную
+identity и report_origin, для sync cancellation проверять disk enqueue/ACK.
+Related bugreports входит в CI; новый Full catalogue (207 cases) нужен перед
+публикацией APK после этой доработки.

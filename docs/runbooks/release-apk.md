@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-14
+last_verified: 2026-10-17
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -57,6 +57,8 @@ maplib #51 с production `3.1.2.29` (Merge Commit
 `28a4300ae308c6f531c9b8073382f09c1d6ad052`) → fetched pins в app #59 →
 зелёный CI → app #59 (Squash) → APK version matrix → dry-run → публикация
 только `lisa` и `belka`. Debug сохраняет 3.1.2.23 / 218.
+
+Локальная сборка Lisa Release 17 октября 2026 без повышения версии и без публикации: maplib #55 (Merge Commit `3f1db55dea715a873f6a073854a0aca1b7154eaf`) и maplibui #38 (Merge Commit `9c4b8c82f388ad2d040ba59d72b3cf431e1460a7`) → fetched pins в app #67 → Squash. Версии остаются 3.1.2.29 / 223 и debug 3.1.2.23 / 218. Publisher и установка на рабочий телефон не входят в этот шаг.
 
 Выпуск «Орбиты-кольца» 3.1.2.28 / 222: maplib #49 (Merge Commit) → fetched
 remote merge pin в app #58 → зелёный CI итогового app head → app #58 (Squash)
@@ -284,3 +286,8 @@ source fingerprint блокируют публикацию. При отсутс�
 1403 сначала спросить пользователя о другом тестовом проекте.
 Порядок dependency closure и отдельное разрешение на публикацию сохраняются.
 Подробности: [автотесты](automated-tests.md).
+
+После добавления GlitchTip regression cases 2026-10-17 новый Full catalogue
+содержит 207 native cases. Related bugreports и unit checks не заменяют Full и
+Check-Publication перед выпуском. Порядок поставки: maplib Merge Commit → fetch
+library merge commit и root pin → app Squash → согласованный выпуск APK.
