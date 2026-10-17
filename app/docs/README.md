@@ -6,6 +6,28 @@ last_verified: 2026-10-17
 
 # app — Android-приложение Lisa/Belka
 
+## Настройка сектора точности компаса
+
+В «Настройки → Местоположение» есть чекбокс «Показывать сектор точности
+компаса» (`show_compass_accuracy_sector`, default false). Выбор сохраняется;
+MapFragment применяет его при возврате на карту через
+`MapDrawable.setCompassAccuracySectorVisible(boolean)`. Заливка и оба
+контура переключаются вместе, выбранная видимость сохраняется при reload.
+Расчёт и стили сектора сохранены для доработки. Стрелка направления, круг GPS
+и синяя точка 5 dp с белой каймой 2 dp независимы от чекбокса.
+Related `cursor` проверяет default off, включение/выключение после resume,
+hot-add/lite reload, реальные rendered features и русскую подпись чекбокса
+в обеих темах при крупном интерфейсе.
+
+## GPS diagnostic episodes
+
+Snapshot v2 separates reception loss, callback delivery and processing; bounded
+24-sample history and correlated recovery/cancel preserve the episode UUID.
+Short no-fix gaps stay local; long/repeated gaps are rate limited. Only sustained
+fresh used-in-fix statuses without callbacks allow one same-listener re-registration.
+Recorders, Network, precision leases, wake lock, filtering and segment rules remain owned
+by their existing controllers. See consuming root docs/architecture/location-pipeline.md.
+
 ## Статистика использования
 
 Release с локальным `usage.properties` передаёт модель/ID устройства,
@@ -345,7 +367,7 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   сектором точности компаса (истинный курс, без коррекции выноса); ширина
   сектора следует за неопределённостью компаса, длина сохраняет 56 логических
   пикселей при смене масштаба. «Орбита-кольцо» оставляет прозрачное окно 21 dp
-  с синей центральной точкой диаметром 6 dp. Синий обод утолщён наружу на 1 dp
+  с синей центральной точкой диаметром 5 dp и белой обводкой толщиной 2 dp. Синий обод утолщён наружу на 1 dp
   до радиуса 13 dp за счёт белого обода; внешний радиус 15.2 dp и тёмная кромка
   сохранены. Заливки GPS и компаса не перекрывают окно, поэтому небольшой
   точечный объект на текущем месте виден под курсором. Сектор имеет белый и

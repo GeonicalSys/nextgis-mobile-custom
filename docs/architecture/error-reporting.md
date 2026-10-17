@@ -17,15 +17,28 @@ related_code:
 
 ## Автоматическая диагностика восстановления GPS
 
-Долгое получение GPS создаёт warning `gps_recovery` с operation `LOCATION`.
-Передаётся готовый ограниченный snapshot: ожидание, возраст измерения/доставки,
-accuracy, состояние фильтра и GNSS, power state и число владельцев. Provider off
-и отсутствие permission не создают event. Порог — 30 секунд первичного ожидания
-или 15 секунд повторного восстановления, один report на эпизод и максимум один
-в десять минут. Группировка — acquisition/display_processing. Используется
-существующий durable transport с offline retry; verbose_log и ручной HyperLog
-экспорт не требуются. Business storage и полная БД журнала не читаются.
+`GpsRecoveryPolicy` различает отсутствие спутникового решения (`no_fix`),
+недоставленные callbacks при свежем used-in-fix status (`callback_stalled`),
+тишину всего provider, stale/invalid fixes, ожидание фильтра и display processing.
+Локальный эпизод фиксируется через 30 s первичного / 15 s повторного ожидания
+после истечения прежней 8 s свежести. В GlitchTip уходят длительные (60 s ожидания),
+третий короткий эпизод за 10 min и признаки сбоя доставки/обработки. Не более одной
+начальной отправки за 10 min. Recovery/cancel пары отправляются только для уже
+отправленного эпизода, с тем же UUID и причиной группировки, даже если причина
+позже изменилась; recovery имеет INFO, задержка WARNING.
 
+Snapshot v2 содержит `last_callback_age_ms` (время с последнего callback) отдельно
+от `last_callback_delivery_lag_ms` (возраст координаты при той доставке).
+История — максимум 24 компактных строки раз в 5 s: monotonic time, raw/callback/status
+ages, used/visible, C/N0, решение фильтра, screen и owners. Координат в истории нет.
+Один `callback_stalled`, непрерывный 30 s при свежих used-in-fix statuses, разрешает
+одну повторную регистрацию того же listener с прежним интервалом, не чаще раза
+за 10 min. Network, recorders, precision leases, wake lock и фильтр сохраняются.
+При `no_fix`, отсутствии разрешения, отключённом provider или external input
+повторной регистрации нет. Provider-off/permission loss не открывают новый эпизод;
+остановка существующего даёт cancelled, а не выдуманное recovery.
+
+Существующий durable transport сохраняет warning и парный итог offline.
 
 MapRuntimeDiagnostics добавляет адресную диагностику локальных тайлов и
 touch queries MapLibre. Быстрые успешные операции не пишутся в журнал.

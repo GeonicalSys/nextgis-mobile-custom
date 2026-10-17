@@ -21,6 +21,7 @@ import org.maplibre.android.geometry.LatLng;
 import org.maplibre.android.maps.Style;
 import org.maplibre.android.style.layers.BackgroundLayer;
 import org.maplibre.android.style.layers.CircleLayer;
+import org.maplibre.android.style.layers.LineLayer;
 import org.maplibre.android.style.layers.PropertyFactory;
 import org.maplibre.android.style.layers.Layer;
 import org.maplibre.android.style.layers.SymbolLayer;
@@ -28,6 +29,7 @@ import org.maplibre.android.style.sources.GeoJsonSource;
 import org.maplibre.geojson.Feature;
 import org.maplibre.geojson.FeatureCollection;
 import org.maplibre.geojson.Point;
+import org.maplibre.geojson.LineString;
 import org.maplibre.geojson.Polygon;
 import java.lang.reflect.Method;
 import java.io.File;
@@ -122,13 +124,17 @@ public class LocationOrbitTest {
         return radius;
     }
 
-    @Test public void orbitUsesCompassThenCourseWithACenteredAnchorAndVisibleSector() throws Exception {
+    @Test public void orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector() throws Exception {
         assertTrue("Use only an isolated emulator", android.os.Build.MODEL.contains("sdk")
                 || android.os.Build.FINGERPRINT.startsWith("generic"));
         GISApplication app = (GISApplication) InstrumentationRegistry.getInstrumentation()
                 .getTargetContext().getApplicationContext();
         assertTrue(app.getPackageName().endsWith(".debug"));
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(app);
+        String sectorKey = AppSettingsConstants.KEY_PREF_SHOW_COMPASS_ACCURACY_SECTOR;
+        boolean hadSector = preferences.contains(sectorKey);
+        boolean oldSector = preferences.getBoolean(sectorKey, false);
+        assertTrue(preferences.edit().remove(sectorKey).commit());
         boolean hadIntro = preferences.contains(AppSettingsConstants.KEY_PREF_INTRO);
         boolean oldIntro = preferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
         boolean hadGeoDialog = preferences.contains(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
@@ -146,6 +152,15 @@ public class LocationOrbitTest {
                     Method stop = activity.getMapFragment().getClass().getDeclaredMethod("stopDeviceHeading");
                     stop.setAccessible(true);
                     stop.invoke(activity.getMapFragment());
+                    // The separately tested power warning can cover the marker at 200% font.
+                    java.lang.reflect.Field delegate = MainActivity.class.getDeclaredField("backgroundLocationWarning$delegate");
+                    delegate.setAccessible(true);
+                    com.nextgis.mobile.location.BackgroundLocationWarning warning =
+                            (com.nextgis.mobile.location.BackgroundLocationWarning) ((kotlin.Lazy<?>) delegate.get(activity)).getValue();
+                    Method restrictions = warning.getClass().getDeclaredMethod("restrictions");
+                    restrictions.setAccessible(true);
+                    warning.setShownState((Integer) restrictions.invoke(warning));
+                    warning.close();
                 } catch (ReflectiveOperationException ex) { throw new AssertionError(ex); }
                 MapDrawable map = (MapDrawable) app.getMap();
                 map.getMaplibreMap().moveCamera(CameraUpdateFactory.newLatLngZoom(
@@ -167,8 +182,9 @@ public class LocationOrbitTest {
                     int cy = marker.getHeight() / 2;
                     float density = marker.getWidth() / 72f;
                     assertEquals(Color.rgb(8, 114, 232), marker.getPixel(cx, cy));
-                    assertEquals("6 dp blue centre ends before 4 dp", 0,
-                            Color.alpha(marker.getPixel(cx + Math.round(4f * density), cy)));
+                    assertWhiteBorder(marker, cx, cy, density);
+                    assertEquals("Blue centre and white border end before 5.5 dp", 0,
+                            Color.alpha(marker.getPixel(cx + Math.round(5.5f * density), cy)));
                     assertEquals("Transparent ring opening", 0,
                             Color.alpha(marker.getPixel(cx + Math.round(9f * density), cy)));
                     assertEquals("Blue rim grows outward into the white rim", Color.rgb(8, 114, 232),
@@ -188,7 +204,7 @@ public class LocationOrbitTest {
                 ensurePointUnderCursor(style);
             });
             awaitMarker(screen, app, true, 35f);
-            screen.onActivity(activity -> assertSectorSize((MapDrawable) app.getMap(), app));
+            screen.onActivity(activity -> assertSectorRetainsGeometry((MapDrawable) app.getMap(), app, false));
             screenshot(app, "orbit-compass.png");
             screen.onActivity(activity -> ((MapDrawable) app.getMap())
                     .loadLayersToMaplibreMapLite(Collections.emptyList(), true));
@@ -196,6 +212,7 @@ public class LocationOrbitTest {
             screen.onActivity(activity -> {
                 Style style = ((MapDrawable) app.getMap()).getMaplibreMap().getStyle();
                 assertStack(style);
+                assertSectorRetainsGeometry((MapDrawable) app.getMap(), app, false);
                 ensurePointUnderCursor(style);
             });
             for (double zoom : new double[]{16, 19}) {
@@ -206,7 +223,7 @@ public class LocationOrbitTest {
                 screen.onActivity(activity -> ((MapDrawable) app.getMap())
                         .updateLocation(FIX, false, 140f, 12f, 35f, 30f));
                 awaitMarker(screen, app, true, 35f);
-                screen.onActivity(activity -> assertSectorSize((MapDrawable) app.getMap(), app));
+                screen.onActivity(activity -> assertSectorRetainsGeometry((MapDrawable) app.getMap(), app, false));
             }
             screen.onActivity(activity -> ((MapDrawable) app.getMap()).updateLocation(
                     FIX, true, 140f, 12f, 35f, 30f));
@@ -216,17 +233,51 @@ public class LocationOrbitTest {
                     FIX, false, 0f, 12f, null, null));
             awaitMarker(screen, app, true, 0f);
             screenshot(app, "orbit-course.png");
+            screen.onActivity(activity -> {
+                Style style = ((MapDrawable) app.getMap()).getMaplibreMap().getStyle();
+                style.removeLayer("orbit-test-feature");
+                style.removeSource("orbit-test-feature-source");
+                style.addSource(new GeoJsonSource("orbit-test-track-source", Feature.fromGeometry(
+                        LineString.fromLngLats(java.util.Arrays.asList(
+                                Point.fromLngLat(FIX.longitude() - 0.001, FIX.latitude()),
+                                Point.fromLngLat(FIX.longitude() + 0.001, FIX.latitude()))))));
+                style.addLayerBelow(new LineLayer("orbit-test-track", "orbit-test-track-source")
+                        .withProperties(PropertyFactory.lineColor("#0872E8"), PropertyFactory.lineWidth(6f)),
+                        "user-location-accuracy");
+            });
+            screenshot(app, "orbit-blue-track.png", true);
             screen.onActivity(activity -> ((MapDrawable) app.getMap()).updateLocationHeading(270f, 60f));
             awaitMarker(screen, app, true, 270f);
             screen.onActivity(activity -> {
                 MapDrawable map = (MapDrawable) app.getMap();
                 assertStack(map.getMaplibreMap().getStyle());
+                assertSectorRetainsGeometry(map, app, false);
+            });
+            resumeWithSectorPreference(screen, app, preferences, true);
+            awaitSector(screen, app, true);
+            screen.onActivity(activity -> {
+                MapDrawable map = (MapDrawable) app.getMap();
+                map.getMaplibreMap().getStyle().addLayer(new BackgroundLayer("sector-test-hot-layer"));
+                map.updateLocationHeading(35f, 30f);
+                assertStack(map.getMaplibreMap().getStyle());
+                map.getMaplibreMap().getStyle().removeLayer("sector-test-hot-layer");
+                map.loadLayersToMaplibreMapLite(Collections.emptyList(), true);
+            });
+            awaitSector(screen, app, true);
+            screen.onActivity(activity -> assertSectorRetainsGeometry((MapDrawable) app.getMap(), app, true));
+            resumeWithSectorPreference(screen, app, preferences, false);
+            awaitSector(screen, app, false);
+            screen.onActivity(activity -> {
+                MapDrawable map = (MapDrawable) app.getMap();
+                assertSectorRetainsGeometry(map, app, false);
                 map.clearLocation();
             });
             await(screen, () -> ((MapDrawable) app.getMap()).getMaplibreMap().queryRenderedFeatures(
                     markerPoint((MapDrawable) app.getMap()), "user-location-layer").isEmpty());
         } finally {
             SharedPreferences.Editor restore = preferences.edit();
+            if (hadSector) restore.putBoolean(sectorKey, oldSector);
+            else restore.remove(sectorKey);
             if (hadIntro) restore.putBoolean(AppSettingsConstants.KEY_PREF_INTRO, oldIntro);
             else restore.remove(AppSettingsConstants.KEY_PREF_INTRO);
             if (hadGeoDialog) restore.putBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG, oldGeoDialog);
@@ -257,7 +308,51 @@ public class LocationOrbitTest {
         }
     }
 
-    private static void assertSectorSize(MapDrawable map, GISApplication app) {
+    private static void resumeWithSectorPreference(ActivityScenario<MainActivity> screen,
+            GISApplication app, SharedPreferences preferences, boolean visible) throws Exception {
+        screen.moveToState(androidx.lifecycle.Lifecycle.State.STARTED);
+        assertTrue(preferences.edit().putBoolean(
+                AppSettingsConstants.KEY_PREF_SHOW_COMPASS_ACCURACY_SECTOR, visible).commit());
+        screen.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED);
+        screen.onActivity(activity -> {
+            app.getGpsEventSource().removeListener(activity.getMapFragment());
+            try {
+                Method stop = activity.getMapFragment().getClass().getDeclaredMethod("stopDeviceHeading");
+                stop.setAccessible(true);
+                stop.invoke(activity.getMapFragment());
+            } catch (ReflectiveOperationException ex) { throw new AssertionError(ex); }
+            ((MapDrawable) app.getMap()).updateLocation(FIX, true, 140f, 12f, 35f, 30f);
+        });
+        awaitMarker(screen, app, true, 35f);
+    }
+
+    private static void awaitSector(ActivityScenario<MainActivity> screen, GISApplication app,
+            boolean visible) throws Exception {
+        await(screen, () -> {
+            MapDrawable map = (MapDrawable) app.getMap();
+            boolean rendered = !map.getMaplibreMap().queryRenderedFeatures(new android.graphics.RectF(0, 0,
+                    map.getMaplibreMapView().getWidth(), map.getMaplibreMapView().getHeight()),
+                    "user-location-heading", "user-location-heading-halo", "user-location-heading-outline").isEmpty();
+            return rendered == visible;
+        });
+    }
+
+    private static void assertSectorRetainsGeometry(MapDrawable map, GISApplication app, boolean visible) {
+        Style style = map.getMaplibreMap().getStyle();
+        String[] sectorLayers = {"user-location-heading", "user-location-heading-halo",
+                "user-location-heading-outline"};
+        for (String id : sectorLayers) {
+            assertEquals("Compass sector follows saved preference: " + id,
+                    visible ? org.maplibre.android.style.layers.Property.VISIBLE
+                            : org.maplibre.android.style.layers.Property.NONE,
+                    style.getLayer(id).getVisibility().getValue());
+        }
+        assertEquals("GPS accuracy remains visible", org.maplibre.android.style.layers.Property.VISIBLE,
+                style.getLayer("user-location-accuracy").getVisibility().getValue());
+        assertEquals("Rendered sector follows saved preference", !visible,
+                map.getMaplibreMap().queryRenderedFeatures(new android.graphics.RectF(0, 0,
+                        map.getMaplibreMapView().getWidth(), map.getMaplibreMapView().getHeight()),
+                        sectorLayers).isEmpty());
         GeoJsonSource source = map.getMaplibreMap().getStyle().getSourceAs("user-location-source");
         PointF start = markerPoint(map);
         double longest = 0;
@@ -277,6 +372,10 @@ public class LocationOrbitTest {
     }
 
     private static void screenshot(GISApplication app, String name) throws Exception {
+        screenshot(app, name, false);
+    }
+
+    private static void screenshot(GISApplication app, String name, boolean blueTrack) throws Exception {
         // QueryRenderedFeatures can see symbols while their first placement still fades in.
         Thread.sleep(1_000);
         int[] center = new int[2];
@@ -296,12 +395,20 @@ public class LocationOrbitTest {
             assertEquals("Blue centre stays at the fix", 114, Color.green(anchor), 10);
             assertEquals("Blue centre stays at the fix", 232, Color.blue(anchor), 10);
             float density = app.getResources().getDisplayMetrics().density;
-            int featureSampleX = center[0] + Math.round(3f * density);
-            int featureSampleY = center[1] - Math.round(5f * density);
-            int feature = image.getPixel(featureSampleX, featureSampleY);
-            assertEquals("The smaller feature remains visible through the opening", 213, Color.red(feature), 10);
-            assertEquals("Accuracy and compass fills must not tint the feature", 35, Color.green(feature), 10);
-            assertEquals("Accuracy and compass fills must not tint the feature", 57, Color.blue(feature), 10);
+            assertWhiteBorder(image, center[0], center[1], density);
+            if (blueTrack) {
+                int track = image.getPixel(center[0] + Math.round(6f * density), center[1]);
+                assertEquals("Blue track passes through the transparent opening", 8, Color.red(track), 10);
+                assertEquals(114, Color.green(track), 10);
+                assertEquals(232, Color.blue(track), 10);
+            } else {
+                int featureSampleX = center[0] + Math.round(3f * density);
+                int featureSampleY = center[1] - Math.round(5f * density);
+                int feature = image.getPixel(featureSampleX, featureSampleY);
+                assertEquals("The smaller feature remains visible through the opening", 213, Color.red(feature), 10);
+                assertEquals("Accuracy and compass fills must not tint the feature", 35, Color.green(feature), 10);
+                assertEquals("Accuracy and compass fills must not tint the feature", 57, Color.blue(feature), 10);
+            }
             // Sample inside the band, away from the white edge after texture rotation/filtering.
             int blueSampleX = center[0] + Math.round(11.5f * density);
             int actual = image.getPixel(blueSampleX, center[1]);
@@ -309,6 +416,19 @@ public class LocationOrbitTest {
             assertEquals("Blue rim remains visible", 114, Color.green(actual), 10);
             assertEquals("Blue rim remains visible", 232, Color.blue(actual), 10);
         } finally { image.recycle(); }
+    }
+
+    private static void assertWhiteBorder(Bitmap image, int cx, int cy, float density) {
+        for (int side : new int[]{-1, 1}) {
+            boolean white = false;
+            // Projection and the rotated icon atlas round the anchor to neighbouring screen pixels.
+            for (int offset = (int) Math.floor(2f * density); offset <= Math.ceil(4f * density); offset++) {
+                int color = image.getPixel(cx + side * offset, cy);
+                white |= Color.alpha(color) > 220 && Color.red(color) > 220
+                        && Color.green(color) > 220 && Color.blue(color) > 220;
+            }
+            assertTrue("White border separates the blue centre from the blue track on both sides", white);
+        }
     }
 
     private static PointF markerPoint(MapDrawable map) {

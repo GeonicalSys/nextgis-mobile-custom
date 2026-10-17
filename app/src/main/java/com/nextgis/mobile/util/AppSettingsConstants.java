@@ -72,6 +72,7 @@ public interface AppSettingsConstants
     String KEY_PREF_SHOW_MEASURING      = "show_ruler_measuring";
     String KEY_PREF_INTRO               = "app_intro";
     String KEY_PREF_SHOW_ZOOM           = "show_zoom_level";
+    String KEY_PREF_SHOW_COMPASS_ACCURACY_SECTOR = "show_compass_accuracy_sector";
 
     int FIRSTSTART_DOWNLOADZOOM = 5;
 

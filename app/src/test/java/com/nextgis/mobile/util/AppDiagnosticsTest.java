@@ -14,6 +14,31 @@ import io.sentry.protocol.User;
 import static org.junit.Assert.*;
 
 public class AppDiagnosticsTest {
+    @Test public void gpsRecoveryKeepsItsPhaseCorrelationAndBoundedHistoryAcrossReplay() {
+        java.util.Map<String, Object> snapshot = new java.util.LinkedHashMap<>();
+        snapshot.put("phase", "recovered"); snapshot.put("reason", "no_fix");
+        snapshot.put("episode_id", "synthetic-episode"); snapshot.put("waiting_ms", 75_000L);
+        java.util.List<String> history = new ArrayList<>();
+        for (int i = 0; i < 24; i++) history.add("elapsedMs=" + i * 5000 + " used=0/29 callbackAgeMs=23076");
+        snapshot.put("history", history);
+        for (int i = 0; i < 40; i++) snapshot.put("synthetic_scalar_" + i, i);
+        SentryEvent recovered = AppDiagnostics.gpsRecoveryEvent(snapshot);
+        Request request = new Request();
+        request.setData("x".repeat(100_000)); recovered.setRequest(request);
+        assertEquals(io.sentry.SentryLevel.INFO, recovered.getLevel());
+        assertEquals("recovered", recovered.getTag("gps_recovery_phase"));
+        for (int replay = 0; replay < 2; replay++) {
+            AppDiagnostics.sanitize(recovered);
+            java.util.Map<?, ?> context = (java.util.Map<?, ?>) recovered.getContexts().get("gps_recovery");
+            assertEquals("synthetic-episode", context.get("episode_id"));
+            assertEquals(24, ((java.util.List<?>) context.get("history")).size());
+            assertEquals(history.get(23), ((java.util.List<?>) context.get("history")).get(23));
+        }
+        snapshot.put("phase", "delayed");
+        SentryEvent delayed = AppDiagnostics.gpsRecoveryEvent(snapshot);
+        assertEquals(io.sentry.SentryLevel.WARNING, delayed.getLevel());
+        assertEquals(delayed.getFingerprints(), recovered.getFingerprints());
+    }
     @Test public void eventKeepsSuppliedContextPathsAndStack() {
         SentryEvent event = new SentryEvent();
         event.setUser(new User());

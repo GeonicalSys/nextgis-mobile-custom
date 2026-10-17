@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: COMPASS-SECTOR-SETTING
+    paths: [app/src/main/res/xml/preferences_location.xml, app/src/main/res/values/location_cursor.xml, app/src/main/res/values-ru/location_cursor.xml]
+    owners: [app, maplib]
+    read: [docs/architecture/map-rendering.md, docs/architecture/location-pipeline.md, docs/reference/settings-and-config.md]
+    invariants: [INV-LOCATION-CURSOR-TOP]
+    must_update_docs: [docs/architecture/map-rendering.md, docs/architecture/location-pipeline.md, docs/reference/settings-and-config.md, docs/registry/config-keys.yaml, docs/reference/official-differences.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-LOCATION-CURSOR-TOP]
+    strict_docs: true
   - id: MOBILE-USAGE
     paths: [app/src/main/java/com/nextgis/mobile/usage, app/src/test/java/com/nextgis/mobile/usage, app/src/androidTest/java/com/nextgis/mobile/usage]
     owners: [app]
@@ -41,7 +49,7 @@ triggers:
     verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-APP-RELEASES, AUTO-RELIABILITY-NATIVE, SMOKE-MULTI-ACCOUNT-SYNC]
     strict_docs: true
   - id: BACKGROUND-GPS-RECOVERY
-    paths: [app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt, app/src/main/java/com/nextgis/mobile/location/BackgroundLocationPolicy.java, app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt, maplib/src/main/java/com/nextgis/maplib/location/GpsRecoveryPolicy.java, app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java]
+    paths: [app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt, app/src/main/java/com/nextgis/mobile/location/BackgroundLocationPolicy.java, app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt, maplib/src/main/java/com/nextgis/maplib/location/GpsRecoveryPolicy.java, app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java]
     owners: [app, maplib, maplibui]
     read: [docs/architecture/location-pipeline.md, docs/architecture/error-reporting.md, docs/reference/settings-and-config.md]
     invariants: [INV-GPS-TRACK-FILTER, INV-LOCATION-CURSOR-TOP, INV-DIAGNOSTIC-DELIVERY]

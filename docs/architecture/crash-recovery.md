@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-15
+last_verified: 2026-10-17
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -17,6 +17,14 @@ related_code:
 ---
 
 # Crash recovery and durable drafts
+
+## Потеря GPS и диагностические эпизоды
+
+GPS diagnostics не создаёт и не подменяет координаты. Ограниченная повторная
+регистрация того же listener сохраняет recording owners, фильтр и wake lock;
+существующие правила разрыва сегмента и восстановления черновика остаются прежними.
+Recovery/cancel отчёт завершает только диагностический эпизод, не трек или обход.
+Контракт: [GPS pipeline](location-pipeline.md).
 
 ## Shared track migration
 

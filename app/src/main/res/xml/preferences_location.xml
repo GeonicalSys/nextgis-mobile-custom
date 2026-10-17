@@ -33,6 +33,13 @@
         android:summary="@string/background_gps_setting_summary"
         android:singleLineTitle="false" />
 
+    <CheckBoxPreference
+        app:iconSpaceReserved="false"
+        android:key="show_compass_accuracy_sector"
+        android:defaultValue="false"
+        android:title="@string/show_compass_accuracy_sector"
+        android:singleLineTitle="false" />
+
     <ListPreference
         app:iconSpaceReserved="false"
         android:defaultValue="3"

@@ -3310,6 +3310,10 @@ public class MapFragment
         ensureMapViewBoundToApplicationMap()
         mApp?.let { (it as IGISApplication).flushPendingMapReloadAfterLayerFillIfNeeded(this) }
 
+        mapDrawableOrNull?.setCompassAccuracySectorVisible(
+            mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_COMPASS_ACCURACY_SECTOR, false)
+        )
+
         var showControls =
             mPreferences!!.getBoolean(AppSettingsConstants.KEY_PREF_SHOW_ZOOM_CONTROLS, true)
         showMapButtons(showControls, mMapRelativeLayout)
