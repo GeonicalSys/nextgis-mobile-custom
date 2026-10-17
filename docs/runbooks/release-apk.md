@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-14
+last_verified: 2026-10-17
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -284,3 +284,8 @@ source fingerprint блокируют публикацию. При отсутс�
 1403 сначала спросить пользователя о другом тестовом проекте.
 Порядок dependency closure и отдельное разрешение на публикацию сохраняются.
 Подробности: [автотесты](automated-tests.md).
+
+После добавления GlitchTip regression cases 2026-10-17 новый Full catalogue
+содержит 207 native cases. Related bugreports и unit checks не заменяют Full и
+Check-Publication перед выпуском. Порядок поставки: maplib Merge Commit → fetch
+library merge commit и root pin → app Squash → согласованный выпуск APK.

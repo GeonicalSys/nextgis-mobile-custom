@@ -55,7 +55,9 @@ public class DiagnosticsNoiseTest {
         for (int i = 0; i < 6000; i++) HyperLog.i("StartupProbe", message);
         Field executor = HyperLog.class.getDeclaredField("executorService");
         executor.setAccessible(true);
-        ((ExecutorService) executor.get(null)).submit(() -> {}).get(60, TimeUnit.SECONDS);
+        // The real SQLite backlog includes 6000 durable rows, not an in-memory mock.
+        // Headless CI disk latency can exceed one minute; keep the same row-count assertion.
+        ((ExecutorService) executor.get(null)).submit(() -> {}).get(180, TimeUnit.SECONDS);
         assertTrue(HyperLog.getDeviceLogsCount() >= 6000);
         assertTrue(context.getSharedPreferences("HyperLog", 0).edit()
                 .putString("URL", "https://127.0.0.1/nextgis-hyperlog-no-remote/").commit());
@@ -153,7 +155,7 @@ public class DiagnosticsNoiseTest {
                 assertTrue(text.contains("session=demo-new"));
                 assertTrue(text.contains("\"Retry-After\":\"60\""));
                 assertTrue(text.contains("\"status_code\":503"));
-                assertTrue(text.contains("\"diagnostics_contract\":\"2\""));
+                assertTrue(text.contains("\"diagnostics_contract\":\"3\""));
                 return;
             }
             SystemClock.sleep(100);

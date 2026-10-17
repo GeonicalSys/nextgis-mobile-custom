@@ -607,3 +607,8 @@ project_scripts:
     source: maplib/src/main/java/com/nextgis/maplib/scripts/ScriptPackageStore.java
     location_name: Owning project project_scripts/<sha256>.zip
     purpose: Atomic content-addressed verified packages retained for pinned drafts; no global cache or automatic old-version deletion.
+
+# 2026-10-17: diagnostics contract 3 reserves context/breadcrumb budgets and scope
+# identity. Existing diagnostic-reports/map-runtime-diagnostics/sync_recovery_journal
+# keys and storage formats are unchanged; startup joins the same 16 KiB journal.
+# Journal commit uses an owned writer and restores caller interruption.

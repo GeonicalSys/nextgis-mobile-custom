@@ -8,6 +8,16 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-17 — GlitchTip: очередь sync и полнота отчётов
+
+- Воспроизведены interrupted enqueue/ACK на Android API 36; запись журнала
+  вынесена на собственный writer с восстановлением interrupt вызывающего потока.
+- Contract 3 сохраняет GPS/последние действия при больших HTTP/frame данных,
+  actual native scope identity и startup snapshot прежнего процесса для delayed ANR.
+- Добавлены regression cases и область bugreports штатного CI; Full catalogue 207.
+- Девять исходных открытых групп разобраны; статус, пометки и границы диагноза
+  фиксируются в [разборе](reference/glitchtip-triage-2026-10-17.md). Выпуска APK нет.
+
 ## 2026-10-17 — Централизованная статистика мобильного приложения
 
 - Описаны backup-excluded offline outbox, точные ACK и connected retry.

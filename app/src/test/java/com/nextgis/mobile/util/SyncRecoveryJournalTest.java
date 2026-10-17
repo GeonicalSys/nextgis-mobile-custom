@@ -73,6 +73,12 @@ public class SyncRecoveryJournalTest {
             assertTrue(error.getMessage().contains("phase=commit"));
             assertTrue(error.getMessage().contains("storageAvailableBytes="));
             assertTrue(error.getCause().getMessage().contains("commit returned false"));
+            assertTrue(error instanceof SyncRecoveryJournal.PersistenceFailure);
+            java.util.Map<String, Object> diagnostics = ((SyncRecoveryJournal.PersistenceFailure) error).diagnostics;
+            assertEquals("commit", diagnostics.get("phase"));
+            assertEquals("owned_thread", diagnostics.get("write_mode"));
+            assertEquals(false, diagnostics.get("caller_interrupted_at_entry"));
+            assertTrue(((Number) diagnostics.get("storage_available_bytes")).longValue() >= 0);
         }
         assertEquals("[]", real.getString("pending_v2", "[]"));
     }

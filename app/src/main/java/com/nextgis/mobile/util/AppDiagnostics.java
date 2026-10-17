@@ -36,6 +36,7 @@ import io.sentry.protocol.SentryStackTrace;
 import io.sentry.protocol.Request;
 import io.sentry.protocol.Response;
 import io.sentry.hints.Cached;
+import io.sentry.hints.Backfillable;
 import io.sentry.util.HintUtils;
 
 /** Error diagnostics only: SDK event/cache/handler contracts with a durable HTTP extension. */
@@ -48,6 +49,9 @@ public final class AppDiagnostics {
             new AtomicReference<>(Operation.STARTUP);
     private static final Set<String> CONTEXTS = new HashSet<>(
             Arrays.asList("app", "device", "os", "runtime", "gpu", "trace"));
+    private static final Set<String> DIAGNOSTIC_CONTEXTS = new HashSet<>(
+            Arrays.asList("map_runtime", "gps_recovery", "sync_journal", "report_origin"));
+    private static volatile com.nextgis.maplib.util.MapRuntimeDiagnostics.Trace startup;
 
     public enum Operation { STARTUP, MAP, GEOMETRY_EDIT, ATTRIBUTE_FORM, SYNC, AZIMUTH, STAKEOUT, TRACK, WALK, LOCATION }
     public enum Phase { START, READY, SAVE, RESTORE, STOP, FAILED, FINISHED, CANCELLED }
@@ -80,18 +84,41 @@ public final class AppDiagnostics {
     static void initialize(Context context, String dsn) {
         com.nextgis.maplib.util.MapRuntimeDiagnostics.initialize(context,
                 BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, BuildConfig.SOURCE_REVISION);
+        startup = com.nextgis.maplib.util.MapRuntimeDiagnostics.beginStartup();
+        startup.put("brand", BuildConfig.FLAVOR);
+        startup.put("environment", BuildConfig.DEBUG ? "debug" : "production");
+        startup.phase("diagnostics_init");
         if (dsn == null || dsn.trim().isEmpty()) return; // Explicit CI build without diagnostics.
         try {
             SentryAndroid.init(context, options -> {
                 configure(context, options);
                 options.setDsn(dsn);
             });
+            Sentry.configureScope(AppDiagnostics::applyBuildIdentity);
             operation(Operation.STARTUP, Phase.START);
             scheduleRetry(context);
         } catch (RuntimeException error) {
             // Reporting must never prevent opening the user's map or recovery journals.
             Log.w(TAG, "Diagnostic reporting could not initialize", error);
         }
+    }
+
+    // Options tags are applied to Java events; native scope observers require actual scope tags.
+    static void applyBuildIdentity(io.sentry.IScope scope) {
+        scope.setTag("brand", BuildConfig.FLAVOR);
+        scope.setTag("source_revision", BuildConfig.SOURCE_REVISION);
+        scope.setTag("diagnostics_contract", "3");
+    }
+
+    public static void startupPhase(String phase) {
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.Trace trace = startup;
+        if (trace != null) trace.phase(phase);
+    }
+
+    public static void startupFinished() {
+        com.nextgis.maplib.util.MapRuntimeDiagnostics.Trace trace = startup;
+        startup = null;
+        if (trace != null) trace.finish(0, null);
     }
 
     static void configure(Context context, SentryAndroidOptions options) {
@@ -107,8 +134,9 @@ public final class AppDiagnostics {
         options.setDist(BuildConfig.FLAVOR);
         options.setEnvironment(BuildConfig.DEBUG ? "debug" : "production");
         options.setTag("brand", BuildConfig.FLAVOR);
-        options.setTag("diagnostics_contract", "2");
+        options.setTag("diagnostics_contract", "3");
         options.setTag("source_revision", BuildConfig.SOURCE_REVISION);
+        options.setEnableScopeSync(true);
         options.setSendDefaultPii(false);
         options.setAttachServerName(false);
         options.setAttachThreads(true);
@@ -122,7 +150,8 @@ public final class AppDiagnostics {
         options.setSendClientReports(false);
         options.setTransportFactory(DiagnosticsTransport::new);
         options.setBeforeSend((event, hint) -> {
-            if (HintUtils.hasType(hint, Cached.class)) return sanitize(event);
+            if (HintUtils.hasType(hint, Cached.class) || HintUtils.hasType(hint, Backfillable.class))
+                return prepareCachedForSend(event);
             preserveHttpContext(event, hint);
             return prepareForSend(event, SystemClock.elapsedRealtime(), HTTP_POLICY);
         });
@@ -165,6 +194,9 @@ public final class AppDiagnostics {
             event.setLevel(SentryLevel.ERROR);
             event.setTag("operation", operation.name());
             event.setTag("failure_kind", "handled");
+            if (error instanceof SyncRecoveryJournal.PersistenceFailure) {
+                event.getContexts().put("sync_journal", ((SyncRecoveryJournal.PersistenceFailure) error).diagnostics);
+            }
             Sentry.captureEvent(event);
         } catch (RuntimeException ignored) { }
     }
@@ -186,10 +218,28 @@ public final class AppDiagnostics {
     static SentryEvent prepareForSend(SentryEvent event, long now, DiagnosticsHttpPolicy httpPolicy) {
         if (event.getTag("operation") == null) event.setTag("operation", LAST_OPERATION.get().name());
         if (!httpPolicy.shouldReport(event, now)) return null;
+        attachRecordedRuntime(event);
+        return sanitize(event);
+    }
+
+    static SentryEvent prepareCachedForSend(SentryEvent event) {
+        // Cached/native/OS ANR events belong to a previous process. Never substitute its release
+        // or operation with the current reporter's build or LAST_OPERATION.
+        java.util.Map<String, Object> origin = new java.util.LinkedHashMap<>();
+        origin.put("delivery", "cached");
+        origin.put("reporter_version", BuildConfig.VERSION_NAME);
+        origin.put("reporter_build", BuildConfig.VERSION_CODE);
+        origin.put("reporter_revision", BuildConfig.SOURCE_REVISION);
+        event.getContexts().put("report_origin", origin);
+        attachRecordedRuntime(event);
+        return sanitize(event);
+    }
+
+    private static void attachRecordedRuntime(SentryEvent event) {
+        if (event.getTimestamp() == null || event.getContexts().containsKey("map_runtime")) return;
         java.util.Map<String, Object> mapRuntime = com.nextgis.maplib.util.MapRuntimeDiagnostics
                 .forEvent(event.getTimestamp().getTime());
         if (!mapRuntime.isEmpty()) event.getContexts().put("map_runtime", mapRuntime);
-        return sanitize(event);
     }
 
     // The SDK's OkHttp hint retains the original URL/headers even when its default
@@ -229,7 +279,12 @@ public final class AppDiagnostics {
     }
 
     static SentryEvent sanitize(SentryEvent event) {
-        DiagnosticsPayloadLimiter limit = new DiagnosticsPayloadLimiter();
+        // Reserve independent parts of the same 32 KiB / 256-node additional-data budget.
+        // Request/stack noise must not erase GPS, startup state or the last operation.
+        DiagnosticsPayloadLimiter diagnosticLimit = new DiagnosticsPayloadLimiter(16_384, 128);
+        DiagnosticsPayloadLimiter limit = new DiagnosticsPayloadLimiter(8_192, 64);
+        DiagnosticsPayloadLimiter stackLimit = new DiagnosticsPayloadLimiter(4_096, 16);
+        DiagnosticsPayloadLimiter breadcrumbLimit = new DiagnosticsPayloadLimiter(4_096, 48);
         if (event.getRequest() != null) {
             Request request = new Request(event.getRequest());
             request.setUrl(DiagnosticsPayloadLimiter.text(request.getUrl()));
@@ -256,7 +311,10 @@ public final class AppDiagnostics {
             user.setUnknown(limit.map(user.getUnknown()));
             event.setUser(user);
         }
-        for (String key : java.util.Collections.list(event.getContexts().keys())) {
+        java.util.List<String> contextKeys = java.util.Collections.list(event.getContexts().keys());
+        contextKeys.sort(java.util.Comparator.comparingInt(key -> "report_origin".equals(key) ? 0
+                : "sync_journal".equals(key) ? 1 : "gps_recovery".equals(key) ? 2 : "map_runtime".equals(key) ? 3 : 4));
+        for (String key : contextKeys) {
             Object context = event.getContexts().get(key);
             if (context instanceof Response) {
                 Response response = new Response((Response) context);
@@ -265,13 +323,12 @@ public final class AppDiagnostics {
                 response.setData(limit.value(response.getData()));
                 response.setUnknown(limit.map(response.getUnknown()));
                 event.getContexts().put(key, response);
-            } else if (!CONTEXTS.contains(key)) {
-                Object bounded = limit.value(context);
+            } else if (!CONTEXTS.contains(key) && !(context instanceof io.sentry.protocol.OperatingSystem)) {
+                Object bounded = (DIAGNOSTIC_CONTEXTS.contains(key) ? diagnosticLimit : limit).value(context);
                 if (bounded == null) event.getContexts().remove(key);
                 else event.getContexts().put(key, bounded);
             }
         }
-        if (event.getTag("operation") == null) event.setTag("operation", LAST_OPERATION.get().name());
         if (event.getMessage() != null) {
             event.getMessage().setMessage(DiagnosticsPolicy.limitMessage(event.getMessage().getMessage()));
             event.getMessage().setFormatted(DiagnosticsPolicy.limitMessage(event.getMessage().getFormatted()));
@@ -279,11 +336,21 @@ public final class AppDiagnostics {
         }
         if (event.getExceptions() != null) for (SentryException exception : event.getExceptions()) {
             exception.setValue(DiagnosticsPolicy.limitMessage(exception.getValue()));
-            sanitize(exception.getStacktrace(), limit);
+            sanitize(exception.getStacktrace(), stackLimit);
         }
-        if (event.getThreads() != null) event.getThreads().forEach(thread -> sanitize(thread.getStacktrace(), limit));
+        if (event.getThreads() != null) event.getThreads().forEach(thread -> sanitize(thread.getStacktrace(), stackLimit));
         if (event.getBreadcrumbs() != null) {
-            event.getBreadcrumbs().forEach(breadcrumb -> sanitize(breadcrumb, limit));
+            java.util.List<Breadcrumb> breadcrumbs = event.getBreadcrumbs();
+            // Keep wire order while spending the reserved data budget from the newest records.
+            for (int priority = 0; priority < 2; priority++) {
+                for (int i = breadcrumbs.size() - 1; i >= 0; i--) {
+                    Breadcrumb breadcrumb = breadcrumbs.get(i);
+                    String category = breadcrumb.getCategory();
+                    boolean operation = "lisa.operation".equals(category) || "ui.lifecycle".equals(category)
+                            || "ui.fragment.lifecycle".equals(category) || "device.event".equals(category);
+                    if (operation == (priority == 0)) sanitize(breadcrumb, breadcrumbLimit);
+                }
+            }
         }
         return event;
     }

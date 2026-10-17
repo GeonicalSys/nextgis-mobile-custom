@@ -957,7 +957,9 @@ invariants:
       handler. Persist bounded SDK envelopes in private files storage before async HTTP;
       retain offline, 5xx and rate-limited failures, replay through SDK observers and a
       connected WorkManager job without reinitializing handlers. Event UUID and diagnostic
-      stack/version/device/typed-operation context survive process restart. Do not read
+      stack/version/device/typed-operation context survive process restart. Preserve original
+      historical identity, separate reporter identity, and reserve context/breadcrumb budget.
+      Journal writes await durability without losing caller cancellation. Do not read
       business storage, photos or raw HyperLog in crash callbacks. Supplied event data,
       original HTTP URLs/query/headers/cookies, response metadata, custom context and
       frame paths are retained without content masking under bounded serialization.

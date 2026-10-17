@@ -102,10 +102,12 @@ public class MainApplication extends GISApplication
             return;
         }
         initializeDiagnostics();
+        com.nextgis.mobile.util.AppDiagnostics.startupPhase("stale_sync_notifications");
         if (isDefaultApplicationProcess()) {
             com.nextgis.mobile.util.SyncNotifications.clearStaleProgress(this);
         }
         // set userAgent info
+        com.nextgis.mobile.util.AppDiagnostics.startupPhase("user_agent_and_account_identity");
         try {
             NetworkUtil.setUserAgentPrefix(this, "NextGIS-Mobile/" + BuildConfig.VERSION_NAME,
                     TrackerService.getUid(this), BuildConfig.VERSION_CODE);
@@ -114,6 +116,7 @@ public class MainApplication extends GISApplication
             Log.e(TAG, ex.getMessage());
         }
 
+        com.nextgis.mobile.util.AppDiagnostics.startupPhase("preferences_and_local_log");
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (Logger.isExportEnabled(mSharedPreferences)) {
             Logger.initialize(this);
@@ -121,6 +124,7 @@ public class MainApplication extends GISApplication
 
         installHyperLogCrashHandler();
 
+        com.nextgis.mobile.util.AppDiagnostics.startupPhase("underlay_recovery");
         if (isDefaultApplicationProcess()) {
             try {
                 com.nextgis.maplib.util.SharedUnderlayStore.catalog(this).recover();
@@ -129,6 +133,7 @@ public class MainApplication extends GISApplication
             catch (java.io.IOException e) { HyperLog.w(TAG, "Underlay recovery deferred", e); }
         }
 
+        com.nextgis.mobile.util.AppDiagnostics.startupPhase("collector_bootstrap");
         final boolean deferLegacyDebugWorkspace =
                 LegacyUnderlayMigrationContract.shouldDeferDebugProjectBootstrap(this);
         if (isDefaultApplicationProcess() && !deferLegacyDebugWorkspace) {
@@ -145,6 +150,7 @@ public class MainApplication extends GISApplication
             HyperLog.i(TAG, "Debug legacy workspace kept in place for underlay migration");
         }
 
+        com.nextgis.mobile.util.AppDiagnostics.startupPhase("shared_track_migration");
         boolean trackMigrationFailed = false;
         if (isDefaultApplicationProcess()) {
             // Read legacy track schemas before opening map helpers can upgrade those databases.
@@ -154,6 +160,7 @@ public class MainApplication extends GISApplication
                 trackMigrationFailed = true;
             }
         }
+        com.nextgis.mobile.util.AppDiagnostics.startupPhase("gis_application_load");
         super.onCreate();
         if (trackMigrationFailed) android.widget.Toast.makeText(this,
                 R.string.shared_tracks_migration_failed, android.widget.Toast.LENGTH_LONG).show();
@@ -163,11 +170,13 @@ public class MainApplication extends GISApplication
         Log.i(TAG, appVersionLog);
         HyperLog.d(TAG, appVersionLog);
 
+        com.nextgis.mobile.util.AppDiagnostics.startupPhase("upgrade_and_tracker_identity");
         updateFromOldVersion();
         com.nextgis.maplib.util.TrackSendSettings.migrateDefault(mSharedPreferences);
         NGWUtil.NGUA = "ng_mobile";
         NGWUtil.UUID = TrackerService.getUid(this);
 
+        com.nextgis.mobile.util.AppDiagnostics.startupPhase("background_workers");
         if (isDefaultApplicationProcess()) {
             com.nextgis.mobile.usage.UsageAnalytics.start(this);
             backgroundLocationController = new com.nextgis.mobile.location.BackgroundLocationController(this);
@@ -182,6 +191,7 @@ public class MainApplication extends GISApplication
                     () -> SyncRecoveryJournal.schedulePendingIfNeeded(this),
                     3_000L);
         }
+        com.nextgis.mobile.util.AppDiagnostics.startupFinished();
     }
 
     /** Runs before the local crash logger, which must delegate to Sentry and Android. */

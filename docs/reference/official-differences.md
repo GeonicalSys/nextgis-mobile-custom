@@ -13,6 +13,17 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Разбор GlitchTip и диагностика contract 3 — 2026-10-17
+
+Fork-owned error reporting дополняет upstream Android: cancellation-safe disk
+commit sync recovery journal, independent startup snapshots, native scope identity
+и отдельный reporter context для delayed ANR. Общий budget дополнений разделён
+для сохранения последних операций и GPS/sync/startup сведений. Это продолжение
+существующей политики форка; SDK остаётся 8.37.1. Не подтверждённые по старым
+событиям причины native abort/GPS acquisition/ANR не объявляются исправленными.
+Добавлены meaningful unit и API 36 regressions, Related bugreports включён в CI.
+[Разбор](glitchtip-triage-2026-10-17.md). Учёт длительности работы не добавлен.
+
 ## Централизованная статистика — 2026-10-17
 
 Release форка имеет собственный backup-excluded offline outbox и HTTPS

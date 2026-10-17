@@ -22,6 +22,14 @@ public final class SyncRecoveryJournal {
     private static final String QUEUE = "pending_v2";
     private SyncRecoveryJournal() { }
 
+    static final class PersistenceFailure extends IOException {
+        final java.util.Map<String, Object> diagnostics;
+        PersistenceFailure(String message, Throwable cause, java.util.Map<String, Object> diagnostics) {
+            super(message, cause);
+            this.diagnostics = java.util.Collections.unmodifiableMap(new java.util.LinkedHashMap<>(diagnostics));
+        }
+    }
+
     public static synchronized boolean enqueue(Context context, List<ProjectSyncRunner.Target> targets,
                                                List<Account> accounts, boolean manual) {
         try {
@@ -38,6 +46,7 @@ public final class SyncRecoveryJournal {
                                                   List<Account> accounts, boolean manual) throws IOException {
         String phase = "read_queue";
         int beforeCount = -1, afterCount = -1, bytes = -1;
+        boolean interruptedAtEntry = Thread.currentThread().isInterrupted();
         try {
             JSONArray queue = load(context);
             beforeCount = queue.length();
@@ -59,19 +68,34 @@ public final class SyncRecoveryJournal {
             SharedPreferences.Editor editor = preferences(context).edit().putString(QUEUE, payload);
             if (migrated) editor.remove("active").remove("account").remove("workspace").remove("manual")
                     .remove("started_at").remove("attempt");
-            if (!editor.commit()) throw new IOException("SharedPreferences.commit returned false");
+            if (!SyncJournalCommit.commit(editor::commit)) throw new IOException("SharedPreferences.commit returned false");
         } catch (Exception error) {
             long available = -1;
             try { available = context.getFilesDir().getUsableSpace(); } catch (RuntimeException ignored) { }
-            throw new IOException("Cannot persist sync queue phase=" + phase
+            java.util.Map<String, Object> diagnostics = new java.util.LinkedHashMap<>();
+            diagnostics.put("phase", phase);
+            diagnostics.put("projects", targets == null ? -1 : targets.size());
+            diagnostics.put("accounts", accounts == null ? -1 : accounts.size());
+            diagnostics.put("before", beforeCount); diagnostics.put("after", afterCount);
+            diagnostics.put("bytes", bytes); diagnostics.put("storage_available_bytes", available);
+            diagnostics.put("caller_interrupted_at_entry", interruptedAtEntry);
+            diagnostics.put("caller_interrupted", Thread.currentThread().isInterrupted());
+            diagnostics.put("write_mode", "owned_thread");
+            throw new PersistenceFailure("Cannot persist sync queue phase=" + phase
                     + " projects=" + (targets == null ? -1 : targets.size())
                     + " accounts=" + (accounts == null ? -1 : accounts.size())
                     + " before=" + beforeCount + " after=" + afterCount + " bytes=" + bytes
-                    + " storageAvailableBytes=" + available, error);
+                    + " storageAvailableBytes=" + available
+                    + " callerInterruptedAtEntry=" + interruptedAtEntry
+                    + " callerInterrupted=" + Thread.currentThread().isInterrupted()
+                    + " writeMode=owned_thread", error, diagnostics);
+        } finally {
+            if (interruptedAtEntry) Thread.currentThread().interrupt();
         }
     }
 
     public static synchronized boolean complete(Context context, ProjectSyncRunner.Target target, String account) {
+        boolean interruptedAtEntry = Thread.currentThread().isInterrupted();
         try {
             JSONArray before = load(context), after = new JSONArray();
             for (int i = 0; i < before.length(); i++) {
@@ -80,14 +104,16 @@ public final class SyncRecoveryJournal {
                     after.put(entry);
                 }
             }
-            return preferences(context).edit().putString(QUEUE, after.toString()).commit();
+            SharedPreferences.Editor editor = preferences(context).edit().putString(QUEUE, after.toString());
+            return SyncJournalCommit.commit(editor::commit);
         } catch (Exception error) {
             HyperLog.e(Constants.TAG, "Cannot acknowledge completed sync pair", error); return false;
-        }
+        } finally { if (interruptedAtEntry) Thread.currentThread().interrupt(); }
     }
 
     /** Resolve recorded identities from the registry, even after opening another project. */
     public static synchronized void schedulePendingIfNeeded(Context context) {
+        boolean interruptedAtEntry = Thread.currentThread().isInterrupted();
         try {
             IGISApplication app = (IGISApplication) context.getApplicationContext();
             List<ProjectSyncRunner.Target> targets = ProjectSyncRunner.inventory(context);
@@ -112,7 +138,7 @@ public final class SyncRecoveryJournal {
             }
             SharedPreferences.Editor editor = preferences(context).edit().putString(QUEUE, retained.toString());
             if (migrated) editor.remove("active");
-            if (!editor.commit()) return;
+            if (!SyncJournalCommit.commit(editor::commit)) return;
             for (int i = 0; i < retained.length(); i++) {
                 JSONObject entry = retained.getJSONObject(i);
                 Account account = new Account(entry.getString("account"), app.getAccountsType());
@@ -126,7 +152,7 @@ public final class SyncRecoveryJournal {
             }
         } catch (Exception error) {
             HyperLog.e(Constants.TAG, "Cannot restore pending project syncs; journal retained", error);
-        }
+        } finally { if (interruptedAtEntry) Thread.currentThread().interrupt(); }
     }
 
     static JSONArray load(Context context) throws JSONException {

@@ -13,9 +13,14 @@ import java.util.Map;
 /** Keep supplied diagnostic content without expensive/unbounded object serialization. */
 final class DiagnosticsPayloadLimiter {
     private static final String OMITTED = "[diagnostic limit]";
-    private int nodes = 256;
-    private int characters = 32_768;
+    private int nodes;
+    private int characters;
     private final IdentityHashMap<Object, Boolean> parents = new IdentityHashMap<>();
+
+    DiagnosticsPayloadLimiter() { this(32_768, 256); }
+    DiagnosticsPayloadLimiter(int characters, int nodes) {
+        this.characters = characters; this.nodes = nodes;
+    }
 
     static String text(String text) {
         return text == null ? null : text.substring(0, Math.min(text.length(), 4096));
@@ -24,6 +29,7 @@ final class DiagnosticsPayloadLimiter {
     @SuppressWarnings("unchecked")
     Map<String, Object> map(Map<String, ?> source) {
         if (source == null) return null;
+        if (source.isEmpty()) return new LinkedHashMap<>();
         Object result = value(source);
         return result instanceof Map ? (Map<String, Object>) result
                 : Collections.singletonMap("diagnostic_limit", OMITTED);
