@@ -19,6 +19,8 @@ related_code:
 синхронизации и создания проектов сохранены.
 Общий verification runner дополнительно ждёт marker за отложенным startup recovery
 до создания synthetic очередей. Рабочие данные и production Application сохранены.
+Graphics acceptance сектора компаса ждёт retained native geometry после resume,
+включая скрытое состояние; прежний радиус 56 dp и допуск 1,5 dp сохранены.
 
 ## Настройка сектора точности компаса — 2026-10-17
 
