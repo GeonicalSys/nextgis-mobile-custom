@@ -167,7 +167,12 @@ public class BackgroundGpsNativeTest {
         await(() -> scenario.getState() == Lifecycle.State.CREATED);
         assertTrue(running());
         assertEquals(before[1], counts()[1]);
-        scenario.moveToState(Lifecycle.State.RESUMED);
+        // After a real Home the task must regain focus, not merely request a lifecycle state.
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (ActivityManager.AppTask task : app.getSystemService(ActivityManager.class).getAppTasks())
+                task.moveToFront();
+        });
+        await(() -> scenario.getState() == Lifecycle.State.RESUMED);
         doubleBack();
         await(() -> !running() && scenario.getState() == Lifecycle.State.DESTROYED);
         await(() -> app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=false"));
