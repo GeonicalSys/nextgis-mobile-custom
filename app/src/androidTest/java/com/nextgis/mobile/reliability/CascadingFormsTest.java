@@ -478,6 +478,36 @@ public class CascadingFormsTest {
         }
         instrumentation.waitForIdleSync();
     }
+    @Test public void tabSwitchAfterStateSaveWaitsForResumeAndKeepsValues() throws Exception {
+        try (Fixture f = new Fixture(false)) {
+            navigationForm(f);
+            try (ActivityScenario<FormBuilderModifyAttributesActivity> s =
+                         ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
+                choose(s, "contractor", 1);
+                Tabs[] content = new Tabs[1];
+                androidx.fragment.app.FragmentManager[] manager = new androidx.fragment.app.FragmentManager[1];
+                s.onActivity(a -> { content[0] = tabs(a); manager[0] = a.getSupportFragmentManager(); });
+                s.moveToState(androidx.lifecycle.Lifecycle.State.CREATED);
+                InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+                    assertTrue("Exercise a genuinely saved FragmentManager", manager[0].isStateSaved());
+                    assertTrue(content[0].selectAdjacentTab(true));
+                });
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                s.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED);
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                s.onActivity(a -> {
+                    assertEquals(1, tabs(a).getValue());
+                    assertTrue("Deferred page must actually become visible", tabs(a).getPageLayouts().get(1).isShown());
+                    assertEquals("Company A", a.getCascadingLists().value("contractor"));
+                    tabs(a).selectAdjacentTab(false);
+                    a.finish();
+                });
+                await(() -> s.getState() == androidx.lifecycle.Lifecycle.State.DESTROYED);
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+            }
+        }
+    }
+
     @Test public void pinnedTabsAndSwipesPreserveChoicesAndRecreation() throws Exception {
         try (Fixture f=new Fixture(false)) {
             navigationForm(f);

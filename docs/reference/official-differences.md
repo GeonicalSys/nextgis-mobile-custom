@@ -118,6 +118,13 @@ Offline/HTTP ошибки сохраняют очередь, TEMP/NOT_SYNC жд�
 очередью этого проекта; чужие accounts и быстрые local/track uploads его не пишут.
 Это consumer-only изменение, без нового NGW/Collector wire format.
 
+## Безопасная отложенная смена вкладок — 2026-10-17
+
+Tabs сохраняет запрос страницы до безопасного Resume/attach и отменяет callback
+после уничтожения host. Это устраняет найденное телефонным Full падение commit
+после onSaveInstanceState; значения/правила формы и выбранная вкладка сохраняются.
+Новая native регрессия входит в существующий CascadingFormsTest (Related forms/Full).
+
 ## Автоматический background GPS и удержание Network — 2026-10-14
 
 С 2026-10-17 смахивание задачи и подтверждённый двойным Back выход снимают

@@ -1,7 +1,7 @@
 ---
 title: Обязательность, видимость и оформление NGFP
 type: architecture
-last_verified: 2026-10-08
+last_verified: 2026-10-17
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java
@@ -11,6 +11,11 @@ related_code:
 ---
 
 # Обязательность, видимость и оформление NGFP
+
+Tabs применяет отложенную смену страницы только на прикреплённом resumed экране
+с несохранённым FragmentManager state. Пока экран остановлен, сохраняется последний
+запрос; после уничтожения callback отменяется. Контролы всех страниц и текущие
+required/visible значения сохраняются, commitAllowingStateLoss не используется.
 
 Явный [выбор типа при создании](feature-type-creation.md) заполняет поля до
 первого расчёта правил. Required/visible и scripts видят уже выбранную категорию

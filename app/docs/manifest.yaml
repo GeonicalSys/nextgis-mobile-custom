@@ -9,6 +9,8 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
+    responsibility: Verify real cascade controls, SQLite/drafts, navigation and deferred tab selection across saved state, resume and immediate close without losing selected values.
   - path: app/src/main/res/xml/preferences_location.xml
     responsibility: Location preferences, including the persisted default-off show_compass_accuracy_sector checkbox with a multiline title; MapFragment applies its choice on resume through the maplib visibility API.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java
