@@ -47,7 +47,7 @@
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "areas": {
-    "cursor": ["com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndVisibleSector"],
+    "cursor": ["com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndHiddenSector"],
     "gps-recovery": ["com.nextgis.mobile.reliability.GpsRecoveryNativeTest", "com.nextgis.mobile.reliability.BackgroundGpsNativeTest"],
     "bugreports": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.reliability.GpsRecoveryNativeTest"],
     "usage": ["com.nextgis.mobile.usage.UsageDeliveryTest"],

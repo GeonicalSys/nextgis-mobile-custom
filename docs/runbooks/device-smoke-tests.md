@@ -1,7 +1,7 @@
 ---
 title: Ручные проверки на Android-устройстве
 type: runbook
-last_verified: 2026-10-14
+last_verified: 2026-10-17
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -13,6 +13,14 @@ related_code:
 `registry/smoke-tests.yaml`.
 
 ## Базовая матрица
+
+### Курсор без сектора точности компаса
+
+`SMOKE-LOCATION-CURSOR-TOP`: с валидным компасом проверить стрелку на месте и
+в движении; без компаса — курс движения, затем круг без стрелки на остановке.
+Сектор и оба его контура сейчас временно скрыты, в том числе после hot-add,
+lite reload и смены zoom. Круг точности GPS и белая кайма центра остаются видимыми.
+Автоматическая проверка: Related `-Area cursor` на изолированном эмуляторе.
 
 ### Выбор типа объекта
 

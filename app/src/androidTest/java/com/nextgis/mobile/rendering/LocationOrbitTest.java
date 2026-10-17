@@ -124,7 +124,7 @@ public class LocationOrbitTest {
         return radius;
     }
 
-    @Test public void orbitUsesCompassThenCourseWithACenteredAnchorAndVisibleSector() throws Exception {
+    @Test public void orbitUsesCompassThenCourseWithACenteredAnchorAndHiddenSector() throws Exception {
         assertTrue("Use only an isolated emulator", android.os.Build.MODEL.contains("sdk")
                 || android.os.Build.FINGERPRINT.startsWith("generic"));
         GISApplication app = (GISApplication) InstrumentationRegistry.getInstrumentation()
@@ -200,7 +200,7 @@ public class LocationOrbitTest {
                 ensurePointUnderCursor(style);
             });
             awaitMarker(screen, app, true, 35f);
-            screen.onActivity(activity -> assertSectorSize((MapDrawable) app.getMap(), app));
+            screen.onActivity(activity -> assertHiddenSectorRetainsGeometry((MapDrawable) app.getMap(), app));
             screenshot(app, "orbit-compass.png");
             screen.onActivity(activity -> ((MapDrawable) app.getMap())
                     .loadLayersToMaplibreMapLite(Collections.emptyList(), true));
@@ -208,6 +208,7 @@ public class LocationOrbitTest {
             screen.onActivity(activity -> {
                 Style style = ((MapDrawable) app.getMap()).getMaplibreMap().getStyle();
                 assertStack(style);
+                assertHiddenSectorRetainsGeometry((MapDrawable) app.getMap(), app);
                 ensurePointUnderCursor(style);
             });
             for (double zoom : new double[]{16, 19}) {
@@ -218,7 +219,7 @@ public class LocationOrbitTest {
                 screen.onActivity(activity -> ((MapDrawable) app.getMap())
                         .updateLocation(FIX, false, 140f, 12f, 35f, 30f));
                 awaitMarker(screen, app, true, 35f);
-                screen.onActivity(activity -> assertSectorSize((MapDrawable) app.getMap(), app));
+                screen.onActivity(activity -> assertHiddenSectorRetainsGeometry((MapDrawable) app.getMap(), app));
             }
             screen.onActivity(activity -> ((MapDrawable) app.getMap()).updateLocation(
                     FIX, true, 140f, 12f, 35f, 30f));
@@ -246,6 +247,7 @@ public class LocationOrbitTest {
             screen.onActivity(activity -> {
                 MapDrawable map = (MapDrawable) app.getMap();
                 assertStack(map.getMaplibreMap().getStyle());
+                assertHiddenSectorRetainsGeometry(map, app);
                 map.clearLocation();
             });
             await(screen, () -> ((MapDrawable) app.getMap()).getMaplibreMap().queryRenderedFeatures(
@@ -282,7 +284,21 @@ public class LocationOrbitTest {
         }
     }
 
-    private static void assertSectorSize(MapDrawable map, GISApplication app) {
+    private static void assertHiddenSectorRetainsGeometry(MapDrawable map, GISApplication app) {
+        Style style = map.getMaplibreMap().getStyle();
+        String[] sectorLayers = {"user-location-heading", "user-location-heading-halo",
+                "user-location-heading-outline"};
+        for (String id : sectorLayers) {
+            assertEquals("Compass uncertainty stays hidden: " + id,
+                    org.maplibre.android.style.layers.Property.NONE,
+                    style.getLayer(id).getVisibility().getValue());
+        }
+        assertEquals("GPS accuracy remains visible", org.maplibre.android.style.layers.Property.VISIBLE,
+                style.getLayer("user-location-accuracy").getVisibility().getValue());
+        assertTrue("No compass sector fill or contour may render",
+                map.getMaplibreMap().queryRenderedFeatures(new android.graphics.RectF(0, 0,
+                        map.getMaplibreMapView().getWidth(), map.getMaplibreMapView().getHeight()),
+                        sectorLayers).isEmpty());
         GeoJsonSource source = map.getMaplibreMap().getStyle().getSourceAs("user-location-source");
         PointF start = markerPoint(map);
         double longest = 0;
