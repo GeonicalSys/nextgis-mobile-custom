@@ -15,6 +15,12 @@ related_code:
 
 # Автоматические проверки
 
+Методы LocationOrbitTest запускаются отдельно с очисткой verification workspace,
+как остальные независимые графические fixtures. Orbit smoke пересоздаёт Activity,
+меняет камеру и оставляет MapDrawable в Application; следующий тест точности не
+должен получить прежний renderer/style до готовности нового экрана. Все методы,
+проверки пикселей, native circle и исходного Location остаются обязательными.
+
 Перед каждым телефонным классом runner проверяет deviceLocked текущего Android
 пользователя через dumpsys trust. При блокировке он выводит WAIT и до десяти минут
 ждёт ручной разблокировки до очистки verification workspace и старта UI-тестов.
@@ -29,6 +35,11 @@ Linux CI компилирует Kotlin внутри build daemon и заверш
 эмулятора отключён через -feature -Vulkan по
 [официальной рекомендации для GLES](https://developer.android.com/studio/run/emulator-troubleshooting).
 Это настройка среды тестирования; все native cases и pixel assertions обязательны.
+Emulator binary закреплён на 35.6.11 / build 13610412, используемом в local Full.
+Незакреплённый 37.2.12 / 16428233 терял host EGL process после native suite
+при переходе к enlarged-UI profile. Обновлять pin только с полным graphics/UI
+прогоном; параметр emulator-build описан в
+[android-emulator-runner](https://github.com/ReactiveCircus/android-emulator-runner#configurations).
 
 BackgroundGpsNativeTest проверяет Home без остановки GPS, двойной Back,
 настоящее удаление задачи из recents, disarm до повторного открытия и сохранность

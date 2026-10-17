@@ -78,6 +78,9 @@ jobs:
       - name: Native SQLite, track Stop, map tools and login regression
         uses: reactivecircus/android-emulator-runner@v2
         with:
+          # Match the locally verified emulator; 37.2.12 loses its host EGL process
+          # after the native suite when the enlarged-UI profile is applied.
+          emulator-build: 13610412
           api-level: 36
           target: google_apis
           arch: x86_64

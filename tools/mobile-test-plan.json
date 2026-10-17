@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "isolated_methods": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest"],
+  "isolated_methods": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocationOrbitTest"],
   "phone": [
     "com.nextgis.mobile.reliability.CascadingFormsTest",
     "com.nextgis.mobile.reliability.ConditionalRequiredFieldsTest",
