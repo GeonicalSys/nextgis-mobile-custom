@@ -15,6 +15,21 @@ related_code:
 
 # Автоматические проверки
 
+Перед каждым телефонным классом runner проверяет deviceLocked текущего Android
+пользователя через dumpsys trust. При блокировке он выводит WAIT и до десяти минут
+ждёт ручной разблокировки до очистки verification workspace и старта UI-тестов.
+PIN не обходится, системные timeout/font/display/radio настройки телефона не
+меняются. Неизвестный формат lock state завершает проверку явной ошибкой.
+Full сначала выполняет независимые emulator suites, diagnostics и UI matrix,
+затем телефонные классы. Поэтому заблокированный телефон не останавливает
+эмуляторную часть; публикационный receipt по-прежнему требует оба устройства.
+
+Linux CI компилирует Kotlin внутри build daemon и завершает его перед запуском
+эмулятора. Host OpenGL/Mesa сохраняется для glyph/image assertions, Vulkan
+эмулятора отключён через -feature -Vulkan по
+[официальной рекомендации для GLES](https://developer.android.com/studio/run/emulator-troubleshooting).
+Это настройка среды тестирования; все native cases и pixel assertions обязательны.
+
 BackgroundGpsNativeTest проверяет Home без остановки GPS, двойной Back,
 настоящее удаление задачи из recents, disarm до повторного открытия и сохранность
 отдельного recording listener, реальных TrackerService и WalkEditService.

@@ -15,6 +15,13 @@ related_code:
 
 # Матрица сборки и версий
 
+Linux CI выполняет Kotlin compilation in-process и завершает build daemon до
+запуска API 36 эмулятора, чтобы не удерживать память сборки во время native suite.
+Эмулятор сохраняет host OpenGL/Mesa для glyph/image assertions и получает
+`-feature -Vulkan`; это не меняет runtime MapLibre OpenGL artifact или версии APK.
+Полный каталог и все assertions сохраняются. Local Full перед телефонным UI-классом
+ожидает ручной разблокировки текущего пользователя вместо запуска за keyguard.
+
 Android reliability CI включает русский UI при font scale 2.0 и density 620, обе ориентации и native/AppCompat диалоги. Тест подтверждает фактическую русскую локаль, ориентацию и закрытую клавиатуру, нажимает X и нижнюю кнопку отмены; отдельный проход открывает меню/разделы настроек и окна аккаунтов, входа, проекта и подложек; PNG сохраняются в артефакт. Дополнительно проверяется матрица fontScale 1.0/1.3/2.0 и узкие окна обоих themes. Контракт: [крупный интерфейс](../architecture/ui-accessibility.md).
 
 App lifecycle unit tests используют Robolectric `4.16.1` (как maplib) и Android

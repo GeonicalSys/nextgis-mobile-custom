@@ -15,7 +15,7 @@ import sys
 import threading
 import time
 from mobile_test_support import (PACKAGE, RUNNER, check_publication_receipt, expand_selectors,
-                                 native_catalog, parse_instrumentation, source_fingerprint, validate_plan)
+                                 native_catalog, parse_instrumentation, phone_unlocked, source_fingerprint, validate_plan)
 from mobile_test_project import (DEFAULT_PROJECT, ProjectSelectionRequired, choose_project,
                                  read_projects, snapshot_project)
 
@@ -186,6 +186,16 @@ class Verification:
         # The identity is a fixed constant, never derived from a caller-supplied package/URI.
         self.shell(serial,'input','keyevent','KEYCODE_WAKEUP')
         self.shell(serial,'wm','dismiss-keyguard')
+        if serial == getattr(self, 'phone', None):
+            deadline = time.monotonic() + 600
+            announced = False
+            while not phone_unlocked(self.shell(serial, 'dumpsys', 'trust')):
+                if not announced:
+                    print('WAIT: unlock the selected phone manually; UI tests have not started', flush=True)
+                    announced = True
+                if time.monotonic() >= deadline:
+                    raise RuntimeError('The selected phone is locked; unlock it and rerun Full acceptance')
+                time.sleep(2)
         self.shell(serial,'am','force-stop',PACKAGE)
         if self.shell(serial,'pm','clear',PACKAGE)!='Success': raise RuntimeError('Cannot reset the disposable verification workspace')
         self.shell(serial,'cmd','appops','set','--uid',PACKAGE,'MANAGE_EXTERNAL_STORAGE','allow')
@@ -322,12 +332,13 @@ class Verification:
             self.install(self.emulator)
             if self.args.scope=='full':
                 self.install(self.phone)
-                for test in self.plan['phone']:
-                    self.native(self.phone,[test],'phone-'+test.rsplit('.',1)[1])
                 for test in self.plan['emulator']:
                     self.native(self.emulator,[test],'emulator-'+test.rsplit('.',1)[1])
                 self.grant_and_deny(self.emulator)
                 self.diagnostics(); self.ui_matrix()
+                # Finish independent work before requiring a manually unlocked phone.
+                for test in self.plan['phone']:
+                    self.native(self.phone,[test],'phone-'+test.rsplit('.',1)[1])
                 check_publication_receipt(self.receipt('passed'),self.fingerprint,self.required)
             else:
                 selected=set()
