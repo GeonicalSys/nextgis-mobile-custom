@@ -58,6 +58,8 @@ maplib #51 с production `3.1.2.29` (Merge Commit
 зелёный CI → app #59 (Squash) → APK version matrix → dry-run → публикация
 только `lisa` и `belka`. Debug сохраняет 3.1.2.23 / 218.
 
+Локальная сборка Lisa Release 17 октября 2026 без повышения версии и без публикации: maplib #55 (Merge Commit `3f1db55dea715a873f6a073854a0aca1b7154eaf`) и maplibui #38 (Merge Commit `9c4b8c82f388ad2d040ba59d72b3cf431e1460a7`) → fetched pins в app #67 → Squash. Версии остаются 3.1.2.29 / 223 и debug 3.1.2.23 / 218. Publisher и установка на рабочий телефон не входят в этот шаг.
+
 Выпуск «Орбиты-кольца» 3.1.2.28 / 222: maplib #49 (Merge Commit) → fetched
 remote merge pin в app #58 → зелёный CI итогового app head → app #58 (Squash)
 → APK version matrix → подпись/identity → publisher dry-run → публикация
