@@ -46,6 +46,8 @@ Related `-Area accuracy` проверяет панель и реальный к�
 исходного fix и обе темы/ориентации при крупном интерфейсе.
 В Full оба метода LocationOrbitTest получают отдельные process/workspace:
 проверка точности не наследует renderer и камеру после Orbit smoke.
+После переключения сектора smoke ждёт не только видимость layers, но и
+сохранённую native geometry радиусом 56 dp, включая скрытый сектор.
 ProjectSyncRunnerTest перед созданием синтетических проектов ждёт завершения
 pending стартовой миграции подложек и активных workspace operations, до 30 секунд.
 Общий VerificationTestRunner также ждёт marker за отложенными startup callbacks,

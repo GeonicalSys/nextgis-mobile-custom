@@ -8,6 +8,11 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-17 — Ожидание скрытой native geometry сектора
+
+- Graphics fixture после переключения слоя ждёт и видимость, и готовность
+  retained sector geometry в native tiles; прежние geometry assertions сохранены.
+
 ## 2026-10-17 — Готовность verification Application перед native fixtures
 
 - Runner ждёт marker за реальными отложенными startup callbacks и завершения

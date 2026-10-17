@@ -45,6 +45,8 @@ key_components:
     responsibility: Verify one interior label across MVT seams and zoom/style reapply through the real local tile provider, with glyph/fill/outline pixels and no added source or style layer.
   - path: tools/run_mobile_tests.py
     responsibility: Route complete static phone and simulated emulator acceptance, isolate graphics fixtures including both LocationOrbitTest methods, verify native results and source receipts, and require an explicitly permitted project.
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
+    responsibility: Verify actual Orbit pixels, compass/course fallback and accuracy circles; wait for retained native sector geometry as well as layer visibility after resume and reload.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java
     responsibility: Admit only isolated verification APK and explicitly selected phone, then await real delayed startup callbacks and workspace operations before native fixtures; production data and identities remain outside tests.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java

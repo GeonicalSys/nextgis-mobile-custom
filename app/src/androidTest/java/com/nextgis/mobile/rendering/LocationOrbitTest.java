@@ -333,7 +333,9 @@ public class LocationOrbitTest {
             boolean rendered = !map.getMaplibreMap().queryRenderedFeatures(new android.graphics.RectF(0, 0,
                     map.getMaplibreMapView().getWidth(), map.getMaplibreMapView().getHeight()),
                     "user-location-heading", "user-location-heading-halo", "user-location-heading-outline").isEmpty();
-            return rendered == visible;
+            // Hiding the layer is synchronous, while setGeoJson is processed by native tiles.
+            // An empty rendered query alone can succeed before the retained sector arrives.
+            return rendered == visible && Math.abs(sectorRadiusDp(map, app) - 56d) <= 1.5;
         });
     }
 
@@ -353,7 +355,14 @@ public class LocationOrbitTest {
                 map.getMaplibreMap().queryRenderedFeatures(new android.graphics.RectF(0, 0,
                         map.getMaplibreMapView().getWidth(), map.getMaplibreMapView().getHeight()),
                         sectorLayers).isEmpty());
-        GeoJsonSource source = map.getMaplibreMap().getStyle().getSourceAs("user-location-source");
+        assertEquals(56f, sectorRadiusDp(map, app), 1.5);
+    }
+
+    private static double sectorRadiusDp(MapDrawable map, GISApplication app) {
+        Style style = map.getMaplibreMap().getStyle();
+        if (style == null) return Double.NaN;
+        GeoJsonSource source = style.getSourceAs("user-location-source");
+        if (source == null) return Double.NaN;
         PointF start = markerPoint(map);
         double longest = 0;
         // Native tile geometry simplifies and clips the original 32-step arc.
@@ -368,7 +377,7 @@ public class LocationOrbitTest {
             }
         }
         float density = app.getResources().getDisplayMetrics().density;
-        assertEquals(56f, longest / density, 1.5);
+        return longest / density;
     }
 
     private static void screenshot(GISApplication app, String name) throws Exception {
