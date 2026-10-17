@@ -4,6 +4,28 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class BackgroundLocationPolicyTest {
+    @Test public void explicitExitDisarmsGpsUntilTheNextForegroundEntry() {
+        BackgroundLocationPolicy policy = new BackgroundLocationPolicy();
+        policy.foreground(1_000);
+        policy.background(2_000);
+        policy.close();
+        assertFalse(policy.isOpened());
+        assertFalse(policy.wanted(true, 2_001));
+        policy.background(2_002);
+        assertFalse(policy.wanted(true, 2_003));
+        policy.foreground(3_000);
+        assertTrue(policy.isOpened());
+        assertTrue(policy.wanted(true, 3_000));
+    }
+
+    @Test public void exitWhileVisibleCannotBeRearmedByPreferenceOrTimeoutRefresh() {
+        BackgroundLocationPolicy policy = new BackgroundLocationPolicy();
+        policy.foreground(1_000);
+        policy.close();
+        assertFalse(policy.wanted(false, 1_001));
+        assertFalse(policy.wanted(true, 1_002));
+        assertFalse(policy.wanted(true, 20_000_000));
+    }
     @Test public void backgroundProcessWithoutOpeningTheAppNeverStartsGps() {
         BackgroundLocationPolicy policy = new BackgroundLocationPolicy();
         assertFalse(policy.wanted(true, 1_000));

@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-10-15
+last_verified: 2026-10-17
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -66,6 +66,15 @@ TrackerService сохраняет точки и очередь в SharedTrackSto
 worker, boot и смерть процесса сами автоматический GPS не запускают.
 Отменённый pending FGS выполняет обязательную foreground promotion и останавливается
 без получения lease; отказ/потеря location permission не оставляет wake lock.
+
+Смахивание задачи из последних приложений и подтверждённый выход двойным Back
+являются явным закрытием: controller disarm снимает оба автоматических lease,
+отменяет refresh/timeout и останавливает службу. Home, гашение экрана и переход
+в другое приложение сохраняют прежний двухчасовой фон. Back внутри формы или
+инструмента сначала выполняет обычное действие этого экрана. После явного выхода
+смена настройки или отложенный callback не запускают GPS; новый Activity start
+снова разрешает автоматическое получение. Track/Walk сохраняют свои recording
+listeners, foreground services и wake lock до собственного Stop.
 
 `getLastKnownLocation` и запись сохраняют восьмисекундное правило свежести.
 Отдельный `getLastDisplayLocation` удерживает последнюю отображённую Network-точку

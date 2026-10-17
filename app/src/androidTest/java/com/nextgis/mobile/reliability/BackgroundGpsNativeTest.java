@@ -1,11 +1,13 @@
 package com.nextgis.mobile.reliability;
 
 import android.app.NotificationManager;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.SystemClock;
 import android.os.PowerManager;
+import android.view.KeyEvent;
 import android.preference.PreferenceManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
@@ -13,6 +15,17 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.nextgis.maplib.location.GpsEventSource;
 import com.nextgis.maplib.util.SettingsConstants;
+import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.GeoConstants;
+import com.nextgis.maplib.datasource.GeoLineString;
+import com.nextgis.maplib.datasource.GeoPoint;
+import com.nextgis.maplibui.service.TrackerService;
+import com.nextgis.maplibui.service.WalkEditService;
+import com.nextgis.maplibui.util.ConstantsUI;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
+import com.nextgis.maplibui.util.SharedUnderlayProjects;
+import com.nextgis.maplibui.util.WalkSessionPolicy;
+import com.nextgis.maplibui.util.WalkSessionStore;
 import com.nextgis.mobile.MainApplication;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.activity.SettingsActivity;
@@ -146,6 +159,156 @@ public class BackgroundGpsNativeTest {
         assertEquals(before[0], counts()[0]);
         assertEquals(before[1], counts()[1]);
         InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand("input keyevent 4").close();
+    }
+
+    @Test public void homeKeepsGpsButDoubleBackClosesItUntilReopen() throws Exception {
+        long[] before = counts();
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_HOME);
+        await(() -> scenario.getState() == Lifecycle.State.CREATED);
+        assertTrue(running());
+        assertEquals(before[1], counts()[1]);
+        // After a real Home the task must regain focus, not merely request a lifecycle state.
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (ActivityManager.AppTask task : app.getSystemService(ActivityManager.class).getAppTasks())
+                task.moveToFront();
+        });
+        await(() -> scenario.getState() == Lifecycle.State.RESUMED);
+        doubleBack();
+        await(() -> !running() && scenario.getState() == Lifecycle.State.DESTROYED);
+        await(() -> app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=false"));
+        assertTrue(counts()[1] > before[1]);
+        // A queued preference reconciliation must not restart GPS after explicit exit.
+        prefs.edit().putBoolean(BackgroundLocationPolicy.PREFERENCE, false).commit();
+        prefs.edit().putBoolean(BackgroundLocationPolicy.PREFERENCE, true).commit();
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        assertFalse(running());
+        scenario.close();
+        scenario = ActivityScenario.launch(MainActivity.class);
+        await(() -> running());
+    }
+
+    @Test public void removingRecentTaskStopsAutomaticGps() throws Exception {
+        long stops = counts()[1];
+        removeRecentTask();
+        await(() -> !running());
+        await(() -> app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=false"));
+        assertTrue(counts()[1] > stops);
+    }
+
+    @Test public void doubleBackPreservesAnIndependentRecordingSubscription() throws Exception {
+        addRecorder();
+        long stops = counts()[1];
+        doubleBack();
+        await(() -> !running() && scenario.getState() == Lifecycle.State.DESTROYED);
+        assertEquals(stops, counts()[1]);
+        assertTrue(app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=true"));
+        removeRecorder();
+        await(() -> app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=false"));
+    }
+
+    @Test public void removingRecentTaskPreservesAnIndependentRecordingSubscription() throws Exception {
+        addRecorder();
+        long stops = counts()[1];
+        removeRecentTask();
+        await(() -> !running());
+        assertEquals(stops, counts()[1]);
+        assertTrue(app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=true"));
+        removeRecorder();
+        await(() -> app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=false"));
+    }
+
+    @Test public void doubleBackKeepsTheActualTrackServiceRecording() throws Exception {
+        assertFalse(TrackerService.hasRecordingSession(app));
+        try {
+            scenario.onActivity(activity -> TrackerService.start_stop_tracking_GetIconWithTitle(activity));
+            await(TrackerService::isTrackRecordingActive);
+            doubleBack();
+            await(() -> !running() && scenario.getState() == Lifecycle.State.DESTROYED);
+            assertTrue(TrackerService.isTrackRecordingActive());
+            assertTrue(TrackerService.hasRecordingSession(app));
+            assertTrue(app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=true"));
+        } finally {
+            if (TrackerService.hasRecordingSession(app)) {
+                InstrumentationRegistry.getInstrumentation().runOnMainSync(() ->
+                        TrackerService.start_stop_tracking_GetIconWithTitle(app));
+                await(() -> !TrackerService.hasRecordingSession(app));
+            }
+        }
+    }
+
+    @Test public void removingRecentTaskKeepsTheActualWalkServiceRecording() throws Exception {
+        await(() -> !SharedUnderlayProjects.isMigrationPending() && !ProjectOperationCoordinator.isBusy());
+        assertNull(WalkSessionStore.load(app));
+        String[] session = {null};
+        try {
+            scenario.onActivity(activity -> {
+                GeoLineString line = new GeoLineString();
+                line.setCRS(GeoConstants.CRS_WEB_MERCATOR);
+                line.add(new GeoPoint(0, 0));
+                session[0] = WalkSessionStore.begin(app, 900001, Constants.NOT_FOUND,
+                        line, 0, 0, 1, MainActivity.class.getName());
+                assertNotNull(session[0]);
+                Intent start = new Intent(app, WalkEditService.class).setAction(WalkEditService.ACTION_START)
+                        .putExtra(WalkSessionStore.KEY_SESSION, session[0])
+                        .putExtra(ConstantsUI.KEY_LAYER_ID, 900001)
+                        .putExtra(ConstantsUI.KEY_FEATURE_ID, (long) Constants.NOT_FOUND)
+                        .putExtra(ConstantsUI.KEY_GEOMETRY, line)
+                        .putExtra(WalkEditService.KEY_INSERT_INDEX, 1)
+                        .putExtra(ConstantsUI.TARGET_CLASS, MainActivity.class.getName())
+                        .putExtra(ConstantsUI.KEY_MESSAGE, true);
+                androidx.core.content.ContextCompat.startForegroundService(activity, start);
+            });
+            await(() -> WalkEditService.isSessionRunning(session[0]));
+            removeRecentTask();
+            await(() -> !running());
+            assertTrue(WalkEditService.isSessionRunning(session[0]));
+            assertNotNull(WalkSessionStore.load(app));
+            assertFalse(WalkSessionStore.load(app).gpsPaused);
+            assertTrue(app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=true"));
+        } finally {
+            if (session[0] != null && WalkSessionStore.load(app) != null) {
+                WalkEditService.requestCommand(app, session[0], WalkSessionPolicy.Command.DISCARD);
+                await(() -> !WalkEditService.isSessionRunning(session[0]));
+                WalkSessionStore.clear(app, session[0]);
+            }
+        }
+    }
+
+    private void addRecorder() {
+        recorder = location -> { };
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() ->
+                app.getGpsEventSource().addRecordingListener(recorder));
+    }
+
+    private void removeRecorder() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() ->
+                app.getGpsEventSource().removeRecordingListener(recorder));
+        recorder = null;
+    }
+
+    private void doubleBack() {
+        scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+        assertEquals("First Back only asks for confirmation", Lifecycle.State.RESUMED, scenario.getState());
+        assertTrue(running());
+        scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+    }
+
+    private void removeRecentTask() throws Exception {
+        int[] taskId = {-1};
+        scenario.onActivity(activity -> taskId[0] = activity.getTaskId());
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_HOME);
+        await(() -> scenario.getState() == Lifecycle.State.CREATED);
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            boolean removed = false;
+            for (ActivityManager.AppTask task : app.getSystemService(ActivityManager.class).getAppTasks()) {
+                if (task.getTaskInfo().taskId == taskId[0]) {
+                    task.finishAndRemoveTask();
+                    removed = true;
+                }
+            }
+            assertTrue("Remove the app's actual recent task", removed);
+        });
+        await(() -> scenario.getState() == Lifecycle.State.DESTROYED);
     }
 
     private boolean running() {

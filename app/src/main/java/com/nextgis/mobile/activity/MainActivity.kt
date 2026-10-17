@@ -239,9 +239,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 if (finishFragment() || mapFragment?.handleBackPress() == true) return
                 val now = android.os.SystemClock.elapsedRealtime()
                 if (mBackPressed != 0L && mBackPressed + 2000 > now) {
-                    isEnabled = false
-                    try { onBackPressedDispatcher.onBackPressed() }
-                    finally { isEnabled = true }
+                    (application as MainApplication).closeAutomaticLocation()
+                    finishAndRemoveTask()
                 } else Toast.makeText(this@MainActivity, R.string.press_aback_again, Toast.LENGTH_SHORT).show()
                 mBackPressed = now
             }

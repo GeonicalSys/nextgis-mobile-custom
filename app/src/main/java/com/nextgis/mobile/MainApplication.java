@@ -95,6 +95,11 @@ public class MainApplication extends GISApplication
     public static final String LAYER_TRACKS = "tracks";
     private com.nextgis.mobile.location.BackgroundLocationController backgroundLocationController;
 
+    /** Explicit UI/task exit cancels automatic GPS, independently of recording sessions. */
+    public void closeAutomaticLocation() {
+        if (backgroundLocationController != null) backgroundLocationController.closeExplicitly();
+    }
+
     @Override
     public void onCreate() {
         if (com.nextgis.maplib.scripts.ProjectScriptProcess.isSandbox(this)) {

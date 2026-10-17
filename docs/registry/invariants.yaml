@@ -763,7 +763,7 @@ invariants:
     title: Track and walk recording retain real movement through 160 km/h
     owners: [maplib, maplibui, app]
     statement: >
-      GpsEventSource owns one GNSS acquisition stream across screen and service lifecycles. The default-enabled app background owner starts from visible app opening, keeps GPS/Network and the shared wake lock through forms/screen-off, and releases after two hours outside the app or an explicit setting change without stopping recording/guidance owners.
+      GpsEventSource owns one GNSS acquisition stream across screen and service lifecycles. The default-enabled app background owner starts from visible app opening, keeps GPS/Network and the shared wake lock through forms/screen-off/minimization, and releases after two hours outside the app, an explicit setting change, recent-task removal or confirmed double-Back exit without stopping recording/guidance owners. Explicit exit disarms automatic acquisition until the next Activity start.
       Attaching/detaching a map never unregisters active recording GPS or resets its filter. GPS recovery re-registers the same listener only after sustained fresh used-in-fix statuses without callbacks, once per episode and at most once per ten minutes; it never resets recording resources or treats no-fix as a stalled listener.
       The final recorder owns release of the shared partial wake lock unless an
       external NMEA session still needs it; sound off does not

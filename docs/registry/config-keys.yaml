@@ -13,7 +13,7 @@ preferences:
     default: true
     user_configurable: true
     source: app/src/main/res/xml/preferences_location.xml
-    purpose: Continue automatic GPS outside the app for up to two hours; foreground screens and forms keep GPS with this disabled, and explicit recording/guidance owners remain independent.
+    purpose: Continue automatic GPS when minimized for up to two hours, until recent-task removal or confirmed double-Back exit; reopen rearms automatic acquisition. Foreground forms keep GPS with this disabled; Track/Walk recording and guidance owners remain independent.
   show_sync:
     owner: app
     type: boolean

@@ -42,7 +42,7 @@ class BackgroundLocationController(private val application: Application) :
         val allowed = PermissionUtil.hasAnyLocationPermission(application)
         val source = (application as IGISApplication).gpsEventSource
         // Forms are still foreground app use even when the user disables screen-off GPS.
-        if (allowed && visible.isNotEmpty()) source.acquireBackgroundUpdates(this)
+        if (allowed && policy.isOpened && visible.isNotEmpty()) source.acquireBackgroundUpdates(this)
         else source.releaseBackgroundUpdates(this)
         if (!allowed || !policy.wanted(enabled, now)) {
             BackgroundLocationService.stop(application)
@@ -50,6 +50,15 @@ class BackgroundLocationController(private val application: Application) :
             // Launch while visible. A background worker or process restart must not start GPS.
             BackgroundLocationService.start(application)
         }
+    }
+
+    /** Release only automatic owners; Track/Walk services retain their recording listeners. */
+    fun closeExplicitly() {
+        policy.close()
+        handler.removeCallbacks(refresh)
+        handler.removeCallbacks(timeout)
+        (application as IGISApplication).gpsEventSource.releaseBackgroundUpdates(this)
+        BackgroundLocationService.stop(application)
     }
 
     override fun onActivityStarted(activity: Activity) {
@@ -61,6 +70,7 @@ class BackgroundLocationController(private val application: Application) :
     }
 
     override fun onActivityResumed(activity: Activity) {
+        if (!policy.isOpened) return
         handler.removeCallbacks(refresh)
         handler.post(refresh)
     }
@@ -72,7 +82,7 @@ class BackgroundLocationController(private val application: Application) :
         (application as IGISApplication).gpsEventSource.releaseBackgroundUpdates(this)
         handler.removeCallbacks(refresh)
         handler.removeCallbacks(timeout)
-        handler.postDelayed(timeout, policy.remainingMs(SystemClock.elapsedRealtime()))
+        if (policy.isOpened) handler.postDelayed(timeout, policy.remainingMs(SystemClock.elapsedRealtime()))
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String?) {

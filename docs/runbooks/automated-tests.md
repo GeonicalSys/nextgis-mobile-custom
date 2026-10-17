@@ -15,6 +15,13 @@ related_code:
 
 # Автоматические проверки
 
+BackgroundGpsNativeTest проверяет Home без остановки GPS, двойной Back,
+настоящее удаление задачи из recents, disarm до повторного открытия и сохранность
+отдельного recording listener, реальных TrackerService и WalkEditService.
+Возврат после Home использует AppTask.moveToFront для настоящего фокуса задачи.
+Новые методы этого существующего emulator-класса автоматически входят в
+Related gps-recovery/location и Full; их пропуск не допускает публикацию.
+
 Один runner разделяет связанные проверки после доработки и обязательную полную
 приёмку перед публикацией. Рабочий проект телефона не является тестовой базой.
 Опциональный `fieldVerificationChecks=true` создаёт отдельный Debug APK «ЛИСА
