@@ -40,11 +40,13 @@ jobs:
           chmod +x gradlew
       - name: Unit tests, debug APKs and both release source sets
         run: >-
-          ./gradlew -PciReliabilityChecks=true --console=plain
+          ./gradlew -PciReliabilityChecks=true -Pkotlin.compiler.execution.strategy=in-process --console=plain
           :maplib:testDebugUnitTest :maplibui:testDebugUnitTest :app:testLisaDebugUnitTest
           :maplibui:assembleDebug :app:assembleLisaDebug :app:assembleLisaDebugAndroidTest
           :app:compileLisaReleaseKotlin :app:compileLisaReleaseJavaWithJavac
           :app:compileBelkaReleaseKotlin :app:compileBelkaReleaseJavaWithJavac
+      - name: Release build memory before starting the emulator
+        run: ./gradlew --stop
       - name: Resolve built Debug APK paths
         run: |
           set -- app/build/outputs/apk/lisa/debug/*.apk
@@ -81,7 +83,7 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -no-audio -no-snapshot -gpu host -no-boot-anim
+          emulator-options: -no-window -no-audio -no-snapshot -gpu host -feature -Vulkan -no-boot-anim
           script: |
             adb install -r "$LISA_DEBUG_APK"
             adb shell cmd locale set-app-locales com.nextgis.mobile.debug --locales ru

@@ -11,6 +11,16 @@ RUNNER = PACKAGE + '.test/com.nextgis.mobile.util.VerificationTestRunner'
 METHOD = re.compile(r'@Test(?:\([^)]*\))?.*?(?:public\s+void\s+|fun\s+)(\w+)\s*\(', re.S)
 
 
+def phone_unlocked(trust_dump: str) -> bool:
+    """Read the active Android user's keyguard state, never another profile's state."""
+    for line in trust_dump.splitlines():
+        if re.match(r'^\s*User .*\(id=\d+,[^)]*\)\s+\(current\):', line):
+            state = re.search(r'\bdeviceLocked=(true|false|0|1)\b', line)
+            if state:
+                return state.group(1) in ('false', '0')
+    raise ValueError('Cannot determine the selected phone lock state; UI verification cannot start')
+
+
 def native_catalog(root: Path) -> dict[str, set[str]]:
     result = {}
     for path in sorted((root / 'app/src/androidTest/java').rglob('*')):

@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from mobile_test_support import check_publication_receipt, parse_instrumentation, validate_plan
+from mobile_test_support import check_publication_receipt, parse_instrumentation, phone_unlocked, validate_plan
 
 CASE = 'example.Test#works'
 
@@ -27,6 +27,25 @@ class NativeProtocolTest(unittest.TestCase):
         self.assertTrue(parse_instrumentation(text, {CASE}, fatal=CASE)['expected_crash'])
         with self.assertRaises(ValueError): parse_instrumentation(text, {CASE})
         with self.assertRaises(ValueError): parse_instrumentation(text, {CASE}, fatal='example.Test#another')
+
+class PhoneLockStateTest(unittest.TestCase):
+    def test_current_user_must_be_unlocked_even_when_another_profile_is_not(self):
+        for state in ('0', 'false'):
+            dump = (' User "Owner" (id=0, flags=0x1) (current): deviceLocked=' + state + '\n'
+                    ' User "Work" (id=10, flags=0x2): deviceLocked=1\n')
+            self.assertTrue(phone_unlocked(dump))
+
+    def test_an_unlocked_work_profile_cannot_hide_a_locked_current_user(self):
+        for state in ('1', 'true'):
+            dump = (' User "Owner" (id=0, flags=0x1) (current): deviceLocked=' + state + '\n'
+                    ' User "Work" (id=10, flags=0x2): deviceLocked=0\n')
+            self.assertFalse(phone_unlocked(dump))
+
+    def test_unknown_or_incomplete_state_cannot_start_ui_tests(self):
+        for dump in ('', ' User "Work" (id=10, flags=0x2): deviceLocked=0',
+                     ' User "Owner" (id=0, flags=0x1) (current): deviceLocked=unknown'):
+            with self.assertRaises(ValueError):
+                phone_unlocked(dump)
 
 class FullReceiptTest(unittest.TestCase):
     def receipt(self):
