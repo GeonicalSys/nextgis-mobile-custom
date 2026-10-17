@@ -18,6 +18,7 @@ import com.nextgis.maplib.api.IGISApplication
 import com.nextgis.maplib.util.Constants
 import com.nextgis.maplib.util.PermissionUtil
 import com.nextgis.mobile.R
+import com.nextgis.mobile.MainApplication
 import com.nextgis.mobile.activity.MainActivity
 import com.nextgis.mobile.util.AppDiagnostics
 import java.util.UUID
@@ -69,6 +70,11 @@ class BackgroundLocationService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        (application as MainApplication).closeAutomaticLocation()
+        super.onTaskRemoved(rootIntent)
+    }
+
     override fun onDestroy() {
         handler.removeCallbacks(permissionCheck)
         owner?.let {

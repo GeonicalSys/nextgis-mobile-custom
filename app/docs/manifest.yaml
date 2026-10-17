@@ -60,13 +60,13 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LocalChangesUploadTest.java
     responsibility: Verify real saved line delivery, disabled full schedule, offline/HTTP retry, draft exclusion and background workspace isolation on a loopback emulator.
   - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt
-    responsibility: Keep foreground GPS active on every app Activity even with background disabled; own the separate default-enabled service through a two-hour monotonic inactivity timer and immediate preference reconciliation.
+    responsibility: Keep foreground GPS active on every app Activity even with background disabled; own the separate default-enabled service through a two-hour monotonic inactivity timer, disarm both automatic leases on explicit task exit until the next Activity start, and reconcile preferences immediately.
   - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt
-    responsibility: Promote a location foreground service before acquiring an independent shared GPS lease; cancel pending launches safely and preserve explicit recorder owners.
+    responsibility: Promote a location foreground service before acquiring an independent shared GPS lease; cancel pending launches safely, handle recent-task removal through the app controller and preserve explicit recorder owners.
   - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationPolicy.java
-    responsibility: Define the default background GPS setting and deterministic two-hour inactivity policy.
+    responsibility: Define the default background GPS setting, deterministic two-hour inactivity policy and explicit-exit disarm/reopen transitions.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java
-    responsibility: Verify actual screen sleep/wake, foreground forms with background off, service ownership, two-hour expiry, resume and immediate setting changes without stopping a recording owner on an isolated Debug emulator.
+    responsibility: Verify actual screen sleep/wake, forms with background off, Home, double Back, recent-task removal, disarm/reopen, two-hour expiry and preference changes while preserving independent recording owners and actual Track/Walk services on an isolated Debug emulator.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/MapRuntimeDiagnosticsNativeTest.java
     responsibility: Block the real main looper and verify query/startup snapshots and a Backfillable SDK ANR event preserving original identity, then saturate the actual loopback queue and verify explicit rejection headers on an isolated Debug emulator.
   - path: app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalTest.java
