@@ -19,6 +19,12 @@ related_code:
 
 # Настройки и конфигурационные ключи
 
+## Диагностика GPS-эпизодов
+
+Новых настроек нет. Пороги и границы snapshot v2 принадлежат GpsRecoveryPolicy;
+`last_callback_age_ms` и `last_callback_delivery_lag_ms` описывают разные времена.
+Короткий no-fix сам по себе не создаёт GlitchTip event. См. [GPS pipeline](../architecture/location-pipeline.md).
+
 ## Общие треки и настройки подписей
 
 История и видимость слоя «Мои треки» общие для установки, включая новые проекты.

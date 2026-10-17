@@ -764,7 +764,7 @@ invariants:
     owners: [maplib, maplibui, app]
     statement: >
       GpsEventSource owns one GNSS acquisition stream across screen and service lifecycles. The default-enabled app background owner starts from visible app opening, keeps GPS/Network and the shared wake lock through forms/screen-off, and releases after two hours outside the app or an explicit setting change without stopping recording/guidance owners.
-      Attaching/detaching a map never unregisters active recording GPS or resets its filter.
+      Attaching/detaching a map never unregisters active recording GPS or resets its filter. GPS recovery re-registers the same listener only after sustained fresh used-in-fix statuses without callbacks, once per episode and at most once per ten minutes; it never resets recording resources or treats no-fix as a stalled listener.
       The final recorder owns release of the shared partial wake lock unless an
       external NMEA session still needs it; sound off does not
       disable background acquisition. Sensor evidence expires and cannot alone freeze a vehicle.
@@ -959,6 +959,7 @@ invariants:
       connected WorkManager job without reinitializing handlers. Event UUID and diagnostic
       stack/version/device/typed-operation context survive process restart. Preserve original
       historical identity, separate reporter identity, and reserve context/breadcrumb budget.
+      GPS snapshots separate callback age from delivery lag, bound history to 24 samples and correlate warning/recovery/cancel with an episode UUID; short reception gaps stay local.
       Journal writes await durability without losing caller cancellation. Do not read
       business storage, photos or raw HyperLog in crash callbacks. Supplied event data,
       original HTTP URLs/query/headers/cookies, response metadata, custom context and

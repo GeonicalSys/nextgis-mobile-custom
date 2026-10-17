@@ -449,7 +449,7 @@ storage:
   diagnostic-reports:
     owner: app
     source: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-    purpose: SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; contract 2 retains supplied URLs/query/headers/context without content masking, with bounded strings/collections. Connected WorkManager retry is independent of GIS sync and a process-local ten-minute HTTP 5xx filter never drops cached replay or fatal events.
+    purpose: GPS snapshot v2 pairs warning and INFO recovery/cancel with bounded history and separate callback silence/delivery lag; no new setting. SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; contract 2 retains supplied URLs/query/headers/context without content masking, with bounded strings/collections. Connected WorkManager retry is independent of GIS sync and a process-local ten-minute HTTP 5xx filter never drops cached replay or fatal events.
   ngw-field-required:
     owner: maplib
     location_name: fields[].required in the local layer config JSON

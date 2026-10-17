@@ -61,19 +61,25 @@ public final class AppDiagnostics {
     /** Rate limiting is owned by the acquisition policy; warnings diagnose reception, not crashes. */
     public static void reportGpsRecovery(java.util.Map<String, Object> snapshot) {
         try {
-            String reason = Boolean.TRUE.equals(snapshot.get("raw_fresh")) ? "display_processing" : "acquisition";
-            SentryEvent event = new SentryEvent();
-            io.sentry.protocol.Message message = new io.sentry.protocol.Message();
-            message.setFormatted("GPS recovery delayed: " + reason);
-            event.setMessage(message);
-            event.setLevel(SentryLevel.WARNING);
-            event.setTag("operation", Operation.LOCATION.name());
-            event.setTag("failure_kind", "gps_recovery");
-            event.setTag("gps_recovery_reason", reason);
-            event.setFingerprints(Arrays.asList("gps-recovery", reason));
-            event.getContexts().put("gps_recovery", new java.util.LinkedHashMap<>(snapshot));
-            Sentry.captureEvent(event);
+            Sentry.captureEvent(gpsRecoveryEvent(snapshot));
         } catch (RuntimeException ignored) { }
+    }
+
+    static SentryEvent gpsRecoveryEvent(java.util.Map<String, Object> snapshot) {
+        String reason = String.valueOf(snapshot.get("reason"));
+        String phase = String.valueOf(snapshot.get("phase"));
+        SentryEvent event = new SentryEvent();
+        io.sentry.protocol.Message message = new io.sentry.protocol.Message();
+        message.setFormatted("GPS recovery " + phase + ": " + reason);
+        event.setMessage(message);
+        event.setLevel("recovered".equals(phase) || "cancelled".equals(phase) ? SentryLevel.INFO : SentryLevel.WARNING);
+        event.setTag("operation", Operation.LOCATION.name());
+        event.setTag("failure_kind", "gps_recovery");
+        event.setTag("gps_recovery_reason", reason);
+        event.setTag("gps_recovery_phase", phase);
+        event.setFingerprints(Arrays.asList("gps-recovery", reason));
+        event.getContexts().put("gps_recovery", new java.util.LinkedHashMap<>(snapshot));
+        return event;
     }
 
     public static void initialize(Context context) {

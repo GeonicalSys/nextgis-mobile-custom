@@ -13,6 +13,14 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## GPS recovery episodes — 2026-10-17
+
+Короткая потеря спутникового решения остаётся локальным эпизодом. Длительные,
+повторяющиеся и delivery/processing случаи получают классифицированный отчёт,
+историю и парное recovery/cancel с UUID. Повторная регистрация того же listener
+ограничена устойчивым callback stall при свежих used-in-fix statuses; поток записи
+и фильтры сохраняются. Контракт: [GPS pipeline](../architecture/location-pipeline.md).
+
 ## Разбор GlitchTip и диагностика contract 3 — 2026-10-17
 
 Fork-owned error reporting дополняет upstream Android: cancellation-safe disk

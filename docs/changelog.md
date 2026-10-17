@@ -8,6 +8,13 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-17 — Классификация и завершение GPS-эпизодов
+
+- Короткий no-fix локален; long/repeated и delivery/processing случаи ограничены по частоте.
+- Snapshot v2 сохраняет bounded историю, отдельные callback silence/delivery lag и парный итог.
+- Устойчивый callback stall допускает одну повторную регистрацию с сохранением recording resources.
+- Новая native регрессия включена в Related gps-recovery/location/bugreports/diagnostics и Full.
+
 ## 2026-10-17 — GlitchTip: очередь sync и полнота отчётов
 
 - Воспроизведены interrupted enqueue/ACK на Android API 36; запись журнала

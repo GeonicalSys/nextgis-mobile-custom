@@ -26,6 +26,7 @@
   "emulator": [
     "com.nextgis.mobile.util.SyncRecoveryJournalNativeTest",
     "com.nextgis.mobile.usage.UsageDeliveryTest",
+    "com.nextgis.mobile.reliability.GpsRecoveryNativeTest",
     "com.nextgis.mobile.reliability.BackgroundGpsNativeTest",
     "com.nextgis.mobile.reliability.BackgroundLocationWarningTest",
     "com.nextgis.mobile.reliability.LocalChangesUploadTest",
@@ -46,18 +47,19 @@
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "areas": {
-    "bugreports": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.util.DiagnosticsNoiseTest"],
+    "gps-recovery": ["com.nextgis.mobile.reliability.GpsRecoveryNativeTest", "com.nextgis.mobile.reliability.BackgroundGpsNativeTest"],
+    "bugreports": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.reliability.GpsRecoveryNativeTest"],
     "usage": ["com.nextgis.mobile.usage.UsageDeliveryTest"],
     "accuracy": ["com.nextgis.mobile.rendering.LocationOrbitTest#phoneAccuracyFloorMatchesThePanelAndNativeCircleWithoutChangingFixes", "com.nextgis.mobile.reliability.LargeTextLayoutTest#phoneAccuracyFloorFitsRussianPanelAtLargeScales"],
     "help": ["com.nextgis.mobile.reliability.LargeTextLayoutTest#geonicalHelpLinksFitAndKeepTheirDestinations"],
     "layers": ["com.nextgis.mobile.reliability.LayerSelectionDialogTest", "com.nextgis.mobile.reliability.NgwResourceIconTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest#realMapCloseAndDialogActionsStayReachable"],
     "forms": ["com.nextgis.mobile.reliability.CascadingFormsTest", "com.nextgis.mobile.reliability.ConditionalRequiredFieldsTest", "com.nextgis.mobile.reliability.RequiredFieldsTest", "com.nextgis.mobile.reliability.FormAppearanceTest", "com.nextgis.mobile.reliability.FormSaveRecoveryTest", "com.nextgis.mobile.reliability.StandardFeatureTypesTest", "com.nextgis.mobile.reliability.SignatureCheckpointTest"],
     "sync": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.reliability.LocalChangesUploadTest", "com.nextgis.mobile.reliability.LayerPendingChangesTest", "com.nextgis.mobile.reliability.ProjectSyncDisplayNativeTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SyncNotificationsTest"],
-    "location": ["com.nextgis.mobile.reliability.BackgroundGpsNativeTest", "com.nextgis.mobile.reliability.BackgroundLocationWarningTest", "com.nextgis.mobile.reliability.StakeoutForegroundServiceTest", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest", "com.nextgis.mobile.rendering.LocationOrbitTest"],
+    "location": ["com.nextgis.mobile.reliability.BackgroundGpsNativeTest", "com.nextgis.mobile.reliability.BackgroundLocationWarningTest", "com.nextgis.mobile.reliability.StakeoutForegroundServiceTest", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest", "com.nextgis.mobile.rendering.LocationOrbitTest", "com.nextgis.mobile.reliability.GpsRecoveryNativeTest"],
     "tracks": ["com.nextgis.mobile.reliability.TrackPersistenceTest", "com.nextgis.mobile.reliability.TrackerStopRecoveryTest", "com.nextgis.mobile.reliability.TrackRecordingModesTest", "com.nextgis.mobile.reliability.TrackPowerWarningTest", "com.nextgis.mobile.reliability.TrackUploadTest", "com.nextgis.mobile.reliability.WalkCheckpointTest", "com.nextgis.mobile.reliability.SharedTracksTest"],
     "map": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocalVectorTileLabelTest"],
     "scripts": ["com.nextgis.mobile.reliability.ProjectScriptsTest"],
-    "diagnostics": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest"],
+    "diagnostics": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.GpsRecoveryNativeTest"],
     "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest"]
   }
 }
