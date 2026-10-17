@@ -7,6 +7,8 @@ import com.nextgis.mobile.MainApplication;
 
 public final class VerificationTestApplication extends MainApplication {
     static boolean phoneOptIn;
+    static final java.util.concurrent.CountDownLatch startupCallbacks =
+            new java.util.concurrent.CountDownLatch(1);
 
     @Override public void onCreate() {
         // The instrumented isolated script process cannot access app preferences or device APIs.
@@ -26,6 +28,11 @@ public final class VerificationTestApplication extends MainApplication {
                     .putBoolean("battery_dont_show_pref", true).apply();
         }
         super.onCreate();
+        // MainApplication posts underlay migration and journal recovery at +3 seconds.
+        // The instrumentation thread must not create synthetic queues/projects before those
+        // real startup callbacks have observed the initially empty verification workspace.
+        new android.os.Handler(android.os.Looper.getMainLooper())
+                .postDelayed(startupCallbacks::countDown, 3_000L);
         registerActivityLifecycleCallbacks(new android.app.Application.ActivityLifecycleCallbacks() {
             @Override public void onActivityCreated(android.app.Activity activity,android.os.Bundle state) {
                 activity.getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

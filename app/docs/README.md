@@ -48,6 +48,8 @@ Related `-Area accuracy` проверяет панель и реальный к�
 проверка точности не наследует renderer и камеру после Orbit smoke.
 ProjectSyncRunnerTest перед созданием синтетических проектов ждёт завершения
 pending стартовой миграции подложек и активных workspace operations, до 30 секунд.
+Общий VerificationTestRunner также ждёт marker за отложенными startup callbacks,
+чтобы штатное восстановление журнала завершилось до создания synthetic очередей.
 
 ## Контакты и руководство пользователя
 

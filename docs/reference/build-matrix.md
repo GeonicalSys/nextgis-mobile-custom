@@ -22,6 +22,8 @@ Linux CI выполняет Kotlin compilation in-process и завершает 
 Binary закреплён через `emulator-build: 13610412` (35.6.11), как в local Full:
 незакреплённый 37.2.12 / 16428233 терял EGL process при переходе к крупному UI.
 Обновление pin требует повторной graphics/UI приёмки со всеми assertions.
+CI job имеет лимит 75 минут для полного native/Related/UI набора, включая
+ожидание реальных startup callbacks в каждом отдельном verification process.
 Полный каталог и все assertions сохраняются. Local Full перед телефонным UI-классом
 ожидает ручной разблокировки текущего пользователя вместо запуска за keyguard.
 
