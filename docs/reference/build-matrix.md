@@ -19,6 +19,9 @@ Linux CI выполняет Kotlin compilation in-process и завершает 
 запуска API 36 эмулятора, чтобы не удерживать память сборки во время native suite.
 Эмулятор сохраняет host OpenGL/Mesa для glyph/image assertions и получает
 `-feature -Vulkan`; это не меняет runtime MapLibre OpenGL artifact или версии APK.
+Binary закреплён через `emulator-build: 13610412` (35.6.11), как в local Full:
+незакреплённый 37.2.12 / 16428233 терял EGL process при переходе к крупному UI.
+Обновление pin требует повторной graphics/UI приёмки со всеми assertions.
 Полный каталог и все assertions сохраняются. Local Full перед телефонным UI-классом
 ожидает ручной разблокировки текущего пользователя вместо запуска за keyguard.
 
