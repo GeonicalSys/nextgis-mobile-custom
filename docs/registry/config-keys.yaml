@@ -1,5 +1,12 @@
 schema_version: 1
 preferences:
+  show_compass_accuracy_sector:
+    owner: app
+    type: boolean
+    default: false
+    user_configurable: true
+    source: app/src/main/res/xml/preferences_location.xml
+    purpose: Persist opt-in compass uncertainty fill and both contours; MapFragment applies it on resume through MapDrawable.setCompassAccuracySectorVisible, independent of the direction arrow and GPS accuracy. XML and runtime fallback are false.
   background_gps_enabled:
     owner: app
     type: boolean

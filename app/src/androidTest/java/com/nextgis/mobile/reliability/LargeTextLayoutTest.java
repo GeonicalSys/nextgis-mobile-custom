@@ -583,12 +583,14 @@ public class LargeTextLayoutTest {
         themed(1f, SCREENS[0], false);
         android.content.SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(app);
         String gpsKey = com.nextgis.mobile.location.BackgroundLocationPolicy.PREFERENCE;
+        String sectorKey = com.nextgis.mobile.util.AppSettingsConstants.KEY_PREF_SHOW_COMPASS_ACCURACY_SECTOR;
+        boolean hadSector = preferences.contains(sectorKey), oldSector = preferences.getBoolean(sectorKey, false);
         String themeKey = com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_THEME;
         boolean hadGps = preferences.contains(gpsKey), oldGps = preferences.getBoolean(gpsKey, true);
         boolean hadTheme = preferences.contains(themeKey);
         String oldTheme = preferences.getString(themeKey, "light");
-        String theme = "dark".equals(InstrumentationRegistry.getArguments().getString("uiTheme")) ? "dark" : "light";
-        preferences.edit().remove(gpsKey).putString(themeKey, theme).commit();
+        String requestedTheme = InstrumentationRegistry.getArguments().getString("uiTheme");
+        preferences.edit().remove(gpsKey).remove(sectorKey).commit();
         androidx.core.os.LocaleListCompat oldLocales = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
         android.os.LocaleList oldPlatformLocales = Build.VERSION.SDK_INT >= 33
                 ? app.getSystemService(android.app.LocaleManager.class).getApplicationLocales() : null;
@@ -596,8 +598,14 @@ public class LargeTextLayoutTest {
                 .setApplicationLocales(android.os.LocaleList.forLanguageTags("ru"));
         else instrumentation.runOnMainSync(() -> androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
                 androidx.core.os.LocaleListCompat.forLanguageTags("ru")));
-        boolean landscape = "landscape".equals(InstrumentationRegistry.getArguments().getString("uiOrientation"));
+        String requestedOrientation = InstrumentationRegistry.getArguments().getString("uiOrientation");
+        boolean landscape = requestedOrientation == null
+                ? app.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                : "landscape".equals(requestedOrientation);
         int expected = landscape ? Configuration.ORIENTATION_LANDSCAPE : Configuration.ORIENTATION_PORTRAIT;
+        try {
+        for (String theme : requestedTheme == null ? new String[]{"light", "dark"} : new String[]{requestedTheme}) {
+        preferences.edit().putString(themeKey, theme).commit();
         try (ActivityScenario<com.nextgis.mobile.activity.SettingsActivity> scenario =
                      ActivityScenario.launch(com.nextgis.mobile.activity.SettingsActivity.class)) {
             scenario.onActivity(activity -> activity.setRequestedOrientation(landscape
@@ -626,15 +634,28 @@ public class LargeTextLayoutTest {
                 androidx.preference.SwitchPreferenceCompat background = fragment.findPreference(gpsKey);
                 assertNotNull("Real location screen includes background switch", background);
                 assertTrue("Background GPS defaults on", background.isChecked());
+                androidx.preference.CheckBoxPreference sector = fragment.findPreference(sectorKey);
+                assertNotNull("Real location screen includes compass sector checkbox", sector);
+                assertEquals("Показывать сектор точности компаса", sector.getTitle().toString());
+                assertFalse("Compass accuracy sector defaults off", sector.isChecked());
                 preferenceRowsFit(fragment);
+                sector.performClick();
+                assertTrue(sector.isChecked());
+                assertTrue("Checkbox persists enable", preferences.getBoolean(sectorKey, false));
+                sector.performClick();
+                assertFalse(sector.isChecked());
+                assertFalse("Checkbox persists disable", preferences.getBoolean(sectorKey, true));
                 textFits(activity.findViewById(com.nextgis.maplibui.R.id.main_toolbar));
                 Configuration config = activity.getResources().getConfiguration();
                 image(activity.getWindow().getDecorView(), "background-settings-" + theme + "-"
                         + config.fontScale + "-" + config.densityDpi + "-" + expected);
             });
+        }
+        }
         } finally {
             android.content.SharedPreferences.Editor restore = preferences.edit();
             if (hadGps) restore.putBoolean(gpsKey, oldGps); else restore.remove(gpsKey);
+            if (hadSector) restore.putBoolean(sectorKey, oldSector); else restore.remove(sectorKey);
             if (hadTheme) restore.putString(themeKey, oldTheme); else restore.remove(themeKey);
             restore.commit();
             if (Build.VERSION.SDK_INT >= 33) app.getSystemService(android.app.LocaleManager.class)
