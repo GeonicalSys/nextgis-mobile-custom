@@ -136,7 +136,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
     responsibility: Defer disconnected account dispatch before lease/progress/journal changes; apply default-on all-project scope to manual and scheduled passes, preserving the active map/draft while serially opening headless owning maps, draining async children and recording exact recovery pairs.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/ProjectSyncRunnerTest.java
-    responsibility: Native synthetic-project scope, network deferral/reconnect, failure continuation, durable queues, equal-id journals, cancellation and real background fill verification.
+    responsibility: Await pending startup underlay migration and workspace leases before constructing native synthetic-project fixtures; verify scope, network deferral/reconnect, failure continuation, durable queues, equal-id journals, cancellation and real background fill.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java
     responsibility: Verify dynamic requirements, inactive tabs, toolbar and Back Save, immutable draft pins and corrupt snapshot failures before SQLite writes.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
