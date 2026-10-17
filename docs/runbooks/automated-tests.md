@@ -15,6 +15,13 @@ related_code:
 
 # Автоматические проверки
 
+VerificationTestRunner начинает native scenarios после реальных отложенных
+startup callbacks (+3 секунды), pending миграции подложек и workspace leases.
+Отдельный marker тестового Application стоит за callback восстановления журнала,
+поэтому recovery не удаляет synthetic project/account pairs, создаваемые тестом.
+Общий лимит ожидания — 30 секунд; ошибка не превращается в skip. Startup workers
+продолжают выполняться, production Application и рабочие данные не меняются.
+
 ProjectSyncRunnerTest ждёт завершения pending стартовой миграции подложек и
 активных workspace leases до подготовки синтетических проектов, с лимитом
 30 секунд. Проверка только isBusy недостаточна: миграция запланирована на

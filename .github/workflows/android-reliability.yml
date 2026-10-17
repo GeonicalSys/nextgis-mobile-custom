@@ -16,7 +16,7 @@ concurrency:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     env:
       DISPLAY: ':99'
       LIBGL_ALWAYS_SOFTWARE: '1'

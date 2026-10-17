@@ -17,6 +17,8 @@ related_code:
 подложек и workspace operations до создания синтетических проектов, с лимитом
 30 секунд. Это подготовка native test fixture; runtime-контракты миграции,
 синхронизации и создания проектов сохранены.
+Общий verification runner дополнительно ждёт marker за отложенным startup recovery
+до создания synthetic очередей. Рабочие данные и production Application сохранены.
 
 ## Настройка сектора точности компаса — 2026-10-17
 

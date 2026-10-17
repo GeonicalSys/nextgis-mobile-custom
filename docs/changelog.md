@@ -8,6 +8,14 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-17 — Готовность verification Application перед native fixtures
+
+- Runner ждёт marker за реальными отложенными startup callbacks и завершения
+  миграции/workspace leases до начала тестов, с общим лимитом 30 секунд.
+- Startup recovery больше не пересекается с synthetic journal pairs теста.
+  Production Application и все проверки результатов сохранены.
+- CI job получает лимит 75 минут для расширенного набора с startup barrier.
+
 ## 2026-10-17 — Подготовка проектов после стартовой миграции
 
 - Native sync fixture ожидает pending миграцию подложек и активные workspace

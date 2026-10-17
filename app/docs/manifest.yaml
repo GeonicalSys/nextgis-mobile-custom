@@ -46,7 +46,7 @@ key_components:
   - path: tools/run_mobile_tests.py
     responsibility: Route complete static phone and simulated emulator acceptance, isolate graphics fixtures including both LocationOrbitTest methods, verify native results and source receipts, and require an explicitly permitted project.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java
-    responsibility: Admit only isolated verification APK and explicitly selected phone; production data and identities remain outside tests.
+    responsibility: Admit only isolated verification APK and explicitly selected phone, then await real delayed startup callbacks and workspace operations before native fixtures; production data and identities remain outside tests.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java
     responsibility: Verify multi-row viewport and actual layer/Cancel touches under enlarged UI.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java
