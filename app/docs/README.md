@@ -44,6 +44,8 @@ Offline outbox сохраняет UUID/seq до подтверждения; Debu
 Внешний input, native NMEA/mock GPS и Network сохраняют свои значения.
 Related `-Area accuracy` проверяет панель и реальный круг MapLibre, неизменность
 исходного fix и обе темы/ориентации при крупном интерфейсе.
+В Full оба метода LocationOrbitTest получают отдельные process/workspace:
+проверка точности не наследует renderer и камеру после Orbit smoke.
 
 ## Контакты и руководство пользователя
 
