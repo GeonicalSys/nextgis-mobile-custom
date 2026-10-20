@@ -2,7 +2,8 @@
 id: android-20261016-osm-map-credit
 area: Мобильное приложение
 kind: internal
-at: 2026-10-16
+at: 2026-10-17T02:30:50+03:00
+at_source_commit: 520497db38f8a5d44cdca8de3356ff3bbcb2a08a
 title: С карты убран значок MapLibre, для OSM оставлена короткая подпись
 why: Значок библиотеки закрывал угол карты и не требовался её лицензией
 ---

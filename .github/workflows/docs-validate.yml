@@ -24,6 +24,12 @@ jobs:
       - name: Install documentation dependencies
         run: python -m pip install --disable-pip-version-check -r docs/requirements.txt
 
+      - name: Validate update-report cards and changed-file coverage
+        run: python -B tools/check_update_reports.py --head HEAD
+
+      - name: Test update-report guard
+        run: python -B -m unittest discover -s tools -p test_check_update_reports.py -v
+
       - name: Validate documentation and module packs
         run: python docs/scripts/validate_docs.py --workspace-root .
 
