@@ -35,6 +35,10 @@ related_code:
 
 ## После правки
 
+- [ ] Новые ID карточек покрывают точные исходные пути через `covers`; исключения
+  отдельно обоснованы. `py -3.13 tools/check_update_reports.py` завершён успешно.
+- [ ] В этом клоне установлен `.githooks/pre-push`; обход `--no-verify` не применяется.
+
 - [ ] Unit/build checks завершены.
 - [ ] Для version change выполнен `tools\verify-apk-version-matrix.ps1`, включая
   debug и обе release; handoff не содержит непроверенный Gradle DSL.
