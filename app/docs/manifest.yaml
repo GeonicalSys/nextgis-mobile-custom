@@ -20,7 +20,7 @@ key_components:
   - path: app/src/test/java/com/nextgis/mobile/util/AppUpdateReadyStateTest.java
     responsibility: Reject stale/malformed/corrupt/product/certificate-mismatched ready state and preserve offline local readback without opening an installer.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
-    responsibility: Exercise native transfer without a resumed Activity, non-roaming policy and the actual ready dialog in both themes, both orientations and 100/130/200 percent fonts at 280/320 dp and normal widths.
+    responsibility: Exercise native transfer without a resumed Activity, non-roaming policy and the actual ready dialog in both themes, both orientations and 100/130/200 percent fonts at 280/320 dp and normal widths; await the queued Android button listener off the main thread before asserting the install action.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
     responsibility: Verify real cascade controls, SQLite/drafts, navigation and deferred tab selection across saved state, resume and immediate close without losing selected values.
   - path: app/src/main/res/xml/preferences_location.xml
