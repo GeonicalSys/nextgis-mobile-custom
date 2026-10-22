@@ -97,6 +97,8 @@ public class AppUpdateNativeTest {
     @Test public void readyDialogKeepsCompleteRussianTextAndBothActionsAtLargeScales() {
         int[][] screens = {{360, 640}, {640, 360}, {320, 568}, {568, 320}, {280, 500}, {500, 280}};
         AtomicInteger installs = new AtomicInteger();
+        java.util.concurrent.atomic.AtomicReference<AlertDialog> installDialog =
+                new java.util.concurrent.atomic.AtomicReference<>();
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             scenario.onActivity(activity -> {
                 for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f})
@@ -134,13 +136,16 @@ public class AppUpdateNativeTest {
                         } finally { dialog.dismiss(); }
                     }
                 AlertDialog install = AppUpdateManager.readyDialog(activity, "3.1.2.123", "", installs::incrementAndGet);
-                try {
-                    install.show();
-                    assertEquals(0, installs.get());
-                    install.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-                    assertEquals(1, installs.get());
-                } finally { install.dismiss(); }
+                installDialog.set(install);
+                install.show();
+                assertEquals(0, installs.get());
+                install.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
             });
+            // AlertController posts the button listener to the main queue; do not dismiss
+            // or assert its effect from the same main-thread callback that clicks it.
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+            assertEquals(1, installs.get());
+            scenario.onActivity(activity -> installDialog.get().dismiss());
         }
     }
 
