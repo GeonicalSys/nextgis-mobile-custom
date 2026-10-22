@@ -1062,6 +1062,19 @@ invariants:
     must_update_docs:
       - docs/runbooks/release-apk.md
       - app/docs/README.md
+  INV-UPDATER-BACKGROUND:
+    title: Background APK preparation stops in roaming and never starts installation
+    owners: [app]
+    statement: Persist periodic work across process death and reboot, allow Wi-Fi and metered cellular only without roaming, bind transfer sockets/DNS to that network and cancel on roaming/loss/switch/worker stop. Resume only bounded partial bytes with exact ranges and verify full hash, product, version and certificate before persisting ready state. Offer checked local APK offline on launch with Update/Later; revalidate before installation and preserve the existing Android permission continuation.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateDownload.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateDownloadTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateReadyStateTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
+    verify_smoke: [AUTO-UPDATER-CHECKS, AUTO-MOBILE-RELATED, SMOKE-SELF-UPDATE]
+    must_update_docs: [docs/runbooks/release-apk.md, docs/registry/config-keys.yaml, app/docs/README.md, app/docs/manifest.yaml]
   INV-UPDATER-AUTO-RETRY:
     title: A skipped or failed startup update check remains pending
     owners: [app]

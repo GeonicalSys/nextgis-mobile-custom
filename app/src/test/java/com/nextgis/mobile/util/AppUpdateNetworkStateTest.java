@@ -5,6 +5,22 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class AppUpdateNetworkStateTest {
+    @Test public void downloadsUseWifiAndMeteredCellularWithoutRoaming() {
+        assertTrue(new AppUpdateManager.NetworkState(true, true, false, true, false, false, true).canDownload());
+        assertTrue(new AppUpdateManager.NetworkState(true, true, true, false, true, false, true).canDownload());
+        assertTrue(new AppUpdateManager.NetworkState(true, true, true, false, false, true, true).canDownload());
+    }
+
+    @Test public void roamingOrUnknownRoamingBlocksApkButPreservesTheStartupCheck() {
+        AppUpdateManager.NetworkState roaming =
+                new AppUpdateManager.NetworkState(true, true, true, false, true, false, false);
+        assertFalse(roaming.canDownload());
+        assertTrue(roaming.canRequest());
+        assertFalse(new AppUpdateManager.NetworkState(false, true, true, true, false, false, true).canDownload());
+        assertFalse(new AppUpdateManager.NetworkState(true, false, true, true, false, false, true).canDownload());
+        assertFalse(new AppUpdateManager.NetworkState(true, true, true, false, false, false, true).canDownload());
+    }
+
     @Test public void unvalidatedWifiCanRequestTheUpdateServer() {
         AppUpdateManager.NetworkState state = new AppUpdateManager.NetworkState(true, true, false, true, false, false);
         assertTrue(state.canRequest());

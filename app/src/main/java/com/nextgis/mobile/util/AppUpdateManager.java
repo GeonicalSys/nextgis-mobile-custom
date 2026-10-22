@@ -37,7 +37,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -46,6 +45,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -55,6 +55,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import okhttp3.CacheControl;
+import okhttp3.Call;
+import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -67,12 +69,15 @@ public final class AppUpdateManager
             "com.nextgis.mobile.UPDATE_FLAVOR";
     private static final String UPDATE_STATE_PREFERENCES = "app_update_state";
     private static final String KEY_PENDING_INSTALL_MANIFEST = "pending_install_manifest";
+    private static final String KEY_READY_MANIFEST = "ready_manifest";
+    private static final Object STATE_LOCK = new Object();
     private static final int BUFFER_SIZE = 128 * 1024;
     private static final int MAX_MANIFEST_SIZE = 512 * 1024;
     private static final long MAX_APK_SIZE = 1024L * 1024L * 1024L;
     private static final ExecutorService IO_EXECUTOR = Executors.newSingleThreadExecutor();
     private static final AtomicBoolean UPDATE_CHECK_IN_PROGRESS = new AtomicBoolean(false);
     private static final AtomicBoolean UPDATE_DOWNLOAD_IN_PROGRESS = new AtomicBoolean(false);
+    private static final AtomicBoolean BACKGROUND_PREPARE_IN_PROGRESS = new AtomicBoolean(false);
     private static final AtomicLong CHECK_SEQUENCE = new AtomicLong();
     private static final OkHttpClient MANIFEST_HTTP_CLIENT = new OkHttpClient.Builder()
             .callTimeout(45, TimeUnit.SECONDS)
@@ -80,8 +85,11 @@ public final class AppUpdateManager
             .readTimeout(30, TimeUnit.SECONDS)
             .build();
     private static final OkHttpClient DOWNLOAD_HTTP_CLIENT = new OkHttpClient.Builder()
+            .callTimeout(8, TimeUnit.MINUTES)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(5, TimeUnit.MINUTES)
+            .followRedirects(false)
+            .followSslRedirects(false)
             .build();
 
     private AppUpdateManager()
@@ -159,7 +167,7 @@ public final class AppUpdateManager
         // installation later fails, the normal updater UI remains the explicit retry path.
         clearPendingInstallation(activity);
         HyperLog.v(Constants.TAG, "Updater install_resume started versionCode=" + manifest.versionCode);
-        downloadAndInstall(activity, manifest);
+        installPreparedUpdate(activity, manifest);
         return true;
     }
 
@@ -180,11 +188,6 @@ public final class AppUpdateManager
             return;
         }
         NetworkState network = networkState(activity);
-        if (!interactive && !network.canRequest()) {
-            HyperLog.v(Constants.TAG, "Updater check skipped mode=" + mode + " reason=no_internet_network " + network);
-            finishCheck(completion, false);
-            return;
-        }
         if (!UPDATE_CHECK_IN_PROGRESS.compareAndSet(false, true)) {
             HyperLog.v(Constants.TAG, "Updater check skipped mode=" + mode + " reason=check_in_progress " + network);
             finishCheck(completion, false);
@@ -208,9 +211,23 @@ public final class AppUpdateManager
 
         IO_EXECUTOR.execute(() -> {
             UpdateManifest result = null;
+            boolean ready = false;
             Exception failure = null;
             try {
-                result = requestManifest(activity, checkId);
+                // Read locally first: a previously prepared update must also be offered offline.
+                result = readReadyUpdate(activity);
+                ready = result != null;
+                if (ready) {
+                    // Keep the launch check even when an older valid update is already ready.
+                    AppUpdateWorker.enqueue(activity.getApplicationContext());
+                } else if (network.canRequest()) {
+                    result = requestManifest(activity, checkId);
+                    if (result.versionCode > BuildConfig.VERSION_CODE) {
+                        AppUpdateWorker.enqueue(activity.getApplicationContext());
+                    }
+                } else {
+                    throw new IOException("No network for update check");
+                }
             } catch (Exception error) {
                 failure = error;
                 HyperLog.w(Constants.TAG, "Updater check failed id=" + checkId + " mode=" + mode
@@ -220,6 +237,7 @@ public final class AppUpdateManager
                 UPDATE_CHECK_IN_PROGRESS.set(false);
             }
             UpdateManifest manifest = result;
+            boolean updateReady = ready;
             Exception checkError = failure;
             activity.runOnUiThread(() -> {
                 if (!isActivityUsable(activity)) {
@@ -253,7 +271,17 @@ public final class AppUpdateManager
                     finishCheck(completion, false);
                     return;
                 }
-                showUpdateAvailable(activity, manifest);
+                if (!updateReady) {
+                    if (interactive) {
+                        Toast.makeText(activity, network.canDownload()
+                                        ? R.string.update_background_downloading : R.string.update_waiting_network,
+                                Toast.LENGTH_LONG).show();
+                    }
+                    // A foreground retry will show the ready offer when preparation finishes.
+                    finishCheck(completion, false);
+                    return;
+                }
+                showReadyUpdate(activity, manifest);
                 HyperLog.v(Constants.TAG, "Updater check completed id=" + checkId + " result=offer_shown"
                         + " availableVersion=" + manifest.versionName + " availableCode=" + manifest.versionCode
                         + " elapsedMs=" + (SystemClock.elapsedRealtime() - started));
@@ -269,7 +297,14 @@ public final class AppUpdateManager
     }
 
 
-    private static UpdateManifest requestManifest(Activity activity, long checkId)
+    private static UpdateManifest requestManifest(Context activity, long checkId)
+            throws IOException, JSONException
+    {
+        return requestManifest(activity, checkId, null);
+    }
+
+
+    private static UpdateManifest requestManifest(Context activity, long checkId, NetworkGuard guard)
             throws IOException, JSONException
     {
         String branch = updateRepositoryBranch();
@@ -282,7 +317,14 @@ public final class AppUpdateManager
                 .cacheControl(new CacheControl.Builder().noCache().noStore().build())
                 .build();
 
-        try (Response response = MANIFEST_HTTP_CLIENT.newCall(request).execute()) {
+        OkHttpClient client = guard == null ? MANIFEST_HTTP_CLIENT
+                : guard.client.newBuilder().callTimeout(45, TimeUnit.SECONDS).build();
+        Call call = client.newCall(request);
+        if (guard != null) {
+            guard.attach(call);
+            guard.check();
+        }
+        try (Response response = call.execute()) {
             HyperLog.v(Constants.TAG, "Updater manifest response id=" + checkId + " http=" + response.code());
             if (!response.isSuccessful()) {
                 throw new IOException("HTTP " + response.code() + " for " + manifestUrl);
@@ -306,7 +348,7 @@ public final class AppUpdateManager
     }
 
 
-    private static void validateManifest(Activity activity, UpdateManifest manifest)
+    static void validateManifest(Context activity, UpdateManifest manifest)
             throws IOException
     {
         String expectedApplicationId = activity.getPackageName();
@@ -361,7 +403,7 @@ public final class AppUpdateManager
     }
 
 
-    private static void validateApkUrl(String value, String branch, long versionCode)
+    static void validateApkUrl(String value, String branch, long versionCode)
             throws IOException
     {
         try {
@@ -423,76 +465,55 @@ public final class AppUpdateManager
     }
 
 
-    private static void showUpdateAvailable(Activity activity, UpdateManifest manifest)
+    private static void showReadyUpdate(Activity activity, UpdateManifest manifest)
     {
-        StringBuilder message = new StringBuilder(
-                activity.getString(R.string.update_new, manifest.versionName));
-        if (!manifest.releaseNotes.isEmpty()) {
-            message.append("\n\n")
-                    .append(activity.getString(
-                            R.string.update_release_notes,
-                            manifest.releaseNotes));
-        }
-        if (manifest.apkSize > 0) {
-            double sizeMb = manifest.apkSize / (1024.0 * 1024.0);
-            message.append("\n\n")
-                    .append(String.format(Locale.getDefault(), "%.1f MB", sizeMb));
-        }
-
-        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
-                .setTitle(R.string.update_title)
-                .setMessage(message.toString())
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(
-                        R.string.update_download,
-                        (dialog, which) -> downloadAndInstall(activity, manifest))
-                .show();
+        readyDialog(activity, manifest.versionName, manifest.releaseNotes,
+                () -> installPreparedUpdate(activity, manifest)).show();
     }
 
 
-    private static void downloadAndInstall(Activity activity, UpdateManifest manifest)
+    static AlertDialog readyDialog(Context context, String version, String notes, Runnable install)
     {
-        if (!UPDATE_DOWNLOAD_IN_PROGRESS.compareAndSet(false, true)) {
-            return;
-        }
-        ProgressDialog progressDialog = new ProgressDialog(activity);
-        progressDialog.setTitle(R.string.update_title);
-        progressDialog.setMessage(activity.getString(R.string.update_downloading));
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setMax(100);
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        String message = context.getString(R.string.update_ready_message, version);
+        if (!notes.isEmpty()) message += "\n\n" + context.getString(R.string.update_release_notes, notes);
+        return com.nextgis.maplibui.util.FittedDialogs.compatBuilder(context)
+                .setTitle(R.string.update_ready_title)
+                .setMessage(message)
+                .setNegativeButton(R.string.update_later, null)
+                .setPositiveButton(R.string.update_install, (dialog, which) -> install.run())
+                .create();
+    }
 
+
+    private static void installPreparedUpdate(Activity activity, UpdateManifest manifest)
+    {
+        if (!UPDATE_DOWNLOAD_IN_PROGRESS.compareAndSet(false, true)) return;
+        ProgressDialog progress = new ProgressDialog(activity);
+        progress.setMessage(activity.getString(R.string.update_preparing_installation));
+        progress.setIndeterminate(true);
+        progress.setCancelable(false);
+        progress.show();
         IO_EXECUTOR.execute(() -> {
-            File updateDirectory = new File(activity.getCacheDir(), "updates");
-            File apkFile = new File(
-                    updateDirectory,
-                    "update-" + manifest.versionCode + ".apk");
             try {
-                if (!updateDirectory.exists() && !updateDirectory.mkdirs()) {
-                    throw new IOException("Cannot create update cache directory");
+                validateManifest(activity, manifest);
+                File apk = preparedApk(activity, manifest);
+                // Preserve continuation from versions that stored their APK in cache/updates.
+                if (!apk.isFile()) apk = new File(activity.getCacheDir(),
+                        "updates/update-" + manifest.versionCode + ".apk");
+                if (!apk.isFile() || apk.length() != manifest.apkSize
+                        || !manifest.apkSha256.equalsIgnoreCase(sha256File(apk))) {
+                    AppUpdateWorker.enqueue(activity.getApplicationContext());
+                    throw new IOException("Prepared APK is missing or corrupt");
                 }
-
-                if (apkFile.isFile()
-                        && apkFile.length() == manifest.apkSize
-                        && manifest.apkSha256.equalsIgnoreCase(sha256File(apkFile))) {
-                    validateDownloadedApk(activity, apkFile, manifest);
-                } else {
-                    if (apkFile.exists() && !apkFile.delete()) {
-                        throw new IOException("Cannot replace cached update APK");
-                    }
-                    downloadApk(activity, manifest, apkFile, progressDialog);
-                    validateDownloadedApk(activity, apkFile, manifest);
-                }
-
+                validateDownloadedApk(activity, apk, manifest);
+                File validated = apk;
                 runOnUiThread(activity, () -> {
-                    dismiss(progressDialog);
-                    requestInstallation(activity, apkFile, manifest);
+                    dismiss(progress);
+                    requestInstallation(activity, validated, manifest);
                 });
             } catch (Exception error) {
                 runOnUiThread(activity, () -> {
-                    dismiss(progressDialog);
+                    dismiss(progress);
                     showError(activity, error);
                 });
             } finally {
@@ -502,100 +523,183 @@ public final class AppUpdateManager
     }
 
 
-    private static void downloadApk(
-            Activity activity,
-            UpdateManifest manifest,
-            File destination,
-            ProgressDialog progressDialog)
-            throws IOException, NoSuchAlgorithmException
+    static boolean prepareUpdate(Context context, AppUpdateWorker worker) throws Exception
     {
-        File temporaryFile = new File(destination.getParentFile(), destination.getName() + ".part");
-        if (temporaryFile.exists() && !temporaryFile.delete()) {
-            throw new IOException("Cannot clear unfinished update download");
-        }
-
-        Request request = new Request.Builder()
-                .url(manifest.apkUrl)
-                .header("User-Agent", "NextGIS-Mobile-Updater/" + BuildConfig.VERSION_NAME)
-                .build();
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-
-        try (Response response = DOWNLOAD_HTTP_CLIENT.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("HTTP " + response.code() + " while downloading APK");
+        if (!BACKGROUND_PREPARE_IN_PROGRESS.compareAndSet(false, true)) return false;
+        try (NetworkGuard guard = new NetworkGuard(context, worker::isStopped, worker::attach)) {
+            UpdateManifest manifest = requestManifest(context, CHECK_SEQUENCE.incrementAndGet(), guard);
+            guard.manifest = manifest;
+            guard.check();
+            pruneInstalledUpdates(context);
+            if (manifest.versionCode <= BuildConfig.VERSION_CODE) return true;
+            File apk = preparedApk(context, manifest);
+            if (!apk.getParentFile().isDirectory() && !apk.getParentFile().mkdirs()) {
+                throw new IOException("Cannot create update directory");
             }
-            validateApkUrl(
-                    response.request().url().toString(),
-                    updateRepositoryBranch(),
-                    manifest.versionCode);
-            ResponseBody body = response.body();
-            if (body == null) {
-                throw new IOException("Empty APK response");
+            if (!apk.isFile() || apk.length() != manifest.apkSize
+                    || !manifest.apkSha256.equalsIgnoreCase(AppUpdateDownload.sha256(apk, guard))) {
+                AppUpdateDownload.download(guard.client, new Request.Builder().url(manifest.apkUrl)
+                                .header("User-Agent", "NextGIS-Mobile-Updater/" + BuildConfig.VERSION_NAME).build(),
+                        apk, manifest.apkSize, manifest.apkSha256, guard);
             }
-            long totalBytes = body.contentLength();
-            if (totalBytes > 0 && totalBytes != manifest.apkSize) {
-                throw new IOException("APK Content-Length does not match manifest");
-            }
-            if (totalBytes <= 0) {
-                totalBytes = manifest.apkSize;
-            }
-            final long expectedBytes = totalBytes;
-
-            try (InputStream input = body.byteStream();
-                 FileOutputStream output = new FileOutputStream(temporaryFile)) {
-                byte[] buffer = new byte[BUFFER_SIZE];
-                long downloadedBytes = 0;
-                int lastProgress = -1;
-                int read;
-                while ((read = input.read(buffer)) != -1) {
-                    output.write(buffer, 0, read);
-                    digest.update(buffer, 0, read);
-                    downloadedBytes += read;
-                    if (downloadedBytes > manifest.apkSize) {
-                        throw new IOException("Downloaded APK exceeds manifest size");
-                    }
-                    if (expectedBytes > 0) {
-                        int progress = (int) Math.min(
-                                100,
-                                downloadedBytes * 100 / expectedBytes);
-                        if (progress != lastProgress) {
-                            lastProgress = progress;
-                            int progressValue = progress;
-                            runOnUiThread(
-                                    activity,
-                                    () -> progressDialog.setProgress(progressValue));
-                        }
-                    }
+            guard.check();
+            validateDownloadedApk(context, apk, manifest);
+            guard.check();
+            synchronized (STATE_LOCK) {
+                if (!pendingInstallationPreferences(context).edit()
+                        .putString(KEY_READY_MANIFEST, manifest.toJson().toString()).commit()) {
+                    throw new IOException("Cannot persist prepared update");
                 }
-                output.getFD().sync();
             }
-        } catch (IOException error) {
-            temporaryFile.delete();
-            throw error;
+            HyperLog.v(Constants.TAG, "Updater background ready versionCode=" + manifest.versionCode);
+            return true;
+        } finally {
+            BACKGROUND_PREPARE_IN_PROGRESS.set(false);
+        }
+    }
+
+
+    private static File preparedApk(Context context, UpdateManifest manifest)
+    {
+        return new File(context.getFilesDir(), "updates/update-" + manifest.versionCode
+                + "-" + manifest.apkSha256.toLowerCase(Locale.US) + ".apk");
+    }
+
+
+    static UpdateManifest readReadyUpdate(Context context)
+    {
+        String json = pendingInstallationPreferences(context).getString(KEY_READY_MANIFEST, null);
+        if (json == null) return null;
+        try {
+            UpdateManifest manifest = UpdateManifest.fromJson(new JSONObject(json));
+            validateManifest(context, manifest);
+            if (manifest.versionCode <= BuildConfig.VERSION_CODE) {
+                clearReadyUpdate(context, json);
+                return null;
+            }
+            File apk = preparedApk(context, manifest);
+            if (apk.length() != manifest.apkSize
+                    || !manifest.apkSha256.equalsIgnoreCase(sha256File(apk))) {
+                throw new IOException("Prepared APK is missing or corrupt");
+            }
+            validateDownloadedApk(context, apk, manifest);
+            return manifest;
+        } catch (Exception error) {
+            HyperLog.w(Constants.TAG, "Updater prepared state rejected", error);
+            clearReadyUpdate(context, json);
+            return null;
+        }
+    }
+
+
+    private static void clearReadyUpdate(Context context, String expected)
+    {
+        synchronized (STATE_LOCK) {
+            SharedPreferences prefs = pendingInstallationPreferences(context);
+            if (expected.equals(prefs.getString(KEY_READY_MANIFEST, null))) {
+                prefs.edit().remove(KEY_READY_MANIFEST).commit();
+            }
+        }
+    }
+
+
+    private static void pruneInstalledUpdates(Context context)
+    {
+        File[] files = new File(context.getFilesDir(), "updates").listFiles();
+        if (files == null || UPDATE_DOWNLOAD_IN_PROGRESS.get()
+                || pendingInstallationPreferences(context).contains(KEY_PENDING_INSTALL_MANIFEST)) return;
+        for (File file : files) {
+            if (!file.getName().matches("update-[0-9]+-[0-9a-f]{64}\\.apk(\\.part)?")) continue;
+            long code;
+            try { code = Long.parseLong(file.getName().split("-")[1]); }
+            catch (NumberFormatException error) { continue; }
+            if (code <= BuildConfig.VERSION_CODE && !file.delete()) {
+                HyperLog.w(Constants.TAG, "Updater cannot remove installed update artifact");
+            }
+        }
+        String json = pendingInstallationPreferences(context).getString(KEY_READY_MANIFEST, null);
+        if (json != null) {
+            try {
+                if (UpdateManifest.fromJson(new JSONObject(json)).versionCode <= BuildConfig.VERSION_CODE)
+                    clearReadyUpdate(context, json);
+            } catch (JSONException error) { clearReadyUpdate(context, json); }
+        }
+    }
+
+
+    /** Pin sockets and DNS to the eligible network; stop in-flight HTTP on roaming/loss/switch. */
+    static final class NetworkGuard implements AppUpdateDownload.Guard, AutoCloseable {
+        private final Context context;
+        private final java.util.function.BooleanSupplier stopped;
+        private final java.util.function.Consumer<Call> onCall;
+        private final ConnectivityManager connectivity;
+        private final Network network;
+        private final ConnectivityManager.NetworkCallback callback;
+        private volatile boolean invalid;
+        private volatile Call activeCall;
+        private UpdateManifest manifest;
+        final OkHttpClient client;
+
+        NetworkGuard(Context context, java.util.function.BooleanSupplier stopped,
+                     java.util.function.Consumer<Call> onCall) throws IOException {
+            this.context = context;
+            this.stopped = stopped;
+            this.onCall = onCall;
+            connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            network = connectivity == null ? null : connectivity.getActiveNetwork();
+            if (network == null || !networkState(context).canDownload()) {
+                throw new IOException("No non-roaming update network");
+            }
+            client = DOWNLOAD_HTTP_CLIENT.newBuilder().socketFactory(network.getSocketFactory())
+                    .dns(host -> Arrays.asList(network.getAllByName(host)))
+                    .connectionPool(new ConnectionPool()).retryOnConnectionFailure(false).build();
+            callback = new ConnectivityManager.NetworkCallback() {
+                @Override public void onAvailable(Network available) {
+                    if (!network.equals(available)) invalidate();
+                }
+                @Override public void onLost(Network lost) {
+                    if (network.equals(lost)) invalidate();
+                }
+                @Override public void onCapabilitiesChanged(Network changed, NetworkCapabilities caps) {
+                    if (network.equals(changed) && !networkState(context).canDownload()) invalidate();
+                }
+            };
+            connectivity.registerDefaultNetworkCallback(callback);
         }
 
-        if (manifest.apkSize > 0 && temporaryFile.length() != manifest.apkSize) {
-            temporaryFile.delete();
-            throw new IOException("Downloaded APK size does not match manifest");
+        private void invalidate() {
+            invalid = true;
+            Call call = activeCall;
+            if (call != null) call.cancel();
         }
-        String downloadedSha256 = toHex(digest.digest());
-        if (!manifest.apkSha256.equalsIgnoreCase(downloadedSha256)) {
-            temporaryFile.delete();
-            throw new IOException("Downloaded APK SHA-256 does not match manifest");
+
+        @Override public void check() throws IOException {
+            if (invalid || stopped.getAsBoolean() || !network.equals(connectivity.getActiveNetwork())
+                    || !networkState(context).canDownload()) {
+                invalidate();
+                throw new IOException("Update download paused for network/worker change");
+            }
         }
-        if (destination.exists() && !destination.delete()) {
-            temporaryFile.delete();
-            throw new IOException("Cannot replace cached update APK");
+
+        @Override public void attach(Call call) {
+            activeCall = call;
+            onCall.accept(call);
+            if (invalid) call.cancel();
         }
-        if (!temporaryFile.renameTo(destination)) {
-            temporaryFile.delete();
-            throw new IOException("Cannot finalize downloaded update APK");
+
+        @Override public void validateUrl(String url) throws IOException {
+            validateApkUrl(url, updateRepositoryBranch(), manifest.versionCode);
+        }
+
+        @Override public void close() {
+            connectivity.unregisterNetworkCallback(callback);
+            client.connectionPool().evictAll();
         }
     }
 
 
     private static void validateDownloadedApk(
-            Activity activity,
+            Context activity,
             File apkFile,
             UpdateManifest manifest)
             throws IOException, PackageManager.NameNotFoundException, NoSuchAlgorithmException
@@ -687,7 +791,7 @@ public final class AppUpdateManager
     }
 
 
-    private static IOException invalidUpdate(Activity activity, String diagnostic)
+    private static IOException invalidUpdate(Context activity, String diagnostic)
     {
         HyperLog.w(Constants.TAG, "Updater APK validation rejected: " + diagnostic);
         return new IOException(activity.getString(R.string.update_invalid));
@@ -826,13 +930,10 @@ public final class AppUpdateManager
         if (!isActivityUsable(activity)) {
             return;
         }
-        String message = error.getMessage();
-        if (message == null || message.trim().isEmpty()) {
-            message = error.getClass().getSimpleName();
-        }
+        HyperLog.w(Constants.TAG, "Updater UI operation failed", error);
         com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activity)
                 .setTitle(R.string.update_title)
-                .setMessage(activity.getString(R.string.update_error, message))
+                .setMessage(R.string.update_error)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
@@ -848,42 +949,61 @@ public final class AppUpdateManager
 
 
     static final class NetworkState {
-        final boolean active, internet, validated, wifi, cellular, vpn;
+        final boolean active, internet, validated, wifi, cellular, vpn, notRoaming;
 
         NetworkState(boolean active, boolean internet, boolean validated,
                      boolean wifi, boolean cellular, boolean vpn) {
+            this(active, internet, validated, wifi, cellular, vpn, false);
+        }
+
+        NetworkState(boolean active, boolean internet, boolean validated,
+                     boolean wifi, boolean cellular, boolean vpn, boolean notRoaming) {
             this.active = active;
             this.internet = internet;
             this.validated = validated;
             this.wifi = wifi;
             this.cellular = cellular;
             this.vpn = vpn;
+            this.notRoaming = notRoaming;
         }
 
         boolean canRequest() {
             return active && internet; // Server reachability is established by the HTTP request.
         }
 
+        boolean canDownload() {
+            return canRequest() && notRoaming && (wifi || cellular || vpn);
+        }
+
         @Override public String toString() {
             return "active=" + active + " internet=" + internet + " validated=" + validated
-                    + " wifi=" + wifi + " cellular=" + cellular + " vpn=" + vpn;
+                    + " wifi=" + wifi + " cellular=" + cellular + " vpn=" + vpn
+                    + " notRoaming=" + notRoaming;
         }
     }
 
 
-    private static NetworkState networkState(Activity activity)
+    static NetworkState networkState(Context activity)
     {
         try {
             ConnectivityManager connectivity =
                     (ConnectivityManager) activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
             Network active = connectivity == null ? null : connectivity.getActiveNetwork();
             NetworkCapabilities caps = active == null ? null : connectivity.getNetworkCapabilities(active);
+            boolean notRoaming = false;
+            if (caps != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                notRoaming = caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_ROAMING);
+            } else if (active != null) {
+                // NOT_ROAMING was added in API 28; preserve the supported Android 8 route.
+                android.net.NetworkInfo info = connectivity.getNetworkInfo(active);
+                notRoaming = info != null && !info.isRoaming();
+            }
             return new NetworkState(active != null,
                     caps != null && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET),
                     caps != null && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED),
                     caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI),
                     caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR),
-                    caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN));
+                    caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN), notRoaming);
         } catch (RuntimeException error) {
             HyperLog.w(Constants.TAG, "Updater network_state_failed type=" + error.getClass().getSimpleName(), error);
             return new NetworkState(false, false, false, false, false, false);
@@ -909,7 +1029,7 @@ public final class AppUpdateManager
     }
 
 
-    private static final class UpdateManifest
+    static final class UpdateManifest
     {
         final String applicationId;
         final String flavor;

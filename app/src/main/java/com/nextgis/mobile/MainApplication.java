@@ -183,6 +183,7 @@ public class MainApplication extends GISApplication
 
         com.nextgis.mobile.util.AppDiagnostics.startupPhase("background_workers");
         if (isDefaultApplicationProcess()) {
+            com.nextgis.mobile.util.AppUpdateWorker.schedule(this);
             com.nextgis.mobile.usage.UsageAnalytics.start(this);
             backgroundLocationController = new com.nextgis.mobile.location.BackgroundLocationController(this);
             backgroundLocationController.start();

@@ -769,6 +769,12 @@ triggers:
     strict_docs: true
   - id: SELF-HOSTED-UPDATER
     paths:
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkGuardTest.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateDownload.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateDownloadTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateReadyStateTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
       - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
       - app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java
       - app/src/test/java/com/nextgis/mobile/util/StartupUpdateCheckSchedulerTest.java
@@ -782,7 +788,7 @@ triggers:
     owners: [app]
     read:
       - docs/runbooks/release-apk.md
-    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-UPDATER-AUTO-RETRY]
+    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-UPDATER-AUTO-RETRY, INV-UPDATER-BACKGROUND]
     must_update_docs:
       - docs/runbooks/release-apk.md
       - docs/registry/config-keys.yaml

@@ -24,6 +24,7 @@
     "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest"
   ],
   "emulator": [
+    "com.nextgis.mobile.util.AppUpdateNativeTest",
     "com.nextgis.mobile.util.SyncRecoveryJournalNativeTest",
     "com.nextgis.mobile.usage.UsageDeliveryTest",
     "com.nextgis.mobile.reliability.GpsRecoveryNativeTest",
@@ -47,6 +48,7 @@
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "areas": {
+    "updater": ["com.nextgis.mobile.util.AppUpdateNativeTest"],
     "cursor": ["com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector", "com.nextgis.mobile.reliability.LargeTextLayoutTest#realLocationSettingsShowCompleteBackgroundGpsSwitch"],
     "gps-recovery": ["com.nextgis.mobile.reliability.GpsRecoveryNativeTest", "com.nextgis.mobile.reliability.BackgroundGpsNativeTest"],
     "bugreports": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.reliability.GpsRecoveryNativeTest"],

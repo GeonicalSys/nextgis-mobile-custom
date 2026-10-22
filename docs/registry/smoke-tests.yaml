@@ -32,7 +32,7 @@ tests:
     type: automatic
     scope: [app]
     command: .\gradlew.bat :app:testLisaDebugUnitTest
-    expected: StartupUpdateCheckSchedulerTest reproduces network/request failures, focus and busy deferral, companion UI, restored process/window, foreground retry and late/duplicate callbacks. AppUpdateNetworkStateTest permits active INTERNET without VALIDATED and preserves the offline gate; AppUpdatePendingInstallationTest ensures cleared stale or rejected continuation cannot suppress a fresh check. Logs distinguish restore, skip, request, valid result and retry.
+    expected: StartupUpdateCheckSchedulerTest reproduces network/request failures, focus/busy deferral, restored process and late callbacks. AppUpdateNetworkStateTest permits manifest requests without VALIDATED but rejects APK traffic in roaming. AppUpdateDownloadTest covers persisted ranges, interrupted and corrupt transfers; AppUpdateReadyStateTest revalidates local product/version/hash/certificate without an installer. AppUpdatePendingInstallationTest preserves permission continuation. Related updater exercises the native background transfer and complete Russian ready dialog at large scales.
   SMOKE-LARGE-TEXT-UI:
     type: device
     scope: [app, maplibui]

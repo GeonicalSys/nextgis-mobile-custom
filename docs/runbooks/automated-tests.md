@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -99,6 +99,13 @@ isolated SharedTracksTest в Related tracks/map и emulator Full автомат�
 [матрица стилей](../architecture/classic-style-verification.md).
 
 ## После доработки
+
+Related `-Area updater` запускает `AppUpdateNativeTest` на изолированном эмуляторе:
+сохранение проверенного файла при остановленном Activity, сетевую политику и
+настоящий диалог «Обновление готово» / «Обновить» / «Позже» при крупном интерфейсе.
+Unit `AppUpdate*` дополнительно проверяют Range, обрывы/роуминг, размер/hash,
+сертификат и offline ready state. Эти технические проверки не заменяют
+`SMOKE-SELF-UPDATE` с опубликованным APK и системным установщиком реального телефона.
 
 Отдельный `LocalVectorTileLabelTest` в Related `map` проверяет локальные MVT:
 одна подпись исходного квартала на границе тайлов, zoom/style reapply, реальные

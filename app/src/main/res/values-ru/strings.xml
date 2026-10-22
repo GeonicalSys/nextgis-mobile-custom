@@ -191,7 +191,14 @@
     <string name="update_download">Скачать и установить</string>
     <string name="update_downloading">Загрузка обновления…</string>
     <string name="update_release_notes">Что нового:\n%1$s</string>
-    <string name="update_error">Не удалось обновить приложение: %1$s</string>
+    <string name="update_error">Не удалось подготовить обновление. Попробуйте ещё раз позже.</string>
+    <string name="update_ready_title">Обновление готово</string>
+    <string name="update_ready_message">Версия %1$s скачана и проверена. Установить обновление?</string>
+    <string name="update_install">Обновить</string>
+    <string name="update_later">Позже</string>
+    <string name="update_background_downloading">Обновление загружается в фоне. Можно продолжать работу.</string>
+    <string name="update_waiting_network">Обновление скачается при подключении к Wi-Fi или мобильной сети без роуминга.</string>
+    <string name="update_preparing_installation">Подготовка обновления…</string>
     <string name="update_invalid">Загруженное обновление не прошло проверку.</string>
     <string name="update_install_permission_title">Разрешите установку обновлений</string>
     <string name="update_install_permission_message">Разрешите этому приложению установку неизвестных приложений в настройках Android. После возврата установка продолжится автоматически, скачанный APK будет использован повторно.</string>
