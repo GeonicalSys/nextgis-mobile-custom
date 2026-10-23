@@ -15,6 +15,17 @@ related_code:
 
 # Автоматические проверки
 
+## Регрессии GlitchTip 2026-10-23
+
+`bugreports` включает технический `CompassTouchTest`: actual CompassImage touch
+rotation при null Vibrator, отдельный verification APK, без GPS/учётных записей
+и изменения системных настроек. Класс внесён в phone roster. GPS native tests
+сохраняются на эмуляторе: ordinary no-fix не создаёт отчёт даже после долгого
+ожидания и восстановления; sustained callback stall сохраняет retry/recording
+и snapshot v3 timing. Полный каталог после добавления — 43 classes / 220 methods.
+Unit policy/OS matching и CLI protocol tests не заменяют native delivery/release gate.
+Подключение к сервису и безопасный export: [runbook](glitchtip-triage.md).
+
 VerificationTestRunner начинает native scenarios после реальных отложенных
 startup callbacks (+3 секунды), pending миграции подложек и workspace leases.
 Отдельный marker тестового Application стоит за callback восстановления журнала,

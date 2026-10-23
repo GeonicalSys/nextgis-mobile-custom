@@ -8,6 +8,16 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-23 — Разбор мобильных ошибок GlitchTip
+
+- Исправлена необязательная вибрация компаса на устройствах без Vibrator.
+- Штатные no-fix/acquisition/filter wait и распознанные local tile resource 503
+  остаются локально; длительный сбой GPS считается по непрерывной причине.
+- GPS snapshot v3 показывает разрывы observer/сна; OS metadata дополняет
+  historical ANR/native reports, operation/phase поступает в actual native scope.
+- Добавлены CLI с приватным доступом, agent routing и воспроизводимый workflow
+  выгрузки/закрытия. [Разбор 12 групп](reference/glitchtip-triage-2026-10-23.md).
+
 ## 2026-10-23 — Подготовка мобильного обновления в фоне
 
 - WorkManager проверяет и скачивает APK по Wi-Fi/мобильной сети без роуминга;

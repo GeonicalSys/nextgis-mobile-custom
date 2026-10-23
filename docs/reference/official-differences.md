@@ -13,6 +13,19 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Обработка GlitchTip — 2026-10-23
+
+Компас переживает отсутствие сервиса/оборудования вибрации. Штатный no-fix,
+acquisition/filter wait и явно распознанный локальный tile backpressure остаются
+в локальном журнале. GPS callback-stall warning требует 30 s непрерывного сбоя;
+snapshot v3 сохраняет длительность причины и интервалы observer/сна устройства.
+OS process_exit metadata дополняет historical ANR/native failures только при
+совпадении процесса, типа завершения и времени. Native scope хранит operation/phase.
+CLI подключения и workflow закрытия уже находятся в репозитории:
+[runbook](../runbooks/glitchtip-triage.md), [разбор](glitchtip-triage-2026-10-23.md).
+Это диагностические улучшения и конкретный NPE fix; точные причины старых ANR
+и SIGABRT не объявляются установленными, APK этим PR не публикуется.
+
 ## Подготовка обновления в фоне — 2026-10-23
 
 В форке WorkManager проверяет новую версию раз в шесть часов и при запуске,

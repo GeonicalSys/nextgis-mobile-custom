@@ -959,15 +959,18 @@ invariants:
       connected WorkManager job without reinitializing handlers. Event UUID and diagnostic
       stack/version/device/typed-operation context survive process restart. Preserve original
       historical identity, separate reporter identity, and reserve context/breadcrumb budget.
-      GPS snapshots separate callback age from delivery lag, bound history to 24 samples and correlate warning/recovery/cancel with an episode UUID; short reception gaps stay local.
+      GPS snapshot v3 separates callback age from delivery lag, bounds history to 24 samples and correlates actual delivery-fault warning/recovery/cancel with an episode UUID. Reception/acquisition/filter waits stay local; reporting requires a continuous faulty-reason threshold and records observer/device-sleep gaps.
       Journal writes await durability without losing caller cancellation. Do not read
       business storage, photos or raw HyperLog in crash callbacks. Supplied event data,
       original HTTP URLs/query/headers/cookies, response metadata, custom context and
       frame paths are retained without content masking under bounded serialization.
       Never consume streaming HTTP bodies for reporting. Fatal exceptions
       still delegate to Android and existing draft recovery remains independent.
-      Limit only new automatic handled SDK HTTP 5xx bursts; retain the first request
-      and status/source tags, never suppress fatal failures or cached replay.
+      Limit new automatic handled SDK HTTP 5xx bursts; expected local tile GET 503 with
+      explicit queue_full/heap_headroom remains in the bounded local journal. Unknown
+      causes and remote failures retain the first request and status/source tags;
+      never suppress fatal failures or cached replay. Historical OS exit context
+      requires matching original timestamp, process and crash type on a background sender.
       Map runtime snapshots are bounded, captured without SDK/business reads from the observer
       and attached only to matching operation timestamps; old process identity is never replaced
       with the reporting process version. Queue and heap 503 reasons remain independently observable.

@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -113,6 +113,13 @@ Battery Saver; приложение не меняет системный реж�
 [`../registry/config-keys.yaml`](../registry/config-keys.yaml).
 
 ## Правила
+
+Диагностические фильтры не добавляют пользовательских настроек. Штатные local
+tile GET 503 с queue_full/heap_headroom и ожидание спутникового решения остаются
+локальными. Длительность проблемной причины GPS, интервалы observer/сна и OS
+process_exit metadata описаны в [контракте отчётов](../architecture/error-reporting.md).
+Доступ оператора хранится вне Git; адрес и проект для CLI — в tools/glitchtip.json,
+команды — в [runbook](../runbooks/glitchtip-triage.md).
 
 Режим трека выбирается в выпадающем меню кнопки записи и сохраняется как
 `track_recording_mode` перед запросом разрешений. Значения и миграция описаны

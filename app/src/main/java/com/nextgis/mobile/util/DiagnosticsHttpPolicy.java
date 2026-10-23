@@ -68,6 +68,9 @@ final class DiagnosticsHttpPolicy {
                         event.setTag("local_tile_reason", reason);
                         String id = header(response, com.nextgis.maplib.util.MapRuntimeDiagnostics.REQUEST_HEADER);
                         if (id != null && id.matches("[0-9]{1,19}")) event.setTag("local_tile_request", id);
+                        // An explicit local resource guard is expected backpressure. Keep its
+                        // bounded MapRuntime log/snapshot, without a standalone SDK bug report.
+                        if ("GET".equals(method) && isVectorTile(request.getUrl())) return false;
                     }
                 }
             }
@@ -87,6 +90,13 @@ final class DiagnosticsHttpPolicy {
         for (java.util.Map.Entry<String, String> entry : response.getHeaders().entrySet())
             if (name.equalsIgnoreCase(entry.getKey())) return entry.getValue();
         return null;
+    }
+
+    private static boolean isVectorTile(String url) {
+        try {
+            String path = new URI(url).getPath();
+            return path != null && path.matches("/tiles/[0-9]+/[0-9]+/[0-9]+/[0-9]+\\.pbf");
+        } catch (Exception ignored) { return false; }
     }
 
     private static String safeMethod(String method) {

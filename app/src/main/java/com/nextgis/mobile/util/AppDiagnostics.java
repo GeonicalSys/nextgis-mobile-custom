@@ -50,7 +50,7 @@ public final class AppDiagnostics {
     private static final Set<String> CONTEXTS = new HashSet<>(
             Arrays.asList("app", "device", "os", "runtime", "gpu", "trace"));
     private static final Set<String> DIAGNOSTIC_CONTEXTS = new HashSet<>(
-            Arrays.asList("map_runtime", "gps_recovery", "sync_journal", "report_origin"));
+            Arrays.asList("map_runtime", "gps_recovery", "sync_journal", "report_origin", "process_exit"));
     private static volatile com.nextgis.maplib.util.MapRuntimeDiagnostics.Trace startup;
 
     public enum Operation { STARTUP, MAP, GEOMETRY_EDIT, ATTRIBUTE_FORM, SYNC, AZIMUTH, STAKEOUT, TRACK, WALK, LOCATION }
@@ -156,8 +156,10 @@ public final class AppDiagnostics {
         options.setSendClientReports(false);
         options.setTransportFactory(DiagnosticsTransport::new);
         options.setBeforeSend((event, hint) -> {
-            if (HintUtils.hasType(hint, Cached.class) || HintUtils.hasType(hint, Backfillable.class))
+            if (HintUtils.hasType(hint, Cached.class) || HintUtils.hasType(hint, Backfillable.class)) {
+                DiagnosticsExitInfo.attach(context, event);
                 return prepareCachedForSend(event);
+            }
             preserveHttpContext(event, hint);
             return prepareForSend(event, SystemClock.elapsedRealtime(), HTTP_POLICY);
         });
@@ -182,6 +184,7 @@ public final class AppDiagnostics {
     public static void operation(Operation operation, Phase phase) {
         LAST_OPERATION.set(operation);
         try {
+            Sentry.configureScope(scope -> applyOperation(scope, operation, phase));
             Breadcrumb breadcrumb = new Breadcrumb();
             breadcrumb.setCategory("lisa.operation");
             breadcrumb.setMessage(operation.name() + ": " + phase.name());
@@ -189,6 +192,12 @@ public final class AppDiagnostics {
             breadcrumb.setData("phase", phase.name());
             Sentry.addBreadcrumb(breadcrumb);
         } catch (RuntimeException ignored) { }
+    }
+
+    // Native scope sync keeps the original operation/phase when a crash is replayed next launch.
+    static void applyOperation(io.sentry.IScope scope, Operation operation, Phase phase) {
+        scope.setTag("operation", operation.name());
+        scope.setTag("operation_phase", phase.name());
     }
 
     /** Selected recoverable failures; ordinary offline/cancellation outcomes are not bugs. */
@@ -319,7 +328,8 @@ public final class AppDiagnostics {
         }
         java.util.List<String> contextKeys = java.util.Collections.list(event.getContexts().keys());
         contextKeys.sort(java.util.Comparator.comparingInt(key -> "report_origin".equals(key) ? 0
-                : "sync_journal".equals(key) ? 1 : "gps_recovery".equals(key) ? 2 : "map_runtime".equals(key) ? 3 : 4));
+                : "process_exit".equals(key) ? 1 : "sync_journal".equals(key) ? 2
+                : "gps_recovery".equals(key) ? 3 : "map_runtime".equals(key) ? 4 : 5));
         for (String key : contextKeys) {
             Object context = event.getContexts().get(key);
             if (context instanceof Response) {

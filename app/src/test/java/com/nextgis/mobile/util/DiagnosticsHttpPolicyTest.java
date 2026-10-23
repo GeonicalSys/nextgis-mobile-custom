@@ -79,14 +79,28 @@ public class DiagnosticsHttpPolicyTest {
         assertTrue(policy.shouldReport(http(503, "https://host0.example/tiles/1"), 3));
     }
 
-    @Test public void localTileReasonsArePreservedAndThrottledSeparatelyWithoutRequestIdFanout() {
+    @Test public void expectedLocalTileBackpressureNeverCreatesStandaloneReports() {
         DiagnosticsHttpPolicy policy = new DiagnosticsHttpPolicy();
         SentryEvent queue = tileReason("queue_full", "12");
-        assertTrue(policy.shouldReport(queue, 1));
+        assertFalse(policy.shouldReport(queue, 1));
         assertEquals("queue_full", queue.getTag("local_tile_reason"));
         assertEquals("12", queue.getTag("local_tile_request"));
-        assertTrue(policy.shouldReport(tileReason("heap_headroom", "13"), 2));
+        assertFalse(policy.shouldReport(tileReason("heap_headroom", "13"), 2));
         assertFalse(policy.shouldReport(tileReason("queue_full", "14"), 3));
+        assertFalse(policy.shouldReport(tileReason("queue_full", "15"), 1 + DiagnosticsHttpPolicy.REPEAT_WINDOW_MS));
+    }
+
+    @Test public void unexpectedEndpointsMethodsAndFatalLocalFailuresSurvive() {
+        SentryEvent api = tileReason("queue_full", "1");
+        api.getRequest().setUrl("http://127.0.0.1/api/tiles/1");
+        assertTrue(new DiagnosticsHttpPolicy().shouldReport(api, 1));
+        SentryEvent post = tileReason("queue_full", "1"); post.getRequest().setMethod("POST");
+        assertTrue(new DiagnosticsHttpPolicy().shouldReport(post, 1));
+        SentryEvent fatal = tileReason("queue_full", "1"); fatal.setLevel(SentryLevel.FATAL);
+        assertTrue(new DiagnosticsHttpPolicy().shouldReport(fatal, 1));
+        SentryEvent unhandled = tileReason("queue_full", "1");
+        unhandled.getExceptions().get(0).getMechanism().setHandled(false);
+        assertTrue(new DiagnosticsHttpPolicy().shouldReport(unhandled, 1));
     }
 
     @Test public void remoteAndUnknownHeadersDoNotBecomeTrustedLocalTileReasons() {

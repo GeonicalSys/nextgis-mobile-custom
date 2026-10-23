@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: COMPASS-OPTIONAL-VIBRATION
+    paths: [maplibui/src/main/java/com/nextgis/maplibui/fragment/CompassFragment.java, app/src/test/java/com/nextgis/mobile/util/CompassTouchPolicyTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/CompassTouchTest.java]
+    owners: [maplibui, app]
+    read: [docs/architecture/error-reporting.md]
+    invariants: [INV-DIAGNOSTIC-DELIVERY]
+    must_update_docs: [maplibui/docs/README.md, maplibui/docs/manifest.yaml, app/docs/README.md, app/docs/manifest.yaml, docs/architecture/error-reporting.md]
+    verify: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-RELIABILITY-NATIVE]
+    strict_docs: true
   - id: COMPASS-SECTOR-SETTING
     paths: [app/src/main/res/xml/preferences_location.xml, app/src/main/res/values/location_cursor.xml, app/src/main/res/values-ru/location_cursor.xml]
     owners: [app, maplib]

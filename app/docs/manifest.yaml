@@ -9,6 +9,8 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsExitInfo.java
+    responsibility: Add bounded Android 11+ OS termination metadata to historical failures only on a background sender, matching original timestamp and default process without reading business files or OS trace streams.
   - path: app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkGuardTest.java
     responsibility: Verify that real Android network callbacks cancel attached HTTP on roaming/loss/replacement, stopped work cancels its call and Android 8 uses the legacy roaming flag.
   - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java

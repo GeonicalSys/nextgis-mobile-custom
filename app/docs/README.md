@@ -6,6 +6,22 @@ last_verified: 2026-10-23
 
 # app — Android-приложение Lisa/Belka
 
+## Разбор GlitchTip 2026-10-23
+
+`tools/glitchtip.py` подключается к собственному GlitchTip по сохранённой
+несекретной конфигурации; пароль остаётся в приватном файле. Команды и закрытие:
+[runbook](../../docs/runbooks/glitchtip-triage.md).
+Подтверждённый local GET /tiles/...pbf 503 с queue_full/heap_headroom остаётся
+в bounded MapRuntime journal. Неизвестные причины и remote HTTP failures сохраняются.
+GPS snapshot v3 добавляет длительность текущей причины и разрывы проверок/сна;
+обычный no-fix/acquisition/filter wait больше не отправляется как bug report.
+Длительные сбои доставки GPS остаются с парным исходом.
+Native scope сохраняет operation/phase; historical events получают близкую
+по времени OS process_exit metadata только вне главного потока, с проверкой
+имени процесса. На Android ниже 11 этих OS сведений нет.
+Компас библиотеки безопасно вращается без сервиса/оборудования вибрации.
+Технический native regression `CompassTouchTest` доступен в verification APK.
+
 ## Настройка сектора точности компаса
 
 В «Настройки → Местоположение» есть чекбокс «Показывать сектор точности
