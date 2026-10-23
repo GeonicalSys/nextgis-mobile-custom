@@ -1,5 +1,6 @@
 param(
-    [switch]$SkipBuild
+    [switch]$SkipBuild,
+    [switch]$LisaOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -10,10 +11,9 @@ $repositoryRoot = Split-Path -Parent $PSScriptRoot
 if (-not $SkipBuild) {
     Push-Location $repositoryRoot
     try {
-        & .\gradlew.bat `
-            :app:assembleLisaDebug `
-            :app:assembleLisaRelease `
-            :app:assembleBelkaRelease
+        $versionBuildTasks = @(':app:assembleLisaDebug', ':app:assembleLisaRelease')
+        if (-not $LisaOnly) { $versionBuildTasks += ':app:assembleBelkaRelease' }
+        & .\gradlew.bat @versionBuildTasks
         if ($LASTEXITCODE -ne 0) {
             throw "Gradle version-matrix build failed with exit code $LASTEXITCODE."
         }
@@ -147,17 +147,22 @@ $matrix = @(
         Name = 'Lisa Release'
         Directory = 'app\build\outputs\apk\lisa\release'
         ApplicationId = 'com.nextgis.mobile.geonical'
-        VersionCode = 223
-        VersionName = '3.1.2.29'
+        VersionCode = 224
+        VersionName = '3.1.2.30'
     },
     [pscustomobject]@{
         Name = 'Belka Release'
         Directory = 'app\build\outputs\apk\belka\release'
         ApplicationId = 'com.nextgis.mobile.geonical'
-        VersionCode = 223
-        VersionName = '3.1.2.29'
+        VersionCode = 224
+        VersionName = '3.1.2.30'
     }
 )
+
+if ($LisaOnly) {
+    $matrix = @($matrix | Where-Object { $_.Name -ne 'Belka Release' })
+    Write-Output 'Belka Release APK check deferred by explicit LisaOnly selection.'
+}
 
 foreach ($entry in $matrix) {
     $apkPath = Get-VariantApk -RelativeOutputDirectory $entry.Directory
@@ -171,7 +176,7 @@ foreach ($entry in $matrix) {
 
 $maplibVersions = @{
     debug = '3.1.2.23'
-    release = '3.1.2.29'
+    release = '3.1.2.30'
 }
 
 foreach ($buildType in $maplibVersions.Keys) {

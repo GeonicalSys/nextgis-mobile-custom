@@ -6,6 +6,10 @@ last_verified: 2026-10-23
 
 # app — Android-приложение Lisa/Belka
 
+Production подготовлен к 3.1.2.30/224, Lisa Debug сохраняет 3.1.2.23/218.
+По запросу 2026-10-23 собирается только подписанный Lisa Release; Belka APK
+и публикация отложены. Проверки и состав — в consuming release runbook.
+
 ## Копирование, сдвиг и поворот
 
 MapFragment предлагает копирование выбранного объекта в совместимый редактируемый слой с выбором категории, затем открывает новую форму. В MODE_EDIT доступен сдвиг/поворот жестами с неподвижной камерой и штатным Save/Cancel/Undo. Related feature-editing выполняет сценарии на изолированном эмуляторе; с явным PhoneSerial также на verification APK, PhoneOnly допускает только неподвижную phone-часть. [Контракт](../../docs/architecture/feature-copy-transform.md).

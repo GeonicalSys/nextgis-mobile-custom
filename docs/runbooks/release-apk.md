@@ -28,9 +28,9 @@ token для отправки ошибок APK не нужны. Не печат�
 
 ## Версия
 
-Подготавливаемый выпуск `3.1.2.29`: production `versionCode 223`, Lisa Debug —
+Подготавливаемый выпуск `3.1.2.30`: production `versionCode 224`, Lisa Debug —
 `3.1.2.23` / `versionCode 218`; диагностический release
-`maplib.VERSION_NAME 3.1.2.29`, debug — `3.1.2.23`.
+`maplib.VERSION_NAME 3.1.2.30`, debug — `3.1.2.23`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.
@@ -51,6 +51,15 @@ token для отправки ошибок APK не нужны. Не печат�
    notes, если пользователь не запросил иное.
 
 ## Обязательная сборка и проверка версии
+
+Запрос 2026-10-23: повысить production до 3.1.2.30/224, собрать подписанный
+локальный APK только ЛИСА, без публикации. Belka APK пользователь отложил.
+После закрытия library/app PR выполнить version matrix с `-LisaOnly`;
+проверить Lisa Debug/Release, diagnostic versions maplib, release identity,
+подпись и SHA-256. Этот выбор не меняет default matrix для будущего Full.
+Full на смартфоне/эмуляторе и Check-Publication обязательны перед публикацией;
+локальная release-сборка сама по себе их не требует. Publisher, включая
+dry-run, в этот запрос не входит. [Матрица закрытия](../history/mobile-release-3.1.2.30-2026-10-23.md).
 
 Выпуск 3.1.2.29 / 223: maplib #50 и maplibui #36 (Merge Commit) →
 maplib #51 с production `3.1.2.29` (Merge Commit

@@ -20,6 +20,14 @@ related_code:
 2026-10-23 повторно проверены official HEAD: app `04d57c9fd843db6745c170147d6a2863da807352`, maplib `014247eea4a424e828c24d9e52e45fefed362f8d`, maplibui `642093037b135442913cd9dd9bf8b46f8b7aecf9`. В [официальном select_action.xml](https://github.com/nextgis/nextgis_mobile_android/blob/04d57c9fd843db6745c170147d6a2863da807352/app/src/main/res/menu/select_action.xml) отсутствует новая команда копирования; проверенный [MODE_EDIT](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java) не добавляет режим сдвига/поворота. Это адресная сверка этих entry points, без upstream merge или утверждения об отсутствии аналогов во всех инструментах official.
 
 
+## Подготовка локального Lisa Release — 2026-10-23
+
+Production версия форка повышена до 3.1.2.30/224 с согласованным maplib
+VERSION_NAME; Debug остаётся 3.1.2.23/218. Пользователь запросил только
+подписанный Lisa APK, отложив Belka APK и публикацию. LisaOnly ограничивает
+локальную version matrix; полный default набор перед публикацией сохранён.
+[Матрица закрытия](../history/mobile-release-3.1.2.30-2026-10-23.md).
+
 ## Обработка GlitchTip — 2026-10-23
 
 Компас переживает отсутствие сервиса/оборудования вибрации. Штатный no-fix,
