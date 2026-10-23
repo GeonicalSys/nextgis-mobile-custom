@@ -8,6 +8,8 @@
     "com.nextgis.mobile.reliability.FeaturePersistenceTest",
     "com.nextgis.mobile.reliability.FormAppearanceTest",
     "com.nextgis.mobile.reliability.FormSaveRecoveryTest",
+    "com.nextgis.mobile.rendering.FireflyStyleEditorTest",
+    "com.nextgis.mobile.rendering.FireflyTileFallbackTest",
     "com.nextgis.mobile.reliability.GnssDeviceListTest",
     "com.nextgis.mobile.reliability.LargeTextLayoutTest",
     "com.nextgis.mobile.reliability.LayerPendingChangesTest",
@@ -49,6 +51,7 @@
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "related_phone_areas": {
+    "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.FireflyTileFallbackTest"],
     "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"]
   },
   "areas": {
@@ -68,6 +71,6 @@
     "map": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocalVectorTileLabelTest"],
     "scripts": ["com.nextgis.mobile.reliability.ProjectScriptsTest"],
     "diagnostics": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.GpsRecoveryNativeTest"],
-    "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest"]
+    "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.FireflyTileFallbackTest"]
   }
 }

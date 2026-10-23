@@ -47,6 +47,12 @@ App-side `LocationDisplayAccuracy` передаёт в `MapDrawable.updateLocati
 
 ## Матрица обычных стилей
 
+[«Светлячок»](point-firefly.md) — отдельный тип 9 для обычных Point/MultiPoint.
+RGBA rendering children с префиксом `-layout-firefly-` участвуют в существующем
+порядке, picking и visibility логического слоя. Native images освобождаются
+после restyle/удаления последнего владельца; CPU bitmap cache ограничен 4 MiB.
+Прежний `circle-blur` других категорий сохраняет прежнюю отрисовку.
+
 [Native матрица](classic-style-verification.md) проверяет обычный GeoJSON renderer
 и подписи после rule JSON reload. Configured local-vector-tiles исключены по
 render-mode/source, их поддержка не расширяется. Explicit optional label settings

@@ -15,6 +15,17 @@ related_code:
 
 # Автоматические проверки
 
+## Точечные стили и «Светлячок»
+
+`tools\verify-mobile-tests.ps1 -Scope Related -Area styles` выполняет 16 native
+rendering cases, сценарий редактора с 72 локальными профилями и отдельный переход
+живого точечного tile-слоя к classic fallback (18 native cases). Явные
+`-PhoneSerial <serial> -PhoneOnly` разрешают только неподвижные проверки в
+verification APK. Тесты не меняют системные font/display настройки смартфона.
+Pixel evidence сохраняется в `files/firefly-qa` изолированного приложения;
+квитанция runner содержит точные исходы. [Контракт](../architecture/point-firefly.md).
+Full по-прежнему выполняется отдельно перед публикацией.
+
 ## Проверки копирования и преобразований
 
 `tools\verify-mobile-tests.ps1 -Scope Related -Area feature-editing` проверяет новые команды на эмуляторе. Добавить `-PhoneSerial <serial>` для трёх неподвижных проверок на verification APK смартфона; `-PhoneOnly` выполняет только эту разрешённую часть с обязательным serial. Системные настройки смартфона не меняются. Native исходы/полнота сохраняются по каждому сценарию; Related не заменяет Full. Каталог/маршрутизация находятся в mobile-test-plan.json. [Контракт и покрытие](../architecture/feature-copy-transform.md).

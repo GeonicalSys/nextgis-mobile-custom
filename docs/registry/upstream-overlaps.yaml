@@ -1,5 +1,12 @@
 schema_version: 1
 hotspots:
+  POINT-FIREFLY:
+    repositories: [maplib, maplibui, root]
+    paths: [maplib/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java, maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java, maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java]
+    default_decision: ours
+    reason: Preserve separate type 9 for a crisp core and outward-only glow; official master still exposes marker types 1–8 and has no equivalent editor choice as checked on 2026-10-24.
+    invariants: [INV-POINT-FIREFLY]
+    verify: [AUTO-POINT-FIREFLY, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
   GPS-PIPELINE:
     repositories: [root, maplib, maplibui]
     paths:

@@ -1,10 +1,20 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-23
+last_verified: 2026-10-24
 ---
 
 # app — Android-приложение Lisa/Belka
+
+## Проверки «Светлячка»
+
+Related styles включает два новых native pixel/lifecycle случая и настоящий
+редактор в 72 локальных конфигурациях крупного интерфейса. На явно выбранном
+смартфоне используется только verification APK; системные настройки и рабочее
+приложение сохраняются. Контракт — consuming docs/architecture/point-firefly.md.
+
+Отдельный FireflyTileFallbackTest проверяет переход уже загруженного точечного
+VectorSource к GeoJsonSource при выборе сложного стиля через штатный reload.
 
 Production подготовлен к 3.1.2.30/224, Lisa Debug сохраняет 3.1.2.23/218.
 По запросу 2026-10-23 собирается только подписанный Lisa Release; Belka APK

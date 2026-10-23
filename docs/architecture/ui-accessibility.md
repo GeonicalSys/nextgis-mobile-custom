@@ -1,7 +1,7 @@
 ---
 title: Адаптация интерфейса к крупному шрифту и размеру отображения
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-24
 related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java
   - maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java
@@ -17,6 +17,17 @@ related_code:
 ---
 
 # Крупный интерфейс
+
+## Редактор «Светлячка»
+
+`FireflyStyleEditorTest` открывает настоящий StyleFragment в verification APK,
+выбирает новый тип и проверяет полный текст новых подписей, подсказку и
+перенос выбранного названия. Кнопки образца, Save и Cancel нажимаются настоящими
+touches после прокрутки к цели; проверяются границы окна и отсутствие ellipsis.
+72 конфигурации принадлежат только тестовому окну: обе темы/ориентации,
+fontScale 1/1,3/2 и normal/320/280 dp. Activity поворачивается штатно;
+системные font/display настройки смартфона сохраняются. Клавиатура закрыта.
+Контракт и фактические квитанции — [точечный стиль](point-firefly.md).
 
 ## Число точности встроенного GPS
 

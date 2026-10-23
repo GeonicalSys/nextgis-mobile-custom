@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-POINT-FIREFLY:
+    type: automatic
+    scope: [maplib, maplibui, app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area styles
+    expected: Classic rendering pixels prove crisp core, outward-only glow, transparent interior, independent alpha, Point/MultiPoint, zoom, unchanged circle blur and rendering-child/image cleanup. The actual editor passes 72 local Russian theme/font/display/orientation configurations and real preset/Save/Cancel touches. Explicit PhoneOnly uses only the isolated verification APK; Full remains separate.
   AUTO-FEATURE-EDITING:
     type: automatic
     scope: [app, maplibui, maplib]
