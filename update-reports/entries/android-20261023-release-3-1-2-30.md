@@ -8,9 +8,12 @@ why: Выдать пользователю локальную сборку с н
 covers:
   - app/build.gradle
   - tools/verify-apk-version-matrix.ps1
+  - easypicker
+  - maplib
 ---
 
 Production версия 3.1.2.30/224 согласована с maplib; Debug остаётся 3.1.2.23/218.
 LisaOnly проверяет только Lisa Debug/Release и версии maplib, сохраняя полный
 default набор для будущего Full. Belka APK и публикация отложены пользователем.
 Перед release-сборкой закрывается цепочка maplib #59 → maplibui #43 → app #77.
+Easypicker закреплён на уже слитом #4 с report guard; runtime исходники не меняются.

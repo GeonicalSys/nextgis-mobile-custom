@@ -37,7 +37,7 @@ maplibui base — origin/master 9e064c3830124b033039e91da7b93ff24e6b0f0d.
 |---|---|---|---|---|
 | GPS diagnostics, copy policy, whole-object gestures; версия maplib 3.1.2.30 | maplib [#59](https://github.com/GeonicalSys/android_maplib/pull/59), master | c6919d82ed410e56d86b27c5fbbf629505fd6ae2 | Review pin включает production 3.1.2.30 | OPEN, требуется Merge Commit |
 | Copy form defaults, NULL/int64, transform toolbar/history, compass guard | maplibui [#43](https://github.com/GeonicalSys/android_maplibui/pull/43), master | 5d32e6a488f7250f37def1f1d3dbb965e1d12b2f | Feature pin присутствует | OPEN, требуется Merge Commit после maplib |
-| Updater/GlitchTip, копирование/сдвиг/поворот, versionCode 224 | app [#77](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/77), my-maplibre | d113472c7331b2e5ec3135e55ca60adbab86325f + подготовленное повышение версии | Все изменения в текущей ветке | OPEN, требуется Squash после fetched library merge pins |
+| Updater/GlitchTip, копирование/сдвиг/поворот, versionCode 224 | app [#77](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/77), my-maplibre | 2bae00a (production 3.1.2.30/224) | Все изменения в текущей ветке | OPEN, требуется Squash после fetched library merge pins |
 | Report guard governance без runtime diff | easypicker #4, master | 55aad0e0f92329ea4c273a83e541d170d24d7b57 | Pin обновлён с d6327f3 на remote merge commit | MERGED |
 | Publisher guard и Full publication contract | upload_mobile #4/#5, main | 99e3cfde7841b749b83be6005842b96e7d140d00 | Не входит в APK; checkout содержит обе строки | MERGED, публикация отложена |
 
