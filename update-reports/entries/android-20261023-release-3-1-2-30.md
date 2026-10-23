@@ -10,6 +10,7 @@ covers:
   - tools/verify-apk-version-matrix.ps1
   - easypicker
   - maplib
+  - maplibui
 ---
 
 Production версия 3.1.2.30/224 согласована с maplib; Debug остаётся 3.1.2.23/218.
