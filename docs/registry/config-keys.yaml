@@ -456,7 +456,7 @@ storage:
   diagnostic-reports:
     owner: app
     source: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-    purpose: GPS snapshot v2 pairs warning and INFO recovery/cancel with bounded history and separate callback silence/delivery lag; no new setting. SDK cache under private files/diagnostic-reports partitioned by DSN, bounded to 256 ordinary envelopes; contract 2 retains supplied URLs/query/headers/context without content masking, with bounded strings/collections. Connected WorkManager retry is independent of GIS sync and a process-local ten-minute HTTP 5xx filter never drops cached replay or fatal events.
+    purpose: GPS snapshot v3 includes continuous reason duration and observer/sleep gaps; reception/acquisition/filter waits stay local and sustained delivery faults retain correlated outcomes. SDK cache under private files/diagnostic-reports is partitioned by DSN and bounded to 256 ordinary envelopes; contract 3 retains supplied data under size limits. Expected local tile GET 503 resource guards stay in MapRuntime logs, unknown/remote failures retain first-report throttling. Native scope keeps operation/phase; historical failures may receive same-process/type/timestamp OS exit metadata in the reserved context budget. Retry never refilters cached replay or fatal events; no new user setting.
   ngw-field-required:
     owner: maplib
     location_name: fields[].required in the local layer config JSON
@@ -472,6 +472,16 @@ storage:
     location_name: private files/shared-tracks/pending-track-points directory
     source: maplib/src/main/java/com/nextgis/maplib/util/PendingTrackPoints.java
     purpose: Capacity2048 ordered UUID AtomicFile JSON queue; corrupt entries retained; acknowledged only after idempotent SQLite insert.
+  updater-ready:
+    owner: app
+    location_name: app_update_state.ready_manifest and private files/updates
+    source: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+    purpose: Durable checked APK and manifest offered offline on launch; Later keeps the artifact, Update revalidates before requesting installation; partial transfers cannot produce a ready offer
+  updater-background:
+    owner: app
+    location_name: WorkManager app-update-periodic and app-update-on-launch
+    source: app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java
+    purpose: Unique six-hour periodic and launch work with NOT_ROAMING and storage-not-low constraints; metered mobile and Wi-Fi allowed, network switch/roaming/stop cancels HTTP, partial bytes resume with verified ranges and full hash
   updater-pending-install:
     owner: app
     location_name: app_update_state SharedPreferences

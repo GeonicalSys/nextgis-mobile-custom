@@ -1,0 +1,6 @@
+{
+  "base_url": "https://apps-geonical.ru/errors",
+  "organization": "geonical",
+  "project": "nextgis-mobile",
+  "credentials_file": "%USERPROFILE%/Documents/Geonical/ServerAdmin/GlitchTip/Вход в багрепорты.txt"
+}

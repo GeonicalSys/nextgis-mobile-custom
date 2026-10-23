@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 /** Native source/registration integration with synthetic diagnostic timestamps; emulator only. */
 @RunWith(AndroidJUnit4.class)
 public class GpsRecoveryNativeTest {
-    @Test public void noSatelliteSolutionKeepsRegistrationAndPairsOnlyALongGapWithRecovery() throws Exception {
+    @Test public void noSatelliteSolutionKeepsRegistrationAndStaysLocalThroughRecovery() throws Exception {
         withSource(source -> {
             long now = SystemClock.elapsedRealtime();
             List<Map<String, Object>> reports = new ArrayList<>(); source.setRecoveryReporter(reports::add);
@@ -34,21 +34,13 @@ public class GpsRecoveryNativeTest {
             assertEquals(requests, field(source, "gpsRequests"));
             set(policy, "waitingSince", now - 60_000);
             check(source);
-            assertEquals(1, reports.size());
-            Map<String, Object> gap = reports.get(0);
-            assertEquals("no_fix", gap.get("reason")); assertEquals("delayed", gap.get("phase"));
-            assertEquals(514L, gap.get("last_callback_delivery_lag_ms"));
-            assertTrue((Long) gap.get("last_callback_age_ms") >= 23_076L);
-            assertFalse((Boolean) gap.get("retry_attempted"));
-            assertFalse(((List<?>) gap.get("history")).isEmpty());
+            assertTrue(reports.isEmpty());
             assertEquals(requests, field(source, "gpsRequests"));
             Location recovered = new Location("gps"); recovered.setAccuracy(25f);
             recovered.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
             set(source, "gps", recovered); set(source, "rawGps", recovered);
             check(source);
-            assertEquals(2, reports.size());
-            assertEquals("recovered", reports.get(1).get("phase"));
-            assertEquals(gap.get("episode_id"), reports.get(1).get("episode_id"));
+            assertTrue(reports.isEmpty());
         });
     }
 
@@ -71,6 +63,9 @@ public class GpsRecoveryNativeTest {
                 assertEquals(1, reports.size());
                 assertEquals("registered", reports.get(0).get("subscription_retry"));
                 assertEquals("callback_stalled", reports.get(0).get("reason"));
+                assertEquals(3, reports.get(0).get("schema_version"));
+                assertTrue((Long) reports.get(0).get("reason_duration_ms") >= 30_000);
+                assertTrue(reports.get(0).containsKey("diagnostic_tick_gap_ms"));
             } finally { source.removeRecordingListener(recorder); }
         });
     }

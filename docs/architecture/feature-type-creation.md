@@ -1,7 +1,7 @@
 ---
 title: Выбор типа нового объекта по стилю
 type: architecture
-last_verified: 2026-10-09
+last_verified: 2026-10-23
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - maplibui/src/main/java/com/nextgis/maplibui/dialog/ChooseFeatureTypeDialog.java
@@ -10,6 +10,11 @@ related_code:
 ---
 
 # Выбор типа нового объекта по стилю
+
+## Категория при копировании
+
+Кнопка «Копировать в слой» после выбора совместимого назначения использует этот же выбор категории. Копия получает новую identity; выбранная категория назначения и её зависимые поля перекрывают скопированные совпадающие значения. Слой с простым стилем сразу открывает новую форму. [Полный контракт](feature-copy-transform.md).
+
 
 При создании карандашом, по местоположению и обходом после выбора слоя MapFragment
 открывает выбор конкретной категории FieldStyleRule. При единственном слое выбор

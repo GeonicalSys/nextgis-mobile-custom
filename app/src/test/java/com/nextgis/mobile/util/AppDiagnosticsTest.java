@@ -147,8 +147,11 @@ public class AppDiagnosticsTest {
                     return null;
                 }));
         AppDiagnostics.applyBuildIdentity(new io.sentry.Scope(options));
+        AppDiagnostics.applyOperation(new io.sentry.Scope(options), AppDiagnostics.Operation.MAP, AppDiagnostics.Phase.READY);
         assertEquals(com.nextgis.mobile.BuildConfig.FLAVOR, nativeTags.get("brand"));
         assertEquals(com.nextgis.mobile.BuildConfig.SOURCE_REVISION, nativeTags.get("source_revision"));
         assertEquals("3", nativeTags.get("diagnostics_contract"));
+        assertEquals("MAP", nativeTags.get("operation"));
+        assertEquals("READY", nativeTags.get("operation_phase"));
     }
 }

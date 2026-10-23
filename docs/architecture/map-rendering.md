@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,11 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+## Копирование и преобразование объекта
+
+[Контракт](feature-copy-transform.md): копирование сохраняет исходный объект и открывает форму назначения. В отдельном режиме целиком сдвигается/поворачивается текущая геометрия при неподвижной камере; один жест — один Undo, включая все части и отверстия. Панель вписывает все команды без overflow по фактической density/insets.
+
 
 ## Круг точности встроенного GPS
 

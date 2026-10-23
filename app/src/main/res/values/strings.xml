@@ -197,7 +197,14 @@
     <string name="update_download">Download and install</string>
     <string name="update_downloading">Downloading update…</string>
     <string name="update_release_notes">What’s new:\n%1$s</string>
-    <string name="update_error">Update failed: %1$s</string>
+    <string name="update_error">Could not prepare the update. Please try again later.</string>
+    <string name="update_ready_title">Update ready</string>
+    <string name="update_ready_message">Version %1$s has been downloaded and verified. Install the update?</string>
+    <string name="update_install">Update</string>
+    <string name="update_later">Later</string>
+    <string name="update_background_downloading">The update is downloading in the background. You can continue working.</string>
+    <string name="update_waiting_network">The update will download when Wi-Fi or a mobile network without roaming is available.</string>
+    <string name="update_preparing_installation">Preparing the update…</string>
     <string name="update_invalid">The downloaded update did not pass verification.</string>
     <string name="update_install_permission_title">Allow update installation</string>
     <string name="update_install_permission_message">Allow this app to install unknown apps in Android settings. After you return, installation will continue automatically and the downloaded APK will be reused.</string>

@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -22,6 +22,11 @@ outbox и точными ACK. Длительность работы не соб�
 объектов и desktop tenant DB не меняются. [Контракт](mobile-usage.md).
 
 ## Владение
+
+Фоновой загрузкой APK владеет Android `app`: тот же опубликованный manifest и
+versioned APK подготавливаются через WorkManager по сети без роуминга. Серверный
+формат, NGW/Collector и desktop-профили не меняются. Установка начинается только
+по кнопке «Обновить» в открытом приложении; [контракт](../runbooks/release-apk.md).
 
 | Система | Канонический источник | Ответственность |
 |---|---|---|

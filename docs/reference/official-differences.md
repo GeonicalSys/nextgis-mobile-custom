@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,53 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Копирование в слой и сдвиг/поворот — 2026-10-23
+
+В форке у выбранного объекта есть «Копировать в слой», в том числе из read-only источника; совместимое назначение, его категория и совпадающие атрибуты передаются в новую форму. В редакторе есть режим целого объекта: один палец — сдвиг, два — поворот при неподвижной камере, один Undo на жест. [Контракт](../architecture/feature-copy-transform.md).
+
+2026-10-23 повторно проверены official HEAD: app `04d57c9fd843db6745c170147d6a2863da807352`, maplib `014247eea4a424e828c24d9e52e45fefed362f8d`, maplibui `642093037b135442913cd9dd9bf8b46f8b7aecf9`. В [официальном select_action.xml](https://github.com/nextgis/nextgis_mobile_android/blob/04d57c9fd843db6745c170147d6a2863da807352/app/src/main/res/menu/select_action.xml) отсутствует новая команда копирования; проверенный [MODE_EDIT](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java) не добавляет режим сдвига/поворота. Это адресная сверка этих entry points, без upstream merge или утверждения об отсутствии аналогов во всех инструментах official.
+
+
+## Подготовка локального Lisa Release — 2026-10-23
+
+Production версия форка повышена до 3.1.2.30/224 с согласованным maplib
+VERSION_NAME; Debug остаётся 3.1.2.23/218. Пользователь запросил только
+подписанный Lisa APK, отложив Belka APK и публикацию. LisaOnly ограничивает
+локальную version matrix; полный default набор перед публикацией сохранён.
+[Матрица закрытия](../history/mobile-release-3.1.2.30-2026-10-23.md).
+
+## Обработка GlitchTip — 2026-10-23
+
+Компас переживает отсутствие сервиса/оборудования вибрации. Штатный no-fix,
+acquisition/filter wait и явно распознанный локальный tile backpressure остаются
+в локальном журнале. GPS callback-stall warning требует 30 s непрерывного сбоя;
+snapshot v3 сохраняет длительность причины и интервалы observer/сна устройства.
+OS process_exit metadata дополняет historical ANR/native failures только при
+совпадении процесса, типа завершения и времени. Native scope хранит operation/phase.
+CLI подключения и workflow закрытия уже находятся в репозитории:
+[runbook](../runbooks/glitchtip-triage.md), [разбор](glitchtip-triage-2026-10-23.md).
+API комментариев использует nested data.text; wire shape закреплён regression test.
+Source GPS integration tests проверяют настоящий prior callback/status silence
+и новый snapshot v3; ordinary acquisition больше не служит fixture сбоя доставки.
+Это диагностические улучшения и конкретный NPE fix; точные причины старых ANR
+и SIGABRT не объявляются установленными, APK этим PR не публикуется.
+
+## Подготовка обновления в фоне — 2026-10-23
+
+В форке WorkManager проверяет новую версию раз в шесть часов и при запуске,
+скачивает APK по Wi-Fi и мобильной сети без роуминга. Смена сети/роуминг/остановка
+задачи прерывают HTTP; частичные байты продолжаются с проверкой диапазона и
+полного hash. Проверенный APK хранится во внутренней папке приложения.
+При открытии, в том числе offline, появляется «Обновление готово» с кнопками
+«Обновить» и «Позже». Установка начинается только по нажатию, с сохранением
+проверок подлинности и продолжения после Android install permission.
+[Контракт](../runbooks/release-apk.md), Related `-Area updater`.
+В native-сценарии нажатие «Обновить» проверяется после обработки очереди
+Android на instrumentation thread; само `performClick()` не означает, что
+обработчик установки уже выполнен. «Позже» не вызывает действие установки.
+Transfer regression ждёт явного уничтожения Activity до отпускания HTTP-ответа;
+первый завершившийся MainActivity не переводится обратно в живое состояние.
 
 Приёмка синхронизации форка ждёт завершения pending стартовой миграции
 подложек и workspace operations до создания синтетических проектов, с лимитом

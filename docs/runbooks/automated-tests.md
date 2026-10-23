@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -14,6 +14,60 @@ related_code:
 ---
 
 # Автоматические проверки
+
+## Проверки копирования и преобразований
+
+`tools\verify-mobile-tests.ps1 -Scope Related -Area feature-editing` проверяет новые команды на эмуляторе. Добавить `-PhoneSerial <serial>` для трёх неподвижных проверок на verification APK смартфона; `-PhoneOnly` выполняет только эту разрешённую часть с обязательным serial. Системные настройки смартфона не меняются. Native исходы/полнота сохраняются по каждому сценарию; Related не заменяет Full. Каталог/маршрутизация находятся в mobile-test-plan.json. [Контракт и покрытие](../architecture/feature-copy-transform.md).
+
+
+## Ускорение эмулятора в Windows
+
+Если `emulator -accel-check` сообщает об отсутствии Android Emulator hypervisor
+driver, проверить и WHPX: это может быть сообщение о fallback после отключения
+основного Windows hypervisor. Read-only диагностика:
+
+```powershell
+Get-CimInstance Win32_ComputerSystem | Select-Object HypervisorPresent
+Get-CimInstance Win32_Processor | Select-Object VirtualizationFirmwareEnabled
+Get-CimInstance Win32_OptionalFeature -Filter "Name='HypervisorPlatform'" | Select-Object InstallState
+(Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control').SystemStartOptions
+```
+
+На проверенном ноутбуке 2026-10-23: BIOS virtualization=true, WHP InstallState=1,
+но HypervisorPresent=false и текущие boot options содержат
+`HYPERVISORLAUNCHTYPE=OFF`. Журнал Hyper-V-Hypervisor фиксирует успешный запуск
+2026-10-09; текущая Windows загружена 2026-10-20 с запретом запуска. Момент и
+инициатор изменения boot option не установлены. SDK emulator 35.6.11 установлен
+с 2025-07-25; свидетельств его недавнего обновления нет.
+
+Возврат `bcdedit /set hypervisorlaunchtype auto` требует Administrator/UAC и
+последующей перезагрузки. Выполнять по явному выбору пользователя, затем повторить
+`emulator -accel-check` и изолированный Related. До повторного запуска не считать
+ускорение восстановленным. Не заменять это установкой AEHD или отключением
+защитных функций вслепую. [Android WHPX](https://developer.android.com/studio/run/emulator-acceleration#vm-windows),
+[Microsoft BCDEdit](https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set).
+
+По явному выбору пользователя 2026-10-23 выполнен возврат Auto через Windows UAC;
+BCDEdit readback подтвердил `Off → Auto`. Перезагрузка отложена пользователем.
+Текущий загруженный сеанс сохраняет Off/HypervisorPresent=false до перезапуска;
+проверка ускорения и emulator Related после перезагрузки остаются открытыми.
+
+## Регрессии GlitchTip 2026-10-23
+
+`bugreports` включает технический `CompassTouchTest`: actual CompassImage touch
+rotation при null Vibrator, отдельный verification APK, без GPS/учётных записей
+и изменения системных настроек. Класс внесён в phone roster. GPS native tests
+сохраняются на эмуляторе: ordinary no-fix не создаёт отчёт даже после долгого
+ожидания и восстановления; sustained callback stall сохраняет retry/recording
+и snapshot v3 timing. С учётом копирования и преобразований каталог — 43 classes / 223 methods.
+Unit policy/OS matching и CLI protocol tests не заменяют native delivery/release gate.
+Подключение к сервису и безопасный export: [runbook](glitchtip-triage.md).
+
+Updater transfer regression удерживает ответ до явного DESTROYED ActivityScenario,
+проверяет terminal state, затем отпускает байты и сверяет файл/отсутствие .part.
+Первый MainActivity может закончить startup route самостоятельно: тест больше
+не пытается перевести уничтоженный экземпляр в CREATED или RESUMED. Это проверка
+технического transfer helper, а не фактического скачивания production APK через Doze.
 
 VerificationTestRunner начинает native scenarios после реальных отложенных
 startup callbacks (+3 секунды), pending миграции подложек и workspace leases.
@@ -99,6 +153,13 @@ isolated SharedTracksTest в Related tracks/map и emulator Full автомат�
 [матрица стилей](../architecture/classic-style-verification.md).
 
 ## После доработки
+
+Related `-Area updater` запускает `AppUpdateNativeTest` на изолированном эмуляторе:
+сохранение проверенного файла при остановленном Activity, сетевую политику и
+настоящий диалог «Обновление готово» / «Обновить» / «Позже» при крупном интерфейсе.
+Unit `AppUpdate*` дополнительно проверяют Range, обрывы/роуминг, размер/hash,
+сертификат и offline ready state. Эти технические проверки не заменяют
+`SMOKE-SELF-UPDATE` с опубликованным APK и системным установщиком реального телефона.
 
 Отдельный `LocalVectorTileLabelTest` в Related `map` проверяет локальные MVT:
 одна подпись исходного квартала на границе тайлов, zoom/style reapply, реальные

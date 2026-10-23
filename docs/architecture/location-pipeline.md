@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -90,13 +90,18 @@ listeners, foreground services и wake lock до собственного Stop.
 недоставленные callbacks при свежем used-in-fix status (`callback_stalled`),
 тишину всего provider, stale/invalid fixes, ожидание фильтра и display processing.
 Локальный эпизод фиксируется через 30 s первичного / 15 s повторного ожидания
-после истечения прежней 8 s свежести. В GlitchTip уходят длительные (60 s ожидания),
-третий короткий эпизод за 10 min и признаки сбоя доставки/обработки. Не более одной
+после истечения прежней 8 s свежести. No-fix/acquisition/filter wait остаются
+локальными при любой длительности/повторяемости. Отправляются непрерывные
+callback_stalled от 30 s, provider_silent от 60 s, stale/invalid/display_processing
+от 15 s именно этой причины. Предыдущее ожидание решения в этот срок не входит. Не более одной
 начальной отправки за 10 min. Recovery/cancel пары отправляются только для уже
 отправленного эпизода, с тем же UUID и причиной группировки, даже если причина
 позже изменилась; recovery имеет INFO, задержка WARNING.
 
-Snapshot v2 содержит `last_callback_age_ms` (время с последнего callback) отдельно
+Snapshot v3 добавляет reason_duration_ms, observed_reason, diagnostic_tick_gap_ms
+и device_sleep_gap_ms. Разрыв observer и глубокий сон различаются по elapsed
+и uptime, но сами по себе не доказывают причину тишины provider. Snapshot содержит
+`last_callback_age_ms` (время с последнего callback) отдельно
 от `last_callback_delivery_lag_ms` (возраст координаты при той доставке).
 История — максимум 24 компактных строки раз в 5 s: monotonic time, raw/callback/status
 ages, used/visible, C/N0, решение фильтра, screen и owners. Координат в истории нет.

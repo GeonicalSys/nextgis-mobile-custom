@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -90,7 +90,12 @@ Mesa llvmpipe: прежний `swiftshader_indirect` не рисует glyph/bit
 [общие треки](../architecture/shared-tracks.md),
 [обычные стили](../architecture/classic-style-verification.md).
 
-Текущий production выпуск — `3.1.2.29` / `223`, Debug — `3.1.2.23` / `218`.
+Подготавливаемый production выпуск — `3.1.2.30` / `224`, Debug — `3.1.2.23` / `218`.
+По запросу 2026-10-23 собирается только локальный подписанный Lisa Release,
+без публикации. `verify-apk-version-matrix.ps1 -LisaOnly` проверяет Lisa Debug,
+Lisa Release и обе версии maplib; Belka APK отложен пользователем. Default
+matrix и Full перед публикацией сохраняют обе production flavors.
+Состав и закрытие PR: [матрица 3.1.2.30](../history/mobile-release-3.1.2.30-2026-10-23.md).
 Публикация обеих release: maplib #49 (Merge Commit) → fetched pin в app #58 →
 зелёный CI → app #58 (Squash) → APK version matrix → dry-run → `lisa`/`belka`.
 Debug не публикуется. [Матрица](../history/orbit-ring-delivery-2026-10-11.md).
@@ -112,11 +117,11 @@ Debug не публикуется. [Матрица](../history/orbit-ring-delive
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `223` |
-| App versionName (release) | `3.1.2.29` |
+| App versionCode (release) | `224` |
+| App versionName (release) | `3.1.2.30` |
 | App versionCode (debug) | `218` |
 | App versionName (debug) | `3.1.2.23` |
-| maplib VERSION_NAME (release) | `3.1.2.29` |
+| maplib VERSION_NAME (release) | `3.1.2.30` |
 | maplib VERSION_NAME (debug) | `3.1.2.23` |
 | MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |

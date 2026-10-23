@@ -1,7 +1,7 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -26,13 +26,20 @@ related_code:
 недоставленные callbacks при свежем used-in-fix status (`callback_stalled`),
 тишину всего provider, stale/invalid fixes, ожидание фильтра и display processing.
 Локальный эпизод фиксируется через 30 s первичного / 15 s повторного ожидания
-после истечения прежней 8 s свежести. В GlitchTip уходят длительные (60 s ожидания),
-третий короткий эпизод за 10 min и признаки сбоя доставки/обработки. Не более одной
+после истечения прежней 8 s свежести. No-fix/acquisition/filter wait остаются
+локальными независимо от длительности и повторов. В GlitchTip уходят непрерывные
+callback_stalled от 30 s, provider_silent от 60 s и stale/invalid/display_processing
+от 15 s именно этой причины. Предыдущее ожидание спутников не считается временем
+сбоя callbacks. Не более одной
 начальной отправки за 10 min. Recovery/cancel пары отправляются только для уже
 отправленного эпизода, с тем же UUID и причиной группировки, даже если причина
 позже изменилась; recovery имеет INFO, задержка WARNING.
 
-Snapshot v2 содержит `last_callback_age_ms` (время с последнего callback) отдельно
+Snapshot v3 добавляет `reason_duration_ms`, `observed_reason` (fresh_fix при парном
+восстановлении), `diagnostic_tick_gap_ms` и `device_sleep_gap_ms`. Разрыв
+main-thread observer без сна помогает отличить задержку обработки от сна
+устройства; сам по себе он не устанавливает причину. Snapshot содержит
+`last_callback_age_ms` (время с последнего callback) отдельно
 от `last_callback_delivery_lag_ms` (возраст координаты при той доставке).
 История — максимум 24 компактных строки раз в 5 s: monotonic time, raw/callback/status
 ages, used/visible, C/N0, решение фильтра, screen и owners. Координат в истории нет.
@@ -185,7 +192,12 @@ cancel не создают handled bug report. Повтор одинаковой
 Новые catch-ветви подключать явно, не превращать каждое предупреждение в событие.
 
 Автоматические `SentryHttpClientException` от `SentryOkHttpInterceptor` проходят
-отдельный фильтр `DiagnosticsHttpPolicy` в BeforeSend. Первый HTTP 5xx сохраняется,
+отдельный фильтр `DiagnosticsHttpPolicy` в BeforeSend. Штатный GET локального
+`/tiles/<layer>/<z>/<x>/<y>.pbf` с HTTP 503 и явным X-Lisa-Tile-Reason
+queue_full/heap_headroom не создаёт отдельного багрепорта. Bounded MapRuntime
+журнал, причины и resource guards сохраняются. Неизвестная причина, иной endpoint,
+remote response и fatal/unhandled событие не проходят это исключение.
+Для остальных HTTP 5xx первый отчёт сохраняется,
 повторы в течение десяти минут подавляются по status/method/operation/месту вызова
 и endpoint. Только в ключе лимитера числовые сегменты пути тайлов/ресурсов
 объединяются, query отбрасывается;
@@ -251,6 +263,21 @@ Collector bootstrap, shared-track migration, GISApplication load, upgrade и wor
 brand/source_revision/diagnostics_contract устанавливаются и в actual SDK scope
 с enableScopeSync: options tags сами по себе не поступают NDK scope observer в
 закреплённом SDK 8.37.1. Версия SDK и обработчики native crash не меняются.
+
+Типизированная operation/phase теперь тоже обновляет actual scope, чтобы NDK
+сохранял последнюю операцию исходного процесса. `DiagnosticsExitInfo` дополняет
+cached/Backfillable failures полем `process_exit`: timestamp, PID, reason/status,
+importance, description, PSS/RSS в KiB. Android 11+ OS history читается только
+на фоновом отправителе; требуется то же имя процесса, соответствующий тип
+завершения (ANR/JVM/native) и расстояние timestamp не более 10 s. Обычный handled
+отчёт, иной процесс, stale history или нормальное завершение не получают этот
+контекст. API ниже 30 и отсутствие OS history остаются отсутствием данных.
+OS trace streams, business storage и HyperLog DB здесь не читаются; crash callback
+не делает новых Binder/file запросов. `process_exit` имеет приоритет после
+report_origin в прежнем 16 KiB бюджете диагностических context.
+
+Готовая CLI и доступ: [runbook](../runbooks/glitchtip-triage.md).
+Текущий разбор и границы исправлений: [2026-10-23](../reference/glitchtip-triage-2026-10-23.md).
 
 Sync PersistenceFailure добавляет sync_journal: phase, projects/accounts, before/after,
 bytes, storage_available_bytes, caller_interrupted_at_entry/caller_interrupted и

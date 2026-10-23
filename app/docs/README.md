@@ -1,10 +1,39 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 ---
 
 # app — Android-приложение Lisa/Belka
+
+Production подготовлен к 3.1.2.30/224, Lisa Debug сохраняет 3.1.2.23/218.
+По запросу 2026-10-23 собирается только подписанный Lisa Release; Belka APK
+и публикация отложены. Проверки и состав — в consuming release runbook.
+
+## Копирование, сдвиг и поворот
+
+MapFragment предлагает копирование выбранного объекта в совместимый редактируемый слой с выбором категории, затем открывает новую форму. В MODE_EDIT доступен сдвиг/поворот жестами с неподвижной камерой и штатным Save/Cancel/Undo. Related feature-editing выполняет сценарии на изолированном эмуляторе; с явным PhoneSerial также на verification APK, PhoneOnly допускает только неподвижную phone-часть. [Контракт](../../docs/architecture/feature-copy-transform.md).
+
+
+## Разбор GlitchTip 2026-10-23
+
+`tools/glitchtip.py` подключается к собственному GlitchTip по сохранённой
+несекретной конфигурации; пароль остаётся в приватном файле. Команды и закрытие:
+[runbook](../../docs/runbooks/glitchtip-triage.md).
+Подтверждённый local GET /tiles/...pbf 503 с queue_full/heap_headroom остаётся
+в bounded MapRuntime journal. Неизвестные причины и remote HTTP failures сохраняются.
+GPS snapshot v3 добавляет длительность текущей причины и разрывы проверок/сна;
+обычный no-fix/acquisition/filter wait больше не отправляется как bug report.
+Длительные сбои доставки GPS остаются с парным исходом.
+Native scope сохраняет operation/phase; historical events получают близкую
+по времени OS process_exit metadata только вне главного потока, с проверкой
+имени процесса. На Android ниже 11 этих OS сведений нет.
+Компас библиотеки безопасно вращается без сервиса/оборудования вибрации.
+Технический native regression `CompassTouchTest` доступен в verification APK.
+На SM-A566B / Android 16 прошли четыре technical native checks: null-vibrator
+touch rotation, transfer после DESTROYED Activity, ready-dialog actions в 36
+configurations и network constraints. Это отдельный verification APK; реальный
+production APK install, GPS/radio native suite и полный release gate не проверены.
 
 ## Настройка сектора точности компаса
 
@@ -492,9 +521,11 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   NextGIS Web/Collector или явный import поддерживаемого portable artifact, без
   чтения desktop workspace;
 - настройки приложения и Android permissions/services;
-- автоматическая проверка Lisa/Belka updates после запуска, включая восстановление
-  окна в новом процессе, с повтором при сетевом сбое; установка с продолжением после
-  выдачи Android-разрешения на установку;
+- фоновая проверка Lisa/Belka updates раз в шесть часов и проверка после запуска;
+  загрузка по Wi-Fi и мобильному интернету без роуминга с продолжением после обрыва;
+  проверенный APK сохраняется во внутренней папке приложения и предлагается даже
+  offline: «Обновление готово», «Обновить» / «Позже»; установка только по нажатию,
+  с продолжением после выдачи Android-разрешения;
 - экспорт/очистка сохранённых layer backups.
 
 ## Ограничения

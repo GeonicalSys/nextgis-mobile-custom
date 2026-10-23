@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -17,6 +17,11 @@ related_code:
 ---
 
 # Crash recovery and durable drafts
+
+## Черновики копии и сдвига/поворота
+
+[Копирование и преобразования](feature-copy-transform.md) используют существующие журналы. До form launch сохраняются новая геометрия, typed control state, скопированные поля вне формы и исходное представление пустых controls. Recreate/durable form recovery сохраняют их. Transform preview checkpoint не создаёт Undo шаги; ACTION_CANCEL возвращает точный предыдущий снимок. После восстановления geometry draft продолжается обычное редактирование вершин.
+
 
 ## Потеря GPS и диагностические эпизоды
 

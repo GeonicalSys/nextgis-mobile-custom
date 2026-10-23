@@ -1,5 +1,21 @@
 schema_version: 1
 triggers:
+  - id: FEATURE-COPY-TRANSFORM
+    paths: [maplib/src/main/java/com/nextgis/maplib/util/FeatureCopyPolicy.java, maplib/src/main/java/com/nextgis/maplib/util/GeometryTransform.java, maplib/src/main/java/com/nextgis/maplib/map/GeometryTransformGesture.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/fragment/BottomToolbar.java, maplibui/src/main/res/menu/edit_transform.xml, app/src/main/res/values/feature_copy_strings.xml, app/src/main/res/values-ru/feature_copy_strings.xml]
+    owners: [app, maplib, maplibui]
+    read: [docs/architecture/feature-copy-transform.md, docs/architecture/feature-type-creation.md, docs/architecture/map-rendering.md, docs/architecture/crash-recovery.md]
+    invariants: [INV-FEATURE-COPY, INV-WHOLE-OBJECT-TRANSFORM, INV-GEOMETRY-SKETCH-WORKFLOW, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs: [docs/architecture/feature-copy-transform.md, docs/architecture/feature-type-creation.md, docs/architecture/map-rendering.md, docs/architecture/crash-recovery.md, docs/reference/official-differences.md, docs/runbooks/automated-tests.md, docs/runbooks/device-smoke-tests.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml, maplibui/docs/README.md, maplibui/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-DEBUG, AUTO-FEATURE-EDITING, SMOKE-FEATURE-COPY-TRANSFORM]
+    strict_docs: true
+  - id: COMPASS-OPTIONAL-VIBRATION
+    paths: [maplibui/src/main/java/com/nextgis/maplibui/fragment/CompassFragment.java, app/src/test/java/com/nextgis/mobile/util/CompassTouchPolicyTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/CompassTouchTest.java]
+    owners: [maplibui, app]
+    read: [docs/architecture/error-reporting.md]
+    invariants: [INV-DIAGNOSTIC-DELIVERY]
+    must_update_docs: [maplibui/docs/README.md, maplibui/docs/manifest.yaml, app/docs/README.md, app/docs/manifest.yaml, docs/architecture/error-reporting.md]
+    verify: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-RELIABILITY-NATIVE]
+    strict_docs: true
   - id: COMPASS-SECTOR-SETTING
     paths: [app/src/main/res/xml/preferences_location.xml, app/src/main/res/values/location_cursor.xml, app/src/main/res/values-ru/location_cursor.xml]
     owners: [app, maplib]
@@ -769,6 +785,12 @@ triggers:
     strict_docs: true
   - id: SELF-HOSTED-UPDATER
     paths:
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkGuardTest.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateDownload.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateDownloadTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateReadyStateTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
       - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
       - app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java
       - app/src/test/java/com/nextgis/mobile/util/StartupUpdateCheckSchedulerTest.java
@@ -782,7 +804,7 @@ triggers:
     owners: [app]
     read:
       - docs/runbooks/release-apk.md
-    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-UPDATER-AUTO-RETRY]
+    invariants: [INV-FLAVORS, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-UPDATER-AUTO-RETRY, INV-UPDATER-BACKGROUND]
     must_update_docs:
       - docs/runbooks/release-apk.md
       - docs/registry/config-keys.yaml

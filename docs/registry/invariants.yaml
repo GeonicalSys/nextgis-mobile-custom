@@ -1,5 +1,26 @@
 schema_version: 1
 invariants:
+  INV-FEATURE-COPY:
+    title: Copying creates an independent compatible feature with destination category precedence
+    verify_smoke: [AUTO-FEATURE-EDITING, SMOKE-FEATURE-COPY-TRANSFORM]
+    owners: [app, maplib, maplibui]
+    statement: A selected vector feature may be copied from a read-only source into another editable current-map layer only through lossless same-family single/multi compatibility. Match exact schema keys and compatible scalar types; never copy row identity. Destination category defaults override copied values. Save validates the normal destination form and preserves unbound fields, SQL NULL, empty strings, typed values and durable recovery. Cancellation never changes the source.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/FeatureCopyPolicy.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    must_update_docs: [docs/architecture/feature-copy-transform.md, docs/architecture/feature-type-creation.md]
+  INV-WHOLE-OBJECT-TRANSFORM:
+    title: Whole-object gestures preserve camera, structure, scale and one-step Undo
+    verify_smoke: [AUTO-FEATURE-EDITING, SMOKE-FEATURE-COPY-TRANSFORM]
+    owners: [app, maplib, maplibui]
+    statement: An explicit geometry editor tool consumes one-finger translation and two-finger rotation for every component and hole without scaling or moving the camera. Pointer transitions do not jump. Preview journals projected geometry without allocating history steps; one completed gesture allocates one Undo step. CANCEL restores the exact prior coordinates. History retains container and nested CRS so a transformed multipart geometry remains saveable after Undo/Redo. All editing actions stay inside the bottom panel without overflow.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/GeometryTransform.java
+      - maplib/src/main/java/com/nextgis/maplib/map/GeometryTransformGesture.java
+      - maplibui/src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java
+      - maplibui/src/main/java/com/nextgis/maplibui/fragment/BottomToolbar.java
+    must_update_docs: [docs/architecture/feature-copy-transform.md, docs/architecture/map-rendering.md, docs/architecture/crash-recovery.md]
   INV-MOBILE-USAGE:
     title: Usage statistics preserve offline ownership and never collect foreground duration
     owners: [app]
@@ -959,15 +980,18 @@ invariants:
       connected WorkManager job without reinitializing handlers. Event UUID and diagnostic
       stack/version/device/typed-operation context survive process restart. Preserve original
       historical identity, separate reporter identity, and reserve context/breadcrumb budget.
-      GPS snapshots separate callback age from delivery lag, bound history to 24 samples and correlate warning/recovery/cancel with an episode UUID; short reception gaps stay local.
+      GPS snapshot v3 separates callback age from delivery lag, bounds history to 24 samples and correlates actual delivery-fault warning/recovery/cancel with an episode UUID. Reception/acquisition/filter waits stay local; reporting requires a continuous faulty-reason threshold and records observer/device-sleep gaps.
       Journal writes await durability without losing caller cancellation. Do not read
       business storage, photos or raw HyperLog in crash callbacks. Supplied event data,
       original HTTP URLs/query/headers/cookies, response metadata, custom context and
       frame paths are retained without content masking under bounded serialization.
       Never consume streaming HTTP bodies for reporting. Fatal exceptions
       still delegate to Android and existing draft recovery remains independent.
-      Limit only new automatic handled SDK HTTP 5xx bursts; retain the first request
-      and status/source tags, never suppress fatal failures or cached replay.
+      Limit new automatic handled SDK HTTP 5xx bursts; expected local tile GET 503 with
+      explicit queue_full/heap_headroom remains in the bounded local journal. Unknown
+      causes and remote failures retain the first request and status/source tags;
+      never suppress fatal failures or cached replay. Historical OS exit context
+      requires matching original timestamp, process and crash type on a background sender.
       Map runtime snapshots are bounded, captured without SDK/business reads from the observer
       and attached only to matching operation timestamps; old process identity is never replaced
       with the reporting process version. Queue and heap 503 reasons remain independently observable.
@@ -1062,6 +1086,19 @@ invariants:
     must_update_docs:
       - docs/runbooks/release-apk.md
       - app/docs/README.md
+  INV-UPDATER-BACKGROUND:
+    title: Background APK preparation stops in roaming and never starts installation
+    owners: [app]
+    statement: Persist periodic work across process death and reboot, allow Wi-Fi and metered cellular only without roaming, bind transfer sockets/DNS to that network and cancel on roaming/loss/switch/worker stop. Resume only bounded partial bytes with exact ranges and verify full hash, product, version and certificate before persisting ready state. Offer checked local APK offline on launch with Update/Later; revalidate before installation and preserve the existing Android permission continuation.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateDownload.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateDownloadTest.java
+      - app/src/test/java/com/nextgis/mobile/util/AppUpdateReadyStateTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
+    verify_smoke: [AUTO-UPDATER-CHECKS, AUTO-MOBILE-RELATED, SMOKE-SELF-UPDATE]
+    must_update_docs: [docs/runbooks/release-apk.md, docs/registry/config-keys.yaml, app/docs/README.md, app/docs/manifest.yaml]
   INV-UPDATER-AUTO-RETRY:
     title: A skipped or failed startup update check remains pending
     owners: [app]

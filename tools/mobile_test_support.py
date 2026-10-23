@@ -35,6 +35,11 @@ def native_catalog(root: Path) -> dict[str, set[str]]:
     return result
 
 
+def avd_names(listing: str) -> list[str]:
+    # Some Windows emulator builds merge crash-reporter diagnostics into -list-avds output.
+    return [line.strip() for line in listing.splitlines() if re.fullmatch(r'[\w.-]+',line.strip(),re.ASCII)]
+
+
 def expand_selectors(selectors: list[str], catalog: dict[str, set[str]]) -> set[str]:
     result = set()
     for selector in selectors:
@@ -59,6 +64,11 @@ def validate_plan(plan: dict, catalog: dict[str, set[str]]) -> set[str]:
         raise ValueError('Unknown class in per-method isolation routing')
     for selectors in plan['areas'].values():
         expand_selectors(selectors, catalog)
+    for area,selectors in plan.get('related_phone_areas',{}).items():
+        if area not in plan['areas']:
+            raise ValueError('Unknown Related phone area: '+area)
+        if not expand_selectors(selectors,catalog) <= expand_selectors(plan['areas'][area],catalog):
+            raise ValueError('Related phone cases must belong to their selected area: '+area)
     return set().union(*catalog.values())
 
 

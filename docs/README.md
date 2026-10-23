@@ -1,13 +1,18 @@
 ---
 title: GeonicalSystem NextGIS Mobile — документация
 type: index
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - settings.gradle
   - .gitmodules
 ---
 
 # Документация GeonicalSystem NextGIS Mobile
+
+## Копирование и преобразования
+
+[Копирование, сдвиг и поворот объектов](architecture/feature-copy-transform.md): пользовательский путь, schema/geometry compatibility, draft/Undo и проверки.
+
 
 Единый источник знаний для людей и ИИ-агентов о форке NextGIS Mobile.
 Человекочитаемые объяснения находятся в Markdown, точные связи и контракты — в

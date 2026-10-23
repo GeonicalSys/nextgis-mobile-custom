@@ -14,7 +14,7 @@ import subprocess
 import sys
 import threading
 import time
-from mobile_test_support import (PACKAGE, RUNNER, check_publication_receipt, expand_selectors,
+from mobile_test_support import (PACKAGE, RUNNER, avd_names, check_publication_receipt, expand_selectors,
                                  native_catalog, parse_instrumentation, phone_unlocked, source_fingerprint, validate_plan)
 from mobile_test_project import (DEFAULT_PROJECT, ProjectSelectionRequired, choose_project,
                                  read_projects, snapshot_project)
@@ -74,6 +74,9 @@ class Verification:
         return serial
 
     def select_devices(self):
+        phone_only=getattr(self.args,'phone_only',False)
+        if phone_only and (self.args.scope!='related' or not self.args.phone_serial):
+            raise ValueError('Phone-only checks require Related and an explicit phone serial')
         listing=self.command([self.adb,'devices'])
         connected=[line.split()[0] for line in listing.splitlines() if re.match(r'^\S+\s+device$',line)]
         if self.args.scope=='full':
@@ -82,6 +85,13 @@ class Verification:
                 raise ValueError('Full acceptance needs one connected phone or an explicit --phone-serial')
             self.phone=self.identity(self.args.phone_serial or phones[0],'phone')
             self.select_project()
+        elif self.args.phone_serial:
+            self.phone=self.identity(self.args.phone_serial,'phone')
+            self.related_phone_cases=sorted({case for area in self.args.area or ['layers']
+                for case in self.plan.get('related_phone_areas',{}).get(area,[])})
+            if not self.related_phone_cases:
+                raise ValueError('No stationary phone checks are defined for the selected Related areas')
+            if phone_only: return
         emulators=[serial for serial in connected if serial.startswith('emulator-')]
         if not self.args.emulator_serial and len(emulators)>1:
             raise ValueError('Select --emulator-serial when more than one emulator is running')
@@ -124,15 +134,14 @@ class Verification:
 
     def start_emulator(self):
         binary=self.sdk/'emulator'/('emulator.exe' if os.name=='nt' else 'emulator')
-        avds=self.command([binary,'-list-avds']).strip().splitlines()
-        if self.args.avd: avds=[self.args.avd]
+        avds=[self.args.avd] if self.args.avd else avd_names(self.command([binary,'-list-avds']))
         if not avds: raise ValueError('Install an API 36 AVD first, then use --avd NAME')
         for port in range(5556,5680,2):
             with socket.socket() as check:
                 if check.connect_ex(('127.0.0.1',port))!=0: break
         serial='emulator-'+str(port)
         stream=(self.output/'emulator-start.log').open('w',encoding='utf-8')
-        subprocess.Popen([str(binary),'-avd',avds[0],'-port',str(port),'-read-only','-no-snapshot',
+        process=subprocess.Popen([str(binary),'-avd',avds[0],'-port',str(port),'-read-only','-no-snapshot',
                           '-no-window','-no-audio','-gpu','host'],stdout=stream,stderr=subprocess.STDOUT,
                          creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
         stream.close()
@@ -140,6 +149,8 @@ class Verification:
         print('Starting isolated read-only emulator '+serial,flush=True)
         until=time.monotonic()+180
         while time.monotonic()<until:
+            if process.poll() is not None:
+                raise RuntimeError('The isolated emulator exited before boot; see emulator-start.log')
             text=self.command([self.adb,'-s',serial,'shell','getprop','sys.boot_completed'],allow_failure=True)
             if text.strip()=='1': return serial
             time.sleep(2)
@@ -196,6 +207,8 @@ class Verification:
                 if time.monotonic() >= deadline:
                     raise RuntimeError('The selected phone is locked; unlock it and rerun Full acceptance')
                 time.sleep(2)
+            # An expanded notification shade keeps input focus even after the test Activity starts.
+            self.shell(serial,'cmd','statusbar','collapse')
         self.shell(serial,'am','force-stop',PACKAGE)
         if self.shell(serial,'pm','clear',PACKAGE)!='Success': raise RuntimeError('Cannot reset the disposable verification workspace')
         self.shell(serial,'cmd','appops','set','--uid',PACKAGE,'MANAGE_EXTERNAL_STORAGE','allow')
@@ -329,7 +342,9 @@ class Verification:
                 # A failed/interrupted new acceptance must not leave a prior green gate behind.
                 (ROOT/'build/verification/full-passed.json').unlink(missing_ok=True)
             self.select_devices(); self.build()
-            self.install(self.emulator)
+            if hasattr(self,'emulator'): self.install(self.emulator)
+            if self.args.scope=='related' and hasattr(self,'phone'):
+                self.install(self.phone)
             if self.args.scope=='full':
                 self.install(self.phone)
                 for test in self.plan['emulator']:
@@ -345,10 +360,16 @@ class Verification:
                 for area in self.args.area or ['layers']:
                     if area not in self.plan['areas']: raise ValueError('Unknown area: '+area)
                     selected.update(self.plan['areas'][area])
-                for index,test in enumerate(sorted(selected)):
-                    self.native(self.emulator,[test],f'related-{index}-'+test.replace('#','-').rsplit('.',1)[1])
-                if any('StakeoutForegroundServiceTest' in test for test in selected): self.grant_and_deny(self.emulator)
-                if 'layers' in (self.args.area or ['layers']): self.ui_matrix()
+                if hasattr(self,'emulator'):
+                    for index,test in enumerate(sorted(selected)):
+                        self.native(self.emulator,[test],f'related-{index}-'+test.replace('#','-').rsplit('.',1)[1])
+                    if any('StakeoutForegroundServiceTest' in test for test in selected): self.grant_and_deny(self.emulator)
+                    if 'layers' in (self.args.area or ['layers']): self.ui_matrix()
+                phone_failures=[]
+                for index,test in enumerate(getattr(self,'related_phone_cases',[])):
+                    try: self.native(self.phone,[test],f'phone-related-{index}-'+test.split('#')[-1])
+                    except Exception as error: phone_failures.append(test+': '+str(error))
+                if phone_failures: raise RuntimeError('\n'.join(phone_failures))
             if source_fingerprint(ROOT)!=self.fingerprint: raise RuntimeError('Source changed during verification; rerun the affected checks')
             receipt=self.receipt('passed')
             (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
@@ -367,6 +388,7 @@ def main():
     parser.add_argument('--scope',choices=('related','full','check-publication','list'),default='related')
     parser.add_argument('--area',action='append')
     parser.add_argument('--phone-serial'); parser.add_argument('--emulator-serial')
+    parser.add_argument('--phone-only',action='store_true',help='Related stationary verification checks only; explicit phone serial required')
     parser.add_argument('--test-project',help='Explicitly authorized Collector ID, name or workspace directory; default 1403')
     parser.add_argument('--avd'); parser.add_argument('--sdk'); parser.add_argument('--output')
     parser.add_argument('--skip-build',action='store_true')

@@ -1,13 +1,18 @@
 ---
 title: Ручные проверки на Android-устройстве
 type: runbook
-last_verified: 2026-10-17
+last_verified: 2026-10-23
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
 ---
 
 # Ручные проверки на Android-устройстве
+
+## Копирование, сдвиг и поворот
+
+На тестовых слоях выбрать read-only объект → «Копировать в слой». Проверить отсутствие неподходящих/не редактируемых назначений, скрытый совместимый слой, категорию, Cancel, recreate, значения совпадающих полей и сохранность исходника. Для редактируемого multipart объекта проверить сдвиг одним пальцем, поворот двумя без zoom, переключения числа пальцев, отверстия, Undo/Redo, Save и Cancel. Повторить с крупным шрифтом и display size, в обеих темах/ориентациях. Команды и точный [контракт](../architecture/feature-copy-transform.md).
+
 
 Выбирать тесты по `registry/change-impact.yaml`; точные IDs и шаги находятся в
 `registry/smoke-tests.yaml`.

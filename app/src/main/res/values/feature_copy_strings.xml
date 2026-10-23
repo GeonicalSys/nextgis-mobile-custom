@@ -1,0 +1,6 @@
+<resources>
+    <string name="feature_copy">Copy to layer</string>
+    <string name="feature_copy_choose_layer">Copy to layer</string>
+    <string name="feature_copy_no_layers">No compatible editable layers to copy to.</string>
+    <string name="feature_copy_failed">Unable to prepare the copy. Select the object and try again.</string>
+</resources>
