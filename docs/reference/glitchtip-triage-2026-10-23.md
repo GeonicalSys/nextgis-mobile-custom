@@ -45,6 +45,13 @@ Lisa/Belka Release source sets компилируются; release APK не со
 validator, 7 docs tests, 19 runner/support tests и 26 report-guard tests прошли;
 маршрутизация покрывает текущий каталог 43 native classes / 220 methods.
 
+Первый CI на `bd953a0` обнаружил две старые source-integration регрессии,
+ожидавшие report при обычном acquisition. Fixtures переведены на настоящий
+предыдущий callback/status и непрерывный provider_silent; проверки полей и
+остановки/восстановления подписки сохранены. Последующий полный локальный набор:
+**857 unit cases, 0 failures/errors/skips** (maplib 585, maplibui 92, app 180).
+Wire contract комментария CLI проверен по live OpenAPI: request/response `data.text`.
+
 Телефон сначала был доступен и разблокирован, перед native запуском исчез из ADB;
 native результаты уточняются отдельно. Эмулятор предыдущей задачи не стартовал
 из-за отсутствующего Hypervisor Driver; полный Related/native delivery не подтверждён.
@@ -57,7 +64,7 @@ native результаты уточняются отдельно. Эмулят�
 [Draft PR #77](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/77)
 вместе с предыдущей фоновой подготовкой APK. Библиотеки:
 [maplib Draft PR #59](https://github.com/GeonicalSys/android_maplib/pull/59),
-commit `3c71efe3fcc9e369874b577ab514e41bcf337687`, и
+commit `a1cf04920ed659193b1b1cb0d0670bfe298b9acc` (включает implementation `3c71efe`), и
 [maplibui Draft PR #43](https://github.com/GeonicalSys/android_maplibui/pull/43),
 commit `b2ac71cfaeb6a04076aa20d92d30a2f21a6c3d14`. Библиотечные fixes требуют своих
 Merge Commit PR и последующего pin merged revisions в app перед выпуском.

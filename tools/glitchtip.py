@@ -98,7 +98,7 @@ class Client:
             return {'id': str(issue_id), 'status': 'already resolved'}
         if expected and any(str(issue.get(k)) != str(expected.get(k)) for k in ('count', 'lastSeen')):
             raise GlitchTipError(f'Issue {issue_id} changed since export; inspect its new events first')
-        self.request(f'/api/0/issues/{issue_id}/comments/', {'text': comment}, 'POST', accepted=(201,))
+        self.request(f'/api/0/issues/{issue_id}/comments/', {'data': {'text': comment}}, 'POST', accepted=(201,))
         result, _ = self.request(f'/api/0/issues/{issue_id}/', {'status': 'resolved'}, 'PUT')
         if result.get('status') != 'resolved':
             raise GlitchTipError(f'Issue {issue_id} was not resolved')

@@ -23,6 +23,9 @@ OS process_exit metadata дополняет historical ANR/native failures то�
 совпадении процесса, типа завершения и времени. Native scope хранит operation/phase.
 CLI подключения и workflow закрытия уже находятся в репозитории:
 [runbook](../runbooks/glitchtip-triage.md), [разбор](glitchtip-triage-2026-10-23.md).
+API комментариев использует nested data.text; wire shape закреплён regression test.
+Source GPS integration tests проверяют настоящий prior callback/status silence
+и новый snapshot v3; ordinary acquisition больше не служит fixture сбоя доставки.
 Это диагностические улучшения и конкретный NPE fix; точные причины старых ANR
 и SIGABRT не объявляются установленными, APK этим PR не публикуется.
 

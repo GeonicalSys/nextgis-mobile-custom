@@ -57,6 +57,7 @@ class ConnectionTest(unittest.TestCase):
         c.request = Mock(side_effect=[({'id':'4'},201),({'status':'resolved','count':'2'},200)])
         self.assertEqual('resolved', c.resolve(1, 'Fix in draft; not released')['status'])
         self.assertEqual('POST', c.request.call_args_list[0].args[2])
+        self.assertEqual({'data': {'text': 'Fix in draft; not released'}}, c.request.call_args_list[0].args[1])
         self.assertEqual({'status':'resolved'}, c.request.call_args_list[1].args[1])
         self.assertEqual('PUT', c.request.call_args_list[1].args[2])
 
