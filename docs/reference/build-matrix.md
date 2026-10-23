@@ -11,9 +11,44 @@ related_code:
   - tools/verify-apk-version-matrix.ps1
   - tools/mobile-test-plan.json
   - .github/workflows/android-reliability.yml
+  - .github/workflows/docs-validate.yml
+  - docs/scripts/check_change_impact.py
+  - docs/tests/test_change_impact_ci.py
 ---
 
 # Матрица сборки и версий
+
+## Проверка документации
+
+`Validate documentation` передаёт в strict change-impact проверку итоговые
+изменения всего PR, а не только последнего push. Поэтому документация,
+обновлённая предыдущим коммитом того же PR, удовлетворяет требованию.
+Откат документации к исходному состоянию больше не считается обновлением.
+
+Для `pull_request` используются base/head SHA из события; diff начинается от
+их общего предка. Служебный merge commit checkout и посторонние изменения
+целевой ветки в этот список не входят. Для push рабочей ветки helper
+`docs/scripts/check_change_impact.py` читает открытые PR этой ветки через
+[GitHub API](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests),
+сверяет репозиторий источника и проверяет диапазон каждого PR отдельно.
+Это сохраняет базу вложенного PR и поддерживает несколько PR одной ветки.
+Токен workflow имеет только `contents: read` и `pull-requests: read`.
+
+Если PR ещё не открыт, сравнение идёт от общего предка с fetched default
+branch, включая первый push новой ветки. Push в default branch и tag сохраняет
+диапазон `before..head`; начальный push проверяется от пустого дерева.
+Ручной запуск для рабочей ветки выбирает базу тем же способом, что и push.
+Ошибка API или недоступная Git-история завершает проверку ошибкой.
+Требования `--enforce-diff` и структурный validator остаются обязательными.
+
+Регрессии запускаются общей командой `tools\docs-check.ps1 -RunTests`:
+на временных Git-историях проверяются ранний docs commit, отсутствие/откат
+документации, изменения только в base, вложенные PR, checkout merge,
+новая ветка, default/tag/manual события и имена с пробелами/кириллицей.
+Отдельно проверяются pagination API, точный head repository и отказ API.
+Эти проверки не требуют сборки APK, телефона или эмулятора.
+
+## Android reliability
 
 Linux CI выполняет Kotlin compilation in-process и завершает build daemon до
 запуска API 36 эмулятора, чтобы не удерживать память сборки во время native suite.

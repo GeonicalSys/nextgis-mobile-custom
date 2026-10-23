@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   validate:
@@ -35,21 +36,8 @@ jobs:
 
       - name: Enforce change-impact requirements
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-        shell: bash
-        run: |
-          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
-            echo "No usable base SHA; skipping diff report"
-            exit 0
-          fi
-          mapfile -t changed < <(git diff --name-only "$BASE_SHA" HEAD --)
-          args=()
-          for path in "${changed[@]}"; do
-            args+=(--changed-file "$path")
-          done
-          if ((${#args[@]})); then
-            python docs/scripts/validate_docs.py --workspace-root . "${args[@]}" --enforce-diff
-          fi
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python -B docs/scripts/check_change_impact.py --workspace-root .
 
       - name: Test documentation tooling
         run: python -m unittest discover -s docs/tests -p "test_*.py" -v

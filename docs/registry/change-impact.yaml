@@ -216,6 +216,14 @@ triggers:
     must_update_docs: [maplibui/docs/README.md, docs/reference/official-differences.md]
     verify: [AUTO-MAPLIBUI-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-NGID-AND-RESOURCE-ICONS]
     strict_docs: true
+  - id: DOCUMENTATION-CI
+    paths: [.github/workflows/docs-validate.yml, docs/scripts/check_change_impact.py, docs/tests/test_change_impact_ci.py]
+    owners: [app]
+    read: [docs/reference/build-matrix.md]
+    invariants: []
+    must_update_docs: [docs/reference/build-matrix.md]
+    verify: [AUTO-DOCS-VALIDATE]
+    strict_docs: true
   - id: RELIABILITY-CI
     paths: [.github/workflows/android-reliability.yml, gradle/verification-metadata.xml]
     owners: [app, maplib, maplibui]
