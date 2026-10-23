@@ -20,10 +20,15 @@ related_code:
 breadcrumbs и прежние комментарии. Сырые события и приватный доступ находятся
 вне Git. Counts не означают число падений или пользователей.
 
+Во время закрытия issue 45 получила ещё одно событие build 222: local MVT GET
+503 без structured reason, рядом breadcrumb queue_full. Оно отдельно проверено,
+итог обработки — **313 событий в тех же 12 группах**. Отсутствующий response header
+не восстанавливался догадкой; новый фильтр требует явного reason самого ответа.
+
 | Issue | События | Вывод и обработка |
 |---|---:|---|
 | 101 / MOBILE-T | 2 | Подтверждённый fatal NPE, HONOR NDL2-W09, Android 16, 223/source 5050495. CompassFragment.onTouch:262 разыменовывает null Vibrator. Добавлены проверки service/hasVibrator, rotation и настройка сохранены. Точная причина отсутствия сервиса в исходном процессе не требуется для безопасного исправления. |
-| 45 / MOBILE-1 | 160 | 132 события явно local HTTP; 28 старых без URL. 503 — защитный backpressure, свежие snapshots показывают queue_full (2 workers/16 queue). Только известный local tile GET с explicit queue_full/heap_headroom исключён из отдельных SDK reports. Нераспознанные/remote HTTP failures сохраняются. Это фильтр шума, не доказательство устранения любой задержки карты. |
+| 45 / MOBILE-1 | 160 + 1 | 133 события явно local HTTP; 28 старых без URL. 503 — защитный backpressure, свежие snapshots показывают queue_full (2 workers/16 queue). Только известный local tile GET с explicit queue_full/heap_headroom исключён из отдельных SDK reports. Нераспознанные/remote HTTP failures сохраняются. Это фильтр шума, не доказательство устранения любой задержки карты. |
 | 65 / MOBILE-G | 2 | Local tile 503, та же узкая политика. Лимиты ресурсов не снимаются; MapRuntime log/snapshot остаётся. |
 | 64 / MOBILE-F | 58 | 57 событий 222/contract 2, одно Debug 218/contract 1. Ни одного нового sync_journal context. Уже имеющийся owned writer исправляет воспроизведённый false commit при прерванном caller; эти старые события не доказывают другую причину или регрессию на новой сборке. Real write failures продолжают отправляться с cause/phase/counts/space/interrupt flags. |
 | 88 / MOBILE-P | 31 | no_fix: в delayed snapshots нет used-in-fix, обычное отсутствие решения. Теперь локально при любой длине/повторяемости, без warning/recovery спама в GlitchTip. Фильтр, координаты и запись сохранены. |
@@ -52,9 +57,22 @@ validator, 7 docs tests, 19 runner/support tests и 26 report-guard tests про
 **857 unit cases, 0 failures/errors/skips** (maplib 585, maplibui 92, app 180).
 Wire contract комментария CLI проверен по live OpenAPI: request/response `data.text`.
 
-Телефон сначала был доступен и разблокирован, перед native запуском исчез из ADB;
-native результаты уточняются отдельно. Эмулятор предыдущей задачи не стартовал
-из-за отсутствующего Hypervisor Driver; полный Related/native delivery не подтверждён.
+После повторного подключения SM-A566B / Android 16 (API 36) прошли **4 native
+cases без skips** в отдельном `com.nextgis.mobile.verification.debug`: production
+CompassImage touch path с техническим null Vibrator, transfer без Activity,
+обе ready-dialog actions в 36 configurations (темы, font 1.0/1.3/2.0 и размеры
+280/320/360 dp в обеих ориентациях), WorkManager network constraints.
+Первый прогон: 3 PASS/1 FAIL — тест пытался перевести уже завершившийся первый
+MainActivity в CREATED. Исправлен сам fixture: DESTROYED подтверждается до
+отпускания transfer response, возвращения уничтоженного Activity в RESUMED нет.
+Исходный failed log сохранён; повтор всех четырёх прошёл 2026-10-23 11:01:26 UTC.
+Это технический transfer через interceptor, не реальный APK install или Doze run.
+
+Локальный эмулятор не стартует из-за отсутствующего Hypervisor Driver.
+CI на `07f2d83` прошёл unit/build/docs, но native run прерван на BackgroundGps
+`twoHourExpiryStopsOnlyAutomaticOwnerAndResumeStartsItAgain`: **System has crashed**,
+shell commands перестали работать, завершены 9 из 137 cases. Причина system crash
+не установлена; полный Related/native delivery не подтверждён.
 Новый Full/Check-Publication обязателен перед выпуском. Неизвестные ANR/native
 причины остаются неизвестными; новые поля не подтверждают исправление их причин.
 
@@ -76,6 +94,29 @@ Merge Commit PR и последующего pin merged revisions в app пере
 проверками, ссылками на PR и пометкой «APK не выпущен». Закрытие отмечает
 завершённую обработку (исправление/диагностика/штатный шум); новые события на
 новой сборке требуют разбора. Events/counts и остальные проекты сохраняются.
-Фактический итог закрытия фиксируется после readback API.
+Контрольное чтение API 2026-10-23 **10:53:33 UTC / 12:53 Europe/Warsaw**:
+все 12 групп resolved, **открытых мобильных групп 0**. Собственные комментарии
+прочитаны обратно и совпадают с отправленным текстом:
+
+| Issue | Comment ID |
+|---|---:|
+| 101 | 32 |
+| 64 | 33 |
+| 45 | 34 |
+| 88 | 35 |
+| 90 | 36 |
+| 96 | 37 |
+| 67 | 38 |
+| 65 | 39 |
+| 69 | 40 |
+| 53 | 41 |
+| 87 | 42 |
+| 68 | 43 |
+
+В контрольном снимке **105 групп / 462 события**. Разница с исходными 458:
++1 новый mobile HTTP event и +3 события в существующей desktop issue 102;
+desktop не изменялся. Статусы всех остальных групп сохранены, уменьшений counts
+нет, события не удалялись. Комментарии фиксируют состояние проверок на время
+закрытия; результаты поздней проверки телефона добавлены в этот документ.
 
 Подключение и команды: [runbook](../runbooks/glitchtip-triage.md).

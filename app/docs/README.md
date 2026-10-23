@@ -21,6 +21,10 @@ Native scope сохраняет operation/phase; historical events получа�
 имени процесса. На Android ниже 11 этих OS сведений нет.
 Компас библиотеки безопасно вращается без сервиса/оборудования вибрации.
 Технический native regression `CompassTouchTest` доступен в verification APK.
+На SM-A566B / Android 16 прошли четыре technical native checks: null-vibrator
+touch rotation, transfer после DESTROYED Activity, ready-dialog actions в 36
+configurations и network constraints. Это отдельный verification APK; реальный
+production APK install, GPS/radio native suite и полный release gate не проверены.
 
 ## Настройка сектора точности компаса
 

@@ -26,6 +26,12 @@ rotation при null Vibrator, отдельный verification APK, без GPS/�
 Unit policy/OS matching и CLI protocol tests не заменяют native delivery/release gate.
 Подключение к сервису и безопасный export: [runbook](glitchtip-triage.md).
 
+Updater transfer regression удерживает ответ до явного DESTROYED ActivityScenario,
+проверяет terminal state, затем отпускает байты и сверяет файл/отсутствие .part.
+Первый MainActivity может закончить startup route самостоятельно: тест больше
+не пытается перевести уничтоженный экземпляр в CREATED или RESUMED. Это проверка
+технического transfer helper, а не фактического скачивания production APK через Doze.
+
 VerificationTestRunner начинает native scenarios после реальных отложенных
 startup callbacks (+3 секунды), pending миграции подложек и workspace leases.
 Отдельный marker тестового Application стоит за callback восстановления журнала,

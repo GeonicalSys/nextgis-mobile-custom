@@ -82,12 +82,14 @@ public class AppUpdateNativeTest {
                 } catch (Exception error) { throw new AssertionError(error); }
             });
             assertTrue(entered.await(15, TimeUnit.SECONDS));
-            scenario.moveToState(Lifecycle.State.CREATED);
+            // MainActivity may finish its first-launch route. Closing is terminal in either
+            // case and proves the transfer does not need an Activity to remain alive.
+            scenario.moveToState(Lifecycle.State.DESTROYED);
+            assertEquals(Lifecycle.State.DESTROYED, scenario.getState());
             proceed.countDown();
             transfer.get(15, TimeUnit.SECONDS);
             assertArrayEquals(contents, Files.readAllBytes(destination.toPath()));
             assertFalse(new File(destination.getPath() + ".part").exists());
-            scenario.moveToState(Lifecycle.State.RESUMED);
         } finally {
             proceed.countDown();
             executor.shutdownNow();
