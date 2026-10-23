@@ -93,3 +93,6 @@ alpha, нулевую ширину, ограничение памяти, JSON/cl
 Порядок будущего слияния: maplib Merge Commit → maplibui Merge Commit → root
 PR #78 Squash с pins на удалённые merge commits библиотек. Текущие Draft PR
 не являются выпуском; версия и публикация в этой доработке не меняются.
+
+[Фактическая квитанция 24 октября](../reference/point-firefly-verification-2026-10-24.md):
+точные commits, зависимости, runtime, исходы и ограничения.
