@@ -6,6 +6,11 @@ last_verified: 2026-10-23
 
 # app — Android-приложение Lisa/Belka
 
+## Копирование, сдвиг и поворот
+
+MapFragment предлагает копирование выбранного объекта в совместимый редактируемый слой с выбором категории, затем открывает новую форму. В MODE_EDIT доступен сдвиг/поворот жестами с неподвижной камерой и штатным Save/Cancel/Undo. Related feature-editing выполняет сценарии на изолированном эмуляторе; с явным PhoneSerial также на verification APK, PhoneOnly допускает только неподвижную phone-часть. [Контракт](../../docs/architecture/feature-copy-transform.md).
+
+
 ## Разбор GlitchTip 2026-10-23
 
 `tools/glitchtip.py` подключается к собственному GlitchTip по сохранённой

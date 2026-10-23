@@ -9,7 +9,8 @@ param(
     [string]$SdkPath="$env:LOCALAPPDATA\Android\Sdk",
     [string]$PythonPath,
     [string]$OutputPath,
-    [switch]$SkipBuild
+    [switch]$SkipBuild,
+    [switch]$PhoneOnly
 )
 $ErrorActionPreference='Stop'
 $repoTaskPath=Split-Path -Parent $PSScriptRoot
@@ -33,6 +34,7 @@ try {
     if($Avd) {$runArgs+=@('--avd',$Avd)}
     if($OutputPath) {$runArgs+=@('--output',$OutputPath)}
     if($SkipBuild) {$runArgs+='--skip-build'}
+    if($PhoneOnly) {$runArgs+='--phone-only'}
     Push-Location $repoTaskPath
     try { & $PythonPath @pythonPrefix @runArgs; $runExitTask=$LASTEXITCODE }
     finally {Pop-Location}

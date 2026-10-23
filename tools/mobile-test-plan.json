@@ -48,7 +48,11 @@
     "com.nextgis.mobile.rendering.LocalVectorTileLabelTest"
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
+  "related_phone_areas": {
+    "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"]
+  },
   "areas": {
+    "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.MapEditingToolsTest#anotherLayerCanBeSelectedAndReadOnlyLayerHasNoEditingActions", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"],
     "updater": ["com.nextgis.mobile.util.AppUpdateNativeTest"],
     "cursor": ["com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector", "com.nextgis.mobile.reliability.LargeTextLayoutTest#realLocationSettingsShowCompleteBackgroundGpsSwitch"],
     "gps-recovery": ["com.nextgis.mobile.reliability.GpsRecoveryNativeTest", "com.nextgis.mobile.reliability.BackgroundGpsNativeTest"],

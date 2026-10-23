@@ -40,21 +40,30 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.*;
 
-/** Real activity, menus, map projection and SQLite on an isolated test emulator. */
+/** Real activity, menus, map projection and SQLite in the isolated verification application. */
 @RunWith(AndroidJUnit4.class)
 public class MapEditingToolsTest {
+    @org.junit.Rule public final org.junit.rules.TestName methodName = new org.junit.rules.TestName();
     private ActivityScenario<MainActivity> scenario;
     private GISApplication app;
     private SharedPreferences preferences;
     private boolean hadIntro, oldIntro;
+    private boolean hadBatteryWarning, oldBatteryWarning;
+    private static final String BATTERY_WARNING = "battery_dont_show_pref";
+    private boolean hadGeoWarning, oldGeoWarning;
+    private static final String GEO_WARNING = com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG;
     private final List<VectorLayerUI> layers = new ArrayList<>();
     private final List<Long> ids = new ArrayList<>();
 
     @Before public void setUp() throws Exception {
         app = (GISApplication) InstrumentationRegistry.getInstrumentation().getTargetContext()
                 .getApplicationContext();
-        assertTrue("Run only on the isolated emulator", android.os.Build.MODEL.contains("sdk")
-                || android.os.Build.FINGERPRINT.startsWith("generic"));
+        if (!com.nextgis.mobile.util.VerificationEnvironment.isEmulator()) {
+            com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(app);
+            assertTrue("Only stationary object editing is allowed on the opt-in verification phone",
+                    methodName.getMethodName().equals("copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields")
+                    || methodName.getMethodName().equals("wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce"));
+        }
         // Remove only uniquely named fixtures from an interrupted earlier run of this suite.
         List<com.nextgis.maplib.api.ILayer> interrupted = new ArrayList<>();
         com.nextgis.maplib.map.LayerGroup.getVectorLayersByType((MapDrawable) app.getMap(), GeoConstants.GTAnyCheck, interrupted);
@@ -74,7 +83,13 @@ public class MapEditingToolsTest {
         preferences = PreferenceManager.getDefaultSharedPreferences(app);
         hadIntro = preferences.contains(AppSettingsConstants.KEY_PREF_INTRO);
         oldIntro = preferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
-        assertTrue(preferences.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true).commit());
+        hadBatteryWarning = preferences.contains(BATTERY_WARNING);
+        oldBatteryWarning = preferences.getBoolean(BATTERY_WARNING, false);
+        hadGeoWarning = preferences.contains(GEO_WARNING);
+        oldGeoWarning = preferences.getBoolean(GEO_WARNING, true);
+        // The warning has its own UI suite. Exercise the map with no snackbar covering its actions.
+        assertTrue(preferences.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true)
+                .putBoolean(BATTERY_WARNING, true).putBoolean(GEO_WARNING, false).commit());
         scenario = ActivityScenario.launch(MainActivity.class);
         java.util.concurrent.atomic.AtomicReference<org.maplibre.android.maps.MapLibreMap> currentViewMap =
                 new java.util.concurrent.atomic.AtomicReference<>();
@@ -106,6 +121,12 @@ public class MapEditingToolsTest {
         assertFalse("Startup migration still owns project operations",
                 com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending()
                         || com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy());
+        // Let the normal launch warning finish showing, then dismiss it through Activity lifecycle.
+        // Its text/actions are covered separately by LargeTextLayoutTest; no device setting changes.
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync(); Thread.sleep(500);
+        scenario.moveToState(androidx.lifecycle.Lifecycle.State.CREATED);
+        scenario.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED);
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync(); Thread.sleep(300);
     }
 
     @After public void tearDown() {
@@ -130,6 +151,10 @@ public class MapEditingToolsTest {
             SharedPreferences.Editor editor = preferences.edit();
             if (hadIntro) editor.putBoolean(AppSettingsConstants.KEY_PREF_INTRO, oldIntro);
             else editor.remove(AppSettingsConstants.KEY_PREF_INTRO);
+            if (hadBatteryWarning) editor.putBoolean(BATTERY_WARNING, oldBatteryWarning);
+            else editor.remove(BATTERY_WARNING);
+            if (hadGeoWarning) editor.putBoolean(GEO_WARNING, oldGeoWarning);
+            else editor.remove(GEO_WARNING);
             assertTrue(editor.commit());
         }
     }
@@ -890,6 +915,304 @@ public class MapEditingToolsTest {
             saveCategoryForm(monitor, expected, walk.id);
             assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
         } finally { instrumentation.removeMonitor(monitor); }
+    }
+
+    private void addCopyFixture(int geometryType, boolean editable, boolean visible, String wkt,
+                                List<com.nextgis.maplib.datasource.Field> fields, ContentValues attributes) {
+        scenario.onActivity(activity -> {
+            try {
+                MapDrawable map = (MapDrawable) app.getMap();
+                VectorLayerUI layer = new VectorLayerUI(app, new File(map.getPath(),
+                        "creation_type_" + UUID.randomUUID().toString().replace("-", "")));
+                map.addLayer(layer); layers.add(layer);
+                layer.setName("Слой для проверки копирования объектов");
+                layer.create(geometryType, fields); layer.setIsEditable(editable); layer.setVisible(visible);
+                long id = Constants.NOT_FOUND;
+                if (wkt != null) {
+                    ContentValues values = new ContentValues(attributes);
+                    values.put(Constants.FIELD_GEOM, com.nextgis.maplib.datasource.GeoGeometryFactory
+                            .fromWKT(wkt, GeoConstants.CRS_WEB_MERCATOR).toBlob());
+                    id = layer.insertAddChanges(values);
+                }
+                ids.add(id); map.save();
+            } catch (Exception error) { throw new AssertionError(error); }
+        });
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    }
+
+    private void tapCopyAction() throws Exception {
+        AtomicBoolean focused = new AtomicBoolean();
+        long deadline = android.os.SystemClock.uptimeMillis()+10000;
+        while(!focused.get() && android.os.SystemClock.uptimeMillis()<deadline) {
+            scenario.onActivity(activity -> focused.set(activity.getWindow().getDecorView().hasWindowFocus()));
+            if(!focused.get())Thread.sleep(50);
+        }
+        assertTrue("Map window must have input focus before the copy tap",focused.get());
+        final float[] position = new float[2];
+        List<Integer> touches = new ArrayList<>();
+        scenario.onActivity(activity -> {
+            View action = activity.getBottomToolbar().findViewById(R.id.menu_feature_copy);
+            assertNotNull(action); assertTrue(action.isShown());
+            assertTrue("Copy menu item must be enabled", activity.getBottomToolbar().getMenu()
+                    .findItem(R.id.menu_feature_copy).isEnabled());
+            assertTrue("Copy action view must follow its enabled menu item", action.isEnabled());
+            android.graphics.Rect visible = new android.graphics.Rect();
+            assertTrue(action.getGlobalVisibleRect(visible));
+            assertEquals(action.getWidth(),visible.width()); assertEquals(action.getHeight(),visible.height());
+            int[] location=new int[2]; action.getLocationOnScreen(location);
+            position[0]=location[0]+action.getWidth()/2f; position[1]=location[1]+action.getHeight()/2f;
+            action.setOnTouchListener((view, event) -> { touches.add(event.getActionMasked()); return false; });
+        });
+        android.app.Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();
+        long down=android.os.SystemClock.uptimeMillis();
+        MotionEvent press=MotionEvent.obtain(down,down,MotionEvent.ACTION_DOWN,position[0],position[1],0);
+        MotionEvent release=MotionEvent.obtain(down,down+40,MotionEvent.ACTION_UP,position[0],position[1],0);
+        instrumentation.sendPointerSync(press); instrumentation.sendPointerSync(release);
+        press.recycle(); release.recycle(); instrumentation.waitForIdleSync();
+        assertEquals("Copy action touch stream at "+java.util.Arrays.toString(position),
+                java.util.Arrays.asList(MotionEvent.ACTION_DOWN,MotionEvent.ACTION_UP),touches);
+        AtomicBoolean shown = new AtomicBoolean();
+        deadline = android.os.SystemClock.uptimeMillis()+5000;
+        while(!shown.get() && android.os.SystemClock.uptimeMillis()<deadline) {
+            scenario.onActivity(activity -> shown.set(activity.getMapFragment().getChildFragmentManager()
+                    .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseLayerDialog.TAG)!=null));
+            if(!shown.get())Thread.sleep(50);
+        }
+        assertTrue("The visible copy action must receive the real screen tap",shown.get());
+    }
+
+    private void tapVisibleView(View action) {
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        final float[] position = new float[2];
+        instrumentation.runOnMainSync(() -> {
+            assertNotNull(action); assertTrue(action.isShown()); assertTrue(action.isEnabled());
+            android.graphics.Rect visible = new android.graphics.Rect();
+            assertTrue(action.getGlobalVisibleRect(visible));
+            assertEquals(action.getWidth(), visible.width()); assertEquals(action.getHeight(), visible.height());
+            int[] location = new int[2]; action.getLocationOnScreen(location);
+            position[0] = location[0] + action.getWidth()/2f;
+            position[1] = location[1] + action.getHeight()/2f;
+        });
+        long down = android.os.SystemClock.uptimeMillis();
+        MotionEvent press = MotionEvent.obtain(down,down,MotionEvent.ACTION_DOWN,position[0],position[1],0);
+        MotionEvent release = MotionEvent.obtain(down,down+40,MotionEvent.ACTION_UP,position[0],position[1],0);
+        instrumentation.sendPointerSync(press); instrumentation.sendPointerSync(release);
+        press.recycle(); release.recycle(); instrumentation.waitForIdleSync();
+    }
+
+    private void chooseCopyTarget(int target, boolean cancel) {
+        java.util.concurrent.atomic.AtomicReference<View> action = new java.util.concurrent.atomic.AtomicReference<>();
+        scenario.onActivity(activity -> {
+            com.nextgis.maplibui.dialog.ChooseLayerDialog dialog = (com.nextgis.maplibui.dialog.ChooseLayerDialog)
+                    activity.getMapFragment().getChildFragmentManager().findFragmentByTag(com.nextgis.maplibui.dialog.ChooseLayerDialog.TAG);
+            assertNotNull(dialog); assertNotNull(dialog.getDialog());
+            assertFalse(dialog.getLayers().contains(layers.get(0)));
+            for (com.nextgis.maplib.api.ILayer candidate : dialog.getLayers()) {
+                VectorLayerUI layer = (VectorLayerUI) candidate;
+                assertTrue(layer.isEditingAllowed());
+                assertTrue(com.nextgis.maplib.util.FeatureCopyPolicy.accepts(layers.get(0).getGeometryForId(ids.get(0)), layer.getGeometryType()));
+            }
+            if (cancel) action.set(((androidx.appcompat.app.AlertDialog) dialog.requireDialog())
+                    .getButton(android.content.DialogInterface.BUTTON_NEGATIVE));
+            else {
+                android.widget.ListView list = dialog.requireDialog().findViewById(com.nextgis.maplibui.R.id.listView);
+                int index = dialog.getLayers().indexOf(layers.get(target)); assertTrue(index >= 0);
+                action.set(list.getChildAt(index - list.getFirstVisiblePosition()));
+            }
+        });
+        tapVisibleView(action.get());
+    }
+
+    @Test public void copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields() throws Exception {
+        List<com.nextgis.maplib.datasource.Field> fields = java.util.Arrays.asList(
+                new com.nextgis.maplib.datasource.Field(GeoConstants.FTString,"name","Название"),
+                new com.nextgis.maplib.datasource.Field(GeoConstants.FTInteger,"quantity","Количество"),
+                new com.nextgis.maplib.datasource.Field(GeoConstants.FTLong,"big","Номер"),
+                new com.nextgis.maplib.datasource.Field(GeoConstants.FTString,"note","Примечание"),
+                new com.nextgis.maplib.datasource.Field(GeoConstants.FTDateTime,"date","Дата"),
+                new com.nextgis.maplib.datasource.Field(GeoConstants.FTString,"typeobj","Категория"));
+        ContentValues source = new ContentValues(); source.put("name","Исходный объект");
+        source.put("quantity",0); source.put("big",9007199254740993L); source.putNull("note");
+        source.putNull("date"); source.put("typeobj","source-category");
+        addCopyFixture(GeoConstants.GTPoint,false,true,"POINT (120 340)",fields,source);
+        addCopyFixture(GeoConstants.GTPoint,true,false,null,fields,new ContentValues());
+        addCopyFixture(GeoConstants.GTLineString,true,true,null,fields,new ContentValues());
+        addCopyFixture(GeoConstants.GTPoint,false,true,null,fields,new ContentValues());
+        // Custom numeric controls must also retain int64 precision and typed category overrides.
+        File formFile = new File(layers.get(1).getPath(),"form.json");
+        File metaFile = new File(layers.get(1).getPath(),"ngfp_meta.json");
+        org.json.JSONArray controls = new org.json.JSONArray()
+                .put(new org.json.JSONObject().put("type","counter").put("attributes",new org.json.JSONObject().put("field","big")))
+                .put(new org.json.JSONObject().put("type","checkbox").put("attributes",new org.json.JSONObject().put("field","quantity")))
+                .put(new org.json.JSONObject().put("type","text").put("attributes",new org.json.JSONObject().put("field","name")));
+        java.nio.file.Files.write(formFile.toPath(),controls.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        java.nio.file.Files.write(metaFile.toPath(),"{}".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        try {
+            android.os.Bundle category = new android.os.Bundle();
+            category.putString(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey("quantity"),"1");
+            android.os.Bundle typed = com.nextgis.maplibui.util.FeatureCopyDefaults.create(
+                    layers.get(0).getFeature(ids.get(0)),layers.get(1),category);
+            assertEquals(9007199254740993L,typed.getLong(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey("big")));
+            assertTrue(typed.getBoolean(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey("quantity")));
+            assertEquals("Исходный объект",typed.getString(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey("name")));
+        } finally { assertTrue(formFile.delete()); assertTrue(metaFile.delete()); }
+        scenario.onActivity(activity -> {
+            com.nextgis.maplib.display.SimpleMarkerStyle symbol = new com.nextgis.maplib.display.SimpleMarkerStyle();
+            symbol.setColor(android.graphics.Color.RED);
+            com.nextgis.maplib.display.FieldStyleRule rule = new com.nextgis.maplib.display.FieldStyleRule(layers.get(1));
+            rule.setKey("typeobj"); rule.setStyle("destination-category", symbol);
+            layers.get(1).setRenderer(new com.nextgis.maplib.display.RuleFeatureRenderer(layers.get(1),rule,symbol));
+            select(activity,0); assertEquals(MapFragment.MODE_SELECT_FOR_VIEW,mode(activity));
+        });
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        tapCopyAction();
+        scenario.recreate(); awaitRecreatedMap();
+        chooseCopyTarget(1,true); assertEquals(0,layers.get(1).getCount());
+        tapCopyAction();
+        chooseCopyTarget(1,false);
+        AtomicBoolean categoryShown = new AtomicBoolean();
+        long categoryDeadline = android.os.SystemClock.uptimeMillis()+10000;
+        while(!categoryShown.get() && android.os.SystemClock.uptimeMillis()<categoryDeadline) {
+            scenario.onActivity(activity -> {
+                androidx.fragment.app.DialogFragment category = (androidx.fragment.app.DialogFragment)
+                        activity.getMapFragment().getChildFragmentManager()
+                                .findFragmentByTag(com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog.TAG);
+                categoryShown.set(category != null && category.getDialog() != null && category.requireDialog().isShowing());
+            });
+            if(!categoryShown.get())Thread.sleep(50);
+        }
+        assertTrue("The destination row tap must open its category chooser",categoryShown.get());
+        scenario.recreate(); awaitRecreatedMap();
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
+                com.nextgis.maplibui.activity.ModifyAttributesActivity.class.getName(),null,false);
+        com.nextgis.maplibui.activity.ModifyAttributesActivity form = null;
+        try {
+            chooseFirstCategory(true,false);
+            form = (com.nextgis.maplibui.activity.ModifyAttributesActivity) instrumentation.waitForMonitorWithTimeout(monitor,20000);
+            assertNotNull("Copy must open the destination form",form); instrumentation.waitForIdleSync();
+            assertTrue(layers.get(1).isVisible()); assertEquals(0,layers.get(1).getCount());
+            android.os.Bundle initial = form.getIntent().getBundleExtra(com.nextgis.maplibui.util.FeatureTypeDefaults.INITIAL_VALUES);
+            assertNotNull(initial);
+            assertEquals("destination-category",initial.getString(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey("typeobj")));
+            assertEquals("Исходный объект",initial.getString(com.nextgis.maplibui.util.ControlHelper.getSavedStateKey("name")));
+            assertNotNull(com.nextgis.maplibui.util.FeatureFormDraftStore.load(app));
+            final com.nextgis.maplibui.activity.ModifyAttributesActivity opened = form;
+            java.util.concurrent.atomic.AtomicReference<View> save = new java.util.concurrent.atomic.AtomicReference<>();
+            instrumentation.runOnMainSync(() -> {
+                android.view.inputmethod.InputMethodManager keyboard = (android.view.inputmethod.InputMethodManager)
+                        opened.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                keyboard.hideSoftInputFromWindow(opened.getWindow().getDecorView().getWindowToken(),0);
+                save.set(opened.findViewById(com.nextgis.maplibui.R.id.form_save));
+            });
+            instrumentation.waitForIdleSync();
+            tapVisibleView(save.get());
+            long deadline = android.os.SystemClock.uptimeMillis()+20000;
+            while (layers.get(1).getCount()==0 && android.os.SystemClock.uptimeMillis()<deadline) Thread.sleep(50);
+            assertEquals(1,layers.get(1).getCount());
+            try (android.database.Cursor row = layers.get(1).query(null,null,null,null,null)) {
+                assertTrue(row.moveToFirst());
+                assertEquals("Исходный объект",row.getString(row.getColumnIndexOrThrow("name")));
+                assertEquals(0,row.getLong(row.getColumnIndexOrThrow("quantity")));
+                assertEquals(9007199254740993L,row.getLong(row.getColumnIndexOrThrow("big")));
+                assertTrue(row.isNull(row.getColumnIndexOrThrow("note")));
+                assertTrue(row.isNull(row.getColumnIndexOrThrow("date")));
+                assertEquals("destination-category",row.getString(row.getColumnIndexOrThrow("typeobj")));
+                long copiedId = row.getLong(row.getColumnIndexOrThrow(Constants.FIELD_ID));
+                assertEquals(layers.get(0).getGeometryForId(ids.get(0)).toWKT(true),layers.get(1).getGeometryForId(copiedId).toWKT(true));
+            }
+            assertEquals(1,layers.get(0).getCount());
+            assertEquals("source-category",layers.get(0).getFeature(ids.get(0)).getFieldValueAsString("typeobj"));
+            AtomicBoolean finished = new AtomicBoolean();
+            deadline = android.os.SystemClock.uptimeMillis()+20000;
+            while(!finished.get() && android.os.SystemClock.uptimeMillis()<deadline) {
+                instrumentation.waitForIdleSync();
+                scenario.onActivity(activity -> finished.set(mode(activity)==MapFragment.MODE_NORMAL
+                        && com.nextgis.maplibui.util.FeatureFormDraftStore.load(app)==null));
+                if(!finished.get())Thread.sleep(50);
+            }
+            assertTrue("Copy save must finish its form handoff",finished.get());
+        } finally {
+            if (form != null && !form.isFinishing()) { final android.app.Activity opened=form; instrumentation.runOnMainSync(opened::finish); }
+            instrumentation.removeMonitor(monitor); instrumentation.waitForIdleSync();
+        }
+    }
+
+    private void transformEvent(View view,long down,int action,float... xy) {
+        int count = xy.length/2;
+        MotionEvent.PointerProperties[] properties = new MotionEvent.PointerProperties[count];
+        MotionEvent.PointerCoords[] coordinates = new MotionEvent.PointerCoords[count];
+        for (int i=0;i<count;i++) {
+            properties[i]=new MotionEvent.PointerProperties(); properties[i].id=i; properties[i].toolType=MotionEvent.TOOL_TYPE_FINGER;
+            coordinates[i]=new MotionEvent.PointerCoords(); coordinates[i].x=xy[2*i]; coordinates[i].y=xy[2*i+1];
+            coordinates[i].pressure=1; coordinates[i].size=1;
+        }
+        MotionEvent event=MotionEvent.obtain(down,android.os.SystemClock.uptimeMillis(),action,count,properties,coordinates,
+                0,0,1,1,0,0,android.view.InputDevice.SOURCE_TOUCHSCREEN,0);
+        view.dispatchTouchEvent(event); event.recycle();
+    }
+
+    @Test public void wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce() throws Exception {
+        addCopyFixture(GeoConstants.GTMultiPolygon,true,true,
+                "MULTIPOLYGON (((0 0, 100 0, 100 100, 0 100, 0 0), (20 20, 80 20, 80 80, 20 80, 20 20)),"
+                        + " ((200 200, 300 200, 300 300, 200 300, 200 200)))",Collections.emptyList(),new ContentValues());
+        // Wait for hot-add, then exercise the real MapView touch dispatch rather than invoking a geometry helper.
+        long until=android.os.SystemClock.uptimeMillis()+20000; AtomicBoolean ready=new AtomicBoolean();
+        while(!ready.get() && android.os.SystemClock.uptimeMillis()<until) {
+            scenario.onActivity(activity -> ready.set(((MapDrawable)app.getMap()).getMaplibreMap().getStyle()
+                    .getSource(layers.get(0).getPath().toString()) != null));
+            if(!ready.get())Thread.sleep(50);
+        }
+        assertTrue(ready.get());
+        scenario.onActivity(activity -> {
+            MapDrawable map=(MapDrawable)app.getMap(); MapFragment fragment=activity.getMapFragment();
+            map.getMaplibreMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0,0),16));
+            select(activity,0);
+            assertTrue(activity.getBottomToolbar().getMenu().performIdentifierAction(R.id.menu_feature_edit,0));
+            assertNotNull(map.editingObject);
+            com.nextgis.maplib.datasource.GeoGeometry original=fragment.getEditLayerOverlay().getSelectedFeatureGeometry();
+            String sourceWkt=layers.get(0).getGeometryForId(ids.get(0)).toWKT(true);
+            org.maplibre.android.camera.CameraPosition camera=map.getMaplibreMap().getCameraPosition();
+            assertTrue(fragment.onOptionsItemSelected(com.nextgis.maplibui.R.id.menu_edit_transform));
+            assertTrue(map.isGeometryTransformEnabled());
+            View mapView=map.getMaplibreMapView(); float x=mapView.getWidth()/2f,y=mapView.getHeight()/2f;
+            long down=android.os.SystemClock.uptimeMillis();
+            transformEvent(mapView,down,MotionEvent.ACTION_DOWN,x,y);
+            transformEvent(mapView,down,MotionEvent.ACTION_MOVE,x+60,y+35);
+            transformEvent(mapView,down,MotionEvent.ACTION_UP,x+60,y+35);
+            com.nextgis.maplib.datasource.GeoGeometry moved=fragment.getEditLayerOverlay().getSelectedFeatureGeometry();
+            assertNotEquals(original.toWKT(true),moved.toWKT(true));
+            assertEquals(camera,map.getMaplibreMap().getCameraPosition());
+            assertTrue(fragment.onOptionsItemSelected(com.nextgis.maplibui.R.id.menu_edit_undo));
+            assertEquals(original.getEnvelope().getMinX(),fragment.getEditLayerOverlay().getSelectedFeatureGeometry().getEnvelope().getMinX(),.001);
+            assertTrue(fragment.onOptionsItemSelected(com.nextgis.maplibui.R.id.menu_edit_redo));
+            down=android.os.SystemClock.uptimeMillis();
+            transformEvent(mapView,down,MotionEvent.ACTION_DOWN,x-70,y);
+            transformEvent(mapView,down,MotionEvent.ACTION_POINTER_DOWN | (1<<MotionEvent.ACTION_POINTER_INDEX_SHIFT),x-70,y,x+70,y);
+            transformEvent(mapView,down,MotionEvent.ACTION_MOVE,x,y-100,x,y+100);
+            transformEvent(mapView,down,MotionEvent.ACTION_POINTER_UP | (1<<MotionEvent.ACTION_POINTER_INDEX_SHIFT),x,y-100,x,y+100);
+            transformEvent(mapView,down,MotionEvent.ACTION_UP,x,y-100);
+            com.nextgis.maplib.datasource.GeoMultiPolygon rotated=(com.nextgis.maplib.datasource.GeoMultiPolygon)fragment.getEditLayerOverlay().getSelectedFeatureGeometry();
+            assertEquals(2,rotated.size()); assertEquals(1,rotated.get(0).getInnerRingCount());
+            assertEquals(100,rotated.get(0).getOuterRing().getPoint(0).distance(rotated.get(0).getOuterRing().getPoint(1)),.001);
+            assertTrue(rotated.get(0).getInnerRing(0).isClosed());
+            assertTrue(fragment.onOptionsItemSelected(com.nextgis.maplibui.R.id.menu_edit_undo));
+            assertEquals(moved.getEnvelope().getMinX(),fragment.getEditLayerOverlay().getSelectedFeatureGeometry().getEnvelope().getMinX(),.001);
+            assertTrue(fragment.onOptionsItemSelected(com.nextgis.maplibui.R.id.menu_edit_redo));
+            String beforeCancel=fragment.getEditLayerOverlay().getSelectedFeatureGeometry().toWKT(true);
+            down=android.os.SystemClock.uptimeMillis();
+            transformEvent(mapView,down,MotionEvent.ACTION_DOWN,x,y);
+            transformEvent(mapView,down,MotionEvent.ACTION_MOVE,x+30,y);
+            transformEvent(mapView,down,MotionEvent.ACTION_CANCEL,x+30,y);
+            assertEquals(beforeCancel,fragment.getEditLayerOverlay().getSelectedFeatureGeometry().toWKT(true));
+            assertEquals(sourceWkt,layers.get(0).getGeometryForId(ids.get(0)).toWKT(true));
+            assertEquals(camera,map.getMaplibreMap().getCameraPosition());
+            assertNotNull(com.nextgis.maplibui.util.GeometryEditDraftStore.load(app));
+            assertTrue(fragment.onOptionsItemSelected(com.nextgis.maplibui.R.id.menu_edit_transform));
+            assertFalse(map.isGeometryTransformEnabled());
+            assertTrue(fragment.saveEdits());
+            assertNotEquals(sourceWkt,layers.get(0).getGeometryForId(ids.get(0)).toWKT(true));
+        });
     }
 
     @Test public void selectionImmediatelyEnablesToolsAndBackClearsIt() {

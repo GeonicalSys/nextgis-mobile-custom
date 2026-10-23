@@ -48,7 +48,7 @@ context 7, OS matching 2 и compass API 26/36 4. CLI проверена **6 те
 Lisa/Belka Release source sets компилируются; release APK не собирается и не
 публикуется. Verification APK и instrumentation APK собираются. Strict docs
 validator, 7 docs tests, 19 runner/support tests и 26 report-guard tests прошли;
-маршрутизация покрывает текущий каталог 43 native classes / 220 methods.
+маршрутизация покрывает каталог на момент этого разбора: 43 native classes / 220 methods.
 
 Первый CI на `bd953a0` обнаружил две старые source-integration регрессии,
 ожидавшие report при обычном acquisition. Fixtures переведены на настоящий

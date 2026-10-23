@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: FEATURE-COPY-TRANSFORM
+    paths: [maplib/src/main/java/com/nextgis/maplib/util/FeatureCopyPolicy.java, maplib/src/main/java/com/nextgis/maplib/util/GeometryTransform.java, maplib/src/main/java/com/nextgis/maplib/map/GeometryTransformGesture.java, maplibui/src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java, maplibui/src/main/java/com/nextgis/maplibui/fragment/BottomToolbar.java, maplibui/src/main/res/menu/edit_transform.xml, app/src/main/res/values/feature_copy_strings.xml, app/src/main/res/values-ru/feature_copy_strings.xml]
+    owners: [app, maplib, maplibui]
+    read: [docs/architecture/feature-copy-transform.md, docs/architecture/feature-type-creation.md, docs/architecture/map-rendering.md, docs/architecture/crash-recovery.md]
+    invariants: [INV-FEATURE-COPY, INV-WHOLE-OBJECT-TRANSFORM, INV-GEOMETRY-SKETCH-WORKFLOW, INV-CRASH-DRAFT-RECOVERY]
+    must_update_docs: [docs/architecture/feature-copy-transform.md, docs/architecture/feature-type-creation.md, docs/architecture/map-rendering.md, docs/architecture/crash-recovery.md, docs/reference/official-differences.md, docs/runbooks/automated-tests.md, docs/runbooks/device-smoke-tests.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml, maplibui/docs/README.md, maplibui/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-MAPLIBUI-ASSEMBLE, AUTO-APP-DEBUG, AUTO-FEATURE-EDITING, SMOKE-FEATURE-COPY-TRANSFORM]
+    strict_docs: true
   - id: COMPASS-OPTIONAL-VIBRATION
     paths: [maplibui/src/main/java/com/nextgis/maplibui/fragment/CompassFragment.java, app/src/test/java/com/nextgis/mobile/util/CompassTouchPolicyTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/CompassTouchTest.java]
     owners: [maplibui, app]

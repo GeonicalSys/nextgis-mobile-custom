@@ -40,6 +40,47 @@ public class LargeTextLayoutTest {
 
     private static final int[][] SCREENS = {{360, 640, 420}, {320, 568, 540}, {568, 320, 540}, {280, 500, 620}};
 
+    @Test public void copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales() {
+        int[][] screens={{360,640,420},{640,360,420},{320,568,540},{568,320,540},{280,500,620},{500,280,620}};
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (float scale : new float[]{1f,1.3f,2f}) for (int[] screen : screens)
+                for (boolean dark : new boolean[]{false,true}) {
+                    Context context=themed(scale,screen,dark);
+                    FrameLayout root=new FrameLayout(context);
+                    com.nextgis.maplibui.fragment.BottomToolbar toolbar=(com.nextgis.maplibui.fragment.BottomToolbar)
+                            LayoutInflater.from(context).inflate(com.nextgis.maplibui.R.layout.bottombar,root,false);
+                    root.addView(toolbar);
+                    toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark);
+                    toolbar.setNavigationContentDescription("Отменить");
+                    toolbar.inflateMenu(R.menu.select_action); toolbar.fitAllActions();
+                    final int[] clicks={0}; toolbar.setOnMenuItemClickListener(item -> {clicks[0]++;return true;});
+                    layout(root,dp(context,screen[0]),dp(context,screen[1]));
+                    View copy=toolbar.findViewById(R.id.menu_feature_copy);
+                    assertNotNull(copy); assertTrue(copy.getWidth()>0); actionsFit(root,R.id.menu_feature_copy);
+                    assertTrue(copy.performClick()); assertEquals(1,clicks[0]);
+                    toolbar.getMenu().clear(); toolbar.inflateMenu(com.nextgis.maplibui.R.menu.edit_polygon);
+                    toolbar.inflateMenu(com.nextgis.maplibui.R.menu.edit_transform);
+                    toolbar.fitAllActions();
+                    layout(root,dp(context,screen[0]),dp(context,screen[1]));
+                    View transform=toolbar.findViewById(com.nextgis.maplibui.R.id.menu_edit_transform);
+                    assertNotNull(transform); assertTrue(transform.getWidth()>0);
+                    StringBuilder trace=new StringBuilder("font="+scale+" width="+screen[0]+" root="+root.getWidth()+"x"+root.getHeight()+"\n");
+                    geometry(root,toolbar,trace); android.util.Log.i("ObjectToolbarGeometry",trace.toString());
+                    actionsFit(root,com.nextgis.maplibui.R.id.menu_edit_transform);
+                    assertTrue(transform.performClick()); assertEquals(2,clicks[0]);
+                    for(int i=0;i<toolbar.getMenu().size();i++) toolbar.getMenu().getItem(i).setVisible(
+                            toolbar.getMenu().getItem(i).getItemId()==com.nextgis.maplibui.R.id.menu_edit_transform);
+                    toolbar.setTitle(com.nextgis.maplibui.R.string.geometry_transform);
+                    for(int pass=0;pass<3;pass++) {
+                        root.forceLayout(); toolbar.forceLayout();
+                        layout(root,dp(context,screen[0]),dp(context,screen[1]));
+                    }
+                    textFits(root); actionsFit(root,com.nextgis.maplibui.R.id.menu_edit_transform);
+                    if (scale==2f && screen[0]==280) image(root,"feature-transform-"+(dark?"dark":"light"));
+                }
+        });
+    }
+
     @Test public void phoneAccuracyFloorFitsRussianPanelAtLargeScales() {
         int[][] screens = {{360, 640, 420}, {640, 360, 420}, {320, 568, 540},
                 {568, 320, 540}, {280, 500, 620}, {500, 280, 620}};

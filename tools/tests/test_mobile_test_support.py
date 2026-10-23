@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from mobile_test_support import check_publication_receipt, parse_instrumentation, phone_unlocked, validate_plan
+from mobile_test_support import avd_names, check_publication_receipt, parse_instrumentation, phone_unlocked, validate_plan
 
 CASE = 'example.Test#works'
 
@@ -13,6 +13,10 @@ def output(code=0, summary='OK (1 test)'):
             'INSTRUMENTATION_CODE: -1\n')
 
 class NativeProtocolTest(unittest.TestCase):
+    def test_avd_names_exclude_windows_crash_reporter_output(self):
+        self.assertEqual(['Medium_Phone_API_36.0'],avd_names(
+            '[123:456:20261023,185744:ERROR filesystem_win.cc:130] GetFileAttributes Q:\\Temp failed\n'
+            'Medium_Phone_API_36.0\n'))
     def test_android_final_minus_one_is_a_successful_run(self):
         self.assertEqual([CASE], parse_instrumentation(output(), {CASE})['passed'])
     def test_failed_case_cannot_pass_with_a_stale_ok_line(self):
@@ -72,5 +76,16 @@ class FullReceiptTest(unittest.TestCase):
         self.assertEqual({CASE},validate_plan(plan,{'example.Test':{CASE}}))
         plan['isolated_methods']=['unknown.Test']
         with self.assertRaises(ValueError):validate_plan(plan,{'example.Test':{CASE}})
+
+    def test_related_phone_cases_must_be_known_and_belong_to_the_requested_area(self):
+        plan={'phone':['example.Test'],'emulator':[],'diagnostics':[],
+              'areas':{'editing':[CASE]},'related_phone_areas':{'editing':[CASE]}}
+        self.assertEqual({CASE},validate_plan(plan,{'example.Test':{CASE}}))
+        for mapping in ({'missing':[CASE]},{'editing':['example.Test#missing']}):
+            plan['related_phone_areas']=mapping
+            with self.assertRaises(ValueError):validate_plan(plan,{'example.Test':{CASE}})
+        other='example.Test#another'
+        plan['related_phone_areas']={'editing':[other]}
+        with self.assertRaises(ValueError):validate_plan(plan,{'example.Test':{CASE,other}})
 
 if __name__ == '__main__': unittest.main()

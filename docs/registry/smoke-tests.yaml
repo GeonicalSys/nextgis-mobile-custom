@@ -1,5 +1,19 @@
 schema_version: 1
 tests:
+  AUTO-FEATURE-EDITING:
+    type: automatic
+    scope: [app, maplibui, maplib]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area feature-editing
+    expected: Isolated native copying, compatible targets, category recreation, typed SQLite values, actual multipart transform gestures, exact cancel and 72 local font/display/theme/orientation profiles pass. An explicit phone serial permits only classified stationary verification methods; PhoneOnly cannot produce Full acceptance.
+  SMOKE-FEATURE-COPY-TRANSFORM:
+    type: device
+    scope: [app, maplibui, maplib]
+    steps:
+      - Select a read-only point, line or polygon and copy it to a compatible editable target, including a hidden target; reject incompatible types and lossy multipart truncation.
+      - Choose a destination category; check matching fields, NULL, zero, int64, unbound form fields, Cancel, recreate and independent SQLite identity.
+      - Move an editable multipart feature with one finger and rotate it with two; retain holes, scale and fixed camera, transition pointer counts, Undo/Redo, exact gesture Cancel and Save.
+      - Check every action and full Russian mode caption in both themes and orientations with 100/130/200 percent fonts and normal/320/280 dp effective widths.
+    expected: Source remains unchanged, the destination uses normal form gates, each transform gesture is one reversible step and every bottom-panel command is reachable without overflow.
   AUTO-MOBILE-USAGE:
     type: automatic
     scope: [app]

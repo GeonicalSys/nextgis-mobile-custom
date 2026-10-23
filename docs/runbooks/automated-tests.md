@@ -15,6 +15,43 @@ related_code:
 
 # Автоматические проверки
 
+## Проверки копирования и преобразований
+
+`tools\verify-mobile-tests.ps1 -Scope Related -Area feature-editing` проверяет новые команды на эмуляторе. Добавить `-PhoneSerial <serial>` для трёх неподвижных проверок на verification APK смартфона; `-PhoneOnly` выполняет только эту разрешённую часть с обязательным serial. Системные настройки смартфона не меняются. Native исходы/полнота сохраняются по каждому сценарию; Related не заменяет Full. Каталог/маршрутизация находятся в mobile-test-plan.json. [Контракт и покрытие](../architecture/feature-copy-transform.md).
+
+
+## Ускорение эмулятора в Windows
+
+Если `emulator -accel-check` сообщает об отсутствии Android Emulator hypervisor
+driver, проверить и WHPX: это может быть сообщение о fallback после отключения
+основного Windows hypervisor. Read-only диагностика:
+
+```powershell
+Get-CimInstance Win32_ComputerSystem | Select-Object HypervisorPresent
+Get-CimInstance Win32_Processor | Select-Object VirtualizationFirmwareEnabled
+Get-CimInstance Win32_OptionalFeature -Filter "Name='HypervisorPlatform'" | Select-Object InstallState
+(Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control').SystemStartOptions
+```
+
+На проверенном ноутбуке 2026-10-23: BIOS virtualization=true, WHP InstallState=1,
+но HypervisorPresent=false и текущие boot options содержат
+`HYPERVISORLAUNCHTYPE=OFF`. Журнал Hyper-V-Hypervisor фиксирует успешный запуск
+2026-10-09; текущая Windows загружена 2026-10-20 с запретом запуска. Момент и
+инициатор изменения boot option не установлены. SDK emulator 35.6.11 установлен
+с 2025-07-25; свидетельств его недавнего обновления нет.
+
+Возврат `bcdedit /set hypervisorlaunchtype auto` требует Administrator/UAC и
+последующей перезагрузки. Выполнять по явному выбору пользователя, затем повторить
+`emulator -accel-check` и изолированный Related. До повторного запуска не считать
+ускорение восстановленным. Не заменять это установкой AEHD или отключением
+защитных функций вслепую. [Android WHPX](https://developer.android.com/studio/run/emulator-acceleration#vm-windows),
+[Microsoft BCDEdit](https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set).
+
+По явному выбору пользователя 2026-10-23 выполнен возврат Auto через Windows UAC;
+BCDEdit readback подтвердил `Off → Auto`. Перезагрузка отложена пользователем.
+Текущий загруженный сеанс сохраняет Off/HypervisorPresent=false до перезапуска;
+проверка ускорения и emulator Related после перезагрузки остаются открытыми.
+
 ## Регрессии GlitchTip 2026-10-23
 
 `bugreports` включает технический `CompassTouchTest`: actual CompassImage touch
@@ -22,7 +59,7 @@ rotation при null Vibrator, отдельный verification APK, без GPS/�
 и изменения системных настроек. Класс внесён в phone roster. GPS native tests
 сохраняются на эмуляторе: ordinary no-fix не создаёт отчёт даже после долгого
 ожидания и восстановления; sustained callback stall сохраняет retry/recording
-и snapshot v3 timing. Полный каталог после добавления — 43 classes / 220 methods.
+и snapshot v3 timing. С учётом копирования и преобразований каталог — 43 classes / 223 methods.
 Unit policy/OS matching и CLI protocol tests не заменяют native delivery/release gate.
 Подключение к сервису и безопасный export: [runbook](glitchtip-triage.md).
 

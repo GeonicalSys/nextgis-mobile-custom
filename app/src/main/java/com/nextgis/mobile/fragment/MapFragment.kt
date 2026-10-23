@@ -111,6 +111,7 @@ import com.nextgis.maplib.util.CameraZoom
 import com.nextgis.maplib.util.LocationUtil
 import com.nextgis.maplib.util.MapUtil
 import com.nextgis.maplib.util.MultiPolygonGeometryRepair
+import com.nextgis.maplib.util.FeatureCopyPolicy
 import com.nextgis.maplib.util.StakeoutGeometryTarget
 import com.nextgis.maplibui.GISApplication
 import com.nextgis.maplibui.api.EditEventListener
@@ -120,6 +121,7 @@ import com.nextgis.maplibui.api.MapViewEventListener
 import com.nextgis.maplibui.dialog.ChooseLayerDialog
 import com.nextgis.maplibui.dialog.ChooseFeatureTypeDialog
 import com.nextgis.maplibui.util.FeatureTypeDefaults
+import com.nextgis.maplibui.util.FeatureCopyDefaults
 import com.nextgis.maplibui.fragment.CompassFragment
 import com.nextgis.maplibui.mapui.MapViewOverlays
 import com.nextgis.maplibui.overlay.CurrentLocationOverlay
@@ -1037,6 +1039,9 @@ public class MapFragment
     private var walkPanel: WalkRecordingPanel? = null
     private var pointSessionId: String? = null
     private var newFeatureDefaults: Bundle? = null
+    private var copySourceLayerId = Constants.NOT_FOUND
+    private var copySourceFeatureId = Constants.NOT_FOUND.toLong()
+    private var copySourceMap: String? = null
     private var finishedWalkEditId: String? = null
     private var pendingWalkFinishId: String? = null
     private var pendingWalkFormId: String? = null
@@ -1200,6 +1205,11 @@ public class MapFragment
         // There is no geometry/form journal: return to the same point-creation command.
         WalkSessionStore.bindPoint(requireContext(), session.pointId, Constants.NOT_FOUND, WalkSessionStore.STAGE_CHOOSE)
         when (session.pointTool) {
+            COPY_FEATURE -> {
+                finishPointCreation()
+                setNewMode(MODE_NORMAL)
+                Toast.makeText(context,R.string.feature_copy_failed,Toast.LENGTH_LONG).show()
+            }
             ADD_CURRENT_LOC -> addCurrentLocation(true)
             ADD_POINT_BY_TAP -> addPointByTap()
             else -> addNewGeometry()
@@ -1217,6 +1227,13 @@ public class MapFragment
     fun onOptionsItemSelected(id: Int): Boolean {
         val result: Boolean
         when (id) {
+            com.nextgis.maplibui.R.id.menu_edit_transform -> {
+                val map = mapDrawableOrNull ?: return false
+                if (mode != MODE_EDIT || mSelectedLayer?.isEditingAllowed != true || map.editingObject == null)
+                    return false
+                setGeometryTransformMode(!map.isGeometryTransformEnabled)
+                return true
+            }
             android.R.id.home -> {
                 cancelEdits()
                 return true
@@ -1799,6 +1816,7 @@ public class MapFragment
             return
         }
         val previousMode = this.mode
+        if (mode != MODE_EDIT) mapDrawableOrNull?.setGeometryTransformEnabled(false)
         if (isLiveStakeoutMode(previousMode) && mode != previousMode) {
             mStakeoutController?.stop()
             mStakeoutPanel?.visibility = View.GONE
@@ -1892,7 +1910,7 @@ public class MapFragment
                     setNewMode(MODE_NORMAL)
                     return
                 }
-
+                mapDrawableOrNull?.setGeometryTransformEnabled(false)
                 mSelectedLayer!!.isLocked = true
                 mActivity!!.showEditToolbar()
                 editLayerOverlay!!.mode = EditLayerOverlay.MODE_EDIT
@@ -1940,6 +1958,7 @@ public class MapFragment
                 toolbar.title = null
                 toolbar.menu.clear()
                 toolbar.inflateMenu(R.menu.select_action)
+                toolbar.fitAllActions()
                 toolbar.menu.findItem(R.id.menu_feature_edit).setEnabled(false)
                 toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
 
@@ -1953,6 +1972,7 @@ public class MapFragment
                         if (mSelectedLayer == null) return@OnMenuItemClickListener false
                         when (item.itemId) {
                             R.id.menu_feature_edit -> startFeatureGeometryEdit()
+                            R.id.menu_feature_copy -> copySelectedFeature()
 
                             R.id.menu_feature_edit_attributes -> showSelectedFeatureAttributesFormFromEditMode()
                             R.id.menu_feature_delete -> deleteFeature()
@@ -1975,6 +1995,7 @@ public class MapFragment
                 toolbar.title = null
                 toolbar.menu.clear()
                 toolbar.inflateMenu(R.menu.select_action_view)
+                toolbar.fitAllActions()
                 toolbar.setNavigationIcon(com.nextgis.maplibui.R.drawable.ic_action_cancel_dark)
 
                 mFinishListener = View.OnClickListener { setNewMode(MODE_NORMAL) }
@@ -1984,6 +2005,7 @@ public class MapFragment
                     Toolbar.OnMenuItemClickListener { item ->
                         if (mSelectedLayer == null) return@OnMenuItemClickListener false
                         when (item.itemId) {
+                            R.id.menu_feature_copy -> copySelectedFeature()
                             R.id.menu_feature_attributes -> setNewMode(
                                 MODE_INFO,
                                 true
@@ -2275,6 +2297,8 @@ public class MapFragment
                             && StakeoutGeometryTarget.isSupportedType(geometry.type)
                 )
             }
+            item = toolbar.menu.findItem(R.id.menu_feature_copy)
+            if (item != null) ControlHelper.setEnabled(item, hasSelectedFeature)
         }
 
         updateEditAttributesActionAvailability()
@@ -2587,6 +2611,9 @@ public class MapFragment
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBundle(FeatureTypeDefaults.INITIAL_VALUES, newFeatureDefaults)
+        outState.putInt("copy_source_layer", copySourceLayerId)
+        outState.putLong("copy_source_feature", copySourceFeatureId)
+        outState.putString("copy_source_map", copySourceMap)
         outState.putString("finished_walk_edit_id", finishedWalkEditId)
         mapLibreMapView?.onSaveInstanceState(outState)
         outState.putBoolean(BUNDLE_KEY_IS_MEASURING, mRulerOverlay!!.isMeasuring)
@@ -2627,6 +2654,9 @@ public class MapFragment
     ) {
         super.onViewStateRestored(savedInstanceState)
         newFeatureDefaults = savedInstanceState?.getBundle(FeatureTypeDefaults.INITIAL_VALUES)
+        copySourceLayerId = savedInstanceState?.getInt("copy_source_layer", Constants.NOT_FOUND) ?: Constants.NOT_FOUND
+        copySourceFeatureId = savedInstanceState?.getLong("copy_source_feature", Constants.NOT_FOUND.toLong()) ?: Constants.NOT_FOUND.toLong()
+        copySourceMap = savedInstanceState?.getString("copy_source_map")
         if (null == savedInstanceState) {
             mode = MODE_NORMAL
         } else {
@@ -3678,6 +3708,60 @@ public class MapFragment
         }
     }
 
+    private fun copySelectedFeature() {
+        if (isDialogShown) return
+        val source = mSelectedLayer ?: return
+        val sourceId = editLayerOverlay?.selectedFeatureId ?: return
+        val geometry = editLayerOverlay?.selectedFeatureGeometry ?: return
+        if (sourceId == Constants.NOT_FOUND.toLong()) return
+        val recording = WalkSessionStore.load(context)
+        if (recording != null && geometry.type != GeoConstants.GTPoint && geometry.type != GeoConstants.GTMultiPoint) {
+            Toast.makeText(context, com.nextgis.maplibui.R.string.walk_already_active, Toast.LENGTH_LONG).show()
+            return
+        }
+        val targets = filterLayersForCreation(mMapRef.get()!!.getVectorLayersByType(GeoConstants.GTAnyCheck))
+            .filter { it is VectorLayer && it.id != source.id && FeatureCopyPolicy.accepts(geometry, it.geometryType) }
+        if (targets.isEmpty()) {
+            Toast.makeText(context, R.string.feature_copy_no_layers, Toast.LENGTH_LONG).show()
+            return
+        }
+        if (!beginPointCreation(COPY_FEATURE)) return
+        copySourceLayerId = source.id
+        copySourceFeatureId = sourceId
+        copySourceMap = currentMapDraftPath()
+        val dialog = ChooseLayerDialog(false, false)
+        mChooseLayerDialogRef = WeakReference(dialog)
+        dialog.setPointSessionId(pointSessionId)
+        dialog.setLayerList(targets).setCode(COPY_FEATURE)
+            .setTitle(getString(R.string.feature_copy_choose_layer))
+            .setTheme(mActivity!!.themeId).show(childFragmentManager, ChooseLayerDialog.TAG)
+    }
+
+    private fun launchCopiedFeatureForm(target: VectorLayer) {
+        try {
+            check(copySourceMap == currentMapDraftPath() && target.isEditingAllowed)
+            val source = mApp?.map?.getLayerById(copySourceLayerId) as? VectorLayer
+                ?: error("Copy source layer is unavailable")
+            val feature = source.getFeature(copySourceFeatureId) ?: error("Copy source object is unavailable")
+            val geometry = source.getGeometryForId(copySourceFeatureId) ?: error("Copy source geometry is unavailable")
+            val cloned = FeatureCopyPolicy.geometry(geometry, target.geometryType)
+            val initial = FeatureCopyDefaults.create(feature, target, newFeatureDefaults)
+            ensureLayerVisibleForCreation(target)
+            bindPointCreation(target)
+            if (LayerUtil.showSessionEditForm(target, requireActivity(), Constants.NOT_FOUND.toLong(), cloned, null, initial)) {
+                copySourceLayerId = Constants.NOT_FOUND
+                copySourceFeatureId = Constants.NOT_FOUND.toLong()
+                copySourceMap = null
+                newFeatureDefaults = null
+                setNewMode(MODE_NORMAL)
+            }
+        } catch (error: Exception) {
+            HyperLog.e(Constants.TAG, "Feature copy preparation failed", error)
+            Toast.makeText(context, R.string.feature_copy_failed, Toast.LENGTH_LONG).show()
+            finishPointCreation()
+        }
+    }
+
     private fun chooseNewFeatureType(layer: VectorLayer, tool: Int = EDIT_LAYER) {
         newFeatureDefaults = null
         if (!FeatureTypeDefaults.hasCategories(layer)) {
@@ -3691,6 +3775,7 @@ public class MapFragment
 
     private fun startChosenFeatureCreation(layer: VectorLayer, tool: Int) {
         when (tool) {
+            COPY_FEATURE -> launchCopiedFeatureForm(layer)
             ADD_CURRENT_LOC -> {
                 ensureLayerVisibleForCreation(layer)
                 mSelectedLayer?.isLocked = false
@@ -4081,7 +4166,7 @@ public class MapFragment
         startFillByWalk: Boolean
     ) {
         val vectorLayer = layer as? VectorLayer ?: run { finishPointCreation(); return }
-        if (code == EDIT_LAYER || code == ADD_CURRENT_LOC || code == ADD_GEOMETRY_BY_WALK) {
+        if (code == EDIT_LAYER || code == ADD_CURRENT_LOC || code == ADD_GEOMETRY_BY_WALK || code == COPY_FEATURE) {
             chooseNewFeatureType(vectorLayer, code)
             return
         }
@@ -5546,6 +5631,7 @@ public class MapFragment
         protected const val BUNDLE_KEY_IS_MEASURING: String = "is_measuring"
         protected const val BUNDLE_KEY_RULER_GEOMETRY: String = "ruler_geometry"
         const val EDIT_LAYER: Int = 2
+        private const val COPY_FEATURE = 1003
         private const val LOCATE_MIN_ZOOM = 12.0
         private const val CAMERA_ANIMATION_MS = 800
         private const val MAPLIBRE_MIN_PRESENTATION_ATTEMPTS = 4
@@ -6085,6 +6171,32 @@ public class MapFragment
         undoRedoOverlay!!.saveToHistory(originalSelectedFeature)
         persistManualGeometryDraft("maplibre-change")
         updateEditAttributesActionAvailability()
+    }
+
+    override fun previewGeometryTransform(geometry: GeoGeometry?, original: Feature?) {
+        if (geometry == null || original == null) return
+        original.geometry = geometry
+        editLayerOverlay?.updateGeometryFromMaplibre(geometry)
+        editLayerOverlay?.fillDrawItems(geometry)
+        persistManualGeometryDraft("whole-object-transform")
+    }
+
+    private fun setGeometryTransformMode(enabled: Boolean) {
+        val map = mapDrawableOrNull ?: return
+        map.setGeometryTransformEnabled(enabled)
+        val toolbar = mActivity?.bottomToolbar ?: return
+        for (i in 0 until toolbar.menu.size()) {
+            val item = toolbar.menu.getItem(i)
+            item.isVisible = !enabled || item.itemId == com.nextgis.maplibui.R.id.menu_edit_transform
+        }
+        toolbar.menu.findItem(com.nextgis.maplibui.R.id.menu_edit_transform)?.let {
+            it.isChecked = enabled
+            it.setTitle(if (enabled) com.nextgis.maplibui.R.string.geometry_transform_finish
+                else com.nextgis.maplibui.R.string.geometry_transform)
+        }
+        toolbar.title = if (enabled) getString(com.nextgis.maplibui.R.string.geometry_transform) else null
+        if (enabled) Toast.makeText(context, com.nextgis.maplibui.R.string.geometry_transform_hint, Toast.LENGTH_LONG).show()
+        else toolbar.title = null
     }
 
     override fun getSelectedLayer(): VectorLayer? {
