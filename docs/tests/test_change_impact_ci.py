@@ -226,6 +226,25 @@ class PullRequestLookupTest(unittest.TestCase):
 
 
 class ChangeImpactCommandTest(unittest.TestCase):
+    def test_api_failure_is_a_failing_command_without_validator_fallback(self):
+        with tempfile.TemporaryDirectory(prefix="docs-impact-event-") as temporary:
+            event_path = Path(temporary) / "event.json"
+            event_path.write_text(json.dumps({"repository": {
+                "full_name": REPOSITORY, "default_branch": "my-maplibre"},
+                "before": "a" * 40}), encoding="utf-8")
+            environment = {"GITHUB_EVENT_NAME": "push", "GITHUB_EVENT_PATH": str(event_path),
+                           "GITHUB_REF": "refs/heads/feature/docs", "GITHUB_SHA": "b" * 40,
+                           "GITHUB_TOKEN": "unit-test-placeholder"}
+            with mock.patch.dict(os.environ, environment), \
+                    mock.patch.object(sys, "argv", ["check_change_impact.py"]), \
+                    mock.patch.object(impact, "urlopen", side_effect=URLError("unavailable")), \
+                    mock.patch.object(impact.subprocess, "call") as run_validator, \
+                    mock.patch("sys.stderr", new_callable=io.StringIO) as error:
+                self.assertEqual(impact.main(), 1)
+                run_validator.assert_not_called()
+                self.assertIn("impact check stopped", error.getvalue())
+                self.assertNotIn(environment["GITHUB_TOKEN"], error.getvalue())
+
     def test_validator_failure_and_termination_are_not_reported_as_success(self):
         with tempfile.TemporaryDirectory(prefix="docs-impact-event-") as temporary:
             event_path = Path(temporary) / "event.json"
