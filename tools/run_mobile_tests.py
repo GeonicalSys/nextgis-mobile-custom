@@ -19,8 +19,11 @@ from mobile_test_support import (PACKAGE, RUNNER, avd_names, check_publication_r
 from mobile_test_project import (DEFAULT_PROJECT, ProjectSelectionRequired, choose_project,
                                  read_projects, snapshot_project)
 
+from mobile_style_evidence import collect_style_images
+
 ROOT = Path(__file__).resolve().parents[1]
 EMULATOR_HARDWARE = {'ranchu', 'goldfish'}
+
 
 
 class Verification:
@@ -240,6 +243,9 @@ class Verification:
               'true' if serial==getattr(self,'phone',None) else 'false','-e','class',','.join(selectors)]
         for key,value in (extra or {}).items(): argv+=['-e',key,str(value)]
         text=self.command(argv+[RUNNER],name=name,allow_failure=bool(fatal))
+        if any(selector.startswith('com.nextgis.mobile.rendering.') for selector in selectors):
+            evidence_name=re.sub(r'[^A-Za-z0-9_.-]', '_', name)
+            collect_style_images(self.adb,serial,self.output/'images'/evidence_name)
         try: result=parse_instrumentation(text,expected,fatal=fatal)
         except ValueError as error:
             raise RuntimeError(str(error)+'; see '+str(self.output/(name+'.log'))+'\n'+text[-4000:]) from error

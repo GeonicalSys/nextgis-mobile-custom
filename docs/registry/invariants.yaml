@@ -1,5 +1,31 @@
 schema_version: 1
 invariants:
+  INV-POLYGON-STYLE-CONTROLS:
+    title: Configurable polygon symbols preserve old styles and match the live native preview
+    owners: [maplib, maplibui, app]
+    statement: Missing option objects preserve old patterns and opacity. Explicit disabled settings override inherited Other options. Procedural textures are periodic, bounded and shared by style with independent pattern alpha and last-owner native cleanup. Dash/cap/join use constant filtered rendering children with normal order, picking and visibility. Advanced MVT styles use the existing classic fallback. The live offline preview uses production native geometry factories and owns its lifecycle. A category modal edits an independent effective clone, leaves the source rule and Other unchanged on Cancel and saves only the chosen category; its separate remove action remains independent. Invalid new inputs block Save; Russian controls and actions remain reachable at large scales.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java
+      - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/PolygonStyleControls.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java
+    verify_smoke: [AUTO-POLYGON-STYLE-CONTROLS, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
+    must_update_docs: [docs/architecture/polygon-style-controls.md, docs/architecture/classic-style-verification.md]
+  INV-POINT-FIREFLY:
+    title: Firefly core remains crisp and its glow has no interior coverage
+    owners: [maplib, maplibui, app]
+    statement: Marker type 9 shares the existing JSON fields and never changes the blur rendering of types 1–8. Its independent core and outer glow alpha compose without filling a transparent centre. Whole-symbol zoom and one layer-opacity multiplier apply to non-SDF children with the logical layer picking/order/visibility lifecycle. Native images are released after their last owner and CPU bitmaps are bounded. Type selection preserves existing settings; the field-points preset is explicit. Full remains a separate publication gate.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java
+      - maplib/src/main/java/com/nextgis/maplib/map/mpl/FireflyLayerFactory.java
+      - maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyTileFallbackTest.java
+    verify_smoke: [AUTO-POINT-FIREFLY, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
+    must_update_docs: [docs/architecture/point-firefly.md, docs/architecture/classic-style-verification.md]
   INV-FEATURE-COPY:
     title: Copying creates an independent compatible feature with destination category precedence
     verify_smoke: [AUTO-FEATURE-EDITING, SMOKE-FEATURE-COPY-TRANSFORM]
@@ -265,7 +291,7 @@ invariants:
   INV-MAPLIBRE-BACKEND-COMPATIBILITY:
     title: Production map rendering does not require Vulkan
     owners: [app, maplibui, maplib]
-    statement: MapLibre Android 13.0.2 must resolve through org.maplibre.gl:android-sdk-opengl in app, maplibui and maplib; the generic android-sdk or android-sdk-vulkan artifacts must not enter the production runtime because supported devices may lack a compatible Vulkan implementation.
+    statement: MapLibre Android 13.7.1 must resolve through org.maplibre.gl:android-sdk-opengl in app, maplibui and maplib; the generic android-sdk or android-sdk-vulkan artifacts must not enter the production runtime because supported devices may lack a compatible Vulkan implementation.
     related_code:
       - app/build.gradle
       - maplibui/build.gradle

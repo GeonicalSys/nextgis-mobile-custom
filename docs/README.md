@@ -62,6 +62,9 @@ related_code:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\docs-check.ps1 -RunTests
 ```
 
+Push-check учитывает документацию из всех коммитов PR. Выбор базы, strict
+проверка и регрессии описаны в [матрице проверок](reference/build-matrix.md#проверка-документации).
+
 ## Правила мобильных проектов
 
 [Руководство пользователя](guides/project-scripts-user-guide.md),

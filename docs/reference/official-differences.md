@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-23
+last_verified: 2026-10-24
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,35 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Эффективный черновик категории — 2026-10-24
+
+Редактор категории форка открывает независимую эффективную копию с наследованием
+параметров «Прочие»; Cancel сохраняет исходный JSON, а Save заменяет только
+выбранную категорию. Строка открывает диалог независимо от focusable delete.
+В текущем [official RuleFeatureRendererUI 6420930](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/java/com/nextgis/maplibui/display/RuleFeatureRendererUI.java)
+проверен прямой путь getStyle → setStyle без effective clone в этих entry points.
+Это адресная сверка данного владельца; решение ours. Native вход/Cancel/Save
+и независимое удаление описаны в [контракте](../architecture/polygon-style-controls.md).
+
+## Штриховки, контуры и живой образец — 2026-10-24
+
+В форке добавлены необязательные pattern_options/outline_options, независимая alpha штриховки и offline native предпросмотр символов в редакторе. [Контракт](../architecture/polygon-style-controls.md). Проверены актуальные official master: maplib 014247eea4a424e828c24d9e52e45fefed362f8d, maplibui 642093037b135442913cd9dd9bf8b46f8b7aecf9, app 04d57c9fd843db6745c170147d6a2863da807352. Прочитанные [SimplePolygonStyle](https://github.com/nextgis/android_maplib/blob/014247eea4a424e828c24d9e52e45fefed362f8d/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java) (258 строк) и [StyleFragment](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java) (575 строк) не содержат этих объектов или live MapView preview. Адресная сверка entry points; решение ours, без upstream merge.
+
+## Точечный стиль «Светлячок» — 2026-10-24
+
+В форке добавлен [отдельный тип точки](../architecture/point-firefly.md): чёткое
+ядро и ореол только снаружи, независимые цвета/непрозрачность, общий zoom и
+явный образец «Полевые точки». Прежнее размытие других типов сохраняется.
+Выбор поддерживается в простом и категорийном редакторе; RGBA children
+сохраняют обычные picking, видимость и порядок логического слоя.
+
+Проверен актуальный official master 2026-10-24:
+[maplib 014247e](https://github.com/nextgis/android_maplib/blob/014247eea4a424e828c24d9e52e45fefed362f8d/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java)
+содержит типы 1–8;
+[maplibui 6420930](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/res/values/arrays.xml)
+содержит их восемь пунктов. Отдельного «Светлячка» в этих исходниках нет.
+Решение `ours`; перенос upstream нужно согласовывать вместе с новым типом.
 
 ## Копирование в слой и сдвиг/поворот — 2026-10-23
 
@@ -1848,7 +1877,7 @@ HTTP body временно хранится на диске, сканирует�
 
 Начиная с MapLibre Android 13 generic artifact `org.maplibre.gl:android-sdk`
 использует Vulkan. Официальный NextGIS Mobile `3.1.2` подключает именно его.
-Форк сохраняет API и версию MapLibre `13.0.2`, но во всех consuming-модулях
+Форк использует MapLibre `13.7.1` и во всех consuming-модулях
 явно выбирает `org.maplibre.gl:android-sdk-opengl`.
 
 Решение принято после воспроизводимого завершения процесса с сообщением

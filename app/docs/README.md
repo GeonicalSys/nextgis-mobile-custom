@@ -1,10 +1,26 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-23
+last_verified: 2026-10-24
 ---
 
 # app — Android-приложение Lisa/Belka
+
+## Штриховки, контуры и живой образец
+
+Related styles включает native PolygonStyleRenderingTest, PolygonStyleEditorTest и PolygonStyleTileFallbackTest. Они проверяют actual pixels, сохранённые категории, lifecycle и 72 русских локальных профиля редактора с Save/Cancel. Full выполняется перед публикацией. Контракт — consuming docs/architecture/polygon-style-controls.md.
+
+Высокие действия в прокрутке проверяются реальным касанием видимой области после стабилизации окна; отдельный регрессионный сценарий покрывает частичное обрезание кнопки viewport. Системная защита ввода Android сохранена.
+
+## Проверки «Светлячка»
+
+Related styles включает два новых native pixel/lifecycle случая и настоящий
+редактор в 72 локальных конфигурациях крупного интерфейса. На явно выбранном
+смартфоне используется только verification APK; системные настройки и рабочее
+приложение сохраняются. Контракт — consuming docs/architecture/point-firefly.md.
+
+Отдельный FireflyTileFallbackTest проверяет переход уже загруженного точечного
+VectorSource к GeoJsonSource при выборе сложного стиля через штатный reload.
 
 Production подготовлен к 3.1.2.30/224, Lisa Debug сохраняет 3.1.2.23/218.
 По запросу 2026-10-23 собирается только подписанный Lisa Release; Belka APK
@@ -294,7 +310,7 @@ Launcher и экраны intro/about получают иконку через fl
 `app_launcher_icon`: Lisa использует `ic_launcher_lisa`, Belka — отдельный
 `ic_launcher_belka` во всех пяти Android density buckets. PNG-символы точечных
 стилей лежат в `src/main/assets/marker_icons/*.png`; имя файла без расширения —
-id изображения в MapLibre. Карта использует MapLibre Android `13.0.2` с явным
+id изображения в MapLibre. Карта использует MapLibre Android `13.7.1` с явным
 OpenGL backend вместо Vulkan-default artifact.
 
 Текущий production выпуск Lisa/Belka — `3.1.2.29` / `223`, сопряжённая
@@ -542,7 +558,7 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   операции с проектом.
 - `lisa` и `belka` — отдельные product flavors.
 - `app`, `maplibui` и `maplib` должны разрешать один MapLibre backend:
-  `org.maplibre.gl:android-sdk-opengl:13.0.2`; generic `android-sdk` версии 13
+  `org.maplibre.gl:android-sdk-opengl:13.7.1`; generic `android-sdk` версии 13
   использует Vulkan и возвращать его в production нельзя.
 - `MapFragment` должен реализовывать актуальный `MaplibreMapInteraction`.
 - Каждый созданный MapLibre `MapView` должен получить согласованную пару
@@ -876,3 +892,5 @@ sync_journal и cause. Contract 3 резервирует payload budget, actual 
 для NDK и фиксирует startup stages. Cached/Backfillable reports сохраняют original
 identity; report_origin содержит отправителя. Related bugreports включён в CI.
 [Группы и ограничения вывода](../../docs/reference/glitchtip-triage-2026-10-17.md).
+
+Фактический результат: [проверка 2026-10-24](../../docs/reference/polygon-style-verification-2026-10-24.md).

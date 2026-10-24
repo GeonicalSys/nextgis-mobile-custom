@@ -1,5 +1,19 @@
 schema_version: 1
 hotspots:
+  POLYGON-STYLE-CONTROLS:
+    repositories: [maplib, maplibui, root]
+    paths: [maplib/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java, maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java, maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java, maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java]
+    default_decision: ours
+    reason: Official maplib 014247e and maplibui 6420930 still have the simple polygon model/editor with no pattern_options, outline_options or native live symbol preview in those entry points, verified 2026-10-24. Preserve the optional fork JSON and shared native factories when reconciling upstream.
+    invariants: [INV-POLYGON-STYLE-CONTROLS]
+    verify: [AUTO-POLYGON-STYLE-CONTROLS, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
+  POINT-FIREFLY:
+    repositories: [maplib, maplibui, root]
+    paths: [maplib/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java, maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java, maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java]
+    default_decision: ours
+    reason: Preserve separate type 9 for a crisp core and outward-only glow; official master still exposes marker types 1–8 and has no equivalent editor choice as checked on 2026-10-24.
+    invariants: [INV-POINT-FIREFLY]
+    verify: [AUTO-POINT-FIREFLY, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
   GPS-PIPELINE:
     repositories: [root, maplib, maplibui]
     paths:

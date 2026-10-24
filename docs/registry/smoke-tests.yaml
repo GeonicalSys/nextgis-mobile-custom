@@ -1,5 +1,15 @@
 schema_version: 1
 tests:
+  AUTO-POLYGON-STYLE-CONTROLS:
+    type: automatic
+    scope: [maplib, maplibui, app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area styles
+    expected: Periodic procedural textures, independent fill/pattern/contour alpha, dashed and secondary contours, saved categories, Polygon/MultiPolygon holes, fractional zoom, visibility/picking, image cleanup and live MVT fallback pass actual native checks. The real editor keeps the native preview visible and Save/Cancel reachable across 72 Russian window-local profiles. The polygon-styles area is a scoped development subset; Full remains required before publication.
+  AUTO-POINT-FIREFLY:
+    type: automatic
+    scope: [maplib, maplibui, app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area styles
+    expected: Classic rendering pixels prove crisp core, outward-only glow, transparent interior, independent alpha, Point/MultiPoint, zoom, unchanged circle blur and rendering-child/image cleanup. The actual editor passes 72 local Russian theme/font/display/orientation configurations and real preset/Save/Cancel touches. Explicit PhoneOnly uses only the isolated verification APK; Full remains separate.
   AUTO-FEATURE-EDITING:
     type: automatic
     scope: [app, maplibui, maplib]
@@ -288,7 +298,7 @@ tests:
     type: automatic
     scope: [app, maplib]
     command: powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version-matrix.ps1
-    expected: Lisa Debug, Lisa Release and Belka Release assemble; Lisa Release resolves MapLibre android-sdk-opengl 13.0.2 without generic/Vulkan artifact; aapt reports the exact expected package and version for each APK; maplib diagnostic versions match their consuming variants.
+    expected: Lisa Debug, Lisa Release and Belka Release assemble; Lisa Release resolves MapLibre android-sdk-opengl 13.7.1 without generic/Vulkan artifact; aapt reports the exact expected package and version for each APK; maplib diagnostic versions match their consuming variants.
   SMOKE-MAP-COLD-START:
     type: device
     scope: [app, maplib]

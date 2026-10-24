@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-23
+last_verified: 2026-10-24
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -32,6 +32,20 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+## MapLibre 13.7.1 с OpenGL
+
+Все три consuming-модуля используют `org.maplibre.gl:android-sdk-opengl:13.7.1`.
+Обновляется только SDK: прежние GeoJSON/MVT источники, фабрики стилей, подписи,
+выбор и редактирование объектов сохраняются. API `feature-state`, SDF patterns
+и `CustomVectorSource` доступны в новом SDK, но их использование потребует
+отдельных изменений приложения. Выбран OpenGL. Переработка загрузки и тайлов —
+отдельная задача. Результаты сборок и native регрессий:
+[проверка обновления SDK](../reference/maplibre-13-7-1-verification-2026-10-24.md).
+
+## Штриховки и расширенный контур
+
+[Контракт нового пакета](polygon-style-controls.md): необязательные параметры сохраняют прежний вид старых полигонов. Узоры получают отдельные цвет/alpha и бесшовную решётку; расширенный контур рисуется штатными children. Настроенный MVT-слой с новыми параметрами переходит к classic fallback. Native образец в редакторе использует те же фабрики, без сети и рабочей карты.
+
 ## Копирование и преобразование объекта
 
 [Контракт](feature-copy-transform.md): копирование сохраняет исходный объект и открывает форму назначения. В отдельном режиме целиком сдвигается/поворачивается текущая геометрия при неподвижной камере; один жест — один Undo, включая все части и отверстия. Панель вписывает все команды без overflow по фактической density/insets.
@@ -46,6 +60,12 @@ App-side `LocationDisplayAccuracy` передаёт в `MapDrawable.updateLocati
 Контракт источников и проверок: [GPS pipeline](location-pipeline.md).
 
 ## Матрица обычных стилей
+
+[«Светлячок»](point-firefly.md) — отдельный тип 9 для обычных Point/MultiPoint.
+RGBA rendering children с префиксом `-layout-firefly-` участвуют в существующем
+порядке, picking и visibility логического слоя. Native images освобождаются
+после restyle/удаления последнего владельца; CPU bitmap cache ограничен 4 MiB.
+Прежний `circle-blur` других категорий сохраняет прежнюю отрисовку.
 
 [Native матрица](classic-style-verification.md) проверяет обычный GeoJSON renderer
 и подписи после rule JSON reload. Configured local-vector-tiles исключены по
@@ -374,7 +394,7 @@ ContentProvider и mutable cache `TrackLayer` ([контракт](shared-tracks.
     не включая MapLibre source и не меняя visibility. Выключенный классический
     vector layer по-прежнему пропускается. Решение централизовано в
     `LayerIdentifyPolicy` и одинаково для всех активных веток identify.
-25. MapLibre Android `13.0.2` разрешается только через явный артефакт
+25. MapLibre Android `13.7.1` разрешается только через явный артефакт
     `org.maplibre.gl:android-sdk-opengl` одновременно в `app`, `maplibui` и
     `maplib`. Generic `org.maplibre.gl:android-sdk` этой major-версии использует
     Vulkan и не является допустимым fallback: на устройствах без совместимого
