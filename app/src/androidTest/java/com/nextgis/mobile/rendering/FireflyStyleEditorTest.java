@@ -70,23 +70,7 @@ public class FireflyStyleEditorTest {
     }
 
     private static void touch(VectorStyleRenderingTest.Fixture f, ConfiguredEditor editor, int id) {
-        AtomicReference<Rect> target = new AtomicReference<>();
-        f.screen.onActivity(activity -> {
-            View view = editor.requireView().findViewById(id);
-            Rect bounds = new Rect(); assertTrue("Action is really visible", view.getGlobalVisibleRect(bounds));
-            Rect window = new Rect(); editor.requireDialog().getWindow().getDecorView().getGlobalVisibleRect(window);
-            assertTrue("Action stays in the test window", window.contains(bounds));
-            assertEquals("Action is not clipped vertically", view.getHeight(), bounds.height());
-            int[] origin = new int[2]; view.getLocationOnScreen(origin);
-            target.set(new Rect(origin[0], origin[1], origin[0] + view.getWidth(), origin[1] + view.getHeight()));
-        });
-        Rect bounds = target.get(); long now = SystemClock.uptimeMillis();
-        MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, bounds.centerX(), bounds.centerY(), 0);
-        MotionEvent up = MotionEvent.obtain(now, now + 60, MotionEvent.ACTION_UP, bounds.centerX(), bounds.centerY(), 0);
-        InstrumentationRegistry.getInstrumentation().sendPointerSync(down);
-        InstrumentationRegistry.getInstrumentation().sendPointerSync(up);
-        down.recycle(); up.recycle();
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        NativeStyleTouch.tap(f, () -> editor.requireView().findViewById(id));
     }
 
     @Test public void russianFireflyEditorSupportsSelectionPresetSaveAndCancelAcrossLargeInterfaceMatrix() throws Exception {

@@ -102,3 +102,7 @@ maplibui #44 → app #78. До будущего выпуска библиоте�
 Native runner после каждого rendering case сохраняет bounded PNG из фиксированных QA-папок verification-приложения: до 4 MiB на файл и 16 MiB на case, только безопасные PNG-имена, SHA-256 index. Рабочие файлы приложения не читаются. Отдельный case живого образца проверяет реальные pixels точек/линий/полигонов и изменение alpha настоящим жестом до Save.
 
 Фактический результат: [проверка 2026-10-24](../reference/polygon-style-verification-2026-10-24.md).
+
+При входе из списка категорий RuleFeatureRendererUI открывает независимую копию эффективного стиля, включая наследованные параметры «Прочие». Cancel не меняет исходный rule JSON; Save заменяет только выбранную категорию и закрепляет показанный effective snapshot. Native case actualCategoryEntryUsesInheritedPreviewAndCancelCannotMutateTheRule проходит именно этот вход реальными touches.
+
+Адресная область style-categories проверяет настоящую строку категории, наследованные настройки, Cancel/Save и отдельную кнопку удаления. NativeStyleTouch перед targeted инъекцией ждёт фокус окна, полную видимость и стабильные физические координаты; UID guard Android сохраняется.

@@ -61,7 +61,7 @@ public class PolygonStyleEditorTest {
         }
     }
 
-    private static void reveal(VectorStyleRenderingTest.Fixture f, ConfiguredEditor editor, int id) {
+    private static void reveal(VectorStyleRenderingTest.Fixture f, StyleFragment editor, int id) {
         f.screen.onActivity(activity -> {
             View view = editor.requireView().findViewById(id);
             view.requestRectangleOnScreen(new Rect(0, 0, view.getWidth(), view.getHeight()), true);
@@ -69,24 +69,8 @@ public class PolygonStyleEditorTest {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
 
-    private static void touch(VectorStyleRenderingTest.Fixture f, ConfiguredEditor editor, int id) {
-        AtomicReference<Rect> target = new AtomicReference<>();
-        f.screen.onActivity(activity -> {
-            View view = editor.requireView().findViewById(id);
-            Rect bounds = new Rect(); assertTrue("Action is really visible", view.getGlobalVisibleRect(bounds));
-            Rect window = new Rect(); editor.requireDialog().getWindow().getDecorView().getGlobalVisibleRect(window);
-            assertTrue("Action stays in the test window", window.contains(bounds));
-            assertEquals("Action "+id+" is not clipped vertically at "+view.getResources().getConfiguration(), view.getHeight(), bounds.height());
-            int[] origin = new int[2]; view.getLocationOnScreen(origin);
-            target.set(new Rect(origin[0], origin[1], origin[0] + view.getWidth(), origin[1] + view.getHeight()));
-        });
-        Rect bounds = target.get(); long now = SystemClock.uptimeMillis();
-        MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, bounds.centerX(), bounds.centerY(), 0);
-        MotionEvent up = MotionEvent.obtain(now, now + 60, MotionEvent.ACTION_UP, bounds.centerX(), bounds.centerY(), 0);
-        InstrumentationRegistry.getInstrumentation().sendPointerSync(down);
-        InstrumentationRegistry.getInstrumentation().sendPointerSync(up);
-        down.recycle(); up.recycle();
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    private static void touch(VectorStyleRenderingTest.Fixture f, StyleFragment editor, int id) {
+        NativeStyleTouch.tap(f, () -> editor.requireView().findViewById(id));
     }
 
     private static void saveEditorScreenshot(VectorStyleRenderingTest.Fixture f,String name) throws Exception {
@@ -156,21 +140,77 @@ public class PolygonStyleEditorTest {
                 java.io.File folder=new java.io.File(f.app.getFilesDir(),"polygon-editor-qa");assertTrue(folder.isDirectory()||folder.mkdirs());
                 try(java.io.FileOutputStream output=new java.io.FileOutputStream(new java.io.File(folder,"live-"+kind+"-before.png"))){assertTrue(before.compress(android.graphics.Bitmap.CompressFormat.PNG,100,output));}finally{before.recycle();}
                 int opacity=kind==2?R.id.pattern_alpha:R.id.fill_alpha_seek;reveal(f,editor,opacity);
-                AtomicReference<Rect> target=new AtomicReference<>();
-                f.screen.onActivity(activity->{
-                    android.widget.SeekBar bar=editor.requireView().findViewById(opacity);assertNotNull("Visible slider thumb",bar.getThumb());assertNotNull(bar.getProgressDrawable());
-                    int[] origin=new int[2];bar.getLocationOnScreen(origin);
-                    target.set(new Rect(origin[0]+bar.getPaddingLeft()+1,origin[1]+bar.getHeight()/2,0,0));
-                });
-                Rect point=target.get();long now=SystemClock.uptimeMillis();
-                MotionEvent down=MotionEvent.obtain(now,now,MotionEvent.ACTION_DOWN,point.left,point.top,0);
-                MotionEvent up=MotionEvent.obtain(now,now+60,MotionEvent.ACTION_UP,point.left,point.top,0);
-                InstrumentationRegistry.getInstrumentation().sendPointerSync(down);InstrumentationRegistry.getInstrumentation().sendPointerSync(up);down.recycle();up.recycle();
-                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                NativeStyleTouch.minimum(f, () -> editor.requireView().findViewById(opacity));
                 f.screen.onActivity(activity->{android.widget.SeekBar bar=editor.requireView().findViewById(opacity);assertTrue("Actual opacity touch reached the minimum",bar.getProgress()<=2);});
                 android.graphics.Bitmap after=awaitPreviewPixels(f,preview.get(),false);
                 try(java.io.FileOutputStream output=new java.io.FileOutputStream(new java.io.File(folder,"live-"+kind+"-after.png"))){assertTrue(after.compress(android.graphics.Bitmap.CompressFormat.PNG,100,output));}finally{after.recycle();}
                 touch(f,editor,R.id.button_negative);assertEquals("The working symbol was never mutated",original,source.toJSON().toString());
+            }
+        }
+    }
+
+    private static void touchRuleRow(VectorStyleRenderingTest.Fixture f,androidx.fragment.app.Fragment rules) {
+        f.screen.onActivity(activity->{android.widget.ListView list=rules.requireView().findViewById(R.id.rules);assertEquals(1,list.getCount());});
+        NativeStyleTouch.tap(f, () -> ((android.widget.ListView)rules.requireView().findViewById(R.id.rules)).getChildAt(0));
+    }
+    @Test public void actualCategoryEntryUsesInheritedPreviewAndCancelCannotMutateTheRule() throws Exception {
+        try(VectorStyleRenderingTest.Fixture f=new VectorStyleRenderingTest.Fixture()) {
+            f.screen.onActivity(activity->activity.setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT));
+            AtomicBoolean portrait=new AtomicBoolean();long deadline=SystemClock.uptimeMillis()+15000;
+            while(!portrait.get()&&SystemClock.uptimeMillis()<deadline){f.screen.onActivity(activity->portrait.set(activity.getResources().getConfiguration().orientation==Configuration.ORIENTATION_PORTRAIT));if(!portrait.get())Thread.sleep(50);}
+            assertTrue(portrait.get());VectorLayerUI layer=f.add(GeoConstants.GTPolygon);f.insert(layer,0,"A");
+            com.nextgis.maplib.display.SimplePolygonStyle other=new com.nextgis.maplib.display.SimplePolygonStyle(Color.YELLOW,Color.BLUE);
+            other.setFill(false);other.setFillPattern(1);other.setPatternOptions(new com.nextgis.maplib.display.PolygonPatternOptions());
+            other.getPatternOptions().setSpacing(20);other.getPatternOptions().setColor(Color.RED);other.getPatternOptions().setAlpha(255);
+            other.setOutlineOptions(new com.nextgis.maplib.display.PolygonOutlineOptions());other.getOutlineOptions().setCasing(true);
+            com.nextgis.maplib.display.SimplePolygonStyle original=new com.nextgis.maplib.display.SimplePolygonStyle(Color.YELLOW,Color.BLUE);
+            original.setFill(false);original.setFillPattern(1);
+            com.nextgis.maplib.display.FieldStyleRule rules=new com.nextgis.maplib.display.FieldStyleRule(layer);rules.setKey("kind");rules.setOtherStyle(other);rules.setStyle("A",original);
+            String originalJson=original.toJSON().toString(),otherJson=other.toJSON().toString();
+            com.nextgis.maplib.display.RuleFeatureRenderer renderer=new com.nextgis.maplib.display.RuleFeatureRenderer(layer,rules,other);
+            com.nextgis.maplibui.display.RuleFeatureRendererUI controller=new com.nextgis.maplibui.display.RuleFeatureRendererUI(renderer,layer);
+            f.screen.onActivity(activity->{layer.setRenderer(renderer);assertTrue(layer.save());});
+            androidx.fragment.app.Fragment settings=controller.getSettingsScreen(layer);AtomicReference<android.widget.FrameLayout> host=new AtomicReference<>();
+            try {
+                f.screen.onActivity(activity->{
+                    android.widget.FrameLayout frame=new android.widget.FrameLayout(activity);frame.setId(View.generateViewId());host.set(frame);
+                    ((ViewGroup)activity.findViewById(android.R.id.content)).addView(frame,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+                    activity.getSupportFragmentManager().beginTransaction().add(frame.getId(),settings,"rule-entry-qa").commitNow();
+                });
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                for(boolean save:new boolean[]{false,true}) {
+                    touchRuleRow(f,settings);AtomicReference<StyleFragment> modal=new AtomicReference<>();
+                    f.screen.onActivity(activity->{
+                        modal.set((StyleFragment)activity.getSupportFragmentManager().findFragmentByTag("STYLE_DIALOG_FRAGMENT"));assertNotNull(modal.get());
+                        assertTrue(((android.widget.CheckBox)modal.get().requireView().findViewById(R.id.pattern_configure)).isChecked());
+                        assertTrue(((android.widget.CheckBox)modal.get().requireView().findViewById(R.id.outline_configure)).isChecked());
+                        android.widget.EditText spacing=modal.get().requireView().findViewById(R.id.pattern_spacing);
+                        assertEquals("20",spacing.getText().toString());spacing.setText("24");
+                        assertNull("The rule remains raw until Save",((com.nextgis.maplib.display.SimplePolygonStyle)rules.getStyle("A")).getPatternOptions());
+                    });
+                    InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                    touch(f,modal.get(),save?R.id.button_positive:R.id.button_negative);
+                    assertEquals("The Other symbol never changes",otherJson,other.toJSON().toString());
+                    if(save) {
+                        assertTrue(layer.save());
+                        assertEquals(24,((com.nextgis.maplib.display.SimplePolygonStyle)rules.getStyle("A")).getPatternOptions().getSpacing(),0);
+                        assertNotSame(original,rules.getStyle("A"));
+                        com.nextgis.maplib.display.FieldStyleRule restored=new com.nextgis.maplib.display.FieldStyleRule(layer);restored.fromJSON(rules.toJSON());
+                        assertEquals(24,((com.nextgis.maplib.display.SimplePolygonStyle)restored.resolveEffectiveStyle("A",other)).getPatternOptions().getSpacing(),0);
+                    }else assertEquals("Cancel from the actual category row leaves its JSON unchanged",originalJson,rules.getStyle("A").toJSON().toString());
+                    assertEquals(originalJson,original.toJSON().toString());
+                }
+                NativeStyleTouch.tap(f, () -> ((android.widget.ListView)settings.requireView().findViewById(R.id.rules)).getChildAt(0).findViewById(R.id.rule_remove));
+                assertNull("The separate remove action still removes only its category",rules.getStyle("A"));
+                assertEquals(otherJson,other.toJSON().toString());
+                f.screen.onActivity(activity->assertEquals(0,((android.widget.ListView)settings.requireView().findViewById(R.id.rules)).getCount()));
+            }finally{
+                f.screen.onActivity(activity->{
+                    androidx.fragment.app.Fragment modal=activity.getSupportFragmentManager().findFragmentByTag("STYLE_DIALOG_FRAGMENT");
+                    if(modal instanceof androidx.fragment.app.DialogFragment)((androidx.fragment.app.DialogFragment)modal).dismissNow();
+                    if(settings.isAdded())activity.getSupportFragmentManager().beginTransaction().remove(settings).commitNow();
+                    if(host.get()!=null)((ViewGroup)activity.findViewById(android.R.id.content)).removeView(host.get());
+                });
             }
         }
     }

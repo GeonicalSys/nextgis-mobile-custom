@@ -13,6 +13,16 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Эффективный черновик категории — 2026-10-24
+
+Редактор категории форка открывает независимую эффективную копию с наследованием
+параметров «Прочие»; Cancel сохраняет исходный JSON, а Save заменяет только
+выбранную категорию. Строка открывает диалог независимо от focusable delete.
+В текущем [official RuleFeatureRendererUI 6420930](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/java/com/nextgis/maplibui/display/RuleFeatureRendererUI.java)
+проверен прямой путь getStyle → setStyle без effective clone в этих entry points.
+Это адресная сверка данного владельца; решение ours. Native вход/Cancel/Save
+и независимое удаление описаны в [контракте](../architecture/polygon-style-controls.md).
+
 ## Штриховки, контуры и живой образец — 2026-10-24
 
 В форке добавлены необязательные pattern_options/outline_options, независимая alpha штриховки и offline native предпросмотр символов в редакторе. [Контракт](../architecture/polygon-style-controls.md). Проверены актуальные official master: maplib 014247eea4a424e828c24d9e52e45fefed362f8d, maplibui 642093037b135442913cd9dd9bf8b46f8b7aecf9, app 04d57c9fd843db6745c170147d6a2863da807352. Прочитанные [SimplePolygonStyle](https://github.com/nextgis/android_maplib/blob/014247eea4a424e828c24d9e52e45fefed362f8d/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java) (258 строк) и [StyleFragment](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java) (575 строк) не содержат этих объектов или live MapView preview. Адресная сверка entry points; решение ours, без upstream merge.
