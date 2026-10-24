@@ -1,12 +1,16 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-23
+last_verified: 2026-10-24
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-24 — Штриховки, контуры и живой предпросмотр
+
+Добавлен [контракт](architecture/polygon-style-controls.md) новых необязательных параметров полигона, независимой alpha, бесшовных textures, constant stroke children и native offline образца редактора. Обновлены модульные packs, зависимости, инвариант, Related styles/polygon-styles и адресная official сверка. Новая доработка имеет отдельные IDs карточек всех трёх владельцев.
 
 ## 2026-10-24 — Отдельный стиль «Светлячок»
 

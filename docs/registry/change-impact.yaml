@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: POLYGON-STYLE-CONTROLS
+    paths: [maplib/src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java, maplib/src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java, maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java, maplib/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java, maplibui/src/main/java/com/nextgis/maplibui/util/PolygonStyleControls.java, maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java, maplibui/src/main/res/layout/style_polygon_options.xml, app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleTileFallbackTest.java]
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/polygon-style-controls.md, docs/architecture/classic-style-verification.md, docs/architecture/ui-accessibility.md]
+    invariants: [INV-POLYGON-STYLE-CONTROLS, INV-CLASSIC-RULE-LABELS, INV-LAYER-ORDER, INV-UI-VISIBLE-BOUNDS]
+    must_update_docs: [docs/architecture/polygon-style-controls.md, docs/reference/official-differences.md, docs/registry/dependencies.yaml, maplib/docs/manifest.yaml, maplibui/docs/manifest.yaml, app/docs/manifest.yaml]
+    verify: [AUTO-POLYGON-STYLE-CONTROLS, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
+    strict_docs: true
   - id: POINT-FIREFLY
     paths: [maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java, maplib/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/FireflyLayerFactory.java, maplib/src/test/java/com/nextgis/maplib/display/FireflyMarkerTest.java, maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java, maplibui/src/main/res/values/firefly_strings.xml, maplibui/src/main/res/values-ru/firefly_strings.xml, app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java]
     owners: [maplib, maplibui, app]

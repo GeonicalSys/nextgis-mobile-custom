@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-23
+last_verified: 2026-10-24
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -14,6 +14,10 @@ related_code:
 ---
 
 # Автоматические проверки
+
+## Новые стили полигонов
+
+Для полного адресного покрытия стилей: Related -Area styles. Быстрый пакет polygon-styles включает три новых класса с пятью методами. Явные -PhoneSerial и -PhoneOnly используют только отдельный verification APK. Текущую сборку проверять до -SkipBuild; runner сохраняет fingerprint всех владельцев. Full не запускается при обычной сборке и остаётся обязательным перед публикацией. Контракт: [настройки полигонов](../architecture/polygon-style-controls.md).
 
 ## Точечные стили и «Светлячок»
 
@@ -312,3 +316,5 @@ restart отдельно, а остальные HTTP cases — с чистым c
 штатный GitHub related runner; дублирующиеся cases map/bugreports не повторяются.
 Full catalogue содержит 207 native cases; прежние Full receipts это новое
 содержимое не подтверждают. APK пока не опубликован.
+
+Native runner после каждого rendering case сохраняет bounded PNG из фиксированных QA-папок verification-приложения: до 4 MiB на файл и 16 MiB на case, только безопасные PNG-имена, SHA-256 index. Рабочие файлы приложения не читаются. Отдельный case живого образца проверяет реальные pixels точек/линий/полигонов и изменение alpha настоящим жестом до Save.

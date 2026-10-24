@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-23
+last_verified: 2026-10-24
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,10 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Штриховки, контуры и живой образец — 2026-10-24
+
+В форке добавлены необязательные pattern_options/outline_options, независимая alpha штриховки и offline native предпросмотр символов в редакторе. [Контракт](../architecture/polygon-style-controls.md). Проверены актуальные official master: maplib 014247eea4a424e828c24d9e52e45fefed362f8d, maplibui 642093037b135442913cd9dd9bf8b46f8b7aecf9, app 04d57c9fd843db6745c170147d6a2863da807352. Прочитанные [SimplePolygonStyle](https://github.com/nextgis/android_maplib/blob/014247eea4a424e828c24d9e52e45fefed362f8d/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java) (258 строк) и [StyleFragment](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java) (575 строк) не содержат этих объектов или live MapView preview. Адресная сверка entry points; решение ours, без upstream merge.
 
 ## Точечный стиль «Светлячок» — 2026-10-24
 

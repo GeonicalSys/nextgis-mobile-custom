@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-POLYGON-STYLE-CONTROLS:
+    type: automatic
+    scope: [maplib, maplibui, app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area styles
+    expected: Periodic procedural textures, independent fill/pattern/contour alpha, dashed and secondary contours, saved categories, Polygon/MultiPolygon holes, fractional zoom, visibility/picking, image cleanup and live MVT fallback pass actual native checks. The real editor keeps the native preview visible and Save/Cancel reachable across 72 Russian window-local profiles. The polygon-styles area is a scoped development subset; Full remains required before publication.
   AUTO-POINT-FIREFLY:
     type: automatic
     scope: [maplib, maplibui, app]

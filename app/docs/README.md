@@ -6,6 +6,10 @@ last_verified: 2026-10-24
 
 # app — Android-приложение Lisa/Belka
 
+## Штриховки, контуры и живой образец
+
+Related styles включает native PolygonStyleRenderingTest, PolygonStyleEditorTest и PolygonStyleTileFallbackTest. Они проверяют actual pixels, сохранённые категории, lifecycle и 72 русских локальных профиля редактора с Save/Cancel. Full выполняется перед публикацией. Контракт — consuming docs/architecture/polygon-style-controls.md.
+
 ## Проверки «Светлячка»
 
 Related styles включает два новых native pixel/lifecycle случая и настоящий

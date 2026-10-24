@@ -21,6 +21,10 @@ related_code:
 
 # Проверки обычных векторных стилей и подписей
 
+## Настраиваемые полигоны и живой образец
+
+[Пакет](polygon-style-controls.md) добавляет PolygonStyleRenderingTest (смешанные сохранённые категории, независимая alpha, реальные цветные pixels, дырки, Polygon/MultiPolygon, дробный zoom, visibility/picking/cleanup), PolygonStyleTileFallbackTest и PolygonStyleEditorTest. Последний проверяет 72 русских профиля с живым native MapView и реальными Configure/Casing/Save/Cancel touches. Классы включены в Related styles; отдельная область polygon-styles предназначена для адресной разработки. Наличие сценариев не заменяет фактическую квитанцию.
+
 ## «Светлячок»
 
 [Отдельный тип точки](point-firefly.md) проверяется через тот же SQL/JSON/native

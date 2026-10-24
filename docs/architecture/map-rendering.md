@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-23
+last_verified: 2026-10-24
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,10 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+## Штриховки и расширенный контур
+
+[Контракт нового пакета](polygon-style-controls.md): необязательные параметры сохраняют прежний вид старых полигонов. Узоры получают отдельные цвет/alpha и бесшовную решётку; расширенный контур рисуется штатными children. Настроенный MVT-слой с новыми параметрами переходит к classic fallback. Native образец в редакторе использует те же фабрики, без сети и рабочей карты.
 
 ## Копирование и преобразование объекта
 
