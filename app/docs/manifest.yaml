@@ -10,7 +10,7 @@ entrypoints:
   - app/src/main/AndroidManifest.xml
 key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java
-    responsibility: Require window focus, full usable physical bounds and stable target coordinates before guarded native input after rotation or scrolling.
+    responsibility: Require window focus and stable visible bounds clipped to scrolling, window and physical display before guarded native input; verify that the actual SeekBar minimum remains visible.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
     responsibility: Verify native polygon styles, live preview, lifecycle and Russian large-interface editor behavior.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java

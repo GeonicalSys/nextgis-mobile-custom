@@ -73,9 +73,44 @@ public class FireflyStyleEditorTest {
         NativeStyleTouch.tap(f, () -> editor.requireView().findViewById(id));
     }
 
+    /** Reproduces a preset taller than its scroll viewport without changing device settings. */
+    private static void clippedScrollActionUsesAVisiblePhysicalTouch(VectorStyleRenderingTest.Fixture f) {
+        AtomicReference<android.app.Dialog> dialog = new AtomicReference<>();
+        AtomicReference<android.widget.Button> button = new AtomicReference<>();
+        AtomicBoolean clicked = new AtomicBoolean();
+        f.screen.onActivity(activity -> {
+            float density = activity.getResources().getDisplayMetrics().density;
+            android.widget.ScrollView scroll = new android.widget.ScrollView(activity);
+            android.widget.Button action = new android.widget.Button(activity);
+            action.setText("Действие в прокрутке");
+            action.setMinHeight(Math.round(360 * density));
+            scroll.addView(action, new android.widget.ScrollView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, Math.round(360 * density)));
+            android.app.Dialog window = new android.app.Dialog(activity);
+            window.setContentView(scroll); window.show();
+            window.getWindow().setLayout(Math.round(240 * density), Math.round(120 * density));
+            action.setOnClickListener(view -> clicked.set(true));
+            dialog.set(window); button.set(action);
+        });
+        try {
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+            NativeStyleTouch.tap(f, button::get);
+            f.screen.onActivity(activity -> {
+                Rect visible = new Rect();
+                assertTrue(button.get().getLocalVisibleRect(visible));
+                assertTrue("Regression requires a partially clipped action: visible=" + visible
+                        + " height=" + button.get().getHeight(), visible.height() < button.get().getHeight());
+            });
+            assertTrue("The visible action receives the real touch", clicked.get());
+        } finally {
+            f.screen.onActivity(activity -> dialog.get().dismiss());
+        }
+    }
+
     @Test public void russianFireflyEditorSupportsSelectionPresetSaveAndCancelAcrossLargeInterfaceMatrix() throws Exception {
         int[][] screens = {{360,640,420},{640,360,420},{320,568,540},{568,320,540},{280,500,620},{500,280,620}};
         try (VectorStyleRenderingTest.Fixture f = new VectorStyleRenderingTest.Fixture()) {
+            clippedScrollActionUsesAVisiblePhysicalTouch(f);
             VectorLayerUI layer = f.add(GeoConstants.GTPoint);
             for (float font : new float[]{1, 1.3f, 2}) for (int[] screen : screens)
                 for (boolean dark : new boolean[]{false, true}) for (boolean cancel : new boolean[]{false, true}) {
