@@ -37,13 +37,13 @@ finally {
 }
 
 $releaseRuntimeDependencyText = $releaseRuntimeDependencies -join "`n"
-if ($releaseRuntimeDependencyText -notmatch 'org\.maplibre\.gl:android-sdk-opengl:13\.0\.2') {
-    throw 'Lisa Release runtime does not contain MapLibre OpenGL 13.0.2.'
+if ($releaseRuntimeDependencyText -notmatch 'org\.maplibre\.gl:android-sdk-opengl:13\.7\.1') {
+    throw 'Lisa Release runtime does not contain MapLibre OpenGL 13.7.1.'
 }
-if ($releaseRuntimeDependencyText -match 'org\.maplibre\.gl:android-sdk(?:-vulkan)?:13\.0\.2') {
-    throw 'Lisa Release runtime contains the generic or Vulkan MapLibre 13.0.2 artifact.'
+if ($releaseRuntimeDependencyText -match 'org\.maplibre\.gl:android-sdk(?:-vulkan(?:-opengl)?)?:') {
+    throw 'Lisa Release runtime contains a generic, Vulkan or dual-backend MapLibre artifact.'
 }
-Write-Output 'OK: Lisa Release runtime uses MapLibre android-sdk-opengl:13.0.2 without generic/Vulkan artifact'
+Write-Output 'OK: Lisa Release runtime uses MapLibre android-sdk-opengl:13.7.1 without generic/Vulkan/dual-backend artifact'
 
 $sdkCandidates = @(@(
     $env:ANDROID_SDK_ROOT,

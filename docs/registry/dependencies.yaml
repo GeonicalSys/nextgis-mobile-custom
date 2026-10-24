@@ -160,7 +160,7 @@ runtime_contracts:
     defined_in: app/build.gradle
     implementers: [app, maplibui, maplib]
     callers: [app, maplibui, maplib]
-    artifact: org.maplibre.gl:android-sdk-opengl:13.0.2
+    artifact: org.maplibre.gl:android-sdk-opengl:13.7.1
     backend: OpenGL ES
   stakeout-guidance:
     owner: maplib

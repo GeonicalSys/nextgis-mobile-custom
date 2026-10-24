@@ -291,7 +291,7 @@ invariants:
   INV-MAPLIBRE-BACKEND-COMPATIBILITY:
     title: Production map rendering does not require Vulkan
     owners: [app, maplibui, maplib]
-    statement: MapLibre Android 13.0.2 must resolve through org.maplibre.gl:android-sdk-opengl in app, maplibui and maplib; the generic android-sdk or android-sdk-vulkan artifacts must not enter the production runtime because supported devices may lack a compatible Vulkan implementation.
+    statement: MapLibre Android 13.7.1 must resolve through org.maplibre.gl:android-sdk-opengl in app, maplibui and maplib; the generic android-sdk or android-sdk-vulkan artifacts must not enter the production runtime because supported devices may lack a compatible Vulkan implementation.
     related_code:
       - app/build.gradle
       - maplibui/build.gradle

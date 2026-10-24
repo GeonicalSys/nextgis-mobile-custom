@@ -298,7 +298,7 @@ tests:
     type: automatic
     scope: [app, maplib]
     command: powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\verify-apk-version-matrix.ps1
-    expected: Lisa Debug, Lisa Release and Belka Release assemble; Lisa Release resolves MapLibre android-sdk-opengl 13.0.2 without generic/Vulkan artifact; aapt reports the exact expected package and version for each APK; maplib diagnostic versions match their consuming variants.
+    expected: Lisa Debug, Lisa Release and Belka Release assemble; Lisa Release resolves MapLibre android-sdk-opengl 13.7.1 without generic/Vulkan artifact; aapt reports the exact expected package and version for each APK; maplib diagnostic versions match their consuming variants.
   SMOKE-MAP-COLD-START:
     type: device
     scope: [app, maplib]

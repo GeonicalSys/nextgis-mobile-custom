@@ -32,6 +32,16 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+## MapLibre 13.7.1 с OpenGL
+
+Все три consuming-модуля используют `org.maplibre.gl:android-sdk-opengl:13.7.1`.
+Обновляется только SDK: прежние GeoJSON/MVT источники, фабрики стилей, подписи,
+выбор и редактирование объектов сохраняются. API `feature-state`, SDF patterns
+и `CustomVectorSource` доступны в новом SDK, но их использование потребует
+отдельных изменений приложения. Выбран OpenGL. Переработка загрузки и тайлов —
+отдельная задача. Результаты сборок и native регрессий:
+[проверка обновления SDK](../reference/maplibre-13-7-1-verification-2026-10-24.md).
+
 ## Штриховки и расширенный контур
 
 [Контракт нового пакета](polygon-style-controls.md): необязательные параметры сохраняют прежний вид старых полигонов. Узоры получают отдельные цвет/alpha и бесшовную решётку; расширенный контур рисуется штатными children. Настроенный MVT-слой с новыми параметрами переходит к classic fallback. Native образец в редакторе использует те же фабрики, без сети и рабочей карты.
@@ -384,7 +394,7 @@ ContentProvider и mutable cache `TrackLayer` ([контракт](shared-tracks.
     не включая MapLibre source и не меняя visibility. Выключенный классический
     vector layer по-прежнему пропускается. Решение централизовано в
     `LayerIdentifyPolicy` и одинаково для всех активных веток identify.
-25. MapLibre Android `13.0.2` разрешается только через явный артефакт
+25. MapLibre Android `13.7.1` разрешается только через явный артефакт
     `org.maplibre.gl:android-sdk-opengl` одновременно в `app`, `maplibui` и
     `maplib`. Generic `org.maplibre.gl:android-sdk` этой major-версии использует
     Vulkan и не является допустимым fallback: на устройствах без совместимого

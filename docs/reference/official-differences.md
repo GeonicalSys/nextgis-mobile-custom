@@ -1877,7 +1877,7 @@ HTTP body временно хранится на диске, сканирует�
 
 Начиная с MapLibre Android 13 generic artifact `org.maplibre.gl:android-sdk`
 использует Vulkan. Официальный NextGIS Mobile `3.1.2` подключает именно его.
-Форк сохраняет API и версию MapLibre `13.0.2`, но во всех consuming-модулях
+Форк использует MapLibre `13.7.1` и во всех consuming-модулях
 явно выбирает `org.maplibre.gl:android-sdk-opengl`.
 
 Решение принято после воспроизводимого завершения процесса с сообщением

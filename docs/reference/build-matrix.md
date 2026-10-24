@@ -158,7 +158,7 @@ Debug не публикуется. [Матрица](../history/orbit-ring-delive
 | App versionName (debug) | `3.1.2.23` |
 | maplib VERSION_NAME (release) | `3.1.2.30` |
 | maplib VERSION_NAME (debug) | `3.1.2.23` |
-| MapLibre Android SDK | `13.0.2`, `android-sdk-opengl` (OpenGL ES) |
+| MapLibre Android SDK | `13.7.1`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |
 | OkHttp | `5.3.2` |
 | Release application/account | `com.nextgis.mobile.geonical` / `com.nextgis.account.geonical` |
@@ -177,7 +177,7 @@ override — `androidComponents.onVariants`, debug maplib version — отдел
 `GTMultiPolygon`. Она одинакова для Lisa/Belka и debug/release и не меняет
 variant identity.
 
-MapLibre `13.0.2` подключается во всех трёх consuming-модулях через
+MapLibre `13.7.1` подключается во всех трёх consuming-модулях через
 `org.maplibre.gl:android-sdk-opengl`. Generic `android-sdk` начиная с MapLibre
 13 использует Vulkan и не входит в production runtime: на устройствах без
 совместимого Vulkan-драйвера он завершает процесс при открытии карты.

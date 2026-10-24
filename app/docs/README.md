@@ -310,7 +310,7 @@ Launcher и экраны intro/about получают иконку через fl
 `app_launcher_icon`: Lisa использует `ic_launcher_lisa`, Belka — отдельный
 `ic_launcher_belka` во всех пяти Android density buckets. PNG-символы точечных
 стилей лежат в `src/main/assets/marker_icons/*.png`; имя файла без расширения —
-id изображения в MapLibre. Карта использует MapLibre Android `13.0.2` с явным
+id изображения в MapLibre. Карта использует MapLibre Android `13.7.1` с явным
 OpenGL backend вместо Vulkan-default artifact.
 
 Текущий production выпуск Lisa/Belka — `3.1.2.29` / `223`, сопряжённая
@@ -558,7 +558,7 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   операции с проектом.
 - `lisa` и `belka` — отдельные product flavors.
 - `app`, `maplibui` и `maplib` должны разрешать один MapLibre backend:
-  `org.maplibre.gl:android-sdk-opengl:13.0.2`; generic `android-sdk` версии 13
+  `org.maplibre.gl:android-sdk-opengl:13.7.1`; generic `android-sdk` версии 13
   использует Vulkan и возвращать его в production нельзя.
 - `MapFragment` должен реализовывать актуальный `MaplibreMapInteraction`.
 - Каждый созданный MapLibre `MapView` должен получить согласованную пару

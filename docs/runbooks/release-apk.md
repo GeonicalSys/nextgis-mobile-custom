@@ -141,7 +141,7 @@ APK может содержать production basename. Это не версия 
   AppDiagnostics инициализирует SDK после isolated-script guard;
 - JTS Core присутствует в обеих release-сборках, а
   `MultiPolygonGeometryRepairTest` проходит в `:maplib:testDebugUnitTest`;
-- runtime dependency graph разрешает `org.maplibre.gl:android-sdk-opengl:13.0.2`
+- runtime dependency graph разрешает `org.maplibre.gl:android-sdk-opengl:13.7.1`
   и не содержит generic/Vulkan MapLibre artifact;
 - запуск поверх существующего профиля.
 
