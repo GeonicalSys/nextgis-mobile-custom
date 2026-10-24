@@ -890,3 +890,5 @@ sync_journal и cause. Contract 3 резервирует payload budget, actual 
 для NDK и фиксирует startup stages. Cached/Backfillable reports сохраняют original
 identity; report_origin содержит отправителя. Related bugreports включён в CI.
 [Группы и ограничения вывода](../../docs/reference/glitchtip-triage-2026-10-17.md).
+
+Фактический результат: [проверка 2026-10-24](../../docs/reference/polygon-style-verification-2026-10-24.md).
