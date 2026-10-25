@@ -8,6 +8,14 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-25 — Недельные напоминания о данных и обновлении
+
+UX-05 описывает независимые successful full-sync и manifest clocks, исключение
+локальных проектов, наблюдение неизвестной истории и overdue download/install
+без блокировки работы. Повторный показ ограничен process/daily review.
+Добавлены registry/config/manifest и native матрица новых диалогов.
+[Контракт](architecture/maintenance-reminders.md).
+
 ## 2026-10-25 — Отложенный SDK тап при закрытии карты
 
 Full выявил обращение queryPointAnnotations после уничтожения MapView.

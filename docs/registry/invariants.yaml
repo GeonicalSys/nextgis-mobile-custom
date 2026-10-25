@@ -1,5 +1,17 @@
 schema_version: 1
 invariants:
+  INV-MAINTENANCE-REMINDERS:
+    title: Weekly reminders distinguish complete online-project sync and verified app updates
+    owners: [app]
+    statement: Read only the active online project's canonical ProjectSyncState full-success clock; local maps never need sync. Persist successful validated manifest checks separately from first discovery of an uninstalled update, retaining the outstanding age across newer releases. Only a fully revalidated matching APK means downloaded. Unknown legacy history gets observation grace without claiming success. Foreground reminders preserve retry, Install/Later and offline work; rotation/network retries do not duplicate them, and a resident process receives a fresh review on reopening after a day.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/test/java/com/nextgis/mobile/util/MaintenanceRemindersTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/util/MaintenanceRemindersNativeTest.java
+    verify_smoke: [AUTO-MAINTENANCE-REMINDERS, AUTO-UPDATER-CHECKS, AUTO-MOBILE-RELATED]
+    must_update_docs: [docs/architecture/maintenance-reminders.md, docs/runbooks/release-apk.md, app/docs/README.md, app/docs/manifest.yaml]
   INV-POLYGON-STYLE-CONTROLS:
     title: Configurable polygon symbols preserve old styles and match the live native preview
     owners: [maplib, maplibui, app]

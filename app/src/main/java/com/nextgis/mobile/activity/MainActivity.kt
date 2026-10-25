@@ -1845,6 +1845,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             val alertDialog = builder.create()
             alertDialog.show()
         }
+        if (AppUpdateManager.shouldRefreshStartupCheck()) startupUpdateCheck.restore(false, false)
         startupUpdateCheck.onResume()
         watchUpdateNetwork()
     }

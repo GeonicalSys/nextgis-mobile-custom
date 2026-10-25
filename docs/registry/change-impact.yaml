@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: MAINTENANCE-REMINDERS
+    paths: [app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java, app/src/test/java/com/nextgis/mobile/util/MaintenanceRemindersTest.java, app/src/androidTest/java/com/nextgis/mobile/util/MaintenanceRemindersNativeTest.java, app/src/main/res/values/maintenance_strings.xml, app/src/main/res/values-ru/maintenance_strings.xml]
+    owners: [app]
+    read: [docs/architecture/maintenance-reminders.md, docs/architecture/ngw-sync-and-storage.md, docs/runbooks/release-apk.md, docs/architecture/ui-accessibility.md]
+    invariants: [INV-MAINTENANCE-REMINDERS, INV-UPDATER-BACKGROUND, INV-UPDATER-AUTO-RETRY, INV-UI-VISIBLE-BOUNDS]
+    must_update_docs: [docs/architecture/maintenance-reminders.md, docs/runbooks/release-apk.md, docs/registry/config-keys.yaml, docs/reference/official-differences.md, app/docs/README.md, app/docs/manifest.yaml]
+    verify: [AUTO-MAINTENANCE-REMINDERS, AUTO-UPDATER-CHECKS, AUTO-MOBILE-RELATED, AUTO-APP-RELEASES]
+    strict_docs: true
   - id: VISIBLE-LINE-LABELS
     paths: [maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelLayout.java, maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelController.java, app/src/androidTest/java/com/nextgis/mobile/rendering/VisibleLineLabelsTest.java]
     owners: [maplib, app]

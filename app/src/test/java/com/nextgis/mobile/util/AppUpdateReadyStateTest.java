@@ -81,6 +81,15 @@ public class AppUpdateReadyStateTest {
         assertNull(Shadows.shadowOf((Application) context).getNextStartedActivity());
     }
 
+    @Test public void validatedOfflineApkRemembersAvailabilityWithoutRecordingAnOnlineCheck() {
+        context.getSharedPreferences(MaintenanceReminders.PREFERENCES, 0).edit().clear().commit();
+        assertNotNull(AppUpdateManager.readReadyUpdate(context));
+        android.content.SharedPreferences state = context.getSharedPreferences(MaintenanceReminders.PREFERENCES, 0);
+        assertEquals(BuildConfig.VERSION_CODE + 1L, state.getLong("available_version", 0));
+        assertTrue(state.getLong("available_since", 0) > 0);
+        assertFalse(state.contains("last_check"));
+    }
+
     @Test public void missingOrCorruptApkCannotProduceAReadyOffer() throws Exception {
         Files.write(apk.toPath(), new byte[]{1, 2});
         assertRejected();

@@ -42,6 +42,12 @@ Full по-прежнему выполняется отдельно перед п
 
 ## Проверки копирования и преобразований
 
+Недельные напоминания: Related `-Area maintenance` проверяет новый native UI и
+существующий updater transfer/ready/non-roaming путь на эмуляторе. Неподвижные
+новые проверки доступны с явным PhoneSerial в verification APK. Новый класс
+входит в phone roster Full; системные настройки телефона сохраняются. Контракт:
+[напоминания](../architecture/maintenance-reminders.md).
+
 `tools\verify-mobile-tests.ps1 -Scope Related -Area feature-editing` проверяет новые команды на эмуляторе. Добавить `-PhoneSerial <serial>` для трёх неподвижных проверок на verification APK смартфона; `-PhoneOnly` выполняет только эту разрешённую часть с обязательным serial. Системные настройки смартфона не меняются. Native исходы/полнота сохраняются по каждому сценарию; Related не заменяет Full. Каталог/маршрутизация находятся в mobile-test-plan.json. [Контракт и покрытие](../architecture/feature-copy-transform.md).
 
 

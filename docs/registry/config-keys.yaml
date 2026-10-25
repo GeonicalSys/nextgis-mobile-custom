@@ -483,6 +483,11 @@ storage:
     location_name: app_update_state.ready_manifest and private files/updates
     source: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
     purpose: Durable checked APK and manifest offered offline on launch; Later keeps the artifact, Update revalidates before requesting installation; partial transfers cannot produce a ready offer
+  maintenance-reminders:
+    owner: app
+    location_name: private SharedPreferences maintenance-reminders
+    source: app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
+    purpose: Independent last_check and available_since/version clocks, first-observation grace per installation/online canonical path, and process/daily shown_session/shown_at; ProjectSyncState full success is read without mutation and local maps are exempt from sync warnings
   updater-background:
     owner: app
     location_name: WorkManager app-update-periodic and app-update-on-launch

@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-MAINTENANCE-REMINDERS:
+    type: automatic
+    scope: [app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area maintenance
+    expected: Durable clocks distinguish full success, local projects, unknown-history grace, pending releases and validated ready APK without installation; 288 local Russian dialog configurations preserve full text and visible actions, and Full includes the stationary new class on the selected verification phone.
   AUTO-POLYGON-STYLE-CONTROLS:
     type: automatic
     scope: [maplib, maplibui, app]

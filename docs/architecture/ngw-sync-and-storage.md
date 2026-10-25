@@ -70,7 +70,11 @@ pull данных/форм/состава проекта нет. TrackWorker с�
 Потеря сети/ошибка дают retry, не успешное подтверждение очереди.
 
 `ProjectSyncState` хранит подтверждённый full-sync clock по canonical map path
-в full-project-sync-state. `ProjectSyncRunner` пишет его после всех account
+в full-project-sync-state и используется [недельным напоминанием](maintenance-reminders.md) только для
+активных онлайн-проектов. Локальные карты исключены; проверка manifest updater
+имеет собственные часы и не подтверждает синхронизацию данных.
+
+`ProjectSyncRunner` пишет его после всех account
 проходов текущего проекта, ожидания children, проверки отсутствия готовых
 local edits и успешной очистки session. Ошибка, отмена, layer-only запуск,
 другая account и track-only обмен не обновляют project clock. Для проекта с
