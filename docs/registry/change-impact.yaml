@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: TRACK-CONTROLS
+    paths: [maplib/src/main/java/com/nextgis/maplib/map/TrackMapStyle.java, maplib/src/main/java/com/nextgis/maplib/map/TrackColorPalette.java, maplibui/src/main/java/com/nextgis/maplibui/util/TrackActions.java, maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java, app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java]
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/track-controls.md, docs/architecture/shared-tracks.md, docs/architecture/map-rendering.md]
+    invariants: [INV-TRACK-LAYER-TOP, INV-LAYER-ORDER, INV-UI-VISIBLE-BOUNDS]
+    must_update_docs: [docs/architecture/track-controls.md, docs/architecture/shared-tracks.md, docs/architecture/map-rendering.md, docs/reference/official-differences.md, maplib/docs/manifest.yaml, maplibui/docs/manifest.yaml, app/docs/manifest.yaml]
+    verify: [AUTO-MOBILE-RELATED, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
+    strict_docs: true
   - id: POLYGON-STYLE-CONTROLS
     paths: [maplibui/src/main/java/com/nextgis/maplibui/display/RuleFeatureRendererUI.java, app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java, maplib/src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java, maplib/src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java, maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java, maplib/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java, maplibui/src/main/java/com/nextgis/maplibui/util/PolygonStyleControls.java, maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java, maplibui/src/main/res/layout/style_polygon_options.xml, app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleTileFallbackTest.java]
     owners: [maplib, maplibui, app]

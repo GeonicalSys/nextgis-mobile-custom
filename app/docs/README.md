@@ -6,6 +6,11 @@ last_verified: 2026-10-24
 
 # app — Android-приложение Lisa/Belka
 
+MapFragment выбирает трек обычным тапом, показывает TrackSelectionPanel и
+сохраняет выбор скрытого трека при пересоздании. Инструменты очищают выбор;
+Point/MultiPoint сохраняют приоритет выбора. Проверка: Related track-controls.
+Контракт: `docs/architecture/track-controls.md`.
+
 ## Штриховки, контуры и живой образец
 
 Related styles включает native PolygonStyleRenderingTest, PolygonStyleEditorTest и PolygonStyleTileFallbackTest. Они проверяют actual pixels, сохранённые категории, lifecycle и 72 русских локальных профиля редактора с Save/Cancel. Full выполняется перед публикацией. Контракт — consuming docs/architecture/polygon-style-controls.md.

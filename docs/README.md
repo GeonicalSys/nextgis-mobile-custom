@@ -9,6 +9,8 @@ related_code:
 
 # Документация GeonicalSystem NextGIS Mobile
 
+- [Управление треками и точки над линиями](architecture/track-controls.md).
+
 ## Копирование и преобразования
 
 [Копирование, сдвиг и поворот объектов](architecture/feature-copy-transform.md): пользовательский путь, schema/geometry compatibility, draft/Undo и проверки.

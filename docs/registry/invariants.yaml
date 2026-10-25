@@ -395,7 +395,7 @@ invariants:
   INV-TRACK-LAYER-TOP:
     title: My Tracks stays at the top of the user layer list
     owners: [app, maplib, maplibui]
-    statement: Keep every direct tracks layer last in internal LayerGroup order so it is first in the reversed UI list, and insert Collector project layers below it.
+    statement: Keep every direct tracks layer last in internal LayerGroup order so it is first in the reversed UI list, and insert Collector project layers below it. Native rendering separately puts track lines below actual Point/MultiPoint vector groups, preserving their relative list order and keeping transient tools and GPS above them.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java

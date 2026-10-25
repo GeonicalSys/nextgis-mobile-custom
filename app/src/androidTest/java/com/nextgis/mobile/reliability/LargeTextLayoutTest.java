@@ -40,6 +40,31 @@ public class LargeTextLayoutTest {
 
     private static final int[][] SCREENS = {{360, 640, 420}, {320, 568, 540}, {568, 320, 540}, {280, 500, 620}};
 
+    @Test public void trackActionsFitRussianPanelsAcrossThemesFontsAndNarrowViewports() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (float scale : new float[]{1f, 1.3f, 2f})
+                for (int[] screen : new int[][]{{320,568,540},{568,320,540},{280,500,620},{500,280,620}})
+                    for (boolean dark : new boolean[]{false, true}) for (boolean visible : new boolean[]{true, false}) {
+                        Context context = themed(scale, screen, dark);
+                        com.nextgis.maplibui.view.TrackSelectionPanel panel = new com.nextgis.maplibui.view.TrackSelectionPanel(context);
+                        android.database.MatrixCursor row = new android.database.MatrixCursor(new String[]{"id","name","color","visible","end"});
+                        row.addRow(new Object[]{1,"Длинный маршрут к дальней точке и обратный путь",0xff00c853,visible?1:0,100});
+                        assertTrue(row.moveToFirst());
+                        int[] clicks = {0};
+                        panel.bind(com.nextgis.maplib.map.TrackLayer.TrackInfo.fromCursor(row), action -> clicks[0]++); row.close();
+                        layout(panel, dp(context, screen[0]), dp(context, screen[1]));
+                        textFits(panel);
+                        int[] ids = {com.nextgis.maplibui.R.id.track_panel_color, com.nextgis.maplibui.R.id.track_panel_rename,
+                                com.nextgis.maplibui.R.id.track_panel_visibility, com.nextgis.maplibui.R.id.track_panel_delete,
+                                com.nextgis.maplibui.R.id.track_panel_close};
+                        actionsFit(panel, ids);
+                        for (int id : ids) assertTrue(panel.findViewById(id).performClick());
+                        assertEquals(5, clicks[0]);
+                        if (scale == 2f && screen[0] == 280 && !visible) image(panel, "track-panel-" + (dark?"dark":"light"));
+                    }
+        });
+    }
+
     @Test public void copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales() {
         int[][] screens={{360,640,420},{640,360,420},{320,568,540},{568,320,540},{280,500,620},{500,280,620}};
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
@@ -199,6 +224,13 @@ public class LargeTextLayoutTest {
         }
         if (view instanceof ViewGroup) for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
             textFits(((ViewGroup) view).getChildAt(i));
+    }
+
+    /** Reuse actual TextView layout and transformed action bounds for track-owned native dialogs. */
+    public static void assertTrackDialogFits(android.app.Dialog dialog) {
+        ViewGroup root = (ViewGroup) dialog.getWindow().getDecorView();
+        assertTrue(root.getWidth() > 0 && root.getHeight() > 0);
+        textFits(root); actionsFit(root, android.R.id.button1, android.R.id.button2);
     }
 
     private static RectF bounds(ViewGroup root, View child) {

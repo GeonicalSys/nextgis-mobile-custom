@@ -15,6 +15,12 @@ related_code:
 
 # Автоматические проверки
 
+Адресная проверка управления треками: `tools/verify-mobile-tests.ps1 -Scope Related -Area track-controls`.
+Она использует verification APK и включает виджеты/жесты, native pixels/order,
+Save/Cancel, пересоздание и отказ удаления активного трека. Stationary поднабор
+доступен с явным PhoneSerial; recorder/retry выполняется на эмуляторе. Полная
+регрессия записи/выгрузки — Related tracks, редактора — Related feature-editing.
+
 ## Новые стили полигонов
 
 Для полного адресного покрытия стилей: Related -Area styles. Быстрый пакет polygon-styles включает три новых класса с шестью методами. Явные -PhoneSerial и -PhoneOnly используют только отдельный verification APK. Текущую сборку проверять до -SkipBuild; runner сохраняет fingerprint всех владельцев. Full не запускается при обычной сборке и остаётся обязательным перед публикацией. Контракт: [настройки полигонов](../architecture/polygon-style-controls.md).

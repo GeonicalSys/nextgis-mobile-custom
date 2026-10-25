@@ -185,6 +185,37 @@ public class SharedTracksTest {
         }
     }
 
+    @Test public void historicalDeletionKeepsRecordingAndActiveDeletionRetriesBeforeClearingItsIntent() throws Exception {
+        try (Fixture f = new Fixture()) {
+            long historical = f.addTrack();
+            f.screen.onActivity(TrackerService::start_stop_tracking_GetIconWithTitle);
+            await(TrackerService::isTrackRecordingActive);
+            SharedPreferences temp = f.app.getSharedPreferences(TrackerService.TEMP_PREFERENCES, 0);
+            String current = temp.getString("track_uri", null); assertNotNull(current);
+            long active = ContentUris.parseId(Uri.parse(current)); f.added.add(active);
+            f.screen.onActivity(activity -> assertTrue(TrackerService.deleteTracks(activity, new String[]{Long.toString(historical)})));
+            assertNull(com.nextgis.maplibui.util.TrackActions.find(f.app, historical));
+            assertTrue(TrackerService.isTrackRecordingActive()); assertEquals(current, temp.getString("track_uri", null));
+            f.screen.onActivity(activity -> com.nextgis.maplibui.util.TrackActions.visibility(activity, active, false, () -> { }));
+            assertFalse(com.nextgis.maplibui.util.TrackActions.find(f.app, active).visible);
+            assertTrue("Hiding keeps the recorder active", TrackerService.isTrackRecordingActive());
+            f.screen.onActivity(activity -> com.nextgis.maplibui.util.TrackActions.visibility(activity, active, true, () -> { }));
+            SQLiteDatabase db = f.layer().getDatabase(false);
+            db.execSQL("CREATE TEMP TRIGGER reject_active_delete BEFORE DELETE ON tracks WHEN OLD._id=" + active
+                    + " BEGIN SELECT RAISE(ABORT, 'verification deletion refusal'); END");
+            try {
+                f.screen.onActivity(activity -> assertTrue(TrackerService.deleteTracks(activity, new String[]{Long.toString(active)})));
+                await(() -> TrackerService.getRecordingState(f.app) == TrackerService.RecordingState.ERROR);
+                assertNotNull(com.nextgis.maplibui.util.TrackActions.find(f.app, active));
+                assertEquals(Long.toString(active), temp.getString("pending_delete_track", null));
+                assertTrue(TrackerService.hasRecordingSession(f.app));
+            } finally { db.execSQL("DROP TRIGGER reject_active_delete"); }
+            await(() -> TrackerService.getRecordingState(f.app) == TrackerService.RecordingState.STOPPED);
+            assertNull(com.nextgis.maplibui.util.TrackActions.find(f.app, active));
+            assertFalse(temp.contains("pending_delete_track")); assertFalse(temp.contains("track_uri"));
+        }
+    }
+
     private static File seedLegacyDatabase(Fixture f, boolean unfinished) throws Exception {
         return seedLegacyDatabase(f,f.other,unfinished,
                 "true".equals(InstrumentationRegistry.getArguments().getString("legacyTrackFixture")));

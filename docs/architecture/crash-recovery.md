@@ -18,6 +18,11 @@ related_code:
 
 # Crash recovery and durable drafts
 
+Удаление текущего трека хранит `tracks_temp.pending_delete_track` вместе с
+`pending_stop`. После durable drain завершение/удаление выбранного ID выполняется
+одной SQLite-транзакцией; отказ оставляет намерение и очередь для повтора.
+Исторические треки не останавливают текущую запись. См. [контракт](track-controls.md).
+
 ## Черновики копии и сдвига/поворота
 
 [Копирование и преобразования](feature-copy-transform.md) используют существующие журналы. До form launch сохраняются новая геометрия, typed control state, скопированные поля вне формы и исходное представление пустых controls. Recreate/durable form recovery сохраняют их. Transform preview checkpoint не создаёт Undo шаги; ACTION_CANCEL возвращает точный предыдущий снимок. После восстановления geometry draft продолжается обычное редактирование вершин.

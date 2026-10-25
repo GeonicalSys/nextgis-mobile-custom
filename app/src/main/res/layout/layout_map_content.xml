@@ -252,6 +252,12 @@
             android:layout_gravity="bottom">
             <include layout="@layout/layout_stakeout_panel" />
             <include layout="@layout/layout_azimuth_panel" />
+            <com.nextgis.maplibui.view.TrackSelectionPanel
+                android:id="@+id/track_selection_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone" />
             <com.nextgis.maplibui.view.WalkRecordingPanel
                 android:id="@+id/walk_recording_panel"
                 android:layout_width="match_parent"

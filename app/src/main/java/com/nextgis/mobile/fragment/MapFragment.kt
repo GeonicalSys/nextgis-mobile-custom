@@ -139,6 +139,8 @@ import com.nextgis.maplibui.util.LayerUtil
 import com.nextgis.maplibui.util.WalkSessionPolicy
 import com.nextgis.maplibui.util.WalkSessionRecoveryPolicy
 import com.nextgis.maplibui.view.WalkRecordingPanel
+import com.nextgis.maplibui.view.TrackSelectionPanel
+import com.nextgis.maplibui.util.TrackActions
 import com.nextgis.maplibui.util.ConstantsUI
 import com.nextgis.maplibui.util.ControlHelper
 import com.nextgis.maplibui.util.GeometryEditDraftStore
@@ -263,6 +265,67 @@ public class MapFragment
     protected var mivZoomOut: FloatingActionButton? = null
     protected var mMeasurements: FloatingActionButton? = null
     private var trackStatusButton: FloatingActionButton? = null
+    private var selectedTrackId = -1L
+    private var trackSelectionPanel: TrackSelectionPanel? = null
+    private val trackMetadataObserver = object : android.database.ContentObserver(android.os.Handler(android.os.Looper.getMainLooper())) {
+        override fun onChange(selfChange: Boolean) {
+            if (view == null) return
+            mapDrawableOrNull?.reloadTrackListToMap()
+            mapDrawableOrNull?.reloadCurrentTrackToMap()
+            refreshSelectedTrack()
+        }
+    }
+
+    private fun clearSelectedTrack() {
+        selectedTrackId = -1L
+        trackSelectionPanel?.visibility = View.GONE
+        mapDrawableOrNull?.selectTrack(-1L)
+    }
+
+    private fun refreshSelectedTrack() {
+        if (selectedTrackId < 0 || mode != MODE_NORMAL) return
+        val host = context ?: return
+        val info = TrackActions.find(host, selectedTrackId)
+        if (info == null) { clearSelectedTrack(); return }
+        mapDrawableOrNull?.selectTrack(selectedTrackId)
+        trackSelectionPanel?.bind(info) { action ->
+            val id = info.id.toLong()
+            val refresh = Runnable { if (view != null) refreshSelectedTrack() }
+            when (action) {
+                TrackSelectionPanel.COLOR -> TrackActions.color(host, arrayOf(id.toString()), refresh)
+                TrackSelectionPanel.RENAME -> TrackActions.rename(host, id, refresh)
+                TrackSelectionPanel.VISIBILITY -> TrackActions.visibility(host, id, !info.visible, refresh)
+                TrackSelectionPanel.DELETE -> TrackActions.delete(host, arrayOf(id.toString()), refresh)
+                TrackSelectionPanel.CLOSE -> clearSelectedTrack()
+            }
+        }
+    }
+
+    private fun selectTappedTrack(x: Float, y: Float): Boolean {
+        if (mode != MODE_NORMAL && mode != MODE_SELECT_ACTION && mode != MODE_SELECT_FOR_VIEW
+            || mRulerOverlay?.isMeasuring == true) return false
+        val map = mapDrawableOrNull ?: return false
+        val ids = map.queryTrackIds(x, y, mTolerancePX)
+        if (ids.isEmpty()) { clearSelectedTrack(); return false }
+        val host = context ?: return false
+        val trackLayer = com.nextgis.maplib.map.MapContentProviderHelper.getVectorLayerByPath(
+            map, com.nextgis.maplib.map.TrackLayer.TABLE_TRACKS) as? com.nextgis.maplib.map.TrackLayer
+            ?: return false
+        val metadata = trackLayer.trackInfo
+        val tracks = ids.mapNotNull { metadata[it.toInt()] }
+        if (tracks.isEmpty()) return false
+        fun select(id: Long) {
+            if (mode != MODE_NORMAL) setNewMode(MODE_NORMAL)
+            selectedTrackId = id
+            refreshSelectedTrack()
+        }
+        if (tracks.size == 1) select(tracks[0].id.toLong())
+        else com.nextgis.maplibui.util.FittedDialogs.compatBuilder(host)
+            .setTitle(com.nextgis.maplibui.R.string.track_choose)
+            .setItems(tracks.map { it.name }.toTypedArray()) { _, which -> select(tracks[which].id.toLong()) }
+            .setNegativeButton(com.nextgis.maplibui.R.string.cancel, null).show()
+        return true
+    }
     protected var mAddNewGeometry: FloatingActionButton? = null
     protected var mAddPointButton: FloatingActionButton? = null
 
@@ -425,6 +488,8 @@ public class MapFragment
         val view = inflater.inflate(R.layout.fragment_map, container, false)
         walkPreviewKey = null
         finishedWalkEditId = savedInstanceState?.getString("finished_walk_edit_id")
+        selectedTrackId = savedInstanceState?.getLong("selected_track_id", -1L) ?: selectedTrackId
+        trackSelectionPanel = view.findViewById(R.id.track_selection_panel)
         attachWalkPanel(view)
 
         mCurrentLocationOverlay = CurrentLocationOverlay(mActivity, mMapRef.get())
@@ -623,6 +688,7 @@ public class MapFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireContext().contentResolver.registerContentObserver(TrackActions.uri(requireContext()), true, trackMetadataObserver)
         childFragmentManager.setFragmentResultListener(ChooseFeatureTypeDialog.RESULT, viewLifecycleOwner) { _, result ->
             if (result.getString("map") != currentMapDraftPath()) return@setFragmentResultListener
             val defaults = result.getBundle(FeatureTypeDefaults.INITIAL_VALUES)
@@ -724,6 +790,7 @@ public class MapFragment
     }
 
     override fun setMapLayersLoaded() {
+        refreshSelectedTrack()
         com.nextgis.maplib.util.MapRuntimeDiagnostics.sceneState("ready")
         mapLibreLayersAppliedForCurrentView = true
         startMapLibreRenderRecovery("layers-applied")
@@ -1797,6 +1864,7 @@ public class MapFragment
         value == MODE_AZIMUTH_CURRENT || value == MODE_AZIMUTH_POINTS
 
     fun setNewMode(requestedMode: Int, vararg readOnly: Boolean) {
+        if (requestedMode != MODE_NORMAL) clearSelectedTrack()
         val mode = if ((requestedMode == MODE_SELECT_FOR_VIEW || requestedMode == MODE_SELECT_ACTION)
             && mSelectedLayer != null
             && (editLayerOverlay?.selectedFeatureId ?: Constants.NOT_FOUND.toLong())
@@ -2319,6 +2387,8 @@ public class MapFragment
 
 
     override fun onDestroyView() {
+        context?.contentResolver?.unregisterContentObserver(trackMetadataObserver)
+        trackSelectionPanel = null
         HyperLog.v(Constants.TAG, "MapFragment.onDestroyView")
         walkPanel?.setListener(null)
         walkPanel = null
@@ -2615,6 +2685,7 @@ public class MapFragment
         outState.putLong("copy_source_feature", copySourceFeatureId)
         outState.putString("copy_source_map", copySourceMap)
         outState.putString("finished_walk_edit_id", finishedWalkEditId)
+        outState.putLong("selected_track_id", selectedTrackId)
         mapLibreMapView?.onSaveInstanceState(outState)
         outState.putBoolean(BUNDLE_KEY_IS_MEASURING, mRulerOverlay!!.isMeasuring)
         val rulerGeometry = mMapRef.get()?.map?.measurementGeometry
@@ -4195,6 +4266,7 @@ public class MapFragment
     }
 
     override fun processMapClick(screenx: Float, screeny: Float): Boolean {    // x y - screen coordinates
+        if (selectTappedTrack(screenx, screeny)) return true
 //        Log.e("CCCLLIICK", "screenX: " + screenx + " - " + " screeny: " + screeny)
         onSingleTapUpFromMaplibre(screenx, screeny)
         return true

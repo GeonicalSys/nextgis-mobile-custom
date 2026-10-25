@@ -287,7 +287,11 @@ public class PolygonStyleEditorTest {
                             dark?Color.rgb(68,68,68):Color.rgb(240,240,240));
                     assertTrue("Caption contrast in the actual dialog theme: "+contrast,contrast>=4.5);
                     View colourAction=editor.requireView().findViewById(R.id.outline_casing_color);Rect visible=new Rect();
-                    assertTrue(colourAction.getGlobalVisibleRect(visible));assertEquals("The last colour action remains fully reachable",colourAction.getHeight(),visible.height());
+                    assertTrue(colourAction.getGlobalVisibleRect(visible));assertEquals("The last colour action remains fully reachable"
+                            + " font="+font+" viewport="+screen[0]+"x"+screen[1]+" dark="+dark+" cancel="+cancel
+                            + " scrollHeight="+editor.requireView().findViewById(R.id.dialog_body_scroll).getHeight()
+                            + " previewHeight="+preview.get().getHeight()+" rect="+visible,
+                            colourAction.getHeight(),visible.height());
                     Rect bounds=new Rect();assertTrue(preview.get().getGlobalVisibleRect(bounds));assertEquals(preview.get().getHeight(),bounds.height());
                 });
                 if(!cancel && (font==1 && screen==screens[0] && !dark || font==2 && (screen==screens[4] || screen==screens[5])))

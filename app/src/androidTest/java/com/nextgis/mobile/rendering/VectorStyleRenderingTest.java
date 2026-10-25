@@ -65,7 +65,7 @@ public class VectorStyleRenderingTest {
         final SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(app);
         final boolean intro=prefs.getBoolean(AppSettingsConstants.KEY_PREF_INTRO,false), hadIntro=prefs.contains(AppSettingsConstants.KEY_PREF_INTRO);
         final boolean geoDialog=prefs.getBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG,true),hadGeoDialog=prefs.contains(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
-        final ActivityScenario<MainActivity> screen;
+        ActivityScenario<MainActivity> screen;
         final List<VectorLayerUI> layers=new ArrayList<>();
         Fixture() throws Exception {
             VerificationEnvironment.requireIsolated(app);

@@ -9,6 +9,8 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java
+    responsibility: Verify real track list/map actions, persisted metadata, native glow and point group order.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java
     responsibility: Require window focus and stable visible bounds clipped to scrolling, window and physical display before guarded native input; verify that the actual SeekBar minimum remains visible.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
