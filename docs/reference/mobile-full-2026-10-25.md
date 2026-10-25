@@ -222,3 +222,49 @@ SM_A566B PASS**, без required skips. AVD остановлен, настрой
 Docs validator и 24 tests PASS. Далее нужен новый Full на окончательных
 исходниках, затем отдельный Full на планшете; эти Related результаты
 не закрывают полную приёмку.
+
+## Матрица включения четвёртого Full
+
+После свежего fetch все пять owner деревьев чистые, без ahead/behind своих
+удалённых веток. App source `2a19481279790458deb398406e644bceeb703bdb`.
+Открыты только собственные Draft #78/#60/#44; все неслитые опубликованные
+codex heads включены по ancestry. Pins в app и checked-out library HEAD совпадают.
+
+| Требование / владелец | Commit / PR / base | Состояние включения |
+|---|---|---|
+| Стили, MapLibre 13.7.1 OpenGL, треки/подписи / app | f06ccfb, #78, my-maplibre | Ancestor 2a19481; PR открыт |
+| Pending tap teardown / app | 1756ad5, #78, my-maplibre | Ancestor 2a19481 |
+| UX-05 недельные напоминания / app | 45bd6c8, #78, my-maplibre | Ancestor 2a19481 |
+| Cursor readiness diagnostics / app | 5c3c936, #78, my-maplibre | Ancestor 2a19481 |
+| Общий tap и полевая линия под точками / app | 3b5338a, #78, my-maplibre | Ancestor 2a19481 |
+| Form gesture readiness diagnostics / app | 2a19481, #78, my-maplibre | Текущий source tip |
+| GIS стили, mixed hit и field-line priority / maplib | 3ad5d49d3fc015555578360ca5dd62446a70235a, #60, master | Точный gitlink, прежний 3c8020a ancestor; PR открыт |
+| Редакторы и UI / maplibui | d4b8f27337f0549f25353f9b28e7810371f00ae5, #44, master | Точный gitlink; PR открыт |
+| Easypicker | 55aad0e0f92329ea4c273a83e541d170d24d7b57, master | Merged dependency, pin совпадает |
+| Publisher | 99e3cfde7841b749b83be6005842b96e7d140d00, main | Не менялся, не запускался |
+
+Прежние background-updater commits b07c512/7e794a4 также включены по ancestry.
+Evidence: `...\evidence\phone-full-04-delivery-matrix.json`,
+`phone-full-04-preflight.log`. Full с полным catalogue 53/253 запущен заново,
+результат пока ожидается. Исключение разрешает только локальный signed APK;
+цепочка merge #60 → #44 → remote merged pins → #78 и публикация остаются
+отложенными. Десктоп, серверные метаданные трека и переделка загрузки/тайлов
+по прежним решениям пользователя не включаются.
+
+## Четвёртый Full: FAIL на планировании после возврата сети
+
+Source 2a19481, fingerprint
+`f7fa4add7f0facb9c855e6adfdcaa00874d440695c4e61401d5e705c84f71156`.
+913 unit, runner 27, version matrix и docs/24 tests PASS. Успешно записаны
+53 distinct native cases, включая все MapEditingToolsTest и guidance service.
+SyncOfflineAndWalkGpsTest: 4 PASS /1 FAIL —
+`scheduledAccountWorkWaitsForNetworkWithoutStartingSync`, строка 159:
+после Wi-Fi и 20 секунд ожидания ENQUEUED вместо SUCCEEDED.
+Смартфонные классы, оставшиеся emulator cases, diagnostics и UI matrix
+не достигнуты; это **Full FAIL**, gate отсутствует. AVD остановлен.
+
+Исходный тест не сохранял runAttemptCount, stop reason, eligible time и
+ConnectivityManager capabilities в момент сбоя. Поэтому причина не доказана.
+Проверяются переход сети/JobScheduler и штатный WorkManager retry backoff,
+который может превышать исходные 20 секунд. Source/runtime sync не меняется
+до получения достаточных свидетельств. Evidence: `...\evidence\phone-full-04`.
