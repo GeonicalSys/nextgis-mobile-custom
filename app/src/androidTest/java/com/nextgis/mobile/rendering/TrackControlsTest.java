@@ -45,7 +45,7 @@ public class TrackControlsTest {
         assertTrue("Track UI/native source did not settle", condition.getAsBoolean());
     }
 
-    private static class Tracks implements AutoCloseable {
+    static class Tracks implements AutoCloseable {
         final VectorStyleRenderingTest.Fixture f = new VectorStyleRenderingTest.Fixture();
         final List<Long> added = new ArrayList<>();
         final TrackLayer layer;
@@ -135,7 +135,7 @@ public class TrackControlsTest {
         }
     }
 
-    private static final class Ui {
+    static final class Ui {
         static boolean configured;
         static android.app.UiAutomation automation() {
             android.app.UiAutomation ui = InstrumentationRegistry.getInstrumentation().getUiAutomation();
@@ -178,6 +178,23 @@ public class TrackControlsTest {
                     || text.contentEquals(node.getContentDescription() == null ? "" : node.getContentDescription());
         }
         static void text(String text) throws Exception { tap(textMatch(text)); }
+        static android.graphics.Rect touchBounds(android.view.accessibility.AccessibilityNodeInfo node) {
+            android.graphics.Rect result = new android.graphics.Rect(); node.getBoundsInScreen(result);
+            List<android.view.accessibility.AccessibilityWindowInfo> windows = automation().getWindows();
+            android.view.accessibility.AccessibilityWindowInfo owner = null;
+            for (android.view.accessibility.AccessibilityWindowInfo window : windows)
+                if (window.getId() == node.getWindowId()) owner = window;
+            if (owner == null || !owner.isActive() || !owner.isFocused()) return null;
+            android.graphics.Rect area = new android.graphics.Rect(); owner.getBoundsInScreen(area);
+            if (!result.intersect(area)) return null;
+            for (android.view.accessibility.AccessibilityWindowInfo window : windows) {
+                if (window.getId() == owner.getId() || window.getLayer() <= owner.getLayer()) continue;
+                window.getBoundsInScreen(area);
+                // Foreground notification heads-up windows can cover a still-focused toolbar.
+                if (area.contains((int)result.exactCenterX(), (int)result.exactCenterY())) return null;
+            }
+            return result;
+        }
         static void tap(java.util.function.Predicate<android.view.accessibility.AccessibilityNodeInfo> matches) throws Exception {
             AtomicReference<android.view.accessibility.AccessibilityNodeInfo> result = new AtomicReference<>();
             android.graphics.Rect[] previous = {null}; long[] stable = {0};
@@ -185,7 +202,8 @@ public class TrackControlsTest {
                 if (result.get() != null) result.getAndSet(null).recycle();
                 result.set(find(matches));
                 if (result.get() == null) { previous[0] = null; return false; }
-                android.graphics.Rect bounds = new android.graphics.Rect(); result.get().getBoundsInScreen(bounds);
+                android.graphics.Rect bounds = touchBounds(result.get());
+                if (bounds == null) { previous[0] = null; return false; }
                 long now = SystemClock.uptimeMillis();
                 if (!bounds.equals(previous[0])) { previous[0] = bounds; stable[0] = now; }
                 return !bounds.isEmpty() && now - stable[0] >= 150;
@@ -199,7 +217,8 @@ public class TrackControlsTest {
                 throw new AssertionError(error.getMessage() + "\n" + detail, error);
             }
             android.view.accessibility.AccessibilityNodeInfo node = result.get();
-            android.graphics.Rect bounds = new android.graphics.Rect(); node.getBoundsInScreen(bounds);
+            android.graphics.Rect bounds = touchBounds(node);
+            assertNotNull("The touch must still target the focused, unobscured app window", bounds);
             assertTrue(node.isEnabled()); assertFalse(bounds.isEmpty()); node.recycle();
             long now = SystemClock.uptimeMillis();
             MotionEvent down = MotionEvent.obtain(now,now,MotionEvent.ACTION_DOWN,bounds.exactCenterX(),bounds.exactCenterY(),0);
@@ -233,17 +252,45 @@ public class TrackControlsTest {
                 }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         }
+
+        static View overflow(View view) {
+            if (!view.isShown()) return null;
+            if (view.getClass().getSimpleName().equals("OverflowMenuButton")) return view;
+            if (view instanceof android.view.ViewGroup) {
+                android.view.ViewGroup group = (android.view.ViewGroup)view;
+                for(int i=0;i<group.getChildCount();i++) {
+                    View found=overflow(group.getChildAt(i)); if(found!=null)return found;
+                }
+            }
+            return null;
+        }
+
+        static void menuItem(ActivityScenario<? extends android.app.Activity> screen, int id, String title, boolean actionMode) throws Exception {
+            AtomicBoolean ready=new AtomicBoolean(),direct=new AtomicBoolean();
+            AtomicReference<String> overflowDescription=new AtomicReference<>();
+            await(() -> {
+                screen.onActivity(activity -> {
+                    ready.set(false);
+                    View root=actionMode ? activity.findViewById(androidx.appcompat.R.id.action_mode_bar)
+                            : activity.getWindow().getDecorView();
+                    if(root==null || !root.isShown() || !root.hasWindowFocus() || root.isLayoutRequested() || root.getWidth()==0)return;
+                    View item=activity.findViewById(id);
+                    direct.set(item!=null && item.isShown() && item.getWidth()>0);
+                    if(direct.get()) { ready.set(true);return; }
+                    View button=overflow(root);
+                    if(button!=null && button.getWidth()>0 && button.getContentDescription()!=null) {
+                        overflowDescription.set(button.getContentDescription().toString());ready.set(true);
+                    }
+                }); return ready.get();
+            });
+            if(direct.get())tap(id(id).or(textMatch(title)));
+            else { text(overflowDescription.get());text(title); }
+        }
     }
 
     private static void menu(ActivityScenario<TracksActivity> list, int id, int title) throws Exception {
         String text = InstrumentationRegistry.getInstrumentation().getTargetContext().getString(title);
-        java.util.function.Predicate<android.view.accessibility.AccessibilityNodeInfo> target = Ui.id(id).or(Ui.textMatch(text));
-        android.view.accessibility.AccessibilityNodeInfo item = Ui.find(target);
-        if (item != null) { item.recycle(); Ui.tap(target); }
-        else {
-            Ui.text(InstrumentationRegistry.getInstrumentation().getTargetContext().getString(androidx.appcompat.R.string.abc_action_menu_overflow_description));
-            Ui.text(text);
-        }
+        Ui.menuItem(list,id,text,true);
     }
 
     @Test public void listRenamePersistsWithoutChangingColorGeometryOrIdentity() throws Exception {
@@ -315,7 +362,9 @@ public class TrackControlsTest {
                 int pixel = image.getPixel(Math.round(center.x), Math.round(center.y) + dy);
                 if (Color.red(pixel) > Color.green(pixel) + 15) colored++;
             }
-            assertTrue("Glow extends outside the crisp four-dp core", colored > 4 * t.f.app.getResources().getDisplayMetrics().density);
+            float density = t.f.app.getResources().getDisplayMetrics().density;
+            assertTrue("Glow extends outside the thinner two-dp core", colored > 2 * density);
+            assertTrue("The complete glow is narrower than the former ten-dp line", colored < 9 * density);
             save(t, image, "track-glow");
             image.recycle();
             VectorLayerUI lower = t.f.add(GeoConstants.GTPoint), upper = t.f.add(GeoConstants.GTMultiPoint);
@@ -401,7 +450,7 @@ public class TrackControlsTest {
                                     fitted.set(root.hasWindowFocus() && root.getWidth() > 0 && !root.isLayoutRequested());
                                 }); return fitted.get(); });
                                 t.f.screen.onActivity(activity -> com.nextgis.mobile.reliability.LargeTextLayoutTest.assertTrackDialogFits(dialog.get()));
-                                Ui.tap(android.R.id.button2);
+                                NativeStyleTouch.tap(t.f, () -> dialog.get().findViewById(android.R.id.button2));
                                 assertFalse(dialog.get().isShowing());
                                 assertNotNull(TrackActions.find(t.f.app, id));
                             } finally { t.f.screen.onActivity(activity -> { if (dialog.get().isShowing()) dialog.get().dismiss(); }); }

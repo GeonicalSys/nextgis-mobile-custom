@@ -2,13 +2,19 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-24
+last_verified: 2026-10-25
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VisibleLineLabelsTest.java
+    responsibility: Verify native whole-word rendering, current extent, pan/zoom/rotation, categories and original picking.
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackStopConfirmationTest.java
+    responsibility: Verify all manual recording Stop entry points, stale confirmation and real Russian dialog bounds.
+  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LegacyTrackColorsNativeTest.java
+    responsibility: Verify real shared-store v1 to v2 color migration without metadata or point loss.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java
     responsibility: Verify real track list/map actions, persisted metadata, native glow and point group order.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java

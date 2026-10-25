@@ -1,7 +1,7 @@
 ---
 title: Общая история треков
 type: architecture
-last_verified: 2026-10-15
+last_verified: 2026-10-25
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/SharedTrackStore.java
   - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
@@ -25,6 +25,11 @@ related_code:
 и CollectorProjectRegistry; эта доработка его не разрешает.
 
 ## Хранение
+
+SharedTrackStore schema 2 транзакционно заполняет прежние NULL цвета при
+upgrade v1 и при позднем импорте legacy workspace. Все заданные цвета и остальные
+столбцы остаются прежними; версия базы/цвета при ошибке откатываются вместе.
+Повторный запуск не генерирует новые цвета.
 
 SharedTrackStore открывает private files/shared-tracks/tracks.db через отдельный
 SQLiteOpenHelper. TrackLayer и MapDrawable читают эту БД; прежний проектный файл

@@ -11,12 +11,12 @@ from mobile_test_support import PACKAGE
 PNG = b'\x89PNG\r\n\x1a\nfixture'
 
 class StyleEvidenceTest(unittest.TestCase):
-    def collect(self, files, declared=None):
+    def collect(self, files, declared=None, folder='polygon-editor-qa'):
         calls=[]
         def run(argv, **kwargs):
             self.assertEqual(['adb','-s','phone','exec-out','run-as',PACKAGE], argv[:6])
             args=argv[6:];calls.append(args)
-            if args[0]=='ls': data='\n'.join(files if args[-1]=='files/polygon-editor-qa' else []).encode()
+            if args[0]=='ls': data='\n'.join(files if args[-1]=='files/'+folder else []).encode()
             elif args[0]=='stat': data=str((declared or {}).get(args[-1].split('/')[-1],len(files[args[-1].split('/')[-1]]))).encode()
             else: data=files[args[-1].split('/')[-1]]
             return subprocess.CompletedProcess(argv,0,data,b'')
@@ -33,3 +33,7 @@ class StyleEvidenceTest(unittest.TestCase):
         result,calls=self.collect({'large.png':PNG,'changed.png':PNG},{'large.png':4194305,'changed.png':100})
         self.assertEqual([],result)
         self.assertFalse(any(x[0]=='cat' and x[-1].endswith('large.png') for x in calls))
+    def test_line_label_evidence_uses_the_same_owned_package_and_path_bounds(self):
+        result,calls=self.collect({'whole-word.png':PNG,'../outside.png':PNG},folder='line-label-qa')
+        self.assertEqual(['line-label-qa/whole-word.png'],[image['path'] for image in result])
+        self.assertFalse(any('outside' in args[-1] for args in calls))

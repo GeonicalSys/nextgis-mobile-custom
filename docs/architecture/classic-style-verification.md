@@ -1,7 +1,7 @@
 ---
 title: Проверки обычных векторных стилей и подписей
 type: architecture
-last_verified: 2026-10-24
+last_verified: 2026-10-25
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/display/FieldStyleRule.java
   - maplib/src/main/java/com/nextgis/maplib/display/LabelAttributes.java
@@ -139,3 +139,5 @@ The marker pixel matrix also found disappearing cross strokes: generated SDF
 images placed the boundary at 0.5 instead of the native shader's 0.75. The
 registry now encodes the correct edge and eight-pixel distance range, retaining
 thin shapes and their requested sizes. See the [native SDF shader](https://github.com/maplibre/maplibre-native/blob/main/shaders/symbol_sdf.fragment.glsl).
+
+С 25 октября линейные подписи проверяются дополнительно Related line-labels: whole-word point layout для текущего экстента заменяет изгиб букв. Repeat/spacing/curvature сохраняются в JSON, но выбран новый runtime one-per-visible-object. Field/font/category/halo/alpha/zoom/collision и исходная геометрия сохраняются. См. [контракт](visible-line-labels.md).

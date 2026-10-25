@@ -1,7 +1,10 @@
 {
   "schema_version": 1,
-  "isolated_methods": ["com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocationOrbitTest"],
+  "isolated_methods": ["com.nextgis.mobile.rendering.VisibleLineLabelsTest", "com.nextgis.mobile.rendering.TrackStopConfirmationTest", "com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocationOrbitTest"],
   "phone": [
+    "com.nextgis.mobile.rendering.VisibleLineLabelsTest",
+    "com.nextgis.mobile.rendering.TrackStopConfirmationTest",
+    "com.nextgis.mobile.reliability.LegacyTrackColorsNativeTest",
     "com.nextgis.mobile.rendering.TrackControlsTest",
     "com.nextgis.mobile.reliability.CompassTouchTest",
     "com.nextgis.mobile.reliability.CascadingFormsTest",
@@ -52,6 +55,11 @@
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "related_phone_areas": {
+    "line-labels": ["com.nextgis.mobile.rendering.VisibleLineLabelsTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest#rulesOtherAndNullCategoriesPreserveStylesAndLabelsForAllGeometries"],
+    "firefly-editor-ui": ["com.nextgis.mobile.rendering.FireflyStyleEditorTest"],
+    "track-stop-layout": ["com.nextgis.mobile.rendering.TrackStopConfirmationTest#stopConfirmationFitsRussianThemesFontsAndNarrowViewportsWithoutStopping"],
+    "track-stop-ui": ["com.nextgis.mobile.rendering.TrackStopConfirmationTest"],
+    "track-followup": ["com.nextgis.mobile.rendering.TrackStopConfirmationTest", "com.nextgis.mobile.reliability.LegacyTrackColorsNativeTest", "com.nextgis.mobile.rendering.TrackControlsTest"],
     "polygon-style-ui": ["com.nextgis.mobile.rendering.PolygonStyleEditorTest#russianPolygonEditorKeepsLivePreviewAndControlsUsableAcrossLargeInterfaceMatrix"],
     "track-controls": ["com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest#trackActionsFitRussianPanelsAcrossThemesFontsAndNarrowViewports"],
     "style-editors": ["com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest"],
@@ -61,6 +69,12 @@
     "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"]
   },
   "areas": {
+    "recording-intent": ["com.nextgis.mobile.reliability.TrackerStopRecoveryTest"],
+    "line-labels": ["com.nextgis.mobile.rendering.VisibleLineLabelsTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest#rulesOtherAndNullCategoriesPreserveStylesAndLabelsForAllGeometries"],
+    "firefly-editor-ui": ["com.nextgis.mobile.rendering.FireflyStyleEditorTest"],
+    "track-stop-layout": ["com.nextgis.mobile.rendering.TrackStopConfirmationTest#stopConfirmationFitsRussianThemesFontsAndNarrowViewportsWithoutStopping"],
+    "track-stop-ui": ["com.nextgis.mobile.rendering.TrackStopConfirmationTest"],
+    "track-followup": ["com.nextgis.mobile.rendering.TrackStopConfirmationTest", "com.nextgis.mobile.reliability.LegacyTrackColorsNativeTest", "com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.reliability.TrackerStopRecoveryTest", "com.nextgis.mobile.reliability.SharedTracksTest"],
     "polygon-style-ui": ["com.nextgis.mobile.rendering.PolygonStyleEditorTest#russianPolygonEditorKeepsLivePreviewAndControlsUsableAcrossLargeInterfaceMatrix"],
     "track-controls": ["com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest#trackActionsFitRussianPanelsAcrossThemesFontsAndNarrowViewports", "com.nextgis.mobile.reliability.SharedTracksTest#historicalDeletionKeepsRecordingAndActiveDeletionRetriesBeforeClearingItsIntent"],
     "style-editors": ["com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest"],

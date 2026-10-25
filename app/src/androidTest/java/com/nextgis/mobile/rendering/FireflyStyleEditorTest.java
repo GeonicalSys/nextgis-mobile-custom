@@ -107,7 +107,7 @@ public class FireflyStyleEditorTest {
         }
     }
 
-    @Test public void russianFireflyEditorSupportsSelectionPresetSaveAndCancelAcrossLargeInterfaceMatrix() throws Exception {
+    @Test public void russianFireflyEditorSupportsSelectionManualSettingsSaveAndCancelAcrossLargeInterfaceMatrix() throws Exception {
         int[][] screens = {{360,640,420},{640,360,420},{320,568,540},{568,320,540},{280,500,620},{500,280,620}};
         try (VectorStyleRenderingTest.Fixture f = new VectorStyleRenderingTest.Fixture()) {
             clippedScrollActionUsesAVisiblePhysicalTouch(f);
@@ -162,14 +162,17 @@ public class FireflyStyleEditorTest {
                     textFits((TextView) ((Spinner) editor.requireView().findViewById(R.id.type)).getSelectedView());
                     for (int id : new int[]{R.id.marker_size_label, R.id.marker_blur_label, R.id.marker_fill_label,
                             R.id.marker_stroke_label, R.id.marker_width_label, R.id.fill_alpha_label, R.id.stroke_alpha_label,
-                            R.id.firefly_hint, R.id.firefly_preset}) textFits(editor.requireView().findViewById(id));
+                            R.id.firefly_hint}) textFits(editor.requireView().findViewById(id));
+                    int preset=editor.requireContext().getResources().getIdentifier("firefly_preset","id",editor.requireContext().getPackageName());
+                    assertTrue("The removed preset must not reappear in the editor",preset==0 || editor.requireView().findViewById(preset)==null);
+                    ((android.widget.EditText)editor.requireView().findViewById(R.id.size)).setText("6");
+                    ((android.widget.EditText)editor.requireView().findViewById(R.id.width)).setText("14");
                 });
-                reveal(f, editor, R.id.firefly_preset); touch(f, editor, R.id.firefly_preset);
                 f.screen.onActivity(activity -> {
-                    assertEquals(Color.WHITE, edited.getColor()); assertEquals(Color.rgb(255,102,133), edited.getOutColor());
+                    assertEquals(Color.GREEN, edited.getColor()); assertEquals(Color.BLACK, edited.getOutColor());
                     assertEquals(6, edited.getSize(), 0); assertEquals(14, edited.getWidth(), 0);
                     android.graphics.Bitmap preview = com.nextgis.maplibui.util.FeatureTypePreview.render(editor.requireContext(), edited);
-                    assertEquals("Category preview has the same crisp white core", Color.WHITE,
+                    assertEquals("Category preview preserves the selected core color", Color.GREEN,
                             preview.getPixel(preview.getWidth() / 2, preview.getHeight() / 2));
                     assertEquals("The whole preview fits inside its transparent margin", 0, Color.alpha(preview.getPixel(0, 0)));
                     preview.recycle();
@@ -183,7 +186,7 @@ public class FireflyStyleEditorTest {
                 if (!cancel) {
                     SimpleMarkerStyle restored = new SimpleMarkerStyle(); restored.fromJSON(edited.toJSON());
                     assertEquals(SimpleMarkerStyle.MarkerStyleFirefly, restored.getType());
-                    assertEquals(Color.WHITE, restored.getColor());
+                    assertEquals(Color.GREEN, restored.getColor());
                 }
             }
         }

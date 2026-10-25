@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-24
+last_verified: 2026-10-25
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -328,3 +328,14 @@ Native runner после каждого rendering case сохраняет bounde
 Адресная область style-categories проверяет настоящую строку категории, наследованные настройки, Cancel/Save и отдельную кнопку удаления. NativeStyleTouch перед targeted инъекцией ждёт фокус окна и стабильную видимую область в физических координатах. Касание высокой кнопки допускается только внутри пересечения с viewport прокрутки и экраном; для SeekBar дополнительно видима настоящая точка минимального значения. Регрессия создаёт частично обрезанную кнопку и проверяет доставку реального касания. UID guard Android сохраняется.
 
 Адресная область `style-editors` запускает FireflyStyleEditorTest и PolygonStyleEditorTest: обе матрицы и два отдельных случая живого образца/реальной категории, 4 native метода. Она предназначена для изменения тестового ввода и не заменяет остальные rendering-сценарии `styles` или Full перед публикацией.
+
+## Треки: подтверждение Stop и прежние цвета
+
+Related `-Area track-followup` запускает TrackStopConfirmationTest (map/menu/
+notification, Cancel/Back, stale UUID, split и 24 профиля окна),
+LegacyTrackColorsNativeTest (реальный v1→v2), TrackControlsTest (native GPU),
+а на эмуляторе также прежние Stop/retry и shared-track сценарии. Для stationary
+проверки на разрешённом устройстве указать `-PhoneSerial`; используется только
+отдельная verification-установка, системные настройки телефона не меняются.
+
+Related `-Area line-labels` включает VisibleLineLabelsTest и cross-geometry regression VectorStyleRenderingTest. `-Area firefly-editor-ui` проверяет текущий редактор без кнопки пресета в 72 профилях Save/Cancel. Обе области имеют stationary verification phone routing. PNG `line-label-qa` сохраняются bounded collector перед reset. Фактические результаты фиксируются в квитанции задачи.

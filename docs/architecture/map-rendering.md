@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-24
+last_verified: 2026-10-25
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -682,3 +682,10 @@ query/tile diagnostics. MainApplication отмечает фиксированн�
 времени, без подмены исходной сборки текущим reporter. Задержки загрузки R-tree и
 native SIGABRT требуют новых данных; алгоритмы загрузки карты и лимиты local tiles
 по прежним несимволицированным стекам не меняются.
+
+Треки с 2026-10-25 используют чёткую линию 2 px, свечение 6 px/blur 2 и
+выделение 4 px. Два общих sources и постоянное число style layers сохраняются.
+Прежние NULL цвета становятся постоянными при upgrade shared store; подробнее
+[управление треками](track-controls.md).
+
+Линейные подписи — одна цельная надпись на видимую часть каждого SQL-объекта. Отдельный point source получает anchor/direction после camera settle без SQLite; clipping и predominant direction работают в фоне. Длина прямого отрезка больше не ограничивает слово. Контракт: [видимые линейные подписи](visible-line-labels.md).

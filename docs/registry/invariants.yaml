@@ -54,10 +54,17 @@ invariants:
     related_code: [app/src/main/java/com/nextgis/mobile/usage, app/src/main/java/com/nextgis/mobile/MainApplication.java]
     verify_smoke: [AUTO-MOBILE-USAGE]
     must_update_docs: [docs/architecture/mobile-usage.md]
+  INV-VISIBLE-LINE-LABELS:
+    title: One whole label follows the visible part of a linear object
+    owners: [maplib, app]
+    statement: Native LineString/MultiLineString labels use one point anchor per SQL ID in the current screen quadrilateral and a length-weighted predominant visible direction. The word stays rigid even when no straight segment can fit it. Camera/source work coalesces off the UI thread using loaded geometry; stale map/style results never apply. Original geometry, picking, SQL and upload stay unchanged. Native fonts, category paint, zoom and collision remain active.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelLayout.java, maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelController.java, maplib/src/main/java/com/nextgis/maplib/map/RuleLabelLayouts.java, app/src/androidTest/java/com/nextgis/mobile/rendering/VisibleLineLabelsTest.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MOBILE-RELATED]
+    must_update_docs: [docs/architecture/visible-line-labels.md, docs/architecture/map-rendering.md]
   INV-SHARED-TRACKS:
     title: One installation owns track history independently of project workspaces
     owners: [app, maplib, maplibui]
-    statement: All projects use one private track database, durable spool and shared layer visibility. Resolve the actual legacy layers.db through DatabaseContext; missed histories import beside post-update tracks. Sent flags, segments, UUID acknowledgements and atomic backup/new pending points migrate transactionally without modifying sources; source provenance prevents duplicate bootstrap copies and deleted history reimport. Project deletion retains common tracks. Recording project-switch guards remain enabled.
+    statement: All projects use one private track database, durable spool and shared layer visibility. Resolve the actual legacy layers.db through DatabaseContext; missed histories import beside post-update tracks. SQL NULL legacy colors are filled once during schema-v2 upgrade or late import while explicit colors stay unchanged. Sent flags, segments, UUID acknowledgements and atomic backup/new pending points migrate transactionally without modifying sources; source provenance prevents duplicate bootstrap copies and deleted history reimport. Project deletion retains common tracks. Recording project-switch guards remain enabled.
     related_code: [maplib/src/main/java/com/nextgis/maplib/map/SharedTrackStore.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedTrackProjects.java, app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java]
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, AUTO-MOBILE-RELATED]
     must_update_docs: [docs/architecture/shared-tracks.md, docs/architecture/collector-projects.md]
@@ -203,7 +210,7 @@ invariants:
     title: Failed track writes and Stop retain the shared-store tail
     owners: [maplib, maplibui, app]
     statement: >
-      Sampled points enter a bounded ordered application-owned shared-track queue before idempotent UUID SQLite insert.
+      Map/menu/notification require confirmation before recording Stop; Cancel/Back preserve intent. A durable user-session UUID rejects stale confirmations and survives recovery/split. Sampled points enter a bounded ordered application-owned shared-track queue before idempotent UUID SQLite insert.
       A failed write retains the point; pending files are removed only after commit. Stop intent,
       track row and recording flag survive until the full tail drains and session closure commits.
       Corrupt checkpoints block silent recovery. Disk-full RAM fallback cannot survive process death
@@ -1037,7 +1044,7 @@ invariants:
     owners: [app, maplibui, maplib]
     statement: >
       Track recording uses durable preference track_recording_enabled, cleared only by the
-      explicit menu finish action. After reboot or process death, recording auto-resumes
+      confirmed finish action from map/menu/notification; Cancel/Back preserve it and stale user-session UUIDs cannot stop a new session. After reboot or process death, recording auto-resumes
       without a dialog; already inserted trackpoints must not be lost (closing an unfinished
       track and starting a new id is allowed). TrackerService shares the default application
       process with the toolbar so lifecycle delivery and durable preference reads are ordered;

@@ -398,7 +398,7 @@ public class VectorStyleRenderingTest {
                 }
                 f.screen.onActivity(activity->{assertNotNull(f.labels(layer));
                     boolean line=type==GeoConstants.GTLineString||type==GeoConstants.GTMultiLineString;
-                    assertEquals(line?"line-center":"point",f.labels(layer).getSymbolPlacement().getValue());
+                    assertEquals("point",f.labels(layer).getSymbolPlacement().getValue());
                     assertEquals(line?"viewport":"auto",f.labels(layer).getTextRotationAlignment().getValue());});
             }
         }

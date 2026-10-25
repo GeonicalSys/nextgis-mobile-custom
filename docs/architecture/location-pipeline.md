@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-10-23
+last_verified: 2026-10-25
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -676,3 +676,10 @@ track_send по умолчанию true. Старые установки одн�
 для следующей живой или фоновой попытки, включая Stop и process restart.
 WorkManager jobs принадлежат сохранённому пути проекта и не переходят на другую
 карту. Полный контракт и индикация: [доставка трека](ngw-sync-and-storage.md#доставка-трека-и-регистрация-uid).
+
+## Ручной Stop трека
+
+Map/menu/notification требуют подтверждения через TrackActions.confirmStop.
+UUID track_recording_session переживает recovery/split, а старый ответ не может
+остановить новый сеанс. Cancel/Back не сбрасывают запись или pending intent.
+Сохранение хвоста и retry остаются в TrackerService; см. track-controls.md.

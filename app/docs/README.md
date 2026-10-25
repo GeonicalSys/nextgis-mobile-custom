@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-24
+last_verified: 2026-10-25
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -899,3 +899,9 @@ identity; report_origin содержит отправителя. Related bugrepo
 [Группы и ограничения вывода](../../docs/reference/glitchtip-triage-2026-10-17.md).
 
 Фактический результат: [проверка 2026-10-24](../../docs/reference/polygon-style-verification-2026-10-24.md).
+
+MainActivity требует общий confirm Stop с map/menu; notification использует
+TrackStopConfirmationActivity. Related track-followup проверяет реальные входы
+и Cancel/Back, stale session UUID и legacy SQLite colors на verification-установке.
+
+Related line-labels verifies winding Russian labels, one anchor per visible SQL ID, pan/zoom/rotation, category paint and geometry picking. Related firefly-editor-ui keeps manual settings/preview/Save/Cancel and proves the removed field-points preset stays absent.

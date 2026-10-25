@@ -33,6 +33,80 @@ import static org.junit.Assert.*;
 /** The actual foreground recorder must retain its tail and Stop intent until SQLite recovers. */
 @RunWith(AndroidJUnit4.class)
 public class TrackerStopRecoveryTest {
+    private static void systemLocation(boolean enabled) throws Exception {
+        try(java.io.InputStream result=new android.os.ParcelFileDescriptor.AutoCloseInputStream(
+                InstrumentationRegistry.getInstrumentation().getUiAutomation()
+                .executeShellCommand("cmd location set-location-enabled "+enabled))) {
+            byte[] buffer=new byte[1024];while(result.read(buffer)!=-1){ }
+        }
+    }
+
+    @Test public void rejectedResumeWithSystemLocationOffKeepsRecordingIntentUntilConfirmedStop() throws Exception {
+        assertTrue("System location changes are emulator-only",android.os.Build.HARDWARE.contains("ranchu")
+                || android.os.Build.HARDWARE.contains("goldfish"));
+        GISApplication app=(GISApplication)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(app);
+        SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(app);
+        SharedPreferences temp=app.getSharedPreferences(TrackerService.TEMP_PREFERENCES,Context.MODE_PRIVATE);
+        assertFalse(TrackerService.hasRecordingSession(app));assertFalse(temp.contains("track_uri"));
+        java.util.Map<String,?> original=prefs.getAll();boolean location=TrackerService.isSystemLocationEnabled(app);
+        String[] keys={AppSettingsConstants.KEY_PREF_INTRO,SettingsConstants.KEY_PREF_TRACK_SEND,
+                SettingsConstants.KEY_PREF_GNSS_INPUT,SettingsConstants.KEY_PREF_GNSS_TRANSPORT,
+                SettingsConstants.KEY_PREF_GNSS_DEVICE_ID,SettingsConstants.KEY_PREF_TRACK_RECORDING_ENABLED,
+                "track_recording_session","track_recording_failure","battery_dont_show_pref"};
+        java.util.Set<String> owned=new java.util.HashSet<>();TrackLayer layer=null;
+        try {
+            systemLocation(true);
+            assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO,true)
+                    .putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND,false).putBoolean("battery_dont_show_pref",true)
+                    .putString(SettingsConstants.KEY_PREF_GNSS_INPUT,com.nextgis.maplib.gnss.GnssInputPrefs.VALUE_EXTERNAL)
+                    .putString(SettingsConstants.KEY_PREF_GNSS_TRANSPORT,com.nextgis.maplib.gnss.GnssInputPrefs.TRANSPORT_USB)
+                    .putString(SettingsConstants.KEY_PREF_GNSS_DEVICE_ID,"").commit());
+            try(ActivityScenario<MainActivity> screen=ActivityScenario.launch(MainActivity.class)) {
+                screen.onActivity(TrackerService::start_stop_tracking_GetIconWithTitle);
+                AtomicBoolean state=new AtomicBoolean();await(state,15000,() -> state.set(TrackerService.isTrackRecordingActive()));
+                String session=TrackerService.getRecordingSessionId(app),uri=temp.getString("track_uri","");
+                String id=Uri.parse(uri).getLastPathSegment();owned.add(id);
+                layer=(TrackLayer)MapContentProviderHelper.getVectorLayerByPath(app.getMap(),TrackLayer.TABLE_TRACKS);
+                systemLocation(false);
+                assertFalse("The emulator GPS-off precondition must be real",TrackerService.isSystemLocationEnabled(app));
+                screen.onActivity(a -> a.stopService(new android.content.Intent(a,TrackerService.class)));
+                state.set(false);await(state,15000,() -> state.set(!TrackerService.isTrackerServiceRunning(app)));
+                screen.onActivity(TrackerService::ensureRecordingRunningIfEnabled);
+                assertFalse("Public resume defers the forbidden GPS-off location FGS",TrackerService.isTrackerServiceRunning(app));
+                // Exercise the defensive handler through an ordinary foreground-Activity service
+                // request: requesting a location FGS with GPS off violates Android prerequisites.
+                screen.onActivity(a -> a.startService(new android.content.Intent(a,TrackerService.class)
+                        .setAction("com.nextgis.maplibui.TRACK_START")));
+                state.set(false);await(state,15000,() -> state.set(TrackerService.getRecordingState(app)==TrackerService.RecordingState.ERROR));
+                assertTrue("GPS-off must not silently stop a user's durable recording",TrackerService.isTrackRecordingEnabled(app));
+                assertEquals(session,TrackerService.getRecordingSessionId(app));assertFalse(temp.contains("pending_stop"));
+                assertEquals(1,DatabaseUtils.longForQuery(layer.getDatabase(true),
+                        "SELECT count(*) FROM tracks WHERE _id=? AND end IS NULL",new String[]{id}));
+                state.set(false);await(state,15000,() -> state.set(!TrackerService.isTrackerServiceRunning(app)));
+                systemLocation(true);
+                screen.onActivity(TrackerService::ensureRecordingRunningIfEnabled);
+                state.set(false);await(state,15000,() -> state.set(TrackerService.isTrackRecordingActive()));
+                owned.add(Uri.parse(temp.getString("track_uri","")).getLastPathSegment());
+                assertEquals(session,TrackerService.getRecordingSessionId(app));
+                screen.onActivity(a -> assertTrue(TrackerService.stopRecording(a,session,"native-confirmed-stop")));
+                state.set(false);await(state,15000,() -> state.set(!TrackerService.hasRecordingSession(app)));
+            }
+        } finally {
+            systemLocation(true);
+            if(TrackerService.hasRecordingSession(app)) {
+                InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> TrackerService.stopRecording(
+                        app,TrackerService.getRecordingSessionId(app),"native-test-cleanup"));
+                AtomicBoolean stopped=new AtomicBoolean();await(stopped,20000,() -> stopped.set(!TrackerService.hasRecordingSession(app)));
+            }
+            if(layer!=null)for(String id:owned)layer.delete(Uri.parse("content://"+app.getAuthority()+"/tracks"),TrackLayer.FIELD_ID+"=?",new String[]{id});
+            systemLocation(location);SharedPreferences.Editor restore=prefs.edit();
+            for(String key:keys){Object value=original.get(key);
+                if(value instanceof Boolean)restore.putBoolean(key,(Boolean)value);
+                else if(value instanceof String)restore.putString(key,(String)value);else restore.remove(key);}
+            assertTrue(restore.commit());
+        }
+    }
     private static void await(AtomicBoolean condition, long timeout, Runnable check) throws Exception {
         long deadline = SystemClock.uptimeMillis() + timeout;
         while (!condition.get() && SystemClock.uptimeMillis() < deadline) {

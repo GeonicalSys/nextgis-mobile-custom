@@ -15,7 +15,7 @@ def collect_style_images(adb: Path, serial: str, destination: Path) -> list[dict
         return result.stdout if result.returncode == 0 else b''
     images = []
     total = 0
-    for folder in ('firefly-qa', 'polygon-editor-qa'):
+    for folder in ('firefly-qa', 'polygon-editor-qa', 'line-label-qa'):
         names = read('ls', '-1', 'files/' + folder).decode('utf-8', errors='replace').splitlines()
         for name in names[:32]:
             if not re.fullmatch(r'[A-Za-z0-9_.-]+\.png', name):
