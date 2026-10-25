@@ -8,6 +8,14 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-26 — Полный сбор native сбоев и ожидание сети
+
+Full сохраняет отдельные неуспешные native попытки и продолжает независимые
+проверки; gate отвергает их даже после успешного повтора. Добавлены пять runner
+regressions (общий suite 32). Offline sync fixture переиспользует общий Wi-Fi
+барьер и finally cleanup, учитывает один обычный WorkManager backoff в 60 с
+и сохраняет attempts/network diagnostics. Production sync не менялся.
+
 ## 2026-10-26 — Готовность окна native проверки форм
 
 После единичного Full FAIL на Samsung четыре gesture метода и весь класс

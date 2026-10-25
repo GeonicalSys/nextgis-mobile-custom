@@ -73,6 +73,7 @@
     "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"]
   },
   "areas": {
+    "offline-sync": ["com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest"],
     "form-navigation": ["com.nextgis.mobile.reliability.CascadingFormsTest"],
     "track-candidates": ["com.nextgis.mobile.rendering.TrackControlsTest#crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections", "com.nextgis.mobile.rendering.TrackControlsTest#mixedCandidateDialogKeepsLongRowsScrollableAndCancelVisibleAtLargeScales", "com.nextgis.mobile.rendering.TrackControlsTest#nativeGlowAndPointGroupsStayAboveTracksAfterLiteFullAndReorder", "com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete"],
     "cursor-rendering": ["com.nextgis.mobile.rendering.LocationOrbitTest"],

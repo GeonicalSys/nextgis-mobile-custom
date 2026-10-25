@@ -249,11 +249,22 @@ class Verification:
             collect_style_images(self.adb,serial,self.output/'images'/evidence_name)
         try: result=parse_instrumentation(text,expected,fatal=fatal)
         except ValueError as error:
-            raise RuntimeError(str(error)+'; see '+str(self.output/(name+'.log'))+'\n'+text[-4000:]) from error
+            message=str(error)+'; see '+str(self.output/(name+'.log'))+'\n'+text[-4000:]
+            if self.args.scope!='full': raise RuntimeError(message) from error
+            # Each independent check resets only the disposable verification workspace.
+            # Preserve the failure and finish the roster; transport/setup failures still abort.
+            result={'passed':[],'skipped':[],'expected_crash':False,'failed':True,'error':message}
         self.results.append({'name':name,'device':serial,**result})
         (self.output/'progress.json').write_text(json.dumps(self.receipt('running'),ensure_ascii=False,indent=2),encoding='utf-8')
-        print('PASS '+name+': '+str(len(result['passed']))+' cases'+(' (expected fatal)' if fatal else ''),flush=True)
+        if result.get('failed'):
+            print('FAIL '+name+'; retained in receipt, continuing independent Full checks',flush=True)
+        else:
+            print('PASS '+name+': '+str(len(result['passed']))+' cases'+(' (expected fatal)' if fatal else ''),flush=True)
         return result
+
+    def require_native_success(self):
+        failures=[result['name'] for result in self.results if result.get('failed')]
+        if failures: raise RuntimeError('Native checks failed: '+', '.join(failures))
 
     def diagnostics_noise(self,serial,name):
         test='com.nextgis.mobile.util.DiagnosticsNoiseTest#'
@@ -275,12 +286,13 @@ class Verification:
     def ui_matrix(self):
         case='com.nextgis.mobile.reliability.LayerSelectionDialogTest#allChoicesAndCancelRemainTouchableAtLargeScales'
         self.prepare(self.emulator)
+        first_result=len(self.results)
         for density,font,theme,orientation in itertools.product((420,540,617),('1.0','1.3','2.0'),('light','dark'),('portrait','landscape')):
             self.shell(self.emulator,'wm','density',str(density))
             self.shell(self.emulator,'settings','put','system','font_scale',font)
             name=f'chooser-{density}-{font}-{theme}-{orientation}'
             self.native(self.emulator,[case],name,reset=False,extra={'uiTheme':theme,'uiOrientation':orientation})
-        self.checks['ui_matrix']=True
+        self.checks['ui_matrix']=not any(result.get('failed') for result in self.results[first_result:])
 
     def diagnostics(self):
         serial=self.emulator
@@ -361,6 +373,7 @@ class Verification:
                 # Finish independent work before requiring a manually unlocked phone.
                 for test in self.plan['phone']:
                     self.native(self.phone,[test],'phone-'+test.rsplit('.',1)[1])
+                self.require_native_success()
                 check_publication_receipt(self.receipt('passed'),self.fingerprint,self.required)
             else:
                 selected=set()

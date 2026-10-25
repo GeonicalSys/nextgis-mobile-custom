@@ -6,6 +6,12 @@ last_verified: 2026-10-26
 
 # app — Android-приложение Lisa/Belka
 
+Full сохраняет JUnit/native failures и завершает остальные независимые проверки;
+ошибка остаётся FAIL даже после успешного повтора. Build/setup/transport failures
+прерывают запуск. Offline sync fixture использует общий EmulatorNetworkFixture
+с ожиданием готового Wi-Fi и восстановлением в finally; bounded budget учитывает
+один штатный backoff, без изменения production SyncAccountWorker/constraints.
+
 MaintenanceReminders предупреждает о недельной давности полного успешного sync
 онлайн-проекта, проверки updater и известного обновления до/после загрузки.
 Локальным картам sync не нужен. Offline/частичная отправка не обновляют часы;

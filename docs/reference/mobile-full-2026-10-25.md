@@ -268,3 +268,26 @@ ConnectivityManager capabilities в момент сбоя. Поэтому при
 Проверяются переход сети/JobScheduler и штатный WorkManager retry backoff,
 который может превышать исходные 20 секунд. Source/runtime sync не меняется
 до получения достаточных свидетельств. Evidence: `...\evidence\phone-full-04`.
+
+Перед следующим Full runner дополнен сбором всех независимых native failures:
+failed attempt остаётся в receipt и запрещает PASS даже при успешном повторе;
+ошибки сборки/подготовки/транспорта прерывают запуск. 32/32 runner units PASS,
+включая новые continuation/false-green regressions.
+
+Исходные 20 секунд короче документированного default WorkManager retry delay
+30 секунд ([Android Developers](https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started/define-work#retries_backoff)).
+Test budget расширен до 60 с для одного обычного retry и scheduler latency,
+с diagnostics attempts/stop reason/next eligible time/connected/validated.
+Offline ENQUEUED/zero attempts/no queue и final SUCCEEDED сохранены;
+после успеха дополнительно проверяется отсутствие запущенной sync queue.
+Related offline-sync-readiness-01: 5/5 PASS. Это не доказывает исходную причину.
+
+Найден и устранён старый пробел fixture: он сам переключал радио без ожидания
+готовности адаптера/именно Wi-Fi и без завершения восстановления между тестами.
+Используется существующий EmulatorNetworkFixture с close в finally; worker,
+его constraints и реальные account/data не меняются. Адресный повтор идёт
+на окончательном варианте перед новым полным прогоном.
+
+Related offline-sync-readiness-02: **5/5 PASS** с общим network fixture;
+owned AVD остановлен. Runner32 и docs/24 tests PASS. Production worker не менялся.
+Окончательный Full и отдельный планшетный Full всё ещё обязательны.

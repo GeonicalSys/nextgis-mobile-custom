@@ -58,6 +58,9 @@ class FullReceiptTest(unittest.TestCase):
                 'devices':{'phone':{'sdk':36},'emulator':{'sdk':36}}}
     def test_a_complete_current_full_run_is_accepted(self):
         check_publication_receipt(self.receipt(),'abc',{CASE})
+    def test_a_failed_attempt_cannot_be_hidden_by_a_successful_repeat(self):
+        receipt=self.receipt();receipt['runs']=[{'failed':True,'passed':[]},{'passed':[CASE]}]
+        with self.assertRaises(ValueError):check_publication_receipt(receipt,'abc',{CASE})
     def test_changed_code_or_a_related_run_is_rejected(self):
         for key,value in [('source_fingerprint','old'),('scope','related'),('status','failed')]:
             receipt=self.receipt(); receipt[key]=value

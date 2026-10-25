@@ -15,6 +15,18 @@ related_code:
 
 # Автоматические проверки
 
+Full сохраняет неуспешную native попытку и продолжает независимые сценарии
+после штатного reset verification workspace. В конце любая такая ошибка,
+required skip или отсутствующий случай оставляет FAIL; успешный повтор её
+не скрывает. Ошибки сборки, подготовки, транспорта или блокировка телефона
+прерывают запуск. Related сохраняет fail-fast. Runner regressions: 32 cases.
+
+Related `-Area offline-sync` выполняет весь SyncOfflineAndWalkGpsTest только
+на эмуляторе. Ожидание после возврата Wi-Fi допускает один штатный WorkManager
+backoff и scheduler latency (60 секунд); offline zero-attempt/no-sync и final
+SUCCEEDED assertions сохранены. Ошибка содержит attempts/stop reason/eligible
+time и network connected/validated. Production worker не меняется.
+
 Related `-Area form-navigation` запускает весь CascadingFormsTest в том же
 порядке, что Full; с явным PhoneSerial доступен stationary verification APK.
 Перед реальным жестом fixture ждёт фокуса окна, завершённой раскладки и
