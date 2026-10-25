@@ -10,6 +10,7 @@ related_code:
 # Документация GeonicalSystem NextGIS Mobile
 
 - [Управление треками и точки над линиями](architecture/track-controls.md).
+- [Квитанция проверки треков от 25 октября](reference/track-controls-verification-2026-10-25.md).
 
 ## Копирование и преобразования
 

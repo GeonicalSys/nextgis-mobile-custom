@@ -29,3 +29,6 @@ covers:
 Пункт передачи имени/меток на сервер исключён. Desktop-палитра отложена по
 последнему указанию пользователя. Порядок интеграции: maplib #60 (Merge Commit)
 → maplibui #44 (Merge Commit) → merged pins в app #78 (Squash). Выпуск не запрошен.
+
+Фактическая проверка: `docs/reference/track-controls-verification-2026-10-25.md` —
+876 unit и 62 native случая на эмуляторе API 36; физический планшет недоступен.
