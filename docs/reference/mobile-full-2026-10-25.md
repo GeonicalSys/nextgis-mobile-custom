@@ -83,3 +83,54 @@ scrollbar отклонено native проверкой API 36 (framework null dr
 и 9 ready-state), docs validator + 24 tests PASS. Каталог проверен: 53 класса,
 251 required native methods. Эти адресные результаты не заменяют Full.
 Evidence: `...\evidence\maintenance-native-07`, `maintenance-unit-summary.json`.
+
+## Матрица включения второго Full
+
+После fetch все Android owner деревья чистые, без ahead/behind своих удалённых
+веток. Android source tip `45bd6c86f36e8227df7906e1fb49a399fdf59d57`.
+Открыты только требуемые собственные Draft PR #78/#60/#44; опубликованные
+unmerged codex heads совпадают с текущими tips и включены по ancestry.
+Easypicker и publisher не имеют открытых PR/неучтённых codex heads.
+
+| Изменение / владелец | Commit / PR / base | Включение / состояние |
+|---|---|---|
+| Стили, MapLibre 13.7.1 OpenGL, треки/подписи / app | f06ccfb, #78, my-maplibre | Ancestor текущего app tip; PR открыт |
+| GIS стили/отрисовка / maplib | 3c8020a0f9b550db36baee8b7234fea6ee6325e6, #60, master | Root gitlink и checked-out SHA совпадают с PR head; открыт |
+| Редакторы и UI / maplibui | d4b8f27337f0549f25353f9b28e7810371f00ae5, #44, master | Root gitlink и checked-out SHA совпадают с PR head; открыт |
+| Pending native tap teardown / app | 1756ad5, #78, my-maplibre | Ancestor 45bd6c8 |
+| UX-05 напоминания и scroll / app | 45bd6c8, #78, my-maplibre | Текущий source tip |
+| Easypicker | 55aad0e0f92329ea4c273a83e541d170d24d7b57, master | Ранее merged dependency; pin совпадает |
+| Publisher | 99e3cfde7841b749b83be6005842b96e7d140d00, main | Не изменён и не запускался |
+
+Успешные предыдущие updater изменения b07c512 и 7e794a4 также проверены
+как ancestors текущего app tip. Исключение пользователя разрешает локальный
+signed Release APK из этих открытых PR без merge/публикации. Оно не закрывает
+цепочку выпуска: #60 Merge Commit → #44 Merge Commit → fetched remote merged
+pins в app → #78 Squash. Эта цепочка и будущая публикация остаются отложенными.
+Десктоп, серверные метаданные трека (пункт 5), переделка загрузки/тайлов отложены
+по прежним решениям пользователя и не включались в этот пакет.
+
+Второй Full запущен со всеми 251 обязательными native методами на смартфоне
+R5GL130K54D + изолированном API36 AVD. Промежуточно пройдены 912 units
+(614 maplib +93 maplibui +205 app), runner units, нормальная version matrix
+Lisa Debug/Lisa Release/Belka Release и docs validator/24 tests. Native ещё
+выполняются; промежуточные успехи не означают общий Full PASS.
+Evidence: `...\evidence\phone-full-02` и `phone-full-02-delivery-matrix.json`.
+
+## Второй Full: FAIL на native курсоре
+
+Исходники 45bd6c8, fingerprint
+`6d01c67eb9493335ea0d37bc8d00cd006f936c804c67df33094fefe292d7a519`.
+912 unit, runner tests, version matrix и docs/24 tests прошли. Пройдены
+82 distinct native сценария, включая прежнюю линейку и новую регрессию
+MapView teardown, GPS/recording/track upload. Таймаут 30 секунд на первом
+awaitMarker в `LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector`.
+Телефонные классы, оставшиеся emulator styles/sync, diagnostics и chooser
+matrix ещё не достигнуты. Общего Full PASS нет; gate удалён. Owned emulator
+остановлен в finally; ADB readback показывает только смартфон.
+
+Проверяется гонка graphics fixture с завершающим full-style callback,
+который штатно вызывает updateLastLocation. Это пока гипотеза по коду,
+не установленная причина: нужны фактические source/cache/camera diagnostics.
+Baseline Related cursor выполняется до исправления. Смартфон/планшет Full
+после исправления остаются обязательными.
