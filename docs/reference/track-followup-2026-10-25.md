@@ -119,5 +119,10 @@ Stop потребовали исправлений; до финального п
 PR: [app #78](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/78),
 [maplib #60](https://github.com/GeonicalSys/android_maplib/pull/60),
 [maplibui #44](https://github.com/GeonicalSys/android_maplibui/pull/44).
-Все Draft. Обновлённый подписанный APK собирается локально по ранее данному
+Все Draft. Обновлённый подписанный APK собран локально по ранее данному
 разовому исключению без merge и публикации; предыдущий кандидат сохранён отдельно.
+
+[Состав, hash и квитанция Release APK](../history/lisa-local-release-tracks-labels-2026-10-25.md).
+Основные обновлённые контракты: [треки](../architecture/track-controls.md),
+[общее хранилище](../architecture/shared-tracks.md), [подписи](../architecture/visible-line-labels.md),
+[восстановление](../architecture/crash-recovery.md) и [редактор «Светлячка»](../architecture/point-firefly.md).
