@@ -683,3 +683,14 @@ Map/menu/notification требуют подтверждения через Track
 UUID track_recording_session переживает recovery/split, а старый ответ не может
 остановить новый сеанс. Cancel/Back не сбрасывают запись или pending intent.
 Сохранение хвоста и retry остаются в TrackerService; см. track-controls.md.
+
+## Готовность graphics fixture курсора
+
+LocationOrbitTest перед прямым техническим fix ждёт завершения текущего app
+layer apply и pending reload, готового Style и layout MapView. Post-load hook
+штатно перечитывает GPS и может очистить преждевременно подставленную позицию.
+При таймауте fixture сообщает camera, lifecycle/focus, loading flags, cached
+fix и native source/rendered marker. Оба метода запускаются отдельно,
+предел 30 секунд и pixel/heading/sector assertions сохранены. Настройки
+и runtime GPS не изменены; одиночный Full timeout пока не доказывает
+производственный дефект. Related cursor-rendering: оба метода PASS.

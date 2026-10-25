@@ -349,3 +349,8 @@ LegacyTrackColorsNativeTest (реальный v1→v2), TrackControlsTest (nativ
 отдельная verification-установка, системные настройки телефона не меняются.
 
 Related `-Area line-labels` включает VisibleLineLabelsTest и cross-geometry regression VectorStyleRenderingTest. `-Area firefly-editor-ui` проверяет текущий редактор без кнопки пресета в 72 профилях Save/Cancel. Обе области имеют stationary verification phone routing. PNG `line-label-qa` сохраняются bounded collector перед reset. Фактические результаты фиксируются в квитанции задачи.
+
+Related `-Area cursor-rendering` запускает оба LocationOrbitTest метода
+отдельно с очисткой verification workspace. Scene barrier предшествует
+техническому fix; timeout включает source/cache/camera/loading diagnostics.
+Это не отменяет обязательный полный набор и исходные native assertions.

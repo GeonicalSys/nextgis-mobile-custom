@@ -63,8 +63,7 @@ public class LocationOrbitTest {
                 .putBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG, false)
                 .putString(SettingsConstantsUI.KEY_PREF_SHOW_STATUS_PANEL, "3").commit());
         try (ActivityScenario<MainActivity> screen = ActivityScenario.launch(MainActivity.class)) {
-            await(screen, () -> ((MapDrawable) app.getMap()).getMaplibreMap() != null
-                    && ((MapDrawable) app.getMap()).getMaplibreMap().getStyle() != null);
+            awaitInitialScene(screen, app);
             screen.onActivity(activity -> {
                 app.getGpsEventSource().removeListener(activity.getMapFragment());
                 ((MapDrawable) app.getMap()).getMaplibreMap().moveCamera(
@@ -142,8 +141,7 @@ public class LocationOrbitTest {
         preferences.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true)
                 .putBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG, false).commit();
         try (ActivityScenario<MainActivity> screen = ActivityScenario.launch(MainActivity.class)) {
-            await(screen, () -> ((MapDrawable) app.getMap()).getMaplibreMap() != null
-                    && ((MapDrawable) app.getMap()).getMaplibreMap().getStyle() != null);
+            awaitInitialScene(screen, app);
             screen.onActivity(activity -> {
                 // This graphics fixture injects overlay fixes directly; a real GPS-expiry callback
                 // must not clear them while screenshots and camera updates are in flight.
@@ -446,12 +444,82 @@ public class LocationOrbitTest {
 
     private static void awaitMarker(ActivityScenario<MainActivity> screen, GISApplication app,
                                     boolean direction, float bearing) throws Exception {
-        await(screen, () -> {
+        awaitScene(screen, app, "marker direction=" + direction + " bearing=" + bearing, () -> {
             MapDrawable map = (MapDrawable) app.getMap();
             return map.getMaplibreMap().queryRenderedFeatures(markerPoint(map), "user-location-layer")
                     .stream().anyMatch(f -> f.getBooleanProperty("has_direction") == direction
                             && Math.abs(f.getNumberProperty("bearing").floatValue() - bearing) < 0.001f);
         });
+    }
+
+    private static void awaitInitialScene(ActivityScenario<MainActivity> screen, GISApplication app) throws Exception {
+        java.util.concurrent.atomic.AtomicReference<com.nextgis.mobile.fragment.MapFragment> fragment =
+                new java.util.concurrent.atomic.AtomicReference<>();
+        screen.onActivity(activity -> fragment.set(activity.getMapFragment()));
+        awaitScene(screen, app, "initial application scene", () -> {
+            MapDrawable map = (MapDrawable) app.getMap();
+            if (map.getMaplibreMap() == null || map.getMaplibreMap().getStyle() == null
+                    || !map.getMaplibreMap().getStyle().isFullyLoaded()
+                    || map.getMaplibreMapView() == null || map.getMaplibreMapView().getWidth() == 0
+                    || map.getMaplibreMapView().getHeight() == 0) return false;
+            // A Style object precedes completion of the app's asynchronous layer apply.
+            // Its post-load hook reads actual GPS and can erase a directly injected test fix.
+            return !flag(MapDrawable.class, map, "mLayerLoadInProgress")
+                    && !flag(MapDrawable.class, map, "mPendingReload")
+                    && flag(com.nextgis.mobile.fragment.MapFragment.class,
+                            fragment.get(), "mapLibreLayersAppliedForCurrentView");
+        });
+    }
+
+    private static boolean flag(Class<?> owner, Object target, String name) {
+        return (Boolean) value(owner, target, name);
+    }
+
+    private static Object value(Class<?> owner, Object target, String name) {
+        try {
+            java.lang.reflect.Field field = owner.getDeclaredField(name);
+            field.setAccessible(true);
+            return field.get(target);
+        } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+    }
+
+    private static void awaitScene(ActivityScenario<MainActivity> screen, GISApplication app,
+                                   String phase, Check check) throws Exception {
+        try { await(screen, check); }
+        catch (AssertionError timeout) {
+            java.util.concurrent.atomic.AtomicReference<String> actual = new java.util.concurrent.atomic.AtomicReference<>();
+            try {
+                screen.onActivity(activity -> {
+                    MapDrawable map = (MapDrawable) app.getMap();
+                    org.maplibre.android.maps.MapLibreMap nativeMap = map.getMaplibreMap();
+                    Style style = nativeMap == null ? null : nativeMap.getStyle();
+                    StringBuilder state = new StringBuilder("activity=").append(activity.getLifecycle().getCurrentState())
+                            .append(" focus=").append(activity.hasWindowFocus())
+                            .append(" loading=").append(flag(MapDrawable.class, map, "mLayerLoadInProgress"))
+                            .append(" pendingReload=").append(flag(MapDrawable.class, map, "mPendingReload"))
+                            .append(" cachedFix=").append(value(MapDrawable.class, map, "lastUserLocationPoint"))
+                            .append(" applied=").append(flag(com.nextgis.mobile.fragment.MapFragment.class,
+                                    activity.getMapFragment(), "mapLibreLayersAppliedForCurrentView"));
+                    if (nativeMap != null) state.append(" camera=").append(nativeMap.getCameraPosition());
+                    if (style != null) {
+                        GeoJsonSource source = style.getSourceAs("user-location-source");
+                        state.append(" styleLoaded=").append(style.isFullyLoaded())
+                                .append(" markerLayer=").append(style.getLayer("user-location-layer") != null);
+                        if (source != null) {
+                            List<Feature> features = source.querySourceFeatures(null);
+                            state.append(" sourceFeatures=").append(features.size());
+                            for (Feature feature : features) if (feature.geometry() instanceof Point) {
+                                state.append(" point=").append(feature.toJson()); break;
+                            }
+                        }
+                        state.append(" renderedAtFix=").append(nativeMap.queryRenderedFeatures(
+                                markerPoint(map), "user-location-layer").size());
+                    }
+                    actual.set(state.toString());
+                });
+            } catch (RuntimeException diagnosticFailure) { actual.set("unavailable: " + diagnosticFailure); }
+            throw new AssertionError(phase + " did not settle: " + actual.get(), timeout);
+        }
     }
 
     private interface Check { boolean ready(); }

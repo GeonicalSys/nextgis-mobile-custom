@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-23
+last_verified: 2026-10-25
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -328,3 +328,14 @@ map-runtime-diagnostics остаётся приватным журналом д�
 сохраняет прежние ключи/формат и использует подтверждённую запись собственным
 disk writer с восстановлением interrupt вызывающего потока. Пользовательских
 переключателей или новых credentials нет; учёт длительности работы не добавлен.
+
+## Готовность graphics fixture курсора
+
+LocationOrbitTest перед прямым техническим fix ждёт завершения текущего app
+layer apply и pending reload, готового Style и layout MapView. Post-load hook
+штатно перечитывает GPS и может очистить преждевременно подставленную позицию.
+При таймауте fixture сообщает camera, lifecycle/focus, loading flags, cached
+fix и native source/rendered marker. Оба метода запускаются отдельно,
+предел 30 секунд и pixel/heading/sector assertions сохранены. Настройки
+и runtime GPS не изменены; одиночный Full timeout пока не доказывает
+производственный дефект. Related cursor-rendering: оба метода PASS.

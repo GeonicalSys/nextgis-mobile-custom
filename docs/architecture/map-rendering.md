@@ -699,3 +699,14 @@ native SIGABRT требуют новых данных; алгоритмы заг
 [управление треками](track-controls.md).
 
 Линейные подписи — одна цельная надпись на видимую часть каждого SQL-объекта. Отдельный point source получает anchor/direction после camera settle без SQLite; clipping и predominant direction работают в фоне. Длина прямого отрезка больше не ограничивает слово. Контракт: [видимые линейные подписи](visible-line-labels.md).
+
+## Готовность graphics fixture курсора
+
+LocationOrbitTest перед прямым техническим fix ждёт завершения текущего app
+layer apply и pending reload, готового Style и layout MapView. Post-load hook
+штатно перечитывает GPS и может очистить преждевременно подставленную позицию.
+При таймауте fixture сообщает camera, lifecycle/focus, loading flags, cached
+fix и native source/rendered marker. Оба метода запускаются отдельно,
+предел 30 секунд и pixel/heading/sector assertions сохранены. Настройки
+и runtime GPS не изменены; одиночный Full timeout пока не доказывает
+производственный дефект. Related cursor-rendering: оба метода PASS.

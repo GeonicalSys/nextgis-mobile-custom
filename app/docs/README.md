@@ -921,3 +921,8 @@ TrackStopConfirmationActivity. Related track-followup проверяет реа�
 и Cancel/Back, stale session UUID и legacy SQLite colors на verification-установке.
 
 Related line-labels verifies winding Russian labels, one anchor per visible SQL ID, pan/zoom/rotation, category paint and geometry picking. Related firefly-editor-ui keeps manual settings/preview/Save/Cancel and proves the removed field-points preset stays absent.
+
+Graphics LocationOrbitTest теперь ждёт завершения текущего app layer apply
+перед подстановкой технической позиции; одного ненулевого Style недостаточно.
+При таймауте выводятся camera, source/cache и loading flags. Related cursor-rendering
+запускает оба обязательных метода отдельно; assertions и 30 секунд сохранены.

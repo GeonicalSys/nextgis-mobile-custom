@@ -8,6 +8,13 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-25 — Готовность native cursor fixture
+
+После одиночного Full timeout добавлены app scene barrier и source/cache/camera
+diagnostics. Baseline повтор прошёл без изменений; производственная причина
+не установлена. Native assertions и deadline сохранены, оба метода Related
+cursor-rendering прошли. [Квитанция](reference/mobile-full-2026-10-25.md).
+
 ## 2026-10-25 — Недельные напоминания о данных и обновлении
 
 UX-05 описывает независимые successful full-sync и manifest clocks, исключение
