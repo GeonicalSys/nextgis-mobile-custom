@@ -2419,6 +2419,20 @@ public class MapFragment
             mapLibreView.removeOnDidFailLoadingMapListener(mapLibreLoadFailureListener)
             mapLibreView.setOnTouchListener(null)
 
+            // The SDK's delayed single-tap confirmation can outlive onDestroy().
+            // Cancel directly in the SDK, bypassing the edit listener that may consume CANCEL.
+            if (!mapLibreView.isDestroyed) {
+                val now = android.os.SystemClock.uptimeMillis()
+                val cancel = android.view.MotionEvent.obtain(
+                    now, now, android.view.MotionEvent.ACTION_CANCEL, 0f, 0f, 0
+                )
+                try {
+                    mapLibreView.onTouchEvent(cancel)
+                } finally {
+                    cancel.recycle()
+                }
+            }
+
             val mapDrawable = mapDrawableOrNull
             if (mapDrawable?.maplibreMapView === mapLibreView) {
                 mapDrawable.maplibreMap = null

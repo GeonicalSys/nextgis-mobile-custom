@@ -1328,6 +1328,46 @@ public class MapEditingToolsTest {
         });
     }
 
+    @Test public void pendingNativeTapIsCancelledBeforeViewDestruction() throws Exception {
+        for (int iteration = 0; iteration < 3; iteration++) {
+            java.util.concurrent.atomic.AtomicReference<org.maplibre.android.maps.MapView> previous =
+                    new java.util.concurrent.atomic.AtomicReference<>();
+            scenario.onActivity(activity -> {
+                org.maplibre.android.maps.MapView view = activity.findViewById(R.id.mapViewMaplibre);
+                previous.set(view);
+                assertSame(view, ((MapDrawable) app.getMap()).getMaplibreMapView());
+                long now = android.os.SystemClock.uptimeMillis();
+                MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN,
+                        view.getWidth() * .25f, view.getHeight() * .3f, 0);
+                MotionEvent up = MotionEvent.obtain(now, now + 20, MotionEvent.ACTION_UP,
+                        view.getWidth() * .25f, view.getHeight() * .3f, 0);
+                try {
+                    // Feed the real SDK detector so its single-tap confirmation is pending.
+                    view.onTouchEvent(down);
+                    view.onTouchEvent(up);
+                } finally { down.recycle(); up.recycle(); }
+            });
+            scenario.recreate();
+            long deadline = android.os.SystemClock.uptimeMillis() + 30000;
+            AtomicBoolean rebound = new AtomicBoolean();
+            while (!rebound.get() && android.os.SystemClock.uptimeMillis() < deadline) {
+                scenario.onActivity(activity -> {
+                    org.maplibre.android.maps.MapView current = activity.findViewById(R.id.mapViewMaplibre);
+                    MapDrawable map = (MapDrawable) app.getMap();
+                    rebound.set(previous.get().isDestroyed() && current != previous.get()
+                            && current != null && !current.isDestroyed()
+                            && map.getMaplibreMapView() == current && map.getMaplibreMap() != null
+                            && map.getMaplibreMap().getStyle() != null);
+                });
+                if (!rebound.get()) Thread.sleep(50);
+            }
+            assertTrue("Recreation must replace the destroyed native map", rebound.get());
+            // Let an uncancelled SDK confirmation run while strict mode remains enabled.
+            Thread.sleep(android.view.ViewConfiguration.getDoubleTapTimeout() + 120L);
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        }
+    }
+
     private void openMeasurementMenu() {
         scenario.onActivity(activity -> {
             View button = activity.findViewById(R.id.action_measurements);

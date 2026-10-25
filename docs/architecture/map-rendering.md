@@ -32,6 +32,14 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+Перед уничтожением MapView host отправляет ACTION_CANCEL прямо в SDK после
+снятия edit touch listener. Это завершает ожидающие single-tap/long-press
+callbacks до освобождения native renderer; очистка только app map listeners
+их не отменяет. [MapView 13.7.1](https://github.com/maplibre/maplibre-native/blob/android-v13.7.1/platform/android/MapLibreAndroid/src/main/java/org/maplibre/android/maps/MapView.java)
+при onDestroy освобождает renderer, а [MapGestureDetector](https://github.com/maplibre/maplibre-native/blob/android-v13.7.1/platform/android/MapLibreAndroid/src/main/java/org/maplibre/android/maps/MapGestureDetector.java)
+передаёт ACTION_CANCEL gesture manager. Strict mode не подавляется. Адресная
+проверка — Related map-teardown; после неё обязателен повтор Full.
+
 Треки рисуются тонкой тёмной сердцевиной и свечением исходного насыщенного цвета.
 Выбранные параметры и производный цвет сердцевины описаны в контракте треков;
 дополнительных источников или проходов для нового вида нет. Настоящие

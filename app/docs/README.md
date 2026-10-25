@@ -6,6 +6,10 @@ last_verified: 2026-10-25
 
 # app — Android-приложение Lisa/Belka
 
+MapFragment отменяет ожидающие SDK gestures до уничтожения MapView. Native
+Related map-teardown проверяет линейку и три пересоздания Activity после тапа
+при включённом strict mode; Full включает регрессию автоматически.
+
 MapFragment выбирает трек обычным тапом, показывает TrackSelectionPanel и
 сохраняет выбор скрытого трека при пересоздании. Инструменты очищают выбор;
 Point/MultiPoint сохраняют приоритет выбора. Проверка: Related track-controls.

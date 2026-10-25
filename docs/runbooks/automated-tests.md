@@ -15,6 +15,10 @@ related_code:
 
 # Автоматические проверки
 
+Related `-Area map-teardown` адресно воспроизводит отложенный SDK тап при
+закрытии/пересоздании MapView и исходный сценарий линейки. Проверка идёт на
+эмуляторе с strict mode; оба метода входят в Full через MapEditingToolsTest.
+
 Адресная проверка управления треками: `tools/verify-mobile-tests.ps1 -Scope Related -Area track-controls`.
 Она использует verification APK и включает виджеты/жесты, native pixels/order,
 Save/Cancel, пересоздание и отказ удаления активного трека. Stationary поднабор

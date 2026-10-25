@@ -69,6 +69,7 @@
     "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"]
   },
   "areas": {
+    "map-teardown": ["com.nextgis.mobile.reliability.MapEditingToolsTest#pendingNativeTapIsCancelledBeforeViewDestruction", "com.nextgis.mobile.reliability.MapEditingToolsTest#rulerAcceptsFingerDriftAndKeepsPanCancelAndLongPressSeparate"],
     "recording-intent": ["com.nextgis.mobile.reliability.TrackerStopRecoveryTest"],
     "line-labels": ["com.nextgis.mobile.rendering.VisibleLineLabelsTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest#rulesOtherAndNullCategoriesPreserveStylesAndLabelsForAllGeometries"],
     "firefly-editor-ui": ["com.nextgis.mobile.rendering.FireflyStyleEditorTest"],
