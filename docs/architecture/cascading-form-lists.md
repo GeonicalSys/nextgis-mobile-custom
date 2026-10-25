@@ -1,7 +1,7 @@
 ---
 title: Зависимые списки NGFP
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-26
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java
@@ -15,6 +15,11 @@ related_code:
 FragmentManager; уничтожение отменяет callback. Выбор подрядчика/сотрудника и pin
 не сбрасываются. CascadingFormsTest проверяет сохранённое состояние, фактическую
 видимость страницы после Resume и закрытие сразу после выбора вкладки.
+
+Test-only gesture fixture дополнительно ждёт фокуса окна, завершения раскладки
+и стабильных видимых границ до DOWN, без переигрывания жеста. Related
+form-navigation повторяет весь класс, сохраняя межсценарный порядок Full.
+Это не изменение production правил, контролов или сохранения данных.
 
 Диалоги выбора используют общие builders `FittedDialogs`: подписи и действия адаптируются к крупному интерфейсу. Существующие ключи элементов, выбор и cascade callbacks сохраняются. Проверка компоновки описана в [контракте UI](ui-accessibility.md).
 

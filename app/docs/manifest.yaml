@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-25
+last_verified: 2026-10-26
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -54,7 +54,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
     responsibility: Exercise native transfer without a resumed Activity, non-roaming policy and the actual ready dialog in both themes, both orientations and 100/130/200 percent fonts at 280/320 dp and normal widths; await the queued Android button listener off the main thread before asserting the install action.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
-    responsibility: Verify real cascade controls, SQLite/drafts, navigation and deferred tab selection across saved state, resume and immediate close without losing selected values.
+    responsibility: Verify real cascade controls, SQLite/drafts, navigation and deferred tab selection across saved state, resume and immediate close without losing selected values; wait for focused stable visible geometry before a single native gesture and retain bounds diagnostics on failure.
   - path: app/src/main/res/xml/preferences_location.xml
     responsibility: Location preferences, including the persisted default-off show_compass_accuracy_sector checkbox with a multiline title; MapFragment applies its choice on resume through the maplib visibility API.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java

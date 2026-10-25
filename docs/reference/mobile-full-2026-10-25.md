@@ -1,7 +1,7 @@
 ---
 title: Full на смартфоне и планшете — 25 октября 2026
 type: reference
-last_verified: 2026-10-25
+last_verified: 2026-10-26
 related_code:
   - tools/run_mobile_tests.py
   - tools/mobile-test-plan.json
@@ -169,3 +169,56 @@ Evidence: `...\evidence\mixed-pick-native-01`,
 Смартфонный Full с этими дополнениями ещё должен завершиться, затем нужен
 отдельный планшетный Full на том же коде. Предыдущие 82 native PASS относятся
 к прежнему tip и не заменяют новую полную приёмку.
+
+## Третий Full: FAIL при перелистывании формы на Samsung
+
+App `3b5338ac68c67cbe898723cd84ebfecc3beac8a3`, maplib
+`3ad5d49d3fc015555578360ca5dd62446a70235a`, maplibui `d4b8f27`.
+Fingerprint `e41e31b772e538e4557aeb9e99129b0ade9e88b3fe5a47070c18e5f3c36bb573`.
+913 unit (615 maplib /93 maplibui /205 app), runner 27, version matrix,
+docs/24 tests, весь emulator roster, GPS grant/deny, diagnostic delivery
+и 36 системных UI-профилей прошли. Оба cursor метода также прошли.
+
+На SM_A566B прошли недельные напоминания, линейные подписи, подтверждение Stop,
+legacy цвета, все шесть TrackControlsTest (включая смешанные кандидаты,
+каждый выбор и порядок field lines/points), CompassTouchTest. Следующий класс
+CascadingFormsTest: 22 PASS /1 FAIL. В
+`swipesWorkAcrossSelectorsCheckboxCommentsAndBlankSpace` после свайпа вправо
+поверх checkbox ожидается вкладка 0, осталась 1 (строка 605).
+Остальные смартфонные классы не достигнуты; это **Full FAIL**.
+
+Причина пока не установлена: добавляется фактическая геометрия target/ancestors,
+видимая область и горизонтальная прокрутка. Системные настройки Samsung
+(fontScale 1.15, density 420) сохраняются. Emulator завершён, PID runner
+отсутствует. Evidence: `...\evidence\phone-full-03` и
+`phone-full-03-delivery-matrix.json`. Следующие полные прогоны смартфона
+и планшета остаются обязательными.
+
+Четыре nav/gesture метода отдельно на Samsung прошли без рабочего исправления
+(`form-navigation-diagnosis-01`, 4/4). Попытка всего класса на новом read-only
+AVD (`form-navigation-class-01`) завершилась 7/23 FAIL: во время native ввода
+активным оказалось системное окно `Application Error: com.google.android.bluetooth`.
+Сохранён filtered dumpsys focus; targeted input отвергнут вне UID verification APK,
+проверки accessibility искали другое активное окно. Это внешнее препятствие
+данного emulator запуска, не доказательство дефекта приложения и не PASS.
+AVD остановлен штатным finally. Рабочий код Bluetooth/формы не менялся.
+
+Весь класс отдельно на том же Samsung прошёл **23/23 PASS** до изменения
+ожидания (`form-navigation-class-phone-01`). Причина исходного swipe FAIL
+не доказана. Fixture затем усилен: фокус, завершённая раскладка предков,
+стабильная видимая область 120 мс до одного жеста (лимит 10 с). Ввод не
+переигрывается, направление/повторения и все state/data assertions сохранены.
+Изменён только код проверки; production FormScrollView/Tabs не менялись.
+
+Первый вариант ожидания (`form-navigation-ready-01`) прошёл 22/23 на AVD,
+но ошибочно переводил local visible rect самого прокрученного ScrollView
+как обычного контрола: его собственный scroll offset давал неверную область.
+Этот дефект нового test helper исправлен через root-global visible rect
+с реальным origin окна. Проверка с заранее прокрученной страницей сохранена.
+
+Related `form-navigation-ready-02`: **23/23 на API36 AVD и 23/23 на
+SM_A566B PASS**, без required skips. AVD остановлен, настройки рабочего
+телефона и production version/lastUpdateTime совпадают с baseline.
+Docs validator и 24 tests PASS. Далее нужен новый Full на окончательных
+исходниках, затем отдельный Full на планшете; эти Related результаты
+не закрывают полную приёмку.

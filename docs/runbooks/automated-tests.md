@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-25
+last_verified: 2026-10-26
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -14,6 +14,13 @@ related_code:
 ---
 
 # Автоматические проверки
+
+Related `-Area form-navigation` запускает весь CascadingFormsTest в том же
+порядке, что Full; с явным PhoneSerial доступен stationary verification APK.
+Перед реальным жестом fixture ждёт фокуса окна, завершённой раскладки и
+стабильной видимой области; сам жест не переигрывает при ошибке. Сбой содержит
+геометрию контрола/родителей и состояние окна. Внешнее системное окно означает
+FAIL проверки окружения, не право нажимать за пределами UID тестового APK.
 
 Related `-Area map-teardown` адресно воспроизводит отложенный SDK тап при
 закрытии/пересоздании MapView и исходный сценарий линейки. Проверка идёт на
