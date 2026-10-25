@@ -1,12 +1,19 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-24
+last_verified: 2026-10-25
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-25 — Разовый локальный Lisa Release без публикации
+
+Сохранена [квитанция подписанного APK 3.1.2.30/224](history/lisa-local-release-2026-10-25.md):
+состав всех owner repositories, явное разовое разрешение сборки из открытых PR,
+version matrix LisaOnly, production identity, подпись и SHA-256. APK хранится
+локально; обычные merge/publication gates сохраняются.
 
 ## 2026-10-24 — MapLibre 13.7.1, прежний OpenGL
 
