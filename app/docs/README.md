@@ -12,7 +12,7 @@ Point/MultiPoint сохраняют приоритет выбора. Прове�
 Контракт: `docs/architecture/track-controls.md`.
 
 Текущий двухслойный образец трека: сердцевина 1.4 px / затемнение 73%, свечение
-4.5 px / blur 3 / opacity .83. Native pixel expectations обновлены под этот
+6.5 px / blur 3 / opacity .83. Native pixel expectations обновлены под этот
 выбор; новый прогон по разрешению пользователя отложен.
 
 ## Штриховки, контуры и живой образец

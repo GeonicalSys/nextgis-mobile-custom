@@ -360,7 +360,7 @@ public class TrackControlsTest {
                     LineLayer line = t.map().getMaplibreMap().getStyle().getLayerAs(prefix + "-layer");
                     LineLayer glow = t.map().getMaplibreMap().getStyle().getLayerAs(prefix + "-glow");
                     assertEquals(1.4f, line.getLineWidth().getValue(), .001f);
-                    assertEquals(4.5f, glow.getLineWidth().getValue(), .001f);
+                    assertEquals(6.5f, glow.getLineWidth().getValue(), .001f);
                     assertEquals(3f, glow.getLineBlur().getValue(), .001f);
                     assertEquals(.83f, glow.getLineOpacity().getValue(), .001f);
                 }
@@ -376,7 +376,7 @@ public class TrackControlsTest {
             }
             float density = t.f.app.getResources().getDisplayMetrics().density;
             assertTrue("Glow extends outside the selected 1.4-dp core", colored > 1.4f * density);
-            assertTrue("The complete glow is narrower than the former ten-dp line", colored < 9 * density);
+            assertTrue("Glow stays within the selected width and its soft edges", colored < 12.5f * density);
             save(t, image, "track-glow");
             image.recycle();
             VectorLayerUI lower = t.f.add(GeoConstants.GTPoint), upper = t.f.add(GeoConstants.GTMultiPoint);
