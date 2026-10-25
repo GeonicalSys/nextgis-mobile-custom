@@ -1,13 +1,22 @@
 ---
 title: С чего начать — GeonicalSystem NextGIS Mobile
 type: guide
-last_verified: 2026-10-07
+last_verified: 2026-10-25
 related_code:
   - app/build.gradle
   - settings.gradle
 ---
 
 # С чего начать
+
+## Планирование любой доработки
+
+Начать с [общей дорожной карты мобильного приложения](roadmap/mobile.md):
+выбрать ID либо добавить новый пункт, проверить зависимости и критерии приёмки.
+Это относится и к запросам заказчика, срочным исправлениям и сторонним PR.
+Карта задаёт процесс согласования; разрешение на выполнение и выпуск определяется
+текущим поручением и действующими ограничениями. Подробности для PR — в
+[чеклисте](guides/change-checklist.md).
 
 ## Общая история и обычные стили
 
@@ -97,7 +106,8 @@ Plugins, код мобильного клиента — здесь. Не исп�
 - [`../WHATS_NEW.md`](../WHATS_NEW.md) — пользовательские release notes.
 - [`runbooks/collector-project-setup.md`](runbooks/collector-project-setup.md) — настройка Collector.
 - [`architecture/map-performance.md`](architecture/map-performance.md) — состояние и план производительности.
-- [`roadmap/collector.md`](roadmap/collector.md) — только ещё не завершённые Collector-задачи.
+- [`roadmap/mobile.md`](roadmap/mobile.md) — общая очередь, ID и согласование всех доработок.
+- [`roadmap/collector.md`](roadmap/collector.md) — техническая детализация Collector; старые пункты сверять с кодом и общей картой.
 
 ## Правила мобильных проектов
 
