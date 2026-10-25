@@ -379,6 +379,14 @@ public class TrackControlsTest {
             assertTrue("Glow stays within the selected width and its soft edges", colored < 12.5f * density);
             save(t, image, "track-glow");
             image.recycle();
+            VectorLayerUI fieldLines = t.f.add(GeoConstants.GTLineString), ordinaryLines = t.f.add(GeoConstants.GTLineString);
+            for (VectorLayerUI line : new VectorLayerUI[]{fieldLines, ordinaryLines}) {
+                line.setName(line == fieldLines ? "Полевые линейные" : "Обычная линия");
+                t.f.insert(line, 0, null);
+                com.nextgis.maplib.display.SimpleLineStyle paint = new com.nextgis.maplib.display.SimpleLineStyle();
+                paint.setColor(Color.BLUE); paint.setWidth(2); paint.setField("name"); paint.setTextSize(5);
+                t.f.bind(line, paint, null);
+            }
             VectorLayerUI lower = t.f.add(GeoConstants.GTPoint), upper = t.f.add(GeoConstants.GTMultiPoint);
             for (VectorLayerUI point : new VectorLayerUI[]{lower, upper}) {
                 t.f.insert(point, 0, null);
@@ -397,23 +405,149 @@ public class TrackControlsTest {
                 t.f.screen.onActivity(activity -> {
                     List<Layer> layers = t.map().getMaplibreMap().getStyle().getLayers();
                     int track = index(layers, "track-inprogress-layer"), tool = index(layers, "selected-dot-layer");
+                    int fieldBody = index(layers, "nglayer-layer-" + fieldLines.getId());
+                    int fieldLabel = index(layers, "symbol-nglayer-layer-" + fieldLines.getId());
+                    assertTrue("Field line body above tracks", fieldBody > track);
+                    assertTrue("Field line labels above tracks", fieldLabel > track);
+                    assertTrue("Ordinary lines remain below tracks", index(layers, "nglayer-layer-" + ordinaryLines.getId()) < track);
                     for (VectorLayerUI point : new VectorLayerUI[]{lower, upper}) {
                         int body = index(layers, "nglayer-layer-" + point.getId());
                         int label = index(layers, "symbol-nglayer-layer-" + point.getId());
                         assertTrue("Point bodies above tracks", body > track); assertTrue(label > track);
+                        assertTrue("Points stay above field line body and labels", body > fieldBody && body > fieldLabel);
                         assertTrue("Point labels stay below tools", label < tool);
                     }
                     boolean lowerFirst = t.map().getLayers().indexOf(lower) < t.map().getLayers().indexOf(upper);
                     assertEquals("Native point order follows the layer list", lowerFirst,
                             index(layers, "nglayer-layer-" + lower.getId()) < index(layers, "nglayer-layer-" + upper.getId()));
                     PointF hit = t.map().getMaplibreMap().getProjection().toScreenLocation(new org.maplibre.android.geometry.LatLng(0, 0));
-                    assertTrue("A point intercepts a track hit", t.map().queryTrackIds(hit.x, hit.y, 8).isEmpty());
+                    assertTrue("Point drawing priority preserves the track as a hit candidate",
+                            t.map().queryTrackIds(hit.x, hit.y, 8).contains(id));
                 });
                 Bitmap points = t.f.snapshot(); PointF p = t.point(0);
                 assertEquals("Native green point covers the red track", Color.GREEN, points.getPixel(Math.round(p.x), Math.round(p.y)));
                 save(t, points, "track-points-" + pass);
                 points.recycle();
             }
+        }
+    }
+
+    @Test public void crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections() throws Exception {
+        try (Tracks t = new Tracks()) {
+            long first = t.add("Первый маршрут", 0xffff1744, 0), second = t.add("Второй маршрут", 0xff00b8d4, 0);
+            VectorLayerUI point = t.f.add(GeoConstants.GTPoint), line = t.f.add(GeoConstants.GTLineString),
+                    polygon = t.f.add(GeoConstants.GTPolygon);
+            VectorLayerUI[] objects = {point, line, polygon};
+            String[] names = {"Полевые точки", "Полевые линейные", "Площадной объект"};
+            for (int i = 0; i < objects.length; i++) {
+                VectorLayerUI layer = objects[i]; layer.setName(names[i]); t.f.insert(layer, 0, null);
+                com.nextgis.maplib.display.Style paint;
+                if (layer == point) paint = new SimpleMarkerStyle(Color.GREEN, Color.GREEN, 12, SimpleMarkerStyle.MarkerStyleCircle);
+                else if (layer == line) paint = new com.nextgis.maplib.display.SimpleLineStyle();
+                else paint = new com.nextgis.maplib.display.SimplePolygonStyle();
+                ((com.nextgis.maplib.api.ITextStyle) paint).setField("name"); t.f.bind(layer, paint, null);
+            }
+            t.f.screen.onActivity(activity -> activity.getMapFragment().loadLayersLite());
+            t.source(first, true); t.source(second, true);
+            for (int i = 0; i < 5; i++) {
+                t.tap(0);
+                AtomicBoolean complete = new AtomicBoolean();
+                await(() -> { t.f.screen.onActivity(activity -> {
+                    try {
+                        java.lang.reflect.Field field = activity.getMapFragment().getClass().getDeclaredField("mapSelectionDialog");
+                        field.setAccessible(true);
+                        androidx.appcompat.app.AlertDialog chooser = (androidx.appcompat.app.AlertDialog) field.get(activity.getMapFragment());
+                        complete.set(chooser != null && chooser.isShowing() && chooser.getListView().getAdapter().getCount() == 5);
+                    } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+                }); return complete.get(); });
+                for (String name : names) {
+                    AtomicReference<android.view.accessibility.AccessibilityNodeInfo> found = new AtomicReference<>();
+                    await(() -> { found.set(Ui.find(node -> node.getText() != null && node.getText().toString().startsWith(name + ":")));
+                        if (found.get() == null) return false; found.get().recycle(); return true; });
+                }
+                for (String trackName : new String[]{"Трек: Первый маршрут", "Трек: Второй маршрут"}) {
+                    android.view.accessibility.AccessibilityNodeInfo row = Ui.find(Ui.textMatch(trackName));
+                    assertNotNull("Track is present once beside all vector types", row); row.recycle();
+                }
+                if (i < 3) {
+                    final int which = i;
+                    Ui.tap(node -> node.getText() != null && node.getText().toString().startsWith(names[which] + ":"));
+                    AtomicBoolean chosen = new AtomicBoolean();
+                    await(() -> { t.f.screen.onActivity(activity -> chosen.set(activity.getMapFragment().getSelectedLayer() == objects[which]));
+                        return chosen.get(); });
+                    assertFalse("Selecting an object closes the track panel", t.panel());
+                } else { Ui.text(i == 3 ? "Трек: Первый маршрут" : "Трек: Второй маршрут"); await(t::panel); }
+            }
+            TrackActions.visibility(t.f.app, second, false, () -> {}); t.source(second, false);
+            t.f.screen.onActivity(activity -> { for (VectorLayerUI layer : objects) {
+                layer.setVisible(false); t.map().checkLayerVisibility(layer.getId());
+            }});
+            t.tap(0); await(t::panel); // One remaining track is selected directly.
+            TrackActions.visibility(t.f.app, first, false, () -> {}); t.source(first, false);
+            t.f.screen.onActivity(activity -> { point.setVisible(true); t.map().checkLayerVisibility(point.getId()); });
+            t.tap(0);
+            AtomicBoolean chosen = new AtomicBoolean();
+            await(() -> { t.f.screen.onActivity(activity -> chosen.set(activity.getMapFragment().getSelectedLayer() == point));
+                return chosen.get(); });
+            assertFalse("A lone vector object is selected directly", t.panel());
+        }
+    }
+
+    @Test public void mixedCandidateDialogKeepsLongRowsScrollableAndCancelVisibleAtLargeScales() throws Exception {
+        try (Tracks t = new Tracks()) {
+            t.f.screen.onActivity(activity -> {
+                for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f})
+                    for (int[] screen : new int[][]{{360,640},{640,360},{320,568},{568,320},{280,500},{500,280}}) {
+                        android.content.res.Configuration config = new android.content.res.Configuration(activity.getResources().getConfiguration());
+                        config.setLocale(new java.util.Locale("ru")); config.fontScale = scale;
+                        config.screenWidthDp = screen[0]; config.screenHeightDp = screen[1];
+                        config.smallestScreenWidthDp = Math.min(screen[0], screen[1]);
+                        config.orientation = screen[0] > screen[1] ? android.content.res.Configuration.ORIENTATION_LANDSCAPE
+                                : android.content.res.Configuration.ORIENTATION_PORTRAIT;
+                        androidx.appcompat.view.ContextThemeWrapper context = new androidx.appcompat.view.ContextThemeWrapper(activity,
+                                dark ? com.nextgis.mobile.R.style.AppTheme_Dark : com.nextgis.mobile.R.style.AppTheme);
+                        context.applyOverrideConfiguration(config);
+                        List<String> labels = new ArrayList<>();
+                        for (int i = 0; i < 9; i++) labels.add((i % 2 == 0 ? "Трек: " : "Полевые линейные: ")
+                                + "Длинное название объекта у дальней границы участка " + i);
+                        java.util.concurrent.atomic.AtomicInteger selected = new java.util.concurrent.atomic.AtomicInteger(-1);
+                        androidx.appcompat.app.AlertDialog dialog = com.nextgis.mobile.util.MapSelectionDialog.create(context,
+                                com.nextgis.mobile.R.string.choose_object, labels, selected::set);
+                        try {
+                            dialog.show(); View root = dialog.getWindow().getDecorView();
+                            float density = context.getResources().getDisplayMetrics().density;
+                            int width = Math.round(screen[0] * density), height = Math.round(screen[1] * density);
+                            for (int pass = 0; pass < 3; pass++) {
+                                root.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                                        View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.AT_MOST));
+                                root.layout(0,0,width,root.getMeasuredHeight());
+                            }
+                            assertTrue(root.getHeight() <= height);
+                            android.widget.ListView list = dialog.getListView();
+                            assertEquals(labels.size(), list.getAdapter().getCount());
+                            assertTrue(list.getHeight() > 0);
+                            for (int i = 0; i < labels.size(); i++) {
+                                android.widget.TextView row = (android.widget.TextView) list.getAdapter().getView(i, null, list);
+                                row.measure(View.MeasureSpec.makeMeasureSpec(Math.max(1,list.getWidth()), View.MeasureSpec.EXACTLY),
+                                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                                row.layout(0,0,row.getMeasuredWidth(),row.getMeasuredHeight());
+                                assertEquals(labels.get(i), row.getText().toString());
+                                for (int lineIndex = 0; lineIndex < row.getLayout().getLineCount(); lineIndex++) {
+                                    assertEquals(0, row.getLayout().getEllipsisCount(lineIndex));
+                                    assertTrue(row.getLayout().getLineMax(lineIndex) <= row.getLayout().getWidth() + 1);
+                                }
+                                assertTrue(row.getLayout().getHeight() <= row.getHeight() - row.getCompoundPaddingTop() - row.getCompoundPaddingBottom());
+                            }
+                            View cancel = dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE);
+                            android.graphics.Rect box = new android.graphics.Rect(0,0,cancel.getWidth(),cancel.getHeight());
+                            ((android.view.ViewGroup) root).offsetDescendantRectToMyCoords(cancel,box);
+                            assertTrue("Cancel stays inside viewport", box.top >= 0 && box.bottom <= root.getHeight());
+                            assertEquals(-1, selected.get());
+                            cancel.performClick();
+                            assertEquals("Cancel never chooses an object", -1, selected.get());
+                        } finally { dialog.dismiss(); }
+                    }
+            });
         }
     }
 

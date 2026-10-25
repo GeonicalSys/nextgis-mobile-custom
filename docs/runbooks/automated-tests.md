@@ -354,3 +354,9 @@ Related `-Area cursor-rendering` запускает оба LocationOrbitTest м�
 отдельно с очисткой verification workspace. Scene barrier предшествует
 техническому fix; timeout включает source/cache/camera/loading diagnostics.
 Это не отменяет обязательный полный набор и исходные native assertions.
+
+Related `-Area track-candidates`: четыре stationary native сценария общего
+выбора, прежних track actions, длинного списка (72 UI profiles) и group order
+полевая линия/точки после reload/reorder. Явный PhoneSerial использует только
+verification APK. Два новых метода TrackControlsTest обязательны в Full;
+текущий catalogue — 53 класса /253 native methods.

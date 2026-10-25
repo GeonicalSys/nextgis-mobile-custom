@@ -9,6 +9,8 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java
+    responsibility: Show a single bounded scrolling candidate list with wrapping full labels and cancellation; keep vector and track choice callbacks distinct.
   - path: app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
     responsibility: Persist independent successful manifest and outstanding-update clocks, read only full successful active online-project sync, exempt local projects, and compose advisory weekly reminders with process/daily duplicate suppression.
   - path: app/src/test/java/com/nextgis/mobile/util/MaintenanceRemindersTest.java
@@ -22,7 +24,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LegacyTrackColorsNativeTest.java
     responsibility: Verify real shared-store v1 to v2 color migration without metadata or point loss.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java
-    responsibility: Verify real track list/map actions, persisted metadata, the selected thin dark track core and original-hue glow, and point group order; the latest style expectations remain mandatory in the user-requested Full on smartphone and then tablet.
+    responsibility: Verify real track list/map actions, persisted metadata, the selected thin dark track core and original-hue glow, and point/field-line group order, unified mixed candidates and large chooser rows; the latest style expectations remain mandatory in the user-requested Full on smartphone and then tablet.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java
     responsibility: Require window focus and stable visible bounds clipped to scrolling, window and physical display before guarded native input; verify that the actual SeekBar minimum remains visible.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java

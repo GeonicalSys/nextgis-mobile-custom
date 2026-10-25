@@ -1,5 +1,19 @@
 schema_version: 1
 invariants:
+  INV-MIXED-MAP-CANDIDATES:
+    title: A normal tap offers all eligible tracks and vector objects together
+    owners: [app, maplib]
+    statement: Collect vector SQL candidates with the existing inclusion and geometry-refinement policy plus visible native track IDs before choosing. Points and tracks never suppress each other or other vector geometry types. Deduplicate track segments by ID, retain layer plus feature identity separately from track identity, use a single scrolling chooser for multiple candidates, and select one candidate directly. Retain tool gestures, cancel without selection, reject stale map callbacks and dismiss the chooser with its view.
+    related_code: [app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt, app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java, maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java, app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java]
+    verify_smoke: [AUTO-MOBILE-RELATED, AUTO-MAPLIB-UNIT]
+    must_update_docs: [docs/architecture/track-controls.md, docs/architecture/map-rendering.md, app/docs/README.md, maplib/docs/README.md]
+  INV-FIELD-LINE-DISPLAY-PRIORITY:
+    title: Standard field lines are above tracks and below point groups
+    owners: [maplib, app]
+    statement: Match only line or multiline geometry named Полевые линейные or field_lines (trimmed, case-insensitive). Keep all its body and label passes above ordinary data and tracks and below actual Point/MultiPoint groups, including logical groups and derived label sources, across full/lite/style/reorder. Preserve internal group and point list order and the higher transient tools/GPS. Display priority never filters hit candidates.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java, maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java, maplib/src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MOBILE-RELATED]
+    must_update_docs: [docs/architecture/track-controls.md, docs/architecture/map-rendering.md, maplib/docs/README.md, maplib/docs/manifest.yaml]
   INV-MAINTENANCE-REMINDERS:
     title: Weekly reminders distinguish complete online-project sync and verified app updates
     owners: [app]
@@ -414,7 +428,7 @@ invariants:
   INV-TRACK-LAYER-TOP:
     title: My Tracks stays at the top of the user layer list
     owners: [app, maplib, maplibui]
-    statement: Keep every direct tracks layer last in internal LayerGroup order so it is first in the reversed UI list, and insert Collector project layers below it. Native rendering separately puts track lines below actual Point/MultiPoint vector groups, preserving their relative list order and keeping transient tools and GPS above them.
+    statement: Keep every direct tracks layer last in internal LayerGroup order so it is first in the reversed UI list, and insert Collector project layers below it. Native rendering separately puts track lines below named standard field-line groups and actual Point/MultiPoint vector groups, preserving their relative list order and keeping transient tools and GPS above them.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java

@@ -710,3 +710,11 @@ fix и native source/rendered marker. Оба метода запускаются
 предел 30 секунд и pixel/heading/sector assertions сохранены. Настройки
 и runtime GPS не изменены; одиночный Full timeout пока не доказывает
 производственный дефект. Related cursor-rendering: оба метода PASS.
+
+## Приоритет полевых линий и tap candidates
+
+Data stack: обычные данные → треки → «Полевые линейные»/field_lines →
+Point/MultiPoint → инструменты → GPS. Body и отдельные label sources
+перемещаются вместе, включая logical groups. Это порядок рисования;
+при обычном тапе все допустимые векторы и треки составляют один список,
+без short circuit трека или точки. [Контракт и native проверки](track-controls.md).

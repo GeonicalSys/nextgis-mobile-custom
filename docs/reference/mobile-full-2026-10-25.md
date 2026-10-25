@@ -143,3 +143,29 @@ reload до технического fix. Это закрывает устано
 Related cursor-readiness-01: оба метода **2/2 PASS** отдельно, как в Full.
 Пользователь затем добавил обязательное исправление общего выбора
 треков/векторных объектов: новый Full выполняется после него.
+
+## Дополнения общего выбора и полевых линий
+
+Пользователь обнаружил конфликт выбора на пересечениях. Убраны ранний
+short-circuit трека в app и подавление track hits точкой в библиотеке.
+Обычный tap собирает один список всех разрешённых SQL vector hits и
+видимых native track IDs. Сегменты дедуплицируются; layer/feature и track
+identity различаются. Один кандидат выбирается напрямую, несколько — через
+MapSelectionDialog с переносом строк/прокруткой/Cancel и dismiss по view lifecycle.
+Порядок рисования независимо дополнен: ordinary data → tracks → named
+field_lines/«Полевые линейные» с labels → actual points → tools → GPS.
+Имя целевого слоя подтверждено read-only snapshot проекта 1403.
+
+Related mixed-pick-native-01 / track-candidates: **4/4 native PASS** —
+пять кандидатов (два трека, point/line/polygon), каждый выбирается также поверх
+прежнего выбора, hidden/lone cases, прежние actions, 72 locale-local UI
+profiles длинных строк и Cancel, body/label priority после full/lite/reorder
+и GPU pixel точки поверх трека. Maplib **615 unit PASS**, consumer/native
+compilation и docs validator PASS. Новых required методов два: итоговый
+catalogue 53 класса /253 methods. Все старые методы остаются обязательными.
+Evidence: `...\evidence\mixed-pick-native-01`,
+`mixed-pick-maplib-unit-summary.json`, `mixed-pick-compile-units-03.log`.
+
+Смартфонный Full с этими дополнениями ещё должен завершиться, затем нужен
+отдельный планшетный Full на том же коде. Предыдущие 82 native PASS относятся
+к прежнему tip и не заменяют новую полную приёмку.

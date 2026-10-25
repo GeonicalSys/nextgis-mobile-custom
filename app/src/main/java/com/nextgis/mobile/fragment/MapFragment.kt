@@ -267,6 +267,7 @@ public class MapFragment
     private var trackStatusButton: FloatingActionButton? = null
     private var selectedTrackId = -1L
     private var trackSelectionPanel: TrackSelectionPanel? = null
+    private var mapSelectionDialog: androidx.appcompat.app.AlertDialog? = null
     private val trackMetadataObserver = object : android.database.ContentObserver(android.os.Handler(android.os.Looper.getMainLooper())) {
         override fun onChange(selfChange: Boolean) {
             if (view == null) return
@@ -301,29 +302,48 @@ public class MapFragment
         }
     }
 
-    private fun selectTappedTrack(x: Float, y: Float): Boolean {
-        if (mode != MODE_NORMAL && mode != MODE_SELECT_ACTION && mode != MODE_SELECT_FOR_VIEW
-            || mRulerOverlay?.isMeasuring == true) return false
+    private fun selectTrackCandidate(id: Long) {
+        if (mode != MODE_NORMAL) setNewMode(MODE_NORMAL)
+        selectedTrackId = id
+        refreshSelectedTrack()
+    }
+
+    private fun showMapTapCandidates(
+        x: Float, y: Float, labels: List<String>, layers: List<VectorLayer>,
+        geometries: List<GeoGeometry?>, features: List<Feature>
+    ): Boolean {
         val map = mapDrawableOrNull ?: return false
-        val ids = map.queryTrackIds(x, y, mTolerancePX)
-        if (ids.isEmpty()) { clearSelectedTrack(); return false }
         val host = context ?: return false
+        val ids = map.queryTrackIds(x, y, mTolerancePX)
         val trackLayer = com.nextgis.maplib.map.MapContentProviderHelper.getVectorLayerByPath(
             map, com.nextgis.maplib.map.TrackLayer.TABLE_TRACKS) as? com.nextgis.maplib.map.TrackLayer
-            ?: return false
-        val metadata = trackLayer.trackInfo
-        val tracks = ids.mapNotNull { metadata[it.toInt()] }
-        if (tracks.isEmpty()) return false
-        fun select(id: Long) {
-            if (mode != MODE_NORMAL) setNewMode(MODE_NORMAL)
-            selectedTrackId = id
-            refreshSelectedTrack()
+        val metadata = if (ids.isNotEmpty()) trackLayer?.trackInfo else null
+        val tracks = ids.mapNotNull { metadata?.get(it.toInt()) }.filter { it.visible }
+        val names = ArrayList(labels)
+        names.addAll(tracks.map {
+            if (labels.isEmpty()) it.name else getString(R.string.map_candidate_track, it.name)
+        })
+        if (names.isEmpty()) { clearSelectedTrack(); return false }
+        fun choose(index: Int) {
+            if (mapDrawableOrNull !== map || mode !in arrayOf(MODE_NORMAL, MODE_SELECT_ACTION, MODE_SELECT_FOR_VIEW)) return
+            if (index < features.size) {
+                val layer = layers[index]
+                if (mMapRef.get()?.getVectorLayersByType(GeoConstants.GTAnyCheck)?.none { it === layer } != false) return
+                clearSelectedTrack()
+                showViewModeForFeature(layer, features[index], layer, geometries[index],
+                    features[index].id, features[index].id, mode == MODE_SELECT_ACTION)
+            } else selectTrackCandidate(tracks[index - features.size].id.toLong())
         }
-        if (tracks.size == 1) select(tracks[0].id.toLong())
-        else com.nextgis.maplibui.util.FittedDialogs.compatBuilder(host)
-            .setTitle(com.nextgis.maplibui.R.string.track_choose)
-            .setItems(tracks.map { it.name }.toTypedArray()) { _, which -> select(tracks[which].id.toLong()) }
-            .setNegativeButton(com.nextgis.maplibui.R.string.cancel, null).show()
+        if (names.size == 1) choose(0)
+        else {
+            mapSelectionDialog?.dismiss()
+            val dialog = com.nextgis.mobile.util.MapSelectionDialog.create(host,
+                if (features.isEmpty()) com.nextgis.maplibui.R.string.track_choose else R.string.choose_object,
+                names) { choose(it) }
+            mapSelectionDialog = dialog
+            dialog.setOnDismissListener { if (mapSelectionDialog === dialog) mapSelectionDialog = null }
+            dialog.show()
+        }
         return true
     }
     protected var mAddNewGeometry: FloatingActionButton? = null
@@ -2387,6 +2407,8 @@ public class MapFragment
 
 
     override fun onDestroyView() {
+        mapSelectionDialog?.dismiss()
+        mapSelectionDialog = null
         context?.contentResolver?.unregisterContentObserver(trackMetadataObserver)
         trackSelectionPanel = null
         HyperLog.v(Constants.TAG, "MapFragment.onDestroyView")
@@ -4280,7 +4302,6 @@ public class MapFragment
     }
 
     override fun processMapClick(screenx: Float, screeny: Float): Boolean {    // x y - screen coordinates
-        if (selectTappedTrack(screenx, screeny)) return true
 //        Log.e("CCCLLIICK", "screenX: " + screenx + " - " + " screeny: " + screeny)
         onSingleTapUpFromMaplibre(screenx, screeny)
         return true
@@ -4817,41 +4838,8 @@ public class MapFragment
             }
 
             else -> if (mode == MODE_NORMAL || mode == MODE_SELECT_FOR_VIEW || mode == MODE_SELECT_ACTION) {
-                // check objects on map to select
-                val dMinX = (screenx - mTolerancePX)
-                val dMaxX = (screenx + mTolerancePX)
-                val dMinY = (screeny - mTolerancePX)
-                val dMaxY = (screeny + mTolerancePX)
-
-                val screenPointMin = PointF(dMinX, dMinY)
-                val screenPointMax = PointF(dMaxX, dMaxY)
-
-                val minPoint = mMapRef.get()!!.map!!.maplibreMap.getProjection().fromScreenLocation(screenPointMin)
-                val maxPoint = mMapRef.get()!!.map!!.maplibreMap.getProjection().fromScreenLocation(screenPointMax)
-
-//                Log.e("CCCLLIICK", " click at: " + screenx + " - " + " screeny: " + screeny)
-//                Log.e("CCCLLIICK", "points lnglong " + minPoint.longitude + " : " +  minPoint.latitude + " : "
-//                        + maxPoint.longitude + " : " + maxPoint.latitude )
-
-                val pointsMin = convert4326To3857(minPoint.longitude, minPoint.latitude)
-                val pointsMax = convert4326To3857(maxPoint.longitude, maxPoint.latitude);
-
-                var minx =   pointsMin[0];
-                var maxx =   pointsMax[0];
-                var miny =   pointsMin[1];
-                var maxy =   pointsMax[1];
-
-                if (minx > maxx){
-                    minx =   pointsMax[0]
-                    maxx =   pointsMin[0]
-                }
-                if (miny > maxy){
-                    miny =   pointsMax[1]
-                    maxy =   pointsMin[1]
-                }
-                //val exactEnv: GeoEnvelope = GeoEnvelope(minx,maxx , miny, maxy)
                 val pointClick = PointF(screenx, screeny)
-                val exactEnv: GeoEnvelope = getClickEnelope(pointClick, mMapRef.get()!!.map!!.maplibreMap)
+                val exactEnv = getClickEnelope(pointClick, mMapRef.get()!!.map!!.maplibreMap)
 
                 val point = GeoPoint(exactEnv.center.x, exactEnv.center.y)
                 point.crs = GeoConstants.CRS_WEB_MERCATOR
@@ -4863,8 +4851,6 @@ public class MapFragment
 
 
                 var vectorLayer: VectorLayer? = null
-                var selectedSingleVectorLayer: VectorLayer? = null
-                var selectedSingleFeatureId: Long = -1
 
                 val mSelectedLayers = ArrayList<String>()
                 var geometry: GeoGeometry? = null
@@ -4909,8 +4895,6 @@ public class MapFragment
 
 //                            selectedFeatures.add(feature)
 
-                            selectedSingleVectorLayer = layer
-                            selectedSingleFeatureId = featureId
 
                             selectedVectorLayer.add(vectorLayer)
                             selectedGeometry.add(geometry)
@@ -4923,58 +4907,15 @@ public class MapFragment
                     }
                 }
 
-                if (mSelectedLayers.size == 0 && (mode == MODE_SELECT_FOR_VIEW || mode == MODE_SELECT_ACTION)) {
-                    // need select none
+                if (showMapTapCandidates(screenx, screeny, mSelectedLayers,
+                        selectedVectorLayer, selectedGeometry, selectedFeatures)) return
+                if (mode == MODE_SELECT_FOR_VIEW || mode == MODE_SELECT_ACTION) {
                     setNewMode(MODE_NORMAL)
-                } else {
-                    if (mSelectedLayers.size > 1 || selectedFeatures.size > 1)
-                        showOverlayPointMultiChoise(
-                            screenx.toDouble(),
-                            screeny.toDouble(),
-                            mSelectedLayers,
-                        selectedVectorLayer,
-                        selectedGeometry,
-                        selectedFeatures,
-                        false )
-                    else if (mSelectedLayers.size == 1 || selectedFeatures.size == 1){
-
-                        showViewModeForFeature(selectedVectorLayer.get(0),
-                            selectedFeatures.get(0),
-                            selectedSingleVectorLayer,
-                            geometry,
-                            selectedSingleFeatureId,
-                            featureId ,
-                            mode == MODE_SELECT_ACTION)
-
-
-//                        if (mSelectedLayer != null)
-//                            mSelectedLayer!!.isLocked = false
-//
-//                        mSelectedLayer = selectedSingleVectorLayer
-//                        editLayerOverlay!!.setSelectedLayer(selectedSingleVectorLayer)
-//
-//                        if (geometry != null) editLayerOverlay!!.setSelectedFeature(selectedSingleFeatureId)
-//
-//                        if (mode != MODE_SELECT_ACTION)
-//                            setMode(MODE_SELECT_FOR_VIEW)
-//                        //showOverlayPoint(event);
-//
-//                        if (featureId != -1L && mSelectedLayer != null) {
-//                            mMapRef.get()!!.map!!.startFeatureSelectionForView(
-//                                selectedVectorLayer.get(0),
-//                                selectedFeatures.get(0))
-//                        }
-                    } else {
-                        if (mAddPointButton!!.visibility == View.VISIBLE) {
-                            editLayerOverlay!!.hideOverlayPoint()
-                            //mMapRef.get()!!.postInvalidate()
-
-                            hideAddByTapButton()
-                            showMainButton()
-
-                            mMapRef.get()!!.map.clearPressedPoint()
-                        }
-                    }
+                } else if (mAddPointButton!!.visibility == View.VISIBLE) {
+                    editLayerOverlay!!.hideOverlayPoint()
+                    hideAddByTapButton()
+                    showMainButton()
+                    mMapRef.get()!!.map.clearPressedPoint()
                 }
                 //set select action mode
                 //mMapRef.get()!!.postInvalidate()

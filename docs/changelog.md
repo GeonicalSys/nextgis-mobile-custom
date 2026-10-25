@@ -8,6 +8,13 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-25 — Общий tap и полевые линии
+
+Убраны ранний выбор трека и исключение трека точкой. Native проверяет общий
+список двух треков и Point/Line/Polygon, длинные строки и Cancel. Полевая
+линейная группа с подписями поднята под точки после full/lite/reorder.
+Registry, packs и [контракт](architecture/track-controls.md) обновлены.
+
 ## 2026-10-25 — Готовность native cursor fixture
 
 После одиночного Full timeout добавлены app scene barrier и source/cache/camera
