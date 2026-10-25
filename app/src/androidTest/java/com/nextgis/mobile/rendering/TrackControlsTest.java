@@ -25,6 +25,7 @@ import com.nextgis.maplibui.util.TrackView;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.maplibre.android.style.layers.Layer;
+import org.maplibre.android.style.layers.LineLayer;
 import org.maplibre.android.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
@@ -354,16 +355,27 @@ public class TrackControlsTest {
     @Test public void nativeGlowAndPointGroupsStayAboveTracksAfterLiteFullAndReorder() throws Exception {
         try (Tracks t = new Tracks()) {
             long id = t.add("Красный", 0xffff1744, 0); t.source(id, true);
+            t.f.screen.onActivity(activity -> {
+                for (String prefix : new String[]{"track-line", "track-inprogress"}) {
+                    LineLayer line = t.map().getMaplibreMap().getStyle().getLayerAs(prefix + "-layer");
+                    LineLayer glow = t.map().getMaplibreMap().getStyle().getLayerAs(prefix + "-glow");
+                    assertEquals(1.4f, line.getLineWidth().getValue(), .001f);
+                    assertEquals(4.5f, glow.getLineWidth().getValue(), .001f);
+                    assertEquals(3f, glow.getLineBlur().getValue(), .001f);
+                    assertEquals(.83f, glow.getLineOpacity().getValue(), .001f);
+                }
+            });
             PointF center = t.point(0); Bitmap image = t.f.snapshot();
             int core = image.getPixel(Math.round(center.x), Math.round(center.y));
-            assertTrue("The native core uses the saved red", Color.red(core) > 220 && Color.green(core) < 70);
+            assertTrue("The native core is a darker shade of the saved red",
+                    Color.red(core) < 160 && Color.red(core) > Color.green(core) + 20 && Color.green(core) < 120);
             int colored = 0;
             for (int dy = -30; dy <= 30; dy++) {
                 int pixel = image.getPixel(Math.round(center.x), Math.round(center.y) + dy);
                 if (Color.red(pixel) > Color.green(pixel) + 15) colored++;
             }
             float density = t.f.app.getResources().getDisplayMetrics().density;
-            assertTrue("Glow extends outside the thinner two-dp core", colored > 2 * density);
+            assertTrue("Glow extends outside the selected 1.4-dp core", colored > 1.4f * density);
             assertTrue("The complete glow is narrower than the former ten-dp line", colored < 9 * density);
             save(t, image, "track-glow");
             image.recycle();

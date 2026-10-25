@@ -16,7 +16,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LegacyTrackColorsNativeTest.java
     responsibility: Verify real shared-store v1 to v2 color migration without metadata or point loss.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java
-    responsibility: Verify real track list/map actions, persisted metadata, native glow and point group order.
+    responsibility: Verify real track list/map actions, persisted metadata, the selected thin dark track core and original-hue glow, and point group order; the latest style expectations await a user-deferred native run.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java
     responsibility: Require window focus and stable visible bounds clipped to scrolling, window and physical display before guarded native input; verify that the actual SeekBar minimum remains visible.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
