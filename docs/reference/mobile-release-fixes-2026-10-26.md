@@ -79,6 +79,8 @@ authoritative result/cleanup сохраняет versioned runner. Корень �
 | Runner units | 53 PASS, включая manual-only policy, все delivery cases и обязательные реальные окна |
 | Publisher units | 23 PASS; только временные локальные каталоги, production не изменялся |
 | Docs | Report guard26 и docs24 PASS; строгий impact полного task diff PASS; финальные docs дополнительно валидируются перед commit |
+| Phone Full10 на merged769629c | FAIL до native: empty --enforce-diff на чистой target ветке; units913/runner53/version matrix PASS, native0, cleanup PASS |
+| Empty-diff helper regression | Настоящий PowerShell wrapper принимает clean target и сохраняет strict changed path с пробелом; runner54 PASS |
 
 Native устройство — только отдельный verification APK; production данные и
 системные настройки физического устройства не изменяются. Смартфон пользователь

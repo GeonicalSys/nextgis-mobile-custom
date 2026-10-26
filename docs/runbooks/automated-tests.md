@@ -51,7 +51,11 @@ Full сохраняет неуспешную native попытку и продо
 после штатного reset verification workspace. В конце любая такая ошибка,
 required skip или отсутствующий случай оставляет FAIL; успешный повтор её
 не скрывает. Ошибки сборки, подготовки, транспорта или блокировка телефона
-прерывают запуск. Related сохраняет fail-fast. Runner regressions: 53 cases.
+прерывают запуск. Related сохраняет fail-fast. Runner regressions: 54 cases.
+
+После merge на clean target пустой diff не передаётся как --enforce-diff без
+путей: полный validator и unit suites продолжают выполняться. Регрессия
+проверяет настоящий Windows wrapper на owned clean/changed Git fixture.
 
 Owned AVD финализируется через собственную console даже при потере ADB;
 ожидаются закрытие порта и выход launcher. cleanup.json хранит фактический

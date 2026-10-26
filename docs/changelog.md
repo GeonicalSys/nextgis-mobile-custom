@@ -8,6 +8,13 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-26 — Пустой diff после merge
+
+Full10 остановлен до native на docs wrapper: --enforce-diff требовал хотя бы
+один путь после слияния. Исправлено условие флага, полный validator сохранён.
+Настоящий PowerShell wrapper проверен на clean target и изменённом пути с
+пробелом; runner54 PASS. Full10 остаётся FAIL, новый Full обязателен.
+
 ## 2026-10-26 — Локальные проверки вместо автоматических Actions
 
 По поручению пользователя Android reliability/docs workflow оставлены только
