@@ -365,3 +365,43 @@ SHA256 `08f3a44f84d8bb22701d25d466e957829b22fb40074144bbc3ac751de59935d8`;
 Новый Full планшета выполняется после выбора проекта и фиксации исходников.
 Повторный Full смартфона на окончательном коде остаётся обязательным;
 сборка локального APK разрешена прежним исключением, публикация/merge отложены.
+
+## Локальный подписанный APK и состояние handoff
+
+Code source `bf10dfd09d5b5562975dc4f2d88c5657af43f71c` отправлен в Draft #78;
+maplib `3ad5d49` /Draft #60 и maplibui `d4b8f27` /Draft #44 включены точными
+gitlinks. После нового fetch все пять Android owner trees чистые, published
+required heads и прежние commits присутствуют по ancestry.
+Evidence: `bf10dfd-preflight.log`, `bf10dfd-delivery-matrix.json`.
+Desktop checkout другой задачи не менялся. Merge/deployment order по-прежнему
+#60 Merge Commit → #44 Merge Commit → remote merged pins → #78 Squash;
+цепочка остаётся открытой, публикация не разрешена.
+
+Normal **Lisa Release 3.1.2.30/224** успешно собран. Подтверждены package
+`com.nextgis.mobile.geonical`, label `NextGIS ЛИСА`, min26/target36,
+четыре ABI, DEBUG=false/FIELD_VERIFICATION=false/FLAVOR=lisa. Подпись проверена,
+certificate SHA256 `ecd04c936532000eea8cb06ca6a3c1a3ae482844cacce2b84926c635429c3e18`.
+
+- APK: `Q:\Codex\Artifacts\lisa-mobile\2026-10-26\lisa-3.1.2.30-224-bf10dfd.apk`;
+- размер70493937 bytes;
+- SHA256 `fbf260e226df79b798e00c68af8c04603854d9e7fa44bb5750745af12290e91f`;
+- рядом сохранены `.metadata.json` и `.sha256`, hash копии совпадает с build output.
+
+Первая ручная команда сборки остановилась до компиляции из-за разбора
+`-Pkotlin.incremental=false` PowerShell; повтор с literal argument array
+успешен (`bf10dfd-release-02.log`). Это локальная сборка по исключению
+пользователя, не принятие Full и не публикация. Последующие docs-only commits
+не меняют product/test sources данного APK.
+
+Последние адресные результаты: emulator28/tablet26, runner43/docs24 PASS.
+Финальные Full остаются pending: для планшета ожидается выбор разрешённого
+проекта/снимка; смартфон R5GL130K54D после тестовых изменений ещё не подключён.
+`full-passed.json` отсутствует; успешная сборка/Related не заменяют эту приёмку.
+
+Собственные AVD остановлены: console закрыт, launcher exited, старые
+PID25128/16444 отсутствуют. Новых SDK/runtime copies или downloads нет.
+Compact evidence около9MiB сохраняется в
+`Q:\Codex\Scratch\mobile-full-20261025-f06ccfb\evidence` до приёмки PR;
+storage manifest остаётся active/waiting user choice, disposable bulk targets
+не оставлены. Shared SDK/Gradle/build caches сохраняются как reusable inputs.
+Durable APK и прежний f06ccfb APK не входят в disposal scope.
