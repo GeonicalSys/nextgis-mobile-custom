@@ -54,7 +54,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
     responsibility: Exercise native transfer without a resumed Activity, non-roaming policy and the actual ready dialog in both themes, both orientations and 100/130/200 percent fonts at 280/320 dp and normal widths; await the queued Android button listener off the main thread before asserting the install action.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
-    responsibility: Verify real cascade controls, SQLite/drafts, navigation and deferred tab selection across saved state, resume and immediate close without losing selected values; wait for focused stable visible geometry before a single native gesture and retain bounds diagnostics on failure.
+    responsibility: Verify real cascade controls, SQLite/drafts and deferred tab selection; reveal the target touch band within the current viewport, await focused stable geometry before one native gesture, retain bounds diagnostics and selected values.
   - path: app/src/main/res/xml/preferences_location.xml
     responsibility: Location preferences, including the persisted default-off show_compass_accuracy_sector checkbox with a multiline title; MapFragment applies its choice on resume through the maplib visibility API.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java
@@ -88,9 +88,9 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
     responsibility: Verify one interior label across MVT seams and zoom/style reapply through the real local tile provider, with glyph/fill/outline pixels and no added source or style layer.
   - path: tools/run_mobile_tests.py
-    responsibility: Route complete static phone and simulated emulator acceptance, isolate graphics fixtures, retain native failures while finishing independent Full checks, reject every failed attempt even after a successful repeat, verify source receipts and require an explicitly permitted project.
+    responsibility: Route complete static phone and emulator acceptance, retain failures, finalize owned AVD before PASS, verify source receipts and require a permitted project or an explicitly chosen validated metadata-only policy fixture with provenance.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
-    responsibility: Verify actual Orbit pixels, compass/course fallback and accuracy circles; await app scene completion before direct fixture injection, retain 30-second/native assertions, report source/cache/camera state on timeout, and wait for retained sector geometry after resume/reload.
+    responsibility: Verify actual Orbit pixels, heading/course fallback and accuracy circles; isolate heading input for radius checks, await camera and app scene before direct fixture injection, retain .08m/30-second assertions and report sample/cache/source/radius/camera state.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java
     responsibility: Admit only isolated verification APK and explicitly selected phone, then await real delayed startup callbacks and workspace operations before native fixtures; production data and identities remain outside tests.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java

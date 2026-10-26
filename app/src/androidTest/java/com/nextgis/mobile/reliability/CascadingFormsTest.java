@@ -479,6 +479,17 @@ public class CascadingFormsTest {
             scenario.onActivity(a -> {
                 View view=target.apply(a);
                 if(view==null) {lastSwipeDiagnostic="Gesture target not yet attached";return;}
+                // A wide/short window can place the control outside the current scroll viewport.
+                // Reveal its touch band as a user would scroll before swiping; keep deliberate
+                // scroll-position checks on the ScrollView itself unchanged.
+                if(!(view instanceof ScrollView)&&view.isShown()&&view.getWidth()>0&&view.getHeight()>0) {
+                    int band=Math.min(view.getHeight(),Math.round(48*a.getResources().getDisplayMetrics().density));
+                    int top=(view.getHeight()-band)/2;
+                    if(view.requestRectangleOnScreen(new android.graphics.Rect(0,top,view.getWidth(),top+band),true)) {
+                        lastSwipeDiagnostic="Revealing gesture target: "+viewBounds(view);
+                        return;
+                    }
+                }
                 android.graphics.Rect visible=new android.graphics.Rect(), window=new android.graphics.Rect();
                 // Global bounds already account for the target's own ScrollView offset.
                 // Convert root coordinates to screen coordinates, including the window origin.

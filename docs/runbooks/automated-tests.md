@@ -19,7 +19,28 @@ Full сохраняет неуспешную native попытку и продо
 после штатного reset verification workspace. В конце любая такая ошибка,
 required skip или отсутствующий случай оставляет FAIL; успешный повтор её
 не скрывает. Ошибки сборки, подготовки, транспорта или блокировка телефона
-прерывают запуск. Related сохраняет fail-fast. Runner regressions: 32 cases.
+прерывают запуск. Related сохраняет fail-fast. Runner regressions: 43 cases.
+
+Owned AVD финализируется через собственную console даже при потере ADB;
+ожидаются закрытие порта и выход launcher. cleanup.json хранит фактический
+результат. PASS/gate записываются после cleanup; заимствованный AVD и общий
+ADB server не останавливаются.
+
+Если разрешённого проекта на устройстве нет, сначала согласовать проект либо
+использование сохранённого policy snapshot. Только после явного выбора можно
+передать `-TestProject 1403 -TestProjectFixture <approved-policy.json>` в Full
+или Related `-Area project-policy`. Это ограниченный metadata-only schema1 JSON,
+без accounts/features/coordinates; ID должен совпадать, source/output hashes
+и explicit-policy-fixture provenance сохраняются. Без параметра прежний
+discovery и обязательное уточнение остаются. Наличие проекта на новом
+production устройстве из такого теста не следует.
+
+Related `-Area form-layout` проверяет оба native класса форм на эмуляторе
+либо stationary verification APK. Жест сначала раскрывает touch band в
+прокрученной области. Выбранное имя проверяется полностью на реальной ширине
+и со строгим wrap на 320/280dp компонентах; одна строка допустима, если текст
+помещается в широком окне. Camera/heading isolation accuracy fixture сохраняет
+native radius tolerance .08m и 30-секундное ожидание с подробным sample state.
 
 Related `-Area offline-sync` выполняет весь SyncOfflineAndWalkGpsTest только
 на эмуляторе. Ожидание после возврата Wi-Fi допускает один штатный WorkManager

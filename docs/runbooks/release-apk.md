@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-23
+last_verified: 2026-10-26
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -325,6 +325,9 @@ Full продолжает независимые native проверки пос�
 attempt в receipt. Любая такая попытка блокирует итоговый PASS и gate, даже
 если тот же case успешно выполнен повторно. Ошибки подготовки/транспорта и
 ручная блокировка устройства по-прежнему прерывают запуск.
+Успешный receipt/gate появляется после owned-resource cleanup. Сбой восстановления
+или остановки оставляет FAIL. Явно согласованный metadata-only policy fixture
+фиксируется как источник, а не как загруженный production проект устройства.
 Подробности: [автотесты](automated-tests.md).
 
 После добавления GlitchTip regression cases 2026-10-17 новый Full catalogue

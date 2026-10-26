@@ -2,7 +2,8 @@ import sys
 from pathlib import Path
 import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from mobile_test_project import choose_project, ProjectSelectionRequired, read_projects, snapshot_project
+from mobile_test_project import choose_project, ProjectSelectionRequired, read_projects, snapshot_project, load_policy_fixture
+from tempfile import TemporaryDirectory
 import json
 
 
@@ -37,3 +38,30 @@ class PermittedProjectTest(unittest.TestCase):
         self.assertTrue(snapshot['layers'][0]['expected_editable'])
         for forbidden in ('secret-account','secret-password','coordinates','features'):
             self.assertNotIn(forbidden,text)
+
+class ExplicitPolicyFixtureTest(unittest.TestCase):
+    def fixture(self):
+        return {'schema_version':1,'project_id':1403,'layers':[{'name':'Field points','geometry_type':1,
+            'ngw':True,'managed':True,'is_editable':False,'collector_editable':True,
+            'sync_direction':3,'expected_editable':True}]}
+    def load(self,fixture,selector='1403'):
+        with TemporaryDirectory() as folder:
+            path=Path(folder)/'policy.json';path.write_text(json.dumps(fixture),encoding='utf-8')
+            return load_policy_fixture(path,selector)
+    def test_explicit_id_and_policy_only_snapshot_are_accepted(self):
+        self.assertEqual(self.fixture(),self.load(self.fixture()))
+    def test_another_project_needs_an_explicit_matching_choice(self):
+        with self.assertRaises(ProjectSelectionRequired):self.load(self.fixture(),'42')
+    def test_credentials_features_and_unexpected_fields_are_rejected(self):
+        for key in ('account','password','features','coordinates'):
+            fixture=self.fixture();fixture['layers'][0][key]='unwanted'
+            with self.assertRaises(ValueError):self.load(fixture)
+    def test_wrong_shape_and_inconsistent_expectations_are_rejected(self):
+        for key,value in [('geometry_type',0),('ngw','true'),('expected_editable',False),('sync_direction',5)]:
+            fixture=self.fixture();fixture['layers'][0][key]=value
+            with self.assertRaises(ValueError):self.load(fixture)
+    def test_oversized_valid_json_is_rejected_before_use(self):
+        with TemporaryDirectory() as folder:
+            path=Path(folder)/'policy.json'
+            path.write_text(json.dumps(self.fixture())+' '*(256*1024),encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'too large'):load_policy_fixture(path,'1403')

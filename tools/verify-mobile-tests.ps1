@@ -5,6 +5,7 @@ param(
     [string]$PhoneSerial,
     [string]$EmulatorSerial,
     [string]$TestProject,
+    [string]$TestProjectFixture,
     [string]$Avd,
     [string]$SdkPath="$env:LOCALAPPDATA\Android\Sdk",
     [string]$PythonPath,
@@ -31,6 +32,7 @@ try {
     if($PhoneSerial) {$runArgs+=@('--phone-serial',$PhoneSerial)}
     if($EmulatorSerial) {$runArgs+=@('--emulator-serial',$EmulatorSerial)}
     if($TestProject) {$runArgs+=@('--test-project',$TestProject)}
+    if($TestProjectFixture) {$runArgs+=@('--test-project-fixture',$TestProjectFixture)}
     if($Avd) {$runArgs+=@('--avd',$Avd)}
     if($OutputPath) {$runArgs+=@('--output',$OutputPath)}
     if($SkipBuild) {$runArgs+='--skip-build'}

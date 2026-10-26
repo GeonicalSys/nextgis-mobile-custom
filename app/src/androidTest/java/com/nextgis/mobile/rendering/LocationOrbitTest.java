@@ -66,9 +66,16 @@ public class LocationOrbitTest {
             awaitInitialScene(screen, app);
             screen.onActivity(activity -> {
                 app.getGpsEventSource().removeListener(activity.getMapFragment());
+                try {
+                    Method stop=activity.getMapFragment().getClass().getDeclaredMethod("stopDeviceHeading");
+                    stop.setAccessible(true);stop.invoke(activity.getMapFragment());
+                } catch(ReflectiveOperationException error) {throw new AssertionError(error);}
                 ((MapDrawable) app.getMap()).getMaplibreMap().moveCamera(
                         CameraUpdateFactory.newLatLngZoom(new LatLng(FIX.latitude(), FIX.longitude()), 22));
             });
+            awaitScene(screen,app,"accuracy camera zoom 22",() ->
+                    Math.abs(((MapDrawable)app.getMap()).getMaplibreMap().getCameraPosition().zoom-22)<.001);
+            awaitInitialScene(screen,app);
             for (int kind = 0; kind < 5; kind++) {
                 android.location.Location fix = new android.location.Location(kind == 3 ? "network" : "gps");
                 fix.setLatitude(FIX.latitude()); fix.setLongitude(FIX.longitude());
@@ -92,7 +99,8 @@ public class LocationOrbitTest {
                     assertEquals(FIX.latitude(), fix.getLatitude(), 0d);
                     assertEquals(FIX.longitude(), fix.getLongitude(), 0d);
                 });
-                await(screen, () -> Math.abs(accuracyCircleRadius((MapDrawable) app.getMap()) - expected) < .08);
+                awaitScene(screen,app,"accuracy kind="+kind+" expected="+expected,
+                        () -> Math.abs(accuracyCircleRadius((MapDrawable) app.getMap()) - expected) < .08);
             }
         } finally {
             SharedPreferences.Editor restore = preferences.edit();
@@ -508,6 +516,8 @@ public class LocationOrbitTest {
                         if (source != null) {
                             List<Feature> features = source.querySourceFeatures(null);
                             state.append(" sourceFeatures=").append(features.size());
+                            state.append(" cachedAccuracy=").append(value(MapDrawable.class,map,"lastUserLocationAccuracyMeters"))
+                                    .append(" nativeAccuracyRadius=").append(accuracyCircleRadius(map));
                             for (Feature feature : features) if (feature.geometry() instanceof Point) {
                                 state.append(" point=").append(feature.toJson()); break;
                             }

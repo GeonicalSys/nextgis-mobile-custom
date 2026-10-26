@@ -6,6 +6,13 @@ last_verified: 2026-10-26
 
 # app — Android-приложение Lisa/Belka
 
+Adaptive form fixtures раскрывают контрол перед свайпом и проверяют полное
+имя на default/320/280dp ширине. Accuracy graphics fixture изолирует heading,
+ждёт камеру/сцену и сохраняет sample/radius diagnostics. Адресно пройдены
+26 form cases на T40 Plus/API30 и 28 form/cursor cases на API36 AVD; текущий
+Full остаётся отдельным обязательным этапом. Runner43 проверяет также owned
+AVD cleanup перед PASS и явно выбранный policy-fixture input.
+
 Full сохраняет JUnit/native failures и завершает остальные независимые проверки;
 ошибка остаётся FAIL даже после успешного повтора. Build/setup/transport failures
 прерывают запуск. Offline sync fixture использует общий EmulatorNetworkFixture

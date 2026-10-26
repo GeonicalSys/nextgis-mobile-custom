@@ -108,11 +108,42 @@ public class FormAppearanceTest {
             assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG,100,stream));
         } finally { bitmap.recycle(); }
     }
+    private static void assertWholeChoice(TextView value,boolean mustWrap) {
+        android.text.Layout layout=value.getLayout();assertNotNull(layout);
+        float desired=android.text.Layout.getDesiredWidth(value.getText(),value.getPaint());
+        int available=value.getWidth()-value.getCompoundPaddingLeft()-value.getCompoundPaddingRight();
+        if(mustWrap||desired>available+.5f)
+            assertTrue("An overflowing name wraps: desired="+desired+" available="+available,value.getLineCount()>=2);
+        assertEquals(value.getText().length(),layout.getLineEnd(layout.getLineCount()-1));
+        for(int line=0;line<layout.getLineCount();line++)assertEquals("Full name has no ellipsis",0,layout.getEllipsisCount(line));
+        assertTrue("Every name line fits its value view",layout.getHeight()<=
+                value.getHeight()-value.getCompoundPaddingTop()-value.getCompoundPaddingBottom());
+    }
+    private static void awaitChoiceLayout(ActivityScenario<FormBuilderModifyAttributesActivity> scenario) throws Exception {
+        java.util.concurrent.atomic.AtomicBoolean ready=new java.util.concurrent.atomic.AtomicBoolean();
+        long deadline=SystemClock.uptimeMillis()+10000;
+        do {
+            scenario.onActivity(a -> {
+                Spinner company=(Spinner)controls(a).get("contractor");
+                View container=FormFieldLayout.container(company);
+                TextView value=(TextView)company.getSelectedView();
+                if(container==null||value==null) {ready.set(false);return;}
+                boolean pending=false;
+                for(View view=value;view!=null;view=view.getParent() instanceof View?(View)view.getParent():null)
+                    pending|=view.isLayoutRequested();
+                ready.set(!pending&&value.getLayout()!=null&&value.getWidth()>0
+                        &&(container.getLayoutParams().width<0||container.getWidth()==container.getLayoutParams().width));
+            });
+            if(!ready.get())Thread.sleep(30);
+        } while(!ready.get()&&SystemClock.uptimeMillis()<deadline);
+        assertTrue("Picker layout completed before checking text",ready.get());
+    }
     @Test public void clearFieldsHavePermanentCaptionsWrappedValuesAndReadableThemes() throws Exception {
         try (Fixture f = new Fixture()) {
             for (String theme : new String[]{"light", "dark"}) {
                 PreferenceManager.getDefaultSharedPreferences(f.app).edit().putString("theme",theme).commit();
                 try (ActivityScenario<FormBuilderModifyAttributesActivity> s = ActivityScenario.launch(f.intent())) {
+                    awaitChoiceLayout(s);
                     s.onActivity(a -> {
                         Spinner company = (Spinner) controls(a).get("contractor");
                         FormFieldLayout.FieldContainer container = FormFieldLayout.container(company);
@@ -122,11 +153,30 @@ public class FormAppearanceTest {
                         assertEquals("Подрядчик *",label.getText().toString());
                         assertNotEquals("Caption and value have distinct hierarchy", label.getCurrentTextColor(),value.getCurrentTextColor());
                         assertTrue(value.getTextSize() > label.getTextSize());
-                        assertTrue("Long names wrap in the closed picker", value.getLineCount() >= 2);
+                        assertWholeChoice(value,false);
                         assertTrue(company.getHeight() >= FormFieldLayout.dp(company,56));
                         assertEquals(View.GONE, FormFieldLayout.container((View) controls(a).get("comment")).getVisibility());
                         assertTrue(a.findViewById(R.id.form_save).isShown());
                     });
+                    // A full landscape/tablet row may fit this name on one line. Explicit narrow
+                    // components retain strict native wrapping coverage without changing phone settings.
+                    for(int width:new int[]{320,280}) {
+                        s.onActivity(a -> {
+                            View container=FormFieldLayout.container((Spinner)controls(a).get("contractor"));
+                            android.view.ViewGroup.LayoutParams params=container.getLayoutParams();
+                            params.width=Math.min(FormFieldLayout.dp(container,width),((View)container.getParent()).getWidth());
+                            container.setLayoutParams(params);
+                        });
+                        awaitChoiceLayout(s);
+                        s.onActivity(a -> assertWholeChoice((TextView)((Spinner)controls(a).get("contractor")).getSelectedView(),true));
+                        screenshot(f.app,"clear-fields-"+theme+"-w"+width);
+                    }
+                    s.onActivity(a -> {
+                        View container=FormFieldLayout.container((Spinner)controls(a).get("contractor"));
+                        android.view.ViewGroup.LayoutParams params=container.getLayoutParams();
+                        params.width=android.view.ViewGroup.LayoutParams.MATCH_PARENT;container.setLayoutParams(params);
+                    });
+                    awaitChoiceLayout(s);
                     screenshot(f.app, "clear-fields-"+theme);
                     s.onActivity(a -> ((CheckBox)controls(a).get("check")).setChecked(false));
                     InstrumentationRegistry.getInstrumentation().waitForIdleSync();

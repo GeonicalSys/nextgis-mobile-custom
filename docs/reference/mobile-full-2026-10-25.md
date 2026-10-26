@@ -291,3 +291,77 @@ Related offline-sync-readiness-01: 5/5 PASS. Это не доказывает и
 Related offline-sync-readiness-02: **5/5 PASS** с общим network fixture;
 owned AVD остановлен. Runner32 и docs/24 tests PASS. Production worker не менялся.
 Окончательный Full и отдельный планшетный Full всё ещё обязательны.
+
+## Пятый Full: полный список результатов и четыре test failures
+
+Source `0103a75dd598229b8c998d26be8f11672804a2f9`, fingerprint
+`65e7feef3f467cbaa90ad2e34c90f35c0d29f0f7109d210673f1a62736d638a6`.
+Свежая матрица пяти owners: `phone-full-05-delivery-matrix.json`; все прежние
+требования/ветки/pins включены. 913 units, runner32, version matrix,
+docs/24 tests, diagnostic delivery и все 36 системных chooser profiles PASS.
+
+Все **253 required метода начаты: 249 PASS /4 обычных FAIL** в трёх группах.
+Missing и эффективных skipped cases нет. Преднамеренный fatal diagnostic
+сценарий подтверждён отдельно; permission-denied case после initial grant-only
+assumption выполнен явным deny проходом. Receipt учитывает успешные группы
+как 226 distinct cases; остальные 23 успешных метода внутри двух failed
+классов подтверждены raw instrumentation. Общий результат — **Full FAIL**,
+full-passed.json не создан. Evidence: `...\evidence\phone-full-05`,
+`native-complete-summary.json` и все индивидуальные logs.
+
+| Метод | Фактический сбой / вывод |
+|---|---|
+| LocationOrbitTest.phoneAccuracyFloorMatchesThePanelAndNativeCircleWithoutChangingFixes | Generic 30s radius timeout, строка95; исходный kind/radius не сохранён, причина не доказана |
+| CascadingFormsTest.swipesWorkAcrossSelectorsCheckboxCommentsAndBlankSpace | Galaxy в окне2340x1080: checkbox y1030 ниже form viewport331..849; target невидим, новый helper честно отказался посылать жест |
+| CascadingFormsTest.verticalScrollAndSelectedCommentKeepTheirOwnGestures | Selected EditText выше видимой прокрученной области; это не доказательство ошибки production tab navigation |
+| FormAppearanceTest.clearFieldsHavePermanentCaptionsWrappedValuesAndReadableThemes | Тест требовал минимум2 строки даже когда имя помещалось в широком landscape picker |
+
+Все остальные группы выполнены, включая недельные сообщения, видимую часть
+линейных подписей, Stop/старую историю/все шесть TrackControls, mixed candidates
+и field-line/point order, classic/native styles, polygon holes/patterns,
+SDK/SQLite persistence, project selection, scripts, required fields,
+signature/draft recovery и diagnostics. Смартфонная production версия224,
+font1.15/density420 не менялись. После прогона смартфон был отключён пользователем.
+
+## Адресные исправления после пятого Full
+
+Production GPS/renderer/form код не менялся. Gesture fixture раскрывает
+центральную touch band обычной прокруткой перед одним прежним жестом;
+selected-text/signature/vertical/blank-area assertions сохранены. Имя проверяется
+полностью на фактической ширине с Layout/ellipsis/height oracle; на 320/280dp
+компонентах строгий wrap остаётся обязательным в обеих темах.
+
+Accuracy fixture отключает heading callbacks как соседний Orbit case,
+ждёт zoom22 и app scene после камеры. .08m tolerance, 30s deadline и проверки
+неизменности raw fix сохранены. При timeout теперь видны kind/expected,
+cached accuracy, native radius, camera и source state. Related PASS не
+объявляется доказательством исходной production причины.
+
+Пользователь переключил ADB на **T40 Plus_ROW**, serial59843808167874,
+Android11/API30, hardware ums512_1h10. Production **3.1.2.29/223**,
+font1.0/density280, secure location_mode3 сохранены. Новые Related:
+
+- `adaptive-fixtures-tablet-01`: **26/26** form cases PASS;
+- `adaptive-fixtures-emulator-02`: **28/28** form/cursor cases PASS;
+- текущий runner suite: **43/43 PASS**.
+
+Первый emulator Related успел пройти23 form cases, затем ADB потерял
+авторизацию при смене устройства (`adaptive-fixtures-emulator-01`). Его owned
+read-only AVD завершён через console; PID25128/16444 отсутствуют по readback.
+Исправлена финализация: owned console останавливается даже при restore error,
+launcher сохраняется и join-ится, cleanup.json содержит readback. Успех/gate
+пишутся после cleanup. Второй emulator Related завершился с закрытым console
+и exited launcher; borrowed AVD и общий ADB server не останавливаются.
+
+На планшете standard Collector discovery не нашёл1403/других доступных
+проектов. По app/AGENTS.md задан обязательный вопрос о проекте. Подготовлен
+явный `TestProjectFixture` для согласованного metadata-only snapshot:
+schema1, matching ID, максимум256KiB/500 layers, только policy fields,
+без accounts/features/coordinates, с source/output SHA256/provenance.
+Автоматического fallback нет. Прежний phone1403 snapshot содержит18 слоёв,
+SHA256 `08f3a44f84d8bb22701d25d466e957829b22fb40074144bbc3ac751de59935d8`;
+его применение на планшете пока ожидает ответа пользователя.
+
+Новый Full планшета выполняется после выбора проекта и фиксации исходников.
+Повторный Full смартфона на окончательном коде остаётся обязательным;
+сборка локального APK разрешена прежним исключением, публикация/merge отложены.

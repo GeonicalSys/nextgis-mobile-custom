@@ -17,7 +17,7 @@ import time
 from mobile_test_support import (PACKAGE, RUNNER, avd_names, check_publication_receipt, expand_selectors,
                                  native_catalog, parse_instrumentation, phone_unlocked, source_fingerprint, validate_plan)
 from mobile_test_project import (DEFAULT_PROJECT, ProjectSelectionRequired, choose_project,
-                                 read_projects, snapshot_project)
+                                 read_projects, snapshot_project, load_policy_fixture)
 
 from mobile_style_evidence import collect_style_images
 
@@ -43,6 +43,7 @@ class Verification:
         self.checks={}
         self.devices={}
         self.owned_emulator=None
+        self.emulator_process=None
         self.saved_emulator={}
         self.project_fixture=None
 
@@ -94,7 +95,10 @@ class Verification:
                 for case in self.plan.get('related_phone_areas',{}).get(area,[])})
             if not self.related_phone_cases:
                 raise ValueError('No stationary phone checks are defined for the selected Related areas')
+            if any('ProjectLayerSelectionTest' in case for case in self.related_phone_cases): self.select_project()
             if phone_only: return
+        if self.args.scope!='full' and getattr(self.args,'test_project_fixture',None) and not self.project_fixture:
+            self.select_project()
         emulators=[serial for serial in connected if serial.startswith('emulator-')]
         if not self.args.emulator_serial and len(emulators)>1:
             raise ValueError('Select --emulator-serial when more than one emulator is running')
@@ -111,6 +115,16 @@ class Verification:
         self.shell(self.emulator,'cmd','location','set-location-enabled','true')
 
     def select_project(self):
+        source=getattr(self.args,'test_project_fixture',None)
+        if source:
+            fixture=load_policy_fixture(Path(source),self.args.test_project or DEFAULT_PROJECT)
+            self.project_fixture=self.output/'test-project-layers.json'
+            self.project_fixture.write_text(json.dumps(fixture,ensure_ascii=False),encoding='utf-8')
+            self.checks['test_project']={'id':fixture['project_id'],'layer_count':len(fixture['layers']),
+                'snapshot_sha256':hashlib.sha256(self.project_fixture.read_bytes()).hexdigest(),
+                'source':'explicit-policy-fixture','source_sha256':hashlib.sha256(Path(source).read_bytes()).hexdigest()}
+            print('Test project '+str(fixture['project_id'])+': explicitly supplied read-only policy snapshot',flush=True)
+            return
         # Read-only discovery in the existing app. Never choose another project automatically.
         def read(*args):
             return self.command([self.adb,'-s',self.phone,'shell',*args],allow_failure=True).strip()
@@ -149,6 +163,7 @@ class Verification:
                          creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
         stream.close()
         self.owned_emulator=serial
+        self.emulator_process=process
         print('Starting isolated read-only emulator '+serial,flush=True)
         until=time.monotonic()+180
         while time.monotonic()<until:
@@ -332,21 +347,48 @@ class Verification:
                 'passed_cases':sorted({case for result in self.results for case in result['passed']})}
 
     def restore(self):
-        for device in self.devices.values():
-            self.command([self.adb,'-s',device['serial'],'shell','am','force-stop',PACKAGE],allow_failure=True)
-        if not self.saved_emulator: return
-        serial=self.emulator
-        for key in ('window_animation_scale','transition_animation_scale','animator_duration_scale'):
-            value=self.saved_emulator[key]
-            self.shell(serial,'settings','delete','global',key) if value=='null' else self.shell(serial,'settings','put','global',key,value)
-        self.shell(serial,'settings','put','system','font_scale',self.saved_emulator['font'])
-        density=re.search(r'Override density:\s*(\d+)',self.saved_emulator['density'])
-        self.shell(serial,'wm','density',density.group(1) if density else 'reset')
-        for key,service in [('wifi','wifi'),('data','data')]:
-            self.shell(serial,'svc',service,'enable' if self.saved_emulator[key]=='1' else 'disable')
-        self.shell(serial,'cmd','location','set-location-enabled',self.saved_emulator['location'])
-        if self.owned_emulator:
-            self.command([self.adb,'-s',self.owned_emulator,'emu','kill'],allow_failure=True)
+        cleanup={'owned_emulator':self.owned_emulator,'settings_restored':None,
+                 'owned_console_closed':None,'owned_process_exited':None}
+        try:
+            for device in self.devices.values():
+                self.command([self.adb,'-s',device['serial'],'shell','am','force-stop',PACKAGE],allow_failure=True)
+            if not self.saved_emulator: return
+            serial=self.emulator
+            for key in ('window_animation_scale','transition_animation_scale','animator_duration_scale'):
+                value=self.saved_emulator[key]
+                self.shell(serial,'settings','delete','global',key) if value=='null' else self.shell(serial,'settings','put','global',key,value)
+            self.shell(serial,'settings','put','system','font_scale',self.saved_emulator['font'])
+            density=re.search(r'Override density:\s*(\d+)',self.saved_emulator['density'])
+            self.shell(serial,'wm','density',density.group(1) if density else 'reset')
+            for key,service in [('wifi','wifi'),('data','data')]:
+                self.shell(serial,'svc',service,'enable' if self.saved_emulator[key]=='1' else 'disable')
+            self.shell(serial,'cmd','location','set-location-enabled',self.saved_emulator['location'])
+            cleanup['settings_restored']=True
+        except Exception as error:
+            cleanup['restore_error']=str(error)
+            raise
+        finally:
+            try:
+                if self.owned_emulator:
+                    # The owned emulator console remains reachable even if its ADB transport broke.
+                    self.command([self.adb,'-s',self.owned_emulator,'emu','kill'],allow_failure=True)
+                    port=int(self.owned_emulator.removeprefix('emulator-'))
+                    deadline=time.monotonic()+10
+                    while True:
+                        with socket.socket() as probe:
+                            probe.settimeout(.2)
+                            closed=probe.connect_ex(('127.0.0.1',port))!=0
+                        if closed or time.monotonic()>=deadline: break
+                        time.sleep(.1)
+                    cleanup['owned_console_closed']=closed
+                    if not closed: raise RuntimeError('Owned emulator console remained open: '+self.owned_emulator)
+                    process=getattr(self,'emulator_process',None)
+                    if process is not None:
+                        cleanup['owned_process_exited']=False
+                        process.wait(timeout=10)
+                        cleanup['owned_process_exited']=True
+            finally:
+                (self.output/'cleanup.json').write_text(json.dumps(cleanup,indent=2),encoding='utf-8')
 
     def run(self):
         if self.args.scope=='check-publication':
@@ -391,16 +433,22 @@ class Verification:
                     except Exception as error: phone_failures.append(test+': '+str(error))
                 if phone_failures: raise RuntimeError('\n'.join(phone_failures))
             if source_fingerprint(ROOT)!=self.fingerprint: raise RuntimeError('Source changed during verification; rerun the affected checks')
-            receipt=self.receipt('passed')
-            (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
-            if self.args.scope=='full':
-                (ROOT/'build/verification/full-passed.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
-            print('PASS '+self.args.scope+': '+str(len(receipt['passed_cases']))+' distinct native cases; '+str(self.output),flush=True)
         except Exception as error:
             receipt=self.receipt('failed'); receipt['error']=str(error)
             (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
             raise
-        finally: self.restore()
+        finally:
+            try: self.restore()
+            except Exception as error:
+                receipt=self.receipt('failed');receipt['error']='Cleanup failed: '+str(error)
+                (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+                raise
+        # A run becomes successful only after its owned resources have been finalized.
+        receipt=self.receipt('passed')
+        (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+        if self.args.scope=='full':
+            (ROOT/'build/verification/full-passed.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+        print('PASS '+self.args.scope+': '+str(len(receipt['passed_cases']))+' distinct native cases; '+str(self.output),flush=True)
 
 
 def main():
@@ -410,6 +458,7 @@ def main():
     parser.add_argument('--phone-serial'); parser.add_argument('--emulator-serial')
     parser.add_argument('--phone-only',action='store_true',help='Related stationary verification checks only; explicit phone serial required')
     parser.add_argument('--test-project',help='Explicitly authorized Collector ID, name or workspace directory; default 1403')
+    parser.add_argument('--test-project-fixture',help='Explicitly authorized metadata-only policy snapshot with a matching --test-project ID')
     parser.add_argument('--avd'); parser.add_argument('--sdk'); parser.add_argument('--output')
     parser.add_argument('--skip-build',action='store_true')
     args=parser.parse_args()

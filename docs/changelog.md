@@ -8,6 +8,15 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-26 — Adaptive native fixtures и финализация Full
+
+Full05 попытался выполнить все 253 метода:249 PASS/4 обычных FAIL в трёх группах,
+без эффективных required skips. Уточнены viewport/oracle проверки форм и
+изолирован accuracy graphics fixture; адресно emulator28/tablet26 PASS.
+Owned emulator останавливается даже при потере ADB, PASS следует после cleanup.
+Добавлен явный ограниченный policy-fixture input, без автоматического fallback;
+выбор 1403 snapshot для планшета ожидает пользователя. Runner43 PASS.
+
 ## 2026-10-26 — Полный сбор native сбоев и ожидание сети
 
 Full сохраняет отдельные неуспешные native попытки и продолжает независимые
