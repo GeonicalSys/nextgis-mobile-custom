@@ -1,10 +1,91 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-23
+last_verified: 2026-10-26
 ---
 
 # app — Android-приложение Lisa/Belka
+
+Автоматические Actions Android/docs переведены в manual-only по поручению
+пользователя ради лимитов GitHub. Related/Full и docs/report impact выполняются
+локально;6 прежних cloud-only real-window profiles включены в Full. Перед
+публикацией нужен нынешний Full254 с `real_window_matrix`, старого gate мало.
+
+Новая стадия по поручению пользователя: устранение выявленных блокеров и
+публикация ЛИСЫ после зависимостей и свежего Full смартфона/планшета.
+API30 проверки читают потоки без API33 методов и снимают диалог после attach.
+Добавлен offline MVT метод Full (теперь254 метода); результаты прежнего
+253-методного набора остаются историческими, новый Full ещё не принят.
+
+Исходная приёмка 26 октября: Full09 смартфон/API36+AVD253/253 PASS; после отключения VPN
+планшет/API30 завершил Full02:249 PASS/4 FAIL, missing/effective skips=0.
+Три ошибки — API30 test capture/readers, одна — unresolved azimuth word wrap.
+Код/набор253 методов после67f0125 не менялся. Отдельно подтверждён offline local
+MVT defect, CIbbceec8 failed TrackUpload assertion не закрыт. Публикация заблокирована.
+Состояние и ограничения: [квитанция](../../docs/reference/mobile-full-2026-10-25.md).
+Новая исправляющая стадия: [квитанция выпуска](../../docs/reference/mobile-release-fixes-2026-10-26.md).
+
+Track map-action fixture сохраняет фактическую точку pointer и Snackbar overlap;
+Related track-map-actions проверяет одну полную последовательность действий.
+Перед фоновой кнопкой подтверждаются только известные startup GPS/battery
+warnings штатным ACTION_DISMISS; повторной инъекции потерянного pointer нет.
+
+Blank-area gesture fixture использует некликабельную область вне Tabs,
+а не предполагаемый пустым центр ScrollView. Проверки переключения и
+сохранности значений не меняются; это не изменение production формы.
+
+Adaptive form fixtures раскрывают контрол перед свайпом и проверяют полное
+имя на default/320/280dp ширине. Accuracy graphics fixture изолирует heading,
+ждёт камеру/сцену и сохраняет sample/radius diagnostics. Адресно пройдены
+26 form cases на T40 Plus/API30 и 28 form/cursor cases на API36 AVD; текущий
+Full остаётся отдельным обязательным этапом. Runner48 проверяет также owned
+AVD cleanup перед PASS, явно выбранный policy-fixture input и его передачу
+через verification UID в private files с проверкой SHA-256. Android/data
+рабочего приложения и системные storage permissions не меняются.
+
+Full сохраняет JUnit/native failures и завершает остальные независимые проверки;
+ошибка остаётся FAIL даже после успешного повтора. Build/setup/transport failures
+прерывают запуск. Offline sync fixture использует общий EmulatorNetworkFixture
+с ожиданием готового Wi-Fi и восстановлением в finally; bounded budget учитывает
+один штатный backoff, без изменения production SyncAccountWorker/constraints.
+
+MaintenanceReminders предупреждает о недельной давности полного успешного sync
+онлайн-проекта, проверки updater и известного обновления до/после загрузки.
+Локальным картам sync не нужен. Offline/частичная отправка не обновляют часы;
+новое издание не сбрасывает срок. Старой неизвестной истории дана неделя
+наблюдения; нет выдуманного успеха. В постоянно живом процессе следующее
+открытие через сутки повторяет review без нового фонового job.
+Контракт: consuming docs/architecture/maintenance-reminders.md; Related maintenance.
+
+MapFragment отменяет ожидающие SDK gestures до уничтожения MapView. Native
+Related map-teardown проверяет линейку и три пересоздания Activity после тапа
+при включённом strict mode; Full включает регрессию автоматически.
+
+MapFragment выбирает трек обычным тапом, показывает TrackSelectionPanel и
+сохраняет выбор скрытого трека при пересоздании. Инструменты очищают выбор;
+Треки и все допустимые векторные объекты входят в единый выбор; визуальный
+приоритет точек не исключает кандидатов. Related track-candidates / track-controls.
+Контракт: `docs/architecture/track-controls.md`.
+
+Текущий двухслойный образец трека: сердцевина 1.4 px / затемнение 73%, свечение
+6.5 px / blur 3 / opacity .83. Native pixel expectations обновлены под этот
+выбор; по новому поручению пользователя выполняется полный прогон смартфона, затем планшета.
+
+## Штриховки, контуры и живой образец
+
+Related styles включает native PolygonStyleRenderingTest, PolygonStyleEditorTest и PolygonStyleTileFallbackTest. Они проверяют actual pixels, сохранённые категории, lifecycle и 72 русских локальных профиля редактора с Save/Cancel. Full выполняется перед публикацией. Контракт — consuming docs/architecture/polygon-style-controls.md.
+
+Высокие действия в прокрутке проверяются реальным касанием видимой области после стабилизации окна; отдельный регрессионный сценарий покрывает частичное обрезание кнопки viewport. Системная защита ввода Android сохранена.
+
+## Проверки «Светлячка»
+
+Related styles включает два новых native pixel/lifecycle случая и настоящий
+редактор в 72 локальных конфигурациях крупного интерфейса. На явно выбранном
+смартфоне используется только verification APK; системные настройки и рабочее
+приложение сохраняются. Контракт — consuming docs/architecture/point-firefly.md.
+
+Отдельный FireflyTileFallbackTest проверяет переход уже загруженного точечного
+VectorSource к GeoJsonSource при выборе сложного стиля через штатный reload.
 
 Production подготовлен к 3.1.2.30/224, Lisa Debug сохраняет 3.1.2.23/218.
 По запросу 2026-10-23 собирается только подписанный Lisa Release; Belka APK
@@ -141,6 +222,12 @@ CascadingFormsTest переключает вкладку при уже сохр�
 возобновляет экран и проверяет реальную видимость новой страницы и прежний выбор
 подрядчика. Закрытие сразу после выбора вкладки не оставляет транзакцию в очереди.
 Сценарий входит в Related forms и телефонную часть обязательного Full.
+
+Related form-navigation повторяет весь класс в исходном порядке. Физические
+свайпы ждут фокуса, завершения layout и стабильной видимой области; направление,
+число жестов и проверки сохранности значений не ослаблены. При ошибке доступны
+границы и горизонтальная прокрутка контрола/родителей. Это test-only ожидание,
+а не изменение обработки жестов рабочего приложения.
 
 ## GPS после запуска и диагностика восстановления
 
@@ -294,7 +381,7 @@ Launcher и экраны intro/about получают иконку через fl
 `app_launcher_icon`: Lisa использует `ic_launcher_lisa`, Belka — отдельный
 `ic_launcher_belka` во всех пяти Android density buckets. PNG-символы точечных
 стилей лежат в `src/main/assets/marker_icons/*.png`; имя файла без расширения —
-id изображения в MapLibre. Карта использует MapLibre Android `13.0.2` с явным
+id изображения в MapLibre. Карта использует MapLibre Android `13.7.1` с явным
 OpenGL backend вместо Vulkan-default artifact.
 
 Текущий production выпуск Lisa/Belka — `3.1.2.29` / `223`, сопряжённая
@@ -542,7 +629,7 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   операции с проектом.
 - `lisa` и `belka` — отдельные product flavors.
 - `app`, `maplibui` и `maplib` должны разрешать один MapLibre backend:
-  `org.maplibre.gl:android-sdk-opengl:13.0.2`; generic `android-sdk` версии 13
+  `org.maplibre.gl:android-sdk-opengl:13.7.1`; generic `android-sdk` версии 13
   использует Vulkan и возвращать его в production нельзя.
 - `MapFragment` должен реализовывать актуальный `MaplibreMapInteraction`.
 - Каждый созданный MapLibre `MapView` должен получить согласованную пару
@@ -876,3 +963,20 @@ sync_journal и cause. Contract 3 резервирует payload budget, actual 
 для NDK и фиксирует startup stages. Cached/Backfillable reports сохраняют original
 identity; report_origin содержит отправителя. Related bugreports включён в CI.
 [Группы и ограничения вывода](../../docs/reference/glitchtip-triage-2026-10-17.md).
+
+Фактический результат: [проверка 2026-10-24](../../docs/reference/polygon-style-verification-2026-10-24.md).
+
+MainActivity требует общий confirm Stop с map/menu; notification использует
+TrackStopConfirmationActivity. Related track-followup проверяет реальные входы
+и Cancel/Back, stale session UUID и legacy SQLite colors на verification-установке.
+
+Related line-labels verifies winding Russian labels, one anchor per visible SQL ID, pan/zoom/rotation, category paint and geometry picking. Related firefly-editor-ui keeps manual settings/preview/Save/Cancel and proves the removed field-points preset stays absent.
+
+Graphics LocationOrbitTest теперь ждёт завершения текущего app layer apply
+перед подстановкой технической позиции; одного ненулевого Style недостаточно.
+При таймауте выводятся camera, source/cache и loading flags. Related cursor-rendering
+запускает оба обязательных метода отдельно; assertions и 30 секунд сохранены.
+
+MapSelectionDialog переносит длинные строки общего списка, оставляет прокрутку
+и Cancel. Полевые линейные рисуются над треками/обычными данными, но под точками,
+включая отдельные подписи. Related track-candidates 4/4 native PASS; Full обязателен.

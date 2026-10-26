@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="maintenance_title">Check data and updates</string>
+    <string name="maintenance_sync_overdue">This project was last fully synchronized over a week ago. Connect to the internet and run synchronization to refresh the data and send your changes.</string>
+    <string name="maintenance_sync_unknown">This online project has had no confirmed full synchronization for over a week. Connect to the internet and run synchronization.</string>
+    <string name="maintenance_check_overdue">Updates have not been checked successfully for over a week. For reliable operation, connect to the internet, reopen the app and install any offered update.</string>
+    <string name="maintenance_download_overdue">An update has been available on this device for over a week but has not finished downloading. Connect to the internet without roaming and reopen the app. It will download the update automatically and offer to install it.</string>
+    <string name="maintenance_install_overdue">An update has been available on this device for over a week. It is downloaded but not installed. Please install it for reliable operation. If installation fails, contact technical support.</string>
+</resources>

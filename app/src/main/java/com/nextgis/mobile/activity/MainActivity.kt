@@ -565,9 +565,13 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         get() = findViewById<View>(com.nextgis.maplibui.R.id.bottom_toolbar) as BottomToolbar
 
 
-    private fun controlTrack(item: MenuItem?) {
+    private fun controlTrack(item: MenuItem?, source: String = "menu") {
         if (TrackerService.hasRecordingSession(this)) {
-            performTrackControl(item)
+            com.nextgis.maplibui.util.TrackActions.confirmStop(this,
+                TrackerService.getRecordingSessionId(this), source) {
+                mapFragment?.refreshTrackStatusButton()
+                invalidateOptionsMenu()
+            }
         } else {
             trackPowerWarning.confirmStart { performTrackControl(item) }
         }
@@ -577,6 +581,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     private val backgroundLocationWarning by lazy { com.nextgis.mobile.location.BackgroundLocationWarning(this) }
 
     private fun performTrackControl(item: MenuItem?) {
+        // Permission/power dialogs can return after another entry point has started recording.
+        if (TrackerService.hasRecordingSession(this)) {
+            controlTrack(item)
+            return
+        }
         val iconAndTitle = TrackerService.start_stop_tracking_GetIconWithTitle(this)
         if (item != null)
             setTrackItem(item, iconAndTitle.second, iconAndTitle.first)
@@ -591,7 +600,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
         if (TrackerService.hasRecordingSession(this)) {
             // Stop must work even after location is disabled or permission is revoked.
-            controlTrack(null)
+            controlTrack(null, "map")
             return
         }
         if (mapTrackTogglePending) return
@@ -1836,6 +1845,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             val alertDialog = builder.create()
             alertDialog.show()
         }
+        if (AppUpdateManager.shouldRefreshStartupCheck()) startupUpdateCheck.restore(false, false)
         startupUpdateCheck.onResume()
         watchUpdateNetwork()
     }

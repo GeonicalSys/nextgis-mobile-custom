@@ -1,5 +1,70 @@
 schema_version: 1
 invariants:
+  INV-LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT:
+    title: Local vector tiles render without external network connectivity
+    owners: [maplibui, app]
+    statement: >
+      MapLibre HTTP transport must remain available to the SQLite loopback tile server
+      when Android reports no external network. This SDK override must not change
+      Android NetworkUtil, WorkManager constraints, device radios or upload/update intent.
+      Native offline coverage is emulator-only and restores its owned network state.
+    related_code:
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
+    verify_smoke: [AUTO-LOCAL-VECTOR-TILE-OFFLINE]
+    must_update_docs: [docs/architecture/map-rendering.md, docs/reference/official-differences.md, maplibui/docs/README.md, maplibui/docs/manifest.yaml]
+  INV-MIXED-MAP-CANDIDATES:
+    title: A normal tap offers all eligible tracks and vector objects together
+    owners: [app, maplib]
+    statement: Collect vector SQL candidates with the existing inclusion and geometry-refinement policy plus visible native track IDs before choosing. Points and tracks never suppress each other or other vector geometry types. Deduplicate track segments by ID, retain layer plus feature identity separately from track identity, use a single scrolling chooser for multiple candidates, and select one candidate directly. Retain tool gestures, cancel without selection, reject stale map callbacks and dismiss the chooser with its view.
+    related_code: [app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt, app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java, maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java, app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java]
+    verify_smoke: [AUTO-MOBILE-RELATED, AUTO-MAPLIB-UNIT]
+    must_update_docs: [docs/architecture/track-controls.md, docs/architecture/map-rendering.md, app/docs/README.md, maplib/docs/README.md]
+  INV-FIELD-LINE-DISPLAY-PRIORITY:
+    title: Standard field lines are above tracks and below point groups
+    owners: [maplib, app]
+    statement: Match only line or multiline geometry named Полевые линейные or field_lines (trimmed, case-insensitive). Keep all its body and label passes above ordinary data and tracks and below actual Point/MultiPoint groups, including logical groups and derived label sources, across full/lite/style/reorder. Preserve internal group and point list order and the higher transient tools/GPS. Display priority never filters hit candidates.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java, maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java, maplib/src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MOBILE-RELATED]
+    must_update_docs: [docs/architecture/track-controls.md, docs/architecture/map-rendering.md, maplib/docs/README.md, maplib/docs/manifest.yaml]
+  INV-MAINTENANCE-REMINDERS:
+    title: Weekly reminders distinguish complete online-project sync and verified app updates
+    owners: [app]
+    statement: Read only the active online project's canonical ProjectSyncState full-success clock; local maps never need sync. Persist successful validated manifest checks separately from first discovery of an uninstalled update, retaining the outstanding age across newer releases. Only a fully revalidated matching APK means downloaded. Unknown legacy history gets observation grace without claiming success. Foreground reminders preserve retry, Install/Later and offline work; rotation/network retries do not duplicate them, and a resident process receives a fresh review on reopening after a day.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
+      - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/test/java/com/nextgis/mobile/util/MaintenanceRemindersTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/util/MaintenanceRemindersNativeTest.java
+    verify_smoke: [AUTO-MAINTENANCE-REMINDERS, AUTO-UPDATER-CHECKS, AUTO-MOBILE-RELATED]
+    must_update_docs: [docs/architecture/maintenance-reminders.md, docs/runbooks/release-apk.md, app/docs/README.md, app/docs/manifest.yaml]
+  INV-POLYGON-STYLE-CONTROLS:
+    title: Configurable polygon symbols preserve old styles and match the live native preview
+    owners: [maplib, maplibui, app]
+    statement: Missing option objects preserve old patterns and opacity. Explicit disabled settings override inherited Other options. Procedural textures are periodic, bounded and shared by style with independent pattern alpha and last-owner native cleanup. Dash/cap/join use constant filtered rendering children with normal order, picking and visibility. Advanced MVT styles use the existing classic fallback. The live offline preview uses production native geometry factories and owns its lifecycle. A category modal edits an independent effective clone, leaves the source rule and Other unchanged on Cancel and saves only the chosen category; its separate remove action remains independent. Invalid new inputs block Save; Russian controls and actions remain reachable at large scales.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java
+      - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java
+      - maplibui/src/main/java/com/nextgis/maplibui/util/PolygonStyleControls.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java
+    verify_smoke: [AUTO-POLYGON-STYLE-CONTROLS, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
+    must_update_docs: [docs/architecture/polygon-style-controls.md, docs/architecture/classic-style-verification.md]
+  INV-POINT-FIREFLY:
+    title: Firefly core remains crisp and its glow has no interior coverage
+    owners: [maplib, maplibui, app]
+    statement: Marker type 9 shares the existing JSON fields and never changes the blur rendering of types 1–8. Its independent core and outer glow alpha compose without filling a transparent centre. Whole-symbol zoom and one layer-opacity multiplier apply to non-SDF children with the logical layer picking/order/visibility lifecycle. Native images are released after their last owner and CPU bitmaps are bounded. Type selection preserves existing settings; the field-points preset is explicit. Full remains a separate publication gate.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java
+      - maplib/src/main/java/com/nextgis/maplib/map/mpl/FireflyLayerFactory.java
+      - maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyTileFallbackTest.java
+    verify_smoke: [AUTO-POINT-FIREFLY, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
+    must_update_docs: [docs/architecture/point-firefly.md, docs/architecture/classic-style-verification.md]
   INV-FEATURE-COPY:
     title: Copying creates an independent compatible feature with destination category precedence
     verify_smoke: [AUTO-FEATURE-EDITING, SMOKE-FEATURE-COPY-TRANSFORM]
@@ -28,10 +93,17 @@ invariants:
     related_code: [app/src/main/java/com/nextgis/mobile/usage, app/src/main/java/com/nextgis/mobile/MainApplication.java]
     verify_smoke: [AUTO-MOBILE-USAGE]
     must_update_docs: [docs/architecture/mobile-usage.md]
+  INV-VISIBLE-LINE-LABELS:
+    title: One whole label follows the visible part of a linear object
+    owners: [maplib, app]
+    statement: Native LineString/MultiLineString labels use one point anchor per SQL ID in the current screen quadrilateral and a length-weighted predominant visible direction. The word stays rigid even when no straight segment can fit it. Camera/source work coalesces off the UI thread using loaded geometry; stale map/style results never apply. Original geometry, picking, SQL and upload stay unchanged. Native fonts, category paint, zoom and collision remain active.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelLayout.java, maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelController.java, maplib/src/main/java/com/nextgis/maplib/map/RuleLabelLayouts.java, app/src/androidTest/java/com/nextgis/mobile/rendering/VisibleLineLabelsTest.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MOBILE-RELATED]
+    must_update_docs: [docs/architecture/visible-line-labels.md, docs/architecture/map-rendering.md]
   INV-SHARED-TRACKS:
     title: One installation owns track history independently of project workspaces
     owners: [app, maplib, maplibui]
-    statement: All projects use one private track database, durable spool and shared layer visibility. Resolve the actual legacy layers.db through DatabaseContext; missed histories import beside post-update tracks. Sent flags, segments, UUID acknowledgements and atomic backup/new pending points migrate transactionally without modifying sources; source provenance prevents duplicate bootstrap copies and deleted history reimport. Project deletion retains common tracks. Recording project-switch guards remain enabled.
+    statement: All projects use one private track database, durable spool and shared layer visibility. Resolve the actual legacy layers.db through DatabaseContext; missed histories import beside post-update tracks. SQL NULL legacy colors are filled once during schema-v2 upgrade or late import while explicit colors stay unchanged. Sent flags, segments, UUID acknowledgements and atomic backup/new pending points migrate transactionally without modifying sources; source provenance prevents duplicate bootstrap copies and deleted history reimport. Project deletion retains common tracks. Recording project-switch guards remain enabled.
     related_code: [maplib/src/main/java/com/nextgis/maplib/map/SharedTrackStore.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedTrackProjects.java, app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java]
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, AUTO-MOBILE-RELATED]
     must_update_docs: [docs/architecture/shared-tracks.md, docs/architecture/collector-projects.md]
@@ -52,7 +124,7 @@ invariants:
   INV-MOBILE-PUBLICATION-ACCEPTANCE:
     title: Publication requires current complete phone and emulator acceptance
     owners: [app, maplibui, maplib]
-    statement: After ordinary work run related emulator checks. Before each publication after dependency closure and final code/version run Full and Check-Publication; every native case and core checks must pass for the current content. Only the separate verification APK is reset on a phone. Missing permitted test project requires asking the user.
+    statement: Run local Related after ordinary work and local Full plus Check-Publication after dependency closure and final code/version before publication. Every native case, unit/docs/version gate, 36 chooser profiles and 6 real-window profiles at density620/font200% must pass for the current content, including real_window_matrix. Cloud workflows are manual-only by separate user request. Full preserves every failed attempt; a successful repeat cannot hide it. Setup/transport/locked-device failures abort. Only the separate verification APK is reset on a phone. Missing permitted project requires asking the user.
     related_code: [tools/run_mobile_tests.py, tools/mobile_test_support.py, tools/mobile_test_project.py, tools/mobile-test-plan.json, app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java]
     verify_smoke: [AUTO-MOBILE-FULL, AUTO-MOBILE-PUBLICATION-GATE]
     must_update_docs: [docs/runbooks/automated-tests.md, docs/runbooks/release-apk.md]
@@ -177,7 +249,7 @@ invariants:
     title: Failed track writes and Stop retain the shared-store tail
     owners: [maplib, maplibui, app]
     statement: >
-      Sampled points enter a bounded ordered application-owned shared-track queue before idempotent UUID SQLite insert.
+      Map/menu/notification require confirmation before recording Stop; Cancel/Back preserve intent. A durable user-session UUID rejects stale confirmations and survives recovery/split. Sampled points enter a bounded ordered application-owned shared-track queue before idempotent UUID SQLite insert.
       A failed write retains the point; pending files are removed only after commit. Stop intent,
       track row and recording flag survive until the full tail drains and session closure commits.
       Corrupt checkpoints block silent recovery. Disk-full RAM fallback cannot survive process death
@@ -265,7 +337,7 @@ invariants:
   INV-MAPLIBRE-BACKEND-COMPATIBILITY:
     title: Production map rendering does not require Vulkan
     owners: [app, maplibui, maplib]
-    statement: MapLibre Android 13.0.2 must resolve through org.maplibre.gl:android-sdk-opengl in app, maplibui and maplib; the generic android-sdk or android-sdk-vulkan artifacts must not enter the production runtime because supported devices may lack a compatible Vulkan implementation.
+    statement: MapLibre Android 13.7.1 must resolve through org.maplibre.gl:android-sdk-opengl in app, maplibui and maplib; the generic android-sdk or android-sdk-vulkan artifacts must not enter the production runtime because supported devices may lack a compatible Vulkan implementation.
     related_code:
       - app/build.gradle
       - maplibui/build.gradle
@@ -369,7 +441,7 @@ invariants:
   INV-TRACK-LAYER-TOP:
     title: My Tracks stays at the top of the user layer list
     owners: [app, maplib, maplibui]
-    statement: Keep every direct tracks layer last in internal LayerGroup order so it is first in the reversed UI list, and insert Collector project layers below it.
+    statement: Keep every direct tracks layer last in internal LayerGroup order so it is first in the reversed UI list, and insert Collector project layers below it. Native rendering separately puts track lines below named standard field-line groups and actual Point/MultiPoint vector groups, preserving their relative list order and keeping transient tools and GPS above them.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java
@@ -1011,7 +1083,7 @@ invariants:
     owners: [app, maplibui, maplib]
     statement: >
       Track recording uses durable preference track_recording_enabled, cleared only by the
-      explicit menu finish action. After reboot or process death, recording auto-resumes
+      confirmed finish action from map/menu/notification; Cancel/Back preserve it and stale user-session UUIDs cannot stop a new session. After reboot or process death, recording auto-resumes
       without a dialog; already inserted trackpoints must not be lost (closing an unfinished
       track and starting a new id is allowed). TrackerService shares the default application
       process with the toolbar so lifecycle delivery and durable preference reads are ordered;

@@ -39,6 +39,17 @@ import static org.junit.Assert.*;
 /** Synthetic SQLite -> loopback MVT -> native symbols and pixels; no object-label source. */
 @RunWith(AndroidJUnit4.class)
 public class LocalVectorTileLabelTest {
+    @Test public void localTilesAndLiveStyleFallbackRenderWhileAllExternalNetworksAreOffline() throws Exception {
+        android.content.Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        try (com.nextgis.mobile.reliability.EmulatorNetworkFixture network =
+                     new com.nextgis.mobile.reliability.EmulatorNetworkFixture(context)) {
+            network.connected(false);
+            assertFalse("Application networking still sees offline", new com.nextgis.maplib.util.NetworkUtil(context).isNetworkAvailable());
+            FireflyTileFallbackTest.verifyLiveTiledFallback();
+            assertFalse("Rendering never enables a radio", new com.nextgis.maplib.util.NetworkUtil(context).isNetworkAvailable());
+        }
+    }
+
     @Test public void oneQuarterAcrossTileSeamsKeepsOneInteriorLabelWithOneSourceAndThreeStyleLayers() throws Exception {
         GISApplication app=(GISApplication)InstrumentationRegistry.getInstrumentation()
                 .getTargetContext().getApplicationContext();

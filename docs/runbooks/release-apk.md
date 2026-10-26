@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-23
+last_verified: 2026-10-26
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -15,6 +15,17 @@ related_code:
 ---
 
 # Выпуск Lisa и Belka APK
+
+Проверки перед merge/release выполняются локально. По поручению пользователя
+Android/docs Actions manual-only: не запускать cloud workflow автоматически
+ради green check. Local Full дополнительно требует6 real-window profiles;
+Check-Publication проверяет `real_window_matrix` вместе с остальными gates.
+
+Текущая разрешённая стадия26 октября — публикация только ЛИСЫ после устранения
+блокеров, слияния library PR60/44 и app PR78 и свежего Full смартфона, затем
+планшета. Новый каталог254 включает offline MVT regression; прежний Full253
+не заменяет приёмку изменённого кода. Локальные APK до исправлений не публикуются.
+Текущее свидетельство: [исправления выпуска](../reference/mobile-release-fixes-2026-10-26.md).
 
 ## Конфигурация багрепортов
 
@@ -141,7 +152,7 @@ APK может содержать production basename. Это не версия 
   AppDiagnostics инициализирует SDK после isolated-script guard;
 - JTS Core присутствует в обеих release-сборках, а
   `MultiPolygonGeometryRepairTest` проходит в `:maplib:testDebugUnitTest`;
-- runtime dependency graph разрешает `org.maplibre.gl:android-sdk-opengl:13.0.2`
+- runtime dependency graph разрешает `org.maplibre.gl:android-sdk-opengl:13.7.1`
   и не содержит generic/Vulkan MapLibre artifact;
 - запуск поверх существующего профиля.
 
@@ -170,6 +181,11 @@ package/certificate не должен получить URI или поток п�
 Она выполняется без открытого окна и восстанавливается после перезапуска процесса
 или телефона. Android выбирает точное время; принудительная остановка приложения
 приостанавливает фоновые задачи до следующего открытия. Проверка при запуске сохранена.
+
+Недельные предупреждения о sync, проверке обновлений и давно известном APK
+описаны в [контракте напоминаний](../architecture/maintenance-reminders.md).
+Они показываются на главном экране и не блокируют работу. Для локальных карт
+давность sync не проверяется; частичная/неуспешная синхронизация не сбрасывает срок.
 
 APK скачивается по Wi-Fi или мобильному интернету, включая тарифицируемую сеть,
 только без роуминга (`NetworkType.NOT_ROAMING`). Сокеты и DNS привязаны к выбранной
@@ -316,6 +332,13 @@ Failure, skip required case, неполный отчёт, отсутствие �
 source fingerprint блокируют публикацию. При отсутствии разрешённого проекта
 1403 сначала спросить пользователя о другом тестовом проекте.
 Порядок dependency closure и отдельное разрешение на публикацию сохраняются.
+Full продолжает независимые native проверки после JUnit сбоя, сохраняя failed
+attempt в receipt. Любая такая попытка блокирует итоговый PASS и gate, даже
+если тот же case успешно выполнен повторно. Ошибки подготовки/транспорта и
+ручная блокировка устройства по-прежнему прерывают запуск.
+Успешный receipt/gate появляется после owned-resource cleanup. Сбой восстановления
+или остановки оставляет FAIL. Явно согласованный metadata-only policy fixture
+фиксируется как источник, а не как загруженный production проект устройства.
 Подробности: [автотесты](automated-tests.md).
 
 После добавления GlitchTip regression cases 2026-10-17 новый Full catalogue

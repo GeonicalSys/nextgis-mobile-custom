@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-23
+last_verified: 2026-10-26
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -15,7 +15,119 @@ related_code:
 
 # Автоматические проверки
 
+С26 октября2026 основной маршрут полностью локальный. Android reliability и
+docs Actions оставлены только workflow_dispatch: push/PR не расходуют минуты
+GitHub. Облачный запуск допустим только по отдельному запросу пользователя.
+Локальный Full собирает все variants, выполняет unit/native/docs/version
+проверки,36 chooser profiles и6 бывших cloud-only реальных окон при620dpi,
+font200%, portrait/landscape, native/compat и settings. Успех последних хранит
+обязательный `real_window_matrix`; его отсутствие блокирует публикацию.
+
+`tools/docs-check.ps1 -RunTests` выполняет report-card guard с его unit tests,
+строгий change-impact по всему task diff от fetched origin target вместе с
+рабочими/новыми файлами, validator и docs tests. GitHub API/token для этого
+локального сравнения не нужны. До команды сохраняется обязательный preflight.
+Linux Mesa/Xvfb остаётся отдельным ручным окружением; Windows host OpenGL и
+реальные Android устройства не выдаются за проверку того же Linux driver.
+
+После release fixes26 октября каталог содержит254 метода: новый обязательный
+emulator-only offline MVT случай выполняет тот же live fallback с выключенными
+Wi-Fi/data и реальной native отрисовкой. Related `-Area offline-tiles` запускает
+его отдельно; `-Area azimuth-text`, `persistence-catalog` и `track-delivery`
+адресно проверяют соответствующие прежние методы. На Android11 capture
+диалогов ждёт attach, потоковые readers не требуют InputStream API33.
+Исторические отчёты253 методов не принимают новый каталог автоматически.
+
+Related `-Area track-map-actions` адресно выполняет исходную последовательность
+color/rename/hide/recreate/overlap/delete. Перед pointer сохраняются bounds,
+центр и Snackbar overlap под TrackTouchQA; ошибка включает предыдущее нажатие.
+Это диагностика, без повторной инъекции жеста или увеличения таймаута.
+Track UI перед pointer закрывает только известный startup GPS/battery Snackbar
+его штатным accessibility ACTION_DISMISS и ждёт исчезновения. Это проверка
+действий фонового экрана после закрытия уведомления; dedicated power-warning
+native case не исключается, системные ограничения устройства не меняются.
+
+Full сохраняет неуспешную native попытку и продолжает независимые сценарии
+после штатного reset verification workspace. В конце любая такая ошибка,
+required skip или отсутствующий случай оставляет FAIL; успешный повтор её
+не скрывает. Ошибки сборки, подготовки, транспорта или блокировка телефона
+прерывают запуск. Related сохраняет fail-fast. Runner regressions: 53 cases.
+
+Owned AVD финализируется через собственную console даже при потере ADB;
+ожидаются закрытие порта и выход launcher. cleanup.json хранит фактический
+результат. PASS/gate записываются после cleanup; заимствованный AVD и общий
+ADB server не останавливаются.
+
+Если разрешённого проекта на устройстве нет, сначала согласовать проект либо
+использование сохранённого policy snapshot. Только после явного выбора можно
+передать `-TestProject 1403 -TestProjectFixture <approved-policy.json>` в Full
+или Related `-Area project-policy`. Это ограниченный metadata-only schema1 JSON,
+без accounts/features/coordinates; ID должен совпадать, source/output hashes
+и explicit-policy-fixture provenance сохраняются. Без параметра прежний
+discovery и обязательное уточнение остаются. Наличие проекта на новом
+production устройстве из такого теста не следует.
+
+Согласованный policy JSON передаётся через UTF-8 stdin `adb exec-in run-as`
+в private files verification APK. Проверяются точный package/private parent
+и SHA-256 после записи; native тест требует canonical getFilesDir. Общедоступные
+копии и доступ shell к Android/data не нужны. На некоторых Android11 прошивках
+внешний каталог закрыт даже для ADB; это не доказательство отсутствия проекта.
+
+Related `-Area form-layout` проверяет оба native класса форм на эмуляторе
+либо stationary verification APK. Жест сначала раскрывает touch band в
+прокрученной области. Выбранное имя проверяется полностью на реальной ширине
+и со строгим wrap на 320/280dp компонентах; одна строка допустима, если текст
+помещается в широком окне. Camera/heading isolation accuracy fixture сохраняет
+native radius tolerance .08m и 30-секундное ожидание с подробным sample state.
+
+Related `-Area offline-sync` выполняет весь SyncOfflineAndWalkGpsTest только
+на эмуляторе. Ожидание после возврата Wi-Fi допускает один штатный WorkManager
+backoff и scheduler latency (60 секунд); offline zero-attempt/no-sync и final
+SUCCEEDED assertions сохранены. Ошибка содержит attempts/stop reason/eligible
+time и network connected/validated. Production worker не меняется.
+
+Related `-Area form-navigation` запускает весь CascadingFormsTest в том же
+порядке, что Full; с явным PhoneSerial доступен stationary verification APK.
+Перед реальным жестом fixture ждёт фокуса окна, завершённой раскладки и
+стабильной видимой области; сам жест не переигрывает при ошибке. Сбой содержит
+геометрию контрола/родителей и состояние окна. Внешнее системное окно означает
+FAIL проверки окружения, не право нажимать за пределами UID тестового APK.
+Для blank-area subcase создаётся отдельная некликабельная область вне Tabs:
+центр ScrollView не считается доказательством пустого места. Перед единственным
+свайпом цель раскрывается штатной прокруткой; проверка значений сохраняется.
+
+Related `-Area map-teardown` адресно воспроизводит отложенный SDK тап при
+закрытии/пересоздании MapView и исходный сценарий линейки. Проверка идёт на
+эмуляторе с strict mode; оба метода входят в Full через MapEditingToolsTest.
+
+Адресная проверка управления треками: `tools/verify-mobile-tests.ps1 -Scope Related -Area track-controls`.
+Она использует verification APK и включает виджеты/жесты, native pixels/order,
+Save/Cancel, пересоздание и отказ удаления активного трека. Stationary поднабор
+доступен с явным PhoneSerial; recorder/retry выполняется на эмуляторе. Полная
+регрессия записи/выгрузки — Related tracks, редактора — Related feature-editing.
+
+## Новые стили полигонов
+
+Для полного адресного покрытия стилей: Related -Area styles. Быстрый пакет polygon-styles включает три новых класса с шестью методами. Явные -PhoneSerial и -PhoneOnly используют только отдельный verification APK. Текущую сборку проверять до -SkipBuild; runner сохраняет fingerprint всех владельцев. Full не запускается при обычной сборке и остаётся обязательным перед публикацией. Контракт: [настройки полигонов](../architecture/polygon-style-controls.md).
+
+## Точечные стили и «Светлячок»
+
+`tools\verify-mobile-tests.ps1 -Scope Related -Area styles` выполняет 16 native
+rendering cases, сценарий редактора с 72 локальными профилями и отдельный переход
+живого точечного tile-слоя к classic fallback (18 native cases). Явные
+`-PhoneSerial <serial> -PhoneOnly` разрешают только неподвижные проверки в
+verification APK. Тесты не меняют системные font/display настройки смартфона.
+Pixel evidence сохраняется в `files/firefly-qa` изолированного приложения;
+квитанция runner содержит точные исходы. [Контракт](../architecture/point-firefly.md).
+Full по-прежнему выполняется отдельно перед публикацией.
+
 ## Проверки копирования и преобразований
+
+Недельные напоминания: Related `-Area maintenance` проверяет новый native UI и
+существующий updater transfer/ready/non-roaming путь на эмуляторе. Неподвижные
+новые проверки доступны с явным PhoneSerial в verification APK. Новый класс
+входит в phone roster Full; системные настройки телефона сохраняются. Контракт:
+[напоминания](../architecture/maintenance-reminders.md).
 
 `tools\verify-mobile-tests.ps1 -Scope Related -Area feature-editing` проверяет новые команды на эмуляторе. Добавить `-PhoneSerial <serial>` для трёх неподвижных проверок на verification APK смартфона; `-PhoneOnly` выполняет только эту разрешённую часть с обязательным serial. Системные настройки смартфона не меняются. Native исходы/полнота сохраняются по каждому сценарию; Related не заменяет Full. Каталог/маршрутизация находятся в mobile-test-plan.json. [Контракт и покрытие](../architecture/feature-copy-transform.md).
 
@@ -51,6 +163,17 @@ Get-CimInstance Win32_OptionalFeature -Filter "Name='HypervisorPlatform'" | Sele
 BCDEdit readback подтвердил `Off → Auto`. Перезагрузка отложена пользователем.
 Текущий загруженный сеанс сохраняет Off/HypervisorPresent=false до перезапуска;
 проверка ускорения и emulator Related после перезагрузки остаются открытыми.
+
+Актуализация 2026-10-26: после последующих настроек/перезагрузок WHP,
+VirtualMachinePlatform и WSL фактически Disabled, Hyper-V/VBS не работают.
+По явному выбору пользователя сохраняется выключенный Windows hypervisor:
+в BCD закреплён `hypervisorlaunchtype Off`, установлен уже имеющийся подписанный
+AEHD2.2. `emulator -accel-check` подтвердил usable/exit0 без новой перезагрузки.
+Следующая загрузка требует readback BCD/HypervisorPresent/AEHD; обычный reboot
+не должен считаться новой настройкой Auto. Google объявил sunset AEHD
+31 декабря2026 и рекомендует WHPX; будущий переход согласовывается отдельно.
+Подробности и Full06 environment failure:
+[квитанция](../reference/mobile-full-2026-10-25.md#шестой-full-блок-среды-после-перезагрузки-26-октября).
 
 ## Регрессии GlitchTip 2026-10-23
 
@@ -301,3 +424,31 @@ restart отдельно, а остальные HTTP cases — с чистым c
 штатный GitHub related runner; дублирующиеся cases map/bugreports не повторяются.
 Full catalogue содержит 207 native cases; прежние Full receipts это новое
 содержимое не подтверждают. APK пока не опубликован.
+
+Native runner после каждого rendering case сохраняет bounded PNG из фиксированных QA-папок verification-приложения: до 4 MiB на файл и 16 MiB на case, только безопасные PNG-имена, SHA-256 index. Рабочие файлы приложения не читаются. Отдельный case живого образца проверяет реальные pixels точек/линий/полигонов и изменение alpha настоящим жестом до Save.
+
+Адресная область style-categories проверяет настоящую строку категории, наследованные настройки, Cancel/Save и отдельную кнопку удаления. NativeStyleTouch перед targeted инъекцией ждёт фокус окна и стабильную видимую область в физических координатах. Касание высокой кнопки допускается только внутри пересечения с viewport прокрутки и экраном; для SeekBar дополнительно видима настоящая точка минимального значения. Регрессия создаёт частично обрезанную кнопку и проверяет доставку реального касания. UID guard Android сохраняется.
+
+Адресная область `style-editors` запускает FireflyStyleEditorTest и PolygonStyleEditorTest: обе матрицы и два отдельных случая живого образца/реальной категории, 4 native метода. Она предназначена для изменения тестового ввода и не заменяет остальные rendering-сценарии `styles` или Full перед публикацией.
+
+## Треки: подтверждение Stop и прежние цвета
+
+Related `-Area track-followup` запускает TrackStopConfirmationTest (map/menu/
+notification, Cancel/Back, stale UUID, split и 24 профиля окна),
+LegacyTrackColorsNativeTest (реальный v1→v2), TrackControlsTest (native GPU),
+а на эмуляторе также прежние Stop/retry и shared-track сценарии. Для stationary
+проверки на разрешённом устройстве указать `-PhoneSerial`; используется только
+отдельная verification-установка, системные настройки телефона не меняются.
+
+Related `-Area line-labels` включает VisibleLineLabelsTest и cross-geometry regression VectorStyleRenderingTest. `-Area firefly-editor-ui` проверяет текущий редактор без кнопки пресета в 72 профилях Save/Cancel. Обе области имеют stationary verification phone routing. PNG `line-label-qa` сохраняются bounded collector перед reset. Фактические результаты фиксируются в квитанции задачи.
+
+Related `-Area cursor-rendering` запускает оба LocationOrbitTest метода
+отдельно с очисткой verification workspace. Scene barrier предшествует
+техническому fix; timeout включает source/cache/camera/loading diagnostics.
+Это не отменяет обязательный полный набор и исходные native assertions.
+
+Related `-Area track-candidates`: четыре stationary native сценария общего
+выбора, прежних track actions, длинного списка (72 UI profiles) и group order
+полевая линия/точки после reload/reorder. Явный PhoneSerial использует только
+verification APK. Два новых метода TrackControlsTest обязательны в Full;
+текущий catalogue — 53 класса /253 native methods.

@@ -54,10 +54,16 @@ class PhoneLockStateTest(unittest.TestCase):
 class FullReceiptTest(unittest.TestCase):
     def receipt(self):
         return {'scope':'full','status':'passed','source_fingerprint':'abc','passed_cases':[CASE],
-                'checks':dict.fromkeys(('units','docs','versions','ui_matrix','test_project'),True),
+                'checks':dict.fromkeys(('units','docs','versions','ui_matrix','real_window_matrix','test_project'),True),
                 'devices':{'phone':{'sdk':36},'emulator':{'sdk':36}}}
     def test_a_complete_current_full_run_is_accepted(self):
         check_publication_receipt(self.receipt(),'abc',{CASE})
+    def test_chooser_profiles_alone_cannot_certify_the_real_enlarged_windows(self):
+        receipt=self.receipt();receipt['checks'].pop('real_window_matrix')
+        with self.assertRaises(ValueError):check_publication_receipt(receipt,'abc',{CASE})
+    def test_a_failed_attempt_cannot_be_hidden_by_a_successful_repeat(self):
+        receipt=self.receipt();receipt['runs']=[{'failed':True,'passed':[]},{'passed':[CASE]}]
+        with self.assertRaises(ValueError):check_publication_receipt(receipt,'abc',{CASE})
     def test_changed_code_or_a_related_run_is_rejected(self):
         for key,value in [('source_fingerprint','old'),('scope','related'),('status','failed')]:
             receipt=self.receipt(); receipt[key]=value

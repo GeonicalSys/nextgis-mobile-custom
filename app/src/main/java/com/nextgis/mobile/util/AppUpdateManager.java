@@ -79,6 +79,7 @@ public final class AppUpdateManager
     private static final AtomicBoolean UPDATE_DOWNLOAD_IN_PROGRESS = new AtomicBoolean(false);
     private static final AtomicBoolean BACKGROUND_PREPARE_IN_PROGRESS = new AtomicBoolean(false);
     private static final AtomicLong CHECK_SEQUENCE = new AtomicLong();
+    private static final AtomicLong LAST_STARTUP_REVIEW = new AtomicLong();
     private static final OkHttpClient MANIFEST_HTTP_CLIENT = new OkHttpClient.Builder()
             .callTimeout(45, TimeUnit.SECONDS)
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -113,6 +114,11 @@ public final class AppUpdateManager
             Activity activity, StartupUpdateCheckScheduler.Completion completion)
     {
         checkForUpdate(activity, false, completion);
+    }
+
+    /** A resident process must not suppress reminders indefinitely across daily app openings. */
+    public static boolean shouldRefreshStartupCheck() {
+        return MaintenanceReminders.reviewDue(SystemClock.elapsedRealtime(), LAST_STARTUP_REVIEW.get());
     }
 
 
@@ -194,6 +200,7 @@ public final class AppUpdateManager
             return;
         }
         long checkId = CHECK_SEQUENCE.incrementAndGet();
+        if (!interactive) LAST_STARTUP_REVIEW.set(SystemClock.elapsedRealtime());
         long started = SystemClock.elapsedRealtime();
         HyperLog.v(Constants.TAG, "Updater check started id=" + checkId + " mode=" + mode
                 + " branch=" + updateRepositoryBranch() + " currentVersion=" + BuildConfig.VERSION_NAME
@@ -208,6 +215,11 @@ public final class AppUpdateManager
             progressDialog.show();
         }
         ProgressDialog checkProgressDialog = progressDialog;
+        // Capture only the active online project's identity on the UI thread. Local maps
+        // never get a synchronization reminder, even if another project used to be open.
+        com.nextgis.maplib.map.MapBase activeMap = com.nextgis.maplib.map.MapBase.getActiveInstance();
+        String onlineProjectPath = MaintenanceReminders.hasOnlineLayers(activeMap)
+                ? activeMap.getPath().getAbsolutePath() : null;
 
         IO_EXECUTOR.execute(() -> {
             UpdateManifest result = null;
@@ -239,6 +251,9 @@ public final class AppUpdateManager
             UpdateManifest manifest = result;
             boolean updateReady = ready;
             Exception checkError = failure;
+            MaintenanceReminders.Reminder reminder = MaintenanceReminders.read(activity,
+                    onlineProjectPath, ready && result != null ? result.versionCode : 0,
+                    System.currentTimeMillis());
             activity.runOnUiThread(() -> {
                 if (!isActivityUsable(activity)) {
                     HyperLog.v(Constants.TAG, "Updater check result_deferred id=" + checkId + " reason=activity_unusable");
@@ -246,6 +261,26 @@ public final class AppUpdateManager
                     return;
                 }
                 dismiss(checkProgressDialog);
+                // Never stack a startup warning on an installer, another dialog or a paused map.
+                com.nextgis.maplib.map.MapBase currentMap = com.nextgis.maplib.map.MapBase.getActiveInstance();
+                String currentPath = MaintenanceReminders.hasOnlineLayers(currentMap)
+                        ? currentMap.getPath().getAbsolutePath() : null;
+                if (!interactive && activity.hasWindowFocus()
+                        && java.util.Objects.equals(onlineProjectPath, currentPath)
+                        && reminder.needed()
+                        && !MaintenanceReminders.alreadyShown(activity, StartupUpdateCheckScheduler.PROCESS_SESSION)) {
+                    boolean readyOffer = updateReady && reminder.update != MaintenanceReminders.Update.DOWNLOAD;
+                    if (readyOffer) {
+                        readyDialog(activity, manifest.versionName, manifest.releaseNotes,
+                                reminder.message(activity), () -> installPreparedUpdate(activity, manifest)).show();
+                    } else MaintenanceReminders.dialog(activity, reminder).show();
+                    MaintenanceReminders.markShown(activity, StartupUpdateCheckScheduler.PROCESS_SESSION);
+                    // An offline warning never completes the pending network check. A ready
+                    // offer already contains Install/Later and must not be offered twice.
+                    finishCheck(completion, checkError == null && (readyOffer
+                            || manifest.versionCode <= BuildConfig.VERSION_CODE));
+                    return;
+                }
                 if (checkError != null) {
                     if (interactive) showError(activity, checkError);
                     finishCheck(completion, false);
@@ -339,6 +374,7 @@ public final class AppUpdateManager
             UpdateManifest manifest =
                     UpdateManifest.fromJson(new JSONObject(readBodyLimited(body, MAX_MANIFEST_SIZE)));
             validateManifest(activity, manifest);
+            MaintenanceReminders.recordSuccessfulCheck(activity, manifest.versionCode, System.currentTimeMillis());
             HyperLog.v(Constants.TAG, "Updater manifest validated id=" + checkId
                     + " version=" + manifest.versionName + " versionCode=" + manifest.versionCode
                     + " publishedAt=" + manifest.publishedAt + " branch=" + manifest.flavor
@@ -474,14 +510,25 @@ public final class AppUpdateManager
 
     static AlertDialog readyDialog(Context context, String version, String notes, Runnable install)
     {
+        return readyDialog(context, version, notes, "", install);
+    }
+
+
+    static AlertDialog readyDialog(Context context, String version, String notes, String reminder, Runnable install)
+    {
         String message = context.getString(R.string.update_ready_message, version);
+        if (!reminder.isEmpty()) message = reminder + "\n\n" + message;
         if (!notes.isEmpty()) message += "\n\n" + context.getString(R.string.update_release_notes, notes);
-        return com.nextgis.maplibui.util.FittedDialogs.compatBuilder(context)
+        AlertDialog.Builder builder = reminder.isEmpty()
+                ? com.nextgis.maplibui.util.FittedDialogs.compatBuilder(context)
+                : new AlertDialog.Builder(context);
+        AlertDialog dialog = builder
                 .setTitle(R.string.update_ready_title)
                 .setMessage(message)
                 .setNegativeButton(R.string.update_later, null)
-                .setPositiveButton(R.string.update_install, (dialog, which) -> install.run())
+                .setPositiveButton(R.string.update_install, (prompt, which) -> install.run())
                 .create();
+        return reminder.isEmpty() ? dialog : MaintenanceReminders.scrollable(dialog);
     }
 
 
@@ -583,6 +630,7 @@ public final class AppUpdateManager
                 throw new IOException("Prepared APK is missing or corrupt");
             }
             validateDownloadedApk(context, apk, manifest);
+            MaintenanceReminders.recordReady(context, manifest.versionCode, System.currentTimeMillis());
             return manifest;
         } catch (Exception error) {
             HyperLog.w(Constants.TAG, "Updater prepared state rejected", error);

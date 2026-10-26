@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-10-23
+last_verified: 2026-10-24
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -12,6 +12,11 @@ related_code:
 ---
 
 # Flavors и версионирование форка
+
+Обновление MapLibre до `13.7.1` сохраняет явный OpenGL artifact во всех трёх
+модулях и не меняет версии Lisa/Belka, application IDs, provider authorities,
+NGW account identities или signing. Матрица APK отдельно проверяет прежнюю
+variant identity и отсутствие generic/Vulkan/dual-backend MapLibre в runtime.
 
 GlitchTip reports содержат release/versionCode, environment и тег brand текущего
 variant. `diagnosticDeliveryChecks=true` выбирает отдельный emulator-only runner

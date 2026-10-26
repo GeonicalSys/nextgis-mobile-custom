@@ -9,7 +9,6 @@ import android.location.Location;
 import android.os.Build;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.view.View;
 import android.view.inspector.WindowInspector;
@@ -46,7 +45,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -63,7 +61,7 @@ public class SyncOfflineAndWalkGpsTest {
     private SharedPreferences preferences;
     private Map<String, ?> savedPreferences;
     private String sessionId;
-    private int wifi, mobileData;
+    private EmulatorNetworkFixture network;
     private final String[] keys = {AppSettingsConstants.KEY_PREF_INTRO, "battery_dont_show_pref",
             "show_geo_dialog", SettingsConstants.KEY_PREF_GNSS_INPUT,
             SettingsConstants.KEY_PREF_LOCATION_MIN_TIME, SettingsConstants.KEY_PREF_LOCATION_MIN_DISTANCE};
@@ -75,10 +73,8 @@ public class SyncOfflineAndWalkGpsTest {
         assertNull("No existing walk owner", WalkSessionStore.load(app));
         preferences = PreferenceManager.getDefaultSharedPreferences(app);
         savedPreferences = preferences.getAll();
-        wifi = Settings.Global.getInt(app.getContentResolver(), Settings.Global.WIFI_ON, 0);
-        mobileData = Settings.Global.getInt(app.getContentResolver(), "mobile_data", 0);
-        shell("svc wifi disable"); shell("svc data disable");
-        await(() -> !new NetworkUtil(app).isNetworkAvailable());
+        network=new EmulatorNetworkFixture(app);
+        network.connected(false);
         preferences.edit().putBoolean(keys[0], true).putBoolean(keys[1], true)
                 .putBoolean(keys[2], false).putString(keys[3], "system")
                 .putString(keys[4], "0").putString(keys[5], "0").commit();
@@ -87,6 +83,7 @@ public class SyncOfflineAndWalkGpsTest {
 
     @After public void tearDown() throws Exception {
         if (app == null) return;
+        try {
         if (sessionId != null) {
             WalkSessionStore.Snapshot current = WalkSessionStore.load(app);
             if (current != null && current.id.equals(sessionId)) {
@@ -108,8 +105,9 @@ public class SyncOfflineAndWalkGpsTest {
             }
             edit.commit();
         }
-        if (wifi != 0) shell("svc wifi enable");
-        if (mobileData != 0) shell("svc data enable");
+        } finally {
+            if(network!=null)network.close();
+        }
     }
 
     @Test public void offlineManualTapAndRetryExplainInternetAndDoNotStartQueue() throws Exception {
@@ -150,13 +148,26 @@ public class SyncOfflineAndWalkGpsTest {
             assertFalse(NGWSyncService.isSyncStarted());
             assertFalse(ProjectOperationCoordinator.isDataSyncActive());
             assertNull(errorNotification());
-            shell("svc wifi enable");
-            await(() -> new NetworkUtil(app).isNetworkAvailable());
-            long deadline = SystemClock.elapsedRealtime() + 20000;
-            while (work.getWorkInfosForUniqueWork(name).get(5, TimeUnit.SECONDS).get(0).getState() != WorkInfo.State.SUCCEEDED
-                    && SystemClock.elapsedRealtime() < deadline) Thread.sleep(50);
+            network.connected(true);
+            // A real connectivity handoff may legitimately retry with WorkManager's 30s backoff.
+            // Retain the OS constraint and permit that first retry plus bounded scheduler latency.
+            long deadline = SystemClock.elapsedRealtime() + 60000;
+            WorkInfo completed;
+            do {
+                completed=work.getWorkInfosForUniqueWork(name).get(5,TimeUnit.SECONDS).get(0);
+                if(completed.getState().isFinished())break;
+                Thread.sleep(50);
+            } while(SystemClock.elapsedRealtime()<deadline);
             // The deliberately absent account retires only after network permits the worker.
-            assertEquals(WorkInfo.State.SUCCEEDED, work.getWorkInfosForUniqueWork(name).get(5, TimeUnit.SECONDS).get(0).getState());
+            android.net.ConnectivityManager connectivity=app.getSystemService(android.net.ConnectivityManager.class);
+            android.net.NetworkCapabilities capabilities=connectivity.getNetworkCapabilities(connectivity.getActiveNetwork());
+            String state="attempts="+completed.getRunAttemptCount()+" stopReason="+completed.getStopReason()
+                    +" nextSchedule="+completed.getNextScheduleTimeMillis()
+                    +" connected="+new NetworkUtil(app).isNetworkAvailable()
+                    +" validated="+(capabilities!=null&&capabilities.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED));
+            assertEquals(state,WorkInfo.State.SUCCEEDED,completed.getState());
+            assertFalse(NGWSyncService.isSyncStarted());
+            assertFalse(ProjectOperationCoordinator.isDataSyncActive());
         } finally { work.cancelUniqueWork(name).getResult().get(5, TimeUnit.SECONDS); }
     }
 
@@ -265,12 +276,5 @@ public class SyncOfflineAndWalkGpsTest {
         long deadline = SystemClock.elapsedRealtime() + 10000;
         while (!condition.matches() && SystemClock.elapsedRealtime() < deadline) Thread.sleep(30);
         assertTrue("Timed out waiting for fixture state", condition.matches());
-    }
-    private static String shell(String command) throws Exception {
-        try (android.os.ParcelFileDescriptor descriptor = InstrumentationRegistry.getInstrumentation()
-                .getUiAutomation().executeShellCommand(command);
-             FileInputStream stream = new FileInputStream(descriptor.getFileDescriptor())) {
-            return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
-        }
     }
 }

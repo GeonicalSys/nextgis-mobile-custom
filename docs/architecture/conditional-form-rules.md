@@ -1,7 +1,7 @@
 ---
 title: Обязательность, видимость и оформление NGFP
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-26
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java
@@ -11,6 +11,13 @@ related_code:
 ---
 
 # Обязательность, видимость и оформление NGFP
+
+Native verification учитывает реальный viewport: скрытый прокруткой control
+сначала раскрывается обычным requestRectangleOnScreen, затем выполняется один
+жест. Проверка имени различает полное вписывание на одной строке широкого окна
+и overflow: все строки/высота/ellipsis проверяются всегда, строгий перенос —
+дополнительно на 320/280dp компонентах в обеих темах. Production navigation,
+условия и layout правила этим test-only изменением не меняются.
 
 Tabs применяет отложенную смену страницы только на прикреплённом resumed экране
 с несохранённым FragmentManager state. Пока экран остановлен, сохраняется последний

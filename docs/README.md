@@ -1,13 +1,17 @@
 ---
 title: GeonicalSystem NextGIS Mobile — документация
 type: index
-last_verified: 2026-10-23
+last_verified: 2026-10-25
 related_code:
   - settings.gradle
   - .gitmodules
 ---
 
 # Документация GeonicalSystem NextGIS Mobile
+
+- [Дорожная карта мобильного приложения и согласование всех доработок](roadmap/mobile.md).
+- [Управление треками и точки над линиями](architecture/track-controls.md).
+- [Квитанция проверки треков от 25 октября](reference/track-controls-verification-2026-10-25.md).
 
 ## Копирование и преобразования
 
@@ -42,7 +46,8 @@ related_code:
 | Долгий CI и loopback-тесты отправки треков | [reference/build-matrix.md](reference/build-matrix.md) |
 | Отличия форка | [reference/fork-customizations.md](reference/fork-customizations.md) |
 | Передача отличий official-разработчикам | [reference/official-differences.md](reference/official-differences.md) |
-| Открытые Collector-задачи | [roadmap/collector.md](roadmap/collector.md) |
+| Плановая и внеплановая доработка | [roadmap/mobile.md](roadmap/mobile.md) |
+| Детализация Collector-задач | [roadmap/collector.md](roadmap/collector.md), сверять с общей картой и кодом |
 | Blast radius | [registry/change-impact.yaml](registry/change-impact.yaml) |
 
 ## Разделы
@@ -53,7 +58,7 @@ related_code:
 - [reference/](reference/build-matrix.md) — версии, flavors, настройки и совместимость.
 - [registry/](registry/README.md) — машиночитаемые источники истины.
 - [history/](history/README.md) — исторические отчёты, не действующие контракты.
-- [roadmap/](roadmap/collector.md) — только незавершённые и проверенные по коду планы.
+- [roadmap/](roadmap/mobile.md) — общая очередь и технические детализации; факты кода, риски и идеи разделены.
 - [changelog.md](changelog.md) — история самой документационной системы.
 
 ## Проверка
@@ -61,6 +66,9 @@ related_code:
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\docs-check.ps1 -RunTests
 ```
+
+Push-check учитывает документацию из всех коммитов PR. Выбор базы, strict
+проверка и регрессии описаны в [матрице проверок](reference/build-matrix.md#проверка-документации).
 
 ## Правила мобильных проектов
 

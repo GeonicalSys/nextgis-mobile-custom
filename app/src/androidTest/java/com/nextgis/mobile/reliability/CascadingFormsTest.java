@@ -457,16 +457,71 @@ public class CascadingFormsTest {
         }
         return null;
     }
+    private static String lastSwipeDiagnostic;
+    private static String viewBounds(View view) {
+        android.graphics.Rect visible = new android.graphics.Rect();
+        int[] at = new int[2];
+        view.getLocationOnScreen(at);
+        boolean shown = view.getGlobalVisibleRect(visible);
+        return view.getClass().getSimpleName() + " at=" + at[0] + "," + at[1]
+                + " size=" + view.getWidth() + "x" + view.getHeight()
+                + " visible=" + shown + ":" + visible
+                + " horizontal=" + view.canScrollHorizontally(-1) + "/" + view.canScrollHorizontally(1);
+    }
+    /** Wait for the actual input window and a completed, stable visible layout, without replaying gestures. */
+    private static android.graphics.Rect gestureBounds(
+            ActivityScenario<FormBuilderModifyAttributesActivity> scenario,
+            java.util.function.Function<FormBuilderModifyAttributesActivity,View> target) {
+        long deadline=SystemClock.uptimeMillis()+10000, stableSince=0;
+        android.graphics.Rect previous=null;
+        while(SystemClock.uptimeMillis()<deadline) {
+            android.graphics.Rect[] measured={null};
+            scenario.onActivity(a -> {
+                View view=target.apply(a);
+                if(view==null) {lastSwipeDiagnostic="Gesture target not yet attached";return;}
+                // A wide/short window can place the control outside the current scroll viewport.
+                // Reveal its touch band as a user would scroll before swiping; keep deliberate
+                // scroll-position checks on the ScrollView itself unchanged.
+                if(!(view instanceof ScrollView)&&view.isShown()&&view.getWidth()>0&&view.getHeight()>0) {
+                    int band=Math.min(view.getHeight(),Math.round(48*a.getResources().getDisplayMetrics().density));
+                    int top=(view.getHeight()-band)/2;
+                    if(view.requestRectangleOnScreen(new android.graphics.Rect(0,top,view.getWidth(),top+band),true)) {
+                        lastSwipeDiagnostic="Revealing gesture target: "+viewBounds(view);
+                        return;
+                    }
+                }
+                android.graphics.Rect visible=new android.graphics.Rect(), window=new android.graphics.Rect();
+                // Global bounds already account for the target's own ScrollView offset.
+                // Convert root coordinates to screen coordinates, including the window origin.
+                boolean shown=view.getGlobalVisibleRect(visible);
+                int[] origin=new int[2];view.getRootView().getLocationOnScreen(origin);
+                visible.offset(origin[0],origin[1]);view.getWindowVisibleDisplayFrame(window);
+                boolean layoutPending=view.isLayoutRequested();
+                StringBuilder diagnostic=new StringBuilder("tab="+tabs(a).getValue()
+                        +" font="+a.getResources().getConfiguration().fontScale
+                        +" focus="+view.hasWindowFocus()+" target="+viewBounds(view));
+                for(android.view.ViewParent parent=view.getParent();parent instanceof View;parent=parent.getParent()) {
+                    layoutPending|=((View)parent).isLayoutRequested();
+                    diagnostic.append(" parent=").append(viewBounds((View)parent));
+                }
+                lastSwipeDiagnostic=diagnostic+" layoutPending="+layoutPending+" window="+window;
+                if(view.isShown()&&view.hasWindowFocus()&&!layoutPending&&shown&&visible.intersect(window))
+                    measured[0]=visible;
+            });
+            android.graphics.Rect next=measured[0];long now=SystemClock.uptimeMillis();
+            if(next!=null&&next.equals(previous)) {
+                if(now-stableSince>=120)return next;
+            } else {previous=next;stableSince=now;}
+            SystemClock.sleep(30);
+        }
+        throw new AssertionError("Gesture window did not settle: "+lastSwipeDiagnostic);
+    }
     private static void swipe(ActivityScenario<FormBuilderModifyAttributesActivity> scenario, boolean left,
                               java.util.function.Function<FormBuilderModifyAttributesActivity,View> target) {
-        float[] points=new float[3];
-        scenario.onActivity(a -> {
-            View view=target.apply(a);int[] location=new int[2];view.getLocationOnScreen(location);
-            assertTrue("Swipe target must have a visible drawing area",view.isShown() && view.getWidth()>0 && view.getHeight()>0);
-            points[0]=location[0]+view.getWidth()*(left?.85f:.15f);
-            points[1]=location[0]+view.getWidth()*(left?.15f:.85f);
-            points[2]=location[1]+view.getHeight()/2f;
-        });
+        android.graphics.Rect bounds=gestureBounds(scenario,target);
+        float[] points={bounds.left+bounds.width()*(left?.85f:.15f),
+                bounds.left+bounds.width()*(left?.15f:.85f),bounds.exactCenterY()};
+        lastSwipeDiagnostic="left="+left+" touch="+points[0]+","+points[2]+" "+lastSwipeDiagnostic;
         Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();
         long down=SystemClock.uptimeMillis();
         for (int i=0;i<=12;i++) {
@@ -600,21 +655,37 @@ public class CascadingFormsTest {
                 choose(s,"contractor",1);choose(s,"jobtitle1",1);choose(s,"eployee1",1);
                 for(int i=0;i<5;i++) {
                     swipe(s,true,a -> spinner(a,"contractor"));
-                    s.onActivity(a -> assertEquals(1,tabs(a).getValue()));
+                    s.onActivity(a -> assertEquals(lastSwipeDiagnostic,1,tabs(a).getValue()));
                     swipe(s,false,a -> tabs(a).findViewWithTag("swipe-check"));
-                    s.onActivity(a -> assertEquals(0,tabs(a).getValue()));
+                    s.onActivity(a -> assertEquals(lastSwipeDiagnostic,0,tabs(a).getValue()));
                     swipe(s,true,a -> spinner(a,"jobtitle1"));
                     swipe(s,false,a -> tabs(a).findViewWithTag("swipe-comment"));
-                    s.onActivity(a -> assertEquals(0,tabs(a).getValue()));
+                    s.onActivity(a -> assertEquals(lastSwipeDiagnostic,0,tabs(a).getValue()));
                 }
                 s.onActivity(a -> header(a).getTabAt(1).select());
                 InstrumentationRegistry.getInstrumentation().waitForIdleSync();
-                // The ScrollView centre is below the short page, outside Tabs' own bounds.
-                s.onActivity(a -> ((android.widget.LinearLayout)tabs(a).getPageLayouts().get(1)).removeView(signature(tabs(a).getPageLayouts().get(1))));
-                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
-                swipe(s,false,a -> a.findViewById(R.id.form_scroll));
+                // The viewport centre can hit the comment in a wide/short window.
+                // Give the real ScrollView a non-interactive area outside Tabs at every size.
                 s.onActivity(a -> {
-                    assertEquals("Empty area belongs to page navigation too",0,tabs(a).getValue());
+                    ((android.widget.LinearLayout)tabs(a).getPageLayouts().get(1))
+                            .removeView(signature(tabs(a).getPageLayouts().get(1)));
+                    android.widget.LinearLayout content=a.findViewById(R.id.controls_list);
+                    View blank=new View(a);blank.setTag("swipe-blank-outside-tabs");
+                    blank.setClickable(false);blank.setFocusable(false);
+                    content.addView(blank,new android.widget.LinearLayout.LayoutParams(
+                            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                            Math.round(72*a.getResources().getDisplayMetrics().density)));
+                });
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                swipe(s,false,a -> {
+                    android.widget.LinearLayout content=a.findViewById(R.id.controls_list);
+                    View blank=content.findViewWithTag("swipe-blank-outside-tabs");
+                    assertNotNull(blank);assertSame(content,blank.getParent());
+                    assertFalse(blank.isClickable());assertFalse(blank.isFocusable());
+                    return blank;
+                });
+                s.onActivity(a -> {
+                    assertEquals("Empty area belongs to page navigation too: "+lastSwipeDiagnostic,0,tabs(a).getValue());
                     View page=tabs(a).getPageLayouts().get(1);
                     assertTrue(((android.widget.CheckBox)page.findViewWithTag("swipe-check")).isChecked());
                     assertEquals("Retained comment",((android.widget.EditText)page.findViewWithTag("swipe-comment")).getText().toString());
@@ -627,11 +698,8 @@ public class CascadingFormsTest {
         try(Fixture f=new Fixture(false)) {
             navigationForm(f);
             try(ActivityScenario<FormBuilderModifyAttributesActivity> s=ActivityScenario.launch(f.intent(Constants.NOT_FOUND))) {
-                float[] point=new float[2];
-                s.onActivity(a -> {
-                    View scroll=a.findViewById(R.id.form_scroll);int[] at=new int[2];scroll.getLocationOnScreen(at);
-                    point[0]=at[0]+scroll.getWidth()/2f;point[1]=at[1]+scroll.getHeight()*.8f;
-                });
+                android.graphics.Rect bounds=gestureBounds(s,a -> a.findViewById(R.id.form_scroll));
+                float[] point={bounds.exactCenterX(),bounds.top+bounds.height()*.8f};
                 Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();long down=SystemClock.uptimeMillis();
                 for(int i=0;i<=12;i++) {
                     MotionEvent event=MotionEvent.obtain(down,SystemClock.uptimeMillis(),i==0?MotionEvent.ACTION_DOWN:i==12?MotionEvent.ACTION_UP:MotionEvent.ACTION_MOVE,point[0]+i,point[1]-i*20,0);

@@ -32,7 +32,26 @@ foreach ($candidate in $candidates) {
     if ($LASTEXITCODE -ne 0) {
         continue
     }
-    & $candidate.Exe @($candidate.Prefix) 'docs/scripts/validate_docs.py' @ValidatorArgs
+    $localValidatorTask = @($ValidatorArgs)
+    if ($RunTests) {
+        & $candidate.Exe @($candidate.Prefix) -B 'tools/check_update_reports.py'
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        & $candidate.Exe @($candidate.Prefix) -B -m unittest discover -s tools -p 'test_check_update_reports.py' -v
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        $policyTask = Get-Content -LiteralPath 'tools/update-report-policy.json' -Raw | ConvertFrom-Json
+        $baseTask = 'origin/' + $policyTask.base_branch
+        $changedTask = @(& git diff --name-only ($baseTask + '...HEAD'))
+        if ($LASTEXITCODE -ne 0) { throw 'Local impact comparison needs the fetched target branch' }
+        $changedTask += @(& git diff --name-only HEAD)
+        if ($LASTEXITCODE -ne 0) { throw 'Cannot read local changes for documentation impact' }
+        $changedTask += @(& git ls-files --others --exclude-standard)
+        if ($LASTEXITCODE -ne 0) { throw 'Cannot read new files for documentation impact' }
+        $localValidatorTask += '--enforce-diff'
+        foreach ($pathTask in @($changedTask | Where-Object { $_ } | Sort-Object -Unique)) {
+            $localValidatorTask += @('--changed-file', $pathTask)
+        }
+    }
+    & $candidate.Exe @($candidate.Prefix) 'docs/scripts/validate_docs.py' @localValidatorTask
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }

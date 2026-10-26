@@ -1,7 +1,7 @@
 ---
 title: Зависимые списки NGFP
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-26
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java
@@ -15,6 +15,17 @@ related_code:
 FragmentManager; уничтожение отменяет callback. Выбор подрядчика/сотрудника и pin
 не сбрасываются. CascadingFormsTest проверяет сохранённое состояние, фактическую
 видимость страницы после Resume и закрытие сразу после выбора вкладки.
+
+Test-only gesture fixture дополнительно ждёт фокуса окна, завершения раскладки
+и стабильных видимых границ до DOWN, без переигрывания жеста. Related
+form-navigation повторяет весь класс, сохраняя межсценарный порядок Full.
+Это не изменение production правил, контролов или сохранения данных.
+
+В альбомном/планшетном viewport fixture штатно прокручивает центральную
+touch band контрола в видимую область до ожидания. Преднамеренные scroll
+позиции самого ScrollView сохраняются; selected-text/signature gestures
+проверяются прежними assertions. Related form-layout добавляет отображение
+полных имён на default и явных 320/280dp компонентах.
 
 Диалоги выбора используют общие builders `FittedDialogs`: подписи и действия адаптируются к крупному интерфейсу. Существующие ключи элементов, выбор и cascade callbacks сохраняются. Проверка компоновки описана в [контракте UI](ui-accessibility.md).
 
@@ -158,3 +169,9 @@ Native-сценарии включают определение размером
 или пустым legacy-префиксом. Снимки использует общий FormMetadataSnapshot;
 пути, хеши и legacy pins каскадов совместимы. Независимые условия required
 и закрепление вкладок описаны в [контракте формы](conditional-form-rules.md).
+
+Blank-area subcase CascadingFormsTest использует отдельную некликабельную
+техническую область вне Tabs. Центр ScrollView не считается пустым: в коротком
+окне там может оказаться комментарий. Цель раскрывается обычной прокруткой
+перед одним исходным жестом; проверки вкладки и сохранности значений прежние.
+Production формы и их обработка жестов этим изменением не затронуты.

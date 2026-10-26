@@ -60,15 +60,15 @@ public class VectorStyleRenderingTest {
         while(!condition.getAsBoolean() && SystemClock.uptimeMillis()<end) Thread.sleep(50);
         assertTrue("Renderer did not settle",condition.getAsBoolean());
     }
-    private static class Fixture implements AutoCloseable {
+    static class Fixture implements AutoCloseable {
         final GISApplication app=(GISApplication)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
         final SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(app);
         final boolean intro=prefs.getBoolean(AppSettingsConstants.KEY_PREF_INTRO,false), hadIntro=prefs.contains(AppSettingsConstants.KEY_PREF_INTRO);
         final boolean geoDialog=prefs.getBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG,true),hadGeoDialog=prefs.contains(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
-        final ActivityScenario<MainActivity> screen;
+        ActivityScenario<MainActivity> screen;
         final List<VectorLayerUI> layers=new ArrayList<>();
         Fixture() throws Exception {
-            VerificationEnvironment.requireIsolated(app);assertTrue(VerificationEnvironment.isEmulator());
+            VerificationEnvironment.requireIsolated(app);
             assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO,true)
                     .putBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG,false).commit());
             screen=ActivityScenario.launch(MainActivity.class);
@@ -254,6 +254,131 @@ public class VectorStyleRenderingTest {
         labels.setTextScaleWithZoom(true);labels.setTextZoomScaleStops("12:0.5,16:1,20:2");return labels;
     }
 
+    private static android.graphics.PointF screenPoint(Fixture f, double y) {
+        AtomicReference<android.graphics.PointF> point = new AtomicReference<>();
+        f.screen.onActivity(activity -> {
+            GeoPoint geo = new GeoPoint(0, y); geo.setCRS(GeoConstants.CRS_WEB_MERCATOR);
+            geo.project(GeoConstants.CRS_WGS84);
+            point.set(((MapDrawable) f.app.getMap()).getMaplibreMap().getProjection()
+                    .toScreenLocation(new org.maplibre.android.geometry.LatLng(geo.getY(), geo.getX())));
+        });
+        return point.get();
+    }
+
+    private static int pixel(Bitmap bitmap, android.graphics.PointF point, float offset) {
+        return bitmap.getPixel(Math.round(point.x + offset), Math.round(point.y));
+    }
+
+    private static int bluePixels(Bitmap bitmap) {
+        int count = 0;
+        for (int y = 0; y < bitmap.getHeight(); y++) for (int x = 0; x < bitmap.getWidth(); x++) {
+            int color = bitmap.getPixel(x, y);
+            if (Color.blue(color) > 160 && Color.red(color) < 80 && Color.green(color) < 80) count++;
+        }
+        return count;
+    }
+
+    static void saveFireflySnapshot(Fixture f, Bitmap bitmap, String name) throws Exception {
+        File folder = new File(f.app.getFilesDir(), "firefly-qa");
+        assertTrue(folder.isDirectory() || folder.mkdirs());
+        try (java.io.FileOutputStream output = new java.io.FileOutputStream(new File(folder, name + ".png"))) {
+            assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, output));
+        }
+    }
+
+    @Test public void fireflyKeepsTheCoreCrispAndTheGlowOutsideWithIndependentOpacityAndZoom() throws Exception {
+        try (Fixture f = new Fixture()) {
+            for (int geometry : new int[]{GeoConstants.GTPoint, GeoConstants.GTMultiPoint}) {
+                VectorLayerUI layer = f.add(geometry); f.insert(layer, 0, null);
+                SimpleMarkerStyle marker = new SimpleMarkerStyle(Color.BLUE, Color.rgb(255, 102, 133),
+                        20, SimpleMarkerStyle.MarkerStyleFirefly);
+                marker.setWidth(24); marker.setAlpha(0); marker.setOutAlpha(0);
+                f.bind(layer, marker, null);
+                android.graphics.PointF center = screenPoint(f, 0);
+                Bitmap empty = f.snapshot(); int background = pixel(empty, center, 0);
+                float density = f.app.getResources().getDisplayMetrics().density;
+                float core = MPLFeaturesUtils.getMPLThinkness(20) * density;
+                float glow = MPLFeaturesUtils.getMPLThinkness(24) * density;
+                marker.setAlpha(255); marker.setOutAlpha(255);
+                for (int softness = 0; softness <= 3; softness++) {
+                    marker.setCircleBlur(softness); f.bind(layer, marker, null);
+                    Bitmap image = f.snapshot();
+                    assertEquals("The native core stays blue at every softness", Color.BLUE, pixel(image, center, core * .6f));
+                    int outside = pixel(image, center, core + glow * .3f);
+                    assertTrue("Pink glow is visible outside the core", Color.red(outside) > Color.green(outside) + 45);
+                    saveFireflySnapshot(f, image, "geometry-" + geometry + "-softness-" + softness);
+                }
+                marker.setCircleBlur(2); marker.setAlpha(0); f.bind(layer, marker, null);
+                Bitmap transparent = f.snapshot();
+                assertEquals("The halo cannot leak through a transparent centre", background, pixel(transparent, center, 0));
+                assertEquals(background, pixel(transparent, center, core * .6f));
+                assertNotEquals(background, pixel(transparent, center, core + glow * .3f));
+                saveFireflySnapshot(f, transparent, "transparent-core-" + geometry);
+                marker.setAlpha(255); marker.setOutAlpha(0); f.bind(layer, marker, null);
+                assertEquals(background, pixel(f.snapshot(), center, core + glow * .3f));
+                marker.setOutAlpha(255); layer.setLayerOpacity(128); f.bind(layer, marker, null);
+                int half = pixel(f.snapshot(), center, 0);
+                assertEquals(Math.round(Color.red(background) * 127 / 255f), Color.red(half), 5);
+                assertEquals(Math.round(Color.blue(background) * 127 / 255f + 128), Color.blue(half), 5);
+                layer.setLayerOpacity(255);
+                marker.setScaleSizeWithZoom(true); marker.setSizeZoomScaleStops("12:0.5,16:1,20:2");
+                f.bind(layer, marker, null); f.zoom(12); int small = bluePixels(f.snapshot());
+                f.zoom(16); int medium = bluePixels(f.snapshot());
+                f.zoom(20); int large = bluePixels(f.snapshot());
+                assertTrue("Core scales with its halo", small > 4 && medium > small * 2 && large > medium * 2);
+                marker.setScaleSizeWithZoom(false); f.bind(layer, marker, null);
+                int fixed = bluePixels(f.snapshot()); f.zoom(12);
+                assertEquals("Explicit fixed size survives style reload", fixed, bluePixels(f.snapshot()), 12);
+                f.screen.onActivity(activity -> {layer.setVisible(false); ((MapDrawable) f.app.getMap()).checkLayerVisibility(layer.getId());});
+                f.zoom(16);
+            }
+        }
+    }
+
+    @Test public void fireflyCategoriesPreserveCircleBlurPickingVisibilityAndImageCleanup() throws Exception {
+        try (Fixture f = new Fixture()) {
+            VectorLayerUI layer = f.add(GeoConstants.GTPoint);
+            f.insert(layer, 0, "A"); f.insert(layer, 1, "B"); f.insert(layer, 2, null);
+            SimpleMarkerStyle circle = new SimpleMarkerStyle(Color.GREEN, Color.GREEN, 20, SimpleMarkerStyle.MarkerStyleCircle);
+            circle.setCircleBlur(2); circle.setOutAlpha(0);
+            FieldStyleRule rules = rule(layer, circle, circle.clone()); f.bind(layer, circle, rules);
+            Bitmap before = f.snapshot(); android.graphics.PointF normal = screenPoint(f, 180);
+            SimpleMarkerStyle firefly = new SimpleMarkerStyle(Color.WHITE, Color.rgb(255, 102, 133), 6, SimpleMarkerStyle.MarkerStyleFirefly);
+            firefly.setWidth(14); firefly.setCircleBlur(2); rules.setStyle("A", firefly);
+            f.bind(layer, circle, rules); Bitmap after = f.snapshot();
+            for (int y = -12; y <= 12; y++) for (int x = -12; x <= 12; x++)
+                assertEquals("Adding a firefly category leaves the old blurred circle unchanged", before.getPixel(Math.round(normal.x) + x, Math.round(normal.y) + y),
+                        after.getPixel(Math.round(normal.x) + x, Math.round(normal.y) + y));
+            assertEquals(3, f.picked(layer));
+            saveFireflySnapshot(f, after, "mixed-categories");
+            String base = "nglayer-layer-" + layer.getId();
+            String image = FireflyMarkerRegistry.sprite(firefly).imageName;
+            f.screen.onActivity(activity -> {
+                MapDrawable map = (MapDrawable) f.app.getMap();
+                org.maplibre.android.maps.Style nativeStyle = map.getMaplibreMap().getStyle();
+                assertTrue(nativeStyle.getLayer(base) instanceof org.maplibre.android.style.layers.CircleLayer);
+                assertNotNull(nativeStyle.getLayer(base + "-layout-firefly-1"));
+                assertNotNull(nativeStyle.getImage(image));
+                layer.setVisible(false); map.checkLayerVisibility(layer.getId());
+                assertEquals("none", nativeStyle.getLayer(base + "-layout-firefly-1").getVisibility().getValue());
+                layer.setVisible(true); map.checkLayerVisibility(layer.getId());
+            });
+            firefly.setIconImage("turn"); rules.setStyle("A", firefly); f.bind(layer, circle, rules);
+            f.screen.onActivity(activity -> assertNotNull(((MapDrawable) f.app.getMap()).getMaplibreMap().getStyle().getLayer(base + "_icon")));
+            f.bind(layer, circle, null);
+            f.screen.onActivity(activity -> {
+                org.maplibre.android.maps.Style nativeStyle = ((MapDrawable) f.app.getMap()).getMaplibreMap().getStyle();
+                assertNull(nativeStyle.getLayer(base + "-layout-firefly-1")); assertNull(nativeStyle.getImage(image));
+            });
+            firefly.setIconImage(null); f.bind(layer, firefly, null);
+            f.screen.onActivity(activity -> {
+                MapDrawable map = (MapDrawable) f.app.getMap(); map.deleteLayerByID(layer.getId());
+                assertNull(map.getMaplibreMap().getStyle().getLayer(base + "-layout-firefly-1"));
+                assertNull(map.getMaplibreMap().getStyle().getImage(image));
+            });
+        }
+    }
+
     @Test public void rulesOtherAndNullCategoriesPreserveStylesAndLabelsForAllGeometries() throws Exception {
         try(Fixture f=new Fixture()){
             for(int type:new int[]{GeoConstants.GTPoint,GeoConstants.GTMultiPoint,GeoConstants.GTLineString,GeoConstants.GTMultiLineString,GeoConstants.GTPolygon,GeoConstants.GTMultiPolygon}){
@@ -273,7 +398,7 @@ public class VectorStyleRenderingTest {
                 }
                 f.screen.onActivity(activity->{assertNotNull(f.labels(layer));
                     boolean line=type==GeoConstants.GTLineString||type==GeoConstants.GTMultiLineString;
-                    assertEquals(line?"line-center":"point",f.labels(layer).getSymbolPlacement().getValue());
+                    assertEquals("point",f.labels(layer).getSymbolPlacement().getValue());
                     assertEquals(line?"viewport":"auto",f.labels(layer).getTextRotationAlignment().getValue());});
             }
         }

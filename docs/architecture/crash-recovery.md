@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-23
+last_verified: 2026-10-25
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -17,6 +17,11 @@ related_code:
 ---
 
 # Crash recovery and durable drafts
+
+Удаление текущего трека хранит `tracks_temp.pending_delete_track` вместе с
+`pending_stop`. После durable drain завершение/удаление выбранного ID выполняется
+одной SQLite-транзакцией; отказ оставляет намерение и очередь для повтора.
+Исторические треки не останавливают текущую запись. См. [контракт](track-controls.md).
 
 ## Черновики копии и сдвига/поворота
 
@@ -106,7 +111,7 @@ intent or used to close a track. Existing segment and durable Stop rules apply.
 | GPS validation | Shared `LocationTrackFilter` retains valid movement through 160 km/h, rejects invalid/old/inaccurate fixes and isolated material spikes, and drains its delayed two-fix buffer on stop or before a long-gap segment reset |
 | Provider ownership | Application-owned GpsEventSource; GPS (chip, mock or native NMEA) for display with Network only as GPS-absent fallback; GNSS chip, mock receiver extras or native NMEA for track/walk recording |
 | GPS gaps | Database v6 persists trackpoints.segment; gaps survive map reload and GPX export. Walk flushes accepted points, resets its sampler and automatically accepts the next usable fix without setting gps_paused |
-| Recording flag | Durable preference `track_recording_enabled` is intent, not proof of an active service or track row. The menu and the walking-person button under the ruler distinguish Start, Starting, Recording and Error; neither shows a false active state before service confirmation. Explicit Stop persists pending_stop and clears recording intent only after all queued points and track closure are committed. A foreground/SQLite failure keeps the queue and warns without deleting unfinished data. |
+| Recording flag | Durable preference `track_recording_enabled` is intent, not proof of an active service or track row. The menu and the walking-person button under the ruler distinguish Start, Starting, Recording and Error; neither shows a false active state before service confirmation. Map/menu/notification request confirmation before Stop; Cancel/Back leave intent untouched. A durable recording-session UUID rejects stale dialogs/notifications and survives recovery/split. Confirmed Stop persists pending_stop and clears recording intent only after all queued points and track closure are committed. A foreground/SQLite failure keeps the queue and warns without deleting unfinished data. |
 | System location | Interactive Start is rejected before changing durable intent when Android system location is off. The app explains the requirement and opens Location settings; the service repeats the check to close lifecycle races. |
 | Process ordering | `TrackerService` runs in the default application process. The toolbar Start lifecycle therefore executes before a later toolbar Stop, and both sides observe one in-process preference state; a stale delayed Start is rejected if the durable flag is already off |
 | After reboot / cold start | `BootLoader` and `MainActivity` call `TrackerService.ensureRecordingRunningIfEnabled()` — silent auto-start, no dialog |
@@ -331,3 +336,8 @@ track_send по умолчанию true. Старые установки одн�
 для следующей живой или фоновой попытки, включая Stop и process restart.
 WorkManager jobs принадлежат сохранённому пути проекта и не переходят на другую
 карту. Полный контракт и индикация: [доставка трека](ngw-sync-and-storage.md#доставка-трека-и-регистрация-uid).
+
+Отказ перезапуска TrackerService при выключенной system location сохраняет
+recording intent и UUID в ERROR. Возврат GPS допускает resume; очистка intent
+происходит после подтверждённого Stop. Эмуляторная регрессия входит в Related
+`recording-intent` и tracks; системные настройки физического устройства не меняются.

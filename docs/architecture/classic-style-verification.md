@@ -1,7 +1,7 @@
 ---
 title: Проверки обычных векторных стилей и подписей
 type: architecture
-last_verified: 2026-10-15
+last_verified: 2026-10-25
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/display/FieldStyleRule.java
   - maplib/src/main/java/com/nextgis/maplib/display/LabelAttributes.java
@@ -21,6 +21,25 @@ related_code:
 
 # Проверки обычных векторных стилей и подписей
 
+## Настраиваемые полигоны и живой образец
+
+[Пакет](polygon-style-controls.md) добавляет PolygonStyleRenderingTest (смешанные сохранённые категории, независимая alpha, реальные цветные pixels, дырки, Polygon/MultiPolygon, дробный zoom, visibility/picking/cleanup), PolygonStyleTileFallbackTest и PolygonStyleEditorTest. Последний проверяет 72 русских профиля с живым native MapView и реальными Configure/Casing/Save/Cancel touches. Классы включены в Related styles; отдельная область polygon-styles предназначена для адресной разработки. Наличие сценариев не заменяет фактическую квитанцию.
+
+## «Светлячок»
+
+[Отдельный тип точки](point-firefly.md) проверяется через тот же SQL/JSON/native
+путь: чёткое ядро при blur 0–3, отсутствие ореола внутри прозрачного ядра,
+независимые alpha и layer opacity, Point/MultiPoint и общая zoom curve.
+Смешанная категория сохраняет пиксели прежнего размытого круга. Picking,
+видимость, custom icon overlay, смена типа и удаление не оставляют лишних
+изображений. Редактор имеет отдельную матрицу 72 локальных профилей с реальными
+touches, Save и Cancel. Оба класса включены в Related styles; явный PhoneOnly
+разрешён только в отдельном verification APK. Эмулятор остаётся частью Full.
+Переход уже загруженного точечного VectorSource к classic fallback проверяется
+отдельным `FireflyTileFallbackTest` и не расширяет возможности tile renderer.
+
+## Общая матрица
+
 Матрица использует собственные synthetic VectorLayerUI в verification APK.
 До проверок обязательно assert !LocalVectorTileRenderMode.isRequested и
 !shouldUseLocalVectorTiles; native source обязан быть GeoJsonSource. Настроенные
@@ -36,7 +55,7 @@ Pixel assertions требуют working host OpenGL. Headless `swiftshader_indir
 воспроизводит отсутствие подписей даже при правильных feature props, camera,
 native visibility и zoom limits; дополнительный sleep это не исправляет.
 CI запускает emulator `-gpu host` под Xvfb с Mesa llvmpipe; renderer information
-сохраняется в `graphics-host.txt`. Все 14 styles cases остаются обязательными,
+сохраняется в `graphics-host.txt`. Все 16 rendering cases остаются обязательными,
 включая реальные pixels на zoom 12/19 и отсутствие за category max на 21.
 Fixture отключает только стартовый geo-dialog в disposable preferences,
 восстанавливает его после закрытия и меняет camera/underlay visibility через
@@ -120,3 +139,5 @@ The marker pixel matrix also found disappearing cross strokes: generated SDF
 images placed the boundary at 0.5 instead of the native shader's 0.75. The
 registry now encodes the correct edge and eight-pixel distance range, retaining
 thin shapes and their requested sizes. See the [native SDF shader](https://github.com/maplibre/maplibre-native/blob/main/shaders/symbol_sdf.fragment.glsl).
+
+С 25 октября линейные подписи проверяются дополнительно Related line-labels: whole-word point layout для текущего экстента заменяет изгиб букв. Repeat/spacing/curvature сохраняются в JSON, но выбран новый runtime one-per-visible-object. Field/font/category/halo/alpha/zoom/collision и исходная геометрия сохраняются. См. [контракт](visible-line-labels.md).

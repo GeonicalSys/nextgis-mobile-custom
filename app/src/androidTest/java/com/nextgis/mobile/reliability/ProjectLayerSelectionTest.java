@@ -43,7 +43,7 @@ public class ProjectLayerSelectionTest {
         String source=InstrumentationRegistry.getArguments().getString("testProjectFixture");
         assertNotNull("Select an authorized test project before this integration case",source);
         File fixture=new File(source).getCanonicalFile();
-        assertEquals(app.getExternalFilesDir(null).getCanonicalFile(),fixture.getParentFile());
+        assertEquals(app.getFilesDir().getCanonicalFile(),fixture.getParentFile());
         JSONArray policies=new JSONObject(new String(Files.readAllBytes(fixture.toPath()),StandardCharsets.UTF_8)).getJSONArray("layers");
         PreferenceManager.getDefaultSharedPreferences(app).edit()
                 .putBoolean(AppSettingsConstants.KEY_PREF_INTRO,true).putBoolean("battery_dont_show_pref",true)

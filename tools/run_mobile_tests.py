@@ -17,10 +17,13 @@ import time
 from mobile_test_support import (PACKAGE, RUNNER, avd_names, check_publication_receipt, expand_selectors,
                                  native_catalog, parse_instrumentation, phone_unlocked, source_fingerprint, validate_plan)
 from mobile_test_project import (DEFAULT_PROJECT, ProjectSelectionRequired, choose_project,
-                                 read_projects, snapshot_project)
+                                 read_projects, snapshot_project, load_policy_fixture)
+
+from mobile_style_evidence import collect_style_images
 
 ROOT = Path(__file__).resolve().parents[1]
 EMULATOR_HARDWARE = {'ranchu', 'goldfish'}
+
 
 
 class Verification:
@@ -40,20 +43,21 @@ class Verification:
         self.checks={}
         self.devices={}
         self.owned_emulator=None
+        self.emulator_process=None
         self.saved_emulator={}
         self.project_fixture=None
 
-    def command(self, argv, *, name=None, timeout=900, allow_failure=False):
+    def command(self, argv, *, name=None, timeout=900, allow_failure=False, input_text=None):
         if name:
             print('RUN '+name,flush=True)
             log=self.output/(name+'.log')
             with log.open('w',encoding='utf-8') as stream:
                 result=subprocess.run([str(x) for x in argv],cwd=ROOT,stdout=stream,
-                                      stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace')
+                                      stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace',input=input_text)
             text=log.read_text(encoding='utf-8')
         else:
             result=subprocess.run([str(x) for x in argv],cwd=ROOT,stdout=subprocess.PIPE,
-                                  stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace')
+                                  stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace',input=input_text)
             text=result.stdout
         if result.returncode and not allow_failure:
             raise RuntimeError('Command failed: '+str(argv[0])+'\n'+text[-5000:])
@@ -91,7 +95,10 @@ class Verification:
                 for case in self.plan.get('related_phone_areas',{}).get(area,[])})
             if not self.related_phone_cases:
                 raise ValueError('No stationary phone checks are defined for the selected Related areas')
+            if any('ProjectLayerSelectionTest' in case for case in self.related_phone_cases): self.select_project()
             if phone_only: return
+        if self.args.scope!='full' and getattr(self.args,'test_project_fixture',None) and not self.project_fixture:
+            self.select_project()
         emulators=[serial for serial in connected if serial.startswith('emulator-')]
         if not self.args.emulator_serial and len(emulators)>1:
             raise ValueError('Select --emulator-serial when more than one emulator is running')
@@ -108,6 +115,16 @@ class Verification:
         self.shell(self.emulator,'cmd','location','set-location-enabled','true')
 
     def select_project(self):
+        source=getattr(self.args,'test_project_fixture',None)
+        if source:
+            fixture=load_policy_fixture(Path(source),self.args.test_project or DEFAULT_PROJECT)
+            self.project_fixture=self.output/'test-project-layers.json'
+            self.project_fixture.write_text(json.dumps(fixture,ensure_ascii=False),encoding='utf-8')
+            self.checks['test_project']={'id':fixture['project_id'],'layer_count':len(fixture['layers']),
+                'snapshot_sha256':hashlib.sha256(self.project_fixture.read_bytes()).hexdigest(),
+                'source':'explicit-policy-fixture','source_sha256':hashlib.sha256(Path(source).read_bytes()).hexdigest()}
+            print('Test project '+str(fixture['project_id'])+': explicitly supplied read-only policy snapshot',flush=True)
+            return
         # Read-only discovery in the existing app. Never choose another project automatically.
         def read(*args):
             return self.command([self.adb,'-s',self.phone,'shell',*args],allow_failure=True).strip()
@@ -146,6 +163,7 @@ class Verification:
                          creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
         stream.close()
         self.owned_emulator=serial
+        self.emulator_process=process
         print('Starting isolated read-only emulator '+serial,flush=True)
         until=time.monotonic()+180
         while time.monotonic()<until:
@@ -218,6 +236,23 @@ class Verification:
             self.command([self.adb,'-s',serial,'shell','pm','revoke',PACKAGE,'android.permission.'+permission],allow_failure=True)
         self.command([self.adb,'-s',serial,'shell','cmd','locale','set-app-locales',PACKAGE,'--locales','ru'],allow_failure=True)
 
+    def stage_project_fixture(self,serial):
+        if not self.project_fixture:
+            raise ProjectSelectionRequired('На каком проекте можно протестировать? Укажите --test-project.')
+        directory=self.shell(serial,'run-as',PACKAGE,'pwd')
+        if not re.fullmatch(r'/data/(?:user/\d+|data)/'+re.escape(PACKAGE),directory):
+            raise RuntimeError('Unexpected verification private directory: '+directory)
+        self.shell(serial,'run-as',PACKAGE,'mkdir','-p','files')
+        payload=self.project_fixture.read_text(encoding='utf-8')
+        relative='files/test-project-layers.json'
+        # The debug app owns this file. No shared-storage grant or remote shell redirection.
+        self.command([self.adb,'-s',serial,'exec-in','run-as',PACKAGE,'tee',relative],input_text=payload)
+        expected=hashlib.sha256(payload.encode('utf-8')).hexdigest()
+        actual=self.shell(serial,'run-as',PACKAGE,'sha256sum',relative).split()
+        if not actual or actual[0]!=expected:
+            raise RuntimeError('The verification policy snapshot transfer failed its SHA-256 check')
+        return directory+'/'+relative
+
     def native(self,serial,selectors,name,*,reset=True,extra=None,fatal=None):
         if len(selectors)==1 and selectors[0] in self.plan.get('isolated_methods', []):
             passed=[];skipped=[]
@@ -230,23 +265,35 @@ class Verification:
         if reset: self.prepare(serial)
         extra=dict(extra or {})
         if any('ProjectLayerSelectionTest' in selector for selector in selectors):
-            if not self.project_fixture: raise ProjectSelectionRequired('На каком проекте можно протестировать? Укажите --test-project.')
-            destination='/sdcard/Android/data/'+PACKAGE+'/files/test-project-layers.json'
-            self.shell(serial,'mkdir','-p',destination.rsplit('/',1)[0])
-            self.command([self.adb,'-s',serial,'push',self.project_fixture,destination])
-            extra['testProjectFixture']=destination
+            extra['testProjectFixture']=self.stage_project_fixture(serial)
         expected=expand_selectors(selectors,self.catalog)
         argv=[self.adb,'-s',serial,'shell','am','instrument','-w','-r','-e','verificationPhone',
               'true' if serial==getattr(self,'phone',None) else 'false','-e','class',','.join(selectors)]
         for key,value in (extra or {}).items(): argv+=['-e',key,str(value)]
         text=self.command(argv+[RUNNER],name=name,allow_failure=bool(fatal))
+        if any(selector.startswith('com.nextgis.mobile.rendering.')
+               or selector.startswith('com.nextgis.mobile.util.MaintenanceRemindersNativeTest')
+               or selector.startswith('com.nextgis.mobile.reliability.LargeTextLayoutTest') for selector in selectors):
+            evidence_name=re.sub(r'[^A-Za-z0-9_.-]', '_', name)
+            collect_style_images(self.adb,serial,self.output/'images'/evidence_name)
         try: result=parse_instrumentation(text,expected,fatal=fatal)
         except ValueError as error:
-            raise RuntimeError(str(error)+'; see '+str(self.output/(name+'.log'))+'\n'+text[-4000:]) from error
+            message=str(error)+'; see '+str(self.output/(name+'.log'))+'\n'+text[-4000:]
+            if self.args.scope!='full': raise RuntimeError(message) from error
+            # Each independent check resets only the disposable verification workspace.
+            # Preserve the failure and finish the roster; transport/setup failures still abort.
+            result={'passed':[],'skipped':[],'expected_crash':False,'failed':True,'error':message}
         self.results.append({'name':name,'device':serial,**result})
         (self.output/'progress.json').write_text(json.dumps(self.receipt('running'),ensure_ascii=False,indent=2),encoding='utf-8')
-        print('PASS '+name+': '+str(len(result['passed']))+' cases'+(' (expected fatal)' if fatal else ''),flush=True)
+        if result.get('failed'):
+            print('FAIL '+name+'; retained in receipt, continuing independent Full checks',flush=True)
+        else:
+            print('PASS '+name+': '+str(len(result['passed']))+' cases'+(' (expected fatal)' if fatal else ''),flush=True)
         return result
+
+    def require_native_success(self):
+        failures=[result['name'] for result in self.results if result.get('failed')]
+        if failures: raise RuntimeError('Native checks failed: '+', '.join(failures))
 
     def diagnostics_noise(self,serial,name):
         test='com.nextgis.mobile.util.DiagnosticsNoiseTest#'
@@ -268,12 +315,30 @@ class Verification:
     def ui_matrix(self):
         case='com.nextgis.mobile.reliability.LayerSelectionDialogTest#allChoicesAndCancelRemainTouchableAtLargeScales'
         self.prepare(self.emulator)
+        first_result=len(self.results)
         for density,font,theme,orientation in itertools.product((420,540,617),('1.0','1.3','2.0'),('light','dark'),('portrait','landscape')):
             self.shell(self.emulator,'wm','density',str(density))
             self.shell(self.emulator,'settings','put','system','font_scale',font)
             name=f'chooser-{density}-{font}-{theme}-{orientation}'
             self.native(self.emulator,[case],name,reset=False,extra={'uiTheme':theme,'uiOrientation':orientation})
-        self.checks['ui_matrix']=True
+        self.checks['ui_matrix']=not any(result.get('failed') for result in self.results[first_result:])
+
+    def real_window_matrix(self):
+        """Retain the former cloud-only enlarged-window probes on the owned emulator."""
+        self.prepare(self.emulator)
+        first_result=len(self.results)
+        self.shell(self.emulator,'wm','density','620')
+        self.shell(self.emulator,'settings','put','system','font_scale','2.0')
+        for orientation in ('portrait','landscape'):
+            for style in ('native','compat'):
+                self.native(self.emulator,[
+                    'com.nextgis.mobile.reliability.LargeTextLayoutTest#realMapCloseAndDialogActionsStayReachable'],
+                    f'real-window-{orientation}-{style}',reset=False,
+                    extra={'uiOrientation':orientation,'dialogStyle':style})
+            self.native(self.emulator,[
+                'com.nextgis.mobile.reliability.LargeTextLayoutTest#realSettingsAndSecondaryScreensRetainCompleteLabels'],
+                f'real-window-{orientation}-settings',reset=False,extra={'uiOrientation':orientation})
+        self.checks['real_window_matrix']=not any(result.get('failed') for result in self.results[first_result:])
 
     def diagnostics(self):
         serial=self.emulator
@@ -313,21 +378,48 @@ class Verification:
                 'passed_cases':sorted({case for result in self.results for case in result['passed']})}
 
     def restore(self):
-        for device in self.devices.values():
-            self.command([self.adb,'-s',device['serial'],'shell','am','force-stop',PACKAGE],allow_failure=True)
-        if not self.saved_emulator: return
-        serial=self.emulator
-        for key in ('window_animation_scale','transition_animation_scale','animator_duration_scale'):
-            value=self.saved_emulator[key]
-            self.shell(serial,'settings','delete','global',key) if value=='null' else self.shell(serial,'settings','put','global',key,value)
-        self.shell(serial,'settings','put','system','font_scale',self.saved_emulator['font'])
-        density=re.search(r'Override density:\s*(\d+)',self.saved_emulator['density'])
-        self.shell(serial,'wm','density',density.group(1) if density else 'reset')
-        for key,service in [('wifi','wifi'),('data','data')]:
-            self.shell(serial,'svc',service,'enable' if self.saved_emulator[key]=='1' else 'disable')
-        self.shell(serial,'cmd','location','set-location-enabled',self.saved_emulator['location'])
-        if self.owned_emulator:
-            self.command([self.adb,'-s',self.owned_emulator,'emu','kill'],allow_failure=True)
+        cleanup={'owned_emulator':self.owned_emulator,'settings_restored':None,
+                 'owned_console_closed':None,'owned_process_exited':None}
+        try:
+            for device in self.devices.values():
+                self.command([self.adb,'-s',device['serial'],'shell','am','force-stop',PACKAGE],allow_failure=True)
+            if not self.saved_emulator: return
+            serial=self.emulator
+            for key in ('window_animation_scale','transition_animation_scale','animator_duration_scale'):
+                value=self.saved_emulator[key]
+                self.shell(serial,'settings','delete','global',key) if value=='null' else self.shell(serial,'settings','put','global',key,value)
+            self.shell(serial,'settings','put','system','font_scale',self.saved_emulator['font'])
+            density=re.search(r'Override density:\s*(\d+)',self.saved_emulator['density'])
+            self.shell(serial,'wm','density',density.group(1) if density else 'reset')
+            for key,service in [('wifi','wifi'),('data','data')]:
+                self.shell(serial,'svc',service,'enable' if self.saved_emulator[key]=='1' else 'disable')
+            self.shell(serial,'cmd','location','set-location-enabled',self.saved_emulator['location'])
+            cleanup['settings_restored']=True
+        except Exception as error:
+            cleanup['restore_error']=str(error)
+            raise
+        finally:
+            try:
+                if self.owned_emulator:
+                    # The owned emulator console remains reachable even if its ADB transport broke.
+                    self.command([self.adb,'-s',self.owned_emulator,'emu','kill'],allow_failure=True)
+                    port=int(self.owned_emulator.removeprefix('emulator-'))
+                    deadline=time.monotonic()+10
+                    while True:
+                        with socket.socket() as probe:
+                            probe.settimeout(.2)
+                            closed=probe.connect_ex(('127.0.0.1',port))!=0
+                        if closed or time.monotonic()>=deadline: break
+                        time.sleep(.1)
+                    cleanup['owned_console_closed']=closed
+                    if not closed: raise RuntimeError('Owned emulator console remained open: '+self.owned_emulator)
+                    process=getattr(self,'emulator_process',None)
+                    if process is not None:
+                        cleanup['owned_process_exited']=False
+                        process.wait(timeout=10)
+                        cleanup['owned_process_exited']=True
+            finally:
+                (self.output/'cleanup.json').write_text(json.dumps(cleanup,indent=2),encoding='utf-8')
 
     def run(self):
         if self.args.scope=='check-publication':
@@ -350,10 +442,11 @@ class Verification:
                 for test in self.plan['emulator']:
                     self.native(self.emulator,[test],'emulator-'+test.rsplit('.',1)[1])
                 self.grant_and_deny(self.emulator)
-                self.diagnostics(); self.ui_matrix()
+                self.diagnostics(); self.ui_matrix(); self.real_window_matrix()
                 # Finish independent work before requiring a manually unlocked phone.
                 for test in self.plan['phone']:
                     self.native(self.phone,[test],'phone-'+test.rsplit('.',1)[1])
+                self.require_native_success()
                 check_publication_receipt(self.receipt('passed'),self.fingerprint,self.required)
             else:
                 selected=set()
@@ -365,22 +458,29 @@ class Verification:
                         self.native(self.emulator,[test],f'related-{index}-'+test.replace('#','-').rsplit('.',1)[1])
                     if any('StakeoutForegroundServiceTest' in test for test in selected): self.grant_and_deny(self.emulator)
                     if 'layers' in (self.args.area or ['layers']): self.ui_matrix()
+                    if 'real-windows' in (self.args.area or []): self.real_window_matrix()
                 phone_failures=[]
                 for index,test in enumerate(getattr(self,'related_phone_cases',[])):
                     try: self.native(self.phone,[test],f'phone-related-{index}-'+test.split('#')[-1])
                     except Exception as error: phone_failures.append(test+': '+str(error))
                 if phone_failures: raise RuntimeError('\n'.join(phone_failures))
             if source_fingerprint(ROOT)!=self.fingerprint: raise RuntimeError('Source changed during verification; rerun the affected checks')
-            receipt=self.receipt('passed')
-            (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
-            if self.args.scope=='full':
-                (ROOT/'build/verification/full-passed.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
-            print('PASS '+self.args.scope+': '+str(len(receipt['passed_cases']))+' distinct native cases; '+str(self.output),flush=True)
         except Exception as error:
             receipt=self.receipt('failed'); receipt['error']=str(error)
             (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
             raise
-        finally: self.restore()
+        finally:
+            try: self.restore()
+            except Exception as error:
+                receipt=self.receipt('failed');receipt['error']='Cleanup failed: '+str(error)
+                (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+                raise
+        # A run becomes successful only after its owned resources have been finalized.
+        receipt=self.receipt('passed')
+        (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+        if self.args.scope=='full':
+            (ROOT/'build/verification/full-passed.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+        print('PASS '+self.args.scope+': '+str(len(receipt['passed_cases']))+' distinct native cases; '+str(self.output),flush=True)
 
 
 def main():
@@ -390,6 +490,7 @@ def main():
     parser.add_argument('--phone-serial'); parser.add_argument('--emulator-serial')
     parser.add_argument('--phone-only',action='store_true',help='Related stationary verification checks only; explicit phone serial required')
     parser.add_argument('--test-project',help='Explicitly authorized Collector ID, name or workspace directory; default 1403')
+    parser.add_argument('--test-project-fixture',help='Explicitly authorized metadata-only policy snapshot with a matching --test-project ID')
     parser.add_argument('--avd'); parser.add_argument('--sdk'); parser.add_argument('--output')
     parser.add_argument('--skip-build',action='store_true')
     args=parser.parse_args()

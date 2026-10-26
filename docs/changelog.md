@@ -1,12 +1,219 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-23
+last_verified: 2026-10-26
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-26 — Локальные проверки вместо автоматических Actions
+
+По поручению пользователя Android reliability/docs workflow оставлены только
+для ручного запуска. Full локально сохраняет все254 native метода и получает
+прежние6 cloud-only enlarged-window profiles; docs-check включает report guard,
+его regressions и strict task change-impact. Publication gate требует новую
+матрицу. API30 word fit и reminders3/3, delivery9/9, все8 запусков real-window
+пакета,913 Android units и обе release source sets прошли локальную проверку.
+Runner53 и report/docs26+24 PASS. Полный Full254 обоих устройств ещё впереди.
+
+## 2026-10-26 — Исправление блокеров перед разрешённой публикацией ЛИСЫ
+
+Начата исправляющая стадия MOB-01/MVT-01/REL-03/UX-03. Переносимые native
+readers и attach capture, измеряемый word fit API30 и SDK transport loopback.
+В Full добавлен один emulator-only offline MVT метод. Исправлено прочтение
+CIbbceec8: failed assertion относится к registration badge, не к возврату
+uploadProject. CI причина и финальная приёмка пока открыты.
+
+## 2026-10-26 — Full02 планшета и восстановление Wi-Fi
+
+Пользователь отключил VPN; Windows вернулась с cherles route на физический
+Wi-Fi, после чего Related track-candidates4/4 PASS и весь tablet Full02
+завершились без обрыва:249 PASS/4 FAIL из253. Зафиксированы API30 capture,
+два несовместимых test stream readers и unresolved azimuth word-wrap assertion.
+Набор/код тестов оставались прежними. CIbbceec8 имеет отдельный unresolved
+TrackUpload assertion; offline-MVT дефект не исправлен, выпуск блокирован.
+
+## 2026-10-26 — Готовность выпуска после Full09
+
+Записаны Full09 смартфон/AVD253/253 PASS, незавершённый tablet Full01,
+ошибка тестовой съёмки Android11 и обрыв Wi-Fi ADB. Контролируемый повтор
+исходного MVT native case online/offline подтвердил отдельный реальный дефект
+локальных тайлов без сети. MVT-01, module README и квитанция явно блокируют
+выпуск; product code, merge и publisher в этом разборе не менялись.
+
+## 2026-10-26 — Track map-action hit evidence
+
+Full08:252/253 native PASS, палитра после Цвет не появилась. Тот же tablet
+baseline проходит. Добавлены actual touch/Snackbar bounds и адресная область,
+без изменения жеста, таймаута или production. Адресно доказано попадание в
+startup Snackbar. Fixture штатно подтверждает только известное предупреждение;
+после этого Related emulator8/Samsung7/tablet7 PASS. Полные прогоны ещё нужны.
+
+## 2026-10-26 — Private policy snapshot transport
+
+T40 Plus/API30 закрыл от shell внешний каталог verification APK. Policy JSON
+передаётся через stdin под его debug UID во внутренний filesDir и проверяется
+по SHA-256; native parent guard сохраняется. Production каталог/permissions
+не меняются, временных общедоступных копий нет. Runner48 PASS.
+
+## 2026-10-26 — Однозначная цель blank-area gesture
+
+Full07 завершил все253 native метода:252 PASS/1 FAIL в blank-area subcase.
+Тест больше не предполагает пустым центр ScrollView: техническая область
+вне Tabs раскрывается в viewport перед единственным прежним свайпом.
+Production обработка жестов не меняется; исходная причина без hit evidence
+остаётся неподтверждённой. Повторные Related и Full ещё требуются.
+
+## 2026-10-26 — Full06 и фактическое состояние гипервизора
+
+Смартфон повторно подключён; Full06 остановился до тестов из-за отсутствия
+ускорения AVD. Read-only UAC/CIM/servicing проверка подтвердила выключенные
+Hyper-V/VBS/WHP и отсутствие AEHD service; BCD не содержит явного launch Off.
+Сохранены факты, порядок постоянной настройки и оставшиеся gates в
+[квитанции Full](reference/mobile-full-2026-10-25.md). После явного разрешения
+пользователя закреплён BCD Off и установлен существующий подписанный AEHD2.2;
+accel-check PASS, Hyper-V выключен. Android-код не менялся, Full06 завершён.
+
+## 2026-10-26 — Adaptive native fixtures и финализация Full
+
+Full05 попытался выполнить все 253 метода:249 PASS/4 обычных FAIL в трёх группах,
+без эффективных required skips. Уточнены viewport/oracle проверки форм и
+изолирован accuracy graphics fixture; адресно emulator28/tablet26 PASS.
+Owned emulator останавливается даже при потере ADB, PASS следует после cleanup.
+Добавлен явный ограниченный policy-fixture input, без автоматического fallback;
+выбор 1403 snapshot для планшета ожидает пользователя. Runner43 PASS.
+
+## 2026-10-26 — Полный сбор native сбоев и ожидание сети
+
+Full сохраняет отдельные неуспешные native попытки и продолжает независимые
+проверки; gate отвергает их даже после успешного повтора. Добавлены пять runner
+regressions (общий suite 32). Offline sync fixture переиспользует общий Wi-Fi
+барьер и finally cleanup, учитывает один обычный WorkManager backoff в 60 с
+и сохраняет attempts/network diagnostics. Production sync не менялся.
+
+## 2026-10-26 — Готовность окна native проверки форм
+
+После единичного Full FAIL на Samsung четыре gesture метода и весь класс
+отдельно прошли без рабочего исправления. Fixture теперь ждёт стабильных
+видимых границ и фокуса до единственного жеста, при сбое сохраняет геометрию.
+Причина прежнего падения не объявлена доказанной. [Квитанция](reference/mobile-full-2026-10-25.md).
+
+## 2026-10-25 — Общий tap и полевые линии
+
+Убраны ранний выбор трека и исключение трека точкой. Native проверяет общий
+список двух треков и Point/Line/Polygon, длинные строки и Cancel. Полевая
+линейная группа с подписями поднята под точки после full/lite/reorder.
+Registry, packs и [контракт](architecture/track-controls.md) обновлены.
+
+## 2026-10-25 — Готовность native cursor fixture
+
+После одиночного Full timeout добавлены app scene barrier и source/cache/camera
+diagnostics. Baseline повтор прошёл без изменений; производственная причина
+не установлена. Native assertions и deadline сохранены, оба метода Related
+cursor-rendering прошли. [Квитанция](reference/mobile-full-2026-10-25.md).
+
+## 2026-10-25 — Недельные напоминания о данных и обновлении
+
+UX-05 описывает независимые successful full-sync и manifest clocks, исключение
+локальных проектов, наблюдение неизвестной истории и overdue download/install
+без блокировки работы. Повторный показ ограничен process/daily review.
+Добавлены registry/config/manifest и native матрица новых диалогов.
+[Контракт](architecture/maintenance-reminders.md).
+
+## 2026-10-25 — Отложенный SDK тап при закрытии карты
+
+Full выявил обращение queryPointAnnotations после уничтожения MapView.
+Host отменяет ожидающие gestures перед native teardown; добавлена адресная
+регрессия map-teardown с тремя пересозданиями Activity. Strict mode сохраняется,
+полный прогон повторяется после исправления. [Контракт](architecture/map-rendering.md).
+
+## 2026-10-25 — Уточнение ширины свечения треков
+
+Повторным выбором пользователь увеличил свечение до 6.5 px. Сердцевина
+1.4 px / затемнение 73%, blur 3 и opacity .83 сохранены. Контракт треков,
+описание выбора и native expectations обновлены; локальные тесты по-прежнему
+отложены пользователем. Предыдущий APK 280b78b сохранён с исходной квитанцией.
+
+[Release APK f06ccfb](history/lisa-local-release-track-glow-2026-10-25.md)
+с уточнённым свечением собран; версия, production подпись и hash проверены.
+
+## 2026-10-25 — Выбранная тёмная сердцевина трека
+
+Зафиксирован выбор пользователя в [контракте треков](architecture/track-controls.md):
+1.4 px / затемнение 73%, свечение 4.5 px / blur 3 / opacity .83. Исходный цвет
+сохраняется в базе; число проходов прежнее. Тестовые ожидания обновлены,
+новые прогоны пользователь разрешил отложить; локальный APK учитывается отдельно.
+
+[Lisa Release 280b78b](history/lisa-local-release-dark-core-2026-10-25.md) собран
+без публикации; production identity, подпись и hash проверены. В квитанции
+отделены сборка от отложенной runtime проверки и исторических native PASS.
+
+## 2026-10-25 — Новый локальный APK с треками и цельными подписями
+
+Зафиксированы [результаты и разбор Stop](reference/track-followup-2026-10-25.md),
+контракт подписей видимой части и [квитанция Release `caed88b`](history/lisa-local-release-tracks-labels-2026-10-25.md).
+Полная version matrix и подпись проверены; 887 unit и 11 финальных адресных
+native PASS. Указаны прежние неуспешные batches, частичная phone проверка и
+ограничения. Первый APK сохранён отдельно; merges и публикации не выполнялись.
+
+## 2026-10-25 — Дорожная карта мобильного приложения
+
+Добавлена [общая карта](roadmap/mobile.md) надёжности, PostgreSQL синхронизации,
+векторных тайлов, обмена между устройствами и удобства. Известная работа в PR #78
+учтена отдельно. Для каждой доработки, включая внеплановую и стороннюю, требуется
+ID карты и объяснение влияния; ссылки закреплены в AGENTS, стартовых инструкциях,
+чеклисте и шаблоне PR. Автоматический roadmap check и branch protection
+не включались; runtime, версии и разрешения на исполнение не менялись.
+
+## 2026-10-25 — Разовый локальный Lisa Release без публикации
+
+Сохранена [квитанция подписанного APK 3.1.2.30/224](history/lisa-local-release-2026-10-25.md):
+состав всех owner repositories, явное разовое разрешение сборки из открытых PR,
+version matrix LisaOnly, production identity, подпись и SHA-256. APK хранится
+локально; обычные merge/publication gates сохраняются.
+
+## 2026-10-24 — MapLibre 13.7.1, прежний OpenGL
+
+Все consuming-модули согласованно обновлены с `13.0.2` на `13.7.1` через
+`android-sdk-opengl`. Обновлены checksum metadata, текущие dependency/backend
+контракты и version-matrix gate; старые receipts сохранены с исходной версией.
+Загрузка, тайлы, стили и редактор не перерабатываются. Сборки и настоящая
+отрисовка проверяются отдельно в [квитанции SDK](reference/maplibre-13-7-1-verification-2026-10-24.md).
+
+## 2026-10-24 — Касания видимой области в автотестах
+
+После отказа CI на высокой кнопке в прокрутке тестовый ввод использует стабильную видимую область в физических координатах. Регрессия подтверждает настоящее касание частично обрезанной кнопки, сохраняя фокус и targeted UID guard Android. Продуктовый код не менялся; [порядок проверок](runbooks/automated-tests.md).
+
+## 2026-10-24 — Реальный вход в стиль категории
+
+Категория открывает private effective clone: Cancel сохраняет исходный JSON,
+Save закрепляет показанные настройки только у выбранной категории. Строка
+открывает редактор независимо от фокусируемой кнопки удаления. Добавлены
+native вход через настоящую строку, проверка отдельного удаления и ожидание
+фокуса/стабильных физических границ перед targeted input. Новые карточки
+category-style-session отделяют исправление от первого пакета настроек.
+
+## 2026-10-24 — Штриховки, контуры и живой предпросмотр
+
+Добавлен [контракт](architecture/polygon-style-controls.md) новых необязательных параметров полигона, независимой alpha, бесшовных textures, constant stroke children и native offline образца редактора. Обновлены модульные packs, зависимости, инвариант, Related styles/polygon-styles и адресная official сверка. Новая доработка имеет отдельные IDs карточек всех трёх владельцев.
+
+## 2026-10-24 — Отдельный стиль «Светлячок»
+
+Добавлен [контракт](architecture/point-firefly.md) чёткого ядра и внешнего ореола,
+type=9 без изменения старого circle blur, ограничение cache/native image ownership,
+редактор и образец «Полевые точки». Обновлены модульные packs, Related styles,
+инвариант и official comparison. Native проверки включают смешанные категории,
+прозрачное ядро и 72 конфигурации редактора; фактический результат хранит runner.
+
+## 2026-10-23 — Диапазон PR для push-check документации
+
+Push-check читает фактическую базу открытого PR и учитывает документацию из
+предыдущих коммитов. До открытия PR используется общий предок с default branch;
+для вложенных PR сохраняется собственная база. Strict требования не ослаблены:
+отсутствие или откат документации, ошибка API и недоступная история дают отказ.
+Добавлены регрессии Git-историй и [описание диапазонов](reference/build-matrix.md#проверка-документации).
 
 ## 2026-10-23 — Локальный Lisa Release 3.1.2.30
 
@@ -1519,3 +1726,14 @@ Full остаётся gate перед публикацией. [Состав и �
   change-impact, config, upstream overlap и smoke registries.
 - Добавлены module packs, scaffold, validator, unit tests и CI workflow.
 - `CONTEXT_INSTRUCTION.md` переведён в совместимый redirect на новую систему.
+
+## 2026-10-25 — подтверждение Stop, тонкие линии и цвета старой истории
+
+Карта/меню/уведомление требуют подтверждения, durable UUID защищает новый сеанс
+от старого ответа. Shared-track schema 2 назначает цвета прежним SQL NULL;
+точки/metadata/пользовательские цвета сохраняются. Линия 2 со свечением 6.
+Разбор двух сегодняшних ручных остановок и проверки: `reference/track-followup-2026-10-25.md`.
+
+## 2026-10-25 — прямые подписи текущего экстента и упрощение редактора
+
+VisibleLineLabelLayout/Controller размещают один целый блок по преобладающему направлению видимой части SQL-объекта, без изгиба букв и нового SQLite чтения. Карандаш переименования получил активную насыщенность. Кнопка пресета «Полевые точки» удалена при сохранении ручных настроек и preview. Native проверки расширены line-labels/firefly-editor-ui.

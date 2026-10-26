@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-23
+last_verified: 2026-10-26
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,98 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Offline local MVT и целые слова API30 — 2026-10-26
+
+GISApplication явно разрешает SDK transport для HTTP loopback без внешней
+сети. Guards приложения продолжают использовать Android NetworkUtil и
+WorkManager. WrappingLabel подбирает размер слова по измеренным advances,
+чтобы Android11 hinting не разрывал слово после пропорционального расчёта.
+Сверены official heads через GitHub API: app
+`6113485be698606240b9bc7f0740a18ecc084aaa`, maplibui
+`ed4dac77d51746509a2b59f3cc6b99151b841967`, maplib
+`014247eea4a424e828c24d9e52e45fefed362f8d`. Official GISApplication инициализирует
+MapLibre без setConnected override; нового полного upstream merge не выполняли.
+Контракты: [карта](../architecture/map-rendering.md),
+[крупный интерфейс](../architecture/ui-accessibility.md).
+
+Доставка library части: PR60/44 слиты remote Merge Commits61a0a602/c3253726,
+их trees совпадают с исходными heads; consumer закрепляет именно эти merges.
+App merge, final-device Full и публикация учитываются отдельно.
+
+## Единый выбор и приоритет полевых линий — 2026-10-25
+
+Форк объединяет видимые треки и SQL-кандидаты всех допустимых типов векторов
+в один прокручиваемый список, включая повторный выбор поверх текущего.
+«Полевые линейные» с body/labels рисуются над треками и под точками; это не
+фильтр hit-test. Official app master 04d57c9fd843db6745c170147d6a2863da807352
+и maplib master 014247eea4a424e828c24d9e52e45fefed362f8d повторно проверены
+через API, ревизии прежние; named field-line role и TrackMapStyle/queryTrackIds
+являются частью fork. [Контракт](../architecture/track-controls.md).
+
+## Недельные напоминания полевому пользователю — 2026-10-25
+
+При запуске форк различает давность успешного полного sync онлайн-проекта,
+успешной проверки обновлений и давно известного неустановленного APK до/после
+проверенной загрузки. Для локальных проектов sync не проверяется; неизвестная
+старая история не получает выдуманную дату успеха. Работа остаётся доступной,
+установка требует явного действия. Одна сводная подсказка не повторяется на
+каждый retry/поворот; постоянно живой процесс повторяет review при открытии
+через сутки. [Контракт](../architecture/maintenance-reminders.md).
+Official `nextgis/nextgis_mobile_android` master повторно проверен через API:
+`04d57c9fd843db6745c170147d6a2863da807352`, ревизия прежняя; tree не содержит
+AppUpdateManager, StartupUpdateCheckScheduler или MaintenanceReminders.
+Это политика fork self-hosted updater, без изменения NGW/desktop протокола.
+
+## Отложенный тап при закрытии native карты — 2026-10-25
+
+Host форка отменяет ожидающие SDK gestures перед уничтожением MapView,
+чтобы single-tap confirmation не обращался к освобождённому renderer. В Full
+падение воспроизвелось с strict mode; адресный повтор линейки и три
+пересоздания Activity после тапа прошли после исправления. SDK strict mode
+сохранён. Контракт: [отрисовка](../architecture/map-rendering.md).
+Official app master повторно проверен: `04d57c9fd843db6745c170147d6a2863da807352`,
+без изменения ревизии; lifecycle native MapLibre host относится к форку.
+
+Треки можно переименовывать в списке и выбирать тапом на карте. Нижняя панель
+даёт цвет, название, видимость и подтверждённое удаление. Новые треки получают
+сохранённый насыщенный цвет; native линия имеет сердцевину 1.4 px с затемнением
+73% и свечение исходного оттенка 6.5 px / blur 3 / opacity .83. Настоящие
+точечные слои с подписями рисуются над треками и другими данными с сохранением
+своего порядка. [Контракт и ограничения](../architecture/track-controls.md).
+
+25 октября для этой настройки повторно проверен official maplib master
+`014247eea4a424e828c24d9e52e45fefed362f8d`: ревизия прежняя. Производный цвет
+сердцевины относится к нашему TrackMapStyle; решение ours, upstream merge нет.
+
+## Эффективный черновик категории — 2026-10-24
+
+Редактор категории форка открывает независимую эффективную копию с наследованием
+параметров «Прочие»; Cancel сохраняет исходный JSON, а Save заменяет только
+выбранную категорию. Строка открывает диалог независимо от focusable delete.
+В текущем [official RuleFeatureRendererUI 6420930](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/java/com/nextgis/maplibui/display/RuleFeatureRendererUI.java)
+проверен прямой путь getStyle → setStyle без effective clone в этих entry points.
+Это адресная сверка данного владельца; решение ours. Native вход/Cancel/Save
+и независимое удаление описаны в [контракте](../architecture/polygon-style-controls.md).
+
+## Штриховки, контуры и живой образец — 2026-10-24
+
+В форке добавлены необязательные pattern_options/outline_options, независимая alpha штриховки и offline native предпросмотр символов в редакторе. [Контракт](../architecture/polygon-style-controls.md). Проверены актуальные official master: maplib 014247eea4a424e828c24d9e52e45fefed362f8d, maplibui 642093037b135442913cd9dd9bf8b46f8b7aecf9, app 04d57c9fd843db6745c170147d6a2863da807352. Прочитанные [SimplePolygonStyle](https://github.com/nextgis/android_maplib/blob/014247eea4a424e828c24d9e52e45fefed362f8d/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java) (258 строк) и [StyleFragment](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java) (575 строк) не содержат этих объектов или live MapView preview. Адресная сверка entry points; решение ours, без upstream merge.
+
+## Точечный стиль «Светлячок» — 2026-10-24
+
+В форке добавлен [отдельный тип точки](../architecture/point-firefly.md): чёткое
+ядро и ореол только снаружи, независимые цвета/непрозрачность, общий zoom и
+живой образец без отдельной кнопки пресета «Полевые точки». Прежнее размытие других типов сохраняется.
+Выбор поддерживается в простом и категорийном редакторе; RGBA children
+сохраняют обычные picking, видимость и порядок логического слоя.
+
+Проверен актуальный official master 2026-10-24:
+[maplib 014247e](https://github.com/nextgis/android_maplib/blob/014247eea4a424e828c24d9e52e45fefed362f8d/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java)
+содержит типы 1–8;
+[maplibui 6420930](https://github.com/nextgis/android_maplibui/blob/642093037b135442913cd9dd9bf8b46f8b7aecf9/src/main/res/values/arrays.xml)
+содержит их восемь пунктов. Отдельного «Светлячка» в этих исходниках нет.
+Решение `ours`; перенос upstream нужно согласовывать вместе с новым типом.
 
 ## Копирование в слой и сдвиг/поворот — 2026-10-23
 
@@ -1848,7 +1940,7 @@ HTTP body временно хранится на диске, сканирует�
 
 Начиная с MapLibre Android 13 generic artifact `org.maplibre.gl:android-sdk`
 использует Vulkan. Официальный NextGIS Mobile `3.1.2` подключает именно его.
-Форк сохраняет API и версию MapLibre `13.0.2`, но во всех consuming-модулях
+Форк использует MapLibre `13.7.1` и во всех consuming-модулях
 явно выбирает `org.maplibre.gl:android-sdk-opengl`.
 
 Решение принято после воспроизводимого завершения процесса с сообщением
@@ -2096,3 +2188,15 @@ Fork test fixtures ожидают attached MapView с готовым текущ�
 permissions или поведение карты. Полный phone/emulator прогон подтвердил все
 177 native cases и 36 chooser UI profiles; доказательства и границы проверки
 приведены в [истории приёмки](../history/2026-10-14-layer-chooser-tests.md).
+
+## Безопасный Stop и история треков
+
+Ручная остановка через карту, меню и уведомление требует подтверждения.
+Durable UUID защищает новый сеанс от старого диалога/уведомления. Прежние треки
+без индивидуального цвета однократно получают сохранённые насыщенные оттенки,
+собственные цвета остаются прежними. Линия уменьшена до 2 px со свечением 6 px.
+Контракт: [track-controls](../architecture/track-controls.md).
+
+## Прямые подписи видимых линий
+
+Одна цельная подпись на текущую видимую часть LineString/MultiLineString поворачивается по преобладающему направлению видимых сегментов и может пересекать изгибы. Точка остаётся на линии; native styles/categories/zoom/collision и исходная геометрия сохранены. Обработка идёт в фоне после settle, без нового SQLite-чтения. Контракт: [visible-line-labels](../architecture/visible-line-labels.md).

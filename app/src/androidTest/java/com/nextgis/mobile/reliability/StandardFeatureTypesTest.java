@@ -47,7 +47,7 @@ public class StandardFeatureTypesTest {
         JSONArray fixtures;
         try (java.io.InputStream stream = InstrumentationRegistry.getInstrumentation().getContext()
                 .getAssets().open("feature-types/standard-field-types.json")) {
-            fixtures = new JSONArray(new String(stream.readAllBytes(),StandardCharsets.UTF_8));
+            fixtures = new JSONArray(new String(com.nextgis.mobile.util.VerificationIo.readAll(stream),StandardCharsets.UTF_8));
         }
         GISApplication app = (GISApplication)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
         MapContentProviderHelper map = (MapContentProviderHelper)app.getMap();
