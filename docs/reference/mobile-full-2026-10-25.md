@@ -414,3 +414,69 @@ Durable APK и прежний f06ccfb APK не входят в disposal scope.
 эти пути вне Android scope и не трогались. Это не общий preflight PASS.
 Tablet after-readback сохранил production223/lastUpdateTime, font1.0,
 density280 и secure location_mode3; verification resources остановлены.
+
+## Шестой Full: блок среды после перезагрузки 26 октября
+
+Смартфон R5GL130K54D снова подключён; проект1403 найден, read-only snapshot
+18 политик имеет прежний SHA256. Fetch/preflight прошёл для всех owners,
+включая чистый desktop другой задачи. Матрица `phone-full-06-delivery-matrix.json`
+подтвердила прежние commits, открытые PR и точные pins. App HEAD `ec6ad79`
+отличается от code/APK source `bf10dfd` только документацией; текущий source
+fingerprint `9cf1f27d6795c00e5223b71ab836051929d1a4b2c650d0b87b0ef3b0f3bba8e5`.
+
+`phone-full-06` остановился **до сборок и native tests**: emulator35.6.11
+сообщил об отсутствии CPU acceleration. Это не повторное падение Android-кода
+и не выполненная приёмка смартфона. `runs=[]`, Full FAIL, gate отсутствует.
+Cleanup подтвердил закрытый own console и exited launcher; живых own AVD нет.
+Телефон сохранил production224/lastUpdateTime, font1.15/density420/location3.
+
+По новой просьбе пользователя сначала исследовано постоянное отключение
+Windows Hyper-V. Выполнены только read-only CIM/registry/event/SDK проверки
+и отдельный read-only BCD/feature probe через Windows UAC. Настройки не менялись.
+Факты текущей загрузки 26 октября09:34 Europe/Warsaw:
+
+- `HypervisorPresent=false`, BIOS VT-x включён; VBS status0, security services0;
+- HypervisorPlatform, VirtualMachinePlatform и WSL — Disabled;
+- в текущей BCD-записи `vsmlaunchtype Off`, но явного `hypervisorlaunchtype` нет;
+- последний найденный успешный запуск Hyper-V — 24 октября18:58 CEST;
+- servicing log фиксирует запрос отключения HypervisorPlatform 25 октября22:29
+  и завершение26 октября09:33 CET; повторное самовключение после этого не доказано;
+- AEHD/GVM services отсутствуют (SC1060), хотя SDK уже содержит подписанный
+  installer AEHD2.2.0.0; catalog Authenticode Valid, signer Microsoft Windows
+  Hardware Compatibility Publisher. Новые downloads/runtime copies не нужны.
+
+`vsmlaunchtype Off` не заменяет запрет запуска самого гипервизора.
+Для явного постоянного boot setting используется административная команда
+`bcdedit /set hypervisorlaunchtype off`, затем проверка BCD и состояния после
+обычной перезагрузки. Это сохраняемый параметр, не абсолютная защита от будущего
+изменения администратором/установщиком. Microsoft описывает
+[BCD launch settings](https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set)
+и [зависимые компоненты Hyper-V](https://learn.microsoft.com/en-us/troubleshoot/windows-client/application-management/virtualization-apps-not-work-with-hyper-v).
+Дополнительно отключать уже неработающие security/Windows features не требуется.
+
+При оставленном выключенным Hyper-V для ускоренного emulator нужен другой
+драйвер — имеющийся AEHD. Google рекомендует WHPX и объявил завершение поддержки
+AEHD31 декабря2026: [официальные требования](https://developer.android.com/studio/run/emulator-acceleration).
+Изменение BCD/установка kernel driver пока не выполнялись: последняя просьба
+пользователя — сначала разобраться. Native проверки приостановлены на время
+этого разбора; старое предположение «достаточно перезагрузки с Auto» к текущим
+отключённым Windows features неприменимо. Следующий Full требует рабочей среды;
+планшетный Full дополнительно ожидает устройство и выбор проекта/снимка.
+
+Evidence: `...\evidence\hypervisor-20261026` (read-only BCD, feature receipt),
+`...\evidence\phone-full-06` и baseline смартфона. Небольшие диагностические
+файлы сохраняются вместе с прежними evidence до приёмки PR; новых bulk inputs
+не создавалось, код приложения и ранее выданный локальный APK не менялись.
+
+После разбора пользователь явно разрешил «закрепить Off и установить AEHD».
+Через UAC выполнено только это изменение, с readback исходной/новой BCD,
+проверкой hashes INF/SYS/CAT и Valid catalog signature. `hypervisorlaunchtype Off`
+сохранён, AEHD2.2 running/System; `emulator -accel-check` вернул exit0 и
+`AEHD (version 2.2) is installed and usable`. `HypervisorPresent=false`.
+Windows features, VBS, BIOS не менялись, перезагрузка не выполнялась.
+Долговечность boot setting после следующей перезагрузки требует отдельного
+readback; для текущих тестов ускорение уже доступно. Квитанции:
+`approval-scope.json`, `change-result.json`, `bcd-before-change.txt`,
+`bcd-after-change.txt`, `accel-after.txt` в том же evidence каталоге.
+Новый Full будет отдельным запуском: неуспешный Full06 не переименовывается
+и не объявляется успешным задним числом.

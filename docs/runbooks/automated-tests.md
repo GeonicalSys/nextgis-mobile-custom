@@ -123,6 +123,17 @@ BCDEdit readback подтвердил `Off → Auto`. Перезагрузка �
 Текущий загруженный сеанс сохраняет Off/HypervisorPresent=false до перезапуска;
 проверка ускорения и emulator Related после перезагрузки остаются открытыми.
 
+Актуализация 2026-10-26: после последующих настроек/перезагрузок WHP,
+VirtualMachinePlatform и WSL фактически Disabled, Hyper-V/VBS не работают.
+По явному выбору пользователя сохраняется выключенный Windows hypervisor:
+в BCD закреплён `hypervisorlaunchtype Off`, установлен уже имеющийся подписанный
+AEHD2.2. `emulator -accel-check` подтвердил usable/exit0 без новой перезагрузки.
+Следующая загрузка требует readback BCD/HypervisorPresent/AEHD; обычный reboot
+не должен считаться новой настройкой Auto. Google объявил sunset AEHD
+31 декабря2026 и рекомендует WHPX; будущий переход согласовывается отдельно.
+Подробности и Full06 environment failure:
+[квитанция](../reference/mobile-full-2026-10-25.md#шестой-full-блок-среды-после-перезагрузки-26-октября).
+
 ## Регрессии GlitchTip 2026-10-23
 
 `bugreports` включает технический `CompassTouchTest`: actual CompassImage touch
