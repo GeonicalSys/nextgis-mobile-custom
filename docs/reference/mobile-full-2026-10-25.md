@@ -11,6 +11,15 @@ related_code:
 
 # Область и состояние
 
+Актуальный итог 26 октября: **выпуск заблокирован**. Full09 со смартфоном и
+эмулятором прошёл 253/253, но отдельный Full планшета не завершён. Дополнительная
+контролируемая проверка выявила реальный сбой локальных MVT при полностью
+отключённой сети. Ни этот дефект, ни тестовая ошибка Android 11 пока не исправлены.
+Код исследованной сборки — `67f01259a5a15d277c924508957e12a733808986`, fingerprint
+`7283d9125bd6dd58bdbbbae9cce067bd5cb9bd5f5f3c144d22e7354181d2f28e`.
+Ни merge, ни публикация не выполнялись; последующие изменения этой квитанции
+документационные. Подробности последних запусков находятся в конце документа.
+
 Пользователь запросил полный набор тестов перед будущей публикацией, затем
 отдельный полный прогон на планшете. Публикация и merge этим запросом не
 разрешены. Рабочую ЛИСУ не переустанавливают и не очищают; native suites
@@ -584,3 +593,154 @@ Owned AVD settings restored/console closed/process exited. Приложение 
 настройки батареи устройства не исправлялись: устранено неверное начальное
 условие теста фонового экрана при существующем уведомлении. Source фиксируется
 перед следующими полными прогонами; прежний Full08 остаётся FAIL.
+
+## Full09: смартфон и эмулятор — PASS
+
+На чистом source `67f0125` прошли **все 253 требуемых native метода** из 53
+классов, без missing/skips. Это совокупный Full со stationary Samsung
+SM-A566B/API36 и изолированным API36 AVD; не 253 метода только на смартфоне.
+913 unit (maplib 615, maplibui 93, app 205), runner 48, docs validator/24 tests,
+LisaDebug/LisaRelease/BelkaRelease version matrix, diagnostic delivery с
+ожидаемым fatal и 36 системных chooser profiles прошли.
+
+Завершён 26 октября в 12:34:52 UTC. Cleanup подтвердил восстановление настроек,
+закрытие owned console и выход процесса AVD. `Check-Publication` после этого
+запуска прошёл. Его gate сохранён рядом с исходной квитанцией:
+`Q:\Codex\Scratch\mobile-full-20261025-f06ccfb\evidence\phone-full-09`.
+Следующий новый Full штатно удалил общий gate; архивный PASS не подменяет
+незавершённую приёмку планшета и не отменяет отдельно найденный дефект.
+
+## Tablet Full01: FAIL и незавершённый каталог
+
+Тот же fingerprint, T40 Plus_ROW/API30, соединение Wi-Fi. До запуска прочитаны
+hardware serial 59843808167874, font 1.0/density 280/location 3. Использован явно
+согласованный policy snapshot проекта 1403: 18 слоёв, SHA256
+`08f3a44f84d8bb22701d25d466e957829b22fb40074144bbc3ac751de59935d8`.
+Это не чтение production каталога планшета и не перенос объектов/учётных записей.
+Runner принял snapshot как вход; до native ProjectLayerSelectionTest этот Full
+ещё не дошёл. Ранний Related private-policy PASS не засчитывается вместо него.
+
+Предварительные проверки и вся emulator часть, включая diagnostic delivery и
+36 chooser profiles, прошли. Receipt хранит 132 distinct PASS; сырой лог
+неуспешного класса добавляет ещё один успешный sibling: **133 PASS,
+1 failed native method, 119 методов не завершены** из 253. Ожидаемый
+`DiagnosticsDeliveryTest.crashWhileOffline` относится к PASS доставки и не
+считается отдельным дефектом.
+
+Failed method — `MaintenanceRemindersNativeTest.russianWarningsKeepCompleteTextAndActionsAcrossThemesFontsAndNarrowViewports`.
+Стек ведёт в `capture():172 → decor.draw(Canvas) → View.onDrawScrollIndicators`:
+Android 11 обращается к null `mAttachInfo` у ещё не присоединённого окна.
+Тест показывает, вручную раскладывает и рисует диалог внутри одного UI callback,
+не отдавая очередь присоединению окна. Это сбой тестовой съёмки; падение
+обычного пользовательского показа предупреждения таким стеком не доказано.
+Следует дождаться реального attach/layout перед захватом, сохранив проверки
+полноты текста, прокрутки и доступности действий. Исправление ещё не внесено.
+
+Затем `TrackControlsTest.crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections`
+не получил ни одного instrumentation status; его ADB stream оставался пустым.
+Host command достиг установленного timeout 900 s. В диагностический момент
+verification process на планшете отсутствовал, обычный dumpsys ещё отвечал;
+позже прежний endpoint перестал принимать новое соединение. Это **не PASS и
+не доказанная ошибка выбора объектов**. Runner завершил Full FAIL в 13:39:48 UTC,
+не выполняя оставшиеся 119 методов.
+
+Cleanup: settings_restored/owned_console_closed/owned_process_exited=true;
+AVD отсутствует в ADB. Повторное подключение по прежнему и новому сообщённому
+порту завершилось network timeout до запуска Related cases. Последующий
+readback production/version/settings планшета поэтому недоступен. Тесты
+устанавливали и очищали только verification APK; общий ADB server не перезапускали.
+
+Evidence: `...\evidence\tablet-full-01`, `readiness-summary.json`,
+`...\evidence\tablet-track-candidates-after-reconnect-01` и `-02`.
+Успех прежних Related 7 не закрывает этот Full.
+
+## Подтверждённый дефект: локальные MVT без внешней сети
+
+На том же коде, без правок теста, выполнен исходный
+`FireflyTileFallbackTest.changingALiveTiledPointToFireflyRebuildsItThroughTheClassicFallback`
+дважды на owned AVD, когда основной Full уже работал на планшете:
+
+| Условие | Результат |
+|---|---|
+| Есть active default network | PASS, включая реальный VectorSource и переход к classic Firefly |
+| Wi-Fi и mobile data отключены, active default network=none | FAIL в первом ожидании native idle, до смены стиля |
+
+Параметры радио AVD восстановлены в исходные wifi 1/data 0; это не изменение
+радио планшета или смартфона. Native class и assertions не менялись.
+Evidence: `...\evidence\offline-mvt-probe-67` содержит оба исходных лога и
+readback восстановления.
+
+Причина в текущей интеграции: local MVT source использует HTTP на 127.0.0.1,
+а SDK при Android disconnected переводит свой HTTP loader в Offline и откладывает
+такие запросы вместе с внешними. При отсутствии связи локальные данные не
+достигают native source. Согласуется с точными исходниками Android 13.7.1,
+commit `4cf121e515d8d065b57cd555a0b231ea27ff0e5d`:
+[ConnectivityListener](https://github.com/maplibre/maplibre-native/blob/4cf121e515d8d065b57cd555a0b231ea27ff0e5d/platform/android/MapLibreAndroid/src/cpp/connectivity_listener.cpp)
+и [OnlineFileRequest.schedule](https://github.com/maplibre/maplibre-native/blob/4cf121e515d8d065b57cd555a0b231ea27ff0e5d/platform/default/src/mln/storage/online_file_source.cpp).
+При подключённом Wi-Fi без интернета результат этой проверкой не установлен;
+подтверждён именно случай отсутствия сети, актуальный для авиарежима.
+Также не установлено, появился ли дефект при обновлении SDK или существовал ранее.
+
+Проверка GitHub regression на 67f0125, run 40317166349/job 121552553350, упала в
+том же первом idle ожидании. Однако состояние радио оригинального CI не
+сохранено, поэтому идентичность причины остаётся предположением. Исходный
+красный результат сохранён. Единственный повтор без изменения source,
+attempt2/job121581081930, завершился **SUCCESS** в13:59:27UTC после старта
+в12:49:37UTC. На67f0125 обе docs checks и текущий regression теперь зелёные.
+Это не отменяет отдельный offline FAIL: тот же native case воспроизводит
+разные результаты при явно разных состояниях сети. Причина различия двух
+запусков CI без их radio snapshot не доказана.
+Увеличения timeout, пропуска теста и изменения production в этом разборе нет.
+
+Переделка загрузки/тайлов ранее отложена пользователем. Здесь зафиксирован
+выпускной блокер MVT-01/REL-03; исправление транспорта и новая офлайн native
+регрессия ещё требуются. Отдельно нужны исправление capture на API30, стабильное
+подключение и повторная полная приёмка. Публиковать текущую сборку нельзя.
+
+## Локальный Release APK этой проверки
+
+По ранее согласованному исключению из открытых PR подготовлен normal Lisa
+Release 3.1.2.30/224, SOURCE_REVISION=67f01259a5a15d277c924508957e12a733808986,
+DEBUG=false/FIELD_VERIFICATION=false, package `com.nextgis.mobile.geonical`.
+Файл: `Q:\Codex\Artifacts\lisa-mobile\2026-10-26\lisa-3.1.2.30-224-67f0125.apk`.
+Размер 70,493,937 bytes; SHA256
+`989cb79da7191d1a04e300edfdbd0522e55c23d9420776bcc8bcdf7a1be40f67`.
+Подпись проверена, certificate SHA256
+`ecd04c936532000eea8cb06ca6a3c1a3ae482844cacce2b84926c635429c3e18`.
+Копия сверена по hash; metadata/sha256 находятся рядом. Это артефакт для
+проверки с известным дефектом, не готовый выпуск.
+
+После fetch матрица всех 5 владельцев подтвердила включение требуемых
+опубликованных branch commits. Но библиотеки #60/#44 и app #78 остаются OPEN/Draft;
+pins 3ad5d49/d4b8f27 ещё не merged library commits. Для будущей интеграции нужен
+порядок maplib60 Merge Commit → maplibui44 Merge Commit → fetched merged pins
+в app → app78 Squash и проверка итогового source. Никаких merge, publisher
+dry-run, tag/release или публикации в рамках этой проверки нет.
+
+## Хранение и незавершённая очистка
+
+На Q сохранено около 24.3 MiB компактных доказательств: исходные логи,
+квитанции, hashes, policy provenance и изображения. Их удерживают до приёмки PR;
+дальнейшее удаление требует проверки актуальности доказательств. Подписанный
+APK около 67.2 MiB — отдельный сохраняемый результат, не временный файл.
+Owned AVD и test runner завершены, повторных SDK/JBR/AVD copies не создавали;
+общие установленные runtimes/caches не входят в очистку этой задачи.
+
+Нативное удаление двух новых disposable каталогов отклонено executor policy
+**до запуска PowerShell** при danger-full-access/approval=never. Это не
+Auto-review denial и не Windows ACL/file-lock failure; ни проверки, ни удаление
+из отклонённой команды не выполнялись, освобождённый ею объём — 0.
+Другим способом удаление не повторяли. Остались:
+
+- `...\disposable\ci-67f0125-artifact`: 29,148,575 bytes, 441 files;
+- `...\disposable\maplibre-13.7.1-source`: 133,924 bytes, 9 files.
+
+Всего около 28 MiB. Точная команда/отказ записаны в
+`...\evidence\cleanup-rejected-call.json`, оба пути — в task storage manifest
+и `Q:\Codex\Maintenance\disk-audit-20261023\pending-cleanup.json` с сохранением
+шести прежних записей. Legacy90-path cleanup receipt не менялся. Удаление этих
+двух дубликатов возможно после действительного изменения поддерживаемого
+execution context либо самим оператором, с новыми physical-path/activity/
+preservation checks. Текущий approval=never не даёт интерактивной эскалации.
+Task manifest остаётся held с handoff на исправления и повторную приёмку;
+состояние не выдано за завершённый выпуск или успешную очистку.

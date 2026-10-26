@@ -6,6 +6,12 @@ last_verified: 2026-10-26
 
 # app — Android-приложение Lisa/Belka
 
+Приёмка 26 октября: Full09 со смартфоном/API36 и AVD прошёл253/253; Full
+планшета/API30 не завершён (test capture до window attach и последующий
+таймаут Wi-Fi ADB). Отдельно подтверждён сбой native local MVT при отсутствии
+сети. Публикация заблокирована, исправлений этих двух причин ещё нет.
+Состояние и ограничения: [квитанция](../../docs/reference/mobile-full-2026-10-25.md).
+
 Track map-action fixture сохраняет фактическую точку pointer и Snackbar overlap;
 Related track-map-actions проверяет одну полную последовательность действий.
 Перед фоновой кнопкой подтверждаются только известные startup GPS/battery

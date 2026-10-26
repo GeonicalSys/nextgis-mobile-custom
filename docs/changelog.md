@@ -8,6 +8,14 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-26 — Готовность выпуска после Full09
+
+Записаны Full09 смартфон/AVD253/253 PASS, незавершённый tablet Full01,
+ошибка тестовой съёмки Android11 и обрыв Wi-Fi ADB. Контролируемый повтор
+исходного MVT native case online/offline подтвердил отдельный реальный дефект
+локальных тайлов без сети. MVT-01, module README и квитанция явно блокируют
+выпуск; product code, merge и publisher в этом разборе не менялись.
+
 ## 2026-10-26 — Track map-action hit evidence
 
 Full08:252/253 native PASS, палитра после Цвет не появилась. Тот же tablet
