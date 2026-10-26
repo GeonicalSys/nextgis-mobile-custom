@@ -8,6 +8,15 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-26 — Full02 планшета и восстановление Wi-Fi
+
+Пользователь отключил VPN; Windows вернулась с cherles route на физический
+Wi-Fi, после чего Related track-candidates4/4 PASS и весь tablet Full02
+завершились без обрыва:249 PASS/4 FAIL из253. Зафиксированы API30 capture,
+два несовместимых test stream readers и unresolved azimuth word-wrap assertion.
+Набор/код тестов оставались прежними. CIbbceec8 имеет отдельный unresolved
+TrackUpload assertion; offline-MVT дефект не исправлен, выпуск блокирован.
+
 ## 2026-10-26 — Готовность выпуска после Full09
 
 Записаны Full09 смартфон/AVD253/253 PASS, незавершённый tablet Full01,

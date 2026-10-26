@@ -12,9 +12,12 @@ related_code:
 # Область и состояние
 
 Актуальный итог 26 октября: **выпуск заблокирован**. Full09 со смартфоном и
-эмулятором прошёл 253/253, но отдельный Full планшета не завершён. Дополнительная
-контролируемая проверка выявила реальный сбой локальных MVT при полностью
-отключённой сети. Ни этот дефект, ни тестовая ошибка Android 11 пока не исправлены.
+эмулятором прошёл 253/253. Повторный Full02 планшета после восстановления Wi-Fi
+завершил весь каталог: **249 PASS / 4 FAIL**, missing/effective skips=0.
+Три неуспеха находятся в тестовом коде Android 11, один — в проверке переноса
+инструкции азимута и пока требует адресного разбора. Дополнительная проверка
+выявила реальный сбой локальных MVT при полностью отключённой сети. Исправления
+этих причин в рамках проверки готовности ещё не внесены.
 Код исследованной сборки — `67f01259a5a15d277c924508957e12a733808986`, fingerprint
 `7283d9125bd6dd58bdbbbae9cce067bd5cb9bd5f5f3c144d22e7354181d2f28e`.
 Ни merge, ни публикация не выполнялись; последующие изменения этой квитанции
@@ -719,7 +722,7 @@ dry-run, tag/release или публикации в рамках этой про
 
 ## Хранение и незавершённая очистка
 
-На Q сохранено около 24.3 MiB компактных доказательств: исходные логи,
+После Full02 на Q сохранено около 27.3 MiB компактных доказательств: исходные логи,
 квитанции, hashes, policy provenance и изображения. Их удерживают до приёмки PR;
 дальнейшее удаление требует проверки актуальности доказательств. Подписанный
 APK около 67.2 MiB — отдельный сохраняемый результат, не временный файл.
@@ -744,3 +747,101 @@ execution context либо самим оператором, с новыми phys
 preservation checks. Текущий approval=never не даёт интерактивной эскалации.
 Task manifest остаётся held с handoff на исправления и повторную приёмку;
 состояние не выдано за завершённый выпуск или успешную очистку.
+
+## Восстановление Wi-Fi: пользователь отключил VPN
+
+После неуспешных повторов подключения проверен именно маршрут Windows:
+`Find-NetRoute` выбирал для192.168.0.17 интерфейс `cherles`76, source10.10.10.121,
+route192.168.0.0/24 metric1 вместо физического Wi-Fi15/source192.168.0.15.
+Пользователь самостоятельно отключил VPN на ноутбуке и планшете. После этого
+выбран Wi-Fi15, подключение192.168.0.17:38697 немедленно прошло, hardware
+serial59843808167874 совпал.
+
+Связанный Related `track-candidates` выполнил **4/4 PASS**, включая тот самый
+ранее зависший crossingTracksPointsLinesAndPolygons case, реальные действия
+цвет/имя/видимость/удаление, large UI chooser и native order. Это подтверждает
+текущее восстановление связи; первоначальный незавершённый Full01 остаётся FAIL.
+Нельзя приписывать все прежние таймауты одной причине без их route snapshot.
+
+Агент не менял VPN, routing, OEM unlock или bootloader. Пользователю пояснено,
+что разрешение разблокировки загрузчика не нужно для ADB. После восстановления
+прочитаны прежние production223/3.1.2.29, lastUpdate2026-10-25T23:36:38,
+font1.0/density280/location3. Evidence: `tablet-wifi-vpn-recovery.json` и
+`tablet-track-candidates-after-vpn-off-01`.
+
+## Tablet Full02: весь каталог завершён, четыре неуспеха
+
+Чистый source `bbceec8c6ccbd603b717646f2049ae65f896a95b`; относительно67f0125
+изменена только документация. Fingerprint кода, конфигурации и тестов прежний:
+`7283d9125bd6dd58bdbbbae9cce067bd5cb9bd5f5f3c144d22e7354181d2f28e`.
+Методы не добавлялись и не исключались между Full09/TabletFull01/Full02.
+
+913 unit, runner48, docs validator/24tests, полная version matrix,
+diagnostic delivery и36 chooser profiles прошли. Все253 required метода
+получили исход: **249 PASS,4 FAIL**, missing/effective skips=0. Receipt
+содержит222 положительных метода из полностью успешных групп; ещё27 PASS
+сохранены в сырых логах четырёх failed groups. Эти положительные siblings
+не превращают итоговый Full FAIL в PASS. Первоначальный assumption skip
+deny-location case закрыт его обязательным отдельным запуском с отказом
+разрешения; ожидаемый diagnostics fatal принят по явному протоколу.
+
+| Метод | Что установлено | Что остаётся |
+|---|---|---|
+| MaintenanceRemindersNativeTest.russianWarningsKeepCompleteTextAndActionsAcrossThemesFontsAndNarrowViewports | Повторился null mAttachInfo в test capture():172 при decor.draw до attach окна API30 | Исправить жизненный цикл тестовой съёмки; не объявлять обычный показ диалога сломанным |
+| FeaturePersistenceTest.backupCopiesRowsAndPhotoWithoutOverwritingPreviousArchive | Два архива успешно созданы, затем NoSuchMethodError на InputStream.readAllBytes в проверочном чтении ZIP, строка154 | Portable чтение в тесте и повторная проверка содержимого; содержимое архива этим FAIL не принято |
+| StandardFeatureTypesTest.standardPointLineAndPolygonCategoriesHaveSymbolsAndCanonicalParents | Тот же недоступный InputStream.readAllBytes при чтении test fixture, строка50 | Исправить reader теста и выполнить его прикладные assertions |
+| LargeTextLayoutTest.azimuthTextAndCloseStayWithinSmallPortraitAndLandscapePanels | Не выполнено Instructions wrap between complete words, строка328 | Записать точные theme/font/viewport/line bounds и проверить WrappingLabel; не объявлять ни app fix, ни ошибку oracle доказанными |
+
+Локальный Android36 SDK `data/api-versions.xml` подтверждает, что именно
+`java.io.InputStream.readAllBytes` появился в API33. Проверенные совпадения
+в production app/maplib/maplibui используют **Files.readAllBytes(Path)**,
+а не этот stream method; они не равнозначны тестовой ошибке. Обычная библиотечная
+операция не объявлена сломанной только из-за несовместимого test reader.
+
+На этом проходе завершились прежде не выполненные классы, включая23 cascading
+forms,12 conditional required checks,7 project scripts, весь набор редакторов
+и rendering стилей, приватную policy проверку1403, предупреждения обязательных
+полей и диагностические журналы. Непройденные assertions остаются непроверенными
+продуктовыми условиями даже при завершённом каталоге попыток.
+
+Full02 не прерывался из-за транспорта. Cleanup вновь подтвердил восстановление
+настроек/закрытие console/выход owned AVD. Verification package после прогона
+остановлен. Production223/3.1.2.29 и lastUpdate2026-10-25T23:36:38, физические
+font1.0/density280/location3 прочитаны неизменными. Current Full gate отсутствует.
+Evidence: `...\evidence\tablet-full-02`, включая `readiness-summary.json`.
+
+## CI на документационном bbceec8: другой failed assertion
+
+Run40337933585/job121624420416 завершился FAIL в
+`TrackUploadTest.registrationLaterUploadsWithoutChangingTheSettingAndClearsTheBadge:197`
+на ожидаемом false от очередного uploadProject. В локальном Full02 тот же
+TrackUploadTest прошёл9/9 на AVD. Код и тесты между исходами не менялись;
+штатный CI здесь использует другой startup/runner путь, чем verification Full.
+Причина расхождения пока не доказана: нужны witnesses состояния фоновых workers,
+hub calls и pending/sent rows. Успешным повтором этот сбой не закрывали.
+Компактный исходный fragment/job metadata сохранён в
+`...\evidence\ci-bbceec8-failure-summary.json`; новых artifact downloads не делали.
+
+Таким образом, зелёный CI67 attempt2 относится к конкретному завершённому
+запуску. На bbceec8 regression красный, docs checks зелёные. Следующий
+документационный push получает собственные checks и не доказывает устранения
+известного offline-MVT дефекта, API30 gaps или этого assertion.
+
+## Подписанный APK после Full02
+
+Текущий local normal Lisa Release3.1.2.30/224 собран version matrix из чистого
+bbceec8 и сохранён без публикации:
+`Q:\Codex\Artifacts\lisa-mobile\2026-10-26\lisa-3.1.2.30-224-bbceec8.apk`.
+Размер70,493,937 bytes; SHA256
+`97ab4540606daae74d1f7fdfb3fa58fed77691cfe1fe1b672641c6647bac4df8`.
+Package, min26/target36, четыре ABI, DEBUG=false/FIELD_VERIFICATION=false,
+SOURCE_REVISION=bbceec8c6ccbd603b717646f2049ae65f896a95b и прежний certificate
+SHA256 проверены; hash копии совпал. Metadata/sha256 рядом явно содержат
+249/4 и ограничения. Старые пользовательские APK сохранены как результаты.
+
+Финальный fetch показал все5 Android owner repositories clean и без behind
+их текущих branches. Общий workspace preflight возвращает blocked из-за16
+dirty desktop files в параллельной задаче codex/roadmap-admission; desktop
+не входит в эту проверку и не менялся. Его состояние не скрывалось и не очищалось.
+Все3 Android PR остаются OPEN/Draft. До исправлений, повторной приёмки и
+закрытия их dependency chain выпуск не готов.

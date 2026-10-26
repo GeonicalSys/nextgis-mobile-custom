@@ -28,3 +28,11 @@ decor.draw до attach; обычное падение диалога не док
 исправлялся, source fingerprint прежний. Подготовлен подписанный локальный
 APK3.1.2.30/224 по прежнему исключению; он содержит известный дефект и не
 является готовым выпуском. Все3 связанные PR остаются Draft, публикации нет.
+
+После пользовательского VPN-off подтверждён прямой Wi-Fi route и Related
+track-candidates4/4 PASS. Full02 на документационном bbceec8 завершил весь
+прежний каталог:249 PASS/4 FAIL, missing/effective skips=0. Три сбоя относятся
+к capture/stream API тестов на Android11; azimuth word-wrap assertion пока
+не классифицирован как app defect или ошибочный oracle. Product/tests code
+не менялись; CIbbceec8 имеет отдельный unresolved TrackUpload assertion.
+Подготовлен подписанный local APKbbceec8 с явными ограничениями; публикации нет.

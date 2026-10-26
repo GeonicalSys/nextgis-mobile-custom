@@ -6,10 +6,11 @@ last_verified: 2026-10-26
 
 # app — Android-приложение Lisa/Belka
 
-Приёмка 26 октября: Full09 со смартфоном/API36 и AVD прошёл253/253; Full
-планшета/API30 не завершён (test capture до window attach и последующий
-таймаут Wi-Fi ADB). Отдельно подтверждён сбой native local MVT при отсутствии
-сети. Публикация заблокирована, исправлений этих двух причин ещё нет.
+Приёмка 26 октября: Full09 смартфон/API36+AVD253/253 PASS; после отключения VPN
+планшет/API30 завершил Full02:249 PASS/4 FAIL, missing/effective skips=0.
+Три ошибки — API30 test capture/readers, одна — unresolved azimuth word wrap.
+Код/набор253 методов после67f0125 не менялся. Отдельно подтверждён offline local
+MVT defect, CIbbceec8 failed TrackUpload assertion не закрыт. Публикация заблокирована.
 Состояние и ограничения: [квитанция](../../docs/reference/mobile-full-2026-10-25.md).
 
 Track map-action fixture сохраняет фактическую точку pointer и Snackbar overlap;
