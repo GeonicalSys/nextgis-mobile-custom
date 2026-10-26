@@ -46,9 +46,14 @@ foreach ($candidate in $candidates) {
         if ($LASTEXITCODE -ne 0) { throw 'Cannot read local changes for documentation impact' }
         $changedTask += @(& git ls-files --others --exclude-standard)
         if ($LASTEXITCODE -ne 0) { throw 'Cannot read new files for documentation impact' }
-        $localValidatorTask += '--enforce-diff'
-        foreach ($pathTask in @($changedTask | Where-Object { $_ } | Sort-Object -Unique)) {
-            $localValidatorTask += @('--changed-file', $pathTask)
+        $impactPathsTask = @($changedTask | Where-Object { $_ } | Sort-Object -Unique)
+        if ($impactPathsTask.Count -gt 0) {
+            $localValidatorTask += '--enforce-diff'
+            foreach ($pathTask in $impactPathsTask) {
+                $localValidatorTask += @('--changed-file', $pathTask)
+            }
+        } else {
+            Write-Host 'Documentation impact: no task/worktree changes; complete workspace validation still runs.'
         }
     }
     & $candidate.Exe @($candidate.Prefix) 'docs/scripts/validate_docs.py' @localValidatorTask
