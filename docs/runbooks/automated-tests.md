@@ -15,6 +15,14 @@ related_code:
 
 # Автоматические проверки
 
+После release fixes26 октября каталог содержит254 метода: новый обязательный
+emulator-only offline MVT случай выполняет тот же live fallback с выключенными
+Wi-Fi/data и реальной native отрисовкой. Related `-Area offline-tiles` запускает
+его отдельно; `-Area azimuth-text`, `persistence-catalog` и `track-delivery`
+адресно проверяют соответствующие прежние методы. На Android11 capture
+диалогов ждёт attach, потоковые readers не требуют InputStream API33.
+Исторические отчёты253 методов не принимают новый каталог автоматически.
+
 Related `-Area track-map-actions` адресно выполняет исходную последовательность
 color/rename/hide/recreate/overlap/delete. Перед pointer сохраняются bounds,
 центр и Snackbar overlap под TrackTouchQA; ошибка включает предыдущее нажатие.

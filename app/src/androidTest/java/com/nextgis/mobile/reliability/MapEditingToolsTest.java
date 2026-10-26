@@ -624,7 +624,7 @@ public class MapEditingToolsTest {
         scenario.onActivity(activity -> {
             try (java.io.InputStream stream = InstrumentationRegistry.getInstrumentation().getContext()
                     .getAssets().open("feature-types/standard-field-types.json")) {
-                org.json.JSONArray fixtures = new org.json.JSONArray(new String(stream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8));
+                org.json.JSONArray fixtures = new org.json.JSONArray(new String(com.nextgis.mobile.util.VerificationIo.readAll(stream), java.nio.charset.StandardCharsets.UTF_8));
                 org.json.JSONObject fixture = null;
                 for (int i = 0; i < fixtures.length(); i++)
                     if (fixtures.getJSONObject(i).getInt("geometry_type") == geometryType) fixture = fixtures.getJSONObject(i);

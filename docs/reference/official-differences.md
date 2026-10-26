@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-25
+last_verified: 2026-10-26
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,20 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Offline local MVT и целые слова API30 — 2026-10-26
+
+GISApplication явно разрешает SDK transport для HTTP loopback без внешней
+сети. Guards приложения продолжают использовать Android NetworkUtil и
+WorkManager. WrappingLabel подбирает размер слова по измеренным advances,
+чтобы Android11 hinting не разрывал слово после пропорционального расчёта.
+Сверены official heads через GitHub API: app
+`6113485be698606240b9bc7f0740a18ecc084aaa`, maplibui
+`ed4dac77d51746509a2b59f3cc6b99151b841967`, maplib
+`014247eea4a424e828c24d9e52e45fefed362f8d`. Official GISApplication инициализирует
+MapLibre без setConnected override; нового полного upstream merge не выполняли.
+Контракты: [карта](../architecture/map-rendering.md),
+[крупный интерфейс](../architecture/ui-accessibility.md).
 
 ## Единый выбор и приоритет полевых линий — 2026-10-25
 

@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT
+    paths: [maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java, app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java]
+    owners: [maplibui, app]
+    read: [docs/architecture/map-rendering.md, docs/architecture/ngw-sync-and-storage.md]
+    invariants: [INV-LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT]
+    must_update_docs: [docs/architecture/map-rendering.md, docs/reference/official-differences.md, maplibui/docs/README.md, maplibui/docs/manifest.yaml]
+    verify: [AUTO-LOCAL-VECTOR-TILE-OFFLINE, AUTO-MAPLIBUI-UNIT, AUTO-MOBILE-RELATED, AUTO-APP-RELEASES]
+    strict_docs: true
   - id: MIXED-MAP-CANDIDATES-AND-FIELD-LINES
     paths: [app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java, app/src/main/res/values/map_candidate_strings.xml, app/src/main/res/values-ru/map_candidate_strings.xml, maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java, maplib/src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java]
     owners: [app, maplib]

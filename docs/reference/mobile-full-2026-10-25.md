@@ -814,7 +814,10 @@ Evidence: `...\evidence\tablet-full-02`, включая `readiness-summary.json`
 
 Run40337933585/job121624420416 завершился FAIL в
 `TrackUploadTest.registrationLaterUploadsWithoutChangingTheSettingAndClearsTheBadge:197`
-на ожидаемом false от очередного uploadProject. В локальном Full02 тот же
+на `assertTrue(TrackRegistrationState.canShowPending(...))` после второго
+uploadProject: это подтверждено исходным stack с Assert.assertTrue и текущей
+строкой197. Прежнее описание как unexpected true от uploadProject было
+ошибочным прочтением; сам возврат false принят тестом. В локальном Full02 тот же
 TrackUploadTest прошёл9/9 на AVD. Код и тесты между исходами не менялись;
 штатный CI здесь использует другой startup/runner путь, чем verification Full.
 Причина расхождения пока не доказана: нужны witnesses состояния фоновых workers,

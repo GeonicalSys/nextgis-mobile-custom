@@ -8,6 +8,14 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-26 — Исправление блокеров перед разрешённой публикацией ЛИСЫ
+
+Начата исправляющая стадия MOB-01/MVT-01/REL-03/UX-03. Переносимые native
+readers и attach capture, измеряемый word fit API30 и SDK transport loopback.
+В Full добавлен один emulator-only offline MVT метод. Исправлено прочтение
+CIbbceec8: failed assertion относится к registration badge, не к возврату
+uploadProject. CI причина и финальная приёмка пока открыты.
+
 ## 2026-10-26 — Full02 планшета и восстановление Wi-Fi
 
 Пользователь отключил VPN; Windows вернулась с cherles route на физический

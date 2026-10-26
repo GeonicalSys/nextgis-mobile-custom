@@ -72,9 +72,11 @@ public class MaintenanceRemindersNativeTest {
         };
         AtomicInteger installs = new AtomicInteger();
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            scenario.onActivity(activity -> {
-                for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f})
-                    for (int[] screen : screens) for (MaintenanceReminders.Reminder reminder : reminders) {
+            for (boolean dark : new boolean[]{false, true}) for (float scale : new float[]{1f, 1.3f, 2f})
+                for (int[] screen : screens) for (MaintenanceReminders.Reminder reminder : reminders) {
+                    AlertDialog[] shown = new AlertDialog[1];
+                    try {
+                        scenario.onActivity(activity -> {
                         Configuration config = new Configuration(activity.getResources().getConfiguration());
                         config.setLocale(new Locale("ru"));
                         config.fontScale = scale;
@@ -89,9 +91,16 @@ public class MaintenanceRemindersNativeTest {
                                 ? AppUpdateManager.readyDialog(themed, "3.1.2.123", "Повышена надёжность работы.",
                                     reminder.message(themed), installs::incrementAndGet)
                                 : MaintenanceReminders.dialog(themed, reminder);
-                        try {
+                            shown[0] = dialog;
                             dialog.show();
+                        });
+                        // WindowManager attaches the new decor on a later UI traversal (API30).
+                        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                        scenario.onActivity(activity -> {
+                            AlertDialog dialog = shown[0];
+                            Context themed = dialog.getContext();
                             View decor = dialog.getWindow().getDecorView();
+                            assertTrue("Capture requires an attached dialog", decor.isAttachedToWindow());
                             float density = themed.getResources().getDisplayMetrics().density;
                             int width = Math.round(screen[0] * density), height = Math.round(screen[1] * density);
                             for (int pass = 0; pass < 3; pass++) {
@@ -138,9 +147,11 @@ public class MaintenanceRemindersNativeTest {
                                         laterBounds.top >= 0 && laterBounds.bottom <= decor.getHeight());
                                 dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();
                             } else dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-                        } finally { dialog.dismiss(); }
+                        });
+                    } finally {
+                        scenario.onActivity(activity -> { if (shown[0] != null) shown[0].dismiss(); });
                     }
-            });
+                }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync();
             assertEquals("Acknowledging never starts installation", 0, installs.get());
         }

@@ -29,6 +29,10 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class FireflyTileFallbackTest {
     @Test public void changingALiveTiledPointToFireflyRebuildsItThroughTheClassicFallback() throws Exception {
+        verifyLiveTiledFallback();
+    }
+
+    static void verifyLiveTiledFallback() throws Exception {
         try (VectorStyleRenderingTest.Fixture f = new VectorStyleRenderingTest.Fixture()) {
             MapDrawable map = (MapDrawable) f.app.getMap();
             NGWVectorLayerUI layer = new NGWVectorLayerUI(f.app,
@@ -52,6 +56,10 @@ public class FireflyTileFallbackTest {
                 }
                 assertTrue("Start from a real configured native vector source", tiled.get());
                 f.renderedFrame();
+                f.screen.onActivity(activity -> assertFalse("The local MVT point actually renders before editing",
+                        map.getMaplibreMap().queryRenderedFeatures(new android.graphics.RectF(0, 0,
+                                map.getMaplibreMapView().getWidth(), map.getMaplibreMapView().getHeight()),
+                                "nglayer-layer-" + layer.getId()).isEmpty()));
                 f.screen.onActivity(activity -> {
                     SimpleMarkerStyle firefly = new SimpleMarkerStyle(Color.WHITE, Color.rgb(255, 102, 133), 6, SimpleMarkerStyle.MarkerStyleFirefly);
                     firefly.setWidth(14); firefly.setCircleBlur(2);

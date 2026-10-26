@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-LOCAL-VECTOR-TILE-OFFLINE:
+    type: automatic
+    scope: [maplibui, app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area offline-tiles
+    expected: With Wi-Fi and mobile data disabled only on the owned emulator, SQLite loopback MVT actually renders and a live marker edit reaches classic Firefly; Android NetworkUtil remains offline and the fixture restores both radios. The method remains mandatory in Full.
   AUTO-MAINTENANCE-REMINDERS:
     type: automatic
     scope: [app]

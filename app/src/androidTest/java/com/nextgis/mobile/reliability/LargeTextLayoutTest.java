@@ -323,14 +323,19 @@ public class LargeTextLayoutTest {
                 assertTrue("Panel respects the available map height", panel.getHeight() <= height);
                 textFits(panel);
                 TextView instruction = panel.findViewById(R.id.azimuth_distance);
+                image(panel, "azimuth-" + dark + "-" + scale + "-" + screen[0]);
                 for (int line = 0; line < instruction.getLayout().getLineCount() - 1; line++) {
                     int end = instruction.getLayout().getLineEnd(line);
-                    assertTrue("Instructions wrap between complete words", Character.isWhitespace(instruction.getText().charAt(end - 1))
+                    assertTrue("Instructions wrap between complete words: dark=" + dark + " font=" + scale
+                            + " screen=" + screen[0] + "x" + screen[1] + " textSize=" + instruction.getTextSize()
+                            + " available=" + (instruction.getWidth() - instruction.getCompoundPaddingLeft() - instruction.getCompoundPaddingRight())
+                            + " line=" + line + " end=" + end + " text=" + instruction.getText()
+                            + " widest=" + instruction.getPaint().measureText("Выберите"),
+                            Character.isWhitespace(instruction.getText().charAt(end - 1))
                             || (end < instruction.getText().length() && Character.isWhitespace(instruction.getText().charAt(end))));
                 }
                 actionsFit(panel, R.id.azimuth_stop, R.id.stakeout_correction_minus,
                         R.id.stakeout_correction_plus, R.id.stakeout_correction_value, R.id.stakeout_correction_reset);
-                image(panel, "azimuth-" + dark + "-" + scale + "-" + screen[0]);
             }
         });
     }

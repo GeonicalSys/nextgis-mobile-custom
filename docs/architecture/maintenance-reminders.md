@@ -1,7 +1,7 @@
 ---
 title: Напоминания о синхронизации и обновлении
 type: architecture
-last_verified: 2026-10-25
+last_verified: 2026-10-26
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -10,6 +10,10 @@ related_code:
 ---
 
 # Напоминания о синхронизации и обновлении
+
+Native матрица диалогов возвращается в UI queue после show и ждёт attach окна
+перед ручным viewport layout/capture. Это учитывает WindowManager Android11;
+проверки полного текста, прокрутки и обеих доступных кнопок сохранены.
 
 Дорожная карта: UX-05. Предупреждения советуют подключиться к интернету,
 обновить данные и APK, сохраняя возможность продолжить полевую работу.

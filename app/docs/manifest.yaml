@@ -16,7 +16,9 @@ key_components:
   - path: app/src/test/java/com/nextgis/mobile/util/MaintenanceRemindersTest.java
     responsibility: Verify API 28/36 clocks, unknown-history grace, local/online nested layer detection without business reads, ownership, release succession, cached versus checked state and daily resident-process review.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/MaintenanceRemindersNativeTest.java
-    responsibility: Verify durable independent clocks and 288 Russian dialog configurations with complete text, visible actions and no automatic installation in the isolated verification APK.
+    responsibility: Verify durable clocks and 288 Russian dialog configurations after actual window attachment, with complete text, scrolling, visible actions and no automatic installation in the isolated verification APK.
+  - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationIo.java
+    responsibility: Read verification streams with an API26-compatible buffer while callers retain resource ownership.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VisibleLineLabelsTest.java
     responsibility: Verify native whole-word rendering, current extent, pan/zoom/rotation, categories and original picking.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackStopConfirmationTest.java

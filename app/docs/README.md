@@ -6,12 +6,19 @@ last_verified: 2026-10-26
 
 # app — Android-приложение Lisa/Belka
 
-Приёмка 26 октября: Full09 смартфон/API36+AVD253/253 PASS; после отключения VPN
+Новая стадия по поручению пользователя: устранение выявленных блокеров и
+публикация ЛИСЫ после зависимостей и свежего Full смартфона/планшета.
+API30 проверки читают потоки без API33 методов и снимают диалог после attach.
+Добавлен offline MVT метод Full (теперь254 метода); результаты прежнего
+253-методного набора остаются историческими, новый Full ещё не принят.
+
+Исходная приёмка 26 октября: Full09 смартфон/API36+AVD253/253 PASS; после отключения VPN
 планшет/API30 завершил Full02:249 PASS/4 FAIL, missing/effective skips=0.
 Три ошибки — API30 test capture/readers, одна — unresolved azimuth word wrap.
 Код/набор253 методов после67f0125 не менялся. Отдельно подтверждён offline local
 MVT defect, CIbbceec8 failed TrackUpload assertion не закрыт. Публикация заблокирована.
 Состояние и ограничения: [квитанция](../../docs/reference/mobile-full-2026-10-25.md).
+Новая исправляющая стадия: [квитанция выпуска](../../docs/reference/mobile-release-fixes-2026-10-26.md).
 
 Track map-action fixture сохраняет фактическую точку pointer и Snackbar overlap;
 Related track-map-actions проверяет одну полную последовательность действий.

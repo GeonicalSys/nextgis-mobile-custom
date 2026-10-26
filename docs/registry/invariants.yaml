@@ -1,5 +1,18 @@
 schema_version: 1
 invariants:
+  INV-LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT:
+    title: Local vector tiles render without external network connectivity
+    owners: [maplibui, app]
+    statement: >
+      MapLibre HTTP transport must remain available to the SQLite loopback tile server
+      when Android reports no external network. This SDK override must not change
+      Android NetworkUtil, WorkManager constraints, device radios or upload/update intent.
+      Native offline coverage is emulator-only and restores its owned network state.
+    related_code:
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
+    verify_smoke: [AUTO-LOCAL-VECTOR-TILE-OFFLINE]
+    must_update_docs: [docs/architecture/map-rendering.md, docs/reference/official-differences.md, maplibui/docs/README.md, maplibui/docs/manifest.yaml]
   INV-MIXED-MAP-CANDIDATES:
     title: A normal tap offers all eligible tracks and vector objects together
     owners: [app, maplib]

@@ -272,7 +272,8 @@ class Verification:
         for key,value in (extra or {}).items(): argv+=['-e',key,str(value)]
         text=self.command(argv+[RUNNER],name=name,allow_failure=bool(fatal))
         if any(selector.startswith('com.nextgis.mobile.rendering.')
-               or selector.startswith('com.nextgis.mobile.util.MaintenanceRemindersNativeTest') for selector in selectors):
+               or selector.startswith('com.nextgis.mobile.util.MaintenanceRemindersNativeTest')
+               or selector.startswith('com.nextgis.mobile.reliability.LargeTextLayoutTest') for selector in selectors):
             evidence_name=re.sub(r'[^A-Za-z0-9_.-]', '_', name)
             collect_style_images(self.adb,serial,self.output/'images'/evidence_name)
         try: result=parse_instrumentation(text,expected,fatal=fatal)

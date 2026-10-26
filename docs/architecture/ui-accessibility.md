@@ -1,7 +1,7 @@
 ---
 title: Адаптация интерфейса к крупному шрифту и размеру отображения
 type: architecture
-last_verified: 2026-10-24
+last_verified: 2026-10-26
 related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java
   - maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java
@@ -17,6 +17,12 @@ related_code:
 ---
 
 # Крупный интерфейс
+
+WrappingLabel подбирает размер слишком длинного слова измерением glyph
+advances, включая округление hinting Android11. Пропорциональный расчёт
+может оставить слово на1px шире строки и разбить его; native матрица
+азимута проверяет целые слова при font1/1.3/2 и узких portrait/landscape.
+PNG и параметры проблемной строки сохраняются до assertion.
 
 ## Редактор штриховки и контура
 

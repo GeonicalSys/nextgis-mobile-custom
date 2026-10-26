@@ -57,7 +57,7 @@ public final class EmulatorNetworkFixture implements AutoCloseable {
         try (android.os.ParcelFileDescriptor descriptor = InstrumentationRegistry.getInstrumentation()
                 .getUiAutomation().executeShellCommand(command);
              FileInputStream stream = new FileInputStream(descriptor.getFileDescriptor())) {
-            stream.readAllBytes();
+            com.nextgis.mobile.util.VerificationIo.readAll(stream);
         }
     }
 }

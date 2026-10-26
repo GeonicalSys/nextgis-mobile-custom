@@ -150,14 +150,18 @@ public class FeaturePersistenceTest {
         assertTrue(second.isSuccess());
         assertNotEquals(first.getFile(), second.getFile());
         try (java.util.zip.ZipFile archive = new java.util.zip.ZipFile(first.getFile())) {
-            org.json.JSONObject rows = new org.json.JSONObject(new String(archive.getInputStream(
-                    archive.getEntry("tables/features.json")).readAllBytes(),
-                    java.nio.charset.StandardCharsets.UTF_8));
+            org.json.JSONObject rows;
+            try (java.io.InputStream input = archive.getInputStream(archive.getEntry("tables/features.json"))) {
+                rows = new org.json.JSONObject(new String(com.nextgis.mobile.util.VerificationIo.readAll(input),
+                        java.nio.charset.StandardCharsets.UTF_8));
+            }
             assertEquals(1, rows.getJSONArray("rows").length());
             assertEquals(id, rows.getJSONArray("rows").getJSONObject(0).getLong(Constants.FIELD_ID));
             java.util.zip.ZipEntry attachment = archive.getEntry("attachments/" + id + "/123");
             assertNotNull(attachment);
-            assertArrayEquals(photo, archive.getInputStream(attachment).readAllBytes());
+            try (java.io.InputStream input = archive.getInputStream(attachment)) {
+                assertArrayEquals(photo, com.nextgis.mobile.util.VerificationIo.readAll(input));
+            }
         }
         assertEquals(1, DatabaseUtils.queryNumEntries(db, "test_features"));
     }

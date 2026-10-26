@@ -52,6 +52,7 @@ public class TrackUploadTest {
         volatile boolean registered = true;
         volatile int registrationCode = 200;
         final java.util.concurrent.atomic.AtomicInteger registrationChecks = new java.util.concurrent.atomic.AtomicInteger();
+        final List<String> requests = new CopyOnWriteArrayList<>();
         volatile Runnable beforePacketReply;
         Endpoint(int... codes) throws Exception {
             server.setSoTimeout(90000);
@@ -79,6 +80,7 @@ public class TrackUploadTest {
                             Runnable hook = beforePacketReply; beforePacketReply = null;
                             if (hook != null) hook.run();
                         }
+                        requests.add((request.contains("/registered") ? "registration " + response : "packet") + " -> " + code);
                         socket.getOutputStream().write(("HTTP/1.1 " + code + " Result\r\nContent-Length: " + response.length()
                                 + "\r\nConnection: close\r\n\r\n" + response).getBytes(StandardCharsets.US_ASCII));
                         socket.getOutputStream().flush();
@@ -88,6 +90,12 @@ public class TrackUploadTest {
             }, "isolated-track-hub").start();
         }
         String url() { return "http://127.0.0.1:" + server.getLocalPort(); }
+        String state(Context context) {
+            android.net.ConnectivityManager manager = (android.net.ConnectivityManager)
+                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            return "requests=" + requests + " checks=" + registrationChecks.get()
+                    + " network=" + manager.getActiveNetworkInfo() + " interrupted=" + Thread.currentThread().isInterrupted();
+        }
         @Override public void close() throws Exception { server.close(); }
     }
 
@@ -191,10 +199,15 @@ public class TrackUploadTest {
             hub.registered = false;
             f.hub(hub); assertFalse(TrackRegistrationState.canShowPending(f.app)); f.badge(false);
             assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertEquals("Unregistered response reached the sender: " + hub.state(f.app), 1, hub.registrationChecks.get());
             assertEquals(0, f.sent()); assertTrue(TrackSendSettings.isEnabled(f.prefs)); f.badge(false);
             hub.registered = true;
-            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
-            assertEquals(0, f.sent()); assertTrue(TrackRegistrationState.canShowPending(f.app)); f.badge(true);
+            assertFalse("The first packet is rejected: " + hub.state(f.app),
+                    TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertEquals("Registration was rechecked: " + hub.state(f.app), 2, hub.registrationChecks.get());
+            assertEquals(0, f.sent());
+            assertTrue("Positive registration survives the packet failure: " + hub.state(f.app), TrackRegistrationState.canShowPending(f.app));
+            f.badge(true);
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
             assertEquals(2, f.sent()); f.badge(false);
             assertEquals(Arrays.asList(2, 2), hub.packets.get(5, TimeUnit.SECONDS));
@@ -256,22 +269,19 @@ public class TrackUploadTest {
     @Test public void scheduledDeliveryRetriesAfterRegistrationWithoutOpeningSettings() throws Exception {
         try (Fixture f = new Fixture(2); Endpoint hub = new Endpoint(200)) {
             hub.registered = false; f.hub(hub);
-            android.app.UiAutomation automation = InstrumentationRegistry.getInstrumentation().getUiAutomation();
-            try {
-                automation.executeShellCommand("svc wifi enable").close();
-                TrackWorker.schedule(f.app, f.map);
-                long deadline = android.os.SystemClock.uptimeMillis() + 30000;
-                while (hub.registrationChecks.get() == 0 && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(100);
-                assertTrue("WorkManager did not run the persisted upload", hub.registrationChecks.get() > 0);
-                assertEquals(0, f.sent()); assertTrue(TrackSendSettings.isEnabled(f.prefs));
-                assertFalse(TrackRegistrationState.canShowPending(f.app)); f.badge(false);
-                hub.registered = true;
-                deadline = android.os.SystemClock.uptimeMillis() + 60000;
-                while (f.sent() != 2 && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(100);
-                assertEquals("Queued work must retry after registration without a preference change", 2, f.sent());
-                f.badge(false);
-                assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
-            } finally { automation.executeShellCommand("svc wifi disable").close(); }
+            // @Before/@After's network fixture exclusively owns and awaits radio transitions.
+            TrackWorker.schedule(f.app, f.map);
+            long deadline = android.os.SystemClock.uptimeMillis() + 30000;
+            while (hub.registrationChecks.get() == 0 && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(100);
+            assertTrue("WorkManager did not run the persisted upload", hub.registrationChecks.get() > 0);
+            assertEquals(0, f.sent()); assertTrue(TrackSendSettings.isEnabled(f.prefs));
+            assertFalse(TrackRegistrationState.canShowPending(f.app)); f.badge(false);
+            hub.registered = true;
+            deadline = android.os.SystemClock.uptimeMillis() + 60000;
+            while (f.sent() != 2 && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(100);
+            assertEquals("Queued work must retry after registration without a preference change", 2, f.sent());
+            f.badge(false);
+            assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
         }
     }
 

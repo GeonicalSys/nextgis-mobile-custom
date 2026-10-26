@@ -32,6 +32,14 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+SDK MapLibre разрешает HTTP transport даже без внешней сети: локальные SQLite
+тайлы поступают через HTTP loopback LocalVectorTileServer. Глобальный SDK
+Offline иначе откладывает и эти запросы. Это override только SDK transport;
+NetworkUtil и WorkManager сохраняют фактическое состояние Android сети.
+Внешние URL карты без сети могут получить transport error и backoff SDK.
+Native offline regression выключает оба радио только owned AVD, проверяет
+отрисовку MVT и живой переход к classic Firefly и восстанавливает радио.
+
 Перед уничтожением MapView host отправляет ACTION_CANCEL прямо в SDK после
 снятия edit touch listener. Это завершает ожидающие single-tap/long-press
 callbacks до освобождения native renderer; очистка только app map listeners
