@@ -402,6 +402,8 @@ certificate SHA256 `ecd04c936532000eea8cb06ca6a3c1a3ae482844cacce2b84926c635429c
 PID25128/16444 отсутствуют. Новых SDK/runtime copies или downloads нет.
 Compact evidence около9MiB сохраняется в
 `Q:\Codex\Scratch\mobile-full-20261025-f06ccfb\evidence` до приёмки PR;
-storage manifest остаётся active/waiting user choice, disposable bulk targets
-не оставлены. Shared SDK/Gradle/build caches сохраняются как reusable inputs.
+storage manifest остаётся active/waiting user choice. Отдельных runtime/cluster
+copies в task не создавалось; временные read-only AVD overlays принадлежат
+жизненному циклу SDK. Собственные процессы завершены, отдельная инвентаризация
+всего SDK temp не выполнялась. Shared SDK/Gradle/build caches сохраняются как reusable inputs.
 Durable APK и прежний f06ccfb APK не входят в disposal scope.
