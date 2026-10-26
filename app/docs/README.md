@@ -6,6 +6,11 @@ last_verified: 2026-10-26
 
 # app — Android-приложение Lisa/Belka
 
+Track map-action fixture сохраняет фактическую точку pointer и Snackbar overlap;
+Related track-map-actions проверяет одну полную последовательность действий.
+Перед фоновой кнопкой подтверждаются только известные startup GPS/battery
+warnings штатным ACTION_DISMISS; повторной инъекции потерянного pointer нет.
+
 Blank-area gesture fixture использует некликабельную область вне Tabs,
 а не предполагаемый пустым центр ScrollView. Проверки переключения и
 сохранности значений не меняются; это не изменение production формы.

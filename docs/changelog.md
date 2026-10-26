@@ -8,6 +8,14 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-26 — Track map-action hit evidence
+
+Full08:252/253 native PASS, палитра после Цвет не появилась. Тот же tablet
+baseline проходит. Добавлены actual touch/Snackbar bounds и адресная область,
+без изменения жеста, таймаута или production. Адресно доказано попадание в
+startup Snackbar. Fixture штатно подтверждает только известное предупреждение;
+после этого Related emulator8/Samsung7/tablet7 PASS. Полные прогоны ещё нужны.
+
 ## 2026-10-26 — Private policy snapshot transport
 
 T40 Plus/API30 закрыл от shell внешний каталог verification APK. Policy JSON

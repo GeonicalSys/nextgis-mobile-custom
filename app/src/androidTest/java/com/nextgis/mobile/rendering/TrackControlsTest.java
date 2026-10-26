@@ -138,6 +138,25 @@ public class TrackControlsTest {
 
     static final class Ui {
         static boolean configured;
+        static String lastTouch = "No pointer injected yet";
+        static String touchDiagnostic(android.view.accessibility.AccessibilityNodeInfo node,
+                                      android.graphics.Rect bounds) {
+            StringBuilder detail = new StringBuilder("target=" + node.getViewIdResourceName()
+                    + " bounds=" + bounds + " point=" + bounds.exactCenterX() + "," + bounds.exactCenterY());
+            android.view.accessibility.AccessibilityNodeInfo warning = find(n ->
+                    n.getViewIdResourceName() != null && n.getViewIdResourceName().endsWith("/snackbar_text"));
+            if (warning == null) detail.append(" snackbar=absent");
+            for (int level = 0; warning != null && level < 4; level++) {
+                android.graphics.Rect area = new android.graphics.Rect(); warning.getBoundsInScreen(area);
+                detail.append(" overlay=").append(warning.getClassName()).append(':').append(area)
+                        .append(" coversPoint=").append(area.contains((int) bounds.exactCenterX(), (int) bounds.exactCenterY()))
+                        .append(" actions=").append(warning.getActions());
+                android.view.accessibility.AccessibilityNodeInfo parent = warning.getParent();
+                warning.recycle(); warning = parent;
+            }
+            if (warning != null) warning.recycle();
+            return detail.toString();
+        }
         static android.app.UiAutomation automation() {
             android.app.UiAutomation ui = InstrumentationRegistry.getInstrumentation().getUiAutomation();
             if (configured) return ui;
@@ -178,6 +197,33 @@ public class TrackControlsTest {
             return node -> text.contentEquals(node.getText() == null ? "" : node.getText())
                     || text.contentEquals(node.getContentDescription() == null ? "" : node.getContentDescription());
         }
+        /** Acknowledge only the known app startup warning before exercising the background screen. */
+        static boolean backgroundWarningVisible(boolean dismiss) {
+            android.content.Context app = InstrumentationRegistry.getInstrumentation().getTargetContext();
+            android.view.accessibility.AccessibilityNodeInfo warning = find(node -> {
+                if (node.getViewIdResourceName() == null || !node.getViewIdResourceName().endsWith("/snackbar_text")) return false;
+                CharSequence text = node.getText();
+                return text != null && (app.getString(com.nextgis.mobile.R.string.background_location_optimized_warning).contentEquals(text)
+                        || app.getString(com.nextgis.mobile.R.string.background_location_saver_warning).contentEquals(text)
+                        || app.getString(com.nextgis.mobile.R.string.background_location_restricted_warning).contentEquals(text));
+            });
+            if (warning == null) return false;
+            if (!dismiss) { warning.recycle(); return true; }
+            try {
+                while (warning != null) {
+                    if ((warning.getActions() & android.view.accessibility.AccessibilityNodeInfo.ACTION_DISMISS) != 0) {
+                        assertEquals(app.getPackageName(), String.valueOf(warning.getPackageName()));
+                        assertTrue("The startup warning must expose its normal dismissal action",
+                                warning.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_DISMISS));
+                        android.util.Log.i("TrackTouchQA", "Acknowledged the app startup battery warning before pointer input");
+                        return true;
+                    }
+                    android.view.accessibility.AccessibilityNodeInfo parent = warning.getParent();
+                    warning.recycle(); warning = parent;
+                }
+                throw new AssertionError("Visible startup warning has no native dismissal action");
+            } finally { if (warning != null) warning.recycle(); }
+        }
         static void text(String text) throws Exception { tap(textMatch(text)); }
         static android.graphics.Rect touchBounds(android.view.accessibility.AccessibilityNodeInfo node) {
             android.graphics.Rect result = new android.graphics.Rect(); node.getBoundsInScreen(result);
@@ -199,8 +245,13 @@ public class TrackControlsTest {
         static void tap(java.util.function.Predicate<android.view.accessibility.AccessibilityNodeInfo> matches) throws Exception {
             AtomicReference<android.view.accessibility.AccessibilityNodeInfo> result = new AtomicReference<>();
             android.graphics.Rect[] previous = {null}; long[] stable = {0};
+            boolean[] dismissingWarning = {false};
             try { await(() -> {
                 if (result.get() != null) result.getAndSet(null).recycle();
+                if (backgroundWarningVisible(!dismissingWarning[0])) {
+                    dismissingWarning[0] = true; previous[0] = null; return false;
+                }
+                dismissingWarning[0] = false;
                 result.set(find(matches));
                 if (result.get() == null) { previous[0] = null; return false; }
                 android.graphics.Rect bounds = touchBounds(result.get());
@@ -215,12 +266,15 @@ public class TrackControlsTest {
                     android.view.accessibility.AccessibilityNodeInfo root = window.getRoot();
                     if (root != null) { dump(root, detail); root.recycle(); }
                 }
-                throw new AssertionError(error.getMessage() + "\n" + detail, error);
+                throw new AssertionError(error.getMessage() + "\nPrevious pointer: " + lastTouch + "\n" + detail, error);
             }
             android.view.accessibility.AccessibilityNodeInfo node = result.get();
             android.graphics.Rect bounds = touchBounds(node);
             assertNotNull("The touch must still target the focused, unobscured app window", bounds);
-            assertTrue(node.isEnabled()); assertFalse(bounds.isEmpty()); node.recycle();
+            assertTrue(node.isEnabled()); assertFalse(bounds.isEmpty());
+            lastTouch = touchDiagnostic(node, bounds);
+            android.util.Log.i("TrackTouchQA", lastTouch);
+            node.recycle();
             long now = SystemClock.uptimeMillis();
             MotionEvent down = MotionEvent.obtain(now,now,MotionEvent.ACTION_DOWN,bounds.exactCenterX(),bounds.exactCenterY(),0);
             MotionEvent up = MotionEvent.obtain(now,now+70,MotionEvent.ACTION_UP,bounds.exactCenterX(),bounds.exactCenterY(),0);

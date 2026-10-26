@@ -541,3 +541,46 @@ test проверяет canonical getFilesDir. Общедоступного tran
 Согласованный snapshot18/SHA256 прежний; теперь ни подготовка, ни native чтение
 не требуют shell-доступа к Android/data. Runner48/docs validator PASS.
 Исходники фиксируются перед Full08 смартфона и последующим Full планшета.
+
+## Full08: формы исправлены, один новый map-action failure
+
+Source `8eb8aae`, fingerprint `dcc6e55bc707909bf147b722bf77f1615cf8e1f165cf18b70f522fe551f80dc9`.
+913 units/runner48/version/docs24, diagnostic delivery и36 UI profiles PASS.
+**252/253 native PASS,1 FAIL**, missing нет. Все23 CascadingFormsTest и private
+project-policy теперь проходят в Full; прежние проверки не исключались.
+Full FAIL/gate отсутствует, settings restored/console closed/launcher exited.
+
+Неуспех: TrackControlsTest.mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete,
+строка333: не найдена ambilwarna palette после реального pointer на Цвет.
+Dump показывает исходную панель Поход и Snackbar оптимизации батареи;
+координаты первоначального pointer/перекрытия не записывались, причина неизвестна.
+Unchanged T40 Plus baseline `track-controls-tablet-baseline-01`: **7/7 PASS**,
+включая тот же метод. Это не доказательство отсутствия дефекта на Samsung.
+
+Для адресного исследования добавлены bounds/point/Snackbar parent evidence
+и Related track-map-actions. Исходные жесты, timeout30s и assertions сохранены,
+production пока не меняется. Следующий Full выполняется после разбора этого
+сбоя; Full планшета остаётся обязательным, а Related7 не заменяет его.
+
+`track-touch-phone-01` воспроизвёл тот же сбой с diagnostics: перед Цвет
+button rect=(53,1812..248,1980), pointer=(150.5,1896), Snackbar text
+rect=(32,1822..734,2214), coversPoint=true; parent frame также перекрывает
+point и имеет ACTION_DISMISS. Источник потерянного нажатия подтверждён:
+тест нажимал перекрывающий startup battery warning. Native Color action
+ещё не был вызван. Это не доказанная поломка палитры приложения.
+
+Согласно принятому UI-контракту фоновые действия проверяются после закрытия
+уведомления. Track UI fixture теперь штатно подтверждает только три известных
+GPS/battery messages через ACTION_DISMISS собственного окна, ждёт их исчезновения
+и затем выполняет один исходный pointer. Таймаут30s, palette/value assertions,
+power-warning native case и системные battery settings сохранены.
+Pointer evidence: `...\evidence\track-touch-phone-01-pointers.log`.
+
+`track-touch-phone-02` **1/1 PASS**: после native ACTION_DISMISS тот же Color
+pointer=(150.5,1896) имеет snackbar=absent, реальная палитра и все последующие
+действия выполнены. Связанный пакет `track-readiness-native-01`: **8/8 emulator
++7/7 Samsung PASS**; `track-readiness-tablet-01`: **7/7 T40 Plus PASS**.
+Owned AVD settings restored/console closed/process exited. Приложение и
+настройки батареи устройства не исправлялись: устранено неверное начальное
+условие теста фонового экрана при существующем уведомлении. Source фиксируется
+перед следующими полными прогонами; прежний Full08 остаётся FAIL.

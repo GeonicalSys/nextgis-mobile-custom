@@ -56,6 +56,7 @@
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "related_phone_areas": {
+    "track-map-actions": ["com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete"],
     "project-policy": ["com.nextgis.mobile.reliability.ProjectLayerSelectionTest"],
     "form-layout": ["com.nextgis.mobile.reliability.CascadingFormsTest", "com.nextgis.mobile.reliability.FormAppearanceTest"],
     "form-navigation": ["com.nextgis.mobile.reliability.CascadingFormsTest"],
@@ -75,6 +76,7 @@
     "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"]
   },
   "areas": {
+    "track-map-actions": ["com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete"],
     "project-policy": ["com.nextgis.mobile.reliability.ProjectLayerSelectionTest"],
     "form-layout": ["com.nextgis.mobile.reliability.CascadingFormsTest", "com.nextgis.mobile.reliability.FormAppearanceTest"],
     "offline-sync": ["com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest"],

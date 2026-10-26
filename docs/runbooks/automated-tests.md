@@ -15,6 +15,15 @@ related_code:
 
 # Автоматические проверки
 
+Related `-Area track-map-actions` адресно выполняет исходную последовательность
+color/rename/hide/recreate/overlap/delete. Перед pointer сохраняются bounds,
+центр и Snackbar overlap под TrackTouchQA; ошибка включает предыдущее нажатие.
+Это диагностика, без повторной инъекции жеста или увеличения таймаута.
+Track UI перед pointer закрывает только известный startup GPS/battery Snackbar
+его штатным accessibility ACTION_DISMISS и ждёт исчезновения. Это проверка
+действий фонового экрана после закрытия уведомления; dedicated power-warning
+native case не исключается, системные ограничения устройства не меняются.
+
 Full сохраняет неуспешную native попытку и продолжает независимые сценарии
 после штатного reset verification workspace. В конце любая такая ошибка,
 required skip или отсутствующий случай оставляет FAIL; успешный повтор её
