@@ -407,3 +407,10 @@ copies в task не создавалось; временные read-only AVD ove
 жизненному циклу SDK. Собственные процессы завершены, отдельная инвентаризация
 всего SDK temp не выполнялась. Shared SDK/Gradle/build caches сохраняются как reusable inputs.
 Durable APK и прежний f06ccfb APK не входят в disposal scope.
+
+Последний handoff preflight (`handoff-preflight.log`) fetched все репозитории:
+все пять Android owners чистые, без ahead/behind своих веток. Общий exit2
+вызван 17 изменениями другой desktop-задачи на codex/roadmap-admission;
+эти пути вне Android scope и не трогались. Это не общий preflight PASS.
+Tablet after-readback сохранил production223/lastUpdateTime, font1.0,
+density280 и secure location_mode3; verification resources остановлены.
