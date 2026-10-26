@@ -323,6 +323,23 @@ class Verification:
             self.native(self.emulator,[case],name,reset=False,extra={'uiTheme':theme,'uiOrientation':orientation})
         self.checks['ui_matrix']=not any(result.get('failed') for result in self.results[first_result:])
 
+    def real_window_matrix(self):
+        """Retain the former cloud-only enlarged-window probes on the owned emulator."""
+        self.prepare(self.emulator)
+        first_result=len(self.results)
+        self.shell(self.emulator,'wm','density','620')
+        self.shell(self.emulator,'settings','put','system','font_scale','2.0')
+        for orientation in ('portrait','landscape'):
+            for style in ('native','compat'):
+                self.native(self.emulator,[
+                    'com.nextgis.mobile.reliability.LargeTextLayoutTest#realMapCloseAndDialogActionsStayReachable'],
+                    f'real-window-{orientation}-{style}',reset=False,
+                    extra={'uiOrientation':orientation,'dialogStyle':style})
+            self.native(self.emulator,[
+                'com.nextgis.mobile.reliability.LargeTextLayoutTest#realSettingsAndSecondaryScreensRetainCompleteLabels'],
+                f'real-window-{orientation}-settings',reset=False,extra={'uiOrientation':orientation})
+        self.checks['real_window_matrix']=not any(result.get('failed') for result in self.results[first_result:])
+
     def diagnostics(self):
         serial=self.emulator
         name='com.nextgis.mobile.util.DiagnosticsDeliveryTest'
@@ -425,7 +442,7 @@ class Verification:
                 for test in self.plan['emulator']:
                     self.native(self.emulator,[test],'emulator-'+test.rsplit('.',1)[1])
                 self.grant_and_deny(self.emulator)
-                self.diagnostics(); self.ui_matrix()
+                self.diagnostics(); self.ui_matrix(); self.real_window_matrix()
                 # Finish independent work before requiring a manually unlocked phone.
                 for test in self.plan['phone']:
                     self.native(self.phone,[test],'phone-'+test.rsplit('.',1)[1])
@@ -441,6 +458,7 @@ class Verification:
                         self.native(self.emulator,[test],f'related-{index}-'+test.replace('#','-').rsplit('.',1)[1])
                     if any('StakeoutForegroundServiceTest' in test for test in selected): self.grant_and_deny(self.emulator)
                     if 'layers' in (self.args.area or ['layers']): self.ui_matrix()
+                    if 'real-windows' in (self.args.area or []): self.real_window_matrix()
                 phone_failures=[]
                 for index,test in enumerate(getattr(self,'related_phone_cases',[])):
                     try: self.native(self.phone,[test],f'phone-related-{index}-'+test.split('#')[-1])

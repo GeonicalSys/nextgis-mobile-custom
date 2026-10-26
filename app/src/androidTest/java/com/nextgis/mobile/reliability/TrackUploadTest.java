@@ -96,6 +96,12 @@ public class TrackUploadTest {
             return "requests=" + requests + " checks=" + registrationChecks.get()
                     + " network=" + manager.getActiveNetworkInfo() + " interrupted=" + Thread.currentThread().isInterrupted();
         }
+        List<Integer> awaitPackets(Context context) throws Exception {
+            try { return packets.get(5, TimeUnit.SECONDS); }
+            catch (TimeoutException error) {
+                throw new AssertionError("The loopback hub did not finish the expected packets: " + state(context), error);
+            }
+        }
         @Override public void close() throws Exception { server.close(); }
     }
 
@@ -202,15 +208,15 @@ public class TrackUploadTest {
             assertEquals("Unregistered response reached the sender: " + hub.state(f.app), 1, hub.registrationChecks.get());
             assertEquals(0, f.sent()); assertTrue(TrackSendSettings.isEnabled(f.prefs)); f.badge(false);
             hub.registered = true;
-            assertFalse("The first packet is rejected: " + hub.state(f.app),
-                    TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            boolean uploaded = TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath());
+            assertFalse("The first packet is rejected: " + hub.state(f.app), uploaded);
             assertEquals("Registration was rechecked: " + hub.state(f.app), 2, hub.registrationChecks.get());
             assertEquals(0, f.sent());
             assertTrue("Positive registration survives the packet failure: " + hub.state(f.app), TrackRegistrationState.canShowPending(f.app));
             f.badge(true);
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
             assertEquals(2, f.sent()); f.badge(false);
-            assertEquals(Arrays.asList(2, 2), hub.packets.get(5, TimeUnit.SECONDS));
+            assertEquals(Arrays.asList(2, 2), hub.awaitPackets(f.app));
         }
     }
 
@@ -225,7 +231,7 @@ public class TrackUploadTest {
             assertTrue(TrackSendSettings.isEnabled(f.prefs));
             network.connected(true);
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
-            assertEquals(2, f.sent()); assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
+            assertEquals(2, f.sent()); assertEquals(Collections.singletonList(2), hub.awaitPackets(f.app));
         }
     }
 
@@ -238,7 +244,7 @@ public class TrackUploadTest {
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
             assertEquals(101, f.sent());
             f.badge(false);
-            assertEquals(Arrays.asList(100, 1, 1), hub.packets.get(5, TimeUnit.SECONDS));
+            assertEquals(Arrays.asList(100, 1, 1), hub.awaitPackets(f.app));
         }
     }
 
@@ -253,7 +259,7 @@ public class TrackUploadTest {
             };
             try {
                 assertFalse(TrackWorker.uploadShared(f.app));
-                assertEquals(Collections.singletonList(1), hub.packets.get(5, TimeUnit.SECONDS));
+                assertEquals(Collections.singletonList(1), hub.awaitPackets(f.app));
                 assertTrue(replacement.get() > 0);
                 try (Cursor rows = f.layer.getDatabase(true).rawQuery("SELECT sent FROM trackpoints WHERE session=?",
                         new String[]{Long.toString(replacement.get())})) {
@@ -281,7 +287,7 @@ public class TrackUploadTest {
             while (f.sent() != 2 && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(100);
             assertEquals("Queued work must retry after registration without a preference change", 2, f.sent());
             f.badge(false);
-            assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
+            assertEquals(Collections.singletonList(2), hub.awaitPackets(f.app));
         }
     }
 
@@ -294,7 +300,7 @@ public class TrackUploadTest {
             assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(true);
             f.prefs.edit().putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false).commit(); f.badge(false);
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
-            assertEquals(0, f.sent()); assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
+            assertEquals(0, f.sent()); assertEquals(Collections.singletonList(2), hub.awaitPackets(f.app));
         }
     }
 
@@ -312,7 +318,7 @@ public class TrackUploadTest {
             assertEquals(0, f.sent()); assertTrue(TrackSendSettings.isEnabled(f.prefs));
             hub.registered = true;
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(false);
-            assertEquals(Arrays.asList(2, 2), hub.packets.get(5, TimeUnit.SECONDS));
+            assertEquals(Arrays.asList(2, 2), hub.awaitPackets(f.app));
         }
     }
 
@@ -327,8 +333,8 @@ public class TrackUploadTest {
             second.registered = true;
             assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(true);
             assertTrue(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(false);
-            assertEquals(Collections.singletonList(2), first.packets.get(5, TimeUnit.SECONDS));
-            assertEquals(Arrays.asList(2, 2), second.packets.get(5, TimeUnit.SECONDS));
+            assertEquals(Collections.singletonList(2), first.awaitPackets(f.app));
+            assertEquals(Arrays.asList(2, 2), second.awaitPackets(f.app));
         }
     }
 
@@ -354,7 +360,7 @@ public class TrackUploadTest {
                 assertTrue(TrackWorker.uploadProject(f.app, new File(project.getMapPath()).getCanonicalPath()));
                 assertSame(f.map, f.app.getMap()); assertSame(f.map, MapBase.getActiveInstance()); assertEquals(1, f.sent());
                 assertFalse(TrackUploader.hasPending(f.app, f.layer));
-                assertEquals(Collections.singletonList(2), hub.packets.get(5, TimeUnit.SECONDS));
+                assertEquals(Collections.singletonList(2), hub.awaitPackets(f.app));
                 assertTrue(f.prefs.edit().putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false).commit());
                 androidx.work.PeriodicWorkRequest legacy=new androidx.work.PeriodicWorkRequest.Builder(
                         TrackWorker.class,15,TimeUnit.MINUTES).setInputData(new androidx.work.Data.Builder()

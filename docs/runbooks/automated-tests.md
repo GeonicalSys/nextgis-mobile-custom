@@ -15,6 +15,21 @@ related_code:
 
 # Автоматические проверки
 
+С26 октября2026 основной маршрут полностью локальный. Android reliability и
+docs Actions оставлены только workflow_dispatch: push/PR не расходуют минуты
+GitHub. Облачный запуск допустим только по отдельному запросу пользователя.
+Локальный Full собирает все variants, выполняет unit/native/docs/version
+проверки,36 chooser profiles и6 бывших cloud-only реальных окон при620dpi,
+font200%, portrait/landscape, native/compat и settings. Успех последних хранит
+обязательный `real_window_matrix`; его отсутствие блокирует публикацию.
+
+`tools/docs-check.ps1 -RunTests` выполняет report-card guard с его unit tests,
+строгий change-impact по всему task diff от fetched origin target вместе с
+рабочими/новыми файлами, validator и docs tests. GitHub API/token для этого
+локального сравнения не нужны. До команды сохраняется обязательный preflight.
+Linux Mesa/Xvfb остаётся отдельным ручным окружением; Windows host OpenGL и
+реальные Android устройства не выдаются за проверку того же Linux driver.
+
 После release fixes26 октября каталог содержит254 метода: новый обязательный
 emulator-only offline MVT случай выполняет тот же live fallback с выключенными
 Wi-Fi/data и реальной native отрисовкой. Related `-Area offline-tiles` запускает
@@ -36,7 +51,7 @@ Full сохраняет неуспешную native попытку и продо
 после штатного reset verification workspace. В конце любая такая ошибка,
 required skip или отсутствующий случай оставляет FAIL; успешный повтор её
 не скрывает. Ошибки сборки, подготовки, транспорта или блокировка телефона
-прерывают запуск. Related сохраняет fail-fast. Runner regressions: 48 cases.
+прерывают запуск. Related сохраняет fail-fast. Runner regressions: 53 cases.
 
 Owned AVD финализируется через собственную console даже при потере ADB;
 ожидаются закрытие порта и выход launcher. cleanup.json хранит фактический

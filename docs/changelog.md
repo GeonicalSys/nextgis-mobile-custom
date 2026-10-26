@@ -8,6 +8,16 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-26 — Локальные проверки вместо автоматических Actions
+
+По поручению пользователя Android reliability/docs workflow оставлены только
+для ручного запуска. Full локально сохраняет все254 native метода и получает
+прежние6 cloud-only enlarged-window profiles; docs-check включает report guard,
+его regressions и strict task change-impact. Publication gate требует новую
+матрицу. API30 word fit и reminders3/3, delivery9/9, все8 запусков real-window
+пакета,913 Android units и обе release source sets прошли локальную проверку.
+Runner53 и report/docs26+24 PASS. Полный Full254 обоих устройств ещё впереди.
+
 ## 2026-10-26 — Исправление блокеров перед разрешённой публикацией ЛИСЫ
 
 Начата исправляющая стадия MOB-01/MVT-01/REL-03/UX-03. Переносимые native

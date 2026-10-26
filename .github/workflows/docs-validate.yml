@@ -1,8 +1,7 @@
 name: Validate documentation
 
 on:
-  push:
-  pull_request:
+  # tools/docs-check.ps1 -RunTests runs this gate locally by default.
   workflow_dispatch:
 
 permissions:

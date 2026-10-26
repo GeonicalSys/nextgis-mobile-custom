@@ -78,6 +78,7 @@
     "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"]
   },
   "areas": {
+    "real-windows": ["com.nextgis.mobile.reliability.LargeTextLayoutTest#realMapCloseAndDialogActionsStayReachable", "com.nextgis.mobile.reliability.LargeTextLayoutTest#realSettingsAndSecondaryScreensRetainCompleteLabels"],
     "track-delivery": ["com.nextgis.mobile.reliability.TrackUploadTest"],
     "offline-tiles": ["com.nextgis.mobile.rendering.LocalVectorTileLabelTest#localTilesAndLiveStyleFallbackRenderWhileAllExternalNetworksAreOffline"],
     "azimuth-text": ["com.nextgis.mobile.reliability.LargeTextLayoutTest#azimuthTextAndCloseStayWithinSmallPortraitAndLandscapePanels"],

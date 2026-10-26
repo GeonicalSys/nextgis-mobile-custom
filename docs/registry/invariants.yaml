@@ -124,7 +124,7 @@ invariants:
   INV-MOBILE-PUBLICATION-ACCEPTANCE:
     title: Publication requires current complete phone and emulator acceptance
     owners: [app, maplibui, maplib]
-    statement: After ordinary work run related emulator checks. Before each publication after dependency closure and final code/version run Full and Check-Publication; every native case and core checks must pass for the current content. Full records failed native attempts and continues independent checks; any failed attempt rejects the final receipt even if a repeat passed. Setup, transport and locked-device failures still abort. Only the separate verification APK is reset on a phone. Missing permitted test project requires asking the user.
+    statement: Run local Related after ordinary work and local Full plus Check-Publication after dependency closure and final code/version before publication. Every native case, unit/docs/version gate, 36 chooser profiles and 6 real-window profiles at density620/font200% must pass for the current content, including real_window_matrix. Cloud workflows are manual-only by separate user request. Full preserves every failed attempt; a successful repeat cannot hide it. Setup/transport/locked-device failures abort. Only the separate verification APK is reset on a phone. Missing permitted project requires asking the user.
     related_code: [tools/run_mobile_tests.py, tools/mobile_test_support.py, tools/mobile_test_project.py, tools/mobile-test-plan.json, app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java]
     verify_smoke: [AUTO-MOBILE-FULL, AUTO-MOBILE-PUBLICATION-GATE]
     must_update_docs: [docs/runbooks/automated-tests.md, docs/runbooks/release-apk.md]

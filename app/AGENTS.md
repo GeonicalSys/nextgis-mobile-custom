@@ -20,6 +20,12 @@ VerificationTestRunner и синтетический workspace. Команды �
 [`../docs/runbooks/automated-tests.md`](../docs/runbooks/automated-tests.md).
 Related на эмуляторе обязателен после доработки; Full на смартфоне и эмуляторе
 обязателен перед публикацией, Check-Publication сверяет актуальность результата.
+По поручению пользователя26 октября2026 автоматические Android/docs Actions
+отключены ради лимитов GitHub. Эти проверки выполняются локально; workflow_dispatch
+сохраняется только для отдельно запрошенной облачной проверки. Не запускать,
+не перезапускать и не включать cloud workflows автоматически перед merge/publish.
+`tools/docs-check.ps1 -RunTests` включает report guard и change-impact; Full
+включает бывшие cloud-only реальные окна620dpi/font200% в обоих orientations.
 Не менять системные настройки рабочего смартфона и не запускать mutating suites
 в production либо обычном Debug-профиле.
 

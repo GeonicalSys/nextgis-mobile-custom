@@ -6,6 +6,11 @@ last_verified: 2026-10-26
 
 # app — Android-приложение Lisa/Belka
 
+Автоматические Actions Android/docs переведены в manual-only по поручению
+пользователя ради лимитов GitHub. Related/Full и docs/report impact выполняются
+локально;6 прежних cloud-only real-window profiles включены в Full. Перед
+публикацией нужен нынешний Full254 с `real_window_matrix`, старого gate мало.
+
 Новая стадия по поручению пользователя: устранение выявленных блокеров и
 публикация ЛИСЫ после зависимостей и свежего Full смартфона/планшета.
 API30 проверки читают потоки без API33 методов и снимают диалог после attach.

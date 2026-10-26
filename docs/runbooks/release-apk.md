@@ -16,6 +16,11 @@ related_code:
 
 # Выпуск Lisa и Belka APK
 
+Проверки перед merge/release выполняются локально. По поручению пользователя
+Android/docs Actions manual-only: не запускать cloud workflow автоматически
+ради green check. Local Full дополнительно требует6 real-window profiles;
+Check-Publication проверяет `real_window_matrix` вместе с остальными gates.
+
 Текущая разрешённая стадия26 октября — публикация только ЛИСЫ после устранения
 блокеров, слияния library PR60/44 и app PR78 и свежего Full смартфона, затем
 планшета. Новый каталог254 включает offline MVT regression; прежний Full253

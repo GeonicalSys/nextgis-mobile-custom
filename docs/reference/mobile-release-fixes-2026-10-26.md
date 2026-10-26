@@ -13,6 +13,23 @@ related_code:
 
 # Исправления перед публикацией
 
+Новый порядок по запросу пользователя о лимитах GitHub: автоматические
+Android/docs Actions отключаются; проверки выполняются локально. Cloud
+workflow_dispatch остаётся отдельной ручной возможностью. Недостающие6
+real-window profiles и report guard/change-impact включаются в local Full.
+Настройки защиты ветки не меняются: required status checks в ней отсутствуют,
+enforce_admins/review policy сохранены. Активных/queued облачных запусков при
+проверке не было; новых dispatch/rerun не делали.
+
+Подключены смартфон R5GL130K54D по USB и планшет59843808167874 через
+192.168.0.17:45143. API30 connected-final06: azimuth1/reminders2 PASS;
+измеряемый word fit подтверждён на прежнем проблемном Android11.
+CI8e7c799 завершился raw timeout на await hub в plain-runner дубликате
+TrackUploadTest.delayedAcknowledgementCannotMarkReplacementTrackPointAsSent.
+Все9 методов сохраняются в versioned verification route; Related07:9/9 PASS.
+Причина исходного transport trigger остаётся неподтверждённой. Новый helper
+при timeout сохраняет фактические requests/registration/network witnesses.
+
 Library closure: PR60 MERGED `61a0a6029c261e203ab1948613a4fd81e9d5b071`,
 PR44 MERGED `c3253726ed9bc12d7adff7356ba3532f00e8d383`. Оба consumer pins
 обновлены после fetch; original heads являются ancestors, Git trees равны.
@@ -55,15 +72,18 @@ authoritative result/cleanup сохраняет versioned runner. Корень �
 | emulator-release-fixes-03 | 11/11 PASS: azimuth1, TrackUpload9, offline-MVT1; cleanup PASS |
 | api30-fixed-04 | Планшет не подключился по прежнему порту; native не начинался |
 | backend-integration-fixed-05 | 19/19 PASS: project-policy1, TrackUpload9, mixed selection/order4, reminders2/updater3; cleanup PASS |
-| maplibui units | 93 PASS,0 failures/errors |
-| Runner units | 48 PASS |
+| API30 connected-final06 | 3/3 PASS: whole-word azimuth и288 reminder configurations; cleanup PASS |
+| CI route native07 | Все9 delivery методов PASS через versioned verification runner; cleanup PASS |
+| Local real-windows08 | 8 успешных native запусков,2 разных метода: прежние6 global profiles и2 базовых; real_window_matrix=true, cleanup PASS |
+| Все Android units | maplib615/maplibui93/app205:913 PASS,0 failures/errors/skips; обе Release Kotlin/Java source sets compile PASS |
+| Runner units | 53 PASS, включая manual-only policy, все delivery cases и обязательные реальные окна |
 | Publisher units | 23 PASS; только временные локальные каталоги, production не изменялся |
-| Docs | 24 PASS; окончательная документация дополнительно проверяется перед commit |
+| Docs | Report guard26 и docs24 PASS; строгий impact полного task diff PASS; финальные docs дополнительно валидируются перед commit |
 
 Native устройство — только отдельный verification APK; production данные и
 системные настройки физического устройства не изменяются. Смартфон пользователь
-подключит позже. Планшет после короткой проверки потерял Wi-Fi ADB порт;
-запрошены разблокировка и текущий IP:порт. Новый API30 word-fit пока не принят.
+подключил по USB. Планшет восстановлен на45143; новый API30 word-fit прошёл
+адресную приёмку. Полные прогоны254 обоих устройств пока впереди.
 
 ## Хранение
 
