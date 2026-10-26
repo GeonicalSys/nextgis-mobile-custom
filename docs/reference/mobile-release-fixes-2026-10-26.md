@@ -13,6 +13,13 @@ related_code:
 
 # Исправления перед публикацией
 
+Library closure: PR60 MERGED `61a0a6029c261e203ab1948613a4fd81e9d5b071`,
+PR44 MERGED `c3253726ed9bc12d7adff7356ba3532f00e8d383`. Оба consumer pins
+обновлены после fetch; original heads являются ancestors, Git trees равны.
+Closure inventory всех5 владельцев нашёл только PR78/60/44 текущего автора;
+матрица14 requirement-owner rows сохраняет exact source commits/blobs и весь
+union опубликованных codex heads. App PR78 ещё открыт, final Full не принят.
+
 Пользователь поручил разобрать ошибки и довести пакет до публикации ЛИСЫ.
 Работа продолжается в app PR78, maplib PR60, maplibui PR44. Desktop и публикация
 БЕЛКИ исключены. Финальный порядок: merged libraries → consumer pins → app

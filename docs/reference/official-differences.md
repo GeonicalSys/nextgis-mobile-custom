@@ -27,6 +27,10 @@ MapLibre без setConnected override; нового полного upstream merg
 Контракты: [карта](../architecture/map-rendering.md),
 [крупный интерфейс](../architecture/ui-accessibility.md).
 
+Доставка library части: PR60/44 слиты remote Merge Commits61a0a602/c3253726,
+их trees совпадают с исходными heads; consumer закрепляет именно эти merges.
+App merge, final-device Full и публикация учитываются отдельно.
+
 ## Единый выбор и приоритет полевых линий — 2026-10-25
 
 Форк объединяет видимые треки и SQL-кандидаты всех допустимых типов векторов
