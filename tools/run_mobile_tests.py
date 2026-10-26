@@ -47,17 +47,17 @@ class Verification:
         self.saved_emulator={}
         self.project_fixture=None
 
-    def command(self, argv, *, name=None, timeout=900, allow_failure=False):
+    def command(self, argv, *, name=None, timeout=900, allow_failure=False, input_text=None):
         if name:
             print('RUN '+name,flush=True)
             log=self.output/(name+'.log')
             with log.open('w',encoding='utf-8') as stream:
                 result=subprocess.run([str(x) for x in argv],cwd=ROOT,stdout=stream,
-                                      stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace')
+                                      stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace',input=input_text)
             text=log.read_text(encoding='utf-8')
         else:
             result=subprocess.run([str(x) for x in argv],cwd=ROOT,stdout=subprocess.PIPE,
-                                  stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace')
+                                  stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace',input=input_text)
             text=result.stdout
         if result.returncode and not allow_failure:
             raise RuntimeError('Command failed: '+str(argv[0])+'\n'+text[-5000:])
@@ -236,6 +236,23 @@ class Verification:
             self.command([self.adb,'-s',serial,'shell','pm','revoke',PACKAGE,'android.permission.'+permission],allow_failure=True)
         self.command([self.adb,'-s',serial,'shell','cmd','locale','set-app-locales',PACKAGE,'--locales','ru'],allow_failure=True)
 
+    def stage_project_fixture(self,serial):
+        if not self.project_fixture:
+            raise ProjectSelectionRequired('На каком проекте можно протестировать? Укажите --test-project.')
+        directory=self.shell(serial,'run-as',PACKAGE,'pwd')
+        if not re.fullmatch(r'/data/(?:user/\d+|data)/'+re.escape(PACKAGE),directory):
+            raise RuntimeError('Unexpected verification private directory: '+directory)
+        self.shell(serial,'run-as',PACKAGE,'mkdir','-p','files')
+        payload=self.project_fixture.read_text(encoding='utf-8')
+        relative='files/test-project-layers.json'
+        # The debug app owns this file. No shared-storage grant or remote shell redirection.
+        self.command([self.adb,'-s',serial,'exec-in','run-as',PACKAGE,'tee',relative],input_text=payload)
+        expected=hashlib.sha256(payload.encode('utf-8')).hexdigest()
+        actual=self.shell(serial,'run-as',PACKAGE,'sha256sum',relative).split()
+        if not actual or actual[0]!=expected:
+            raise RuntimeError('The verification policy snapshot transfer failed its SHA-256 check')
+        return directory+'/'+relative
+
     def native(self,serial,selectors,name,*,reset=True,extra=None,fatal=None):
         if len(selectors)==1 and selectors[0] in self.plan.get('isolated_methods', []):
             passed=[];skipped=[]
@@ -248,11 +265,7 @@ class Verification:
         if reset: self.prepare(serial)
         extra=dict(extra or {})
         if any('ProjectLayerSelectionTest' in selector for selector in selectors):
-            if not self.project_fixture: raise ProjectSelectionRequired('На каком проекте можно протестировать? Укажите --test-project.')
-            destination='/sdcard/Android/data/'+PACKAGE+'/files/test-project-layers.json'
-            self.shell(serial,'mkdir','-p',destination.rsplit('/',1)[0])
-            self.command([self.adb,'-s',serial,'push',self.project_fixture,destination])
-            extra['testProjectFixture']=destination
+            extra['testProjectFixture']=self.stage_project_fixture(serial)
         expected=expand_selectors(selectors,self.catalog)
         argv=[self.adb,'-s',serial,'shell','am','instrument','-w','-r','-e','verificationPhone',
               'true' if serial==getattr(self,'phone',None) else 'false','-e','class',','.join(selectors)]

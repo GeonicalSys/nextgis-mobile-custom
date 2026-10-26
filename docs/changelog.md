@@ -8,6 +8,21 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-26 — Private policy snapshot transport
+
+T40 Plus/API30 закрыл от shell внешний каталог verification APK. Policy JSON
+передаётся через stdin под его debug UID во внутренний filesDir и проверяется
+по SHA-256; native parent guard сохраняется. Production каталог/permissions
+не меняются, временных общедоступных копий нет. Runner48 PASS.
+
+## 2026-10-26 — Однозначная цель blank-area gesture
+
+Full07 завершил все253 native метода:252 PASS/1 FAIL в blank-area subcase.
+Тест больше не предполагает пустым центр ScrollView: техническая область
+вне Tabs раскрывается в viewport перед единственным прежним свайпом.
+Production обработка жестов не меняется; исходная причина без hit evidence
+остаётся неподтверждённой. Повторные Related и Full ещё требуются.
+
 ## 2026-10-26 — Full06 и фактическое состояние гипервизора
 
 Смартфон повторно подключён; Full06 остановился до тестов из-за отсутствия

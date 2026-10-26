@@ -6,12 +6,18 @@ last_verified: 2026-10-26
 
 # app — Android-приложение Lisa/Belka
 
+Blank-area gesture fixture использует некликабельную область вне Tabs,
+а не предполагаемый пустым центр ScrollView. Проверки переключения и
+сохранности значений не меняются; это не изменение production формы.
+
 Adaptive form fixtures раскрывают контрол перед свайпом и проверяют полное
 имя на default/320/280dp ширине. Accuracy graphics fixture изолирует heading,
 ждёт камеру/сцену и сохраняет sample/radius diagnostics. Адресно пройдены
 26 form cases на T40 Plus/API30 и 28 form/cursor cases на API36 AVD; текущий
-Full остаётся отдельным обязательным этапом. Runner43 проверяет также owned
-AVD cleanup перед PASS и явно выбранный policy-fixture input.
+Full остаётся отдельным обязательным этапом. Runner48 проверяет также owned
+AVD cleanup перед PASS, явно выбранный policy-fixture input и его передачу
+через verification UID в private files с проверкой SHA-256. Android/data
+рабочего приложения и системные storage permissions не меняются.
 
 Full сохраняет JUnit/native failures и завершает остальные независимые проверки;
 ошибка остаётся FAIL даже после успешного повтора. Build/setup/transport failures

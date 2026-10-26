@@ -521,7 +521,7 @@ public class CascadingFormsTest {
         android.graphics.Rect bounds=gestureBounds(scenario,target);
         float[] points={bounds.left+bounds.width()*(left?.85f:.15f),
                 bounds.left+bounds.width()*(left?.15f:.85f),bounds.exactCenterY()};
-        lastSwipeDiagnostic="left="+left+" "+lastSwipeDiagnostic;
+        lastSwipeDiagnostic="left="+left+" touch="+points[0]+","+points[2]+" "+lastSwipeDiagnostic;
         Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();
         long down=SystemClock.uptimeMillis();
         for (int i=0;i<=12;i++) {
@@ -664,12 +664,28 @@ public class CascadingFormsTest {
                 }
                 s.onActivity(a -> header(a).getTabAt(1).select());
                 InstrumentationRegistry.getInstrumentation().waitForIdleSync();
-                // The ScrollView centre is below the short page, outside Tabs' own bounds.
-                s.onActivity(a -> ((android.widget.LinearLayout)tabs(a).getPageLayouts().get(1)).removeView(signature(tabs(a).getPageLayouts().get(1))));
-                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
-                swipe(s,false,a -> a.findViewById(R.id.form_scroll));
+                // The viewport centre can hit the comment in a wide/short window.
+                // Give the real ScrollView a non-interactive area outside Tabs at every size.
                 s.onActivity(a -> {
-                    assertEquals("Empty area belongs to page navigation too",0,tabs(a).getValue());
+                    ((android.widget.LinearLayout)tabs(a).getPageLayouts().get(1))
+                            .removeView(signature(tabs(a).getPageLayouts().get(1)));
+                    android.widget.LinearLayout content=a.findViewById(R.id.controls_list);
+                    View blank=new View(a);blank.setTag("swipe-blank-outside-tabs");
+                    blank.setClickable(false);blank.setFocusable(false);
+                    content.addView(blank,new android.widget.LinearLayout.LayoutParams(
+                            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                            Math.round(72*a.getResources().getDisplayMetrics().density)));
+                });
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                swipe(s,false,a -> {
+                    android.widget.LinearLayout content=a.findViewById(R.id.controls_list);
+                    View blank=content.findViewWithTag("swipe-blank-outside-tabs");
+                    assertNotNull(blank);assertSame(content,blank.getParent());
+                    assertFalse(blank.isClickable());assertFalse(blank.isFocusable());
+                    return blank;
+                });
+                s.onActivity(a -> {
+                    assertEquals("Empty area belongs to page navigation too: "+lastSwipeDiagnostic,0,tabs(a).getValue());
                     View page=tabs(a).getPageLayouts().get(1);
                     assertTrue(((android.widget.CheckBox)page.findViewWithTag("swipe-check")).isChecked());
                     assertEquals("Retained comment",((android.widget.EditText)page.findViewWithTag("swipe-comment")).getText().toString());

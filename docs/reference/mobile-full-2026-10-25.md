@@ -480,3 +480,64 @@ readback; для текущих тестов ускорение уже дост�
 `bcd-after-change.txt`, `accel-after.txt` в том же evidence каталоге.
 Новый Full будет отдельным запуском: неуспешный Full06 не переименовывается
 и не объявляется успешным задним числом.
+
+## Седьмой Full: один оставшийся blank-area subcase
+
+Source HEAD `573d84d69b72f9b26eaf4cbea55089112b91615c`, тот же product/test
+fingerprint `9cf1f27d6795c00e5223b71ab836051929d1a4b2c650d0b87b0ef3b0f3bba8e5`.
+AVD с AEHD2.2/OpenGL host загрузился за37 секунд. Все913 units, runner43,
+version matrix, docs24, diagnostic delivery и все36 chooser profiles PASS.
+Все253 native метода выполнены: **252 PASS/1 FAIL**, missing нет.
+Receipt содержит230 успешных distinct cases целиком успешных групп;
+ещё22 успешных sibling метода failed CascadingFormsTest подтверждены raw log.
+Квитанция — `...\evidence\phone-full-07\native-complete-summary.json`.
+
+Один FAIL: `swipesWorkAcrossSelectorsCheckboxCommentsAndBlankSpace`,
+`Empty area belongs to page navigation too expected:0 but was:1`.
+Все остальные формы, включая прежний wrap и selected-text subcases, прошли.
+Также прошли все новые подписи, Stop/история/track controls, mixed chooser,
+field-line/point order и недельные сообщения. Итог **Full FAIL**, gate не создан;
+после восстановления настроек own console закрыт, launcher exited.
+
+Тест предполагал, что центр ScrollView ниже страницы Tabs. В коротком окне
+это не гарантирует пустую область; исходный лог не фиксировал точный дочерний
+hit, поэтому причина первоначального непройденного жеста не доказана.
+Fixture теперь создаёт некликабельную72dp область вне Tabs и раскрывает её
+перед единственным жестом. Пять повторений на остальных контролах и все
+проверки checkbox/comment/selection сохранены; assertion включает геометрию
+и screen touch point. Production FormScrollView не менялся. Требуются Related
+полного CascadingFormsTest на эмуляторе/смартфоне и новый окончательный Full.
+
+## Related после Full07 и Wi-Fi планшета
+
+`blank-area-native-01`: весь CascadingFormsTest **23/23 emulator +23/23 Samsung
+PASS**, own AVD finalized/console closed/process exited. На вновь подключённом
+по Wi-Fi T40 Plus **23/23 cascade +3/3 appearance PASS** (`blank-area-tablet-01`).
+Последний Related целиком FAIL: подготовка ProjectLayerSelectionTest остановилась
+на `mkdir .../Android/data/com.nextgis.mobile.verification.debug/files: Permission denied`,
+сам native project case не начат. Это отдельный setup failure, не failed assertion
+26 уже выполненных form cases.
+
+Пользователь подтвердил, что1403 загружен на планшете, и отдельно разрешил
+сохранённый metadata-only snapshot18 слоёв со смартфона. Выяснилось, что Android11
+этой прошивки запрещает shell обход app-owned каталога: UID2000 не имеет
+ext_data_rw, каталог production принадлежит UID10497; verification UID10501
+может читать собственные private files через run-as. Поэтому прежнее отсутствие
+результата discovery не доказывает отсутствия1403. Root, chmod, SELinux,
+production grants/данные не менялись. Wi-Fi connection/identity и baseline
+сохранены в evidence; production223/font1.0/density280/location3 прежние.
+
+Runner передаёт whitelist policy JSON через `exec-in run-as`/stdin в private
+files verification APK, проверяет собственный package/path и SHA-256. Native
+test проверяет canonical getFilesDir. Общедоступного transfer файла нет;
+пять новых regressions (всего48 PASS) покрывают чужой путь, обрыв, hash и UTF-8.
+Требуется адресная проверка private transport на API30/36, затем новые Full
+на смартфоне и планшете на окончательном source fingerprint.
+
+Адресная проверка private transport завершилась: `private-policy-tablet-01`
+**1/1 PASS** на API30 через Wi-Fi и `private-policy-phone-01` **1/1 PASS**
+на Samsung/API36. Оба используют fingerprint
+`dcc6e55bc707909bf147b722bf77f1615cf8e1f165cf18b70f522fe551f80dc9`.
+Согласованный snapshot18/SHA256 прежний; теперь ни подготовка, ни native чтение
+не требуют shell-доступа к Android/data. Runner48/docs validator PASS.
+Исходники фиксируются перед Full08 смартфона и последующим Full планшета.
