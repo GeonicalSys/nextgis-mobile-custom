@@ -331,3 +331,13 @@ Binder/file операций в fatal callback: сбор только после
 retry case первого нового delivery run завершился ENQUEUED; полный run не PASS.
 Fresh verification fixture теперь исключает историю прежних независимых тестов;
 повторный полный адресный delivery ещё требуется. Клиентский224 crash не устранён.
+
+
+К классифицированным редким GPS отчётам добавлен platform snapshot: fine/coarse/
+background permission, GPS/global location enabled, app standby bucket,
+background restriction, process importance и observer_on_main. Это данные
+недостающие в provider_silent после screen off; они не устанавливают причину.
+Координаты/accounts/storage не читаются; необязательная ошибка сбора не теряет
+исходный отчёт. Пороги, retry и подавление нормального no_fix/acquisition/filter
+wait не изменены. Card android-20261027-gps-provider-evidence; первый ручной
+crash APK030f303 этого GPS addon ещё не содержит.

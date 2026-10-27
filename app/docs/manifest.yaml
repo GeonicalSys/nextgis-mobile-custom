@@ -9,6 +9,8 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
+    responsibility: Add optional actual permission/provider/background policy evidence to existing rare classified GPS reports, fail open without reading coordinates, accounts or business storage.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
     responsibility: Persist bounded process ownership before startup; match abnormal OS exits after restart, keep original/unknown historical identity and deterministic event IDs, and acknowledge pending owners only after durable transport storage.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java

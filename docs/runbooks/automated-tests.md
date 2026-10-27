@@ -20,7 +20,7 @@ related_code:
 Related -Area crash-startup выполняет новый empty-handles native case,
 существующий сценарий линейки и MapRuntimeDiagnosticsNativeTest, включая
 явный OS exit export. Оба новых метода входят в Full через прежние классы
-каталога; новый каталог содержит256 методов. Это технические fixtures отдельного
+каталога; новый каталог содержит262 методов. Это технические fixtures отдельного
 verification APK, не пользовательский проект и не воспроизведение вылета224.
 [Разбор и фактические исходы](../reference/mobile-crash-224-2026-10-27.md).
 

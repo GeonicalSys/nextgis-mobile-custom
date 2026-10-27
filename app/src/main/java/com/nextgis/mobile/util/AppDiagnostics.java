@@ -52,6 +52,7 @@ public final class AppDiagnostics {
     private static final Set<String> DIAGNOSTIC_CONTEXTS = new HashSet<>(
             Arrays.asList("map_runtime", "gps_recovery", "sync_journal", "report_origin", "process_exit"));
     private static volatile com.nextgis.maplib.util.MapRuntimeDiagnostics.Trace startup;
+    private static volatile Context diagnosticContext;
 
     public enum Operation { STARTUP, MAP, GEOMETRY_EDIT, ATTRIBUTE_FORM, SYNC, AZIMUTH, STAKEOUT, TRACK, WALK, LOCATION }
     public enum Phase { START, READY, SAVE, RESTORE, STOP, FAILED, FINISHED, CANCELLED }
@@ -61,7 +62,10 @@ public final class AppDiagnostics {
     /** Rate limiting is owned by the acquisition policy; warnings diagnose reception, not crashes. */
     public static void reportGpsRecovery(java.util.Map<String, Object> snapshot) {
         try {
-            Sentry.captureEvent(gpsRecoveryEvent(snapshot));
+            java.util.Map<String,Object> observed = new java.util.LinkedHashMap<>(snapshot);
+            try { observed.put("platform", DiagnosticsGpsPlatform.collect(diagnosticContext)); }
+            catch (RuntimeException unavailable) { observed.put("platform", java.util.Map.of("status", "unavailable")); }
+            Sentry.captureEvent(gpsRecoveryEvent(observed));
         } catch (RuntimeException ignored) { }
     }
 
@@ -93,6 +97,7 @@ public final class AppDiagnostics {
 
     // Package-private seam for the isolated instrumentation Application, never a runtime setting.
     static void initialize(Context context, String dsn) {
+        diagnosticContext = context.getApplicationContext();
         com.nextgis.maplib.util.MapRuntimeDiagnostics.initialize(context,
                 BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, BuildConfig.SOURCE_REVISION);
         startup = com.nextgis.maplib.util.MapRuntimeDiagnostics.beginStartup();

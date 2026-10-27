@@ -1007,3 +1007,13 @@ frames даже при отсутствии исходного SDK envelope. К�
 готовится приватный подписанный APK поверх224, без публичного выпуска и без
 изменения renderer13.7.1. Публичная224 отдельно отозвана: latest/manifest223;
 исправлен и портал. Приёмка клиента Samsung ещё не выполнена.
+
+
+К классифицированным редким GPS отчётам добавлен platform snapshot: fine/coarse/
+background permission, GPS/global location enabled, app standby bucket,
+background restriction, process importance и observer_on_main. Это данные
+недостающие в provider_silent после screen off; они не устанавливают причину.
+Координаты/accounts/storage не читаются; необязательная ошибка сбора не теряет
+исходный отчёт. Пороги, retry и подавление нормального no_fix/acquisition/filter
+wait не изменены. Card android-20261027-gps-provider-evidence; первый ручной
+crash APK030f303 этого GPS addon ещё не содержит.
