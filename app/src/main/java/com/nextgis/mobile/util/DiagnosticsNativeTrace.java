@@ -18,14 +18,21 @@ final class DiagnosticsNativeTrace {
         if (input == null) return result;
         try (InputStream owned = input; ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[8192]; int count;
+            boolean truncated = false;
             while ((count = owned.read(buffer, 0, Math.min(buffer.length, MAX_BYTES + 1 - bytes.size()))) > 0) {
                 bytes.write(buffer, 0, count);
-                if (bytes.size() > MAX_BYTES) { result.put("status", "oversized"); return result; }
+                if (bytes.size() > MAX_BYTES) { truncated = true; break; }
             }
             result.put("bytes_read", bytes.size());
-            if (nativeCrash) result.putAll(tombstone(bytes.toByteArray()));
-            else result.put("main_stack", mainStack(new String(bytes.toByteArray(), StandardCharsets.UTF_8)));
-            result.put("status", "captured");
+            try {
+                if (nativeCrash) result.putAll(tombstone(bytes.toByteArray(), truncated));
+                else result.put("main_stack", mainStack(new String(bytes.toByteArray(), StandardCharsets.UTF_8)));
+            } catch (IOException malformed) {
+                result.put("status", truncated ? "oversized" : "unavailable"); return result;
+            }
+            Object stack = result.get(nativeCrash ? "native_frames" : "main_stack");
+            boolean captured = stack instanceof List && !((List<?>) stack).isEmpty();
+            result.put("status", captured ? (truncated ? "captured_truncated" : "captured") : truncated ? "oversized" : "empty_stack");
         } catch (IOException | RuntimeException error) { result.put("status", "unavailable"); }
         return result;
     }
@@ -43,10 +50,15 @@ final class DiagnosticsNativeTrace {
     // Android's public tombstone.proto wire contract. Unknown fields are skipped by length;
     // only the crashing thread's backtrace is decoded, with fixed nesting and field budgets.
     static Map<String, Object> tombstone(byte[] bytes) throws IOException {
+        return tombstone(bytes, false);
+    }
+    private static Map<String, Object> tombstone(byte[] bytes, boolean truncated) throws IOException {
         Map<String, Object> result = new LinkedHashMap<>();
         Reader top = new Reader(bytes, 0, bytes.length); long tid = 0;
         List<Reader> threads = new ArrayList<>();
-        while (top.next()) {
+        while (true) {
+            try { if (!top.next()) break; }
+            catch (IOException tail) { if (truncated) break; throw tail; }
             if (top.field == 6 && top.wire == 0) tid = top.number;
             if (top.field == 14 && top.wire == 2) {
                 String message = top.text();

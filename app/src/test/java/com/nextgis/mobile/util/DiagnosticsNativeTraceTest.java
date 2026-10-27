@@ -46,4 +46,13 @@ public class DiagnosticsNativeTraceTest {
         String anr = "\"worker\"\n at private.worker(secret.java:1)\n\"main\" prio=5 tid=1\n at android.view.View.draw(View.java:42)\n\"pool\"\n at private.pool(secret.java:2)";
         assertEquals(java.util.List.of("at android.view.View.draw(View.java:42)"), DiagnosticsNativeTrace.mainStack(anr));
     }
+
+    @Test public void oversizedTailDoesNotEraseAnAlreadyAvailableCrashingStack() {
+        byte[] frame = join(number(1, 0x2345), text(4, "Renderer"), text(6, "/private/libmaplibre.so"));
+        byte[] thread = message(16, join(number(1, 42), message(2, message(4, frame))));
+        byte[] data = join(number(6, 42), thread, message(18, new byte[DiagnosticsNativeTrace.MAX_BYTES + 100]));
+        Map<String,Object> result = DiagnosticsNativeTrace.read(new ByteArrayInputStream(data), true);
+        assertEquals("captured_truncated", result.get("status"));
+        assertTrue(new org.json.JSONObject(result).toString().contains("Renderer"));
+    }
 }
