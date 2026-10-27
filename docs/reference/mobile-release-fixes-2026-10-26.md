@@ -19,6 +19,63 @@ related_code:
 
 # Исправления перед публикацией
 
+## Решение о выпуске 27 октября
+
+Пользователь прямо разрешил «опубликуем без зеленого прогона на планшете».
+Исключение относится к выпуску ЛИСЫ3.1.2.30/224; общий автоматический gate и
+обязательные проверки последующих выпусков не изменяются. По отдельному указанию
+пользователя публичные release notes содержат только изменения продукта.
+Ограничения приёмки находятся в этой внутренней квитанции.
+
+APK собран из `29e87d03c6686fdae1d725e18b146fb268191618`, app PR80 уже слит.
+Полная Git-сверка с зелёным Phone Full11 на `d60a768` подтвердила неизменность
+рабочих исходников, build recipe и library pins. Все17 изменённых после него
+путей — четыре AndroidTest fixtures, Python controller/regressions и документация.
+Phone Full11 остаётся историческим PASS254/254, а не новым прогоном текущих тестов.
+Fingerprint текущих проверок `f05ee8bb6cb6095e8a0a84e7b69ee41f253b4ab13f1620020dedb87899ee8280`
+отличается от Phone11; свежий smartphone Full этого fingerprint отсутствует.
+
+| Последующая проверка | Фактический исход |
+|---|---|
+| Tablet Full21 | Setup FAIL до первого native статуса планшета;127 принятых emulator cases,913 Android/61 runner units, versions/docs и обе UI matrices PASS; cleanup PASS |
+| Android start Full21 | PID25548 не выполнил attach, ОС завершила его через10s; остались записи прежних стартов UID10501; исходный trigger не установлен |
+| Чистая установка verification | Удалены только два verification packages, новый target UID10503; production и системные настройки сохранены |
+| Related22/23 | Maintenance2 и track-controls7 PASS;9 native методов после чистой установки |
+| Tablet Full24 | Незавершён:10 принятых distinct методов, final result/cleanup отсутствуют; при восстановлении после Windows boot04:50UTC owned-процессов нет; причина исходного прерывания не установлена |
+| Check-Publication | Exit1, current full-passed.json отсутствует; прежний gate не восстановлен, автоматический PASS не заявлен |
+
+Android11 `processStartTimedOutLocked` удаляет не подключившийся процесс;
+системная запись согласуется с [исходником AOSP](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/android11-release/services/core/java/com/android/server/am/ActivityManagerService.java).
+Это объясняет наблюдаемый этап отказа, но не доказывает причину самого отсутствия
+attach и не объявляет исправленным дефект firmware.
+
+Нормальный signed Release: package `com.nextgis.mobile.geonical`, DEBUG=false,
+FIELD_VERIFICATION=false, MapLibre13.7.1/OpenGL, четыре ABI. Размер70493937bytes,
+SHA-256 `c9f0a17776032245ea013b2e5f7cd7d977d5e8e263d6f945cd21bb2f377f10d5`.
+Certificate SHA-256 `ecd04c936532000eea8cb06ca6a3c1a3ae482844cacce2b84926c635429c3e18`.
+
+Publisher PR6 слит Squash в `ac7b14ae8aa329bc0a87c9553a8e16ca3aefe4b6`:
+клиент использует только совпадающий с настроенным ключ SSH-agent и сохраняет
+RejectPolicy/known_hosts.28 regression tests и настоящее read-only SSH authentication
+PASS. Первая попытка остановлена до подключения на ожидании passphrase;
+после merge повторный dry-run PASS. Матрица18 требований включает app78/79/80,
+maplib60, maplibui44 и publisher6; все изменения есть в remote target branches.
+
+ЛИСА3.1.2.30/224 опубликована27 октября2026 в05:20:45UTC. Публичные
+[manifest](https://apps-geonical.ru/lisa-mobile/lisa/manifest.json) и
+[история](https://apps-geonical.ru/lisa-mobile/lisa/releases.json) содержат224.
+Полное HTTP-скачивание [versioned APK](https://apps-geonical.ru/lisa-mobile/lisa/releases/224/ngmobile-3.1.2.30-lisa-release.apk)
+и [latest.apk](https://apps-geonical.ru/lisa-mobile/lisa/latest.apk) дало в обоих
+случаях70493937bytes и SHA-256, указанный выше. Certificate/source revision и
+release notes совпадают; предыдущий223 сохранён для rollback. БЕЛКА не опубликована.
+
+Android9/10 download/install smoke и повторный Full планшета остаются
+непроверенными; это исключение не является общей device-acceptance. Если на
+проверочном смартфоне уже установлен прежний локальный224, тот же versionCode
+не вызовет автоматическое предложение: окончательный APK устанавливается вручную.
+
+## История исправления блокеров
+
 Новый порядок по запросу пользователя о лимитах GitHub: автоматические
 Android/docs Actions отключаются; проверки выполняются локально. Cloud
 workflow_dispatch остаётся отдельной ручной возможностью. Недостающие6
@@ -44,14 +101,15 @@ MERGED `d60a76883b1ab300f66ae43604d1b625a861ad6b`. Source trees до/после
 squash равны; library heads являются ancestors remote merge commits, consumer
 pins точные. После fetch у всех5 владельцев нет открытых PR или опубликованных
 codex heads с невключёнными обязательными изменениями. Проверены blobs всех16
-строк delivery matrix. Новое исправление native fixtures добавляется отдельным
-app follow-up; final Full после него ещё нужен.
+строк delivery matrix. Исправление native fixtures затем слито app PR80;
+окончательное решение о проверках описано выше.
 
 Пользователь поручил разобрать ошибки и довести пакет до публикации ЛИСЫ.
 Основной пакет app PR78, maplib PR60, maplibui PR44 уже слит. Desktop и публикация
 БЕЛКИ исключены. Финальный порядок: merged libraries → consumer pins → app
 merge → свежий Full смартфона+AVD → Full планшета+AVD → Check-Publication →
-publisher tests/dry-run → публикация и readback. Сейчас выпуск ещё не принят.
+publisher tests/dry-run → публикация и readback. Исходный план проверки затем
+изменён явным пользовательским исключением, записанным выше.
 
 ## Full11–14 и исправление ожиданий native fixtures
 
@@ -169,6 +227,18 @@ Native устройство — только отдельный verification APK
 попытки удаления или обхода не было. Их точные пути/причина уже находятся в
 общем pending-cleanup.json. Доставляемые APK и shared caches не удаляются.
 
+Финальный readback хранения: evidence около95MiB, весь task около123MiB,
+включая указанные28MiB заблокированного disposable. Подписанный опубликованный
+APK около67MiB, manifest и checksum хранятся отдельно в
+`Q:\Codex\Artifacts\lisa-mobile\2026-10-27`. Owned publisher TemporaryDirectory
+удалён штатным finalizer, отсутствие проверено; прочитанные unit fixture paths
+также отсутствуют. Рантаймы SDK/JBR/AVD/Gradle повторно использованы. Full24 не
+имеет обычной cleanup-квитанции после reboot; отсутствие процессов не подменяет её.
+Shared emulator crash database сохранена как общая диагностика SDK. Evidence
+удерживается для разбора и приёмки с пересмотром до2 ноября2026; два запрещённых
+к удалению точных каталога остаются в pending-cleanup до поддержанного изменения
+approval context. Свободно около90GiB на Q; новых runtime copies не оставлено.
+
 ## Зависший запуск проверочного процесса
 
 В Related19 до первого статуса listRename Linux PID target-приложения отсутствовал,
@@ -193,4 +263,5 @@ finalize завершают target и test invoker namespaces; reset=False ос�
 со strict diff по всему task scope. Fingerprint
 `852c32483cf1bed35b0cabdf6b02c9764c487734f12d1358790d675ebfecfced`.
 Native каталог53 classes/254 methods сохранён. Это Related, полный выпускной
-Full на обоих физических устройствах ещё не принят; APK не опубликован.
+Full на обоих физических устройствах на этой стадии ещё не был принят.
+Последующее решение о выпуске и ограничения записаны в начале квитанции.
