@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-10-23
+last_verified: 2026-10-27
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -12,6 +12,57 @@ related_code:
 ---
 
 # Экосистема ЛИСА — desktop, плагины и Android
+
+## Обнаружение зависимостей до правки
+
+Перед любым изменением поведения, API, данных, ресурсов или конфигурации агент
+самостоятельно выполняет discovery всего доступного desktop/mobile source-контура,
+затем разбирает затронутое замыкание в обе стороны. Registry, условие «это задача
+на границе» и перечисленные пользователем цепочки не заменяют поиска.
+
+Единственный общий механизм находится в LISA tooling: модуль
+`tools.ecosystem_tests.dependency_discovery`, source index
+`plugins/geonical-docs/registry/discovered-dependencies.json` и процедура
+`plugins/geonical-docs/guides/scenario-dependencies.md`. Registry links —
+`ECO-DEPENDENCY-DISCOVERY` в [ecosystem.yaml](../registry/ecosystem.yaml).
+Android не хранит копию scanner/index и не делает их runtime-зависимостью APK.
+
+Сначала определить доступный внешний `qgis-plugins` source root по
+`docs/registry/ecosystem.yaml` (location/current_machine_path), прочитать общий
+guide и проверить реальное расположение/ревизии владельцев. В обычном LISA
+checkout из его корня выполняются read-only команды:
+
+```powershell
+py -3.13 -B -m tools.ecosystem_tests.dependency_discovery
+py -3.13 -B -m tools.ecosystem_tests.dependency_discovery --check
+py -3.13 -B -m tools.ecosystem_tests plan --changed android_projects/android_gisapp/app/src/main/java/com/nextgis/mobile/MainApplication.java
+```
+
+Для явного другого LISA source root discovery принимает `--workspace PATH`.
+Он анализирует source contour выбранного root: отдельный Android worktree
+автоматически не становится частью этого контура. Сравнить actual owner roots/
+revisions; индекс другой ветки/копии не подтверждает текущее дерево. Если нужный
+LISA/owner root недоступен, сабмодуль не получен, scanner не поддерживает источник
+или actual root/revision не покрыт, сохранить UNKNOWN с источником/следующим шагом.
+Продолжить доступный локальный поиск и owner registry/evidence; не придумывать
+PASS, не инициализировать чужие сабмодули и не дублировать общий индекс для обхода.
+
+Все новые подтверждённые связи сохраняются в той же задаче без отдельной команды:
+синтаксические — через shared discovery `--write`, смысл/условия/ограничения —
+в curated owner contracts. Ambiguous candidates и unresolved dynamic refs
+сохраняются с source location, статусом и следующим шагом, а не отбрасываются.
+Перед source commit обновить/проверить общий индекс по текущим исходникам и
+повторить impact при изменении границ. Не перегенерировать независимые ожидания
+под текущую ошибочную реализацию. Компактное evidence — в существующей карточке/PR.
+
+Обязательно проверять PostgreSQL → desktop layer → mobile config → NGW/Collector
+→ Android consumer и обратное направление; это пример, а не полный список.
+Новые связи агент находит сам. Dirty/чужой owner checkout блокирует его правки,
+но не исключает обязательный follow-up и порядок доставки. Выполненный статический
+анализ не является native/NGW/DB/device приёмкой, не разрешает AVD, публикацию,
+server writes или возобновление остановленных этапов. AUTO-DOCS-VALIDATE проверяет
+структуру/ссылки app-side registry; это не автоматическое доказательство свежести
+shared source index или полноты смыслового разбора.
 
 ## Статистика мобильного приложения
 

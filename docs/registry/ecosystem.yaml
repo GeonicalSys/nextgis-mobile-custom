@@ -22,20 +22,36 @@ systems:
     kind: external_workspace
     location: ../../standart_profiles
     current_machine_path: C:/dev/lisa/standart_profiles
-    origin: https://github.com/GeonicalSys/standart_profiles.git
+    origin: https://github.com/GeonicalSys/lisa.git
     docs_entry: docs/START-HERE.md
-    docs_url: https://github.com/GeonicalSys/standart_profiles/blob/main/docs/START-HERE.md
+    docs_url: https://github.com/GeonicalSys/lisa/blob/main/standart_profiles/docs/START-HERE.md
     source_of_truth: Desktop launcher/bootstrap, QGIS runtime selection, brands, roles, profile assets and delivery.
   qgis-plugins:
     title: Geonical QGIS Plugins workspace
     kind: external_workspace
     location: ../../plugins
     current_machine_path: C:/dev/lisa/plugins
-    origin: https://github.com/GeonicalSys/geonical-docs.git
+    origin: https://github.com/GeonicalSys/lisa.git
     docs_entry: geonical-docs/START-HERE.md
-    docs_url: https://github.com/GeonicalSys/geonical-docs/blob/main/START-HERE.md
+    docs_url: https://github.com/GeonicalSys/lisa/blob/main/plugins/geonical-docs/START-HERE.md
     source_of_truth: QGIS plugin sources, desktop workflows, GIS resource publishing and central plugin documentation.
 contracts:
+  - id: ECO-DEPENDENCY-DISCOVERY
+    from: qgis-plugins
+    to: mobile-app
+    type: developer_source_contract
+    transport: Read-only static source analysis in the available LISA source contour; no APK runtime import.
+    statement: Before every behavioral/API/data/resource/configuration change the agent discovers dependencies autonomously across the whole available desktop/mobile contour, using existing registries and user examples only as starting points; all newly confirmed links are persisted in the same task in the single shared generated index or curated semantic owner contracts, while ambiguous candidates and dynamic references retain source evidence, UNKNOWN and next steps. Actual owner roots/revisions and source-index freshness are checked before source commits; missing or different worktrees remain UNKNOWN, not covered by another clone's index. Independent expectations are never regenerated to fit faulty production. This entry links the shared procedure and does not implement scanner execution or native acceptance in the Android validator.
+    owners: [app]
+    local_docs: [AGENTS.md, app/AGENTS.md, docs/architecture/lisa-ecosystem.md, docs/guides/change-checklist.md, docs/roadmap/mobile.md]
+    external_docs:
+      - system: qgis-plugins
+        path: geonical-docs/guides/scenario-dependencies.md
+      - system: qgis-plugins
+        path: geonical-docs/registry/scenario-contracts.yaml
+      - system: qgis-plugins
+        path: geonical-docs/registry/discovered-dependencies.json
+    verify: [AUTO-DOCS-VALIDATE]
   - id: ECO-CONDITIONAL-FORM-RULES
     from: qgis-plugins
     to: mobile-app
