@@ -35,6 +35,20 @@ public class MapRuntimeDiagnosticsNativeTest {
                 androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
 
+    @Test public void explicitLogExportIncludesBoundedOsExitEvidenceWithoutAnSdkEvent() throws Exception {
+        guard();
+        JSONObject summary = new JSONObject(AppDiagnostics.processExitSummary(
+                InstrumentationRegistry.getInstrumentation().getTargetContext()));
+        assertEquals(1, summary.getInt("schema_version"));
+        assertEquals(Build.MODEL, summary.getString("model"));
+        assertEquals(Build.VERSION.SDK_INT, summary.getInt("android_api"));
+        assertTrue(summary.getJSONArray("exits").length() <= 8);
+        assertTrue(summary.length() > 0);
+        assertTrue(java.util.Arrays.asList("available", "unavailable", "unsupported").contains(summary.getString("status")));
+        assertFalse(summary.has("accounts")); assertFalse(summary.has("trace"));
+        assertTrue(summary.toString().getBytes(StandardCharsets.UTF_8).length < 8192);
+    }
+
     @Test public void observerPersistsAQueryWhileTheMainThreadIsStillBlocked() throws Exception {
         guard();
         File journal = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir(),

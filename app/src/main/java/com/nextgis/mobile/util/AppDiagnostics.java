@@ -86,6 +86,11 @@ public final class AppDiagnostics {
         initialize(context, BuildConfig.SENTRY_DSN);
     }
 
+    /** Called by explicit log ZIP export, never by a crash callback or at startup. */
+    public static String processExitSummary(Context context) {
+        return DiagnosticsExitInfo.exportSummary(context);
+    }
+
     // Package-private seam for the isolated instrumentation Application, never a runtime setting.
     static void initialize(Context context, String dsn) {
         com.nextgis.maplib.util.MapRuntimeDiagnostics.initialize(context,
@@ -94,6 +99,7 @@ public final class AppDiagnostics {
         startup.put("brand", BuildConfig.FLAVOR);
         startup.put("environment", BuildConfig.DEBUG ? "debug" : "production");
         startup.phase("diagnostics_init");
+        DiagnosticsProcessExitReporter.arm(context);
         if (dsn == null || dsn.trim().isEmpty()) return; // Explicit CI build without diagnostics.
         try {
             SentryAndroid.init(context, options -> {
@@ -125,6 +131,7 @@ public final class AppDiagnostics {
         com.nextgis.maplib.util.MapRuntimeDiagnostics.Trace trace = startup;
         startup = null;
         if (trace != null) trace.finish(0, null);
+        DiagnosticsProcessExitReporter.reportAsync();
     }
 
     static void configure(Context context, SentryAndroidOptions options) {
@@ -156,6 +163,7 @@ public final class AppDiagnostics {
         options.setSendClientReports(false);
         options.setTransportFactory(DiagnosticsTransport::new);
         options.setBeforeSend((event, hint) -> {
+            if ("process_exit_fallback".equals(event.getTag("failure_kind"))) return prepareCachedForSend(event);
             if (HintUtils.hasType(hint, Cached.class) || HintUtils.hasType(hint, Backfillable.class)) {
                 DiagnosticsExitInfo.attach(context, event);
                 return prepareCachedForSend(event);

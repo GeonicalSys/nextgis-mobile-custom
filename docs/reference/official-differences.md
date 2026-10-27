@@ -13,6 +13,15 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Разбор зависаний и завершений 224 — 2026-10-27
+
+MOB-02: fork пропускает пустые editor hit-tests и буферизует чтение GeometryRTree,
+а явный ZIP export дополняет системной историей без назначения текущей версии
+старому процессу. Official app master проверен через API:6113485be698606240b9bc7f0740a18ecc084aaa;
+maplib master:014247eea4a424e828c24d9e52e45fefed362f8d.
+Эти правки не являются upstream merge или доказанным устранением native crash 224.
+[Разбор и приёмка](mobile-crash-224-2026-10-27.md).
+
 ## Native verification после Full14 — 2026-10-27
 
 Только AndroidTest: Home/Back lifecycle наблюдается через main-thread Stage,
@@ -2210,3 +2219,8 @@ Durable UUID защищает новый сеанс от старого диал
 ## Прямые подписи видимых линий
 
 Одна цельная подпись на текущую видимую часть LineString/MultiLineString поворачивается по преобладающему направлению видимых сегментов и может пересекать изгибы. Точка остаётся на линии; native styles/categories/zoom/collision и исходная геометрия сохранены. Обработка идёт в фоне после settle, без нового SQLite-чтения. Контракт: [visible-line-labels](../architecture/visible-line-labels.md).
+
+Автоматический OS restart fallback и отдельный hardware render-stress gate
+добавлены по MOB-02/MOB-03. Ограничения и точные свидетельства —
+[разбор224](mobile-crash-224-2026-10-27.md). Публичная224 отозвана; приватная диагностическая сборка без
+публикации не является обычным release PASS.

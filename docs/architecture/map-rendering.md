@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-25
+last_verified: 2026-10-27
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -31,6 +31,18 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+## Пустые editor hit-tests и индекс — 2026-10-27
+
+При ACTION_DOWN пустой markerFeatureCollection и vertex-layer без editingObject
+дают пустой результат до любых обращений к MapLibre/style. Это убирает ненужный
+синхронный nativeQueryRenderedFeaturesForBox в обычном перемещении карты.
+Если handle существует, сохраняются native picking, допуски, изменение вершины
+и drag; обычные слои этим условием не исключаются. Причина ожиданий внутри
+renderer для непустого запроса не установлена. Startup GeometryRTree получает
+буфер 64 KiB без изменения формата и синхронизации; подробности хранения —
+[NGW/storage](ngw-sync-and-storage.md).
+[Свидетельства и проверки MOB-02](../reference/mobile-crash-224-2026-10-27.md).
 
 SDK MapLibre разрешает HTTP transport даже без внешней сети: локальные SQLite
 тайлы поступают через HTTP loopback LocalVectorTileServer. Глобальный SDK

@@ -15,6 +15,15 @@ related_code:
 
 # Автоматические проверки
 
+## Адресная проверка инцидента 224
+
+Related -Area crash-startup выполняет новый empty-handles native case,
+существующий сценарий линейки и MapRuntimeDiagnosticsNativeTest, включая
+явный OS exit export. Оба новых метода входят в Full через прежние классы
+каталога; новый каталог содержит256 методов. Это технические fixtures отдельного
+verification APK, не пользовательский проект и не воспроизведение вылета224.
+[Разбор и фактические исходы](../reference/mobile-crash-224-2026-10-27.md).
+
 С26 октября2026 основной маршрут полностью локальный. Android reliability и
 docs Actions оставлены только workflow_dispatch: push/PR не расходуют минуты
 GitHub. Облачный запуск допустим только по отдельному запросу пользователя.
@@ -465,3 +474,22 @@ Related `-Area track-candidates`: четыре stationary native сценари�
 полевая линия/точки после reload/reorder. Явный PhoneSerial использует только
 verification APK. Два новых метода TrackControlsTest обязательны в Full;
 текущий catalogue — 53 класса /253 native methods.
+
+## MOB-03: холодная тяжёлая карта и аварийная доставка
+
+Related render-stress сохраняет техническую карту в одном процессе, открывает её
+в другом и проверяет90s pan/pinch, два Activity recreate,6480 полигонов по65 вершин,
+живой UI/кадры/финальную отрисовку. Родитель сохраняет crash/exit/activity/workload
+свидетельства AVD до reset/finalization при assertion. Fixtures остаются только в
+verification APK. Related crash-delivery выполняет настоящий SIGKILL без SDK
+capture и SIGABRT с OS tombstone, затем replay/offline/reconnect через настоящий
+durable transport и локальный receiver. Нормальные User/update stops — отрицательный
+контроль. Неполный run либо сбой последнего case не становится PASS из-за успеха
+предыдущих фаз.
+
+Full включает stress на AVD и выбранном physical device. Check-Publication
+дополнительно требует hardware evidence с текущим source fingerprint: physical
+phone, physical tablet, emulator и incident model SM-X115. Матрица накапливается
+только после успешной фактической нагрузки. Отсутствующий Samsung — блокер
+обычного выпуска, не повод подставлять другое устройство или общий UI profile.
+Приватная диагностическая сборка по явному поручению отдельно, без публикации.

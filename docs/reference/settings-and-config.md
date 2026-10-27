@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-25
+last_verified: 2026-10-27
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -19,6 +19,13 @@ related_code:
 ---
 
 # Настройки и конфигурационные ключи
+
+## Экспорт системной причины завершения — 2026-10-27
+
+Команда отправки журнала добавляет process-exits.json, не требуя настройки,
+разрешения или включения raw GPS log. Экспорт берёт только OS metadata процесса;
+параметры SDK, частота отправки, cache budgets и пользовательские preferences
+не меняются. [Точный состав и состояния API](../architecture/error-reporting.md).
 
 Центр курсора положения: синяя точка 5 dp с белой каймой 2 dp в обоих вариантах; отдельной настройки нет.
 
@@ -339,3 +346,8 @@ fix и native source/rendered marker. Оба метода запускаются
 предел 30 секунд и pixel/heading/sector assertions сохранены. Настройки
 и runtime GPS не изменены; одиночный Full timeout пока не доказывает
 производственный дефект. Related cursor-rendering: оба метода PASS.
+
+Автоматический OS restart fallback и отдельный hardware render-stress gate
+добавлены по MOB-02/MOB-03. Ограничения и точные свидетельства —
+[разбор224](mobile-crash-224-2026-10-27.md). Публичная224 отозвана; приватная диагностическая сборка без
+публикации не является обычным release PASS.

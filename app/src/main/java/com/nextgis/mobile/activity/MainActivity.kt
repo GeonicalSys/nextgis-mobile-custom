@@ -1143,6 +1143,11 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             val fos = FileOutputStream(temp, false)
             val zos = ZipOutputStream(BufferedOutputStream(fos))
 
+            zos.putNextEntry(ZipEntry("process-exits.json"))
+            zos.write(com.nextgis.mobile.util.AppDiagnostics.processExitSummary(this)
+                .toByteArray(Charsets.UTF_8))
+            zos.closeEntry()
+
             val buffer = ByteArray(1024)
             var length: Int
 

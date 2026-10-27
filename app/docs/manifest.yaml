@@ -9,6 +9,12 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
+    responsibility: Persist bounded process ownership before startup; match abnormal OS exits after restart, keep original/unknown historical identity and deterministic event IDs, and acknowledge pending owners only after durable transport storage.
+  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java
+    responsibility: Read at most one MiB of OS ANR/native trace after restart and retain only main/crashing-thread frames and bounded native symbol metadata, excluding memory, registers, open files and OS log buffers.
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/MapRenderStressTest.java
+    responsibility: Seed an isolated technical MVT map in one process and verify 90 seconds of actual pan/pinch/recreation in another with actual OpenGL identity and retained renderer/UI/data witnesses.
   - path: app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java
     responsibility: Show a single bounded scrolling candidate list with wrapping full labels and cancellation; keep vector and track choice callbacks distinct.
   - path: app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
@@ -42,7 +48,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
     responsibility: Hold technical transfer bytes until ActivityScenario is explicitly DESTROYED, verify the completed file without an Activity, exercise both Russian ready-dialog actions at large component scales and inspect non-roaming metered network constraints in the isolated verification APK.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsExitInfo.java
-    responsibility: Add bounded Android 11+ OS termination metadata to historical failures only on a background sender, matching original timestamp, crash type and default process without reading business files or OS trace streams.
+    responsibility: Add bounded Android 11+ OS termination metadata to historical failures only on a background sender, matching original timestamp, crash type and default process without reading business files or OS trace streams. Explicit log ZIP sharing also exports up to eight main-process OS exit records without SDK-event dependency, descriptions, trace reads or inferred historical APK versions.
   - path: app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkGuardTest.java
     responsibility: Verify that real Android network callbacks cancel attached HTTP on roaming/loss/replacement, stopped work cancels its call and Android 8 uses the legacy roaming flag.
   - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java

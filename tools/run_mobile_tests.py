@@ -20,6 +20,7 @@ from mobile_test_project import (DEFAULT_PROJECT, ProjectSelectionRequired, choo
                                  read_projects, snapshot_project, load_policy_fixture)
 
 from mobile_style_evidence import collect_style_images
+from mobile_render_acceptance import STRESS_CLASS, STRESS_CASE, STRESS_SEED, record_stress
 
 ROOT = Path(__file__).resolve().parents[1]
 EMULATOR_HARDWARE = {'ranchu', 'goldfish'}
@@ -115,6 +116,7 @@ class Verification:
         if sdk < (36 if kind=='emulator' else 26):
             raise ValueError(kind+' does not meet the verification API requirement')
         self.devices[kind]={'serial':serial,'hardware':hardware,'sdk':sdk,
+                            'characteristics':self.shell(serial,'getprop','ro.build.characteristics'),
                             'fingerprint':self.shell(serial,'getprop','ro.build.fingerprint')}
         return serial
 
@@ -218,7 +220,7 @@ class Verification:
     def build(self):
         gradle=ROOT/('gradlew.bat' if os.name=='nt' else 'gradlew')
         if self.args.scope=='full':
-            self.command([gradle,'-PciReliabilityChecks=true','--console=plain',
+            self.command([gradle,'-PciReliabilityChecks=true','-Pkotlin.incremental=false','--console=plain',
                           ':maplib:testDebugUnitTest',':maplibui:testDebugUnitTest',':app:testLisaDebugUnitTest',
                           ':maplibui:assembleDebug'],name='all-units',timeout=1800)
             self.command([sys.executable,'-m','unittest','discover','-s','tools/tests','-v'],name='runner-units')
@@ -232,7 +234,7 @@ class Verification:
         if self.args.skip_build:
             if self.args.scope=='full': raise ValueError('A publication full run must build the tested source itself')
         else:
-            self.command([gradle,'-PfieldVerificationChecks=true','-PciReliabilityChecks=true','--console=plain',
+            self.command([gradle,'-PfieldVerificationChecks=true','-PciReliabilityChecks=true','-Pkotlin.incremental=false','--console=plain',
                           ':app:assembleLisaDebug',':app:assembleLisaDebugAndroidTest'],name='verification-apks',timeout=1800)
         main=list((ROOT/'app/build/outputs/apk/lisa/debug').glob('*.apk'))
         tests=list((ROOT/'app/build/outputs/apk/androidTest/lisa/debug').glob('*.apk'))
@@ -296,6 +298,21 @@ class Verification:
         return directory+'/'+relative
 
     def native(self,serial,selectors,name,*,reset=True,extra=None,fatal=None):
+        if selectors == ['com.nextgis.mobile.util.DiagnosticsDeliveryTest']:
+            return self.diagnostics()
+        if selectors == [STRESS_CLASS]:
+            seed = self.native(serial, [STRESS_SEED], name+'-seed')
+            if seed.get('failed'): return seed
+            workload = self.native(serial, [STRESS_CASE], name+'-cold', reset=False)
+            if not workload.get('failed'):
+                raw = self.shell(serial, 'run-as', PACKAGE, 'cat', 'files/render-stress-evidence.json')
+                evidence = json.loads(raw)
+                (self.output/(name+'-evidence.json')).write_text(json.dumps(evidence,indent=2),encoding='utf-8')
+                device = next(item for item in self.devices.values() if item['serial'] == serial)
+                self.checks['render_stress'] = record_stress(ROOT/'build/verification/render-stress.json',
+                                                          evidence, device, self.fingerprint)
+            return {'passed':seed['passed']+workload['passed'], 'skipped':seed['skipped']+workload['skipped'],
+                    'expected_crash':False, 'failed':workload.get('failed',False)}
         if len(selectors)==1 and selectors[0] in self.plan.get('isolated_methods', []):
             passed=[];skipped=[]
             for case in sorted(self.catalog[selectors[0]]):
@@ -320,6 +337,16 @@ class Verification:
             collect_style_images(self.adb,serial,self.output/'images'/evidence_name)
         try: result=parse_instrumentation(text,expected,fatal=fatal)
         except ValueError as error:
+            # Preserve evidence before reset/finalization, including cases that die before
+            # the workload can produce its own final JSON. This owned emulator contains no
+            # customer application; physical capture stays limited to the verification PID.
+            if serial.startswith('emulator-'):
+                for suffix, args in [('crash', ['logcat','-d','-b','crash','-v','threadtime']),
+                                     ('exit', ['dumpsys','activity','exit-info',PACKAGE]),
+                                     ('activity', ['dumpsys','activity','activities']),
+                                     ('workload', ['run-as',PACKAGE,'cat','files/render-stress-evidence.json'])]:
+                    evidence = self.command([self.adb,'-s',serial,'shell',*args],allow_failure=True,timeout=30)
+                    (self.output/(name+'-'+suffix+'.txt')).write_text(evidence,encoding='utf-8')
             message=str(error)+'; see '+str(self.output/(name+'.log'))+'\n'+text[-4000:]
             if self.args.scope!='full': raise NativeCheckFailure(message) from error
             # Each independent check resets only the disposable verification workspace.
@@ -400,6 +427,11 @@ class Verification:
             self.native(serial,[name+'#queueHandledWhileOffline'],'diagnostic-offline-handled',reset=False)
             fatal=name+'#crashWhileOffline'
             self.native(serial,[fatal],'diagnostic-offline-fatal',reset=False,fatal=fatal)
+            for killed, replay in [('hardKillWithoutSdkEnvelopeWhileOffline', 'previousHardKillReachesDurableFallbackWithOriginalIdentity'),
+                                   ('nativeAbortWhileOffline', 'previousNativeAbortIncludesTheActualOsBacktrace')]:
+                case = name+'#'+killed
+                self.native(serial,[case],'diagnostic-'+killed,reset=False,fatal=case)
+                self.native(serial,[name+'#'+replay],'diagnostic-'+replay,reset=False)
             self.native(serial,[name+'#reportsSurviveOfflineRestart'],'diagnostic-offline-restart',reset=False)
             def reconnect():
                 time.sleep(5); self.shell(serial,'svc','wifi','enable')
@@ -407,6 +439,11 @@ class Verification:
             try: self.native(serial,[name+'#deliverWhenNetworkReturns'],'diagnostic-reconnect',reset=False)
             finally: reconnect_thread.join()
             if len(captured)<2: raise RuntimeError('Local receiver did not accept both persisted diagnostic reports')
+            import gzip
+            delivered = b'\n'.join(gzip.decompress(body) for body in captured)
+            for required in (b'process_exit_fallback', b'verification-before-kill', b'verification-before-native-abort', b'native_frames'):
+                if required not in delivered: raise RuntimeError('OS fallback did not reach the local receiver: '+str(required))
+            self.checks['process_exit_delivery'] = True
         finally:
             self.command([self.adb,'-s',serial,'reverse','--remove','tcp:18539'],allow_failure=True)
             server.shutdown(); server.server_close()
@@ -414,6 +451,8 @@ class Verification:
         self.native(serial,[name+'#workerRetriesTemporaryServerFailureWithoutNetworkChange'],'diagnostic-http-retry')
 
     def receipt(self,status):
+        stress = ROOT/'build/verification/render-stress.json'
+        if stress.is_file(): self.checks['render_stress'] = json.loads(stress.read_text(encoding='utf-8'))
         return {'schema_version':1,'scope':self.args.scope,'status':status,
                 'created_at':datetime.now(timezone.utc).isoformat(),'source_fingerprint':self.fingerprint,
                 'devices':self.devices,'checks':self.checks,'runs':self.results,
@@ -483,6 +522,7 @@ class Verification:
                 self.install(self.phone)
             if self.args.scope=='full':
                 self.install(self.phone)
+                self.native(self.emulator, [STRESS_CLASS], 'emulator-render-stress')
                 for test in self.plan['emulator']:
                     self.native(self.emulator,[test],'emulator-'+test.rsplit('.',1)[1])
                 self.grant_and_deny(self.emulator)

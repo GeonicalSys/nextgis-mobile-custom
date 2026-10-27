@@ -47,6 +47,14 @@ public final class VerificationTestApplication extends MainApplication {
     }
 
     @Override protected void initializeDiagnostics() {
+        // pm clear resets this test workspace, but Android retains OS exit history from
+        // earlier disposable runs. Do not import that history into an unrelated new fixture.
+        // Owned marker/replay phases survive reset=False and exercise the real fallback.
+        java.io.File marker = new java.io.File(getFilesDir(), "diagnostic-process.json");
+        if (!marker.exists()) try {
+            java.nio.file.Files.write(marker.toPath(), "{\"history_scanned\":true,\"pending\":[]}"
+                    .getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        } catch (java.io.IOException error) { throw new IllegalStateException(error); }
         AppDiagnostics.initialize(this, "http://synthetic@127.0.0.1:18539/1");
     }
 }

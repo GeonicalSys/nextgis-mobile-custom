@@ -6,6 +6,16 @@ last_verified: 2026-10-27
 
 # app — Android-приложение Lisa/Belka
 
+## Разбор завершений 224 — 2026-10-27
+
+Явная отправка логов включает process-exits.json с ограниченной системной
+историей основного процесса. Полный контракт и границы —
+[диагностика](../../docs/architecture/error-reporting.md); подтверждённые ANR,
+неподтверждённые вылеты 224 и проверки —
+[разбор](../../docs/reference/mobile-crash-224-2026-10-27.md).
+Related crash-startup проверяет пустые edit handles, линейку и OS/observer export
+на изолированном эмуляторе. Рабочие данные пользователей не участвуют.
+
 Автоматические Actions Android/docs переведены в manual-only по поручению
 пользователя ради лимитов GitHub. Related/Full и docs/report impact выполняются
 локально;6 прежних cloud-only real-window profiles включены в Full. Перед
@@ -988,3 +998,12 @@ Graphics LocationOrbitTest теперь ждёт завершения текущ
 MapSelectionDialog переносит длинные строки общего списка, оставляет прокрутку
 и Cancel. Полевые линейные рисуются над треками/обычными данными, но под точками,
 включая отдельные подписи. Related track-candidates 4/4 native PASS; Full обязателен.
+
+## Автоматическая диагностика после закрытия процесса
+
+Новый restart fallback восстанавливает OS exit reason и доступные native/ANR
+frames даже при отсутствии исходного SDK envelope. Контракт, ограничения и
+исходная identity — docs/architecture/error-reporting.md. По поручению пользователя
+готовится приватный подписанный APK поверх224, без публичного выпуска и без
+изменения renderer13.7.1. Публичная224 отдельно отозвана: latest/manifest223;
+исправлен и портал. Приёмка клиента Samsung ещё не выполнена.

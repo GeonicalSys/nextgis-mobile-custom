@@ -61,6 +61,64 @@ public class DiagnosticsDeliveryTest {
         fail("Fatal exceptions must still delegate to Android; the process should have terminated");
     }
 
+    @Test public void hardKillWithoutSdkEnvelopeWhileOffline() throws Exception {
+        seedExitOwner("verification-before-kill");
+        android.os.Process.killProcess(android.os.Process.myPid());
+        SystemClock.sleep(30_000); fail("SIGKILL must terminate the verification process");
+    }
+
+    @Test public void previousHardKillReachesDurableFallbackWithOriginalIdentity() throws Exception {
+        awaitFallback("verification-before-kill", false);
+    }
+
+    @Test public void nativeAbortWhileOffline() throws Exception {
+        seedExitOwner("verification-before-native-abort");
+        android.system.Os.kill(android.os.Process.myPid(), android.system.OsConstants.SIGABRT);
+        SystemClock.sleep(30_000); fail("SIGABRT must reach Android's native crash handler");
+    }
+
+    @Test public void previousNativeAbortIncludesTheActualOsBacktrace() throws Exception {
+        awaitFallback("verification-before-native-abort", true);
+    }
+
+    private void seedExitOwner(String version) throws Exception {
+        VerificationEnvironment.requireIsolated(context);
+        assertTrue(VerificationEnvironment.isEmulator()); awaitDisconnected();
+        File marker = new File(context.getFilesDir(), "diagnostic-process.json");
+        org.json.JSONObject state = new org.json.JSONObject(new String(java.nio.file.Files.readAllBytes(marker.toPath()), StandardCharsets.UTF_8));
+        state.getJSONObject("current").put("version", version).put("build", -10071).put("revision", "verification-original-revision");
+        java.nio.file.Files.write(marker.toPath(), state.toString().getBytes(StandardCharsets.UTF_8));
+        java.nio.file.Files.write(new File(context.getFilesDir(), "expected-exit-pid.txt").toPath(),
+                String.valueOf(android.os.Process.myPid()).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void awaitFallback(String originalVersion, boolean nativeTrace) throws Exception {
+        int pid = Integer.parseInt(new String(java.nio.file.Files.readAllBytes(
+                new File(context.getFilesDir(), "expected-exit-pid.txt").toPath()), StandardCharsets.UTF_8));
+        long deadline = SystemClock.elapsedRealtime() + 15000;
+        while (SystemClock.elapsedRealtime() < deadline) {
+            String text = cachedText();
+            for (String line : text.split("\n")) {
+                if (!line.startsWith("{")) continue;
+                org.json.JSONObject event;
+                try { event = new org.json.JSONObject(line); } catch (Exception ignored) { continue; }
+                org.json.JSONObject contexts = event.optJSONObject("contexts");
+                org.json.JSONObject exit = contexts == null ? null : contexts.optJSONObject("process_exit");
+                if (exit == null || exit.optInt("pid") != pid || !event.optString("release").contains(originalVersion)) continue;
+                assertEquals("verification-original-revision", event.getJSONObject("tags").getString("source_revision"));
+                assertTrue(event.getString("release").endsWith("+-10071"));
+                if (nativeTrace) {
+                    org.json.JSONObject trace = exit.getJSONObject("trace");
+                    assertEquals("captured", trace.getString("status"));
+                    assertTrue("OS tombstone contains real native frames", trace.getJSONArray("native_frames").length() > 0);
+                }
+                return;
+            }
+            SystemClock.sleep(100);
+        }
+        fail("The killed process never produced a durable OS fallback with its original identity");
+    }
+
     @Test public void reportsSurviveOfflineRestart() throws Exception {
         awaitDisconnected();
         awaitPending(2);
@@ -141,7 +199,10 @@ public class DiagnosticsDeliveryTest {
                 SystemClock.sleep(250);
             }
             assertNotNull(info);
-            assertEquals(WorkInfo.State.SUCCEEDED, info.getState());
+            assertEquals("Worker state=" + info.getState() + " attempts=" + info.getRunAttemptCount()
+                            + " HTTP requests=" + requests.get() + " pending=" + AppDiagnostics.hasPendingReports(options)
+                            + " connection=" + options.getConnectionStatusProvider().getConnectionStatus(),
+                    WorkInfo.State.SUCCEEDED, info.getState());
             assertFalse(AppDiagnostics.hasPendingReports(options));
             assertTrue(requests.get() >= 2);
             assertSame("Retry must not reinstall or swallow crash handlers", handler,

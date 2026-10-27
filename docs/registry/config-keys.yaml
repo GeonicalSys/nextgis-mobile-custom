@@ -448,6 +448,16 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  diagnostic-process-owner:
+    owner: app
+    source: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
+    filename: diagnostic-process.json
+    purpose: Atomic bounded current process and four pending historical owners; OS fallback after restart keeps old identity and acknowledges only durable SDK envelopes. No business data, no user setting.
+  process-exits-export:
+    owner: app
+    source: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    filename: process-exits.json
+    purpose: Explicit log ZIP member only, not persistent storage or a preference; up to eight main-process OS exit metadata records, with reporter identity separate from historical records. No new automatic capture, trace stream or business storage read.
   map-runtime-diagnostics:
     owner: maplib
     type: private_json_file

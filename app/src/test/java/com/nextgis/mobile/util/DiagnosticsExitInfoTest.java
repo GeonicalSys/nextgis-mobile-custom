@@ -41,4 +41,30 @@ public class DiagnosticsExitInfoTest {
         assertTrue(DiagnosticsExitInfo.match(List.of(), "app", 1, ApplicationExitInfo.REASON_ANR).isEmpty());
         assertEquals(-1, DiagnosticsExitInfo.reasonFor(new io.sentry.SentryEvent()));
     }
+
+    @Test public void explicitExportRetainsNativeSignalsAndNormalExitsWithoutInventingOldBuilds() throws Exception {
+        java.util.ArrayList<ApplicationExitInfo> history = new java.util.ArrayList<>();
+        history.add(exit("app:script", 100, ApplicationExitInfo.REASON_CRASH_NATIVE));
+        for (int i = 0; i < 12; i++) history.add(exit("app", i,
+                i == 11 ? ApplicationExitInfo.REASON_SIGNALED : ApplicationExitInfo.REASON_EXIT_SELF));
+        set(history.get(12), "setStatus", int.class, 9);
+        List<Map<String, Object>> result = DiagnosticsExitInfo.exportRecords(history, "app");
+        assertEquals(8, result.size()); assertEquals(11L, result.get(0).get("timestamp_ms"));
+        assertEquals(ApplicationExitInfo.REASON_SIGNALED, result.get(0).get("reason"));
+        assertEquals(9, result.get(0).get("status"));
+        assertEquals(ApplicationExitInfo.REASON_EXIT_SELF, result.get(1).get("reason"));
+        assertEquals(4L, result.get(7).get("timestamp_ms"));
+        assertEquals(java.util.Set.of("timestamp_ms", "pid", "reason", "status", "importance", "pss_kib", "rss_kib"),
+                result.get(0).keySet());
+        assertTrue(DiagnosticsExitInfo.exportRecords(null, "app").isEmpty());
+    }
+
+    @Test @Config(sdk = 28) public void olderAndroidExportsAnExplicitUnsupportedResult() throws Exception {
+        org.json.JSONObject summary = new org.json.JSONObject(DiagnosticsExitInfo.exportSummary(
+                org.robolectric.RuntimeEnvironment.getApplication()));
+        assertEquals("unsupported", summary.getString("status"));
+        assertEquals(0, summary.getJSONArray("exits").length());
+        assertEquals(28, summary.getInt("android_api"));
+        assertTrue(summary.has("reporter_build"));
+    }
 }

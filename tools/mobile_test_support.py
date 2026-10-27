@@ -131,3 +131,6 @@ def check_publication_receipt(receipt: dict, fingerprint: str, required: set[str
     devices = receipt.get('devices', {})
     if not devices.get('phone') or not devices.get('emulator'):
         raise ValueError('Both the physical phone and emulator results are required')
+    from mobile_render_acceptance import STRESS_CASE, check_stress_matrix
+    if STRESS_CASE in required:
+        check_stress_matrix(receipt.get('checks', {}).get('render_stress'), fingerprint)

@@ -1,7 +1,7 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-23
+last_verified: 2026-10-27
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -14,6 +14,24 @@ related_code:
 ---
 
 # Доставка диагностических отчётов
+
+## Системная история в отправляемом ZIP — 2026-10-27
+
+При явной команде отправки журнала MainActivity добавляет process-exits.json
+непосредственно в ZIP. На Android 11+ читаются максимум восемь записей OS history,
+затем выбирается основной package process. У каждой записи только timestamp,
+PID, reason, status/signal, importance, PSS/RSS в KiB. Нормальные причины тоже
+сохраняются как системные факты, а не объявляются crash. Новых автоматических
+событий, startup или crash-callback чтений нет. Описания, trace streams, accounts,
+карта, файлы объектов и фотографии здесь не читаются.
+
+Модель/Android и reporter_version/build стоят на уровне экспорта; историческим
+записям текущая версия не назначается. Android ниже 30 возвращает unsupported,
+отсутствие сервиса/отказ API — unavailable, доступная пустая история — available
+с пустым exits. Это отсутствие свидетельства, не отсутствие падений.
+Сведения нужны и когда ни один SDK envelope не пережил завершение.
+[Контракт Android ApplicationExitInfo](https://developer.android.com/reference/android/app/ApplicationExitInfo).
+[Текущий инцидент и ограничения](../reference/mobile-crash-224-2026-10-27.md).
 
 ## Автоматическая диагностика восстановления GPS
 
@@ -283,3 +301,33 @@ Sync PersistenceFailure добавляет sync_journal: phase, projects/account
 bytes, storage_available_bytes, caller_interrupted_at_entry/caller_interrupted и
 write_mode=owned_thread. Причина IOException сохраняется, сами пары и credentials
 не копируются. [Результаты разбора](../reference/glitchtip-triage-2026-10-17.md).
+
+## Автоматический restart fallback — 2026-10-27
+
+До SDK/загрузки карты DiagnosticsProcessExitReporter атомарно сохраняет
+маленький owner marker с PID, временем, исходной версией и source revision.
+После запуска фоновый поток сопоставляет предыдущие процессы с OS exit history
+по имени, PID и lifetime. Ненормальный exit получает отдельный ERROR event
+process_exit_fallback; User/update/permission/self stops его не создают.
+В очереди максимум четыре owner; удаление из неё — после DiskFlushNotification
+от существующего durable transport. Event ID детерминирован по process/PID/time,
+поэтому retry не создаёт новую identity. Возможен отдельный fallback рядом с
+основным SDK crash: число отчётов не считается числом независимых падений.
+
+Первое обновление может прочитать до восьми OS записей последних24h без owner
+старого APK. Их версия и source revision явно unknown, текущая версия не
+приписывается. История/trace могут отсутствовать; Android до11 не предоставляет
+этот fallback. Это ограничение сбора, не гарантия обнаружить любое завершение.
+
+Для ANR читается main-thread stack. Android12+ native tombstone читается с
+пределом1MiB; allowlist parser оставляет до24 crashing-thread native frames,
+function/library basename/rel_pc/build_id и ограниченную безопасную abort message.
+Регистры, raw memory, memory maps, OS log buffers и open files исключены.
+Malformed/oversized/unavailable/missing trace имеют явный статус. Никаких новых
+Binder/file операций в fatal callback: сбор только после следующего запуска.
+
+Проверено на API36 AVD: реальный SIGKILL без SDK envelope и SIGABRT, restart,
+исходная identity, наличие OS native_frames в durable envelope. Последний HTTP
+retry case первого нового delivery run завершился ENQUEUED; полный run не PASS.
+Fresh verification fixture теперь исключает историю прежних независимых тестов;
+повторный полный адресный delivery ещё требуется. Клиентский224 crash не устранён.
