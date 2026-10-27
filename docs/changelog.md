@@ -1,12 +1,24 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-26
+last_verified: 2026-10-27
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-27 — Наблюдение жизненного цикла и завершения native UI
+
+Full11 принят на смартфоне, Full12 отменён, Full13 остановлен до native на ADB,
+Full14 завершён с тремя неуспешными native runs. В AndroidTest добавлены main-thread
+Stage probe, согласованная app/native camera и ожидание OnDismiss с подтверждением
+единственного Cancel DOWN/UP. Ui.tap повторно измеряет цель только после
+отказа Android до доставки DOWN. Production код,254 метода и функциональные допуски
+сохранены. Related20:27 emulator+11 tablet PASS, runner61 PASS; новый Full обоих
+устройств ещё обязателен. Контроллер ограничивает startup60s, сохраняет runtime
+900s, очищает оба verification packages и прекращает прогон после setup timeout.
+[Квитанция и границы результата](reference/mobile-release-fixes-2026-10-26.md).
 
 ## 2026-10-26 — Пустой diff после merge
 

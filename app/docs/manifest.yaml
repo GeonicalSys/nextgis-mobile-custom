@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-26
+last_verified: 2026-10-27
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -22,11 +22,11 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VisibleLineLabelsTest.java
     responsibility: Verify native whole-word rendering, current extent, pan/zoom/rotation, categories and original picking.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackStopConfirmationTest.java
-    responsibility: Verify all manual recording Stop entry points, stale confirmation and real Russian dialog bounds.
+    responsibility: Verify all manual recording Stop entry points, stale confirmation and real Russian dialog bounds; observe actual OnDismiss and one Cancel DOWN/UP without replaying input.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LegacyTrackColorsNativeTest.java
     responsibility: Verify real shared-store v1 to v2 color migration without metadata or point loss.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java
-    responsibility: Verify real track list/map actions, persisted metadata, thin dark track core and original-hue glow, point/field-line order and mixed candidates; acknowledge only known startup power warnings through native dismissal before background pointer input and retain actual overlap diagnostics.
+    responsibility: Verify real track list/map actions, persisted metadata, thin dark track core and original-hue glow, point/field-line order and mixed candidates; acknowledge only known startup power warnings through native dismissal before background pointer input and retain actual overlap diagnostics. Reacquire active owned input bounds only after a UID-rejected DOWN before delivery; fail after an accepted DOWN and retain the shared30-second budget.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java
     responsibility: Require window focus and stable visible bounds clipped to scrolling, window and physical display before guarded native input; verify that the actual SeekBar minimum remains visible.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
@@ -92,7 +92,7 @@ key_components:
   - path: tools/run_mobile_tests.py
     responsibility: Route complete static phone and emulator acceptance, retain failures, finalize owned AVD before PASS, verify source receipts and require a permitted project or an explicitly chosen validated metadata-only policy fixture with provenance.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
-    responsibility: Verify actual Orbit pixels, heading/course fallback and accuracy circles; isolate heading input for radius checks, await camera and app scene before direct fixture injection, retain .08m/30-second assertions and report sample/cache/source/radius/camera state.
+    responsibility: Verify actual Orbit pixels, heading/course fallback and accuracy circles; isolate heading input, synchronize saved/native fixture cameras through MapDrawable, await the app scene, retain .08m/30-second assertions and report both cameras plus sample/cache/source/radius state.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java
     responsibility: Admit only isolated verification APK and explicitly selected phone, then await real delayed startup callbacks and workspace operations before native fixtures; production data and identities remain outside tests.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java
@@ -116,7 +116,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationPolicy.java
     responsibility: Define the default background GPS setting, deterministic two-hour inactivity policy and explicit-exit disarm/reopen transitions.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java
-    responsibility: Verify actual screen sleep/wake, forms with background off, Home, double Back, recent-task removal, disarm/reopen, two-hour expiry and preference changes while preserving independent recording owners and actual Track/Walk services on an isolated Debug emulator.
+    responsibility: Verify actual screen sleep/wake, forms with background off, Home, double Back, recent-task removal, disarm/reopen, two-hour expiry and preference changes; query actual lifecycle Stage on the main thread while preserving independent recording owners and actual Track/Walk services on an isolated Debug emulator.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/MapRuntimeDiagnosticsNativeTest.java
     responsibility: Block the real main looper and verify query/startup snapshots and a Backfillable SDK ANR event preserving original identity, then saturate the actual loopback queue and verify explicit rejection headers on an isolated Debug emulator.
   - path: app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalTest.java

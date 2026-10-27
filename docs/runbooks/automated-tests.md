@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-26
+last_verified: 2026-10-27
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -51,7 +51,16 @@ Full сохраняет неуспешную native попытку и продо
 после штатного reset verification workspace. В конце любая такая ошибка,
 required skip или отсутствующий случай оставляет FAIL; успешный повтор её
 не скрывает. Ошибки сборки, подготовки, транспорта или блокировка телефона
-прерывают запуск. Related сохраняет fail-fast. Runner regressions: 54 cases.
+прерывают запуск. Related собирает обычные native assertions на независимых
+phone checks, но timeout/setup/transport завершает запуск сразу. Runner regressions:
+61 cases.
+
+Каждая instrumentation команда должна сообщить test-start marker за60s.
+Отсутствие маркера завершает только принадлежащий команде ADB client, сохраняет
+startup-timeout receipt и оставляет FAIL. После начала тестов сохраняется общий
+900s limit. Очистка выполняется до следующего сценария: оба точных verification
+package завершаются перед independent reset и при финализации. Controlled
+cross-process/diagnostic phases с reset=False сохраняют свой workspace.
 
 После merge на clean target пустой diff не передаётся как --enforce-diff без
 путей: полный validator и unit suites продолжают выполняться. Регрессия

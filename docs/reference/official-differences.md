@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-26
+last_verified: 2026-10-27
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,16 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Native verification после Full14 — 2026-10-27
+
+Только AndroidTest: Home/Back lifecycle наблюдается через main-thread Stage,
+Orbit fixture согласует app/native camera, а Cancel layout ждёт реальный dismiss
+и подтверждает один DOWN/UP. Системный window driver повторно измеряет цель
+только после UID-rejected DOWN до доставки; принятый жест не повторяется.
+Production поведение и254 метода не меняются.
+Full11 PASS и три неуспешных runs Full14 учитываются отдельно; новая финальная
+приёмка обязательна. [Разбор](mobile-release-fixes-2026-10-26.md).
 
 ## Offline local MVT и целые слова API30 — 2026-10-26
 

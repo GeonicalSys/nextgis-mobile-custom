@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-26
+last_verified: 2026-10-27
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -246,6 +246,14 @@ Activity start. Home сохраняет фоновый GPS. BackgroundGpsNativeT
 видимой с ±accuracy и приблизительным возрастом, сохраняя исходный timestamp.
 Проверки: BackgroundLocationPolicyTest, BackgroundGpsNativeTest и native
 LargeTextLayoutTest для возраста сетевого измерения и настройки местоположения.
+
+Native Home/Back/recent-task probe читает Stage на main thread и допускает
+прохождение промежуточного RESTARTED без ошибки getState. Графическая Orbit
+fixture согласует сохранённую app camera с native viewport. Stop-dialog layout
+ждёт OnDismiss и подтверждает единственный DOWN/UP на Cancel. Ui.tap проверяет
+системное активное окно и повторно измеряет bounds только после отклонённого
+до доставки DOWN; ошибка после принятого DOWN сохраняется. Все функциональные
+assertions,254 метода и device routing сохраняются.
 
 
 Завершение перетаскивания слоёв безопасно обрабатывает строку, ушедшую за

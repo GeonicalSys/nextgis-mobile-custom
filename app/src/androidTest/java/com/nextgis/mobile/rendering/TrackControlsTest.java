@@ -243,10 +243,14 @@ public class TrackControlsTest {
             return result;
         }
         static void tap(java.util.function.Predicate<android.view.accessibility.AccessibilityNodeInfo> matches) throws Exception {
+            long inputDeadline = SystemClock.uptimeMillis() + 30000;
+            while (true) {
             AtomicReference<android.view.accessibility.AccessibilityNodeInfo> result = new AtomicReference<>();
             android.graphics.Rect[] previous = {null}; long[] stable = {0};
             boolean[] dismissingWarning = {false};
             try { await(() -> {
+                assertTrue("The owned input window must become ready within30s; " + lastTouch,
+                        SystemClock.uptimeMillis() < inputDeadline);
                 if (result.get() != null) result.getAndSet(null).recycle();
                 if (backgroundWarningVisible(!dismissingWarning[0])) {
                     dismissingWarning[0] = true; previous[0] = null; return false;
@@ -261,6 +265,7 @@ public class TrackControlsTest {
                 return !bounds.isEmpty() && now - stable[0] >= 150;
             }); }
             catch (AssertionError error) {
+                if (result.get() != null) result.getAndSet(null).recycle();
                 StringBuilder detail = new StringBuilder();
                 for (android.view.accessibility.AccessibilityWindowInfo window : automation().getWindows()) {
                     android.view.accessibility.AccessibilityNodeInfo root = window.getRoot();
@@ -270,17 +275,40 @@ public class TrackControlsTest {
             }
             android.view.accessibility.AccessibilityNodeInfo node = result.get();
             android.graphics.Rect bounds = touchBounds(node);
-            assertNotNull("The touch must still target the focused, unobscured app window", bounds);
-            assertTrue(node.isEnabled()); assertFalse(bounds.isEmpty());
+            if (bounds == null || !node.isEnabled()) {
+                node.recycle();
+                assertTrue("The target input window changed before DOWN; " + lastTouch,
+                        SystemClock.uptimeMillis() < inputDeadline);
+                continue;
+            }
+            assertFalse(bounds.isEmpty());
             lastTouch = touchDiagnostic(node, bounds);
             android.util.Log.i("TrackTouchQA", lastTouch);
             node.recycle();
             long now = SystemClock.uptimeMillis();
             MotionEvent down = MotionEvent.obtain(now,now,MotionEvent.ACTION_DOWN,bounds.exactCenterX(),bounds.exactCenterY(),0);
             MotionEvent up = MotionEvent.obtain(now,now+70,MotionEvent.ACTION_UP,bounds.exactCenterX(),bounds.exactCenterY(),0);
-            try { InstrumentationRegistry.getInstrumentation().sendPointerSync(down); InstrumentationRegistry.getInstrumentation().sendPointerSync(up); }
+            boolean downAccepted = false;
+            try {
+                InstrumentationRegistry.getInstrumentation().sendPointerSync(down);
+                downAccepted = true;
+                InstrumentationRegistry.getInstrumentation().sendPointerSync(up);
+            } catch (IllegalArgumentException error) {
+                String message = String.valueOf(error.getMessage());
+                if (downAccepted || !message.contains("Targeted input event injection")
+                        || !message.contains("owned by uid"))
+                    throw new AssertionError("Native input failed; DOWN accepted=" + downAccepted + "; " + lastTouch, error);
+                // Android rejected DOWN before delivery; reacquire the owned window and bounds.
+                if (SystemClock.uptimeMillis() >= inputDeadline)
+                    throw new AssertionError("Owned input window did not settle before DOWN; " + lastTouch, error);
+                android.util.Log.i("TrackTouchQA", "Rejected DOWN before delivery; reacquiring " + lastTouch);
+                SystemClock.sleep(100);
+                continue;
+            }
             finally { down.recycle(); up.recycle(); }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+            return;
+            }
         }
         static void dump(android.view.accessibility.AccessibilityNodeInfo node, StringBuilder text) {
             if (!String.valueOf(node.getPackageName()).equals(InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName())) return;
