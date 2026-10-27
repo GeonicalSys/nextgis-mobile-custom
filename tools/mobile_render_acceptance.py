@@ -13,7 +13,9 @@ def validate_stress(evidence: dict) -> None:
         raise ValueError('Render stress did not complete successfully')
     for field, minimum in {'elapsed_ms': 90_000, 'gestures': 60, 'frames': 60,
                            'recreations': 2, 'features': 6480, 'vertices_per_feature': 65,
-                           'mvt_layers': 2, 'visible_features': 1}.items():
+                           'mvt_layers': 2, 'visible_features': 1, 'peak_pss_kib': 1,
+                           'pan_changes': 50, 'pinch_changes': 15,
+                           'peak_java_bytes': 1, 'peak_native_bytes': 1}.items():
         value = evidence.get(field)
         if type(value) is not int or value < minimum:
             raise ValueError('Missing/insufficient render stress evidence: ' + field)

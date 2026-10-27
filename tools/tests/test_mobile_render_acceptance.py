@@ -14,7 +14,8 @@ class RenderAcceptanceTest(unittest.TestCase):
         return dict(schema_version=1,status='passed',elapsed_ms=90000,gestures=80,frames=100,
                     recreations=2,features=6480,vertices_per_feature=65,mvt_layers=2,
                     visible_features=2,gpu='Vendor / Renderer / OpenGL ES 3.2',model=model,
-                    manufacturer='samsung',smallest_width_dp=600)
+                    manufacturer='samsung',smallest_width_dp=600,peak_pss_kib=200000,
+                    peak_java_bytes=100000000,peak_native_bytes=100000000,pan_changes=60,pinch_changes=20)
     def matrix(self):
         return {'schema_version':1,'entries':[
             {'kind':kind,'source_fingerprint':'abc','device':{'fingerprint':'Android/current'},
@@ -29,7 +30,8 @@ class RenderAcceptanceTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'SM-X115'):check_stress_matrix(matrix,'abc')
     def test_short_empty_or_unknown_gpu_workloads_are_rejected(self):
         for field,value in [('elapsed_ms',89999),('gestures',0),('frames',0),('visible_features',0),
-                            ('mvt_layers',1),('gpu','null / null'),('model',''),('recreations',1),('features',8)]:
+                            ('mvt_layers',1),('gpu','null / null'),('model',''),('recreations',1),('features',8),
+                            ('pan_changes',0),('pinch_changes',0),('peak_pss_kib',0),('peak_java_bytes',0),('peak_native_bytes',0)]:
             evidence=self.evidence();evidence[field]=value
             with self.subTest(field=field),self.assertRaises(ValueError):validate_stress(evidence)
     def test_changed_sources_or_missing_os_identity_are_rejected(self):

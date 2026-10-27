@@ -7,6 +7,15 @@ git-сабмодули `maplib`, `maplibui`, `easypicker`. Основной яз
 
 ## Локальные проверки и лимиты GitHub
 
+Инцидент27 октября2026: три host hard hangs/принудительные перезагрузки Windows,
+два дневных рядом с запуском AVD `-gpu host`. Новые AVD исполнения остановлены;
+не возобновлять их, включая software, без оценки и явного решения владельца.
+Source/unit/docs/Git разрешены. Runner по умолчанию блокирует запуск до ADB;
+`-AllowEmulator` означает отдельно разрешённое software-only исполнение, не
+разрешение агента самому обойти остановку. Host GPU запрещён harness; actual
+SurfaceFlinger software identity проверяется и у заимствованного AVD. Сам новый
+software путь ещё не проверен исполнением. См. docs/reference/mobile-crash-224-2026-10-27.md.
+
 Проверки Android и документации с26 октября2026 выполняются локально по
 поручению пользователя ради лимитов GitHub. Workflows оставлены manual-only;
 не включать auto push/PR triggers, не dispatch/rerun облачные проверки без

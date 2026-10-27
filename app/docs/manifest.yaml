@@ -16,7 +16,7 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java
     responsibility: Read at most one MiB of OS ANR/native trace after restart and retain only main/crashing-thread frames and bounded native symbol metadata, excluding memory, registers, open files and OS log buffers.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/MapRenderStressTest.java
-    responsibility: Seed an isolated technical MVT map in one process and verify 90 seconds of actual pan/pinch/recreation in another with actual OpenGL identity and retained renderer/UI/data witnesses.
+    responsibility: Seed an isolated technical MVT map in one process and verify 90 seconds of pan/pinch/recreation with independently observed native camera changes, actual OpenGL and peak memory evidence; retain pre-close screenshots, camera/style/lifecycle state and later recovery samples without clearing a failed assertion.
   - path: app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java
     responsibility: Show a single bounded scrolling candidate list with wrapping full labels and cancellation; keep vector and track choice callbacks distinct.
   - path: app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java

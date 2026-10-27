@@ -21,6 +21,7 @@ from mobile_test_project import (DEFAULT_PROJECT, ProjectSelectionRequired, choo
 
 from mobile_style_evidence import collect_style_images
 from mobile_render_acceptance import STRESS_CLASS, STRESS_CASE, STRESS_SEED, record_stress
+from mobile_emulator_safety import SOFTWARE_GPU, require_software_graphics
 
 ROOT = Path(__file__).resolve().parents[1]
 EMULATOR_HARDWARE = {'ranchu', 'goldfish'}
@@ -124,6 +125,10 @@ class Verification:
         phone_only=getattr(self.args,'phone_only',False)
         if phone_only and (self.args.scope!='related' or not self.args.phone_serial):
             raise ValueError('Phone-only checks require Related and an explicit phone serial')
+        if not phone_only and not getattr(self.args, 'allow_emulator', False):
+            raise ValueError('Emulator runs are on hold after host hard hangs. Review the host incident first; '
+                             'an explicitly authorized software-only run requires --allow-emulator. '
+                             'Related --phone-only does not launch an emulator.')
         listing=self.command([self.adb,'devices'])
         connected=[line.split()[0] for line in listing.splitlines() if re.match(r'^\S+\s+device$',line)]
         if self.args.scope=='full':
@@ -147,6 +152,8 @@ class Verification:
             raise ValueError('Select --emulator-serial when more than one emulator is running')
         selected=self.args.emulator_serial or (emulators[0] if emulators else self.start_emulator())
         self.emulator=self.identity(selected,'emulator')
+        self.devices['emulator']['graphics'] = require_software_graphics(
+            self.shell(self.emulator,'dumpsys','SurfaceFlinger'))
         for key,command in [('font',['settings','get','system','font_scale']),
                             ('density',['wm','density']),('wifi',['settings','get','global','wifi_on']),
                             ('data',['settings','get','global','mobile_data']),
@@ -202,7 +209,7 @@ class Verification:
         serial='emulator-'+str(port)
         stream=(self.output/'emulator-start.log').open('w',encoding='utf-8')
         process=subprocess.Popen([str(binary),'-avd',avds[0],'-port',str(port),'-read-only','-no-snapshot',
-                          '-no-window','-no-audio','-gpu','host'],stdout=stream,stderr=subprocess.STDOUT,
+                          '-no-window','-no-audio','-gpu',SOFTWARE_GPU,'-feature','-Vulkan'],stdout=stream,stderr=subprocess.STDOUT,
                          creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
         stream.close()
         self.owned_emulator=serial
@@ -342,6 +349,7 @@ class Verification:
             # customer application; physical capture stays limited to the verification PID.
             if serial.startswith('emulator-'):
                 for suffix, args in [('crash', ['logcat','-d','-b','crash','-v','threadtime']),
+                                     ('logcat', ['logcat','-d','-v','threadtime','-t','1200']),
                                      ('exit', ['dumpsys','activity','exit-info',PACKAGE]),
                                      ('activity', ['dumpsys','activity','activities']),
                                      ('workload', ['run-as',PACKAGE,'cat','files/render-stress-evidence.json'])]:
@@ -573,6 +581,7 @@ def main():
     parser.add_argument('--area',action='append')
     parser.add_argument('--phone-serial'); parser.add_argument('--emulator-serial')
     parser.add_argument('--phone-only',action='store_true',help='Related stationary verification checks only; explicit phone serial required')
+    parser.add_argument('--allow-emulator',action='store_true',help='Explicitly approved software-only emulator execution after reviewing host safety; never use host GPU')
     parser.add_argument('--test-project',help='Explicitly authorized Collector ID, name or workspace directory; default 1403')
     parser.add_argument('--test-project-fixture',help='Explicitly authorized metadata-only policy snapshot with a matching --test-project ID')
     parser.add_argument('--avd'); parser.add_argument('--sdk'); parser.add_argument('--output')

@@ -21,8 +21,9 @@ related_code:
 непосредственно в ZIP. На Android 11+ читаются максимум восемь записей OS history,
 затем выбирается основной package process. У каждой записи только timestamp,
 PID, reason, status/signal, importance, PSS/RSS в KiB. Нормальные причины тоже
-сохраняются как системные факты, а не объявляются crash. Новых автоматических
-событий, startup или crash-callback чтений нет. Описания, trace streams, accounts,
+сохраняются как системные факты, а не объявляются crash. Сам явный ZIP export
+не создаёт автоматических событий; restart fallback описан отдельно ниже.
+Описания, trace streams, accounts,
 карта, файлы объектов и фотографии здесь не читаются.
 
 Модель/Android и reporter_version/build стоят на уровне экспорта; историческим
@@ -327,10 +328,12 @@ Malformed/oversized/unavailable/missing trace имеют явный статус
 Binder/file операций в fatal callback: сбор только после следующего запуска.
 
 Проверено на API36 AVD: реальный SIGKILL без SDK envelope и SIGABRT, restart,
-исходная identity, наличие OS native_frames в durable envelope. Последний HTTP
-retry case первого нового delivery run завершился ENQUEUED; полный run не PASS.
-Fresh verification fixture теперь исключает историю прежних независимых тестов;
-повторный полный адресный delivery ещё требуется. Клиентский224 crash не устранён.
+исходная identity, наличие OS native_frames в durable envelope. В delivery06
+все9 native phases PASS, включая приём fallback локальным HTTP сервером после
+возврата сети и WorkManager retry после503. Owned AVD остановлен с cleanup
+readback PASS. Первый delivery01 оставлен как FAIL на HTTP retry; новый результат
+его не переписывает. Fresh verification fixture исключает OS историю прежних
+независимых тестов. Клиентский224 crash не устранён; физический Samsung не проверен.
 
 
 К классифицированным редким GPS отчётам добавлен platform snapshot: fine/coarse/

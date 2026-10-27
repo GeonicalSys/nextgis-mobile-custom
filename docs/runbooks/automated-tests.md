@@ -15,6 +15,26 @@ related_code:
 
 # Автоматические проверки
 
+## Остановка запусков AVD после зависаний Windows — 27 октября
+
+На рабочем компьютере подтверждены три аварийных завершения Windows; два дневных
+совпадают с началом AVD в аппаратном режиме. До оценки владельцем нового запуска
+не запускать AVD, в том числе для проверки исправленного harness. Текущая задача
+продолжается только source/unit/docs/Git; stress09 оборван и не является PASS.
+
+Runner теперь требует явный `-AllowEmulator` (`--allow-emulator`) для любого
+эмуляторного исполнения и использует `swiftshader_indirect -feature -Vulkan`
+для установленного Emulator35.6.11. По умолчанию остановка происходит до ADB/start.
+Перед workload читается actual GLES SurfaceFlinger: аппаратный или неизвестный
+renderer, включая существующий заимствованный AVD, отклоняется. Software/phone
+не считаются подтверждением исправления host GPU; будущий реальный software run
+ещё не выполнен. Эмуляторный GPU context сохраняется в device receipt.
+Related PhoneOnly по-прежнему требует явный serial и не запускает AVD.
+
+Основания: [режимы Android Emulator](https://developer.android.com/studio/run/emulator-acceleration),
+[Windows Event41](https://learn.microsoft.com/en-us/troubleshoot/windows-client/performance/event-id-41-restart),
+[факты и ограничения](../reference/mobile-crash-224-2026-10-27.md).
+
 ## Адресная проверка инцидента 224
 
 Related -Area crash-startup выполняет новый empty-handles native case,
@@ -23,6 +43,20 @@ Related -Area crash-startup выполняет новый empty-handles native c
 каталога; новый каталог содержит262 методов. Это технические fixtures отдельного
 verification APK, не пользовательский проект и не воспроизведение вылета224.
 [Разбор и фактические исходы](../reference/mobile-crash-224-2026-10-27.md).
+
+Related -Area render-stress выполняет seed/cold фазы в разных процессах:
+два настоящих MVT sources,6480 технических полигонов по65 вершин и подписи,
+не менее90s жестов и два recreate. Сохраняются native кадры, UI responsiveness,
+данные, actual GPU и peak PSS/Java/native memory. Независимое чтение native
+camera подтверждает минимум50 реально изменивших центр pan и15 изменивших
+zoom pinch: отправленные MotionEvent сами по себе не считаются нагрузкой.
+Стартовый viewport задаётся в private preferences fixture, без изменения
+GPS/производственной карты. При assertion owned AVD
+сохраняет снимок до закрытия Activity, native camera/lifecycle/style state,
+ограниченный logcat и ещё два отсчёта через5/10s. Поздний recovery не отменяет FAIL.
+Обычный Check-Publication требует текущую матрицу phone/tablet/emulator,
+включая физический SM-X115. Related и техническая карта не заменяют Full
+и приёмку пользовательского проекта.
 
 С26 октября2026 основной маршрут полностью локальный. Android reliability и
 docs Actions оставлены только workflow_dispatch: push/PR не расходуют минуты
@@ -62,7 +96,7 @@ required skip или отсутствующий случай оставляет 
 не скрывает. Ошибки сборки, подготовки, транспорта или блокировка телефона
 прерывают запуск. Related собирает обычные native assertions на независимых
 phone checks, но timeout/setup/transport завершает запуск сразу. Runner regressions:
-61 cases.
+67 cases.
 
 Каждая instrumentation команда должна сообщить test-start marker за60s.
 Отсутствие маркера завершает только принадлежащий команде ADB client, сохраняет
