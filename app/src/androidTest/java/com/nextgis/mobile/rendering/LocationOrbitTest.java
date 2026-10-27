@@ -10,13 +10,14 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.nextgis.maplib.map.MapDrawable;
+import com.nextgis.maplib.datasource.GeoPoint;
+import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.maplibre.android.camera.CameraUpdateFactory;
 import org.maplibre.android.geometry.LatLng;
 import org.maplibre.android.maps.Style;
 import org.maplibre.android.style.layers.BackgroundLayer;
@@ -70,8 +71,7 @@ public class LocationOrbitTest {
                     Method stop=activity.getMapFragment().getClass().getDeclaredMethod("stopDeviceHeading");
                     stop.setAccessible(true);stop.invoke(activity.getMapFragment());
                 } catch(ReflectiveOperationException error) {throw new AssertionError(error);}
-                ((MapDrawable) app.getMap()).getMaplibreMap().moveCamera(
-                        CameraUpdateFactory.newLatLngZoom(new LatLng(FIX.latitude(), FIX.longitude()), 22));
+                moveFixtureCamera((MapDrawable) app.getMap(), 22f);
             });
             awaitScene(screen,app,"accuracy camera zoom 22",() ->
                     Math.abs(((MapDrawable)app.getMap()).getMaplibreMap().getCameraPosition().zoom-22)<.001);
@@ -112,6 +112,15 @@ public class LocationOrbitTest {
             else restore.remove(SettingsConstantsUI.KEY_PREF_SHOW_STATUS_PANEL);
             assertTrue(restore.commit());
         }
+    }
+
+    private static void moveFixtureCamera(MapDrawable map, float zoom) {
+        GeoPoint center = new GeoPoint(FIX.longitude(), FIX.latitude());
+        center.setCRS(GeoConstants.CRS_WGS84);
+        assertTrue(center.project(GeoConstants.CRS_WEB_MERCATOR));
+        // The app's delayed startup redraw reads this saved camera, too.
+        // Keep it consistent with the native viewport used by source/pixel assertions.
+        map.setZoomAndCenter(zoom, center, false, 0);
     }
 
     private static double accuracyCircleRadius(MapDrawable map) {
@@ -169,8 +178,7 @@ public class LocationOrbitTest {
                     warning.close();
                 } catch (ReflectiveOperationException ex) { throw new AssertionError(ex); }
                 MapDrawable map = (MapDrawable) app.getMap();
-                map.getMaplibreMap().moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(FIX.latitude(), FIX.longitude()), 18));
+                moveFixtureCamera(map, 18f);
             });
             InstrumentationRegistry.getInstrumentation().waitForIdleSync();
             Thread.sleep(500);
@@ -222,8 +230,7 @@ public class LocationOrbitTest {
                 ensurePointUnderCursor(style);
             });
             for (double zoom : new double[]{16, 19}) {
-                screen.onActivity(activity -> ((MapDrawable) app.getMap()).getMaplibreMap()
-                        .moveCamera(CameraUpdateFactory.zoomTo(zoom)));
+                screen.onActivity(activity -> moveFixtureCamera((MapDrawable) app.getMap(), (float) zoom));
                 InstrumentationRegistry.getInstrumentation().waitForIdleSync();
                 Thread.sleep(500);
                 screen.onActivity(activity -> ((MapDrawable) app.getMap())
@@ -508,7 +515,8 @@ public class LocationOrbitTest {
                             .append(" cachedFix=").append(value(MapDrawable.class, map, "lastUserLocationPoint"))
                             .append(" applied=").append(flag(com.nextgis.mobile.fragment.MapFragment.class,
                                     activity.getMapFragment(), "mapLibreLayersAppliedForCurrentView"));
-                    if (nativeMap != null) state.append(" camera=").append(nativeMap.getCameraPosition());
+                    if (nativeMap != null) state.append(" camera=").append(nativeMap.getCameraPosition())
+                            .append(" savedZoom=").append(map.zoomSaved).append(" savedCenter=").append(map.centerSaved);
                     if (style != null) {
                         GeoJsonSource source = style.getSourceAs("user-location-source");
                         state.append(" styleLoaded=").append(style.isFullyLoaded())

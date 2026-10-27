@@ -130,3 +130,16 @@ lone/hidden cases, прежние Color/Rename/Hide/Delete, 72 локальны�
 длинного списка и native pixels/order после full/lite/reorder. Maplib unit
 политики имени/геометрии и compilation consumers прошли. Это адресная
 проверка; полный набор смартфона/планшета выполняется после фиксации кода.
+
+## Завершение native проверки Stop dialog
+
+В24 enlarged Stop-dialog profiles Cancel отправляется одним физическим жестом.
+Непоглощающие observers считают DOWN/UP на настоящей кнопке; проверка ждёт
+штатный OnDismiss, затем читает isShowing в main thread и сверяет запись.
+Это подтверждает завершение асинхронного dismiss без повторения input.
+При сбое сохраняются ширина/высота, density, тема, font scale и input witnesses.
+
+Ui.tap берёт координаты из активного focused/unobscured accessibility window.
+Общий30s budget включает поиск и повторное измерение после явного UID-rejected
+DOWN, который Android не доставил ни одной кнопке. После принятого DOWN сбой
+остаётся FAIL. Прежние UID guards и единственный принятый жест сохраняются.

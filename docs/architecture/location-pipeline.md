@@ -694,3 +694,10 @@ fix и native source/rendered marker. Оба метода запускаются
 предел 30 секунд и pixel/heading/sector assertions сохранены. Настройки
 и runtime GPS не изменены; одиночный Full timeout пока не доказывает
 производственный дефект. Related cursor-rendering: оба метода PASS.
+
+## Наблюдение native lifecycle
+
+Home/Back/recent-task проверки опрашивают AndroidX lifecycle Stage в main thread:
+STOPPED/RESUMED/DESTROYED. Промежуточный RESTARTED не преобразуется через
+ActivityScenario.getState. Это наблюдение без принудительного lifecycle перехода;
+лимит ожидания20s, счётчики GPS/lease и проверки самостоятельной записи сохранены.

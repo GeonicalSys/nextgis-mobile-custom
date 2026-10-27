@@ -25,6 +25,14 @@ ROOT = Path(__file__).resolve().parents[1]
 EMULATOR_HARDWARE = {'ranchu', 'goldfish'}
 
 
+class NativeCheckFailure(RuntimeError):
+    """A completed instrumentation attempt reported a native assertion/protocol failure."""
+
+
+class NativeStartupTimeout(RuntimeError):
+    """Instrumentation did not report the start of a test within its startup budget."""
+
+
 
 class Verification:
     def __init__(self, args):
@@ -47,13 +55,18 @@ class Verification:
         self.saved_emulator={}
         self.project_fixture=None
 
-    def command(self, argv, *, name=None, timeout=900, allow_failure=False, input_text=None):
+    def command(self, argv, *, name=None, timeout=900, allow_failure=False, input_text=None,
+                native_startup_timeout=None):
         if name:
             print('RUN '+name,flush=True)
             log=self.output/(name+'.log')
             with log.open('w',encoding='utf-8') as stream:
-                result=subprocess.run([str(x) for x in argv],cwd=ROOT,stdout=stream,
-                                      stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace',input=input_text)
+                if native_startup_timeout is None:
+                    result=subprocess.run([str(x) for x in argv],cwd=ROOT,stdout=stream,
+                                          stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace',input=input_text)
+                else:
+                    if input_text is not None: raise ValueError('Native startup supervision does not accept stdin')
+                    result=self.wait_native_command(argv,stream,log,timeout,native_startup_timeout)
             text=log.read_text(encoding='utf-8')
         else:
             result=subprocess.run([str(x) for x in argv],cwd=ROOT,stdout=subprocess.PIPE,
@@ -62,6 +75,34 @@ class Verification:
         if result.returncode and not allow_failure:
             raise RuntimeError('Command failed: '+str(argv[0])+'\n'+text[-5000:])
         return text
+
+    def wait_native_command(self,argv,stream,log,timeout,startup_timeout):
+        # Own this one ADB client; never terminate the shared ADB server or another run.
+        process=subprocess.Popen([str(x) for x in argv],cwd=ROOT,stdout=stream,stderr=subprocess.STDOUT,
+                                 creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
+        began=time.monotonic();reported_start=False;startup_expired=False
+        try:
+            while process.poll() is None:
+                elapsed=time.monotonic()-began
+                if not reported_start:
+                    reported_start=bool(re.search(r'^INSTRUMENTATION_STATUS_CODE:\s*1\s*$',
+                                                 log.read_text(encoding='utf-8',errors='replace'),re.M))
+                    if not reported_start and elapsed>=startup_timeout:
+                        startup_expired=True
+                        raise NativeStartupTimeout('Instrumentation did not report a test start within '
+                                                   +str(startup_timeout)+' seconds; see '+str(log))
+                if elapsed>=timeout: raise subprocess.TimeoutExpired([str(x) for x in argv],timeout)
+                time.sleep(.1)
+            return subprocess.CompletedProcess(argv,process.returncode)
+        finally:
+            if process.poll() is None: process.kill()
+            process.wait()
+            if startup_expired:
+                log.with_suffix('.startup-timeout.json').write_text(json.dumps({
+                    'phase':'before-test-start','startup_timeout_seconds':startup_timeout,
+                    'client_pid':process.pid,'client_exited':process.returncode is not None,
+                    'client_returncode':process.returncode,'log':str(log),
+                    'created_at':datetime.now(timezone.utc).isoformat()},indent=2),encoding='utf-8')
 
     def shell(self,serial,*argv):
         return self.command([self.adb,'-s',serial,'shell',*argv]).strip()
@@ -228,6 +269,7 @@ class Verification:
             # An expanded notification shade keeps input focus even after the test Activity starts.
             self.shell(serial,'cmd','statusbar','collapse')
         self.shell(serial,'am','force-stop',PACKAGE)
+        self.shell(serial,'am','force-stop',PACKAGE+'.test')
         if self.shell(serial,'pm','clear',PACKAGE)!='Success': raise RuntimeError('Cannot reset the disposable verification workspace')
         self.shell(serial,'cmd','appops','set','--uid',PACKAGE,'MANAGE_EXTERNAL_STORAGE','allow')
         for permission in ('ACCESS_COARSE_LOCATION','ACCESS_FINE_LOCATION','ACCESS_BACKGROUND_LOCATION','GET_ACCOUNTS','POST_NOTIFICATIONS'):
@@ -270,7 +312,7 @@ class Verification:
         argv=[self.adb,'-s',serial,'shell','am','instrument','-w','-r','-e','verificationPhone',
               'true' if serial==getattr(self,'phone',None) else 'false','-e','class',','.join(selectors)]
         for key,value in (extra or {}).items(): argv+=['-e',key,str(value)]
-        text=self.command(argv+[RUNNER],name=name,allow_failure=bool(fatal))
+        text=self.command(argv+[RUNNER],name=name,allow_failure=bool(fatal),native_startup_timeout=60)
         if any(selector.startswith('com.nextgis.mobile.rendering.')
                or selector.startswith('com.nextgis.mobile.util.MaintenanceRemindersNativeTest')
                or selector.startswith('com.nextgis.mobile.reliability.LargeTextLayoutTest') for selector in selectors):
@@ -279,7 +321,7 @@ class Verification:
         try: result=parse_instrumentation(text,expected,fatal=fatal)
         except ValueError as error:
             message=str(error)+'; see '+str(self.output/(name+'.log'))+'\n'+text[-4000:]
-            if self.args.scope!='full': raise RuntimeError(message) from error
+            if self.args.scope!='full': raise NativeCheckFailure(message) from error
             # Each independent check resets only the disposable verification workspace.
             # Preserve the failure and finish the roster; transport/setup failures still abort.
             result={'passed':[],'skipped':[],'expected_crash':False,'failed':True,'error':message}
@@ -382,7 +424,9 @@ class Verification:
                  'owned_console_closed':None,'owned_process_exited':None}
         try:
             for device in self.devices.values():
-                self.command([self.adb,'-s',device['serial'],'shell','am','force-stop',PACKAGE],allow_failure=True)
+                for package in (PACKAGE,PACKAGE+'.test'):
+                    self.command([self.adb,'-s',device['serial'],'shell','am','force-stop',package],
+                                 allow_failure=True,timeout=30)
             if not self.saved_emulator: return
             serial=self.emulator
             for key in ('window_animation_scale','transition_animation_scale','animator_duration_scale'):
@@ -462,7 +506,7 @@ class Verification:
                 phone_failures=[]
                 for index,test in enumerate(getattr(self,'related_phone_cases',[])):
                     try: self.native(self.phone,[test],f'phone-related-{index}-'+test.split('#')[-1])
-                    except Exception as error: phone_failures.append(test+': '+str(error))
+                    except NativeCheckFailure as error: phone_failures.append(test+': '+str(error))
                 if phone_failures: raise RuntimeError('\n'.join(phone_failures))
             if source_fingerprint(ROOT)!=self.fingerprint: raise RuntimeError('Source changed during verification; rerun the affected checks')
         except Exception as error:

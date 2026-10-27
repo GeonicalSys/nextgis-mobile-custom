@@ -13,6 +13,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.runner.lifecycle.Stage;
 import com.nextgis.maplib.location.GpsEventSource;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplib.util.Constants;
@@ -48,6 +50,7 @@ public class BackgroundGpsNativeTest {
     private SharedPreferences prefs;
     private final Map<String, Object> saved = new HashMap<>();
     private ActivityScenario<MainActivity> scenario;
+    private MainActivity monitoredActivity;
     private GpsEventSource.RecordingListener recorder;
     private final String[] keys = {AppSettingsConstants.KEY_PREF_INTRO, "battery_dont_show_pref",
             "show_geo_dialog", SettingsConstants.KEY_PREF_GNSS_INPUT, BackgroundLocationPolicy.PREFERENCE};
@@ -60,7 +63,7 @@ public class BackgroundGpsNativeTest {
         for (String key : keys) saved.put(key, prefs.getAll().get(key));
         prefs.edit().putBoolean(keys[0], true).putBoolean(keys[1], true).putBoolean(keys[2], false)
                 .putString(keys[3], "system").putBoolean(keys[4], true).commit();
-        scenario = ActivityScenario.launch(MainActivity.class);
+        launchMainActivity();
         await(() -> running());
     }
 
@@ -70,6 +73,7 @@ public class BackgroundGpsNativeTest {
                 app.getGpsEventSource().removeRecordingListener(recorder));
         prefs.edit().putBoolean(BackgroundLocationPolicy.PREFERENCE, false).commit();
         if (scenario != null) scenario.close();
+        monitoredActivity = null;
         SharedPreferences.Editor edit = prefs.edit();
         for (String key : keys) {
             Object value = saved.get(key);
@@ -164,7 +168,7 @@ public class BackgroundGpsNativeTest {
     @Test public void homeKeepsGpsButDoubleBackClosesItUntilReopen() throws Exception {
         long[] before = counts();
         InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_HOME);
-        await(() -> scenario.getState() == Lifecycle.State.CREATED);
+        await(() -> activityStage() == Stage.STOPPED);
         assertTrue(running());
         assertEquals(before[1], counts()[1]);
         // After a real Home the task must regain focus, not merely request a lifecycle state.
@@ -172,9 +176,9 @@ public class BackgroundGpsNativeTest {
             for (ActivityManager.AppTask task : app.getSystemService(ActivityManager.class).getAppTasks())
                 task.moveToFront();
         });
-        await(() -> scenario.getState() == Lifecycle.State.RESUMED);
+        await(() -> activityStage() == Stage.RESUMED);
         doubleBack();
-        await(() -> !running() && scenario.getState() == Lifecycle.State.DESTROYED);
+        await(() -> !running() && activityStage() == Stage.DESTROYED);
         await(() -> app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=false"));
         assertTrue(counts()[1] > before[1]);
         // A queued preference reconciliation must not restart GPS after explicit exit.
@@ -183,7 +187,7 @@ public class BackgroundGpsNativeTest {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         assertFalse(running());
         scenario.close();
-        scenario = ActivityScenario.launch(MainActivity.class);
+        launchMainActivity();
         await(() -> running());
     }
 
@@ -199,7 +203,7 @@ public class BackgroundGpsNativeTest {
         addRecorder();
         long stops = counts()[1];
         doubleBack();
-        await(() -> !running() && scenario.getState() == Lifecycle.State.DESTROYED);
+        await(() -> !running() && activityStage() == Stage.DESTROYED);
         assertEquals(stops, counts()[1]);
         assertTrue(app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=true"));
         removeRecorder();
@@ -223,7 +227,7 @@ public class BackgroundGpsNativeTest {
             scenario.onActivity(activity -> TrackerService.start_stop_tracking_GetIconWithTitle(activity));
             await(TrackerService::isTrackRecordingActive);
             doubleBack();
-            await(() -> !running() && scenario.getState() == Lifecycle.State.DESTROYED);
+            await(() -> !running() && activityStage() == Stage.DESTROYED);
             assertTrue(TrackerService.isTrackRecordingActive());
             assertTrue(TrackerService.hasRecordingSession(app));
             assertTrue(app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=true"));
@@ -288,7 +292,7 @@ public class BackgroundGpsNativeTest {
 
     private void doubleBack() {
         scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
-        assertEquals("First Back only asks for confirmation", Lifecycle.State.RESUMED, scenario.getState());
+        assertEquals("First Back only asks for confirmation", Stage.RESUMED, activityStage());
         assertTrue(running());
         scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
     }
@@ -297,7 +301,7 @@ public class BackgroundGpsNativeTest {
         int[] taskId = {-1};
         scenario.onActivity(activity -> taskId[0] = activity.getTaskId());
         InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_HOME);
-        await(() -> scenario.getState() == Lifecycle.State.CREATED);
+        await(() -> activityStage() == Stage.STOPPED);
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             boolean removed = false;
             for (ActivityManager.AppTask task : app.getSystemService(ActivityManager.class).getAppTasks()) {
@@ -308,7 +312,21 @@ public class BackgroundGpsNativeTest {
             }
             assertTrue("Remove the app's actual recent task", removed);
         });
-        await(() -> scenario.getState() == Lifecycle.State.DESTROYED);
+        await(() -> activityStage() == Stage.DESTROYED);
+    }
+
+    private void launchMainActivity() {
+        scenario = ActivityScenario.launch(MainActivity.class);
+        scenario.onActivity(activity -> monitoredActivity = activity);
+    }
+
+    private Stage activityStage() {
+        // ActivityScenario.getState cannot represent an in-flight RESTARTED stage.
+        // Observe the real Activity on the main thread without forcing a transition.
+        Stage[] current = new Stage[1];
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> current[0] =
+                ActivityLifecycleMonitorRegistry.getInstance().getLifecycleStageOf(monitoredActivity));
+        return current[0];
     }
 
     private boolean running() {

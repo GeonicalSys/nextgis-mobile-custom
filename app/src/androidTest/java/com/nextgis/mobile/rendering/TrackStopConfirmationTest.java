@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import static com.nextgis.maplib.map.TrackLayer.*;
@@ -183,6 +184,10 @@ public class TrackStopConfirmationTest {
                             (a.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) == landscape)); return oriented.get(); });
                     for (boolean dark : new boolean[]{false,true}) for (float font : new float[]{1f,1.3f,2f}) {
                         AtomicReference<androidx.appcompat.app.AlertDialog> dialog = new AtomicReference<>();
+                        AtomicBoolean dismissed = new AtomicBoolean();
+                        AtomicInteger cancelDownEvents = new AtomicInteger();
+                        AtomicInteger cancelUpEvents = new AtomicInteger();
+                        AtomicReference<String> windowInput = new AtomicReference<>("No window input");
                         s.tracks.f.screen.onActivity(a -> {
                             android.content.res.Configuration config = new android.content.res.Configuration(a.getResources().getConfiguration());
                             config.setLocale(new java.util.Locale("ru")); config.fontScale=font;
@@ -190,7 +195,24 @@ public class TrackStopConfirmationTest {
                             androidx.appcompat.view.ContextThemeWrapper context = new androidx.appcompat.view.ContextThemeWrapper(a,
                                     dark ? R.style.AppTheme_Dark : R.style.AppTheme);
                             context.applyOverrideConfiguration(config);
-                            dialog.set(TrackActions.confirmStop(context,s.token(),"layout-native-test",null));
+                            dialog.set(TrackActions.confirmStop(context,s.token(),"layout-native-test",() -> dismissed.set(true)));
+                            android.view.Window window = dialog.get().getWindow();
+                            window.setCallback(new androidx.appcompat.view.WindowCallbackWrapper(window.getCallback()) {
+                                @Override public boolean dispatchTouchEvent(android.view.MotionEvent event) {
+                                    windowInput.set(windowInput.get() + "; action=" + event.getActionMasked()
+                                            + " local=" + event.getX() + "," + event.getY()
+                                            + " raw=" + event.getRawX() + "," + event.getRawY());
+                                    return super.dispatchTouchEvent(event);
+                                }
+                            });
+                            dialog.get().getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE)
+                                    .setOnTouchListener((button, event) -> {
+                                        if (event.getActionMasked() == android.view.MotionEvent.ACTION_DOWN)
+                                            cancelDownEvents.incrementAndGet();
+                                        if (event.getActionMasked() == android.view.MotionEvent.ACTION_UP)
+                                            cancelUpEvents.incrementAndGet();
+                                        return false;
+                                    });
                             android.graphics.Rect usable = new android.graphics.Rect();
                             a.getWindow().getDecorView().getWindowVisibleDisplayFrame(usable);
                             float density = context.getResources().getDisplayMetrics().density;
@@ -203,8 +225,29 @@ public class TrackStopConfirmationTest {
                             fitted.set(root.hasWindowFocus() && root.getWidth()>0 && !root.isLayoutRequested());
                         }); return fitted.get(); });
                         s.tracks.f.screen.onActivity(a -> com.nextgis.mobile.reliability.LargeTextLayoutTest.assertTrackDialogFits(dialog.get()));
-                        NativeStyleTouch.tap(s.tracks.f, () -> dialog.get().getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE));
-                        assertFalse(dialog.get().isShowing()); s.unchanged();
+                        try {
+                            // Resolve physical bounds from the active, focused accessibility window.
+                            // A context-only density/rotation override can precede its input surface.
+                            TrackControlsTest.Ui.tap(android.R.id.button2);
+                            // Input injection can return before AlertController posts dismissal.
+                            // Observe its actual OnDismiss callback; send the Cancel tap only once.
+                            await(dismissed::get);
+                            assertEquals("One Cancel DOWN reached the actual button", 1, cancelDownEvents.get());
+                            assertEquals("One Cancel UP reached the actual button", 1, cancelUpEvents.get());
+                            s.tracks.f.screen.onActivity(a -> assertFalse(dialog.get().isShowing()));
+                            android.util.Log.i("TrackStopLayoutQA", screen[0] + "x" + screen[1]
+                                    + " density=" + screen[2] + " dark=" + dark + " font=" + font
+                                    + " DOWN=1 UP=1 dismissed=true " + TrackControlsTest.Ui.lastTouch);
+                            s.unchanged();
+                        } catch (AssertionError failure) {
+                            throw new AssertionError("Stop confirmation Cancel: " + screen[0] + "x" + screen[1]
+                                    + " density=" + screen[2] + " dark=" + dark + " font=" + font
+                                    + " down=" + cancelDownEvents.get() + " up=" + cancelUpEvents.get()
+                                    + " dismissed=" + dismissed.get() + " " + TrackControlsTest.Ui.lastTouch
+                                    + " windowInput=" + windowInput.get(), failure);
+                        } finally {
+                            s.tracks.f.screen.onActivity(a -> { if (dialog.get().isShowing()) dialog.get().dismiss(); });
+                        }
                     }
                 }
             } finally { s.tracks.f.screen.onActivity(a -> a.setRequestedOrientation(originalOrientation.get())); }

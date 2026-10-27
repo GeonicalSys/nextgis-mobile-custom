@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-10-26
+last_verified: 2026-10-27
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
@@ -84,8 +84,12 @@ TrackUpload verification9/9 PASS. Merge и выпуск принимаются �
 
 После app merge769629c первый Full10 остановился до native: локальный docs
 wrapper передал --enforce-diff без изменённых путей на уже чистой target ветке.
-Исправление этого helper и адресная clean/dirty regression выполняются отдельным
-follow-up PR перед повторным Full; product code и native catalogue не меняются.
+Исправление этого helper и адресная clean/dirty regression слиты в PR79/d60a768.
+После этого Full11 смартфон+AVD прошёл254/254. Tablet Full12 отменён до native,
+Full13 остановлен на host ADB, Full14 завершён с тремя native-fixture failures.
+27 октября MOB-01/REL-03 продолжаются test-only follow-up: main-thread lifecycle
+Stage, согласованная camera и OnDismiss/input witnesses. Набор254 и production
+поведение сохраняются; Related и новые Full обоих устройств ещё обязательны.
 
 Пакет включает принятые в текущем PR настройки стилей и управление треками, согласование MapLibre, а также связанные доработки Stop и прежней истории. Детальный объём и фактические проверки принадлежат PR и его квитанциям. Новые исправления в этом пакете сверяются также с REL-01/REL-03, GEO-01 или UX-03, если затрагивают соответствующий путь.
 

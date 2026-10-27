@@ -726,3 +726,11 @@ Point/MultiPoint → инструменты → GPS. Body и отдельные 
 перемещаются вместе, включая logical groups. Это порядок рисования;
 при обычном тапе все допустимые векторы и треки составляют один список,
 без short circuit трека или точки. [Контракт и native проверки](track-controls.md).
+
+## Камера графической fixture
+
+LocationOrbitTest согласует native test viewport и сохранённую app camera через
+MapDrawable.setZoomAndCenter: стартовый MapView invalidate через750ms использует
+сохранённое положение. Это fixture setup для source/pixel assertions. Допуск
+радиуса.08m, исходные provider fixes и30s readiness остаются прежними; timeout
+показывает native и saved camera. Production camera API не меняется.

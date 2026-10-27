@@ -1,7 +1,7 @@
 ---
-title: Исправления блокеров выпуска ЛИСЫ 26 октября
+title: Исправления блокеров выпуска ЛИСЫ 26–27 октября
 type: reference
-last_verified: 2026-10-26
+last_verified: 2026-10-27
 related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
   - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingLabel.java
@@ -9,6 +9,12 @@ related_code:
   - app/src/androidTest/java/com/nextgis/mobile/util/VerificationIo.java
   - app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/TrackStopConfirmationTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java
+  - tools/run_mobile_tests.py
+  - tools/tests/test_mobile_startup.py
 ---
 
 # Исправления перед публикацией
@@ -21,7 +27,7 @@ real-window profiles и report guard/change-impact включаются в local
 enforce_admins/review policy сохранены. Активных/queued облачных запусков при
 проверке не было; новых dispatch/rerun не делали.
 
-Подключены смартфон R5GL130K54D по USB и планшет59843808167874 через
+Для предыдущих проверок подключались смартфон R5GL130K54D по USB и планшет59843808167874 через
 192.168.0.17:45143. API30 connected-final06: azimuth1/reminders2 PASS;
 измеряемый word fit подтверждён на прежнем проблемном Android11.
 CI8e7c799 завершился raw timeout на await hub в plain-runner дубликате
@@ -33,15 +39,82 @@ TrackUploadTest.delayedAcknowledgementCannotMarkReplacementTrackPointAsSent.
 Library closure: PR60 MERGED `61a0a6029c261e203ab1948613a4fd81e9d5b071`,
 PR44 MERGED `c3253726ed9bc12d7adff7356ba3532f00e8d383`. Оба consumer pins
 обновлены после fetch; original heads являются ancestors, Git trees равны.
-Closure inventory всех5 владельцев нашёл только PR78/60/44 текущего автора;
-матрица14 requirement-owner rows сохраняет exact source commits/blobs и весь
-union опубликованных codex heads. App PR78 ещё открыт, final Full не принят.
+App PR78 MERGED `769629c7ccf6f6e065006b7ebecb8d702ee0d369`, follow-up PR79
+MERGED `d60a76883b1ab300f66ae43604d1b625a861ad6b`. Source trees до/после
+squash равны; library heads являются ancestors remote merge commits, consumer
+pins точные. После fetch у всех5 владельцев нет открытых PR или опубликованных
+codex heads с невключёнными обязательными изменениями. Проверены blobs всех16
+строк delivery matrix. Новое исправление native fixtures добавляется отдельным
+app follow-up; final Full после него ещё нужен.
 
 Пользователь поручил разобрать ошибки и довести пакет до публикации ЛИСЫ.
-Работа продолжается в app PR78, maplib PR60, maplibui PR44. Desktop и публикация
+Основной пакет app PR78, maplib PR60, maplibui PR44 уже слит. Desktop и публикация
 БЕЛКИ исключены. Финальный порядок: merged libraries → consumer pins → app
 merge → свежий Full смартфона+AVD → Full планшета+AVD → Check-Publication →
 publisher tests/dry-run → публикация и readback. Сейчас выпуск ещё не принят.
+
+## Full11–14 и исправление ожиданий native fixtures
+
+На `d60a768` и fingerprint
+`4d9e986efec23477ca9f90aa8a7d90a4839492bb4291594443c80d9e8d62b4d3`:
+
+| Запуск | Фактический исход |
+|---|---|
+| Phone Full11: Samsung Android16 + API36 AVD | PASS254/254,913 Android units,54 runner units,26 report-guard +24 docs, version matrix,36 chooser и6 real-window profiles; cleanup/readback PASS |
+| Tablet Full12 | Отменён пользователем до install/native;0 native, owned AVD остановлен; Full PASS не заявлен |
+| Tablet Full13 | FAIL до native на host ADB: попытка второго daemon при занятом5037;0 native, cleanup PASS |
+| Tablet Full14: Teclast Android11 + API36 AVD | FAIL3 native runs,241 принятый distinct метод, units/version/docs/UI matrices PASS; cleanup и production/global readback PASS |
+
+В Full14 ещё10 методов прошли внутри неуспешного BackgroundGpsNativeTest;
+они не входят в241 принятый метод целого прогона. Все прежние ошибки сохранены.
+После одного штатного restart ADB и повторного подключения точного tablet
+serial весь Full14 завершился без транспортного прерывания. Это восстановление
+инструмента на ноутбуке; Windows/Android settings не менялись.
+
+Изменения ограничены AndroidTest:
+
+- BackgroundGpsNativeTest опрашивает фактический AndroidX Stage в main thread.
+  getState ActivityScenario выбросил NPE на промежуточном RESTARTED. Home должен
+  достичь STOPPED, возврат — RESUMED, выход — DESTROYED; assertions GPS, wake lock,
+  независимых recorder owners и прежний20-секундный предел сохранены.
+- LocationOrbitTest устанавливает test camera через MapDrawable.setZoomAndCenter,
+  согласуя native viewport и сохранённую камеру приложения. Ранее native-only
+  zoom22 мог быть заменён стартовым MapView invalidate через750ms на сохранённые
+  0/0/7.5. Численные проверки исходного fix, радиуса с допуском.08m и30-секундное
+  ожидание сохраняются. Timeout теперь содержит обе камеры.
+- TrackStopConfirmationTest ждёт настоящий OnDismiss после одного физического
+  Cancel. Отдельные observers подтверждают ровно один DOWN и UP на кнопке,
+  возвращают false и сохраняют штатный click handler. Проверяются24 прежних
+  profiles и неизменность записи; сбой содержит профиль и доставленные события.
+  Related15 показал0 button DOWN/UP при уже закрытом окне. Диагностический16
+  воспроизвёл отсутствие input в самом окне на568x320/density540. Существующий
+  Ui.tap использует bounds активного focused/unobscured accessibility window;
+  probe17 подтвердил все24 profiles с одним DOWN/UP и OnDismiss. Численная точка
+  в проблемном profile совпала с прежней; конкретный внутренний переход input
+  surface не установлен, поэтому это исправление readiness, а не доказанный
+  дефект координат или product Cancel.
+- TrackControlsTest.Ui.tap сохраняет UID-защиту и общий30s budget. Между
+  accessibility snapshot и injection окно может смениться. Только явный отказ
+  Android до доставки DOWN разрешает заново найти окно и измерить bounds.
+  Ошибка после принятого DOWN остаётся FAIL; принятые жесты не переигрываются.
+
+Правило main-thread stage query задано
+[AndroidX ActivityLifecycleMonitor](https://developer.android.com/reference/androidx/test/runner/lifecycle/ActivityLifecycleMonitor).
+Production код, версии,254 метода и маршрутизация не изменяются. После этих
+правок выполняется Related gps-recovery/cursor-rendering/track-stop-ui/track-controls
+и затем новые Full текущего содержимого на смартфоне и планшете. Старый Full11
+gate не восстанавливается.
+
+| Адресный запуск | Фактический исход |
+|---|---|
+| Related15 | Emulator19 PASS, tablet3 PASS и layout FAIL: жест не дошёл до кнопки; cleanup PASS |
+| Diagnostic16, phone-only | Layout FAIL, Window.Callback не получил input; emulator cleanup N/A, owned AVD не запускался |
+| System-bounds17, phone-only | Layout PASS,24 уникальных profiles с реальными DOWN=1/UP=1/OnDismiss; emulator cleanup N/A |
+| Related18 | Emulator16 PASS, затем UID-rejected input в menu Stop; cleanup PASS; исходная фаза DOWN/UP не была записана старым helper |
+| Related19 | Emulator27 PASS; tablet scope incomplete: listRename instrumentation900s timeout, затем контроллер ошибочно перешёл к следующему классу; cleanup PASS |
+| Operator abort Related19 | Force-stop только verification namespaces пришёл уже после перехода к menu Stop и создал один Process crashed; это вмешательство оператора, а не product finding |
+| Runner startup regression | Все61 unit PASS; настоящие owned child processes проверяют heartbeat, startup/runtime deadlines и освобождение; doubles проверяют exact package scope и остановку после timeout |
+| Related20 на новом controller | PASS27 emulator +11 API30 tablet; все проверки треков, Stop, cursor/GPS и enlarged layouts завершены; cleanup и production/global readback PASS |
 
 ## Установленные причины и изменения
 
@@ -85,7 +158,8 @@ authoritative result/cleanup сохраняет versioned runner. Корень �
 Native устройство — только отдельный verification APK; production данные и
 системные настройки физического устройства не изменяются. Смартфон пользователь
 подключил по USB. Планшет восстановлен на45143; новый API30 word-fit прошёл
-адресную приёмку. Полные прогоны254 обоих устройств пока впереди.
+адресную приёмку. Full11 прошёл; Full14 выявил три следующих native-fixture сбоя.
+После их исправления полные прогоны254 обоих устройств выполняются заново.
 
 ## Хранение
 
@@ -94,3 +168,29 @@ Native устройство — только отдельный verification APK
 общим размером29282499bytes остаются после executor-policy rejection; повторной
 попытки удаления или обхода не было. Их точные пути/причина уже находятся в
 общем pending-cleanup.json. Доставляемые APK и shared caches не удаляются.
+
+## Зависший запуск проверочного процесса
+
+В Related19 до первого статуса listRename Linux PID target-приложения отсутствовал,
+но AMS сохранял ActiveInstrumentation/Starting ProcessRecord и живой test invoker.
+Планшет отвечал, был awake; crash buffer пуст. Причина Android process-start stall
+не установлена; это не доказанное исправление runtime crash. Прежний Related
+phone loop поймал900s timeout как обычный native fail и перешёл к следующему классу.
+Ручная остановка двух проверочных packages затем прервала уже новый menu case;
+этот Process crashed явно помечен как operator-induced.
+
+Контроллер теперь разделяет NativeCheckFailure и setup/transport exceptions.
+Последние сразу завершают прогон через штатную очистку. Independent prepare и
+finalize завершают target и test invoker namespaces; reset=False остаётся прежним.
+Перед первым INSTRUMENTATION_STATUS_CODE:1 действует отдельный60s budget.
+При истечении завершается только owned ADB command client, записывается receipt
+с его PID/exit, а finally освобождает verification sessions и owned AVD.
+После handshake остаётся прежний900s overall limit. Семь новых unit regressions
+не заменяют новый device run. Native каталог по-прежнему254.
+
+Финальные адресные результаты перед follow-up merge: Related20 **27 emulator /
+11 tablet PASS**, runner **61 PASS**, report guard **26 PASS**, docs **24 PASS**
+со strict diff по всему task scope. Fingerprint
+`852c32483cf1bed35b0cabdf6b02c9764c487734f12d1358790d675ebfecfced`.
+Native каталог53 classes/254 methods сохранён. Это Related, полный выпускной
+Full на обоих физических устройствах ещё не принят; APK не опубликован.
