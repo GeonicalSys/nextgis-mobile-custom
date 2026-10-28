@@ -6,6 +6,49 @@ last_verified: 2026-10-28
 
 # app — Android-приложение Lisa/Belka
 
+## Приватный сбор ресурсов карты — MOB-04, 2026-10-28
+
+Только явный `-PprivateResourceProfiling=true` включает
+`PrivateRenderResourceProfiler`; обычные сборки оставляют его выключенным.
+Он не меняет rendering/cache policy, бизнес-данные, слои, координаты и Sentry.
+Profileable/shell добавляет отдельный проверенный developer helper к приватной
+копии release APK, основной manifest остаётся прежним.
+
+Локальный JSONL `Download/LISA-Diagnostics/lisa-resources-<32hex-session>.jsonl`
+создаётся новым MediaStore item. Включены идентичность процесса/сборки, BOOTTIME,
+numeric scene boundaries без координат, числовые SDK frame stats, heap/RSS/CPU,
+PSS и Graphics. SDK encoding/rendering seconds переводятся в milliseconds и
+не называются GPU time или thread CPU. Aggregate memory и её vertex/index/uniform
+подкатегории не складываются; отрицательные counters остаются invalid/unknown.
+RenderedFeatureInfo и списки feature IDs/XYZ не запрашиваются.
+
+Frame stats агрегируются раз в секунду, первый fully callback и ограниченное
+число slow frames сохраняются отдельно. `fully`, camera-idle, SDK-idle и
+returned-to-SDK различаются; они не принимают полноту бизнес-содержимого.
+Writer работает в фоне: очередь до 512 записей/2 МиБ estimated data, файл до
+64 МиБ, до 60 минут без wakelock (file limit может наступить раньше).
+Первые ручные сеансы планируются примерно на 30 минут. Потери очереди, file limit, probe/writer/frame
+overhead и интервалы сна явны. Итоговые maplib totals хранятся в footer вне
+raw очереди с резервом 256 КиБ. Убийство процесса может оставить JSONL без
+footer; такой сегмент неполон. При MediaStore failure приватный fallback явно
+помечается `export_available=false`, это не успешный доступный export.
+После первых 10 секунд и затем каждые 30 секунд writer сохраняет отдельный
+bounded aggregate checkpoint вне raw очереди. Он сохраняет статистику до
+последней полной записи при process kill, но не заменяет terminal footer.
+Header сообщает фактическую process 64-bit identity, kernel `/proc/self/stat`
+field22 start ticks и фактический `_SC_CLK_TCK`. Они связывают сегмент с PID без
+округления и позволяют обнаружить PID reuse. Process start elapsed ms остаётся
+контекстом, а не заменой kernel birth identity; недоступные значения — unknown.
+В рамках одного session
+предпочтителен один проект: scene/time correlation не устанавливает отдельное
+владение нативной памятью каждого слоя или проекта.
+
+Динамический STOP receiver существует только в приватной сборке, требует от
+отправителя `android.permission.DUMP` и точное session ID. Он завершает сборщик,
+не приложение. Удаление профилей, установка, cold start и external CPU/native
+traces принадлежат developer tooling. Unit проверки границ, numeric conversion,
+invalid counters, queue/storage failure не заменяют smoke на T40 или Full.
+
 ## Локальные SQLite phase timings — MOB-04, 2026-10-28
 
 Ordinary app использует maplib `MapRuntimeDiagnostics.SqliteScope` и локальный

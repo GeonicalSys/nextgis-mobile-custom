@@ -44,6 +44,12 @@ def debugVersionCode = 218
 def debugVersionName = '3.1.2.23'
 def fieldVerificationChecks = providers.gradleProperty('fieldVerificationChecks')
         .getOrElse('false').toBoolean()
+// Explicit private field-diagnostic build only; normal artifacts keep this disabled.
+def privateResourceProfiling = providers.gradleProperty('privateResourceProfiling')
+        .getOrElse('false').toBoolean()
+if (privateResourceProfiling && fieldVerificationChecks) {
+    throw new GradleException('privateResourceProfiling is for a private normal release, not the isolated verification APK')
+}
 def debugProvider = fieldVerificationChecks ? 'com.nextgis.mobile.verification.provider.debug' : 'com.nextgis.mobile.provider.debug'
 def debugAccount = fieldVerificationChecks ? 'com.nextgis.account.verification.debug' : 'com.nextgis.account.debug'
 
@@ -138,6 +144,7 @@ android {
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
         buildConfigField "String", "SOURCE_REVISION", "\"${sourceRevision}\""
         buildConfigField 'boolean', 'FIELD_VERIFICATION', fieldVerificationChecks.toString()
+        buildConfigField 'boolean', 'PRIVATE_RESOURCE_PROFILING', privateResourceProfiling.toString()
         buildConfigField 'String', 'USAGE_ENDPOINT', usageLiteral(fieldVerificationChecks ? '' : usageEndpoint)
         buildConfigField 'String', 'USAGE_UPLOAD_TOKEN', usageLiteral(fieldVerificationChecks ? '' : usageUploadToken)
 

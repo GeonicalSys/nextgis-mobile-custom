@@ -9,6 +9,10 @@ entrypoints:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/main/java/com/nextgis/mobile/util/PrivateRenderResourceProfiler.java
+    responsibility: Default-OFF private local MediaStore JSONL observer with bounded queue/file/deadline, process and SDK numeric resource/frame statistics, monotonic scene boundaries, explicit observer/loss costs and priority final maplib aggregate footer; never changes rendering, cache, business data or Sentry.
+  - path: app/src/test/java/com/nextgis/mobile/util/PrivateRenderResourceProfilerTest.java
+    responsibility: Assert SDK seconds conversion, invalid counters and aggregate/subcategory separation, queue/memory/file bounds, reserved complete footer, writer failure and unknown process metrics on technical fixtures only.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/SqliteMvtEvidence.java
     responsibility: Independently summarize up to4MiB MVT bytes into at most12KiB of geometry-role counts and bounded allowlisted focus FID properties; validate wire lengths/tags/indexes, expose malformed/limit states and never dump coordinates or reuse production encoder helpers.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java

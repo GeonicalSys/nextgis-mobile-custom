@@ -455,3 +455,14 @@ background restriction, process importance и observer_on_main. Это данн�
 исходный отчёт. Пороги, retry и подавление нормального no_fix/acquisition/filter
 wait не изменены. Card android-20261027-gps-provider-evidence; первый ручной
 crash APK030f303 этого GPS addon ещё не содержит.
+
+## Приватное исследование холодной отрисовки, 28 октября 2026
+
+MOB-04: добавлен default-OFF локальный сборщик потребителей, включаемый только
+`-PprivateResourceProfiling=true` в приватной сборке. Подробные tile wall/same-TID
+CPU/counts, SDK frame/texture/buffer stats и процессная память сохраняются с явными
+потерями/лимитами. Нативные allocations и CPU samples собираются отдельными
+ограниченными окнами. Это диагностика, без долгосрочного кеша/изменения геометрии,
+бизнес-данных или новой приёмки. Full/публикация остаются отложенными.
+Контракт/ограничения: [производительность карты](../architecture/map-performance.md#приватное-исследование-холодной-отрисовки-28-октября-2026).
+Порядок ручного сеанса: [runbook](../runbooks/manual-resource-profiling.md).

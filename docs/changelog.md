@@ -1898,3 +1898,12 @@ VisibleLineLabelLayout/Controller размещают один целый бло�
 добавлены по MOB-02/MOB-03. Ограничения и точные свидетельства —
 [разбор224](reference/mobile-crash-224-2026-10-27.md). Публичная224 отозвана; приватная диагностическая сборка без
 публикации не является обычным release PASS.
+
+## Приватное исследование холодной отрисовки, 28 октября 2026
+
+- MOB-04: default-OFF подробный локальный tile/CPU/counts collector с точными
+  агрегатами и явными потерями; SDK frame/texture/buffer stats и процессная память.
+- Приватный JSONL с bounded writer/checkpoints/STOP и подписанная profileable-копия
+  без debuggable/root; T40 manual tooling с ограниченными native/CPU окнами,
+  точным владением процессами и проверяемой выгрузкой.
+- Долговременный кеш, Full и публичный APK в этот этап не входят.

@@ -100,6 +100,7 @@ public final class AppDiagnostics {
         diagnosticContext = context.getApplicationContext();
         com.nextgis.maplib.util.MapRuntimeDiagnostics.initialize(context,
                 BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, BuildConfig.SOURCE_REVISION);
+        PrivateRenderResourceProfiler.initialize(context);
         startup = com.nextgis.maplib.util.MapRuntimeDiagnostics.beginStartup();
         startup.put("brand", BuildConfig.FLAVOR);
         startup.put("environment", BuildConfig.DEBUG ? "debug" : "production");

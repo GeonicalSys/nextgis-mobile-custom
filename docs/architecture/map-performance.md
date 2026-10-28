@@ -311,3 +311,55 @@ benchmark на plain release.
 Unit/build результаты не доказывают native экономию или устранение исходного
 std::bad_alloc. Текущая Related/Full приёмка на устройстве и эмуляторе остаётся
 не завершённой; публикация — отдельный gate основной задачи.
+
+## Приватное исследование холодной отрисовки, 28 октября 2026
+
+Внеплановый этап MOB-04 по прямому поручению владельца: собрать подробные локальные
+данные во время ручного прогона на T40, затем выбирать оптимизации по измерениям.
+Долговременный кеш не рассматривается и этим этапом не реализуется. Обычный
+производственный путь сохраняется: `privateResourceProfiling` по умолчанию false.
+Отдельная приватная Release-сборка включает `PRIVATE_RESOURCE_PROFILING`; только
+её копия получает profileable/shell через существующий manifest-only signing helper.
+Она сохраняет package/signing/data, не является новым публичным выпуском.
+
+`RenderResourceProfiler` независимо от старых cap16/32 считает запросы, исходы,
+объёмы BLOB/PBF/подписей и wall/CPU по этапам. CPU известен только внутри одного
+TID; handoff wall не превращается в CPU. Глобальные/послойные агрегаты сохраняются
+при потере raw: явны queue/active/layer overflow и пропущенные подробности.
+Layer rows объединяют одинаковые numeric IDs; первая сессия ограничивается одним
+проектом, raw source_epoch позволяет отличать поколения. Это не присвоение
+нативной памяти конкретному слою по дельтам общей памяти процесса.
+
+Приватный app-side JSONL в Downloads/LISA-Diagnostics содержит числовые SDK frame
+stats, SDK-managed texture/buffer bytes, scenes/zoom, Java/native/RSS/PSS/Graphics,
+затраты наблюдателя и контрольные aggregate snapshots (первый через10с, затем30с).
+SDK durations seconds переводятся в ms; это не GPU time и не OS thread CPU.
+Aggregate/subcategory bytes не суммируются; отрицательные int counters invalid.
+Не включаются renderedFeatureInfo/feature-ID lists, координаты, URI и атрибуты.
+`returned_to_sdk`, `fully` и `idle` различаются и не принимают полноту карты.
+
+Экспорт ограничен64MiB/60мин на процесс, очередь512records/2MiB, footer имеет
+резерв256KiB; фактическое окончание по размеру явное. STOP требует session nonce
+и sender permission DUMP. Нет новых пользовательских permissions/GC/wakelock.
+Raw локальные данные не отправляются в GlitchTip. При process death footer может
+отсутствовать; checkpoints и raw остаются частичным свидетельством.
+
+Первый ручной trial:30мин лёгких метрик и5 окон по180с native malloc/simpleperf
+(15мин тяжёлого coverage, распределённых по сеансу). У каждого окна собственные
+PID/start_ticks, APK/source/signing identity, предел размера и quality/loss flags.
+Late attach не видит прежние native allocations; retained из разных окон не
+складывается. Данные Graphics не выводятся из heapprofd. Подтверждение переноса
+файла не равно пригодности профиля. Все профили локальны, без root/ADB permissions
+changes и без остановки чужих jobs. Scoped-storage обхода через private app files нет.
+
+Установка и короткий read-only diagnostic smoke выполняются только на выбранном
+T40, с сохранением его проектов и очередей, после проверки отсутствия редактора
+и записи трека. Это не Full и не новая style/OOM/physical2GiB приёмка. Full и
+публикация APK по предыдущему поручению остаются отложены. Установка/первый запуск,
+реальные SDK counters и native/CPU sample coverage подтверждаются отдельными
+receipts; до них состояние — подготовлено, не принято. Никакие кеши, геометрии,
+правила, схемы или бизнес-данные этим сборщиком не оптимизируются и не меняются.
+
+Инструкция: [ручной сбор ресурсов](../runbooks/manual-resource-profiling.md).
+Карточки: android-20261028-private-render-resource-profiler,
+android-20261028-resource-profiler-tools и maplib-20261028-resource-profiler.

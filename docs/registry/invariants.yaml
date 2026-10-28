@@ -1599,3 +1599,24 @@ invariants:
       - app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MOBILE-RELATED, SMOKE-POLYGON-LABEL-ANCHOR]
     must_update_docs: [docs/architecture/map-rendering.md, maplib/docs/README.md, docs/reference/official-differences.md]
+  INV-PRIVATE-RESOURCE-PROFILING:
+    title: Private local resource probes never alter rendering or data admission
+    owners: [app, maplib]
+    statement: >
+      privateResourceProfiling is false by default and incompatible with the verification APK.
+      Detailed local work accounting is independent of legacy cap16/throttle and preserves aggregate
+      request/outcome/count/phase totals when bounded raw records are rejected. Wall and same-TID CPU
+      differ; cross-thread CPU is unknown. SDK durations are not GPU time; SDK memory counters are
+      distinct from process PSS and aggregate/subcategory counters must not be summed.
+      No coordinate/URI/business attributes/rendered-feature lists, forced GC, wake lock or native
+      ownership inferred from process memory deltas. Resource failure/stop never cancels rendering.
+      Native/CPU traces have explicit coverage/loss/PID/source identity and owned-process stop guards.
+      Profileable is added only to a private signed copy; no publication/Full admission is implied.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/RenderResourceProfiler.java
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+      - app/src/main/java/com/nextgis/mobile/util/PrivateRenderResourceProfiler.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - tools/profile_render_resources.py
+    verify_smoke: [AUTO-PRIVATE-RESOURCE-PROFILER, SMOKE-PRIVATE-RESOURCE-PROFILER]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/error-reporting.md, docs/runbooks/manual-resource-profiling.md]
