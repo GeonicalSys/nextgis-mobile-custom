@@ -61,6 +61,7 @@
   "related_phone_areas": {
     "sqlite-marker": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteMultiPointRulesRetainBothPartsAndTheCustomMarker"],
     "sqlite-render": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest"],
+    "sqlite-priority": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks"],
     "render-memory": ["com.nextgis.mobile.rendering.RenderMemorySafetyTest", "com.nextgis.mobile.rendering.MapRenderStressTest", "com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector"],
     "render-stress": ["com.nextgis.mobile.rendering.MapRenderStressTest"],
     "azimuth-text": ["com.nextgis.mobile.reliability.LargeTextLayoutTest#azimuthTextAndCloseStayWithinSmallPortraitAndLandscapePanels"],
@@ -69,7 +70,7 @@
     "project-policy": ["com.nextgis.mobile.reliability.ProjectLayerSelectionTest"],
     "form-layout": ["com.nextgis.mobile.reliability.CascadingFormsTest", "com.nextgis.mobile.reliability.FormAppearanceTest"],
     "form-navigation": ["com.nextgis.mobile.reliability.CascadingFormsTest"],
-    "track-candidates": ["com.nextgis.mobile.rendering.TrackControlsTest#crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections", "com.nextgis.mobile.rendering.TrackControlsTest#mixedCandidateDialogKeepsLongRowsScrollableAndCancelVisibleAtLargeScales", "com.nextgis.mobile.rendering.TrackControlsTest#nativeGlowAndPointGroupsStayAboveTracksAfterLiteFullAndReorder", "com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete"],
+    "track-candidates": ["com.nextgis.mobile.rendering.TrackControlsTest#crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections", "com.nextgis.mobile.rendering.TrackControlsTest#mixedCandidateDialogKeepsLongRowsScrollableAndCancelVisibleAtLargeScales", "com.nextgis.mobile.rendering.TrackControlsTest#nativeGlowAndPointGroupsStayAboveTracksAfterLiteFullAndReorder", "com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete", "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks"],
     "maintenance": ["com.nextgis.mobile.util.MaintenanceRemindersNativeTest"],
     "line-labels": ["com.nextgis.mobile.rendering.VisibleLineLabelsTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest#rulesOtherAndNullCategoriesPreserveStylesAndLabelsForAllGeometries"],
     "firefly-editor-ui": ["com.nextgis.mobile.rendering.FireflyStyleEditorTest"],
@@ -87,6 +88,7 @@
   "areas": {
     "sqlite-marker": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteMultiPointRulesRetainBothPartsAndTheCustomMarker"],
     "sqlite-render": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest"],
+    "sqlite-priority": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks"],
     "render-memory": ["com.nextgis.mobile.rendering.RenderMemorySafetyTest", "com.nextgis.mobile.rendering.MapRenderStressTest", "com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector"],
     "render-stress": ["com.nextgis.mobile.rendering.MapRenderStressTest"],
     "crash-delivery": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
@@ -101,7 +103,7 @@
     "form-layout": ["com.nextgis.mobile.reliability.CascadingFormsTest", "com.nextgis.mobile.reliability.FormAppearanceTest"],
     "offline-sync": ["com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest"],
     "form-navigation": ["com.nextgis.mobile.reliability.CascadingFormsTest"],
-    "track-candidates": ["com.nextgis.mobile.rendering.TrackControlsTest#crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections", "com.nextgis.mobile.rendering.TrackControlsTest#mixedCandidateDialogKeepsLongRowsScrollableAndCancelVisibleAtLargeScales", "com.nextgis.mobile.rendering.TrackControlsTest#nativeGlowAndPointGroupsStayAboveTracksAfterLiteFullAndReorder", "com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete"],
+    "track-candidates": ["com.nextgis.mobile.rendering.TrackControlsTest#crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections", "com.nextgis.mobile.rendering.TrackControlsTest#mixedCandidateDialogKeepsLongRowsScrollableAndCancelVisibleAtLargeScales", "com.nextgis.mobile.rendering.TrackControlsTest#nativeGlowAndPointGroupsStayAboveTracksAfterLiteFullAndReorder", "com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete", "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks"],
     "cursor-rendering": ["com.nextgis.mobile.rendering.LocationOrbitTest"],
     "maintenance": ["com.nextgis.mobile.util.MaintenanceRemindersNativeTest", "com.nextgis.mobile.util.AppUpdateNativeTest"],
     "map-teardown": ["com.nextgis.mobile.reliability.MapEditingToolsTest#pendingNativeTapIsCancelledBeforeViewDestruction", "com.nextgis.mobile.reliability.MapEditingToolsTest#rulerAcceptsFingerDriftAndKeepsPanCancelAndLongPressSeparate"],

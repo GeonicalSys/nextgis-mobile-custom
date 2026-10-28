@@ -1,7 +1,7 @@
 ---
 title: Управление треками и приоритет точечных слоёв
 type: architecture
-last_verified: 2026-10-25
+last_verified: 2026-10-29
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/TrackColorPalette.java
   - maplib/src/main/java/com/nextgis/maplib/map/TrackMapStyle.java
@@ -10,6 +10,8 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
+  - maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java
 ---
 
 # Треки на карте и в списке
@@ -96,6 +98,22 @@ sources и произвольные SymbolLayer не считаются точе
 Один общий порядок восстанавливается после полной и lite-загрузки, hot/style
 обновлений и перестановки слоёв. Уже правильный стек не перестраивается.
 
+Для ordinary SQLite native route группа связывается с точным current alias,
+полученным у style-scoped SqliteVectorLayerController. Одного logical path или
+поиска по префиксу поколения недостаточно. Line labels сохраняют отдельный
+известный logical source. Порядок самих групп берётся из canonical flattened
+модели LayerGroup снизу вверх, а не из порядка вставки source cache: standalone
+load/hot-add могут приходить в ином порядке. Это относится к Point/MultiPoint
+и именованным field LineString/MultiLineString, но не к Point label anchors
+полигонов. Переносит группы тот же cached `Style.getLayer(id)` wrapper, который
+владеет controller hide/edit filter; `getLayers()` используется лишь для чтения
+метаданных. Таким образом порядок не меняет скрытие/Undo и source ownership.
+
+Отдельные style-props, source-update, data-reload и private SQLite refresh
+завершаются восстановлением общего порядка. Full/lite делают это после batch.
+Track-only snapshot refresh обновляет GeoJSON трека без пересоздания vector
+providers, aliases и wrappers; сам по себе он не является order-repair hook.
+
 ## Проверки
 
 `tools/verify-mobile-tests.ps1 -Scope Related -Area track-controls` проверяет
@@ -113,6 +131,23 @@ Related track-followup добавляет Stop/Cancel/Back во всех руч�
 stale notification/dialog, split, 24 профиля Stop и native SQLite upgrade.
 Разбор сегодняшнего журнала и фактические проверки:
 [квитанция доработки](../reference/track-followup-2026-10-25.md).
+
+Новая регрессия `Related -Area sqlite-priority` проходит production SQLite
+reload с CustomVectorSource и пустым global feature cache: две field-line,
+Point/Firefly, MultiPoint/rule icon, обычная линия и polygon-label negative
+контроль, saved/current tracks. Она требует literal placed labels, полные SQL
+геометрии/row hashes, все SDK pass ranges, background pixels и сохранение
+bindings/filters при order repair и hide/Undo. Firefly body — Symbol sprite,
+его Circle baseline намеренно исключает Firefly; body query учитывает реальный
+sprite отдельно от label/icon roles. Первый native запуск29 октября выявил
+реальный дефект relative order из reverse source-cache insertion; oracle не
+ослаблялся. Первые81 JVM/20 Python PASS относятся к исходному варианту;
+canonical traversal затем получил13 planner unit PASS; final83 JVM/10classes
+PASS, 0fail/error/skip. Focused native case1/1 PASS на T40/API30
+(`priority-related-t40-02`), затем весь native класс10 distinct методов PASS
+(`sqlite-related-t40-03/result.json`). T40 logcat не поддержал UID collector `--uid`; это diagnostic gap,
+не повод объявлять весь Related/Full зелёным. Corpus содержит прямых детей root:
+nested groups и Activity recreation пока не проверены.
 
 ## Полевые линейные и единый выбор — 25 октября
 

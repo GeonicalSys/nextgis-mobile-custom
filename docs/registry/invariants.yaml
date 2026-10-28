@@ -185,9 +185,9 @@ invariants:
   INV-FIELD-LINE-DISPLAY-PRIORITY:
     title: Standard field lines are above tracks and below point groups
     owners: [maplib, app]
-    statement: Match only line or multiline geometry named Полевые линейные or field_lines (trimmed, case-insensitive). Keep all its body and label passes above ordinary data and tracks and below actual Point/MultiPoint groups, including logical groups and derived label sources, across full/lite/style/reorder. Preserve internal group and point list order and the higher transient tools/GPS. Display priority never filters hit candidates.
-    related_code: [maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java, maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java, maplib/src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java]
-    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MOBILE-RELATED]
+    statement: Match only line or multiline geometry named Полевые линейные or field_lines (trimmed, case-insensitive). Keep whole body/halo/icon/label groups above ordinary data and every saved/current track pass and below actual Point/MultiPoint groups across full/lite/style/source/data/private refresh/reorder. Resolve exact logical, style-controller current native and known line-label aliases without stale-generation/prefix guesses; polygon Point label anchors never acquire point priority. Take relative group order from canonical bottom-to-top flattened LayerGroup, never source-cache insertion or registration arrival. Preserve internal order, cached Style.getLayer wrapper/filter-owner identity and higher transient tools/GPS; an already-correct stack is unchanged. Display priority never filters hit candidates or modifies cache/queue/currentness or authoritative data. The new sqlite-priority native corpus covers direct root children; nested/recreation acceptance remains separate.
+    related_code: [maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java, maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java, maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java, maplib/src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-SQLITE-LAYER-PRIORITY, AUTO-MOBILE-RELATED]
     must_update_docs: [docs/architecture/track-controls.md, docs/architecture/map-rendering.md, maplib/docs/README.md, maplib/docs/manifest.yaml]
   INV-MAINTENANCE-REMINDERS:
     title: Weekly reminders distinguish complete online-project sync and verified app updates
@@ -604,7 +604,7 @@ invariants:
   INV-TRACK-LAYER-TOP:
     title: My Tracks stays at the top of the user layer list
     owners: [app, maplib, maplibui]
-    statement: Keep every direct tracks layer last in internal LayerGroup order so it is first in the reversed UI list, and insert Collector project layers below it. Native rendering separately puts track lines below named standard field-line groups and actual Point/MultiPoint vector groups, preserving their relative list order and keeping transient tools and GPS above them.
+    statement: Keep every direct tracks layer last in internal LayerGroup order so it is first in the reversed UI list, and insert Collector project layers below it. Native rendering separately puts every saved/current track pass below whole named standard field-line and actual Point/MultiPoint vector groups, using exact current source identity and canonical model relative order independently from source registration arrival; transient tools and GPS remain above them.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java

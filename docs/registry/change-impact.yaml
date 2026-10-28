@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: SQLITE-NATIVE-LAYER-PRIORITY
+    paths: [maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java, maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java, maplib/src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java]
+    owners: [maplib, app]
+    read: [docs/architecture/track-controls.md, docs/architecture/map-rendering.md, docs/runbooks/automated-tests.md]
+    invariants: [INV-FIELD-LINE-DISPLAY-PRIORITY, INV-TRACK-LAYER-TOP, INV-LAYER-ORDER, INV-SQLITE-NATIVE-VECTORS, INV-MAPLIBRE-VIEW-LIFECYCLE]
+    must_update_docs: [docs/architecture/track-controls.md, docs/architecture/map-rendering.md, docs/reference/official-differences.md, docs/runbooks/automated-tests.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-SQLITE-LAYER-PRIORITY, AUTO-APP-RELEASES]
+    strict_docs: true
   - id: LOCAL-TILE-CACHE-AND-IO-ADMISSION
     paths:
       - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileDiskCache.java

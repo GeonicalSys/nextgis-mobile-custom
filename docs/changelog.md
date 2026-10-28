@@ -1,12 +1,38 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-29 — Приоритет whole SQLite групп и native регрессия
+
+Уточнён контракт current style-controller alias, canonical bottom-to-top model
+order вместо cache insertion, cached SDK wrapper/filter-owner identity и четырёх
+standalone rebind путей. Сохраняются cache/queue оптимизации, данные, sync и
+формат проектов. Добавлены новые user/internal cards, module packs, Android
+invariant/dependency/impact/smoke links и адресный `sqlite-priority` runbook.
+Первый81 JVM/20 Python batch PASS; первый native run выявил реальный relative-order
+дефект. Oracle сохранён; canonical traversal исправлен,13 planner unit PASS.
+Focused native case1/1 PASS на T40/API30 (`priority-related-t40-02`), затем весь
+NativeSqliteVectorRenderingTest10 distinct методов PASS на той же source
+fingerprint (`sqlite-related-t40-03/result.json`, `native-run03.log`). Exact
+final83 JVM/10classes PASS, 0fail/error/skip. Три обычных variant PASS71с,
+version matrix PASS. Lisa224/3.1.2.30 APK70580085bytes SHA256
+`57a495854c9c18a5265bf42074101b9dd6d5750ad0fe5e3d6e606c5ef10984bd`
+с прежней подписью установлен поверх T40 без очистки данных. Release
+DEBUG/FIELD_VERIFICATION/PRIVATE_RESOURCE_PROFILING false, profileable отсутствует,
+postprocessing не применялся. Runtime1658-file fingerprint совпал до/после сборки;
+восстановлена карта14.2 и просмотрен normal screenshot, без действий редактора/
+recorder/walk. Это normal smoke отдельно от10 verification native методов,
+не real-project content/pixel/Full приёмка. UID logcat collector `--uid` не поддержан T40 и остаётся
+diagnostic gap. Новый corpus использует прямых root children, nested/recreation
+не проверены.
+Исторический classic-route PASS, build и review не заменяют эту приёмку, Full
+или real-project787 content verification. Публикация не выполняется.
 
 ## 2026-10-28 — Cache index и отменяемый native IO допуск
 

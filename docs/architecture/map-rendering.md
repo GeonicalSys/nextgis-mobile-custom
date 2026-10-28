@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -879,6 +879,21 @@ Point/MultiPoint → инструменты → GPS. Body и отдельные 
 перемещаются вместе, включая logical groups. Это порядок рисования;
 при обычном тапе все допустимые векторы и треки составляют один список,
 без short circuit трека или точки. [Контракт и native проверки](track-controls.md).
+
+В ordinary SQLite native route planner использует exact current source alias
+от style-scoped controller вместе с logical и line-label aliases. Порядок групп
+задаёт canonical flattened модель LayerGroup, index0 снизу; insertion order
+sourcesOrder cache не является моделью. При переносе сохраняются cached factory
+wrappers `Style.getLayer(id)` и filter owner identity, тогда как SDK enumeration
+wrappers читаются лишь как metadata. Standalone style/source/data/private refresh
+восстанавливают порядок после bind, full/lite — после batch. Эти изменения
+не меняют cache/IO admission, SDK cancellation, источники SQLite originals или
+формат проектов. Первый `sqlite-priority` native run выявил реальный relative-order
+дефект. После canonical model исправления focused case1/1 PASS на T40/API30
+(`priority-related-t40-02`), затем весь native класс10/10 distinct PASS
+(`sqlite-related-t40-03/result.json`), final83 JVM/10classes PASS. UID logcat
+collector `--uid` не поддержан этим vendor. Nested/recreation этим case не
+проверены, real-project/Full acceptance остаются отдельными.
 
 ## Камера графической fixture
 

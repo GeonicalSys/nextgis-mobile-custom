@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 related_code:
   - app/build.gradle
   - app/src/main
@@ -150,6 +150,20 @@ App merge, final-device Full и публикация учитываются от
 и maplib master 014247eea4a424e828c24d9e52e45fefed362f8d повторно проверены
 через API, ревизии прежние; named field-line role и TrackMapStyle/queryTrackIds
 являются частью fork. [Контракт](../architecture/track-controls.md).
+
+29 октября восстанавливается этот же fork contract для ordinary SQLite
+CustomVectorSource: whole groups получают exact current controller alias,
+canonical bottom-to-top model relative order независимо от bind/cache arrival
+и сохранение cached wrapper/filter identity при order repair. Производители
+ресурсов/NGW/Collector и правила выбора объектов не меняются. Новый isolated
+`sqlite-priority` проверяет actual sources/passes/labels/pixels/SQL и hide/Undo;
+первый native run выявил реальную ошибку порядка; после canonical traversal fix
+focused case1/1 PASS на T40/API30 (`priority-related-t40-02`), затем весь класс
+10 distinct методов PASS (`sqlite-related-t40-03/result.json`), final83 JVM
+PASS. Nested/recreation ещё не проверены; vendor UID logcat `--uid` unsupported —
+diagnostic gap. Это уточнение локального rendering consumer,
+не новая проверка official master: база upstream comparison выше датирована
+25 октября и в этом документационном шаге повторно не проверялась.
 
 ## Недельные напоминания полевому пользователю — 2026-10-25
 

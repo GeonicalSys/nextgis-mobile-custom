@@ -272,6 +272,441 @@ public class NativeSqliteVectorRenderingTest {
         runGeometrySmoke(GeoConstants.GTMultiPolygon, true, false, false);
     }
 
+    @Test public void sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks() throws Exception {
+        Bitmap icon = Bitmap.createBitmap(16, 16, Bitmap.Config.ARGB_8888);
+        icon.eraseColor(Color.CYAN);
+        String iconName = "sqlite-qa-cyan-priority-" + java.util.UUID.randomUUID();
+        try (TrackControlsTest.Tracks tracks = new TrackControlsTest.Tracks()) {
+            VectorStyleRenderingTest.Fixture f = tracks.f;
+            PriorityCorpus[] witnessCorpus = {null};
+            AtomicReference<AssertionError> failure = new AtomicReference<>();
+            try {
+                priorityUi(f, activity -> MarkerIconRegistry.registerCustomIconBitmap(iconName, icon));
+                PriorityCorpus corpus = new PriorityCorpus(f, iconName); witnessCorpus[0] = corpus;
+                long saved = tracks.add("Сохранённый", Color.RED, 0);
+                long current = tracks.add("Текущий", Color.RED, -140);
+                android.content.ContentValues active = new android.content.ContentValues();
+                active.putNull(com.nextgis.maplib.map.TrackLayer.FIELD_END);
+                assertEquals(1, f.app.getContentResolver().update(com.nextgis.maplibui.util.TrackActions.uri(f.app), active,
+                        com.nextgis.maplib.map.TrackLayer.FIELD_ID + "=?", new String[]{Long.toString(current)}));
+                for (VectorLayerUI layer : corpus.all) reload(f, layer);
+                fitCorpus(f); priorityReloadTracks(tracks, saved, current);
+                assertPriorityScene(tracks, corpus, "initial production SQLite bind", false, true);
+
+                priorityUi(f, activity -> activity.getMapFragment().loadLayersLite());
+                priorityReloadTracks(tracks, saved, current);
+                assertPriorityScene(tracks, corpus, "lite load", false, true);
+
+                SqliteVectorTileProvider beforeFull = provider(f, corpus.point);
+                priorityUi(f, activity -> assertTrue(activity.getMapFragment().reloadMapStyleAndLayersAfterLayerFillBatch()));
+                awaitReplacement(f, corpus.point, beforeFull);
+                fitCorpus(f); priorityReloadTracks(tracks, saved, current);
+                assertPriorityScene(tracks, corpus, "full style and layer reload", false, true);
+
+                priorityUi(f, activity -> {
+                    tracks.map().moveLayer(0, corpus.multiPoint);
+                    activity.getMapFragment().loadLayersLite();
+                });
+                priorityReloadTracks(tracks, saved, current);
+                assertPriorityScene(tracks, corpus, "logical layer reorder", false, true);
+
+                SqliteVectorTileProvider beforeStyle = provider(f, corpus.point);
+                String oldStyleSource = prioritySource(f, corpus.point);
+                corpus.point.setRenderer(new SimpleFeatureRenderer(corpus.point, priorityPointStyle(18)));
+                assertTrue(corpus.point.save());
+                priorityUi(f, activity -> tracks.map().reloadVectorLayerStyleToMaplibre(corpus.point.getId()));
+                awaitReplacement(f, corpus.point, beforeStyle);
+                assertFalse(beforeStyle.isCurrent());
+                assertNotEquals("A real style generation uses a fresh current source", oldStyleSource, prioritySource(f, corpus.point));
+                assertPriorityScene(tracks, corpus, "new style generation", false, true);
+
+                SqliteVectorTileProvider beforeData = provider(f, corpus.point);
+                String oldDataSource = prioritySource(f, corpus.point);
+                android.content.ContentValues changed = new android.content.ContentValues(); changed.put("name", "ТочкаБ");
+                android.net.Uri row = android.net.Uri.parse("content://" + f.app.getAuthority() + "/" + corpus.point.getPath().getName() + "/1");
+                assertEquals("Change one owned technical row through the real provider", 1,
+                        f.app.getContentResolver().update(row, changed, null, null));
+                corpus.labels.get(corpus.point).put(1L, "ТочкаБ");
+                corpus.rows.put(corpus.point, contents(corpus.point, 1));
+                priorityUi(f, activity -> tracks.map().reloadVectorLayerDataToMaplibre(corpus.point));
+                awaitReplacement(f, corpus.point, beforeData);
+                assertFalse(beforeData.isCurrent());
+                assertNotEquals("A real data generation uses a fresh current source", oldDataSource, prioritySource(f, corpus.point));
+                assertPriorityScene(tracks, corpus, "new data generation", false, true);
+
+                PriorityBindings beforeTracks = priorityBindings(f, corpus);
+                android.content.ContentValues renamed = new android.content.ContentValues();
+                renamed.put(com.nextgis.maplib.map.TrackLayer.FIELD_NAME, "Обновлённый");
+                assertEquals(1, f.app.getContentResolver().update(com.nextgis.maplibui.util.TrackActions.uri(f.app), renamed,
+                        com.nextgis.maplib.map.TrackLayer.FIELD_ID + "=?", new String[]{Long.toString(saved)}));
+                priorityReloadTracks(tracks, saved, current);
+                await("Actual saved-track source must observe the updated literal name", () -> priorityTrackName(tracks, saved, "Обновлённый"));
+                assertPriorityBindings(beforeTracks, priorityBindings(f, corpus), false);
+
+                // The production delete-prompt/Undo pair must survive an actual order repair.
+                Map<String, String> originalBodyFilters = priorityPointFilters(f, corpus.point);
+                priorityUi(f, activity -> { corpus.point.hideFeature(1L); tracks.map().hideFeature(1L, corpus.point.getId()); });
+                await("Hidden point must disappear from the actual native body", () -> priorityRenderedBody(f, corpus.point).isEmpty());
+                PriorityBindings bindings = priorityBindings(f, corpus);
+                priorityUi(f, activity -> {
+                    org.maplibre.android.maps.Style style = tracks.map().getMaplibreMap().getStyle();
+                    // Disturb native order using cached wrappers, then the normal public source-reapply hook.
+                    for (String childId : bindings.pointChildren) {
+                        org.maplibre.android.style.layers.Layer cached = style.getLayer(childId);
+                        assertTrue(style.removeLayer(cached)); style.addLayerBelow(cached, "track-line-glow");
+                    }
+                    tracks.map().reloadVectorLayerStylePropsToMaplibre(corpus.ordinaryLine);
+                });
+                awaitPriorityOrder(f, corpus, "hidden point after unchanged ordinary source reapply");
+                PriorityBindings afterOrder = priorityBindings(f, corpus);
+                assertPriorityBindings(bindings, afterOrder, true);
+                assertPriorityScene(tracks, corpus, "hidden point after order repair", true, false);
+                priorityUi(f, activity -> {
+                    assertNotNull(tracks.map().hiddedFeature);
+                    corpus.point.showFeature(1L);
+                    tracks.map().showFeatureFromHide(1L, corpus.point.getId(), tracks.map().hiddedFeature);
+                    // Inspect background pixels, not the transient selection copy returned by Undo.
+                    tracks.map().hideSelectedDotSource();
+                });
+                assertPriorityScene(tracks, corpus, "Undo after order repair", false, true);
+                assertEquals("Undo must restore the original role filter without the temporary hidden-FID condition",
+                        originalBodyFilters, priorityPointFilters(f, corpus.point));
+                assertFalse(corpus.point.isFeatureHidden(1L));
+            } catch (AssertionError | Exception original) {
+                String witness = priorityFailure(f, witnessCorpus[0]);
+                AssertionError report = new AssertionError("SQLite priority: " + original.getMessage() + "\n" + witness, original);
+                failure.set(report); throw report;
+            } finally {
+                try { priorityUi(f, activity -> MarkerIconRegistry.registerCustomIconBitmap(iconName, null)); }
+                catch (AssertionError | RuntimeException cleanup) {
+                    if (failure.get() == null) throw cleanup;
+                    failure.get().addSuppressed(cleanup);
+                }
+            }
+        } finally { icon.recycle(); }
+    }
+
+    /** Return native observation failures to instrumentation before fixture cleanup/evidence capture. */
+    private static void priorityUi(VectorStyleRenderingTest.Fixture f,
+                                   java.util.function.Consumer<com.nextgis.mobile.activity.MainActivity> action) {
+        AtomicReference<Throwable> failure = new AtomicReference<>();
+        f.screen.onActivity(activity -> {
+            try { action.accept(activity); }
+            catch (AssertionError | Exception error) { failure.set(error); }
+        });
+        if (failure.get() != null) throw new AssertionError("Priority native UI observation failed", failure.get());
+    }
+
+    /** Tiny technical DBs, persisted styles and production reload only; never Fixture.bind/classic. */
+    private static final class PriorityCorpus {
+        final VectorLayerUI fieldLine, fieldMultiLine, point, multiPoint, ordinaryLine, polygon;
+        final List<VectorLayerUI> all = new ArrayList<>();
+        final Map<VectorLayerUI, Map<Long, String>> labels = new LinkedHashMap<>();
+        final Map<VectorLayerUI, Map<Long, JSONArray>> coordinates = new LinkedHashMap<>();
+        final Map<VectorLayerUI, byte[]> rows = new LinkedHashMap<>();
+        PriorityCorpus(VectorStyleRenderingTest.Fixture f, String icon) throws Exception {
+            fieldLine = add(f, GeoConstants.GTLineString, "Полевые линейные", "LineString",
+                    new String[]{"[[-280,0],[280,0]]"}, new String[]{"ЛинияА"}, priorityLineStyle());
+            fieldMultiLine = add(f, GeoConstants.GTMultiLineString, "Полевые линейные", "MultiLineString",
+                    new String[]{"[[[-280,-140],[280,-140]],[[-280,-170],[280,-170]]]"}, new String[]{"ЛинияМ"}, priorityLineStyle());
+            point = add(f, GeoConstants.GTPoint, "Полевые точки", "Point", new String[]{"[0,0]"}, new String[]{"ТочкаА"}, priorityPointStyle(14));
+            SimpleMarkerStyle other = (SimpleMarkerStyle) smokeStyle(GeoConstants.GTMultiPoint, Color.GREEN, Color.BLACK, false);
+            multiPoint = add(f, GeoConstants.GTMultiPoint, "Мультиточки", "MultiPoint",
+                    new String[]{"[[-120,140],[-80,140]]", "[[100,160],[140,160]]"}, new String[]{"МультиА", "МультиБ"}, other);
+            SimpleMarkerStyle category = (SimpleMarkerStyle) smokeStyle(GeoConstants.GTMultiPoint, Color.GREEN, Color.BLACK, false);
+            category.setIconImage(icon); category.setIconSize(2); category.setIconAllowOverlap(true); category.setIconIgnorePlacement(true);
+            FieldStyleRule rule = new FieldStyleRule(multiPoint); rule.setKey("kind"); rule.setOtherStyle(other); rule.setStyle("A", category);
+            multiPoint.setRenderer(new RuleFeatureRenderer(multiPoint, rule, other)); assertTrue(multiPoint.save());
+            ordinaryLine = add(f, GeoConstants.GTLineString, "Обычная линия", "LineString",
+                    new String[]{"[[-280,0],[280,0]]"}, new String[]{"Обычная"}, smokeStyle(GeoConstants.GTLineString, Color.MAGENTA, Color.BLACK, false));
+            polygon = add(f, GeoConstants.GTPolygon, "Обычный полигон", "Polygon",
+                    new String[]{"[[[-250,-240],[250,-240],[250,240],[-250,240],[-250,-240]]]"}, new String[]{"ПлощадьА"}, smokeStyle(GeoConstants.GTPolygon, Color.LTGRAY, Color.BLACK, false));
+        }
+        private VectorLayerUI add(VectorStyleRenderingTest.Fixture f, int type, String name, String geometryType,
+                                  String[] shapes, String[] names, com.nextgis.maplib.display.Style style) throws Exception {
+            VectorLayerUI layer = f.add(type); layer.setName(name); all.add(layer);
+            Map<Long, String> expectedNames = new LinkedHashMap<>(); labels.put(layer, expectedNames);
+            Map<Long, JSONArray> expectedCoordinates = new LinkedHashMap<>(); coordinates.put(layer, expectedCoordinates);
+            android.database.sqlite.SQLiteDatabase database = DatabaseContext.getDatabaseForLayer(layer, false);
+            database.beginTransaction();
+            try {
+                for (int i = 0; i < shapes.length; i++) {
+                    JSONArray shape = new JSONArray(shapes[i]);
+                    GeoGeometry geometry = GeoGeometryFactory.fromJson(new JSONObject().put("type", geometryType).put("coordinates", shape));
+                    setSmokeCrs(geometry);
+                    Feature feature = new Feature(i + 1L, layer.getFields()); feature.setGeometry(geometry);
+                    feature.setFieldValue("name", names[i]); feature.setFieldValue("kind", i == 0 ? "A" : "other");
+                    layer.createFeatureBatch(feature, database, false);
+                    expectedNames.put(i + 1L, names[i]); expectedCoordinates.put(i + 1L, new JSONArray(shapes[i]));
+                }
+                database.setTransactionSuccessful();
+            } finally { database.endTransaction(); }
+            layer.rebuildCache(null); layer.setRenderer(new SimpleFeatureRenderer(layer, style)); assertTrue(layer.save());
+            rows.put(layer, contents(layer, shapes.length)); return layer;
+        }
+    }
+
+    private static SimpleLineStyle priorityLineStyle() {
+        SimpleLineStyle style = (SimpleLineStyle) smokeStyle(GeoConstants.GTLineString, Color.BLUE, Color.BLACK, false);
+        style.setWidth(4); return style;
+    }
+    private static SimpleMarkerStyle priorityPointStyle(int size) {
+        SimpleMarkerStyle style = (SimpleMarkerStyle) smokeStyle(GeoConstants.GTPoint, Color.GREEN, Color.BLACK, false);
+        style.setType(SimpleMarkerStyle.MarkerStyleFirefly); style.setSize(size); style.setWidth(size); return style;
+    }
+    private static String prioritySource(VectorStyleRenderingTest.Fixture f, VectorLayerUI layer) {
+        AtomicReference<String> id = new AtomicReference<>();
+        priorityUi(f, activity -> id.set(((MapDrawable) f.app.getMap()).getVectorRenderSourceId(layer.getId())));
+        return id.get();
+    }
+    private static void priorityReloadTracks(TrackControlsTest.Tracks tracks, long saved, long current) throws Exception {
+        priorityUi(tracks.f, activity -> { tracks.map().reloadTrackListToMap(); tracks.map().reloadCurrentTrackToMap(); tracks.map().checkLayerVisibility(tracks.layer.getId()); });
+        await("Saved and current track snapshots must both contain their owned IDs", () -> {
+            AtomicReference<Boolean> ready = new AtomicReference<>(false);
+            priorityUi(tracks.f, activity -> {
+                org.maplibre.android.maps.Style style = tracks.map().getMaplibreMap().getStyle(); boolean foundSaved = false, foundCurrent = false;
+                for (String prefix : new String[]{"track-line", "track-inprogress"}) {
+                    GeoJsonSource source = style.getSourceAs(prefix + "-source"); if (source == null) return;
+                    for (org.maplibre.geojson.Feature feature : source.querySourceFeatures(null))
+                        if (feature.hasProperty(com.nextgis.maplib.map.TrackMapStyle.TRACK_ID)) {
+                            long id = feature.getNumberProperty(com.nextgis.maplib.map.TrackMapStyle.TRACK_ID).longValue();
+                            if (prefix.equals("track-line") && id == saved) foundSaved = true;
+                            if (prefix.equals("track-inprogress") && id == current) foundCurrent = true;
+                        }
+                }
+                ready.set(foundSaved && foundCurrent);
+            }); return ready.get();
+        });
+    }
+    private static boolean priorityTrackName(TrackControlsTest.Tracks tracks, long id, String name) {
+        AtomicReference<Boolean> result = new AtomicReference<>(false);
+        priorityUi(tracks.f, activity -> {
+            GeoJsonSource source = tracks.map().getMaplibreMap().getStyle().getSourceAs("track-line-source");
+            if (source != null) for (org.maplibre.geojson.Feature feature : source.querySourceFeatures(null))
+                if (feature.hasProperty(com.nextgis.maplib.map.TrackMapStyle.TRACK_ID)
+                        && feature.getNumberProperty(com.nextgis.maplib.map.TrackMapStyle.TRACK_ID).longValue() == id
+                        && name.equals(feature.getStringProperty(com.nextgis.maplib.map.TrackMapStyle.NAME))) result.set(true);
+        }); return result.get();
+    }
+    private static Map<String, String> priorityPointFilters(VectorStyleRenderingTest.Fixture f, VectorLayerUI layer) {
+        Map<String, String> result = new LinkedHashMap<>();
+        priorityUi(f, activity -> {
+            MapDrawable map = (MapDrawable) f.app.getMap(); org.maplibre.android.maps.Style style = map.getMaplibreMap().getStyle();
+            for (org.maplibre.android.style.layers.Layer child : style.getLayers()) {
+                if (!map.getVectorRenderSourceId(layer.getId()).equals(priorityLayerSource(child))) continue;
+                org.maplibre.android.style.expressions.Expression filter = child instanceof CircleLayer ? ((CircleLayer) child).getFilter()
+                        : child instanceof SymbolLayer ? ((SymbolLayer) child).getFilter() : null;
+                result.put(child.getId(), filter == null ? "none" : filter.toString());
+            }
+        }); assertFalse("Current point body/sprite/label role filters exist", result.isEmpty()); return result;
+    }
+
+    /** Firefly core/glow is a Symbol sprite; its Circle baseline deliberately excludes Firefly. */
+    private static Map<Long, org.maplibre.geojson.Feature> priorityRenderedBody(VectorStyleRenderingTest.Fixture f, VectorLayerUI layer) {
+        int type = layer.getGeometryType();
+        if (type != GeoConstants.GTPoint && type != GeoConstants.GTMultiPoint) return smokeRendered(f, layer, type, 0);
+        List<org.maplibre.geojson.Feature> hits = new ArrayList<>();
+        priorityUi(f, activity -> {
+            MapDrawable map = (MapDrawable) f.app.getMap(); List<String> bodies = new ArrayList<>();
+            String actual = map.getVectorRenderSourceId(layer.getId());
+            for (org.maplibre.android.style.layers.Layer child : map.getMaplibreMap().getStyle().getLayers())
+                if (actual.equals(priorityLayerSource(child)) && (child instanceof CircleLayer
+                        || child instanceof SymbolLayer && child.getId().contains("-layout-firefly-"))) bodies.add(child.getId());
+            if (!bodies.isEmpty()) hits.addAll(map.getMaplibreMap().queryRenderedFeatures(new RectF(0, 0,
+                    map.getMaplibreMapView().getWidth(), map.getMaplibreMapView().getHeight()), bodies.toArray(new String[0])));
+        });
+        Map<Long, org.maplibre.geojson.Feature> result = new LinkedHashMap<>();
+        for (org.maplibre.geojson.Feature hit : hits) {
+            assertTrue("Every raw point body/sprite hit retains its SQL identity", hit.hasProperty(MPLFeaturesUtils.prop_featureid));
+            assertNotNull("Point body/sprite geometry is present", hit.geometry());
+            assertTrue("Point body/sprite never includes another geometry role", hit.geometry().type().equals("Point") || hit.geometry().type().equals("MultiPoint"));
+            result.put(hit.getProperty(MPLFeaturesUtils.prop_featureid).getAsLong(), hit);
+        }
+        return result;
+    }
+
+    private static void assertPriorityScene(TrackControlsTest.Tracks tracks, PriorityCorpus corpus, String stage,
+                                            boolean pointHidden, boolean pixels) throws Exception {
+        VectorStyleRenderingTest.Fixture f = tracks.f;
+        for (VectorLayerUI layer : corpus.all) {
+            assertStreaming(f, layer);
+            Set<Long> expected = pointHidden && layer == corpus.point ? java.util.Collections.emptySet() : corpus.labels.get(layer).keySet();
+            await(stage + ": complete native body IDs for " + layer.getName(), () -> priorityRenderedBody(f, layer).keySet().equals(expected));
+            await(stage + ": actual placed label IDs for " + layer.getName(), () -> smokeRendered(f, layer, layer.getGeometryType(), 1).keySet().equals(expected));
+            for (Map.Entry<Long, org.maplibre.geojson.Feature> label : smokeRendered(f, layer, layer.getGeometryType(), 1).entrySet())
+                assertEquals(stage + ": literal SQL label", corpus.labels.get(layer).get(label.getKey()), label.getValue().getStringProperty(MplFeatureStyleProps.SIGNATURE));
+            for (Map.Entry<Long, JSONArray> original : corpus.coordinates.get(layer).entrySet()) {
+                Feature feature = provider(f, layer).loadOriginalFeature(original.getKey());
+                assertNotNull(feature); assertCoordinates(stage + ": full SQL original", original.getValue(), originalCoordinates(feature.getGeometry()));
+                assertEquals(corpus.labels.get(layer).get(original.getKey()), feature.getFieldValue("name"));
+            }
+            assertArrayEquals(stage + ": view changes never mutate owned SQL rows", corpus.rows.get(layer), contents(layer, corpus.labels.get(layer).size()));
+        }
+        awaitPriorityOrder(f, corpus, stage); f.renderedFrame();
+        assertEquals("The rule icon really reaches the current native source", java.util.Collections.singleton(1L),
+                smokeRendered(f, corpus.multiPoint, GeoConstants.GTMultiPoint, 2).keySet());
+        if (pixels) {
+            Bitmap frame = f.snapshot();
+            try {
+                PointF green = priorityScreenPoint(f, 0, 0), blueSaved = priorityScreenPoint(f, 180, 0), blueCurrent = priorityScreenPoint(f, 180, -140);
+                assertPriorityPixel(frame, green, true, stage + ": point covers saved track");
+                assertPriorityPixel(frame, blueSaved, false, stage + ": field line covers saved track");
+                assertPriorityPixel(frame, blueCurrent, false, stage + ": field multiline covers current track");
+            } finally { frame.recycle(); }
+        }
+    }
+    private static PointF priorityScreenPoint(VectorStyleRenderingTest.Fixture f, double x, double y) {
+        AtomicReference<PointF> result = new AtomicReference<>();
+        priorityUi(f, activity -> result.set(((MapDrawable) f.app.getMap()).getMaplibreMap().getProjection().toScreenLocation(latLng(x, y))));
+        return result.get();
+    }
+    private static void assertPriorityPixel(Bitmap frame, PointF sample, boolean green, String message) {
+        int x = Math.round(sample.x), y = Math.round(sample.y), matches = 0;
+        assertTrue(message + " sample in actual frame", x > 0 && y > 0 && x < frame.getWidth()-1 && y < frame.getHeight()-1);
+        for (int dy = -1; dy <= 1; dy++) for (int dx = -1; dx <= 1; dx++) {
+            int pixel = frame.getPixel(x+dx, y+dy);
+            if (green ? Color.green(pixel) > 180 && Color.red(pixel) < 60 && Color.blue(pixel) < 60
+                    : Color.blue(pixel) > 180 && Color.red(pixel) < 60 && Color.green(pixel) < 60) matches++;
+        }
+        assertTrue(message + " literal opaque color patch, matches=" + matches, matches >= 5);
+    }
+
+    private static String priorityLayerSource(org.maplibre.android.style.layers.Layer layer) {
+        return layer instanceof CircleLayer ? ((CircleLayer) layer).getSourceId() : layer instanceof LineLayer ? ((LineLayer) layer).getSourceId()
+                : layer instanceof FillLayer ? ((FillLayer) layer).getSourceId() : layer instanceof SymbolLayer ? ((SymbolLayer) layer).getSourceId() : null;
+    }
+    private static List<Integer> priorityGroup(org.maplibre.android.maps.Style style, VectorLayerUI model, String actualSource) {
+        List<Integer> group = new ArrayList<>(); List<org.maplibre.android.style.layers.Layer> children = style.getLayers();
+        String lineLabels = model.getPath().toString() + MPLFeaturesUtils.source_polygon_text;
+        boolean line = model.getGeometryType() == GeoConstants.GTLineString || model.getGeometryType() == GeoConstants.GTMultiLineString;
+        for (int i = 0; i < children.size(); i++) {
+            String source = priorityLayerSource(children.get(i));
+            if (actualSource.equals(source) || line && lineLabels.equals(source)) group.add(i);
+        }
+        assertFalse("Actual whole source group must be present: " + model.getName() + " / " + actualSource, group.isEmpty());
+        return group;
+    }
+    private static void awaitPriorityOrder(VectorStyleRenderingTest.Fixture f, PriorityCorpus corpus, String stage) throws Exception {
+        AtomicReference<String> last = new AtomicReference<>();
+        long deadline = SystemClock.uptimeMillis() + 30000;
+        do {
+            AtomicReference<Boolean> ready = new AtomicReference<>(false);
+            priorityUi(f, activity -> {
+                try { assertPriorityOrder((MapDrawable) f.app.getMap(), corpus); ready.set(true); }
+                catch (AssertionError error) { last.set(error.getMessage()); }
+            });
+            if (ready.get()) return;
+            Thread.sleep(80);
+        } while (SystemClock.uptimeMillis() < deadline);
+        fail(stage + ": actual native priority did not settle: " + last.get());
+    }
+    /** Literal semantic ranges; never calls the production ordering planner/helper. */
+    private static void assertPriorityOrder(MapDrawable map, PriorityCorpus corpus) {
+        org.maplibre.android.maps.Style style = map.getMaplibreMap().getStyle();
+        List<org.maplibre.android.style.layers.Layer> children = style.getLayers(); Map<String, Integer> positions = new HashMap<>();
+        for (int i = 0; i < children.size(); i++) positions.put(children.get(i).getId(), i);
+        int minTrack = Integer.MAX_VALUE, maxTrack = -1;
+        for (String prefix : new String[]{"track-line", "track-inprogress"}) for (String suffix : new String[]{"-glow", "-selection", "-layer"}) {
+            Integer position = positions.get(prefix + suffix); assertNotNull("All saved/current track passes exist", position);
+            minTrack = Math.min(minTrack, position); maxTrack = Math.max(maxTrack, position);
+        }
+        Integer tool = positions.get("selected-dot-layer"), gps = positions.get("user-location-layer");
+        assertNotNull(tool); assertNotNull(gps); assertTrue("GPS stays above tools", gps > tool);
+        for (Map.Entry<String, Integer> layer : positions.entrySet()) if (layer.getKey().startsWith("user-location-"))
+            assertTrue("Every GPS accuracy/heading/cursor pass stays above tools", layer.getValue() > tool);
+        Map<VectorLayerUI, List<Integer>> groups = new LinkedHashMap<>();
+        for (VectorLayerUI layer : corpus.all) {
+            String actual = map.getVectorRenderSourceId(layer.getId()); assertNotNull(actual);
+            assertNotEquals("This case must exercise current generated source aliases", layer.getPath().toString(), actual);
+            assertTrue(map.isSqliteVectorLayer(layer.getId())); assertTrue(style.getSource(actual) instanceof CustomVectorSource);
+            assertTrue(map.getSqliteVectorProvider(layer.getId()).isCurrent());
+            List<Integer> group = priorityGroup(style, layer, actual); groups.put(layer, group);
+            int symbols = 0, circles = 0, icons = 0, fireflySprites = 0;
+            for (int index : group) {
+                org.maplibre.android.style.layers.Layer child = children.get(index);
+                if (child instanceof SymbolLayer) symbols++;
+                if (child instanceof CircleLayer) circles++;
+                if (child.getId().contains("_icon")) icons++;
+                if (child instanceof SymbolLayer && child.getId().contains("-layout-firefly-")) fireflySprites++;
+                assertTrue("Every ordinary group member remains below tools", index < tool);
+            }
+            assertTrue("Each body group includes its actual label child", symbols > 0);
+            if (layer == corpus.point) assertTrue("Firefly core/glow sprite and its separate Circle role baseline are exercised", fireflySprites > 0 && circles > 0);
+            if (layer == corpus.multiPoint) assertTrue("Rule icon children participate in whole-group order", icons > 0);
+        }
+        int maxField = -1;
+        for (VectorLayerUI layer : new VectorLayerUI[]{corpus.fieldLine, corpus.fieldMultiLine}) {
+            assertTrue("Every field body/label child is above every track pass", java.util.Collections.min(groups.get(layer)) > maxTrack);
+            maxField = Math.max(maxField, java.util.Collections.max(groups.get(layer)));
+        }
+        for (VectorLayerUI layer : new VectorLayerUI[]{corpus.point, corpus.multiPoint})
+            assertTrue("Whole point/halo/icon/label group stays above both field-line groups", java.util.Collections.min(groups.get(layer)) > maxField);
+        for (VectorLayerUI layer : new VectorLayerUI[]{corpus.ordinaryLine, corpus.polygon})
+            assertTrue("Ordinary body and polygon Point-label anchor must not be promoted above tracks", java.util.Collections.max(groups.get(layer)) < minTrack);
+        boolean pointFirst = map.getLayers().indexOf(corpus.point) < map.getLayers().indexOf(corpus.multiPoint);
+        List<Integer> low = groups.get(pointFirst ? corpus.point : corpus.multiPoint), high = groups.get(pointFirst ? corpus.multiPoint : corpus.point);
+        assertTrue("Whole point groups preserve logical relative order without interleaving", java.util.Collections.max(low) < java.util.Collections.min(high));
+        boolean fieldFirst = map.getLayers().indexOf(corpus.fieldLine) < map.getLayers().indexOf(corpus.fieldMultiLine);
+        low = groups.get(fieldFirst ? corpus.fieldLine : corpus.fieldMultiLine); high = groups.get(fieldFirst ? corpus.fieldMultiLine : corpus.fieldLine);
+        assertTrue("Whole field-line groups preserve logical relative order without interleaving", java.util.Collections.max(low) < java.util.Collections.min(high));
+    }
+
+    private static final class PriorityBindings {
+        final Map<VectorLayerUI, String> sourceIds = new LinkedHashMap<>();
+        final Map<VectorLayerUI, SqliteVectorTileProvider> providers = new LinkedHashMap<>();
+        final Map<VectorLayerUI, Source> sources = new LinkedHashMap<>();
+        final Map<String, org.maplibre.android.style.layers.Layer> children = new LinkedHashMap<>();
+        final List<String> pointChildren = new ArrayList<>();
+        final Set<String> promotedChildren = new HashSet<>();
+    }
+    private static PriorityBindings priorityBindings(VectorStyleRenderingTest.Fixture f, PriorityCorpus corpus) {
+        PriorityBindings result = new PriorityBindings();
+        priorityUi(f, activity -> {
+            MapDrawable map = (MapDrawable) f.app.getMap(); org.maplibre.android.maps.Style style = map.getMaplibreMap().getStyle();
+            List<org.maplibre.android.style.layers.Layer> layers = style.getLayers();
+            for (VectorLayerUI model : corpus.all) {
+                String id = map.getVectorRenderSourceId(model.getId()); result.sourceIds.put(model, id);
+                result.providers.put(model, map.getSqliteVectorProvider(model.getId())); result.sources.put(model, style.getSource(id));
+                for (int position : priorityGroup(style, model, id)) {
+                    String child = layers.get(position).getId(); result.children.put(child, style.getLayer(child));
+                    if (model == corpus.point || model == corpus.multiPoint) result.pointChildren.add(child);
+                    if (model == corpus.point || model == corpus.multiPoint || model == corpus.fieldLine || model == corpus.fieldMultiLine)
+                        result.promotedChildren.add(child);
+                }
+            }
+        }); return result;
+    }
+    private static void assertPriorityBindings(PriorityBindings before, PriorityBindings after, boolean promotedOnly) {
+        assertEquals("Order-only work must retain current native aliases", before.sourceIds, after.sourceIds);
+        for (VectorLayerUI layer : before.sourceIds.keySet()) {
+            assertSame("Order-only work must preserve the current provider", before.providers.get(layer), after.providers.get(layer));
+            assertSame("Order-only work must preserve its bound source wrapper", before.sources.get(layer), after.sources.get(layer));
+        }
+        for (String id : before.children.keySet()) if (!promotedOnly || before.promotedChildren.contains(id))
+            assertSame("Order repair must retain the cached wrapper/filter owner: " + id, before.children.get(id), after.children.get(id));
+    }
+    private static String priorityFailure(VectorStyleRenderingTest.Fixture f, PriorityCorpus corpus) {
+        try {
+            JSONObject state = new JSONObject().put("schema_version", 1).put("case", "sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks");
+            JSONArray order = new JSONArray(), sources = new JSONArray();
+            priorityUi(f, activity -> {
+                try {
+                    MapDrawable map = (MapDrawable) f.app.getMap(); org.maplibre.android.maps.Style style = map.getMaplibreMap().getStyle();
+                    for (org.maplibre.android.style.layers.Layer child : style.getLayers())
+                        order.put(new JSONObject().put("id", child.getId()).put("source", priorityLayerSource(child)).put("type", child.getClass().getSimpleName()));
+                    if (corpus != null) for (VectorLayerUI layer : corpus.all) sources.put(new JSONObject().put("layer_id", layer.getId())
+                                .put("current_source", map.getVectorRenderSourceId(layer.getId()))
+                                .put("sqlite", map.isSqliteVectorLayer(layer.getId())).put("bridge", new JSONObject(map.getSqliteVectorDiagnostics(layer.getId()))));
+                } catch (Exception error) { throw new IllegalStateException(error); }
+            });
+            state.put("native_order", order).put("current_sources", sources);
+            File directory = new File(f.app.getFilesDir(), "native-sqlite-qa"); assertTrue(directory.isDirectory() || directory.mkdirs());
+            state.put("snapshot_pixels", saveFailureSnapshot(f, directory));
+            writeFailureState(state, new JSONArray(), new JSONArray(), new JSONArray(), directory, false);
+            return "files/native-sqlite-qa/failure.json + failure.png retained before owned fixture cleanup";
+        } catch (Exception | AssertionError error) { return "Priority diagnostic failure: " + error.getClass().getSimpleName() + ": " + error.getMessage(); }
+    }
+
     private static final String[] SMOKE_NAMES = {"Альфа1", "Безкат2", "Прочие3"};
     private static final String[] SMOKE_KINDS = {" a ", null, "unmatched"};
 

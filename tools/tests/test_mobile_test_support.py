@@ -4,7 +4,7 @@ from pathlib import Path
 import unittest
 import hashlib
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from mobile_test_support import avd_names, check_publication_receipt, native_catalog, parse_instrumentation, phone_unlocked, validate_plan
+from mobile_test_support import avd_names, check_publication_receipt, expand_selectors, native_catalog, parse_instrumentation, phone_unlocked, validate_plan
 
 CASE = 'example.Test#works'
 
@@ -104,6 +104,21 @@ class FullReceiptTest(unittest.TestCase):
         plan = json.loads((root / 'tools/mobile-test-plan.json').read_text(encoding='utf-8'))
         expected = {case for cases in catalog.values() for case in cases}
         self.assertEqual(expected, validate_plan(plan, catalog))
+
+    def test_current_sqlite_priority_case_is_routed_to_both_consumers_and_keeps_isolation(self):
+        root = Path(__file__).resolve().parents[2]
+        catalog = native_catalog(root)
+        plan = json.loads((root / 'tools/mobile-test-plan.json').read_text(encoding='utf-8'))
+        name = 'com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest'
+        case = name + '#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks'
+        self.assertIn(case, catalog[name])
+        self.assertIn(name, plan['phone'])
+        self.assertIn(name, plan['isolated_methods'])
+        for area in ('sqlite-priority', 'sqlite-render', 'track-candidates'):
+            self.assertIn(case, expand_selectors(plan['areas'][area], catalog), area)
+            self.assertIn(case, expand_selectors(plan['related_phone_areas'][area], catalog), area)
+        self.assertEqual([case], plan['areas']['sqlite-priority'])
+        self.assertEqual([case], plan['related_phone_areas']['sqlite-priority'])
     def test_per_method_isolation_cannot_name_an_unrouted_class(self):
         plan={'phone':['example.Test'],'emulator':[],'diagnostics':[],'areas':{},
               'isolated_methods':['example.Test']}

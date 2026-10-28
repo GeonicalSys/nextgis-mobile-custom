@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -1163,6 +1163,37 @@ Graphics LocationOrbitTest теперь ждёт завершения текущ
 MapSelectionDialog переносит длинные строки общего списка, оставляет прокрутку
 и Cancel. Полевые линейные рисуются над треками/обычными данными, но под точками,
 включая отдельные подписи. Related track-candidates 4/4 native PASS; Full обязателен.
+
+Регрессия29 октября после перехода ordinary SQLite vectors на CustomVectorSource
+разбирается отдельным этапом MOB-01/MOB-04. Приоритет должен использовать точный
+alias текущего style/controller, а взаимный порядок групп — canonical flattened
+LayerGroup с индексом0 снизу, независимо от порядка загрузки и вставки в cache.
+Перенос сохраняет cached SDK wrappers и владельца hide/Undo filters. Четыре
+standalone rebind пути восстанавливают общий порядок без полной перезагрузки.
+Related `sqlite-priority` адресно запускает новый production-SQLite native case
+в отдельном verification APK; он проверяет тела, Firefly sprite, rule icon,
+подписи, native ranges, пиксели и исходные SQL rows после full/lite/reorder,
+style/data generation и hide/Undo. Первые81 JVM и20 Python checks PASS;
+первый native запуск выявил реальную зависимость порядка от cache insertion.
+После canonical traversal исправления focused case1/1 PASS на T40/API30
+(`priority-related-t40-02`), затем весь NativeSqliteVectorRenderingTest10/10
+distinct PASS (`sqlite-related-t40-03/result.json`). Final83 JVM/10classes PASS,
+0fail/error/skip; исходный81-test batch остаётся историческим. UID logcat
+collector на T40 не поддерживает `--uid`, диагностический пробел остаётся.
+Вложенные группы и Activity recreation
+в этом новом native case не проверены. Старый4/4 PASS их не подтверждает.
+Новых замеров производительности, Full и публикации этот этап не заменяет.
+
+Обычный Lisa Release224/3.1.2.30 собран и установлен поверх прежнего приложения
+на T40 с тем же сертификатом подписи и сохранением данных. SHA256 APK
+`57a495854c9c18a5265bf42074101b9dd6d5750ad0fe5e3d6e606c5ef10984bd`;
+70580085 bytes. Три обычных variant и version matrix PASS; в установленном
+Release DEBUG/FIELD_VERIFICATION/PRIVATE_RESOURCE_PROFILING выключены,
+profileable отсутствует, postprocessing не применялся. Карта восстановлена
+на масштабе14.2, просмотрен итоговый screenshot. Это normal launch/view smoke,
+не content/pixel приёмка всего реального проекта или Full; отдельные10 native
+методов выполнены в verification APK. Точные build/install receipts —
+в [runbook](../../docs/runbooks/automated-tests.md#адресная-sqlite-priority-регрессия29-октября).
 
 ## Автоматическая диагностика после закрытия процесса
 

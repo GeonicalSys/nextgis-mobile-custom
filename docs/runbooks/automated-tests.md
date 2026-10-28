@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -16,6 +16,72 @@ related_code:
 ---
 
 # Автоматические проверки
+
+## Адресная SQLite priority регрессия29 октября
+
+После сообщения владельца о полевых линиях/точках под треками разрешена отдельная
+focused проверка `sqlite-priority` на явно выбранном стационарном устройстве.
+Это новый этап после build-only поручения28 октября ниже; Full, profiler и
+публикация остаются отложенными. Команда из Android root:
+
+```powershell
+tools\verify-mobile-tests.ps1 -Scope Related -Area sqlite-priority -PhoneOnly -PhoneSerial <явный-serial> -OutputPath <новый-owned-каталог-на-Q>
+```
+
+Область выбирает только
+`NativeSqliteVectorRenderingTest#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks`;
+не передавать весь класс, который содержит другие независимые методы. Case также
+входит в `track-candidates`. Нужна свежая fingerprint-bound app/test APK пара
+после изменения source; `SkipBuild` не является способом принять старую пару.
+Мутации и reset ограничены `com.nextgis.mobile.verification.debug` и его test
+package, provider/storage/техническими fixture rows. Production приложение,
+его проекты и accounts не очищаются. Full-only read-only metadata проекта1403
+этому методу не требуется; radio/font/density системные настройки не меняются.
+
+Проверять exact current SQLite alias и CustomVectorSource, пустой global Java
+cache, native ranges целых field/point групп и всех saved/current track passes,
+canonical bottom-to-top model relative order, placed literal labels, отдельный
+Firefly Symbol body/rule icon, background pixel patches и полные SQL originals/
+row hashes. Full/lite/reorder, style/data generation, завершённый literal
+track-name refresh, unchanged-source style apply и hide/Undo не должны ломать
+cached provider/source/promoted wrappers или исходные filters. Не добавлять
+GPS/вызов private order helper для прохождения теста; order repair имеет явный
+публичный source-reapply trigger. JSON/PNG failure capture выполняется внутри
+fixture до cleanup, затем штатный runner сохраняет bounded evidence до reset.
+
+Первый source batch81 JVM/20 Python PASS относится к исходному варианту;
+первый actual native run FAIL по реальному defect reverse source-cache insertion.
+Oracle сохранён, canonical model traversal исправлен;13 planner unit PASS,
+затем exact final83 JVM/10classes PASS, 0fail/error/skip (`focused-units03`,
+`unit-results03`).
+Focused native case1/1 PASS на T40/API30 (`priority-related-t40-02`), source
+fingerprint `ebb3b78d81a45c2b1a95e634369d6e2e4768a16129f0fc795a31fc58b290617f`.
+Затем весь NativeSqliteVectorRenderingTest10 distinct методов PASS на T40,
+та же source fingerprint: `sqlite-related-t40-03/result.json`, `native-run03.log`.
+T40 logcat отвергает `--uid`, поэтому UID collector остаётся diagnostic gap;
+class PASS не означает all-green всего Related/Full. Root-child corpus не покрывает nested groups и Activity
+recreation, historical4/4 classic PASS их не заменяет.
+
+После этого собраны три обычных variant (LisaDebug/LisaRelease/BelkaRelease,
+PASS71с) и version matrix PASS. Обычный Lisa Release224/3.1.2.30:
+70580085 bytes, SHA256
+`57a495854c9c18a5265bf42074101b9dd6d5750ad0fe5e3d6e606c5ef10984bd`,
+прежний signing certificate. Release DEBUG/FIELD_VERIFICATION/
+PRIVATE_RESOURCE_PROFILING false, profileable отсутствует; APK не проходил
+postprocessing. Сборка выполнена до task commits, поэтому SOURCE_REVISION
+`5e85446a088868e8055c6b802e697c94031a5822+dirty`; это не утверждение нового Git
+tip. Runtime1658-file fingerprint до/после сборки один:
+`2b10b4707b0e9b4ed72b0c6874464ea2a3f25657e557fa3403456803da555eb6`.
+
+Этот точный APK установлен `-r` на T40 без очистки пользовательских данных;
+установленный SHA совпал. Восстановлены прежний проект и viewport14.2,
+просмотрен `tablet-final-settled.png`; редактор/Tracker/Walk не запускались.
+Это normal install/launch/view smoke, отдельно от10 verification native методов,
+не полнота/pixel приёмка реальной карты или Full. Сохраняемый APK:
+`Q:/Codex/Deliverables/mobile-field-order-fix-20261029/LISA-3.1.2.30-field-order-fix.apk`.
+Receipts: `Q:/Codex/Scratch/mobile-field-order-fix-20261028-01a1817f/`
+(`apk-receipt.json`, `tablet-final-installed.json`, `source-before-build.json`,
+`source-after-build.json`). Публикация не выполнялась.
 
 Для MOB-04 cache/queue follow-up28октября — адресный source batch
 `AUTO-LOCAL-TILE-CACHE-ADMISSION`: реальные временные Q filesystem fixtures,

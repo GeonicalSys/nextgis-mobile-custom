@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-SQLITE-LAYER-PRIORITY:
+    type: automatic
+    scope: [maplib, app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area sqlite-priority
+    expected: In the separate verification APK, the one exact method exercises production SQLite CustomVectorSource/current aliases and empty global feature cache; all saved/current track passes remain below whole field-line and Point/Firefly/MultiPoint/icon/label groups in canonical root model order, with ordinary line and polygon-label negatives and tools/GPS above. Full/lite/reorder/style/data generations, completed literal track rename snapshot, unchanged-source order repair, cached provider/source/promoted wrapper identity and hide/Undo filter restoration retain complete native IDs/placed labels/background pixels/full SQL originals and unchanged rows. Firefly body query includes its actual Symbol sprite. Capture bounded native order/source JSON and PNG before cleanup and retain failed attempts. Direct root children do not certify nested groups or Activity recreation; one focused method, old classic results and source units never certify the full class/Related/Full or real-project acceptance. Unsupported vendor UID logcat collection remains an explicit diagnostic gap. An explicitly selected stationary verification device is allowed; production data are not touched and no project metadata fixture is required.
   AUTO-LOCAL-TILE-CACHE-ADMISSION:
     type: automatic
     scope: [maplib, maplibui, app]

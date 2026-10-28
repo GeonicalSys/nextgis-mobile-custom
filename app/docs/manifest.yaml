@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -16,7 +16,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/SqliteMvtEvidence.java
     responsibility: Independently summarize up to4MiB MVT bytes into at most12KiB of geometry-role counts and bounded allowlisted focus FID properties; validate wire lengths/tags/indexes, expose malformed/limit states and never dump coordinates or reuse production encoder helpers.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
-    responsibility: Assert the real direct-SQLite native source, all129IDs and paints, separate polygon/anchor roles, placed Russian labels, pixels, original full DB geometry/rows and source invalidation without global Java features; retain bounded failure evidence before fixture cleanup.
+    responsibility: Assert the real direct-SQLite native source, all129IDs and paints, separate polygon/anchor roles, placed Russian labels, pixels, original full DB geometry/rows and source invalidation without global Java features; additionally exercise exact current aliases, saved/current track passes, whole Point/Firefly/icon/field-label priority, canonical root-child order and cached binding/filter identity through full/lite/style/data/reorder/hide/Undo via sqlite-priority; retain bounded failure evidence before fixture cleanup. Nested groups and Activity recreation are not covered by the new priority case.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStart.java
     responsibility: Attach bounded independent request/failure lifecycle, permission and process-importance snapshots to the existing handled background-GPS start refusal, with monotonic request age and explicit unknowns; never decide FGS eligibility or retain Activity/Context references in a request.
   - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStartTest.java
