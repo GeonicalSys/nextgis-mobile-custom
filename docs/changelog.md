@@ -1,12 +1,27 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-28 — Воспроизводимый source basis и provisional observations
+
+Продолжение MOB-02/прежней карточки: обычный вход — один `plan --changed PATH`,
+проверяющий global current manifest/hashes и обновляющий discovery до impact;
+новый consumer находится без предварительной правки producer. Standalone readonly
+inventory необязателен, manual semantic closure сохраняется.
+Read-only all-current observations отделены
+от `--write` live root + foreign HEAD. OWN mobile sources явно выбираются
+`--live-repository`, `--check` повторяет stored basis. `source_context` и SHA
+фиксируются в evidence, без замораживания чужой параллельной задачи или ложного
+покрытия её uncommitted bytes. Shared --write автоматически сохраняет отдельную
+historical dependency-observations.json; проверка её структуры не означает
+freshness/acceptance. Android registry ссылается на общий файл, не дублирует его.
+Product/native/NGW/DB/AVD и выпуск по-прежнему вне этого документационного scope.
 
 ## 2026-10-27 — Общий поиск зависимостей до любой доработки
 

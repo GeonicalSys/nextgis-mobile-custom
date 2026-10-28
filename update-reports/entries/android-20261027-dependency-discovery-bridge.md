@@ -27,3 +27,20 @@ commit проверяется свежесть индекса, независи�
 Документация подготовлена в отдельной чистой ветке от429e980; live мобильная
 задача и сабмодули не редактировались. Product/native/NGW/DB/AVD и выпуск не входят
 в объём; результаты source-only docs/report проверок фиксируются в PR.
+
+Продолжение той же MOB-02/карточки: read-only discovery наблюдает все текущие
+деревья, а воспроизводимый generated index использует live root + foreign HEAD.
+OWN mobile working repos явно включаются через `--live-repository`; PR/evidence
+сохраняют source_context/basis/SHA и отдельно provisional foreign observations.
+HEAD не подтверждает публикацию/приёмку или чужие uncommitted bytes. `--check`
+повторяет stored basis; логический ID не подменяет физический Q-worktree.
+Shared --write автоматически сохраняет исторические provisional source observations
+в dependency-observations.json с source/hash/HEAD proof, status/next step;
+проверка структуры истории не является freshness/runtime-приёмкой. Android
+registry ссылается на этот общий файл, не создавая его копию.
+
+Обычный вход упрощён до одного `plan --changed PATH`: global current manifest/
+hashes проверяются до impact и discovery обновляется при новых источниках,
+включая неизвестного consumer до изменения producer. Standalone readonly
+inventory необязателен; manual semantic closure и автоматическое сохранение
+новых подтверждённых связей остаются обязательными.

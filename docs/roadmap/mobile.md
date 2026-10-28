@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md

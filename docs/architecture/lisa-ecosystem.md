@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -29,31 +29,68 @@ Android не хранит копию scanner/index и не делает их run
 
 Сначала определить доступный внешний `qgis-plugins` source root по
 `docs/registry/ecosystem.yaml` (location/current_machine_path), прочитать общий
-guide и проверить реальное расположение/ревизии владельцев. В обычном LISA
-checkout из его корня выполняются read-only команды:
+guide и проверить actual расположение/ревизии владельцев. Обычный вход —
+один адресный read-only план из корня доступного LISA source workspace:
 
 ```powershell
-py -3.13 -B -m tools.ecosystem_tests.dependency_discovery
-py -3.13 -B -m tools.ecosystem_tests.dependency_discovery --check
 py -3.13 -B -m tools.ecosystem_tests plan --changed android_projects/android_gisapp/app/src/main/java/com/nextgis/mobile/MainApplication.java
 ```
 
-Для явного другого LISA source root discovery принимает `--workspace PATH`.
-Он анализирует source contour выбранного root: отдельный Android worktree
-автоматически не становится частью этого контура. Сравнить actual owner roots/
-revisions; индекс другой ветки/копии не подтверждает текущее дерево. Если нужный
-LISA/owner root недоступен, сабмодуль не получен, scanner не поддерживает источник
-или actual root/revision не покрыт, сохранить UNKNOWN с источником/следующим шагом.
-Продолжить доступный локальный поиск и owner registry/evidence; не придумывать
-PASS, не инициализировать чужие сабмодули и не дублировать общий индекс для обхода.
+До impact он сверяет manifest/hashes всего eligible current source-контура,
+при новых/удалённых/изменённых источниках обновляет discovery в памяти. Новый
+неизвестный consumer находится и до изменения существующего producer. Для
+clean CRLF text используется нормализованный hash, для бинарных ресурсов точный.
+Readonly `py -3.13 -B -m tools.ecosystem_tests.dependency_discovery` остаётся
+необязательным обзором, а не вторым обязательным полным parse. Начальный анализ
+наблюдает текущие деревья, включая чужие uncommitted источники; manual semantic
+closure и сохранение новых подтверждённых связей по-прежнему обязательны.
 
-Все новые подтверждённые связи сохраняются в той же задаче без отдельной команды:
-синтаксические — через shared discovery `--write`, смысл/условия/ограничения —
-в curated owner contracts. Ambiguous candidates и unresolved dynamic refs
-сохраняются с source location, статусом и следующим шагом, а не отбрасываются.
-Перед source commit обновить/проверить общий индекс по текущим исходникам и
-повторить impact при изменении границ. Не перегенерировать независимые ожидания
-под текущую ошибочную реализацию. Компактное evidence — в существующей карточке/PR.
+Воспроизводимый `--write` по умолчанию использует live working tree LISA root
+`.` и committed HEAD остальных repositories. Это точные source snapshots,
+не признак публикации/приёмки. Для OWN Android task в этом же доступном контуре
+нужно явно включить собственные рабочие источники:
+
+```powershell
+py -3.13 -B -m tools.ecosystem_tests.dependency_discovery --write --live-repository . --live-repository android_projects/android_gisapp
+```
+
+Если также меняется собственный сабмодуль, добавить, например,
+`--live-repository android_projects/android_gisapp/maplib`; полные фиксированные
+IDs перечислены в общем guide. Для desktop/root task с чужой параллельной
+mobile задачей использовать обычный `--write`, а не включать чужой live repo.
+В PR/evidence указать `source_context`/basis/SHA и отдельно current/provisional
+observations; volatile live HEAD/dirty остаются наблюдением CLI.
+
+Перед source commit:
+
+```powershell
+py -3.13 -B -m tools.ecosystem_tests.dependency_discovery --check
+```
+
+`--check` повторяет stored basis/live-owner selection. Новый foreign commit
+даёт drift; foreign uncommitted рабочие изменения не считаются покрытыми HEAD
+snapshot. Они остаются source-backed provisional observations с next step,
+не отбрасываются и не разрешают переписывать чужие semantic owner contracts.
+`--write` автоматически сохраняет их в единой LISA history
+`plugins/geonical-docs/registry/dependency-observations.json`: source/hash/HEAD
+proof, definitions/references/dynamic refs/render facts, статус и next step.
+Это исторические provisional observations; `--check` валидирует их структуру,
+а не текущую свежесть движущихся foreign bytes. Raw data/исходники/произвольные
+config values не копируются; чувствительные literal targets хэшируются.
+Caps/errors остаются UNKNOWN и не удаляют сохранённых кандидатов молча.
+Новые подтверждённые/scope-owned связи сохраняются в той же задаче автоматически
+в generated index/curated contracts, без отдельной команды. Независимые ожидания
+не перегенерировать под дефект. Изменившиеся пути и условия требуют нового impact;
+working-tree impact в памяти отличать от сохранённого basis.
+
+Для явного другого LISA source root discovery принимает `--workspace PATH`.
+Он анализирует source contour выбранного root: отдельный Android Q-worktree
+автоматически не становится частью этого контура; `--live-repository` выбирает
+логический ID, а не переназначает физический путь. Если actual root/revision не
+покрыт, LISA/owner root недоступен, сабмодуль не получен или источник не поддержан,
+сохранить UNKNOWN с source/next step. Продолжать доступный локальный поиск и
+owner registry/evidence; не заменять текущую ветку индексом другой копии,
+не инициализировать чужие сабмодули и не создавать Android-дубликат индекса.
 
 Обязательно проверять PostgreSQL → desktop layer → mobile config → NGW/Collector
 → Android consumer и обратное направление; это пример, а не полный список.

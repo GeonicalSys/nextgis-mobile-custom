@@ -1,7 +1,7 @@
 ---
 title: Чеклист изменения Android-форка
 type: guide
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - AGENTS.md
   - docs/registry/change-impact.yaml
@@ -17,8 +17,10 @@ related_code:
   или объёма согласовать с владельцем продукта. Срочный инцидент оформить до merge.
 - [ ] Проверить status/branch root и каждого затрагиваемого сабмодуля.
 - [ ] Прочитать root и ближайший `AGENTS.md`, README и manifest модуля.
-- [ ] До любого изменения поведения/API/данных/ресурсов/config самостоятельно
-  выполнить общий discovery всего доступного desktop/mobile source-контура по
+- [ ] До любого изменения поведения/API/данных/ресурсов/config выполнить один
+  LISA `plan --changed PATH`: global eligible current manifest/hashes проверяются,
+  discovery обновляется до impact, включая нового consumer неизменённого producer.
+  Standalone readonly inventory необязателен; manual semantic closure — по
   [единому маршруту](../architecture/lisa-ecosystem.md#обнаружение-зависимостей-до-правки).
   Проверить actual owner roots/revisions; реестр и пользовательские примеры
   не ограничивают поиск, пользователь не перечисляет зависимости.
@@ -56,6 +58,9 @@ related_code:
 - [ ] Source index обновлён/проверен перед source commit по actual roots/revisions;
   независимые ожидания не перегенерированы под дефект. Требуемый dirty/foreign
   owner остаётся follow-up с порядком доставки, не исключается молча.
+- [ ] В evidence указан source_context/basis/SHA; автоматически сохранённая
+  `--write` shared dependency-observations.json history проверена структурно,
+  не выдана за freshness чужих uncommitted bytes или runtime-приёмку.
 
 - [ ] В PR заполнены ID дорожной карты, связь с целью, влияние и проверки по
   [шаблону](../../.github/PULL_REQUEST_TEMPLATE.md). ID update-reports учитывается отдельно.
