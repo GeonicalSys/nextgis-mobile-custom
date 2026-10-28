@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-LOCAL-TILE-CACHE-ADMISSION:
+    type: automatic
+    scope: [maplib, maplibui, app]
+    command: .\gradlew.bat :maplib:testDebugUnitTest --tests com.nextgis.maplib.map.LocalVectorTileDiskCacheTest --tests com.nextgis.maplib.map.SqliteVectorTileAdmissionTest --tests com.nextgis.maplib.map.SqliteVectorSourceBridgeTest --tests com.nextgis.maplib.map.SqliteVectorTileProviderTest --tests com.nextgis.maplib.map.LocalVectorTileFullContentTest --tests com.nextgis.maplib.map.RenderTileWorkGateTest
+    expected: Real temporary filesystem cache fixtures assert no repeated hot-path directory inventory, shared canonical-root accounting/registry reuse, byte/file limits, loss/write/rename/delete/cancellation recovery and exact complete bytes. Concurrency units assert canceled waiters avoid IO dispatch, active noncooperative work owns permits until unwind, blocked Main does not retain completed IO permits, failures/retry/predispatch cancellation release once, and all original tile/lifecycle/geometry/label expectations stay green. These are source checks; no device speed or native acceptance claim.
   AUTO-SQLITE-NATIVE-VECTORS:
     type: automatic
     scope: [maplib, maplibui, app]

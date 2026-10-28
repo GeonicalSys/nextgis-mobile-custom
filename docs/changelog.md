@@ -8,6 +8,20 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-28 — Cache index и отменяемый native IO допуск
+
+Убраны полный scan/regex/sort/stat каталога перед каждым put: общий bounded
+canonical-root metadata ledger, incremental recency и отдельная reconciliation
+с прежними PBF/identity/byte/file budgets. Перед native IO dispatcher — общий
+отменяемый допуск2, permit до настоящего unwind и release до Main. SDK current
+tiles/геометрии/подписи не отбрасываются.70focused JVM/9classes PASS50с;
+обычные LisaDebug/LisaRelease/BelkaRelease PASS110с/versionmatrixPASS.
+LisaAPK224/3.1.2.30 SHA256b0f55cda…bb67e37, прежняя подпись, profiler/verification
+false и нет profileable. Агент не устанавливал APK и не готовил новые замеры.
+Владелец сообщил о почти моментальной отрисовке; формальная content/скорость
+приёмка, Full/публикация/новый merge остаются отложены. Final whole-contour
+refresh INVALID из-за чужих меняющихся контрактных docs; index follow-up UNKNOWN.
+
 ## 2026-10-28 — Ручной T40 resource trial: общий bottleneck перед геометрией
 
 Пользователь завершил19-минутный прогон:23270 app records/fullfooter/0loss,

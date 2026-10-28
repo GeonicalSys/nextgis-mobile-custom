@@ -1,5 +1,34 @@
 schema_version: 1
 invariants:
+  INV-LOCAL-TILE-CACHE-ADMISSION:
+    title: Complete derived tiles keep bounded shared cache accounting and cancellable pre-dispatch admission
+    owners: [maplib, maplibui, app]
+    statement: >
+      Native and HTTP local tile consumers share the canonical-root cache ledger per operation.
+      Hot publication cannot inventory or sort the entire cache catalog on every put; bootstrap
+      and reconciliation are separate bounded ownership events. Preserve full PBF bytes, byte/file/
+      entry budgets, atomic temporary-file publication, safe cache misses and SQLite authority.
+      Native current guards apply inside optional disk publication; fallback HTTP retains its
+      preexisting outer current/key checks without socket probes in the cache lock. Its peer
+      cancellation/queue are not reworked here. Arbitrary external concurrent
+      cache writers are not assumed supported. Android cache loss must not lose project data.
+      A shared cancellable two-permit admission precedes native blocking IO dispatch across layers.
+      Canceled SDK waiters do not enqueue a blocking payload each. A permit belongs to actual IO
+      until it unwinds, releases before Main completion and releases exactly once on all paths.
+      SDK Job demand remains authoritative: never discard a valid parent/fade/adjacent tile by
+      heuristic age, zoom or density. This is not a bound on SDK pending jobs or the separate line
+      label query scheduler. New source/content/style guards, editor originals, scale gates and
+      complete geometry/identity/label output stay unchanged. JVM/build checks do not certify
+      real device speed, final frame contents, low-RAM behavior or a two-second target.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileDiskCache.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+      - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileDiskCacheTest.java
+      - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorTileAdmissionTest.kt
+    verify_smoke: [AUTO-LOCAL-TILE-CACHE-ADMISSION, AUTO-SQLITE-NATIVE-VECTORS, AUTO-APP-RELEASES]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, maplib/docs/README.md, maplib/docs/manifest.yaml]
   INV-SQLITE-NATIVE-VECTORS:
     title: Ordinary vector rendering reads SQLite tiles without a global GeoJSON snapshot
     owners: [maplib, maplibui, app]

@@ -13,6 +13,15 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+28 октября2026, MOB-04: поверх текущего fork SQLite/native path общий индекс
+производного PBF cache убирает повторный scan/regex/sort/stat каталога на каждом
+новом тайле; атомарные bytes/identity и прежние budgets сохранены. Shared
+cancellable admission2 до IO не даёт каждому отменённому SDK ожиданию создавать
+blocking payload, не отбрасывая ещё нужные parent/fade tiles. Это fork-only
+обслуживание существующего cache/queue, не новый долговременный кэш, не изменение
+SQLite/NGW/Collector schema и не upstream merge. Измерение смартфона/Full не
+выполнялось; готовится обычный APK с private profiling выключенным.
+
 Final validation D101:allmaplib750PASS/132classes/0fail/error/skip59s. Actual
 dense1403/11.7z complete scene gate10.33–12.27s против13.68–15.65s6039 и
 32.45–34.09s843d; late map ROI MAE0 с обоими. Один processcold run/build при

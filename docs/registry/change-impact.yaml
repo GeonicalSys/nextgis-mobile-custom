@@ -1,5 +1,19 @@
 schema_version: 1
 triggers:
+  - id: LOCAL-TILE-CACHE-AND-IO-ADMISSION
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileDiskCache.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+      - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileDiskCacheTest.java
+      - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorTileAdmissionTest.kt
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/reference/mobile-resource-profile-t40-2026-10-28.md]
+    invariants: [INV-LOCAL-TILE-CACHE-ADMISSION, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-SQLITE-NATIVE-VECTORS]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/runbooks/automated-tests.md, docs/reference/official-differences.md, docs/registry/dependencies.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+    verify: [AUTO-LOCAL-TILE-CACHE-ADMISSION, AUTO-APP-RELEASES, AUTO-MOBILE-RELATED]
+    strict_docs: true
   - id: SQLITE-BOUNDED-ORIGINAL-READS
     paths:
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java

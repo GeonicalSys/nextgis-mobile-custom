@@ -39,6 +39,17 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+MOB-04 follow-up28октября сохраняет содержимое и SDK13.7.1 demand: shared
+cancellable admission2 ставится до native blocking IO, canceled waiters не
+заполняют dispatcher payloads; leases живут до actual unwind, освобождаются до
+Main. Текущие parent/fade/adjacent tiles не теряются по эвристике масштаба/возраста.
+Производный PBF cache имеет общий bounded canonical-root ledger с отдельной
+bootstrap/reconciliation вместо полного scan/sort перед каждой записью. Полные
+PBF/ID/геометрии/подписи/scale gates, source/style/content fences и original edit
+route не меняются. HTTP использует тот же indexed cache, его queue/peer protocol
+и line-label scheduler этим не переделываются. См.
+[cache/queue contract](map-performance.md#удаление-общих-накладных-расходов-cachequeue--28-октября2026).
+
 ## Ограниченные original reads — 2026-10-28
 
 Final D101 strict observed dense1403/11.7z video gate принят отдельно от phase

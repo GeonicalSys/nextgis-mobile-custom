@@ -23,6 +23,56 @@ related_code:
 
 # Производительность запуска карты
 
+## Удаление общих накладных расходов cache/queue — 28 октября2026
+
+По следующему прямому поручению владельца реализован узкий follow-up к
+[ручному разбору T40](../reference/mobile-resource-profile-t40-2026-10-28.md):
+убрать scan/sort при каждом put и удалять отменённые ожидания до blocking IO.
+Новый замерщик, установка и замеры не готовятся; нужен обычный APK для телефона.
+
+Производный PBF cache сохраняет прежние имена/identity и byte/entry/1024-file
+budgets. Общий canonical-root ledger с registry8roots и incremental recency
+заменяет полный проход в горячем put. Bootstrap/reconciliation при изменении
+каталога отдельно читают по одному metadata record; после этого один новый тайл
+не компилирует regex и не сортирует/перечитывает все файлы. Старые providers
+заново получают актуальный ledger при операции, safe miss/Android cache loss и
+полные атомарные записи сохраняются. Нативный current guard проверяется внутри
+записи; HTTP сохраняет прежние внешние guards, без1мс socket probe подdisklock.
+Это обслуживание текущего кэша, без новой долговременной политики/индекса на диске.
+
+До shared IO dispatch добавлен общий отменяемый допуск2. SDK cancel удаляет
+ожидание до blocking payload; активное IO держит lease до настоящего unwind,
+отдаёт его до Main, а predispatch failure освобождает один раз. Валидные
+parent/fade/adjacent tiles не отсекаются по возрасту или масштабу. Existing memory
+gate2/1 и владелец source/content/style/edited object остаются прежними;
+HTTP/line-label scheduler и общее число SDK Job этим не изменяются.
+
+Контракт `INV-LOCAL-TILE-CACHE-ADMISSION`, карточка
+`maplib-20261028-tile-cache-queue`. Адресные source/build результаты принадлежат
+новому APK receipt; прежние114мс и p95очереди8,59с не являются результатами
+после исправления. Реальная скорость/полнота кадра и2–3с проверяются отдельно;
+Full/публикация по-прежнему отложены.
+
+Техническая проверка:70 JVM tests/9classes PASS50с, включая25 cache и7 admission;
+0fail/error/skip. LisaDebug/LisaRelease/BelkaRelease PASS1мин50с, version matrix
+PASS с прежними версиями. Source fingerprint1658 runtime/build files
+`1ea9ac886867116d6e3d5c6707e83b74f6caad7644410e563441cdc37952de3d` неизменен
+до/после сборки. Обычный Lisa APK224/3.1.2.30:
+SHA256`b0f55cda77d4bc3965d00e12a316654f9a7de98c9eab060ded7e56337bb67e37`,
+70 580 085 байт, прежний signer, DEBUG/FIELD_VERIFICATION/PRIVATE_RESOURCE_PROFILING
+false, profileable element отсутствует. Никакого postprocessing/установки/профиля.
+После самостоятельной проверки владелец сообщил «Почти моментально отрисовывается
+всё». Это положительный субъективный отзыв, не численный benchmark и не проверка
+полноты всех объектов/подписей. Её владелец явно оставил на потом.
+
+Первая whole-contour проверка до правок завершилась exit0. Финальные refresh и
+retry получили INVALID из-за контрактных документов чужого desktop checkout
+(standart_profiles/AGENTS.md, geonical-docs scenario-dependencies/local-ci/
+mobile-client). Это не PASS. Семантические связи сохранены в own app registries,
+source/mobile input hashes стабильны; canonical root index write/check остаётся
+UNKNOWN/follow-up владельцу, без изменения/заморозки чужих файлов. Частный APK
+не объявляется сквозной release acceptance.
+
 ## Диагностика задержки планшета — 2026-10-28
 
 Final same-dense1403/11.7z strict video content gate (включая последнюю верхнюю

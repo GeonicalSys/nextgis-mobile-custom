@@ -17,6 +17,17 @@ related_code:
 
 # Автоматические проверки
 
+Для MOB-04 cache/queue follow-up28октября — адресный source batch
+`AUTO-LOCAL-TILE-CACHE-ADMISSION`: реальные временные Q filesystem fixtures,
+25 cache и7 новых admission cases плюс прежние provider/lifecycle/gate/full-PBF
+ожидания. Canceled waiter, noncooperative unwind, blocked Main и predispatch
+cancel проверяются без SDK/устройства. Это не географическая/нативная приёмка.
+Владелец поручил обычный APK без подготовки/установки замерщика: privateResourceProfiling,
+fieldVerificationChecks и diagnosticDeliveryChecks false; не запускать ADB,
+эмулятор, profiler tooling, Related native или Full для этого шага. Compiler и
+JVM/doc checks, package/signature/manifest/BuildConfig readback остаются частью
+сборки; пользователь сам устанавливает APK на свой смартфон.
+
 ## Final D101 closure gates — 2026-10-28
 
 ONE final `:maplib:testDebugUnitTest -Pkotlin.incremental=false -PciReliabilityChecks=true`
