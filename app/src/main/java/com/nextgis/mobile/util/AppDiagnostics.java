@@ -50,7 +50,7 @@ public final class AppDiagnostics {
     private static final Set<String> CONTEXTS = new HashSet<>(
             Arrays.asList("app", "device", "os", "runtime", "gpu", "trace"));
     private static final Set<String> DIAGNOSTIC_CONTEXTS = new HashSet<>(
-            Arrays.asList("map_runtime", "gps_recovery", "sync_journal", "report_origin", "process_exit"));
+            Arrays.asList("map_runtime", "gps_recovery", "sync_journal", "report_origin", "process_exit", "background_gps_start"));
     private static volatile com.nextgis.maplib.util.MapRuntimeDiagnostics.Trace startup;
     private static volatile Context diagnosticContext;
 
@@ -342,7 +342,8 @@ public final class AppDiagnostics {
         java.util.List<String> contextKeys = java.util.Collections.list(event.getContexts().keys());
         contextKeys.sort(java.util.Comparator.comparingInt(key -> "report_origin".equals(key) ? 0
                 : "process_exit".equals(key) ? 1 : "sync_journal".equals(key) ? 2
-                : "gps_recovery".equals(key) ? 3 : "map_runtime".equals(key) ? 4 : 5));
+                : "background_gps_start".equals(key) ? 3 : "gps_recovery".equals(key) ? 4
+                : "map_runtime".equals(key) ? 5 : 6));
         for (String key : contextKeys) {
             Object context = event.getContexts().get(key);
             if (context instanceof Response) {

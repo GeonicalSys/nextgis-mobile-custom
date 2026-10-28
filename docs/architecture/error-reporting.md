@@ -1,7 +1,7 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -10,10 +10,57 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStart.java
+  - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt
+  - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt
+  - app/src/test/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStartTest.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
 ---
 
 # Доставка диагностических отчётов
+
+## Обработанный отказ фонового GPS — группа118, 2026-10-28
+
+Событие118 от27 октября17:03:22.891UTC относится к223/5050495 на Samsung/Android16,
+имеет `failure_kind=handled` и цепочку SecurityException/RemoteException.
+MainActivity уже получила stopped за48ms до отказа `startForeground`.
+Это свидетельство гонки eligibility при доставке pending service launch,
+а не подтверждённое падение или OOM. Отказ уже перехватывался сервисом.
+
+К прежнему допущенному handled LOCATION report добавлен `background_gps_start`
+schema1. В нём только фиксированный `stage`, монотонный `request_age_ms` и два
+снимка `request`/`failure`: `visible_activities`, `resumed_activities`,
+`fine_permission`, `coarse_permission`, `background_permission`,
+`process_importance`. Снимок request создаётся до `startForegroundService`,
+failure — в существующем catch. Request хранит независимые scalar значения,
+не Context/Activity и не живой изменяемый lifecycle снимок. По нему можно увидеть
+остановку экрана или изменение разрешений между запросом и promotion.
+
+Допустимы только пять этапов: launch, notification, start_foreground,
+acquire_background_updates, schedule_permission_check. Неизвестные stage,
+утраченный owner/request, отрицательный clock delta и недоступные отдельные
+платформенные сведения отмечаются `unknown`; до API29 background permission
+имеет `not_required`. Нет координат, SQL, accounts, Intent payload или файлов
+проекта. Context прикладывается в отдельном временном SDK scope и не остаётся
+у соседних событий; sanitize/replay сохраняет его с диагностическим приоритетом
+в прежнем общем16KiB бюджете. Отдельной категории/отправки событий нет.
+
+Наблюдение не принимает решений: FGS type, разрешения, eligibility, promotion,
+pending-cancel fulfillment, START_NOT_STICKY, session/GPS lease cleanup и
+политика повторов сохраняются. Существующий permission-gated report и его
+rate limit тоже прежние. Если optional witness недоступен, исходный отчёт
+не должен теряться. Это улучшение сбора, не доказанное устранение Android/OEM
+отказов. Нужен следующий полевой report после установки соответствующего APK.
+
+Технические unit regressions проверяют delayed promotion после сообщённого
+onPause/onStop, отдельные permission states/unknown/API28, scoped handled
+delivery и сохранность witness при настоящем sanitize с большим соседним
+payload и повторным replay. Они не запускают Android FGS и не являются native
+приёмкой гонки. Результат исполнения и факт выпуска фиксируются отдельно в
+[карточке](../../update-reports/entries/android-20261028-background-gps-start-evidence.md).
 
 ## Системная история в отправляемом ZIP — 2026-10-27
 
@@ -326,6 +373,30 @@ function/library basename/rel_pc/build_id и ограниченную безоп
 Регистры, raw memory, memory maps, OS log buffers и open files исключены.
 Malformed/oversized/unavailable/missing trace имеют явный статус. Никаких новых
 Binder/file операций в fatal callback: сбор только после следующего запуска.
+
+Уточнение28 октября: `REASON_SIGNALED` тоже запрашивает trace начиная с API30.
+Прежний reason gate пропускал эти записи целиком и выдавал
+`not_available_for_reason`, хотя публичный Android API не гарантирует отсутствие
+trace. Javadoc/implementation `ApplicationExitInfo.getTraceInputStream()` в
+установленных Android36 SDK sources допускает сохранённый прежний ANR после
+восстановления процесса и последующей смерти по другой причине; getter не имеет
+проверки reason. Native protobuf документирован с API31; null допустим, в том
+числе после перезаписи системного circular buffer.
+
+`DiagnosticsTracePolicy` сохраняет прежний ANR/native API gate, добавляя для
+SIGNALED режим `requested_format=auto`. Parser принимает native format только
+при наличии crashing TID и непустых allowlisted frames; иначе ищет только main
+ANR stack. `format` равен `native_protobuf`, `anr_text` либо `unknown`.
+`association=may_precede_exit` у signal trace означает возможную связь с более
+ранним ANR, а не установленную причину текущего завершения. Исходные reason/status,
+owner identity и fingerprint остаются прежними; reason2/status6 не доказывает OOM.
+Null даёт `missing`, ошибка getter/read — `unavailable` с ограниченным именем
+класса ошибки без её сообщения, нераспознанные bytes — `unrecognized_format`,
+переполнение — `oversized` либо `captured_truncated`. Пропуск политикой теперь
+называется `not_requested_for_reason`, API ниже30 — `unsupported_api`.
+Byte/frame/privacy budgets прежние; никакие дополнительные native handlers не
+устанавливаются. Новые unit cases и реальная OS-проверка SIGNALED ещё не запускались;
+исторический native result ниже относится к прежнему ANR/native reason gate.
 
 Проверено на API36 AVD: реальный SIGKILL без SDK envelope и SIGABRT, restart,
 исходная identity, наличие OS native_frames в durable envelope. В delivery06

@@ -20,7 +20,7 @@ import com.nextgis.maplib.util.PermissionUtil
 import com.nextgis.mobile.R
 import com.nextgis.mobile.MainApplication
 import com.nextgis.mobile.activity.MainActivity
-import com.nextgis.mobile.util.AppDiagnostics
+import com.nextgis.mobile.util.DiagnosticsBackgroundLocationStart
 import java.util.UUID
 
 /** One non-recording owner of the shared GPS stream, with a location foreground notification. */
@@ -42,8 +42,10 @@ class BackgroundLocationService : Service() {
         val current = session?.takeIf { it.id == requested }
         if (current == null && session != null) return START_NOT_STICKY
         owner = current
+        var diagnosticStage = "notification"
         try {
             val notification = notification()
+            diagnosticStage = "start_foreground"
             if (Build.VERSION.SDK_INT >= 29) {
                 startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
             } else startForeground(NOTIFICATION_ID, notification)
@@ -54,13 +56,16 @@ class BackgroundLocationService : Service() {
                 stopSelfResult(startId)
                 return START_NOT_STICKY
             }
+            diagnosticStage = "acquire_background_updates"
             (application as IGISApplication).gpsEventSource.acquireBackgroundUpdates(current)
             HyperLog.i(Constants.TAG, "Background GPS started owner=${current.id}")
+            diagnosticStage = "schedule_permission_check"
             handler.removeCallbacks(permissionCheck)
             handler.post(permissionCheck)
         } catch (error: RuntimeException) {
             HyperLog.w(Constants.TAG, "Background GPS foreground start rejected", error)
-            if (PermissionUtil.hasAnyLocationPermission(this)) AppDiagnostics.report(AppDiagnostics.Operation.LOCATION, error)
+            if (PermissionUtil.hasAnyLocationPermission(this))
+                DiagnosticsBackgroundLocationStart.report(this, current?.request, diagnosticStage, error)
             if (session === current) session = null
             current?.let { (application as IGISApplication).gpsEventSource.releaseBackgroundUpdates(it) }
             stopForeground(STOP_FOREGROUND_REMOVE)
@@ -112,12 +117,13 @@ class BackgroundLocationService : Service() {
     companion object {
         private const val SESSION_ID = "background_gps_session"
         private const val NOTIFICATION_ID = 18_406
-        private class Session(val id: String = UUID.randomUUID().toString()) { var promoted = false }
+        private class Session(val request: DiagnosticsBackgroundLocationStart.Request,
+                              val id: String = UUID.randomUUID().toString()) { var promoted = false }
         private var session: Session? = null // Controller and service run on the main thread.
 
         @JvmStatic fun start(context: Context) {
             if (session != null) return
-            val created = Session()
+            val created = Session(DiagnosticsBackgroundLocationStart.request(context))
             session = created
             try {
                 ContextCompat.startForegroundService(context, Intent(context, BackgroundLocationService::class.java)
@@ -125,7 +131,8 @@ class BackgroundLocationService : Service() {
             } catch (error: RuntimeException) {
                 session = null
                 HyperLog.w(Constants.TAG, "Background GPS launch rejected", error)
-                if (PermissionUtil.hasAnyLocationPermission(context)) AppDiagnostics.report(AppDiagnostics.Operation.LOCATION, error)
+                if (PermissionUtil.hasAnyLocationPermission(context))
+                    DiagnosticsBackgroundLocationStart.report(context, created.request, "launch", error)
             }
         }
 

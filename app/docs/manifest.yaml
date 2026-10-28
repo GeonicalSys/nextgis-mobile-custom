@@ -2,21 +2,43 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/SqliteMvtEvidence.java
+    responsibility: Independently summarize up to4MiB MVT bytes into at most12KiB of geometry-role counts and bounded allowlisted focus FID properties; validate wire lengths/tags/indexes, expose malformed/limit states and never dump coordinates or reuse production encoder helpers.
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
+    responsibility: Assert the real direct-SQLite native source, all129IDs and paints, separate polygon/anchor roles, placed Russian labels, pixels, original full DB geometry/rows and source invalidation without global Java features; retain bounded failure evidence before fixture cleanup.
+  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStart.java
+    responsibility: Attach bounded independent request/failure lifecycle, permission and process-importance snapshots to the existing handled background-GPS start refusal, with monotonic request age and explicit unknowns; never decide FGS eligibility or retain Activity/Context references in a request.
+  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStartTest.java
+    responsibility: Verify delayed promotion after reported Activity stop, permission changes and API28/unknown states, actual scoped handled delivery and diagnostic-priority sanitize/replay without running Android FGS or claiming native acceptance.
+  - path: app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java
+    responsibility: Claim one automatic foreground resource-economy notice per application process across maps, layers and Activity recreation; manual status remains independent and no setting or layer visibility is persisted.
+  - path: app/src/test/java/com/nextgis/mobile/util/RenderMemoryNoticeTest.java
+    responsibility: Assert the process-session claim is atomic, is not reset by another caller and starts clear only for an independent new session.
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
+    responsibility: Independently verify all129 technical SQLite polygon IDs and65-coordinate Java inputs, complete native ID set and whole-row hashes, then exercise once-session notice across recreation and another layer plus eight bounded Russian component dialog profiles. This is no real memory-pressure, Full real-window or2GiB acceptance.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
     responsibility: Add optional actual permission/provider/background policy evidence to existing rare classified GPS reports, fail open without reading coordinates, accounts or business storage.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
-    responsibility: Persist bounded process ownership before startup; match abnormal OS exits after restart, keep original/unknown historical identity and deterministic event IDs, and acknowledge pending owners only after durable transport storage.
+    responsibility: Persist bounded process ownership before startup; match abnormal OS exits after restart, delegate API/reason trace policy including SIGNALED, keep original/unknown identity and deterministic event IDs, and acknowledge owners only after durable transport storage.
+  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java
+    responsibility: Attempt bounded SIGNALED traces from API30 with automatic native/ANR recognition and may-precede-exit association; preserve null, unknown and unavailable evidence without inferring OOM or changing OS reason/status.
+  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsTracePolicyTest.java
+    responsibility: Verify API/reason trace gates, no stream open for skipped cases, prior recovered ANR association and distinct missing/IO/security failure metadata without exception-message disclosure.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java
-    responsibility: Read at most one MiB of OS ANR/native trace after restart and retain only main/crashing-thread frames and bounded native symbol metadata, excluding memory, registers, open files and OS log buffers.
+    responsibility: Read at most one MiB plus a sentinel of OS trace after restart, automatically distinguish recognized native/ANR stacks when needed, retain only main/crashing-thread frames and bounded native symbols, and exclude memory, registers, open files and OS log buffers.
+  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsNativeTraceTest.java
+    responsibility: Independently verify native/ANR allowlists and auto recognition, byte/frame budgets, malformed and oversized inputs, stream closure and bounded IO failure metadata.
+  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporterTest.java
+    responsibility: Verify process ownership, historical identity, abnormal-reason gates and preserved raw SIGNALED reason/status with prior-trace association through the actual cached-send policy.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/MapRenderStressTest.java
-    responsibility: Seed an isolated technical MVT map in one process and verify 90 seconds of pan/pinch/recreation with independently observed native camera changes, actual OpenGL and peak memory evidence; retain pre-close screenshots, camera/style/lifecycle state and later recovery samples without clearing a failed assertion.
+    responsibility: Require distinct seed/workload PIDs and6480-by65 technical geometry; verify90 seconds of pan/pinch/recreation through effective current SQLite CustomVectorSources with empty global feature caches, independent fully-visible grid IDs and valid native geometry roles; retain peak memory/actual GPU and failed recovery evidence without claiming a real-project speed or leak benchmark.
   - path: app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java
     responsibility: Show a single bounded scrolling candidate list with wrapping full labels and cancellation; keep vector and track choice callbacks distinct.
   - path: app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
@@ -94,11 +116,15 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java
     responsibility: Verify real layers.db legacy migration beside new tracks, exact row values, checkpoint/pending Stop recovery, common history/map visibility, project deletion and retained recording switch guard.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
-    responsibility: Verify classic SQL/rule JSON/GeoJSON/native paint and labels on host OpenGL; prepare model camera/visibility and suppress the disposable startup geo-dialog; reject configured local-vector-tiles sources.
+    responsibility: Verify classic SQL/rule JSON/GeoJSON/native paint and labels through real MapLibre OpenGL on an isolated verification phone or software-only emulator; prepare model camera/visibility and suppress the disposable startup geo-dialog; reject configured local-vector-tiles sources. Host-GPU emulator mode is forbidden.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
     responsibility: Verify one interior label across MVT seams and zoom/style reapply through the real local tile provider, with glyph/fill/outline pixels and no added source or style layer.
   - path: tools/run_mobile_tests.py
     responsibility: Route complete static phone and emulator acceptance, retain failures, finalize owned AVD before PASS, verify source receipts and require a permitted project or an explicitly chosen validated metadata-only policy fixture with provenance.
+  - path: tools/mobile_native_log.py
+    responsibility: Continuously capture only the fixed verification package's exact queried UID into a4MiB head/tail host log, stop/join/close only its owned ADB client, retain partial evidence and return bounded diagnostics without changing the native test outcome or device state.
+  - path: tools/tests/test_mobile_native_log.py
+    responsibility: Independently verify actual4MiB first/last bounds, exact package UID admission, owned process and blocked reader shutdown, partial error retention, idempotent metadata and no app/server interactions using fake subprocesses only.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
     responsibility: Verify actual Orbit pixels, heading/course fallback and accuracy circles; isolate heading input, synchronize saved/native fixture cameras through MapDrawable, await the app scene, retain .08m/30-second assertions and report both cameras plus sample/cache/source/radius state.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java
@@ -330,6 +356,10 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackerStopRecoveryTest.java
     responsibility: Real service failed Stop preserves and later drains the unwritten tail.
 public_contracts:
+  - id: render-resource-economy-host
+    symbol: MapFragment.onRenderMemoryWarningChanged and showRenderMemoryStatus
+    path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    consumers: [maplib]
   - id: map-host
     symbol: MapFragment implements MaplibreMapInteraction
     path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
@@ -346,7 +376,7 @@ storage_contracts:
     path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
   - id: sync-recovery-journal
     path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
-invariant_refs: [INV-POINT-FIREFLY, INV-FEATURE-COPY, INV-WHOLE-OBJECT-TRANSFORM, INV-SCROLLING-DIALOG-VIEWPORT, INV-MOBILE-PUBLICATION-ACCEPTANCE, INV-SYNC-NOTIFICATIONS, INV-LOCAL-LOG-STARTUP, INV-TRACK-DELIVERY, INV-DIAGNOSTIC-DELIVERY, INV-CONDITIONAL-REQUIRED, INV-PROJECT-SCRIPTS, INV-REQUIRED-FIELDS, INV-FLAVORS, INV-VERSION-COUPLING, INV-MAPLIBRE-BACKEND-COMPATIBILITY, INV-MAPLIBRE-VIEW-LIFECYCLE, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-SPATIAL-CACHE-CONSISTENCY, INV-HIDDEN-VECTOR-TILE-IDENTIFY, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-UNDERLAY-DISPLAY, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-PROJECT-OPERATION-EXCLUSION, INV-NGRC-PRESERVE, INV-LEGACY-UNDERLAY-MIGRATION, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-UPDATER-AUTO-RETRY, INV-UPDATER-BACKGROUND, INV-ECOSYSTEM-SERVER-BOUNDARY, INV-CRASH-DRAFT-RECOVERY, INV-MULTIPOLYGON-REPAIR, INV-GEOMETRY-SKETCH-WORKFLOW, INV-GPS-TRACK-FILTER, INV-STAKEOUT-GUIDANCE, INV-LOCAL-VECTOR-LAYERS, INV-LOCAL-WRITE-COMMIT, INV-TRACK-RETRY, INV-TOOL-TAP-TOLERANCE]
+invariant_refs: [INV-SQLITE-NATIVE-VECTORS, INV-POINT-FIREFLY, INV-FEATURE-COPY, INV-WHOLE-OBJECT-TRANSFORM, INV-SCROLLING-DIALOG-VIEWPORT, INV-MOBILE-PUBLICATION-ACCEPTANCE, INV-SYNC-NOTIFICATIONS, INV-LOCAL-LOG-STARTUP, INV-TRACK-DELIVERY, INV-DIAGNOSTIC-DELIVERY, INV-CONDITIONAL-REQUIRED, INV-PROJECT-SCRIPTS, INV-REQUIRED-FIELDS, INV-FLAVORS, INV-VERSION-COUPLING, INV-MAPLIBRE-BACKEND-COMPATIBILITY, INV-MAPLIBRE-VIEW-LIFECYCLE, INV-NGW-ACCOUNT-IDENTITY, INV-DEFAULT-OSM-BOTTOM, INV-TRACK-LAYER-TOP, INV-HOT-ADD-CONSISTENCY, INV-SPATIAL-CACHE-CONSISTENCY, INV-HIDDEN-VECTOR-TILE-IDENTIFY, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-UNDERLAY-DISPLAY, INV-COLLECTOR-ISOLATION, INV-COLLECTOR-EDITABILITY, INV-COLLECTOR-RESUMABLE, INV-PROJECT-OPERATION-EXCLUSION, INV-NGRC-PRESERVE, INV-LEGACY-UNDERLAY-MIGRATION, INV-SYNC-ACCOUNT-ISOLATION, INV-UPDATER-IDENTITY, INV-UPDATER-PERMISSION-RESUME, INV-UPDATER-AUTO-RETRY, INV-UPDATER-BACKGROUND, INV-ECOSYSTEM-SERVER-BOUNDARY, INV-CRASH-DRAFT-RECOVERY, INV-MULTIPOLYGON-REPAIR, INV-GEOMETRY-SKETCH-WORKFLOW, INV-GPS-TRACK-FILTER, INV-STAKEOUT-GUIDANCE, INV-LOCAL-VECTOR-LAYERS, INV-LOCAL-WRITE-COMMIT, INV-TRACK-RETRY, INV-TOOL-TAP-TOLERANCE]
 global_docs:
   - docs/architecture/point-firefly.md
   - docs/architecture/feature-copy-transform.md
@@ -371,5 +401,5 @@ global_docs:
   - docs/reference/build-matrix.md
   - docs/reference/flavors-and-versioning.md
   - docs/runbooks/release-apk.md
-smoke_tests: [AUTO-POLYGON-STYLE-CONTROLS, AUTO-POINT-FIREFLY, AUTO-FEATURE-EDITING, SMOKE-FEATURE-COPY-TRANSFORM, AUTO-MOBILE-RELATED, AUTO-MOBILE-FULL, AUTO-MOBILE-PUBLICATION-GATE, SMOKE-LAYER-CHOOSER, SMOKE-MAP-RUNTIME-DIAGNOSTICS, AUTO-UPDATER-CHECKS, SMOKE-SYNC-OFFLINE, SMOKE-SYNC-NOTIFICATIONS, SMOKE-TRACK-DELIVERY, SMOKE-DIAGNOSTIC-DELIVERY, SMOKE-STAKEOUT-PERMISSIONS, SMOKE-FORM-APPEARANCE, SMOKE-CONDITIONAL-REQUIRED, SMOKE-FORM-NAVIGATION, SMOKE-PROJECT-SCRIPTS, SMOKE-REQUIRED-FIELDS, AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-POLYGON-LABEL-ANCHOR, SMOKE-MAP-OPENGL-COMPATIBILITY, SMOKE-MAP-SURFACE-LIFECYCLE, SMOKE-HOT-RASTER, SMOKE-DEBUG-UNDERLAY-MIGRATION, SMOKE-SHARED-UNDERLAYS, SMOKE-UNDERLAY-DISPLAY, SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY, SMOKE-LOCAL-VECTOR-TILE-STRESS, SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-CAMERA-CONTROLS, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-NGW-IMPORT-BACK, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LOCAL-VECTOR-LAYERS, SMOKE-COLLECTOR-IMPORT, SMOKE-LAYER-SYNC-SETTINGS, SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-SCHEMA-REBUILD-GUARD, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-INTERRUPT-ACTION, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE, SMOKE-CRASH-DRAFT-RECOVERY, SMOKE-MULTIPOLYGON-REPAIR, SMOKE-GEOMETRY-SKETCH-WORKFLOW, SMOKE-GPS-RECORDING, SMOKE-STAKEOUT, AUTO-RELIABILITY-NATIVE, SMOKE-RELIABILITY-FAILURES, SMOKE-TOOL-TAP, SMOKE-NGID-AND-RESOURCE-ICONS]
+smoke_tests: [AUTO-SQLITE-NATIVE-VECTORS, AUTO-POLYGON-STYLE-CONTROLS, AUTO-POINT-FIREFLY, AUTO-FEATURE-EDITING, SMOKE-FEATURE-COPY-TRANSFORM, AUTO-MOBILE-RELATED, AUTO-MOBILE-FULL, AUTO-MOBILE-PUBLICATION-GATE, SMOKE-LAYER-CHOOSER, SMOKE-MAP-RUNTIME-DIAGNOSTICS, AUTO-UPDATER-CHECKS, SMOKE-SYNC-OFFLINE, SMOKE-SYNC-NOTIFICATIONS, SMOKE-TRACK-DELIVERY, SMOKE-DIAGNOSTIC-DELIVERY, SMOKE-STAKEOUT-PERMISSIONS, SMOKE-FORM-APPEARANCE, SMOKE-CONDITIONAL-REQUIRED, SMOKE-FORM-NAVIGATION, SMOKE-PROJECT-SCRIPTS, SMOKE-REQUIRED-FIELDS, AUTO-APP-DEBUG, AUTO-APP-RELEASES, AUTO-APP-VERSION-MATRIX, SMOKE-POLYGON-LABEL-ANCHOR, SMOKE-MAP-OPENGL-COMPATIBILITY, SMOKE-MAP-SURFACE-LIFECYCLE, SMOKE-HOT-RASTER, SMOKE-DEBUG-UNDERLAY-MIGRATION, SMOKE-SHARED-UNDERLAYS, SMOKE-UNDERLAY-DISPLAY, SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY, SMOKE-LOCAL-VECTOR-TILE-STRESS, SMOKE-LOCATION-CURSOR-TOP, SMOKE-MAP-CAMERA-CONTROLS, SMOKE-NGW-ACCOUNT-ADD, SMOKE-NGW-URL-IMPORT, SMOKE-NGW-IMPORT-BACK, SMOKE-NGW-LARGE-PULL-CACHE, SMOKE-LOCAL-VECTOR-LAYERS, SMOKE-COLLECTOR-IMPORT, SMOKE-LAYER-SYNC-SETTINGS, SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-SCHEMA-REBUILD-GUARD, SMOKE-COLLECTOR-RESUME, SMOKE-UPDATE-DATA-PRESERVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-INTERRUPT-ACTION, SMOKE-LISA-RELEASE, SMOKE-BELKA-RELEASE, SMOKE-SELF-UPDATE, SMOKE-CRASH-DRAFT-RECOVERY, SMOKE-MULTIPOLYGON-REPAIR, SMOKE-GEOMETRY-SKETCH-WORKFLOW, SMOKE-GPS-RECORDING, SMOKE-STAKEOUT, AUTO-RELIABILITY-NATIVE, SMOKE-RELIABILITY-FAILURES, SMOKE-TOOL-TAP, SMOKE-NGID-AND-RESOURCE-ICONS]
 upstream_hotspots: [POLYGON-STYLE-CONTROLS, MAP-HOST, MAPLIBRE-BACKEND, APP-FLAVORS, RASTER-MBTILES]

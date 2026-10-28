@@ -122,6 +122,8 @@ def check_publication_receipt(receipt: dict, fingerprint: str, required: set[str
         raise ValueError('Publication requires a successful full run, not a related/CI run')
     if receipt.get('source_fingerprint') != fingerprint:
         raise ValueError('The application or test sources changed after the full run')
+    from mobile_build_identity import validate_basis
+    validate_basis(receipt.get('build_basis'),fingerprint)
     if any(result.get('failed') for result in receipt.get('runs', [])):
         raise ValueError('The full run contains a failed native attempt, even if a repeat passed')
     if not required <= set(receipt.get('passed_cases', [])):

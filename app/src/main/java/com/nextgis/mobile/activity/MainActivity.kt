@@ -633,6 +633,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         val app = application as IGISApplication
 
         when (item.itemId) {
+            R.id.menu_render_memory -> {
+                mapFragment?.showRenderMemoryStatus()
+                return true
+            }
             android.R.id.home -> if (hasFragments()) return finishFragment()
             else if (mapFragment!!.isEditMode)
                 return mapFragment!!.onOptionsItemSelected(item.itemId)
@@ -2032,6 +2036,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
 
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.findItem(R.id.menu_render_memory)?.isVisible = mapFragment?.hasRenderMemoryRestrictions() == true
         if (null != mLayersFragment && !mLayersFragment!!.isDrawerOpen) {
             val state = TrackerService.getRecordingState(this)
             val title = when (state) {

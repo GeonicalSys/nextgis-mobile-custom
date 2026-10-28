@@ -107,12 +107,8 @@ final class DiagnosticsProcessExitReporter {
                     context.getPackageName(), owner.getInt("pid"), 4), owner, context.getPackageName(), armedAt);
             if (info == null) continue;
             if (!abnormal(info.getReason())) { acknowledge(context, owner); continue; }
-            Map<String, Object> trace = new java.util.LinkedHashMap<>(); trace.put("status", "not_available_for_reason");
-            if (info.getReason() == ApplicationExitInfo.REASON_ANR
-                    || (info.getReason() == ApplicationExitInfo.REASON_CRASH_NATIVE && Build.VERSION.SDK_INT >= 31)) {
-                try { trace = DiagnosticsNativeTrace.read(info.getTraceInputStream(), info.getReason() == ApplicationExitInfo.REASON_CRASH_NATIVE); }
-                catch (Exception error) { trace.put("status", "unavailable"); }
-            }
+            Map<String, Object> trace = DiagnosticsTracePolicy.read(Build.VERSION.SDK_INT,
+                    info.getReason(), info::getTraceInputStream);
             SentryEvent event = event(context.getPackageName(), owner, info, trace);
             Persisted persisted = new Persisted(); Hint hint = io.sentry.util.HintUtils.createWithTypeCheckHint(persisted);
             Sentry.captureEvent(event, hint);

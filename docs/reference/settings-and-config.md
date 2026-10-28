@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -125,6 +125,10 @@ Battery Saver; приложение не меняет системный реж�
 tile GET 503 с queue_full/heap_headroom и ожидание спутникового решения остаются
 локальными. Длительность проблемной причины GPS, интервалы observer/сна и OS
 process_exit metadata описаны в [контракте отчётов](../architecture/error-reporting.md).
+Restart fallback на API30+ также пробует ограниченный OS trace для SIGNALED;
+это внутренняя политика без новой настройки. Формат определяется по содержимому,
+`association=may_precede_exit` сохраняет возможность прежнего ANR, а reason/status
+не превращаются в утверждение об OOM. Null/IO/unknown отмечаются явно.
 Доступ оператора хранится вне Git; адрес и проект для CLI — в tools/glitchtip.json,
 команды — в [runbook](../runbooks/glitchtip-triage.md).
 

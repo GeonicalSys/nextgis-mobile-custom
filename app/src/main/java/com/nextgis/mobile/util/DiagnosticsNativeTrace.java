@@ -12,9 +12,20 @@ import java.util.Map;
 /** Allowlisted Android tombstone fields only; never export registers, memory, logs or open files. */
 final class DiagnosticsNativeTrace {
     static final int MAX_BYTES = 1024 * 1024;
+    enum Format {
+        ANR_TEXT("anr_text"), NATIVE_PROTOBUF("native_protobuf"), AUTO("auto");
+        final String label;
+        Format(String label) { this.label = label; }
+    }
+
     static Map<String, Object> read(InputStream input, boolean nativeCrash) {
+        return read(input, nativeCrash ? Format.NATIVE_PROTOBUF : Format.ANR_TEXT);
+    }
+
+    static Map<String, Object> read(InputStream input, Format format) {
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", "missing");
+        result.put("format", "unknown");
         if (input == null) return result;
         try (InputStream owned = input; ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[8192]; int count;
@@ -24,22 +35,66 @@ final class DiagnosticsNativeTrace {
                 if (bytes.size() > MAX_BYTES) { truncated = true; break; }
             }
             result.put("bytes_read", bytes.size());
+            byte[] bounded = bytes.toByteArray();
             try {
-                if (nativeCrash) result.putAll(tombstone(bytes.toByteArray(), truncated));
-                else result.put("main_stack", mainStack(new String(bytes.toByteArray(), StandardCharsets.UTF_8)));
+                if (format == Format.AUTO) {
+                    Map<String, Object> nativeTrace = null;
+                    try { nativeTrace = tombstone(bounded, truncated); }
+                    catch (IOException malformedOrText) { /* An OS trace can instead be prior ANR text. */ }
+                    if (nativeTrace != null && meaningfulNativeFrames(nativeTrace)) {
+                        result.putAll(nativeTrace);
+                        result.put("format", Format.NATIVE_PROTOBUF.label);
+                    } else {
+                        List<String> frames = mainStack(new String(bounded, StandardCharsets.UTF_8));
+                        if (!frames.isEmpty()) {
+                            result.put("main_stack", frames);
+                            result.put("format", Format.ANR_TEXT.label);
+                        } else {
+                            result.put("status", truncated ? "oversized" : "unrecognized_format");
+                            return result;
+                        }
+                    }
+                } else if (format == Format.NATIVE_PROTOBUF) {
+                    result.putAll(tombstone(bounded, truncated));
+                    result.put("format", format.label);
+                } else {
+                    result.put("main_stack", mainStack(new String(bounded, StandardCharsets.UTF_8)));
+                    result.put("format", format.label);
+                }
             } catch (IOException malformed) {
-                result.put("status", truncated ? "oversized" : "unavailable"); return result;
+                result.put("status", truncated ? "oversized" : "unavailable");
+                result.put("error_type", errorType(malformed));
+                return result;
             }
-            Object stack = result.get(nativeCrash ? "native_frames" : "main_stack");
+            Object stack = result.get(Format.NATIVE_PROTOBUF.label.equals(result.get("format")) ? "native_frames" : "main_stack");
             boolean captured = stack instanceof List && !((List<?>) stack).isEmpty();
             result.put("status", captured ? (truncated ? "captured_truncated" : "captured") : truncated ? "oversized" : "empty_stack");
-        } catch (IOException | RuntimeException error) { result.put("status", "unavailable"); }
+        } catch (IOException | RuntimeException error) {
+            result.put("status", "unavailable"); result.put("error_type", errorType(error));
+        }
         return result;
+    }
+
+    private static boolean meaningfulNativeFrames(Map<String, Object> trace) {
+        Object tid = trace.get("crashing_tid"), frames = trace.get("native_frames");
+        if (!(tid instanceof Number) || ((Number) tid).longValue() <= 0 || !(frames instanceof List)) return false;
+        for (Object frame : (List<?>) frames)
+            if (frame instanceof Map && !((Map<?, ?>) frame).isEmpty()) return true;
+        return false;
+    }
+
+    static String errorType(Exception error) {
+        String name = error.getClass().getSimpleName();
+        return name.isEmpty() ? "Exception" : shortText(name);
     }
 
     static List<String> mainStack(String text) {
         List<String> frames = new ArrayList<>(); boolean main = false;
-        for (String line : text.split("\n")) {
+        // Avoid a second array containing every line of the one-MiB OS trace.
+        for (int start = 0; start < text.length() && frames.size() < 24;) {
+            int end = text.indexOf('\n', start);
+            if (end < 0) end = text.length();
+            String line = text.substring(start, end); start = end + 1;
             if (line.startsWith("\"")) main = line.startsWith("\"main\"");
             if (main && (line.trim().startsWith("at ") || line.trim().startsWith("native: #")) && frames.size() < 24)
                 frames.add(shortText(line.trim()));

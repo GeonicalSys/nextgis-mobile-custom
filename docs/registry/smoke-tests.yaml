@@ -1,5 +1,38 @@
 schema_version: 1
 tests:
+  AUTO-SQLITE-NATIVE-VECTORS:
+    type: automatic
+    scope: [maplib, maplibui, app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area sqlite-render
+    expected: Nine isolated SQLite production-route methods assert CustomVectorSource and an empty global feature cache, all129polygon IDs with Rule/NULL/Other colors, source/style/hide/show teardown, one-original edit/Cancel/Undo and all six geometry types with multipart/hole/icon/pattern/viewport-label cases. Factory constants are checked where simple styles omit redundant feature properties; Rule overrides remain mandatory. Actual pixel thresholds are unchanged and await asynchronous symbols within a bounded budget. Every failed attempt is retained; subsequent independent methods do not turn an overall FAIL into PASS. Fixed verification UID logs, native counters and bounded PBF evidence are diagnostic, not proof of native delivery, real-project speed or OOM prevention. Explicit software-only admission or a selected stationary verification device is required.
+  AUTO-RENDER-MEMORY-UNITS:
+    type: automatic
+    scope: [maplib, app]
+    command: .\gradlew.bat :maplib:testDebugUnitTest :app:testLisaDebugUnitTest
+    expected: Independent payload required/dead-key and full-geometry/identity/unknown-property assertions, line query fallback, exact uniform defaults, real-headroom policy, no false memory notice from a full queue with ample free memory, retained free counters without legacy process-budget/private additions, fair complete tile work/cache roundtrip and atomic once-per-process notice pass. JVM results do not certify native rendering, OOM prevention or2GiB acceptance.
+  AUTO-RENDER-MEMORY:
+    type: automatic
+    scope: [app, maplib]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area render-memory
+    expected: In the isolated verification APK, RenderMemorySafetyTest checks independently expected129SQLitepolygonIDs and65coordinates in both rich and actual compact inputs, complete native IDs and unchanged whole-row hashes. First automatic production notice arrives without a manual host callback, later callbacks/recreation/another layer do not repeat it, and manual status passes eight bounded Russian component profiles. Render stress also requires real pan/pinch camera changes, heading updates and peak counters. Explicit software-only emulator admission or selected stationary verification-phone scope is required; these fixtures do not emulate real low RAM or replace Full/device acceptance.
+  SMOKE-RENDER-MEMORY-NATIVE:
+    type: device
+    scope: [app, maplib]
+    steps:
+      - Run the current render-memory and style/editing native cases in the separate verification APK, preserving required text/geometry/IDs/rules/layout/gates/picking across reload, edit, Save and Cancel.
+      - Exercise the authorized heavy real project with actual available-memory/process observations, pan/zoom/heading/recreate and retained native images; record source fingerprints and device/renderer identity.
+      - Record actualRAM on a physical2GiB-class target separately from the required incidentSM-X115tablet, physicalphone and admitted software-emulator matrix; model identity alone does not prove2GiB coverage. Retain any failed or incomplete result.
+      - Check automatic notice once per process and independent manual status while cache/work economy is applied, without hiding layers or changing authoritative geometry/data.
+    expected: Required contents and interactions remain intact; warnings/economy follow actual free headroom, never nominalRAM or absolute used/native/RSS. Measured memory changes need actual evidence and an explicit device scope. Technical fixtures, successful route input and prior source/unit receipts cannot prove allOOM impossible or satisfy missing native/2GiB/Full checks.
+  SMOKE-NATIVE-HEAP-DIAGNOSTIC:
+    type: device
+    scope: [app]
+    command: python tools/native_heap_map_route.py --adb <existing-adb> --serial <selected-phone> --capture <active-owned-capture.json> --map-rect <observed-left,top,right,bottom> --zoom-controls <observed-plus-x,plus-y,minus-x,minus-y>
+    steps:
+      - Inspect the actual selected phone screen and supply observed map/control coordinates; require an active owned project787capture matching the serial, original appPID and owned Perfetto command identity.
+      - Record three zoom-out taps,32map swipes and three zoom-in taps; stop on foreground/PID/capture ownership loss and retain map-route.json.
+      - Evaluate trace completeness, lost/overrun/error flags, allocation stacks, source/build identity and independent camera/pixel evidence separately.
+    expected: This38-input manual diagnostic route changes only the map view and writes its receipt. Completed input is not camera/render acceptance, a qualified heap attribution or Full QA; empty/incomplete stacks remain unusable even if observedRSSis lower.
   AUTO-LOCAL-VECTOR-TILE-OFFLINE:
     type: automatic
     scope: [maplibui, app]

@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -19,6 +19,13 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+  - maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java
+  - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java
+  - maplib/src/main/java/com/nextgis/maplib/map/RenderTileWorkGate.java
+  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileDiskCache.java
+  - maplib/src/main/java/com/nextgis/maplib/display/PatternTilePeriod.java
+  - app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java
@@ -31,6 +38,61 @@ related_code:
 ---
 
 # MapLibre rendering и порядок слоёв
+
+## Память без потери геометрии — MOB-04, 2026-10-28
+
+Поддерживаемые ordinary Simple/Field Rule слои используют SQLite/RTree → MVT8192
+→ штатный CustomVectorSource13.7.1 без HTTP и полного startup Java/GeoJSON слоя.
+Редактор/selection читает по одному полному DB original; transient GeoJSON
+нужен только малым overlays. Все factories/rule groups сохраняют paint/layout
+и получают source-layer `features`. Polygon Fill/Line допускают только Polygon,
+Symbol — inline Point anchors, чтобы query/picking не смешивал разные роли
+одного FID. Source owner/content/style epochs и terminal cancel защищают
+смену стиля/проекта/Activity. Это реализованный исходник, не завершённая native
+приёмка или опубликованный APK; benchmark и2GiB/полный styles/edit gates открыты.
+
+В сохранённом classic compatibility path полный rich Java снимок `sourceFeaturesHashMap` остаётся источником для
+редактора/selection/update. Отдельный `NativeFeaturePayload` сохраняет исходные
+геометрию, bbox, IDs, неизвестные поля и используемые paint/label значения,
+но не дублирует literal layout свойства, уже заданные native factories.
+Polygon geometry не несёт label-настроек; отдельные label points создаются
+только для непустой подписи и не несут geometry paint. Point payload сохраняет
+совместные paint/label поля, line payload — inputs для native-query fallback
+`VisibleLineLabelController`. Custom zoom curves, layout keys, label zoom gates
+и явные false/null overrides сохраняются. Exact uniform polygon defaults
+сворачиваются только в контексте тех же SimpleFeatureRenderer/SimplePolygonStyle;
+rule-style и unknown контекст используют консервативную проекцию.
+
+Проекция применяется во всех logical-vector native handoffs: создание,
+hot load, style/data reload, ID/edit/save/hide/show. Rich Java original не
+меняется; публичный `convertToPointFeatures` сохраняет прежний anchor API.
+Старый styled URI не обходит проекцию, native URI cache flag остаётся false.
+Style JSON, SQLite, sync/outbox, saved visibility и геометрия не мигрируют.
+
+`RenderMemoryGuard` реагирует на фактический свободный остаток RAM, системный
+порог/OS low-memory state и Java headroom. Used/native/RSS сохраняются только
+как диагностика, не как условие замедления или предупреждения. Номинальный
+класс2GiB/Android low-RAM сам по себе экономию не включает; он задаёт обычный
+disk cache и резерв32/64MiB. При малом свободном остатке отключается
+межмасштабный кэш и запрашивается SDK `onLowMemory`.
+Верхний app показывает одно автоматическое сообщение за процесс, включая
+другую карту/слой и пересоздание Activity; ручной статус доступен повторно.
+Callback проверяет map/view/host/lifecycle epoch, pause/destroy прекращают
+watcher. Retry переоценивает cache policy без полной GeoJSON перезагрузки.
+Геометрия и полный набор объектов не прореживаются, слои не отключаются,
+`restrictions()` пуст. Текущая защита не вводит новые LOD.
+
+Это не жёсткий предел native памяти: внутренний GeoJSONVT index SDK остаётся
+без добавленного здесь eviction. Профиль787 выделил673MiB/74,2% из907MiB
+sampled retained allocations на index, включая≥564MiB property maps;
+около128MiB — растровые данные. Это не весь RSS и не доказательство утечки
+по одному высокому плато. Триггер223→224 неизвестен. Экспериментальныйec71
+показал уменьшение sampled retained allocations, но его старый RSS-trigger и
+разный startup/route timing не принимают финальную free-only policy/2GiB.
+См. [производительность и границы](map-performance.md),
+[карточку payload](../../maplib/update-reports/entries/maplib-20261028-native-geojson-payload.md)
+и [карточку cache economy](../../maplib/update-reports/entries/maplib-20261027-render-memory-budget.md).
+Related/Full native приёмка остаётся обязательной; отсутствие OOM не гарантируется.
 
 ## Пустые editor hit-tests и индекс — 2026-10-27
 
@@ -80,6 +142,12 @@ Point/MultiPoint группы вместе с их подписями наход
 ## Штриховки и расширенный контур
 
 [Контракт нового пакета](polygon-style-controls.md): необязательные параметры сохраняют прежний вид старых полигонов. Узоры получают отдельные цвет/alpha и бесшовную решётку; расширенный контур рисуется штатными children. Настроенный MVT-слой с новыми параметрами переходит к classic fallback. Native образец в редакторе использует те же фабрики, без сети и рабочей карты.
+
+`PatternTilePeriod` сохраняет исходную512×512ARGB решётку и уменьшает bitmap
+только до точного прямоугольного повторяемого мотива, проверенного по каждому
+пикселю. Density160, округление, color/alpha, native IDs/ownership и LRU4MiB
+сохраняются; без доказанного периода остаётся полный размер. Геометрия и
+saved style прежние. [Карточка](../../maplib/update-reports/entries/maplib-20261027-pattern-exact-motif.md).
 
 ## Копирование и преобразование объекта
 
@@ -139,8 +207,9 @@ Touch queries marker/vertex/azimuth проходят через MapRuntimeDiagno
 ожидание, finally завершает trace при результате или исключении. Native вызов
 сохраняет поток и прежнее поведение. LocalVectorTileServer диагностирует
 queue wait, layer-lock wait, запрос IDs, чтение/обрезку features и MVT encoding;
-503 указывает точную причину и request id. Политика двух workers, очереди 16
-и heap headroom 64 MiB сохраняется. [Контракт диагностики](error-reporting.md).
+503 указывает точную причину и request id. Два workers, очередь16 и прежний
+heap headroom64MiB дополняются фактическим system/Java admission и fair gate;
+подробности ниже. [Контракт диагностики](error-reporting.md).
 
 Панели и инструменты карты адаптируются к font/display scale по [контракту UI](ui-accessibility.md). Компас/GNSS HUD освобождают место на низком экране; азимут располагается под toolbar/компасом слева от инструментов, значения статуса переносятся. View transforms вписывают панели и доставляют touch к отображаемым действиям; MapView сохраняет свою геометрию.
 
@@ -186,7 +255,8 @@ sync сравнивает canonical JSON и сохраняет прежнюю ф
 - Для Polygon и MultiPolygon он создаёт отдельный Point source подписи:
   внутренняя точка берётся с учётом отверстий, у MultiPolygon — на наибольшей
   пригодной части. Вырожденный контур без внутренней точки не получает подпись.
-  Исходные свойства feature переходят к точке подписи.
+  Полный helper сохраняет исходные свойства feature; native точка получает
+  компактную label-проекцию и создаётся только при непустой подписи.
 - `VectorLayerRenderCache` ускоряет подготовку векторных слоёв при cold start.
 - `LayerFillService` загружает и вставляет импортированные слои в `LayerGroup`.
 - `ReorderedLayerView` синхронизирует порядок UI и модели.
@@ -277,10 +347,19 @@ ContentProvider и mutable cache `TrackLayer` ([контракт](shared-tracks.
     `GTPoint` только с простым круговым маркером и подписью из одного поля либо
     фиксированного текста. Rule-style, custom icon, label template, editable и
     прочие геометрии остаются на classic `GeoJsonSource` fallback. Loopback-
-    сервер ограничен двумя worker и очередью 16; тайлы одного слоя строятся
-    последовательно, устаревшая очередь закрывается при смене поколения карты,
-    а нехватка heap/перегрузка возвращает retryable `503`, не создавая новые
-    потоки и не меняя rendering mode слоя.
+    сервер ограничен двумя worker и очередью16; тайлы одного слоя строятся
+    последовательно. Fair two-permit gate сохраняет два builder при нормальных
+    ресурсах, а при малом измеренном свободном system/Java остатке один builder
+    занимает оба permits. Устаревшая очередь закрывается при смене поколения,
+    старые активные запросы проверяют отмену. Coarse prefetch local MVT выключен,
+    source volatile. Полные derived PBF read-only источников кэшируются приватно
+    в пределах32/128MiB,1024 файлов и4MiB на запись; ключ process/map/content/style
+    исключает старый source. Это не межпроцессный reuse и не native swap file.
+    Нехватка памяти/перегрузка даёт явный retryable503, без новых потоков,
+    изменения rendering mode или неполного200/кэша. Текущий успешный тайл содержит
+    все подходящие объекты с прежними MVT clipping/encoding, без ID thinning.
+    Сам ответ503 не доказывает восстановление SDK тайла после освобождения RAM;
+    этот переход — отдельный native gate.
     Подпись квартала вычисляется по исходному Polygon/MultiPolygon до clipping:
     одна внутренняя точка на наибольшей пригодной части с учётом отверстий.
     Полигональные фрагменты остаются без `signature`; единственная служебная

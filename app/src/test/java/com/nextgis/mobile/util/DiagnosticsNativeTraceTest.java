@@ -3,6 +3,10 @@ package com.nextgis.mobile.util;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import static org.junit.Assert.*;
 
@@ -54,5 +58,68 @@ public class DiagnosticsNativeTraceTest {
         Map<String,Object> result = DiagnosticsNativeTrace.read(new ByteArrayInputStream(data), true);
         assertEquals("captured_truncated", result.get("status"));
         assertTrue(new org.json.JSONObject(result).toString().contains("Renderer"));
+    }
+
+    @Test public void autoRecognizesNativeFramesButNeverExportsUnknownProtoFields() {
+        byte[] frame = join(number(1, 0x3456), text(4, "Renderer::draw"), text(6, "/private/libmaplibre.so"));
+        byte[] data = join(number(6, 42), text(14, "password SECRET"),
+                message(16, join(number(1, 42), message(2, message(4, frame)))), text(18, "SECRET MEMORY"));
+        Map<String,Object> result = DiagnosticsNativeTrace.read(new ByteArrayInputStream(data), DiagnosticsNativeTrace.Format.AUTO);
+        assertEquals("captured", result.get("status"));
+        assertEquals("native_protobuf", result.get("format"));
+        assertEquals(42L, result.get("crashing_tid"));
+        assertEquals(List.of(Map.of("rel_pc", "0x3456", "function", "Renderer::draw", "library", "libmaplibre.so")), result.get("native_frames"));
+        assertFalse(result.toString().contains("SECRET"));
+        assertFalse(result.toString().contains("/private"));
+        assertFalse(result.containsKey("main_stack"));
+    }
+
+    @Test public void autoRecognizesRecoveredAnrAndRetainsOnlyBoundedMainFrames() {
+        StringBuilder text = new StringBuilder("\"worker\"\n at SECRET.worker(file:1)\n\"main\" prio=5 tid=1\n");
+        for (int i = 0; i < 30; i++) text.append(" at android.view.View.draw(View.java:").append(i).append(")\n");
+        text.append("\"pool\"\n at SECRET.pool(file:2)");
+        Map<String,Object> result = DiagnosticsNativeTrace.read(new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8)), DiagnosticsNativeTrace.Format.AUTO);
+        assertEquals("captured", result.get("status"));
+        assertEquals("anr_text", result.get("format"));
+        List<?> frames = (List<?>) result.get("main_stack");
+        assertEquals(24, frames.size());
+        assertEquals("at android.view.View.draw(View.java:0)", frames.get(0));
+        assertEquals("at android.view.View.draw(View.java:23)", frames.get(23));
+        assertFalse(result.toString().contains("SECRET"));
+        assertFalse(result.containsKey("crashing_tid"));
+        assertFalse(result.containsKey("native_frames"));
+    }
+
+    @Test public void autoDoesNotInventAStackOrAFormatForMalformedOrUnknownData() {
+        for (byte[] data : new byte[][]{{(byte) 0xff}, number(6, 42), "SECRET unknown text".getBytes(StandardCharsets.UTF_8)}) {
+            Map<String,Object> result = DiagnosticsNativeTrace.read(new ByteArrayInputStream(data), DiagnosticsNativeTrace.Format.AUTO);
+            assertEquals("unrecognized_format", result.get("status"));
+            assertEquals("unknown", result.get("format"));
+            assertFalse(result.containsKey("native_frames"));
+            assertFalse(result.containsKey("main_stack"));
+            assertFalse(result.toString().contains("SECRET"));
+        }
+    }
+
+    @Test public void autoHonorsByteCapClosesStreamsAndKeepsIoFailureUnknown() {
+        final boolean[] closed = {false};
+        ByteArrayInputStream oversized = new ByteArrayInputStream(new byte[DiagnosticsNativeTrace.MAX_BYTES + 100]) {
+            @Override public void close() { closed[0] = true; }
+        };
+        Map<String,Object> result = DiagnosticsNativeTrace.read(oversized, DiagnosticsNativeTrace.Format.AUTO);
+        assertEquals("oversized", result.get("status"));
+        assertEquals(DiagnosticsNativeTrace.MAX_BYTES + 1, result.get("bytes_read"));
+        assertTrue(closed[0]);
+        closed[0] = false;
+        InputStream failing = new InputStream() {
+            @Override public int read() throws IOException { throw new IOException("SECRET/path"); }
+            @Override public void close() { closed[0] = true; }
+        };
+        result = DiagnosticsNativeTrace.read(failing, DiagnosticsNativeTrace.Format.AUTO);
+        assertEquals("unavailable", result.get("status"));
+        assertEquals("unknown", result.get("format"));
+        assertEquals("IOException", result.get("error_type"));
+        assertTrue(closed[0]);
+        assertFalse(result.toString().contains("SECRET"));
     }
 }

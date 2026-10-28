@@ -1,6 +1,24 @@
 schema_version: 1
 edges:
   - from: app
+    to: maplib
+    type: runtime
+    scope: SQLite vector rendering and original editing
+    purpose: Read complete SQLite originals through bounded native tiles without full startup GeoJSON, while retaining actual provider/owner lifecycle and transient full-original overlays.
+    contracts:
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileBackend.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileRequest.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileEncoder.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTilePropertyCodec.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileClipper.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelQuery.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
+  - from: app
     to: maplibui
     type: gradle
     scope: implementation
@@ -17,6 +35,9 @@ edges:
       - maplibui/src/main/java/com/nextgis/maplibui/util/TrackRecordingMode.java
       - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
       - maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java
+      - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java
       - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
       - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
@@ -67,6 +88,24 @@ edges:
     purpose: Picker controls exposed by maplibui forms
     contracts: []
 runtime_contracts:
+  render-memory-pressure:
+    owner: maplib
+    defined_in: maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java
+    implementers: [maplib, app]
+    callers: [maplib, app]
+    contract: MapFragment binds current MapDrawable ownership and starts/stops its resource watch with view lifecycle. Only actual remaining free system/Java headroom and OS low-memory state decide economy/work admission; nominal RAM class may choose ordinary disk-cache capacity and allocation reserve only, and absolute used/native/RSS counters remain diagnostics. Unknown counters are not zero free memory. Owner-fenced MapDrawable callbacks cross MaplibreMapInteraction back to MapFragment. MapRuntimeDiagnostics records bounded available RAM, Java headroom, system threshold/low-memory, free reserve and tile work limit alongside separate numeric process observations. There is no used/RSS target or enforced native cap, and no feature/geometry/visibility/data suppression is allowed.
+  native-geojson-payload:
+    owner: maplib
+    defined_in: maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java
+    implementers: [maplib]
+    callers: [maplib, app]
+    contract: MPLFeaturesUtils, MapDrawable and all six MLP background constructors project separate native property maps while retaining rich Java editor features and full geometry/IDs/unknowns. Polygon label sources omit empty signatures and geometry paint; point sources keep combined roles and lines retain query fallback inputs. Uniform sparsity needs exact factory-default context; rules retain actual consumers, zoom curves/layout keys/gates. App verification fixture observes this transport projection without weakening rich Java or GPU assertions; source/URI/edit paths cannot bypass it.
+  render-memory-notice:
+    owner: app
+    defined_in: app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java
+    implementers: [app]
+    callers: [app]
+    contract: MapFragment consumes resource-economy callbacks through one atomic automatic notice claim per process across maps/recreation. A full work queue alone is not evidence of low free memory and must not produce a memory notice. MainActivity exposes independent manual status while the current guard reports economy. Manual Retry re-evaluates caches/resources, preserves source data and does not reset the automatic claim; verification acknowledges the notice only outside the dedicated production-delivery memory case.
   point-firefly:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java
@@ -138,6 +177,7 @@ runtime_contracts:
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java
     implementers: [app]
     callers: [maplib, maplibui]
+    contract: Existing GIS interaction callbacks remain compatible. The default onRenderMemoryWarningChanged callback lets current MapDrawable report cache/work economy to app MapFragment; its lifecycle owner controls the watch, reads Guard status and applies the process-session notice policy without changing map data or visibility. Other hosts retain the default no-op.
   gis-application:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
@@ -166,6 +206,13 @@ runtime_contracts:
     callers: [app, maplibui, maplib]
     artifact: org.maplibre.gl:android-sdk-opengl:13.7.1
     backend: OpenGL ES
+    contract: Direct SQLite native vector generations require distinct actual source IDs while logical layer paths remain stable; SDK13.7.1 same-ID custom loader replacement alone does not retire old tile pyramids.
+  historical-process-exit:
+    owner: app
+    defined_in: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
+    implementers: [app]
+    callers: [app]
+    contract: AppDiagnostics invokes Reporter then TracePolicy and bounded NativeTrace; process_exit metadata goes through existing sanitize/cache/replay/transport. API30 SIGNALED may contain an earlier recovered ANR trace, explicitly may_precede_exit, and never proves OOM or final-exit cause.
   stakeout-guidance:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java

@@ -268,6 +268,44 @@ public class MapFragment
     private var selectedTrackId = -1L
     private var trackSelectionPanel: TrackSelectionPanel? = null
     private var mapSelectionDialog: androidx.appcompat.app.AlertDialog? = null
+    private var renderMemoryDialog: AlertDialog? = null
+    private var renderMemoryOwner: MapDrawable? = null
+
+    fun hasRenderMemoryRestrictions(): Boolean =
+        renderMemoryOwner?.renderMemoryGuard?.hasResourceNotice() == true
+
+    override fun onRenderMemoryWarningChanged() {
+        val host = activity ?: return
+        host.invalidateOptionsMenu()
+        if (!host.isFinishing && !host.isDestroyed && isResumed && isVisible && hasRenderMemoryRestrictions() &&
+            com.nextgis.mobile.util.RenderMemoryNotice.claim()) showRenderMemoryStatus()
+    }
+
+    fun showRenderMemoryStatus() {
+        val owner = renderMemoryOwner ?: return
+        val host = activity ?: return
+        if (host.isFinishing || host.isDestroyed) return
+        val ids = owner.renderMemoryGuard.restrictions().keys
+        val names = ids.mapNotNull { owner.getLayerById(it)?.name }
+        val message = if (!owner.renderMemoryGuard.hasResourceNotice()) getString(R.string.render_memory_normal) else buildString {
+            append(getString(R.string.render_memory_message))
+            if (names.isNotEmpty()) {
+                append("\n\n").append(getString(R.string.render_memory_layers))
+                for (name in names.take(12)) append("\n• ").append(name)
+                if (names.size > 12) append("\n").append(getString(R.string.render_memory_more, names.size - 12))
+            }
+        }
+        renderMemoryDialog?.dismiss()
+        renderMemoryDialog = AlertDialog.Builder(host)
+            .setTitle(R.string.render_memory_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.render_memory_continue, null)
+            .setNeutralButton(R.string.render_memory_retry) { _, _ -> owner.retryMemoryLimitedLayers() }
+            .create().also { dialog ->
+                dialog.setOnDismissListener { if (renderMemoryDialog === dialog) renderMemoryDialog = null }
+                dialog.show()
+            }
+    }
     private val trackMetadataObserver = object : android.database.ContentObserver(android.os.Handler(android.os.Looper.getMainLooper())) {
         override fun onChange(selfChange: Boolean) {
             if (view == null) return
@@ -765,6 +803,12 @@ public class MapFragment
         HttpRequestImpl.setOkHttpClient(client)
 
         mapDrawable.maplibreMap = mapboxMap
+        renderMemoryOwner = mapDrawable
+        val reducedCache = mapDrawable.renderMemoryGuard.shouldReduceCache()
+        mapboxMap.setTileCacheEnabled(!reducedCache)
+        if (reducedCache) mapDrawable.renderMemoryGuard.noteReducedCache()
+        mapDrawable.setRenderMemoryWatchActive(isResumed)
+        onRenderMemoryWarningChanged()
 
         mapboxMap.setMinZoomPreference(GeoConstants.CAMERA_MIN_ZOOM.toDouble())
 
@@ -2407,6 +2451,11 @@ public class MapFragment
 
 
     override fun onDestroyView() {
+        renderMemoryDialog?.dismiss()
+        renderMemoryDialog = null
+        renderMemoryOwner?.setRenderMemoryWatchActive(false)
+        renderMemoryOwner?.closeSqliteVectorSourcesBeforeDetach()
+        renderMemoryOwner = null
         mapSelectionDialog?.dismiss()
         mapSelectionDialog = null
         context?.contentResolver?.unregisterContentObserver(trackMetadataObserver)
@@ -3345,6 +3394,7 @@ public class MapFragment
     }
 
     override fun onPause() {
+        renderMemoryOwner?.setRenderMemoryWatchActive(false)
         com.nextgis.maplib.util.MapRuntimeDiagnostics.mapState("paused")
         HyperLog.v(
             Constants.TAG,
@@ -3435,6 +3485,8 @@ public class MapFragment
         com.nextgis.maplib.util.MapRuntimeDiagnostics.mapState("resumed")
         HyperLog.v(Constants.TAG, "MapFragment.onResume")
         super.onResume()
+        renderMemoryOwner?.setRenderMemoryWatchActive(true)
+        onRenderMemoryWarningChanged()
 
         mapLibreMapView?.let { mapLibreView ->
             mapLibreHostResumed = true

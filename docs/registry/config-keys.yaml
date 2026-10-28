@@ -452,7 +452,7 @@ storage:
     owner: app
     source: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
     filename: diagnostic-process.json
-    purpose: Atomic bounded current process and four pending historical owners; OS fallback after restart keeps old identity and acknowledges only durable SDK envelopes. No business data, no user setting.
+    purpose: Atomic bounded current process and four pending historical owners; OS fallback after restart keeps old identity and acknowledges only durable SDK envelopes. API30+ SIGNALED trace policy auto-recognizes bounded native or prior ANR frames with may-precede-exit association and explicit unknowns. No business data, no user setting.
   process-exits-export:
     owner: app
     source: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt

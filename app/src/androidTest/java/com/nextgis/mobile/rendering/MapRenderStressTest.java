@@ -17,12 +17,17 @@ import com.nextgis.maplibui.mapui.NGWVectorLayerUI;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.VerificationEnvironment;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -74,7 +79,8 @@ public class MapRenderStressTest {
                 assertTrue(layer.save()); ids.put(layer.getId());
             }
             fixture.screen.onActivity(activity -> { map.setVisible(true); map.setZoomAndCenter(11, new GeoPoint(0, 0), false, 0); assertTrue(map.save()); });
-            JSONObject state = new JSONObject().put("ids", ids).put("features", FEATURES + 80).put("vertices_per_feature", VERTICES + 1);
+            JSONObject state = new JSONObject().put("schema_version", 2).put("seed_pid", android.os.Process.myPid())
+                    .put("ids", ids).put("features", FEATURES + 80).put("vertices_per_feature", VERTICES + 1);
             Files.write(new File(app.getFilesDir(), STATE).toPath(), state.toString().getBytes(StandardCharsets.UTF_8));
             // Fixture owns no entries in its cleanup list here: the next process must read them.
         }
@@ -89,7 +95,14 @@ public class MapRenderStressTest {
                 .putLong(com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_SCROLL_X, Double.doubleToRawLongBits(0))
                 .putLong(com.nextgis.maplibui.util.SettingsConstantsUI.KEY_PREF_SCROLL_Y, Double.doubleToRawLongBits(0)).commit());
         JSONObject state = new JSONObject(new String(Files.readAllBytes(new File(app.getFilesDir(), STATE).toPath()), StandardCharsets.UTF_8));
-        JSONObject evidence = new JSONObject().put("schema_version", 1).put("pid", pid).put("status", "running")
+        assertEquals("The cold workload requires this exact seeded fixture contract", 2, state.getInt("schema_version"));
+        assertTrue("Seed process identity must be recorded", state.getInt("seed_pid") > 0);
+        assertNotEquals("The workload must really start in a new process", state.getInt("seed_pid"), pid);
+        assertEquals(FEATURES + 80, state.getInt("features")); assertEquals(VERTICES + 1, state.getInt("vertices_per_feature"));
+        assertEquals(2, state.getJSONArray("ids").length());
+        assertViewportOracle();
+        JSONObject evidence = new JSONObject().put("schema_version", 2).put("pid", pid).put("seed_pid", state.getInt("seed_pid"))
+                .put("render_backend", "sqlite_native").put("status", "running")
                 .put("model", android.os.Build.MODEL).put("manufacturer", android.os.Build.MANUFACTURER)
                 .put("android_api", android.os.Build.VERSION.SDK_INT).put("features", state.getInt("features"))
                 .put("vertices_per_feature", state.getInt("vertices_per_feature")).put("mvt_layers", 2);
@@ -102,8 +115,29 @@ public class MapRenderStressTest {
         long peakPss = 0, peakJava = 0, peakNative = 0;
         long began = SystemClock.elapsedRealtime(); int gestures = 0, recreations = 0, panChanges = 0, pinchChanges = 0;
         ActivityScenario<MainActivity> screen = ActivityScenario.launch(MainActivity.class);
+        android.os.Handler headingLoop = new android.os.Handler(android.os.Looper.getMainLooper());
+        AtomicInteger headingUpdates = new AtomicInteger();
+        Runnable headingPulse = new Runnable() {
+            @Override public void run() {
+                MapDrawable map = (MapDrawable) app.getMap();
+                if (map.getMaplibreMap() != null && map.getMaplibreMapView() != null
+                        && map.getMaplibreMapView().isAttachedToWindow()
+                        && map.getMaplibreMap().getStyle() != null && map.getMaplibreMap().getStyle().isFullyLoaded()) {
+                    int sample = headingUpdates.incrementAndGet();
+                    map.updateLocation(org.maplibre.geojson.Point.fromLngLat(0, 0), true, 0, 5,
+                            (float) (sample * 7 % 360), 15f);
+                }
+                headingLoop.postDelayed(this, 100);
+            }
+        };
+        headingLoop.post(headingPulse);
+        long peakRss = 0; int sourceChecks = 0;
         try {
-            for (int cycle = 0; cycle < CYCLES || SystemClock.elapsedRealtime() - began < 90_000; cycle++) {
+            awaitSqliteSources(screen, app, state.getJSONArray("ids"));
+            long workloadBegan = SystemClock.elapsedRealtime();
+            evidence.put("startup_elapsed_ms", workloadBegan - began);
+            for (int cycle = 0; cycle < CYCLES || SystemClock.elapsedRealtime() - workloadBegan < 90_000; cycle++) {
+                actualMvtLayers.set(awaitSqliteSources(screen, app, state.getJSONArray("ids"))); sourceChecks++;
                 screen.onActivity(activity -> {
                     MapDrawable map = (MapDrawable) app.getMap();
                     assertNotNull(map.getMaplibreMapView());
@@ -117,26 +151,17 @@ public class MapRenderStressTest {
                         });
                     }
                     captureGpu(map.getMaplibreMapView(), gpu);
-                    int configured = 0;
-                    if (map.getMaplibreMap() != null && map.getMaplibreMap().getStyle() != null)
-                        for (int i = 0; i < state.optJSONArray("ids").length(); i++) {
-                            com.nextgis.maplib.api.ILayer layer = map.getLayerById(state.optJSONArray("ids").optInt(i));
-                            if (layer != null && map.getMaplibreMap().getStyle().getSource(layer.getPath().toString())
-                                    instanceof org.maplibre.android.style.sources.VectorSource) configured++;
-                        }
-                    actualMvtLayers.set(Math.max(actualMvtLayers.get(), configured));
                 });
-                android.view.View view = target.get();
-                int[] location = new int[2]; view.getLocationOnScreen(location);
-                float x = location[0] + view.getWidth() * .5f, y = location[1] + view.getHeight() * .5f;
+                float[] area = readyTouchArea(screen, app);
+                float x = area[0], y = area[1], width = area[2];
                 org.maplibre.android.camera.CameraPosition before = camera(screen, app);
-                pan(x, y, view.getWidth() * (cycle % 2 == 0 ? .25f : -.25f)); gestures++;
+                pan(x, y, width * (cycle % 2 == 0 ? .25f : -.25f)); gestures++;
                 org.maplibre.android.camera.CameraPosition afterPan = camera(screen, app);
                 if (before != null && afterPan != null && before.target != null && afterPan.target != null
                         && (Math.abs(before.target.getLatitude() - afterPan.target.getLatitude()) > .0000001
                         || Math.abs(before.target.getLongitude() - afterPan.target.getLongitude()) > .0000001)) panChanges++;
                 if (cycle % 3 == 0) {
-                    pinch(x, y, view.getWidth(), cycle % 2 == 0); gestures++;
+                    pinch(x, y, width, cycle % 2 == 0); gestures++;
                     org.maplibre.android.camera.CameraPosition afterPinch = camera(screen, app);
                     if (afterPan != null && afterPinch != null && Math.abs(afterPan.zoom - afterPinch.zoom) > .01) pinchChanges++;
                 }
@@ -151,17 +176,23 @@ public class MapRenderStressTest {
                 peakPss = Math.max(peakPss, memory.getTotalPss());
                 peakJava = Math.max(peakJava, Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
                 peakNative = Math.max(peakNative, android.os.Debug.getNativeHeapAllocatedSize());
-                evidence.put("elapsed_ms", SystemClock.elapsedRealtime() - began).put("gestures", gestures)
+                java.util.Map<String, Object> budget = ((MapDrawable) app.getMap()).getRenderMemoryGuard().snapshot();
+                peakRss = Math.max(peakRss, ((Number) budget.get("process_rss_bytes")).longValue());
+                evidence.put("elapsed_ms", SystemClock.elapsedRealtime() - workloadBegan).put("gestures", gestures)
                         .put("frames", frames.get()).put("recreations", recreations)
                         .put("pan_changes", panChanges).put("pinch_changes", pinchChanges)
                         .put("mvt_layers", actualMvtLayers.get()).put("peak_pss_kib", peakPss)
+                        .put("sqlite_layers", actualMvtLayers.get()).put("source_checks", sourceChecks).put("global_feature_count", 0)
                         .put("peak_java_bytes", peakJava).put("peak_native_bytes", peakNative)
+                        .put("heading_updates", headingUpdates.get()).put("peak_process_rss_bytes", peakRss)
+                        .put("memory_budget", new JSONObject(budget))
                         .put("last_frame_age_ms", SystemClock.elapsedRealtime() - lastFrame.get())
                         .put("gpu", gpu.get());
                 Files.write(output.toPath(), evidence.toString().getBytes(StandardCharsets.UTF_8));
                 Thread.sleep(900);
             }
-            AtomicInteger visible = new AtomicInteger();
+            long workloadElapsed = SystemClock.elapsedRealtime() - workloadBegan;
+            evidence.put("elapsed_ms", workloadElapsed).put("workload_elapsed_ms", workloadElapsed);
             screen.onActivity(activity -> {
                 MapDrawable map = (MapDrawable) app.getMap(); map.setZoomAndCenter(11, new GeoPoint(0, 0), false, 0);
                 assertEquals("Persisted objects survive all reloads", FEATURES,
@@ -171,25 +202,44 @@ public class MapRenderStressTest {
                         .query(new GeoEnvelope(-20000, 20000, -20000, 20000)).size());
             });
             long deadline = SystemClock.elapsedRealtime() + 30000;
-            while (visible.get() == 0 && SystemClock.elapsedRealtime() < deadline) {
-                screen.onActivity(activity -> {
-                    MapDrawable map = (MapDrawable) app.getMap();
-                    visible.set(map.getMaplibreMap().queryRenderedFeatures(new android.graphics.RectF(0, 0,
-                            map.getMaplibreMapView().getWidth(), map.getMaplibreMapView().getHeight()),
-                            "nglayer-layer-" + state.optJSONArray("ids").optInt(0)).size());
-                });
-                if (visible.get() == 0) Thread.sleep(100);
+            while (!atFinalCamera(camera(screen, app)) && SystemClock.elapsedRealtime() < deadline) Thread.sleep(50);
+            assertTrue("The final camera must actually reach zoom11/center0", atFinalCamera(camera(screen, app)));
+            awaitSqliteSources(screen, app, state.getJSONArray("ids"));
+            // Freeze independent expectations before any native feature query; never derive them
+            // from what the renderer happened to return or demand every offscreen object.
+            double[][] viewport = viewport(screen, app);
+            List<Set<Long>> required = new ArrayList<>();
+            required.add(requiredIds(viewport, FEATURES)); required.add(requiredIds(viewport, 80));
+            int requiredCount = required.get(0).size() + required.get(1).size();
+            assertTrue("The known final camera must contain complete technical polygons", requiredCount > 0);
+            deadline = SystemClock.elapsedRealtime() + 30000;
+            int visible = 0, missing = requiredCount;
+            while (SystemClock.elapsedRealtime() < deadline) {
+                JSONArray coverage = visibleCoverage(screen, app, state.getJSONArray("ids"), required);
+                evidence.put("visible_coverage", coverage); visible = 0; missing = 0;
+                for (int i = 0; i < coverage.length(); i++) {
+                    JSONObject row = coverage.getJSONObject(i);
+                    assertEquals("Native geometry cannot contain label/invalid roles", 0, row.getInt("invalid_role_hits"));
+                    assertEquals("Native IDs must belong to the independent fixture", 0, row.getInt("unexpected_id_hits"));
+                    visible += row.getInt("rendered_ids_count"); missing += row.getInt("missing_ids_count");
+                }
+                if (missing == 0) break;
+                Thread.sleep(100);
             }
-            assertTrue("Heavy MVT polygons still render after gestures/recreation", visible.get() > 0);
+            assertEquals("Every independently expected fully visible polygon must render after stress", 0, missing);
+            assertTrue("Heavy SQLite polygons still render after gestures/recreation", visible >= requiredCount);
+            actualMvtLayers.set(awaitSqliteSources(screen, app, state.getJSONArray("ids")));
             assertTrue("Native frames must continue", frames.get() >= 60);
             assertTrue("Injected pans must actually move the native camera: " + panChanges, panChanges >= 50);
             assertTrue("Injected pinches must actually change native zoom: " + pinchChanges, pinchChanges >= 15);
+            assertTrue("GPS/heading updates must exercise the native overlay during the workload", headingUpdates.get() >= 300);
             assertEquals("Both sources must actually use native MVT", 2, actualMvtLayers.get());
             assertNotNull("Record the actual OpenGL device", gpu.get());
-            evidence.put("gpu", gpu.get()).put("visible_features", visible.get()).put("status", "passed")
+            evidence.put("gpu", gpu.get()).put("visible_features", visible).put("visible_required_count", requiredCount)
+                    .put("visible_missing_count", missing).put("total_elapsed_ms", SystemClock.elapsedRealtime() - began).put("status", "passed")
                     .put("smallest_width_dp", app.getResources().getConfiguration().smallestScreenWidthDp);
             Files.write(output.toPath(), evidence.toString().getBytes(StandardCharsets.UTF_8));
-        } catch (AssertionError error) {
+        } catch (Exception | AssertionError error) {
             evidence.put("status", "failed").put("failure", error.getMessage())
                     .put("frames", frames.get()).put("last_frame_age_ms", SystemClock.elapsedRealtime() - lastFrame.get());
             evidence.put("failure_state", renderState(screen, app));
@@ -215,6 +265,7 @@ public class MapRenderStressTest {
             }
             throw error;
         } finally {
+            headingLoop.removeCallbacks(headingPulse);
             screen.close();
             for (int i = 0; i < state.getJSONArray("ids").length(); i++) {
                 com.nextgis.maplib.api.ILayer layer = ((MapDrawable) app.getMap()).getLayerById(state.getJSONArray("ids").getInt(i));
@@ -222,6 +273,125 @@ public class MapRenderStressTest {
             }
             assertTrue(app.getMap().save());
         }
+    }
+
+    private static int awaitSqliteSources(ActivityScenario<MainActivity> screen, GISApplication app, JSONArray ids) throws Exception {
+        long deadline = SystemClock.elapsedRealtime() + 30000; AtomicInteger ready = new AtomicInteger();
+        do {
+            screen.onActivity(activity -> {
+                MapDrawable map = (MapDrawable) app.getMap(); int count = 0;
+                if (map.getMaplibreMap() != null && map.getMaplibreMap().getStyle() != null
+                        && map.getMaplibreMap().getStyle().isFullyLoaded()) for (int i = 0; i < ids.length(); i++) {
+                    com.nextgis.maplib.api.ILayer layer = map.getLayerById(ids.optInt(i));
+                    String source = layer == null ? null : map.getVectorRenderSourceId(layer.getId());
+                    SqliteVectorTileProvider provider = layer == null ? null : map.getSqliteVectorProvider(layer.getId());
+                    List<org.maplibre.geojson.Feature> cached = layer == null ? null : map.getLayerFeatures(layer);
+                    if (source != null && map.isSqliteVectorLayer(layer.getId()) && provider != null && provider.isCurrent()
+                            && map.getMaplibreMap().getStyle().getSource(source) instanceof org.maplibre.android.style.sources.CustomVectorSource
+                            && cached != null && cached.isEmpty()) count++;
+                }
+                ready.set(count);
+            });
+            if (ready.get() == 2) return ready.get();
+            Thread.sleep(50);
+        } while (SystemClock.elapsedRealtime() < deadline);
+        assertEquals("Both actual SQLite sources must be current and keep empty global feature lists", 2, ready.get());
+        return ready.get();
+    }
+
+    private static boolean atFinalCamera(org.maplibre.android.camera.CameraPosition camera) {
+        return camera != null && camera.target != null && Math.abs(camera.zoom - 11) < .001
+                && Math.abs(camera.target.getLatitude()) < .0000001 && Math.abs(camera.target.getLongitude()) < .0000001;
+    }
+
+    private static double[][] viewport(ActivityScenario<MainActivity> screen, GISApplication app) {
+        double[][] result = new double[4][2];
+        screen.onActivity(activity -> {
+            MapDrawable map = (MapDrawable) app.getMap(); float width = map.getMaplibreMapView().getWidth(), height = map.getMaplibreMapView().getHeight();
+            android.graphics.PointF[] corners = {new android.graphics.PointF(0, 0), new android.graphics.PointF(width, 0),
+                    new android.graphics.PointF(width, height), new android.graphics.PointF(0, height)};
+            for (int i = 0; i < 4; i++) {
+                org.maplibre.android.geometry.LatLng position = map.getMaplibreMap().getProjection().fromScreenLocation(corners[i]);
+                result[i][0] = Math.toRadians(position.getLongitude()) * 6378137.0;
+                result[i][1] = Math.log(Math.tan(Math.PI / 4 + Math.toRadians(position.getLatitude()) / 2)) * 6378137.0;
+            }
+        });
+        return result;
+    }
+
+    /** Conservative independent oracle: the authored radius140 circle must fit inside every viewport edge. */
+    private static Set<Long> requiredIds(double[][] corners, int count) {
+        double area = 0; for (int i = 0; i < 4; i++) area += corners[i][0] * corners[(i + 1) % 4][1] - corners[(i + 1) % 4][0] * corners[i][1];
+        assertTrue("Viewport must have nonzero finite area", Double.isFinite(area) && Math.abs(area) > 1);
+        double sign = Math.signum(area); Set<Long> result = new HashSet<>();
+        for (int index = 0; index < count; index++) {
+            double x = (index % 80 - 40) * 320.0, y = (index / 80 - 40) * 320.0; boolean inside = true;
+            for (int i = 0; i < 4; i++) {
+                double[] a = corners[i], b = corners[(i + 1) % 4]; double dx = b[0] - a[0], dy = b[1] - a[1];
+                if (sign * (dx * (y - a[1]) - dy * (x - a[0])) <= 142 * Math.hypot(dx, dy)) { inside = false; break; }
+            }
+            if (inside) result.add((long) index + 1);
+        }
+        return result;
+    }
+
+    private static void assertViewportOracle() {
+        Set<Long> square = new HashSet<>();
+        for (int row = 38; row <= 42; row++) for (int column = 38; column <= 42; column++) square.add((long) row * 80 + column + 1);
+        assertEquals(square, requiredIds(new double[][]{{-1000, -1000}, {1000, -1000}, {1000, 1000}, {-1000, 1000}}, FEATURES));
+        assertEquals(square, requiredIds(new double[][]{{-1000, -1000}, {-1000, 1000}, {1000, 1000}, {1000, -1000}}, FEATURES));
+        Set<Long> diamond = new HashSet<>();
+        for (int row = -3; row <= 3; row++) for (int column = -3; column <= 3; column++)
+            if (Math.abs(row) + Math.abs(column) <= 3) diamond.add((long) (40 + row) * 80 + 40 + column + 1);
+        double radius = Math.sqrt(2) * 1000;
+        assertEquals(diamond, requiredIds(new double[][]{{0, -radius}, {radius, 0}, {0, radius}, {-radius, 0}}, FEATURES));
+        assertTrue(requiredIds(new double[][]{{-100, -100}, {100, -100}, {100, 100}, {-100, 100}}, FEATURES).isEmpty());
+    }
+
+    private static JSONArray visibleCoverage(ActivityScenario<MainActivity> screen, GISApplication app, JSONArray ids,
+                                             List<Set<Long>> required) {
+        JSONArray result = new JSONArray();
+        screen.onActivity(activity -> {
+            try {
+                MapDrawable map = (MapDrawable) app.getMap();
+                for (int group = 0; group < 2; group++) {
+                    int count = group == 0 ? FEATURES : 80, invalid = 0, unexpected = 0; Set<Long> seen = new HashSet<>();
+                    for (org.maplibre.geojson.Feature feature : map.getMaplibreMap().queryRenderedFeatures(new android.graphics.RectF(0, 0,
+                            map.getMaplibreMapView().getWidth(), map.getMaplibreMapView().getHeight()), "nglayer-layer-" + ids.getInt(group))) {
+                        if (!(feature.geometry() instanceof org.maplibre.geojson.Polygon || feature.geometry() instanceof org.maplibre.geojson.MultiPolygon)
+                                || feature.hasProperty(NativeVectorTileEncoder.LABEL_ANCHOR)) { invalid++; continue; }
+                        com.google.gson.JsonElement fid = feature.getProperty(MPLFeaturesUtils.prop_featureid); long id;
+                        try { if (fid == null || fid.isJsonNull()) { invalid++; continue; } id = fid.getAsLong(); }
+                        catch (RuntimeException malformed) { invalid++; continue; }
+                        if (id < 1 || id > count) unexpected++; else seen.add(id);
+                    }
+                    Set<Long> missing = new HashSet<>(required.get(group)); missing.removeAll(seen);
+                    JSONArray examples = new JSONArray(); for (long id : missing) { if (examples.length() >= 16) break; examples.put(id); }
+                    result.put(new JSONObject().put("fixture_features", count).put("required_ids_count", required.get(group).size())
+                            .put("rendered_ids_count", seen.size()).put("missing_ids_count", missing.size()).put("missing_id_examples", examples)
+                            .put("invalid_role_hits", invalid).put("unexpected_id_hits", unexpected));
+                }
+            } catch (org.json.JSONException error) { throw new AssertionError("Cannot record independent viewport coverage", error); }
+        });
+        return result;
+    }
+
+    private static float[] readyTouchArea(ActivityScenario<MainActivity> screen, GISApplication app) throws Exception {
+        long deadline = SystemClock.elapsedRealtime() + 5_000;
+        AtomicReference<float[]> area = new AtomicReference<>();
+        while (SystemClock.elapsedRealtime() < deadline) {
+            screen.onActivity(activity -> {
+                android.view.View view = ((MapDrawable) app.getMap()).getMaplibreMapView();
+                if (view == null || !view.isAttachedToWindow() || !view.isShown() || !view.hasWindowFocus()
+                        || view.getWidth() == 0 || view.getHeight() == 0) return;
+                android.graphics.Rect visible = new android.graphics.Rect();
+                if (view.getGlobalVisibleRect(visible) && visible.width() > 0 && visible.height() > 0)
+                    area.set(new float[]{visible.exactCenterX(), visible.exactCenterY(), visible.width()});
+            });
+            if (area.get() != null) return area.get();
+            Thread.sleep(25);
+        }
+        throw new AssertionError("The verification map window did not regain a measured, focused touch area after recreation");
     }
 
     private static org.maplibre.android.camera.CameraPosition camera(ActivityScenario<MainActivity> screen, GISApplication app) {

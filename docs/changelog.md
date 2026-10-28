@@ -1,12 +1,52 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-28 — Direct SQLite native источники и lifecycle
+
+Ordinary Simple/Field Rule слои всех шести geometry types переведены в source
+на SQLite/RTree→полные MVT8192→CustomVectorSource13.7.1 без HTTP и общего
+startup GeoJSON. Добавлены source/model/content/style generations, один DB
+original для редактора, разделение polygon/anchor ролей и preclose lifecycle
+контракты. Invariants/dependencies/change-impact/module manifests фиксируют
+новые связи. Техническая native приёмка сохраняет каждый raw hit и failure
+артефакты; первоначальные FAIL не заменены зелёной сборкой. Новый source tip
+ещё не выпущен, Full/2GiB/787 benchmarks остаются отдельными gates.
+Выявлен SDK13.7.1 same-ID custom source loader cache defect: actual native ID
+теперь уникален на поколение, business layer path остаётся прежним. Смена стиля
+проверяется независимыми backend/native paint ожиданиями. Для SIGNALED OS exit
+разрешено bounded AUTO чтение native/прежнего ANR trace с явной неопределённой
+связью с финальным выходом; reason2/status6 не объявляется OOM.
+
+## 2026-10-28 — Владельцы памяти проекта787 и политика свободного остатка
+
+Qualified native profiles локализовали основное удержание в повторных свойствах
+GeoJSONVT; experimental candidate дал907→373MiB sampled retained с явно
+записанными timing/cache-policy ограничениями сравнения. Обновлены контракты
+compact native payload, полного MVT disk cache, точного мотива штриховки и
+одного автоматического resource notice на процесс. По уточнению владельца
+used/RSS/номинальный объём RAM исключены из условий warning и замедления:
+учитывается только свободный системный/Java остаток и OS low-memory signal.
+Сохранены неизвестные counters и failed прогоны; Full/SM-X115/2GiB gate не заменён.
+В MOB-04 записан следующий SQLite→CustomVectorSource этап без полной startup
+GeoJSON-копии, пока не включённый для всех ordinary layers. Для нового handled
+FGS отчёта118 добавлен bounded request/promotion witness без изменения поведения.
+[Свидетельства и ограничения](reference/mobile-crash-224-2026-10-27.md).
+
+## 2026-10-27 — Разрешено продолжение с программной графикой
+
+Владелец запретил аппаратный GPU и разрешил software-only проверки. Actual
+SwiftShader подтверждён. Новая траектория выполнила60 настоящих pan и20 zoom,
+но поймала отсутствие MVT объектов после нагрузки; это сохранённый FAIL.
+Следующий Full оборвался на software startup после нового Windows hard hang.
+Владелец отключил андервольтинг и поручил продолжить; причина не объявлена найденной.
+[Текущий разбор и границы](reference/mobile-crash-224-2026-10-27.md).
 
 ## 2026-10-27 — Остановлены AVD после зависаний компьютера
 

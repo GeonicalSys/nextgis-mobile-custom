@@ -126,7 +126,7 @@ public class VectorStyleRenderingTest {
                 org.maplibre.android.maps.Style nativeStyle=((MapDrawable)app.getMap()).getMaplibreMap().getStyle();
                 String source=layer.getPath().toString();
                 MPLFeaturesUtils.createSourceForLayer(layer.getId(),layer.getGeometryType(),features,nativeStyle,
-                        new HashMap<>(),new HashMap<>(),new HashMap<>(),source,false,null);
+                        new HashMap<>(),new HashMap<>(),new HashMap<>(),source,false,null,layer);
                 assertTrue("Classic source required",nativeStyle.getSource(source) instanceof GeoJsonSource);
                 MPLFeaturesUtils.createFillLayerForLayer(layer.getId(),layer.getGeometryType(),nativeStyle,
                         new HashMap<>(),new HashMap<>(),new HashMap<>(),new HashMap<>(),layer.getDefaultStyleNoExcept(),
@@ -134,7 +134,7 @@ public class VectorStyleRenderingTest {
             });
             if(layer.isVisible()){
                 Map<String,com.google.gson.JsonObject> expected=new HashMap<>();
-                for(org.maplibre.geojson.Feature feature:features){com.google.gson.JsonObject properties=feature.properties().deepCopy();
+                for(org.maplibre.geojson.Feature feature:MPLFeaturesUtils.nativeFeaturesForLayer(layer,layer.getGeometryType(),features)){com.google.gson.JsonObject properties=feature.properties().deepCopy();
                     // Legacy selection color is omitted by the geometry cache; it is not style paint.
                     properties.remove(MPLFeaturesUtils.prop_color);properties.remove(MPLFeaturesUtils.prop_order);
                     expected.put(feature.getStringProperty(MPLFeaturesUtils.prop_featureid),properties);}

@@ -50,4 +50,21 @@ public class DiagnosticsProcessExitReporterTest {
         for (int reason : new int[]{ApplicationExitInfo.REASON_CRASH_NATIVE, ApplicationExitInfo.REASON_ANR,
                 ApplicationExitInfo.REASON_LOW_MEMORY, ApplicationExitInfo.REASON_SIGNALED}) assertTrue(DiagnosticsProcessExitReporter.abnormal(reason));
     }
+
+    @Test public void signalFallbackKeepsSignalReasonAndPriorTraceAssociationThroughSendPolicy() throws Exception {
+        ApplicationExitInfo info = exit("app", 42, 2000);
+        set(info, "setReason", int.class, ApplicationExitInfo.REASON_SIGNALED);
+        set(info, "setStatus", int.class, 6);
+        Map<String,Object> trace = DiagnosticsTracePolicy.read(30, info.getReason(), () ->
+                new java.io.ByteArrayInputStream("\"main\"\n at android.view.View.draw(View.java:42)".getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+        io.sentry.SentryEvent event = AppDiagnostics.prepareCachedForSend(DiagnosticsProcessExitReporter.event("app", owner(), info, trace));
+        Map<?,?> context = (Map<?,?>) event.getContexts().get("process_exit");
+        assertEquals(2, context.get("reason"));
+        assertEquals(6, context.get("status"));
+        assertEquals("may_precede_exit", ((Map<?,?>) context.get("trace")).get("association"));
+        assertEquals("anr_text", ((Map<?,?>) context.get("trace")).get("format"));
+        assertEquals("app@old+223", event.getRelease());
+        assertEquals(List.of("os-process-exit", "2"), event.getFingerprints());
+        assertFalse(event.getMessage().getFormatted().contains("OOM"));
+    }
 }

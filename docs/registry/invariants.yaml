@@ -1,5 +1,135 @@
 schema_version: 1
 invariants:
+  INV-SQLITE-NATIVE-VECTORS:
+    title: Ordinary vector rendering reads SQLite tiles without a global GeoJSON snapshot
+    owners: [maplib, maplibui, app]
+    statement: >
+      Supported Simple and Field Rule renderers of all six geometry kinds use complete SQLite
+      originals through the RTree, full MVT8192 and stock CustomVectorSource13.7.1 without HTTP.
+      Cold/hot/lite/style/data load must not materialize the complete Java/GeoJSON layer. Preserve
+      every eligible identity, rule/layout/paint/scale/label and original DB coordinate. Polygon
+      Fill/Line exclude inline Point label roles; Symbol uses anchors. Selection/edit reads one
+      unquantized DB original and only transient overlays remain GeoJSON. Cancel/save/hide/undo/
+      remap restore native background without a global list. Cancel source work before native
+      detach/style/project/view replacement; canonical model, owner, source, content and style
+      generations reject late delivery. Project retirement is immediate and nonblocking even from
+      workers. Stable SQLite layer paths and transient native source identities are separate:
+      every source generation has a distinct renderer ID so SDK13.7.1 cannot keep the previous
+      loader/tile pyramid across same-ID replacement. Factories, visible labels, lookup and removal
+      use that actual ID; explicit classic binding first retires the streaming generation.
+      Real Canvas hide invalidates the previous content generation; edit activation must rebind
+      a current provider while keeping its owned original hidden. Actual finish restores that
+      same model ID before capturing the replacement. Duplicate/invalid hide and no-op show
+      never invalidate a current provider, including while another object is hidden for Undo.
+      Query and full clipping share the classic128/512 tile buffer (2048 of8192 extent), so
+      switching storage paths cannot lose the previous margin before style translations.
+      This parity floor does not promise arbitrary out-of-buffer translation visibility.
+      No simplification, thinning, hidden layer fallback or partial successful PBF is allowed.
+      Resource admission uses only measured free remainder. JNI/PBF decode is not zero-copy, a
+      bounded cache does not cap every native allocation, and native contents/performance/2GiB
+      acceptance must be recorded independently of compilation and JVM results.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileEncoder.java
+      - maplib/src/test/java/com/nextgis/maplib/map/NativeVectorTileBufferParityTest.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/test/java/com/nextgis/maplib/map/VectorLayerVisibilityEpochTest.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelController.java
+      - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
+    verify_smoke: [AUTO-SQLITE-NATIVE-VECTORS, AUTO-RENDER-MEMORY-UNITS, AUTO-RENDER-MEMORY, SMOKE-RENDER-MEMORY-NATIVE, AUTO-FEATURE-EDITING]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/runbooks/automated-tests.md, maplib/docs/README.md, maplib/docs/manifest.yaml, maplibui/docs/README.md, maplibui/docs/manifest.yaml, app/docs/manifest.yaml]
+  INV-RENDER-MEMORY-PRESSURE:
+    title: Resource pressure reduces caches and bounds work without changing layer contents
+    owners: [maplib, app]
+    statement: >
+      Decide resource economy from actual remaining free system memory relative to its low-memory
+      threshold and current Java headroom. Nominal device RAM, Android low-RAM class, absolute used
+      memory and self-process native/RSS observations must not independently trigger a warning,
+      cache degradation or work serialization. Nominal RAM class may choose ordinary disk-cache
+      capacity and the allocation reserve only; native/RSS/used counters remain diagnostics, not
+      pressure targets or hard caps. Unknown counters must not be treated as zero free memory.
+      An 8 GiB device with little free memory must receive the same free-headroom protection.
+      Only the current map/view/host epoch
+      receives lifecycle-bound cache callbacks. Keep complete geometry, every eligible feature,
+      source registration, model visibility, editing state, SQLite and sync unchanged. Normal tile
+      work retains two permits; actual resource constraints serialize complete builds fairly, and
+      unavailable headroom yields retryable HTTP 503 rather than successful partial tiles. Cache
+      trimming and SDK onLowMemory do not guarantee eviction of GeoJSONVT's internal index or no OOM.
+      Derived PBF disk caching and direct SQLite CustomVectorSource paging are implemented;
+      native performance, complete styles/edit behavior and 2GiB acceptance remain separate gates.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java
+      - maplib/src/test/java/com/nextgis/maplib/map/RenderMemoryGuardTest.java
+      - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryPolicy.java
+      - maplib/src/main/java/com/nextgis/maplib/map/RenderTileWorkGate.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+      - maplib/src/test/java/com/nextgis/maplib/util/MapRuntimeDiagnosticsTest.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/MapRenderStressTest.java
+    verify_smoke: [AUTO-RENDER-MEMORY-UNITS, AUTO-RENDER-MEMORY, SMOKE-RENDER-MEMORY-NATIVE]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/runbooks/automated-tests.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+  INV-NATIVE-GEOJSON-PAYLOAD:
+    title: Compact native properties preserve complete geometry and rich editor state
+    owners: [maplib, app]
+    statement: >
+      SQLite originals remain authoritative for project data; compatibility rich Java features
+      and single-original editor overlays retain their complete original geometry/properties.
+      Native-only copies retain geometry, all parts/rings/coordinates, bbox, feature/layer/order and
+      GeoJSON identities, unknown properties and applicable explicit overrides. Drop only verified
+      native-unused fields and properties not consumed by that source role. Polygon label points
+      require a nonempty signature and carry label inputs rather than geometry paint; point sources
+      retain both roles, and line geometry retains the native-query label fallback inputs. Preserve
+      rule layout/dash keys, custom zoom curves, label gates and actual paint values. Uniform polygon
+      sparsity requires the exact SimpleFeatureRenderer/SimplePolygonStyle context and matching
+      factory defaults; missing context uses conservative projection. Initial/reload/edit/save,
+      including all six MLP background constructors, must not restore the full rich native payload.
+      Selected/tool/vertex sources and the public polygon anchor helper keep their prior contract.
+      Styled URI files cannot bypass the projection. Transport counts contain IDs/counts only and
+      are not native-memory attribution; neither pruning nor unit success is an OOM guarantee.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelController.java
+      - maplib/src/main/java/com/nextgis/maplib/map/MLP
+      - maplib/src/test/java/com/nextgis/maplib/map/NativeFeaturePayloadTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RENDER-MEMORY, AUTO-POLYGON-STYLE-CONTROLS, AUTO-FEATURE-EDITING]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/reference/official-differences.md, docs/registry/dependencies.yaml, docs/runbooks/automated-tests.md, maplib/docs/README.md, maplib/docs/manifest.yaml, app/docs/README.md, app/docs/manifest.yaml]
+  INV-RENDER-MEMORY-NOTICE:
+    title: Automatic resource-economy notice is once per application process
+    owners: [app, maplib]
+    statement: >
+      When cache economy, serialized work or actual free-memory resource delay is applied, the visible resumed current
+      map receives a readable resource notice. An atomic process-session claim prevents repeats
+      across callbacks, layers, maps and Activity recreation; only a new process starts a new claim.
+      Manual map-loading status remains independent of that claim and is available while the current
+      guard reports economy. Retry re-evaluates resource/cache policy rather than rebuilding every
+      GeoJSON source. UI and lifecycle callbacks must not change saved visibility, geometry or data.
+      The isolated verification app preserves production automatic delivery in the dedicated memory
+      suite; other gesture/layout suites acknowledge that one known notice only in verification.
+    related_code:
+      - app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java
+      - app/src/test/java/com/nextgis/mobile/util/RenderMemoryNoticeTest.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+      - app/src/main/res/menu/main.xml
+      - app/src/main/res/values/render_memory.xml
+      - app/src/main/res/values-ru/render_memory.xml
+      - maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java
+      - app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
+    verify_smoke: [AUTO-RENDER-MEMORY-UNITS, AUTO-RENDER-MEMORY, SMOKE-RENDER-MEMORY-NATIVE]
+    must_update_docs: [docs/guides/bug-reports-user-guide.md, docs/runbooks/automated-tests.md, docs/registry/dependencies.yaml, app/docs/README.md, app/docs/manifest.yaml]
   INV-LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT:
     title: Local vector tiles render without external network connectivity
     owners: [maplibui, app]
@@ -125,7 +255,8 @@ invariants:
     title: Publication requires current complete phone and emulator acceptance
     owners: [app, maplibui, maplib]
     statement: Run local Related after ordinary work and local Full plus Check-Publication after dependency closure and final code/version before publication. Every native case, unit/docs/version gate, 36 chooser profiles and 6 real-window profiles at density620/font200% must pass for the current content, including real_window_matrix. Cloud workflows are manual-only by separate user request. Full preserves every failed attempt; a successful repeat cannot hide it. Setup/transport/locked-device failures abort. Only the separate verification APK is reset on a phone. Missing permitted project requires asking the user.
-    related_code: [tools/run_mobile_tests.py, tools/mobile_test_support.py, tools/mobile_test_project.py, tools/mobile-test-plan.json, app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java]
+    build_identity: A successful known verification assemble must bind the unchanged source fingerprint to the exact app/test APK hashes and fixed recipe. Related SkipBuild only reuses that basis and fails before device access for missing, stale or mixed binaries. Recheck the pair around installs and completion; Full/publication receipts require the basis. This does not attest installed bytes or production release-candidate provenance.
+    related_code: [tools/run_mobile_tests.py, tools/mobile_build_identity.py, tools/mobile_test_support.py, tools/mobile_test_project.py, tools/mobile-test-plan.json, tools/tests/test_mobile_build_identity.py, app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java]
     verify_smoke: [AUTO-MOBILE-FULL, AUTO-MOBILE-PUBLICATION-GATE]
     must_update_docs: [docs/runbooks/automated-tests.md, docs/runbooks/release-apk.md]
   INV-PROJECT-SYNC-COMPLETION:
@@ -1067,6 +1198,10 @@ invariants:
       Map runtime snapshots are bounded, captured without SDK/business reads from the observer
       and attached only to matching operation timestamps; old process identity is never replaced
       with the reporting process version. Queue and heap 503 reasons remain independently observable.
+      API30+ SIGNALED exits also attempt the bounded OS trace stream. Auto parsing distinguishes
+      native frames from a prior recovered-ANR main stack; association may_precede_exit remains
+      explicit, and null/IO/unrecognized format are separate unknown states. Reason2/status6
+      alone never establishes native-crash type, OOM or the cause of the final exit.
     related_code:
       - app/src/main/java/com/nextgis/mobile/MainApplication.java
       - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -1075,6 +1210,9 @@ invariants:
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
       - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java
       - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
     verify_smoke: [SMOKE-DIAGNOSTIC-DELIVERY, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
     must_update_docs: [docs/architecture/error-reporting.md, docs/guides/bug-reports-user-guide.md]
@@ -1359,20 +1497,25 @@ invariants:
       - maplib/docs/README.md
       - app/docs/README.md
   INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS:
-    title: Local vector tiles cannot exhaust the Android heap with concurrent requests
+    title: Local vector tile work has bounded concurrency and pressure admission
     owners: [maplib, app]
     statement: >
       The loopback local-vector-tile server has at most two concurrent workers and sixteen
       queued sockets; overload receives a retryable HTTP 503 instead of allocating another
       worker. Builds for one layer are serialized because geometry BLOB parsing and clipping
       retain large object graphs. A map generation change closes queued stale sockets, and a
-      request is rejected before geometry decoding when less than 64 MiB remains below the
-      runtime heap growth limit. These limits must not change layer order, identify semantics
-      or the classic rendering fallback.
+      request is rejected before geometry decoding when Java or current system headroom is
+      insufficient. A fair two-permit gate serializes complete builds under resource constraints;
+      successful tiles must not omit arbitrary features or simplify source geometry. These checks
+      do not enforce a native-memory ceiling, guarantee SDK retry or prove that OOM is impossible.
+      Preserve layer order, identify semantics and the classic rendering fallback.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
       - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileRequestPolicy.java
       - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/map/RenderTileWorkGate.java
+      - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java
+      - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryPolicy.java
       - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileRequestPolicyTest.java
     verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-LOCAL-VECTOR-TILE-STRESS]
     must_update_docs:

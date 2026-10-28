@@ -20,8 +20,12 @@ from mobile_test_project import (DEFAULT_PROJECT, ProjectSelectionRequired, choo
                                  read_projects, snapshot_project, load_policy_fixture)
 
 from mobile_style_evidence import collect_style_images
+from mobile_sqlite_evidence import SQLITE_CLASS, collect_sqlite_evidence
+from mobile_native_log import start_native_log_capture
 from mobile_render_acceptance import STRESS_CLASS, STRESS_CASE, STRESS_SEED, record_stress
 from mobile_emulator_safety import SOFTWARE_GPU, require_software_graphics
+from mobile_build_identity import (GRADLE_ARGUMENTS, build_and_record, load_basis,
+                                   recipe as build_recipe, verify_pair)
 
 ROOT = Path(__file__).resolve().parents[1]
 EMULATOR_HARDWARE = {'ranchu', 'goldfish'}
@@ -42,6 +46,7 @@ class Verification:
         self.sdk=Path(args.sdk or os.environ.get('ANDROID_HOME') or os.environ.get('ANDROID_SDK_ROOT')
                       or Path(os.environ.get('LOCALAPPDATA',''))/'Android/Sdk')
         self.adb=str(self.sdk/'platform-tools'/('adb.exe' if os.name=='nt' else 'adb'))
+        self.native_log_capture=start_native_log_capture
         self.plan=json.loads((ROOT/'tools/mobile-test-plan.json').read_text(encoding='utf-8'))
         self.catalog=native_catalog(ROOT)
         self.required=validate_plan(self.plan,self.catalog)
@@ -56,6 +61,7 @@ class Verification:
         self.emulator_process=None
         self.saved_emulator={}
         self.project_fixture=None
+        self.build_basis=None
 
     def command(self, argv, *, name=None, timeout=900, allow_failure=False, input_text=None,
                 native_startup_timeout=None):
@@ -225,6 +231,8 @@ class Verification:
         raise RuntimeError('The isolated emulator did not boot; see emulator-start.log')
 
     def build(self):
+        if self.args.skip_build and self.args.scope=='full':
+            raise ValueError('A publication full run must build the tested source itself')
         gradle=ROOT/('gradlew.bat' if os.name=='nt' else 'gradlew')
         if self.args.scope=='full':
             self.command([gradle,'-PciReliabilityChecks=true','-Pkotlin.incremental=false','--console=plain',
@@ -238,11 +246,24 @@ class Verification:
             self.command(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',
                           ROOT/'tools/docs-check.ps1','-RunTests'],name='docs',timeout=300)
             self.checks['docs']=True
+        receipt=ROOT/'build/verification/apk-build.json'
+        recipe=build_recipe(ROOT)
         if self.args.skip_build:
-            if self.args.scope=='full': raise ValueError('A publication full run must build the tested source itself')
+            self.discover_verification_apks()
+            self.build_basis=load_basis(receipt,self.fingerprint,recipe,self.apk_pair())
         else:
-            self.command([gradle,'-PfieldVerificationChecks=true','-PciReliabilityChecks=true','-Pkotlin.incremental=false','--console=plain',
-                          ':app:assembleLisaDebug',':app:assembleLisaDebugAndroidTest'],name='verification-apks',timeout=1800)
+            self.build_basis=build_and_record(receipt,self.fingerprint,recipe,
+                    lambda:source_fingerprint(ROOT),
+                    lambda:self.command([gradle,*GRADLE_ARGUMENTS],name='verification-apks',timeout=1800),
+                    self.discover_verification_apks)
+
+    def apk_pair(self):
+        return dict(zip(('app','test'),self.apks))
+
+    def assert_build_pair(self):
+        verify_pair(self.build_basis,source_fingerprint(ROOT),build_recipe(ROOT),self.apk_pair())
+
+    def discover_verification_apks(self):
         main=list((ROOT/'app/build/outputs/apk/lisa/debug').glob('*.apk'))
         tests=list((ROOT/'app/build/outputs/apk/androidTest/lisa/debug').glob('*.apk'))
         if len(main)!=1 or len(tests)!=1: raise ValueError('Exactly one verification app/test APK is required')
@@ -255,11 +276,14 @@ class Verification:
             if not re.search(r"^package: name='"+re.escape(package)+"'",badging,re.M):
                 raise ValueError('Refusing to install a non-verification APK: '+apk.name)
         self.apks=main+tests
+        return self.apk_pair()
 
     def install(self,serial):
+        self.assert_build_pair()
         for apk in self.apks:
             text=self.command([self.adb,'-s',serial,'install','-r','-g',apk],timeout=120)
             if 'Success' not in text: raise RuntimeError('Verification APK installation failed: '+text)
+        self.assert_build_pair()
 
     def prepare(self,serial):
         # The identity is a fixed constant, never derived from a caller-supplied package/URI.
@@ -321,11 +345,16 @@ class Verification:
             return {'passed':seed['passed']+workload['passed'], 'skipped':seed['skipped']+workload['skipped'],
                     'expected_crash':False, 'failed':workload.get('failed',False)}
         if len(selectors)==1 and selectors[0] in self.plan.get('isolated_methods', []):
-            passed=[];skipped=[]
+            passed=[];skipped=[];failures=[];failed=False
             for case in sorted(self.catalog[selectors[0]]):
-                result=self.native(serial,[case],name+'-'+case.split('#')[1],extra=extra)
+                try:
+                    result=self.native(serial,[case],name+'-'+case.split('#')[1],extra=extra)
+                except NativeCheckFailure as error:
+                    failures.append(str(error));continue
+                failed=failed or result.get('failed',False)
                 passed.extend(result['passed']);skipped.extend(result['skipped'])
-            return {'passed':passed,'skipped':skipped,'expected_crash':False}
+            if failures: raise NativeCheckFailure('\n'.join(failures))
+            return {'passed':passed,'skipped':skipped,'expected_crash':False,'failed':failed}
         if selectors==['com.nextgis.mobile.util.DiagnosticsNoiseTest']:
             return self.diagnostics_noise(serial,name)
         if reset: self.prepare(serial)
@@ -336,12 +365,43 @@ class Verification:
         argv=[self.adb,'-s',serial,'shell','am','instrument','-w','-r','-e','verificationPhone',
               'true' if serial==getattr(self,'phone',None) else 'false','-e','class',','.join(selectors)]
         for key,value in (extra or {}).items(): argv+=['-e',key,str(value)]
-        text=self.command(argv+[RUNNER],name=name,allow_failure=bool(fatal),native_startup_timeout=60)
+        native_log=None
+        if any(case.startswith(SQLITE_CLASS+'#') for case in expected):
+            try:
+                factory=getattr(self,'native_log_capture',None)
+                if factory is not None:
+                    native_log=factory(self.adb,serial,self.output/(name+'-uid-logcat.txt'))
+            except Exception as error:
+                self.checks.setdefault('native_uid_logs',[]).append(
+                    {'case':name,'status':'diagnostic_failure','error_type':type(error).__name__,
+                     'error_code':getattr(error,'code','unknown')})
+        try:
+            text=self.command(argv+[RUNNER],name=name,allow_failure=bool(fatal),native_startup_timeout=60)
+        finally:
+            if native_log is not None:
+                try: log_state=native_log.stop()
+                except Exception as error:
+                    log_state={'status':'diagnostic_failure','error_type':type(error).__name__}
+                self.checks.setdefault('native_uid_logs',[]).append({'case':name,**log_state})
+            # Retain fixed verification files before the next per-method pm clear, even on
+            # command/protocol failure. Diagnostic errors never replace the native failure.
+            for case in sorted(expected):
+                if not case.startswith(SQLITE_CLASS+'#'): continue
+                evidence_name=re.sub(r'[^A-Za-z0-9_.-]', '_', name)[:72]+'-'+hashlib.sha256(case.encode()).hexdigest()[:12]
+                try:
+                    evidence=collect_sqlite_evidence(self.adb,serial,self.output/'sqlite-evidence'/evidence_name,
+                                                     case=case,source_fingerprint=self.fingerprint)
+                except Exception as error:
+                    evidence={'status':'diagnostic_failure','case':case,'source_fingerprint':self.fingerprint,
+                              'error':type(error).__name__+': '+str(error)[:640]}
+                self.checks.setdefault('native_sqlite_evidence',[]).append(evidence)
+                print('SQLite diagnostic artifacts '+evidence['status']+': '+case,flush=True)
         if any(selector.startswith('com.nextgis.mobile.rendering.')
                or selector.startswith('com.nextgis.mobile.util.MaintenanceRemindersNativeTest')
                or selector.startswith('com.nextgis.mobile.reliability.LargeTextLayoutTest') for selector in selectors):
             evidence_name=re.sub(r'[^A-Za-z0-9_.-]', '_', name)
             collect_style_images(self.adb,serial,self.output/'images'/evidence_name)
+        native_failure=None
         try: result=parse_instrumentation(text,expected,fatal=fatal)
         except ValueError as error:
             # Preserve evidence before reset/finalization, including cases that die before
@@ -356,16 +416,17 @@ class Verification:
                     evidence = self.command([self.adb,'-s',serial,'shell',*args],allow_failure=True,timeout=30)
                     (self.output/(name+'-'+suffix+'.txt')).write_text(evidence,encoding='utf-8')
             message=str(error)+'; see '+str(self.output/(name+'.log'))+'\n'+text[-4000:]
-            if self.args.scope!='full': raise NativeCheckFailure(message) from error
+            native_failure=message
             # Each independent check resets only the disposable verification workspace.
             # Preserve the failure and finish the roster; transport/setup failures still abort.
             result={'passed':[],'skipped':[],'expected_crash':False,'failed':True,'error':message}
         self.results.append({'name':name,'device':serial,**result})
         (self.output/'progress.json').write_text(json.dumps(self.receipt('running'),ensure_ascii=False,indent=2),encoding='utf-8')
         if result.get('failed'):
-            print('FAIL '+name+'; retained in receipt, continuing independent Full checks',flush=True)
+            print('FAIL '+name+'; retained in receipt',flush=True)
         else:
             print('PASS '+name+': '+str(len(result['passed']))+' cases'+(' (expected fatal)' if fatal else ''),flush=True)
+        if native_failure is not None and self.args.scope!='full': raise NativeCheckFailure(native_failure)
         return result
 
     def require_native_success(self):
@@ -446,23 +507,39 @@ class Verification:
             reconnect_thread=threading.Thread(target=reconnect); reconnect_thread.start()
             try: self.native(serial,[name+'#deliverWhenNetworkReturns'],'diagnostic-reconnect',reset=False)
             finally: reconnect_thread.join()
-            if len(captured)<2: raise RuntimeError('Local receiver did not accept both persisted diagnostic reports')
-            import gzip
-            delivered = b'\n'.join(gzip.decompress(body) for body in captured)
-            for required in (b'process_exit_fallback', b'verification-before-kill', b'verification-before-native-abort', b'native_frames'):
-                if required not in delivered: raise RuntimeError('OS fallback did not reach the local receiver: '+str(required))
-            self.checks['process_exit_delivery'] = True
+            self.check_diagnostic_receiver(captured)
         finally:
             self.command([self.adb,'-s',serial,'reverse','--remove','tcp:18539'],allow_failure=True)
             server.shutdown(); server.server_close()
             self.shell(serial,'svc','wifi','enable')
         self.native(serial,[name+'#workerRetriesTemporaryServerFailureWithoutNetworkChange'],'diagnostic-http-retry')
 
+    def check_diagnostic_receiver(self,captured):
+        import gzip
+        error=None
+        try:
+            if len(captured)<2: raise ValueError('Local receiver did not accept both persisted diagnostic reports')
+            delivered=b'\n'.join(gzip.decompress(body) for body in captured)
+            for required in (b'process_exit_fallback', b'verification-before-kill', b'verification-before-native-abort', b'native_frames'):
+                if required not in delivered: raise ValueError('OS fallback did not reach the local receiver: '+str(required))
+        except (ValueError,OSError,EOFError) as failure:
+            error=str(failure)
+        self.checks['process_exit_delivery']=error is None
+        report={'name':'diagnostic-receiver','device':self.emulator,'passed':[],'skipped':[],
+                'host_check':True,'failed':error is not None,'received_reports':len(captured)}
+        if error is not None: report['error']=error
+        (self.output/'diagnostic-receiver.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+        self.results.append(report)
+        if error is not None:
+            if self.args.scope!='full': raise NativeCheckFailure(error)
+            print('FAIL diagnostic-receiver; retained in receipt, continuing independent Full checks',flush=True)
+
     def receipt(self,status):
         stress = ROOT/'build/verification/render-stress.json'
         if stress.is_file(): self.checks['render_stress'] = json.loads(stress.read_text(encoding='utf-8'))
-        return {'schema_version':1,'scope':self.args.scope,'status':status,
+        return {'schema_version':2,'scope':self.args.scope,'status':status,
                 'created_at':datetime.now(timezone.utc).isoformat(),'source_fingerprint':self.fingerprint,
+                'build_basis':getattr(self,'build_basis',None),
                 'devices':self.devices,'checks':self.checks,'runs':self.results,
                 'passed_cases':sorted({case for result in self.results for case in result['passed']})}
 
@@ -516,6 +593,8 @@ class Verification:
         if self.args.scope=='check-publication':
             receipt=json.loads((ROOT/'build/verification/full-passed.json').read_text(encoding='utf-8'))
             check_publication_receipt(receipt,self.fingerprint,self.required)
+            self.discover_verification_apks()
+            verify_pair(receipt['build_basis'],self.fingerprint,build_recipe(ROOT),self.apk_pair())
             print('PASS: full phone/emulator acceptance matches the current source',flush=True)
             return
         if self.args.scope=='list':
@@ -524,7 +603,8 @@ class Verification:
             if self.args.scope=='full':
                 # A failed/interrupted new acceptance must not leave a prior green gate behind.
                 (ROOT/'build/verification/full-passed.json').unlink(missing_ok=True)
-            self.select_devices(); self.build()
+            # Reject stale/missing skip-build provenance before the first ADB/device action.
+            self.build(); self.select_devices()
             if hasattr(self,'emulator'): self.install(self.emulator)
             if self.args.scope=='related' and hasattr(self,'phone'):
                 self.install(self.phone)
@@ -541,22 +621,23 @@ class Verification:
                 self.require_native_success()
                 check_publication_receipt(self.receipt('passed'),self.fingerprint,self.required)
             else:
+                related_failures=[]
                 selected=set()
                 for area in self.args.area or ['layers']:
                     if area not in self.plan['areas']: raise ValueError('Unknown area: '+area)
                     selected.update(self.plan['areas'][area])
                 if hasattr(self,'emulator'):
                     for index,test in enumerate(sorted(selected)):
-                        self.native(self.emulator,[test],f'related-{index}-'+test.replace('#','-').rsplit('.',1)[1])
+                        try: self.native(self.emulator,[test],f'related-{index}-'+test.replace('#','-').rsplit('.',1)[1])
+                        except NativeCheckFailure as error: related_failures.append(test+': '+str(error))
                     if any('StakeoutForegroundServiceTest' in test for test in selected): self.grant_and_deny(self.emulator)
                     if 'layers' in (self.args.area or ['layers']): self.ui_matrix()
                     if 'real-windows' in (self.args.area or []): self.real_window_matrix()
-                phone_failures=[]
                 for index,test in enumerate(getattr(self,'related_phone_cases',[])):
                     try: self.native(self.phone,[test],f'phone-related-{index}-'+test.split('#')[-1])
-                    except NativeCheckFailure as error: phone_failures.append(test+': '+str(error))
-                if phone_failures: raise RuntimeError('\n'.join(phone_failures))
-            if source_fingerprint(ROOT)!=self.fingerprint: raise RuntimeError('Source changed during verification; rerun the affected checks')
+                    except NativeCheckFailure as error: related_failures.append(test+': '+str(error))
+                if related_failures: raise NativeCheckFailure('\n'.join(related_failures))
+            self.assert_build_pair()
         except Exception as error:
             receipt=self.receipt('failed'); receipt['error']=str(error)
             (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
@@ -568,6 +649,11 @@ class Verification:
                 (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
                 raise
         # A run becomes successful only after its owned resources have been finalized.
+        try: self.assert_build_pair()
+        except Exception as error:
+            receipt=self.receipt('failed'); receipt['error']=str(error)
+            (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+            raise
         receipt=self.receipt('passed')
         (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
         if self.args.scope=='full':

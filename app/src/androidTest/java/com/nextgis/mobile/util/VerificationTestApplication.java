@@ -7,6 +7,7 @@ import com.nextgis.mobile.MainApplication;
 
 public final class VerificationTestApplication extends MainApplication {
     static boolean phoneOptIn;
+    static boolean memoryNoticeUnderTest;
     static final java.util.concurrent.CountDownLatch startupCallbacks =
             new java.util.concurrent.CountDownLatch(1);
 
@@ -21,6 +22,9 @@ public final class VerificationTestApplication extends MainApplication {
             throw new IllegalStateException("Verification requires its separate test-only APK identity");
         if (!VerificationEnvironment.isEmulator() && !phoneOptIn)
             throw new IllegalStateException("A physical verification phone must be explicitly selected");
+        // Unrelated gesture/layout cases acknowledge this one known onboarding notice.
+        // The dedicated memory suite keeps production delivery and tests it across recreation.
+        if (!memoryNoticeUnderTest) RenderMemoryNotice.claim();
         if (!VerificationEnvironment.isEmulator()) {
             // These preferences belong only to this disposable app, never to the user's app/device.
             PreferenceManager.getDefaultSharedPreferences(this).edit()
