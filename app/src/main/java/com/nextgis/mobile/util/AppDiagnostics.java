@@ -50,8 +50,9 @@ public final class AppDiagnostics {
     private static final Set<String> CONTEXTS = new HashSet<>(
             Arrays.asList("app", "device", "os", "runtime", "gpu", "trace"));
     private static final Set<String> DIAGNOSTIC_CONTEXTS = new HashSet<>(
-            Arrays.asList("map_runtime", "gps_recovery", "sync_journal", "report_origin", "process_exit"));
+            Arrays.asList("map_runtime", "gps_recovery", "sync_journal", "report_origin", "process_exit", "background_gps_start"));
     private static volatile com.nextgis.maplib.util.MapRuntimeDiagnostics.Trace startup;
+    private static volatile Context diagnosticContext;
 
     public enum Operation { STARTUP, MAP, GEOMETRY_EDIT, ATTRIBUTE_FORM, SYNC, AZIMUTH, STAKEOUT, TRACK, WALK, LOCATION }
     public enum Phase { START, READY, SAVE, RESTORE, STOP, FAILED, FINISHED, CANCELLED }
@@ -61,7 +62,10 @@ public final class AppDiagnostics {
     /** Rate limiting is owned by the acquisition policy; warnings diagnose reception, not crashes. */
     public static void reportGpsRecovery(java.util.Map<String, Object> snapshot) {
         try {
-            Sentry.captureEvent(gpsRecoveryEvent(snapshot));
+            java.util.Map<String,Object> observed = new java.util.LinkedHashMap<>(snapshot);
+            try { observed.put("platform", DiagnosticsGpsPlatform.collect(diagnosticContext)); }
+            catch (RuntimeException unavailable) { observed.put("platform", java.util.Map.of("status", "unavailable")); }
+            Sentry.captureEvent(gpsRecoveryEvent(observed));
         } catch (RuntimeException ignored) { }
     }
 
@@ -86,14 +90,21 @@ public final class AppDiagnostics {
         initialize(context, BuildConfig.SENTRY_DSN);
     }
 
+    /** Called by explicit log ZIP export, never by a crash callback or at startup. */
+    public static String processExitSummary(Context context) {
+        return DiagnosticsExitInfo.exportSummary(context);
+    }
+
     // Package-private seam for the isolated instrumentation Application, never a runtime setting.
     static void initialize(Context context, String dsn) {
+        diagnosticContext = context.getApplicationContext();
         com.nextgis.maplib.util.MapRuntimeDiagnostics.initialize(context,
                 BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, BuildConfig.SOURCE_REVISION);
         startup = com.nextgis.maplib.util.MapRuntimeDiagnostics.beginStartup();
         startup.put("brand", BuildConfig.FLAVOR);
         startup.put("environment", BuildConfig.DEBUG ? "debug" : "production");
         startup.phase("diagnostics_init");
+        DiagnosticsProcessExitReporter.arm(context);
         if (dsn == null || dsn.trim().isEmpty()) return; // Explicit CI build without diagnostics.
         try {
             SentryAndroid.init(context, options -> {
@@ -125,6 +136,7 @@ public final class AppDiagnostics {
         com.nextgis.maplib.util.MapRuntimeDiagnostics.Trace trace = startup;
         startup = null;
         if (trace != null) trace.finish(0, null);
+        DiagnosticsProcessExitReporter.reportAsync();
     }
 
     static void configure(Context context, SentryAndroidOptions options) {
@@ -156,6 +168,7 @@ public final class AppDiagnostics {
         options.setSendClientReports(false);
         options.setTransportFactory(DiagnosticsTransport::new);
         options.setBeforeSend((event, hint) -> {
+            if ("process_exit_fallback".equals(event.getTag("failure_kind"))) return prepareCachedForSend(event);
             if (HintUtils.hasType(hint, Cached.class) || HintUtils.hasType(hint, Backfillable.class)) {
                 DiagnosticsExitInfo.attach(context, event);
                 return prepareCachedForSend(event);
@@ -329,7 +342,8 @@ public final class AppDiagnostics {
         java.util.List<String> contextKeys = java.util.Collections.list(event.getContexts().keys());
         contextKeys.sort(java.util.Comparator.comparingInt(key -> "report_origin".equals(key) ? 0
                 : "process_exit".equals(key) ? 1 : "sync_journal".equals(key) ? 2
-                : "gps_recovery".equals(key) ? 3 : "map_runtime".equals(key) ? 4 : 5));
+                : "background_gps_start".equals(key) ? 3 : "gps_recovery".equals(key) ? 4
+                : "map_runtime".equals(key) ? 5 : 6));
         for (String key : contextKeys) {
             Object context = event.getContexts().get(key);
             if (context instanceof Response) {

@@ -1,7 +1,10 @@
 {
   "schema_version": 1,
-  "isolated_methods": ["com.nextgis.mobile.rendering.VisibleLineLabelsTest", "com.nextgis.mobile.rendering.TrackStopConfirmationTest", "com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocationOrbitTest"],
+  "isolated_methods": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest", "com.nextgis.mobile.rendering.RenderMemorySafetyTest", "com.nextgis.mobile.rendering.VisibleLineLabelsTest", "com.nextgis.mobile.rendering.TrackStopConfirmationTest", "com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocationOrbitTest"],
   "phone": [
+    "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest",
+    "com.nextgis.mobile.rendering.RenderMemorySafetyTest",
+    "com.nextgis.mobile.rendering.MapRenderStressTest",
     "com.nextgis.mobile.util.MaintenanceRemindersNativeTest",
     "com.nextgis.mobile.rendering.VisibleLineLabelsTest",
     "com.nextgis.mobile.rendering.TrackStopConfirmationTest",
@@ -56,6 +59,10 @@
   ],
   "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
   "related_phone_areas": {
+    "sqlite-marker": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteMultiPointRulesRetainBothPartsAndTheCustomMarker"],
+    "sqlite-render": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest"],
+    "render-memory": ["com.nextgis.mobile.rendering.RenderMemorySafetyTest", "com.nextgis.mobile.rendering.MapRenderStressTest", "com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector"],
+    "render-stress": ["com.nextgis.mobile.rendering.MapRenderStressTest"],
     "azimuth-text": ["com.nextgis.mobile.reliability.LargeTextLayoutTest#azimuthTextAndCloseStayWithinSmallPortraitAndLandscapePanels"],
     "persistence-catalog": ["com.nextgis.mobile.reliability.FeaturePersistenceTest", "com.nextgis.mobile.reliability.StandardFeatureTypesTest"],
     "track-map-actions": ["com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete"],
@@ -78,6 +85,12 @@
     "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"]
   },
   "areas": {
+    "sqlite-marker": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteMultiPointRulesRetainBothPartsAndTheCustomMarker"],
+    "sqlite-render": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest"],
+    "render-memory": ["com.nextgis.mobile.rendering.RenderMemorySafetyTest", "com.nextgis.mobile.rendering.MapRenderStressTest", "com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector"],
+    "render-stress": ["com.nextgis.mobile.rendering.MapRenderStressTest"],
+    "crash-delivery": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
+    "crash-startup": ["com.nextgis.mobile.reliability.MapEditingToolsTest#emptyEditHandlesNeverEnterTheNativeRenderer", "com.nextgis.mobile.reliability.MapEditingToolsTest#rulerAcceptsFingerDriftAndKeepsPanCancelAndLongPressSeparate", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest"],
     "real-windows": ["com.nextgis.mobile.reliability.LargeTextLayoutTest#realMapCloseAndDialogActionsStayReachable", "com.nextgis.mobile.reliability.LargeTextLayoutTest#realSettingsAndSecondaryScreensRetainCompleteLabels"],
     "track-delivery": ["com.nextgis.mobile.reliability.TrackUploadTest"],
     "offline-tiles": ["com.nextgis.mobile.rendering.LocalVectorTileLabelTest#localTilesAndLiveStyleFallbackRenderWhileAllExternalNetworksAreOffline"],

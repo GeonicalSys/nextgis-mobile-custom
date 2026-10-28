@@ -38,6 +38,17 @@ related_code:
 
 # NGW sync, локальное хранение и восстановление
 
+## Буферизация существующего индекса — 2026-10-27
+
+GeometryRTree.load сохраняет synchronized контракт и читает существующий
+бинарный файл через BufferedInputStream 64 KiB перед DataInputStream. Это
+сокращает мелкие filesystem/Sentry reads в startup, но не переносит загрузку
+модели с main thread. Try-with-resources закрывает поток и при IOException.
+Версия файла, ID, envelopes, поиск, запись, rebuild и бизнес-данные не меняются.
+Независимый legacy fixture из 6000 элементов проходит несколько узлов/буферов,
+проверяет точные координаты, поиск и byte-identical roundtrip без записи в input.
+[Инцидент и непроверенные случаи](../reference/mobile-crash-224-2026-10-27.md).
+
 Миграция общей истории читает настоящий проектный `layers.db`: расширение
 добавляет DatabaseContext к логическому имени `layers`. Общий resolver имени
 не открывает/не создаёт источник. Пропущенные первым обновлением истории

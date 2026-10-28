@@ -11,7 +11,8 @@ param(
     [string]$PythonPath,
     [string]$OutputPath,
     [switch]$SkipBuild,
-    [switch]$PhoneOnly
+    [switch]$PhoneOnly,
+    [switch]$AllowEmulator
 )
 $ErrorActionPreference='Stop'
 $repoTaskPath=Split-Path -Parent $PSScriptRoot
@@ -37,6 +38,7 @@ try {
     if($OutputPath) {$runArgs+=@('--output',$OutputPath)}
     if($SkipBuild) {$runArgs+='--skip-build'}
     if($PhoneOnly) {$runArgs+='--phone-only'}
+    if($AllowEmulator) {$runArgs+='--allow-emulator'}
     Push-Location $repoTaskPath
     try { & $PythonPath @pythonPrefix @runArgs; $runExitTask=$LASTEXITCODE }
     finally {Pop-Location}

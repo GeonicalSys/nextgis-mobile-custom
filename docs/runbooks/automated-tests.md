@@ -1,11 +1,13 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
   - tools/mobile_test_support.py
+  - tools/mobile_build_identity.py
+  - tools/tests/test_mobile_build_identity.py
   - tools/mobile-test-plan.json
   - app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java
   - app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestApplication.java
@@ -14,6 +16,276 @@ related_code:
 ---
 
 # Автоматические проверки
+
+## Final D101 closure gates — 2026-10-28
+
+ONE final `:maplib:testDebugUnitTest -Pkotlin.incremental=false -PciReliabilityChecks=true`
+дал750PASS/132classes/0fail/error/skip59s, sourcefp62de8740…59ec91 unchanged.
+71focused входят в эту suite, не складывать counts. Full logs и132JUnit XML
+сохранены; ADB/emulator/source changes в этом прогоне отсутствовали.
+Независимое видео dense1403/11.7z приняло один named positive fullscene gate:
+32.45–34.09s843d→13.68–15.65s6039→10.33–12.27sD101 с clockmargin, lateROI MAE0.
+Это не FPS/повторная статистика/fullcatalogue; sharp17→12/newextent и latestDB
+after-proof отдельные gates. TrackLayer fullGeoJSON excluded, trackRAM неизвестна.
+
+## Small-BLOB window — отдельный RED/GREEN и API gate
+
+До small-window реализации source/PFD baseline сохранил RED34tests/2expected
+failures:65small originals дали65PFD вместо0, full-byte boundary набор
+1/16383/16384/16385/3MiB дал5PFD вместо2; остальные32PASS. Сохранять также
+RED01 test-compilation failure, не называть его expected RED. Focused команда
+проверяет Reader/Provider/Bridge/Spatial/Diagnostics; отдельные API26/27 методы
+не открывают geometry cursor, API30 real SQLite проверяет nestedCASE и отсутствие
+large/TEXT/NULL payload в small-column. Отдельны cancel между queries,
+mid-window fallback без повторной доставки, exact length/ID/order/cardinality
+и three-resource cleanup; ошибки SQLite/resources не должны дать PFD success.
+GREEN01 PASS71/0fail/error/skip за1m58s (Reader26/Provider9/Bridge13/Spatial4/
+Diagnostics19); исходный RED34 и все5GREEN XML сохранены отдельно. Sourcefp
+62de8740ff56ee0abd76b880000a6049f2825d0bfe9d118f8c94e975c659ec91.
+Geometry query/prefill/refill входит в BLOB_READ, attrs projection прежняя;
+inline/PFD/BLOB_BYTES counts логические consumed buffers, не physical prefetch.
+
+Durable6039 сохранять как предыдущий ordinary PRIVATE baseline. Новый
+API28+1MiB window/<=512KiBsmall payload физически проверен coldD101/API30:
+1350inline+2PFD среди10terminal representatives;0retained read/window failures,
+same9counter121/110-feature cohorts сохранили объёмы и дали меньший BLOBstage.
+Полный кадр/PSS/sharp17→12/fullynewextent — отдельная приёмка, SDKreturn её не
+заменяет. Sorter/Java/decoded/native allocations отдельно,
+общий RAM прирост1MiB не обещать. Без normal build/native evidence focused JVM
+не принимают скорость или reported2–3s target.
+
+## Bounded SQLite original reads — RED/GREEN и tablet gate
+
+До оптимизации source extraction прежнего per-ID цикла дала RED9 tests с двумя
+независимыми failure:65 attributes queries вместо3 и5 BLOB statement opens
+вместо1. Остальные7 typed/order/NULL/fullBLOB/cancel/error checks прошли.
+Первый GREEN55 tests PASS24s по reader/provider/bridge/spatial/diagnostics;
+final GREEN02 —56 PASS17s, включая large multipart/hole/3001 vertices exact
+BLOB regression,0fail/error/skip. После исправления admission-before-read порядка
+final GREEN03 —57 PASS20s (reader13/provider9/bridge13/spatial4/diagnostics18):
+первый guard refusal даёт0queries/0BLOB/0statement, следующий row закрывает
+ресурсы. Independent helper/wiring review не нашёл блокеров; native descriptor,
+обычная новая сборка и тот же tablet speed/content route ещё pending.
+Это технические fixtures; Android BLOB descriptor/native speed отдельно не приняты.
+
+Сохранять исходный diagnostic843d APK и все RED receipts. Для нового private
+кандидата повторить на том же T40/Collector1403 именно sharp17→12 и полностью
+новую область с теми же полными геометриями/подписями. Сверять objects/BLOB bytes,
+тот же typed phase contract и независимое время полного содержимого, не только
+SDK return.39 unobserved scopes первого capture — diagnostic cap loss в
+опубликованных слоях, не потерянные render requests. Полностью unobserved слой
+может не иметь snapshot/counters; process-global denominator неизвестен.
+Небольшие warm11.7 pans не опровергают reported3–10s.
+
+## SQLite phase diagnostics — focused source и ordinary tablet
+
+Для typed phases выполнены39 JVM tests: `MapRuntimeDiagnosticsTest`18,
+`SqliteVectorTileProviderTest`8, `SqliteVectorSourceBridgeTest`13; failures,
+errors и skipped —0. Тесты проверяют timing/privacy, delayed outcomes,
+active/layer bounds и overflow/reuse, clock/writer/watch fail-open cleanup,
+совместимый backend overload и прежние bytes/cancellation. Команда из app root:
+
+```powershell
+.\gradlew.bat '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.util.MapRuntimeDiagnosticsTest' '--tests' 'com.nextgis.maplib.map.SqliteVectorTileProviderTest' '--tests' 'com.nextgis.maplib.map.SqliteVectorSourceBridgeTest'
+```
+
+Обычная приватная сборка и tablet capture остаются отдельной проверкой.
+Перед повтором зафиксировать SHA APK, package/version, serial/model/API,
+project identity, scale/camera route и effective labels. Сохранить bounded
+UID logcat с `LISA-SqlitePhase` и независимое наблюдение времени полного
+содержимого карты. Здесь фактическая tablet задача — Collector1403, не787.
+Сравнивать отдельно active phase, cumulative returned/cancelled/failed и
+observation loss: `returned_to_sdk` не устанавливает native content ready.
+Не менять scoped-storage permissions и не добавлять heap capture в memory run.
+Эти source checks не заменяют native/tablet/Full/2GiB acceptance и не разрешают
+приостановленные AVD/GUI stages.
+
+## MOB-04: чтение SQLite без полной GeoJSON копии
+
+Related сохраняет каждый завершённый assertion/protocol FAIL и исполняет
+остальные независимые isolated методы после собственного reset; общий статус
+остаётся FAIL. Setup/transport/неизвестная runtime ошибка останавливает прогон,
+seed-dependent шаги не продолжаются без seed. SQLite методы дополнительно
+получают ограниченный UID-only logcat с начала instrumentation; собственный
+host adb client останавливается в finally до artifacts/reset. Ошибка сбора
+отмечается отдельно и не подменяет исходный результат теста.
+
+Related `-Area sqlite-render` проверяет новый production reload в отдельном
+verification APK. NativeSqliteVectorRenderingTest создаёт129 технических
+полигонов по65 координат; сравнивает все native ID, каждый Rule/NULL/Other
+paint, три размещённые подписи и pixel patches, полные DB originals и whole-row
+hash. Перед свёрткой FID проверяется каждый raw hit: Fill только Polygon без
+anchor роли, Symbol только Point anchor. Смешанные роли нельзя скрыть фильтром
+самого теста. Отдельно проверяются data/style invalidation, hide/show и поздние
+запросы после teardown. Edit/cancel/temporary hide проходят штатный UI путь;
+это не полная Walk service/Save/sync или787 speed/memory приёмка.
+
+Failure-only JSON≤64KiB и PNG≤2MiB сохраняются versioned collector до очистки
+fixture/verification package, с хешами/source fingerprint/serial. Transport
+failure, отсутствие файла и malformed media различаются; сбор не маскирует
+исходный native FAIL. Первый software01 подтвердил правильные129 polygon ID и
+paint, но лишние Point hits в FillLayer; FAIL сохранён, ожидается повтор после
+production role filter. Наличие девяти методов в каталоге не означает PASS.
+
+## MOB-04: полнота native payload и уведомление о свободных ресурсах
+
+Related `-Area render-memory` включает RenderMemorySafetyTest, тяжёлый MVT stress
+и выбранный случай GPS/heading overlay. Проверки выполняются только в отдельном
+verification APK; телефон выбирается явно, emulator требует действующее
+software-only разрешение и `-AllowEmulator`. Аппаратный GPU не разрешён.
+
+RenderMemorySafetyTest использует129изолированных технических полигонов по65
+координат. Независимые ожидания проверяют все ID и координаты SQLite, полного
+rich Java input и фактической compact projection перед SDK tiling, полный набор
+native source ID и неизменность whole-row hashes. Это проверка сохранения
+исходного содержания, а не сравнение с результатом той же compaction-функции.
+Первое автоматическое окно должно прийти через production callback после
+запроса cache economy, без ручного вызова host callback. После закрытия повторные
+callbacks, Activity recreation и другой слой не показывают его снова в том же
+процессе. Ручной статус проверяется отдельно в8локальных русских component
+профилях; они не заменяют Full real-window matrix. Остальные gesture/layout
+классы подтверждают только это известное окно в verification Application;
+dedicated memory suite сохраняет production delivery.
+
+Последнее поручение владельца: economy/предупреждение определяются только
+фактическим свободным остатком system RAM/Java headroom и OS low-memory state.
+Номинальный объём RAM, Android low-RAM class и абсолютные used/native/RSS сами
+по себе не включают warning, cache degradation или сериализацию. RAM class
+может задавать обычный размер disk cache и резерв свободной памяти;
+неизвестный счётчик не считается нулевым остатком. RSS/used/native сохраняются только
+как диагностика, без hard cap. Переполненная очередь сама по себе не означает
+нехватку памяти и не вызывает memory warning. RenderMemorySafetyTest
+запрашивает технический режим для проверки доставки и сохранности данных;
+он не воспроизводит реальное исчерпание памяти на2GiB.
+
+NativeFeaturePayload сохраняет полную геометрию/IDs/bbox/unknowns и rich Java
+features редактора, но убирает из native input только доказанно неиспользуемые
+поля. Polygon label points без подписи не создаются; point paint+labels и line
+query fallback сохраняют нужные поля, rule layout keys, curves и zoom gates.
+У всех6MLP constructors background тоже проходит projection; selected/tool
+данные остаются rich. Смена source content требует новых source fingerprints
+и native checks; прежние style/pixel/picking/Save/Cancel assertions не ослабляются.
+
+Stress отдельно подтверждает6480technical polygons,2настоящих MVT sources,
+90s workload, минимум50реальных pan/15pinch изменений native camera,2recreate,
+не менее300heading updates и peak PSS/RSS/Java/native observations. Publication
+checker требует свежие phone/tablet/emulator stress rows и физическийSM-X115.
+Эта model matrix сама не доказывает фактические2GiB: RAM и приёмку такого
+физического устройства фиксируют отдельно. Unit/build, visible_feature>0,
+позднее восстановление или сниженныйRSS не превращают неполный/failed native
+run в PASS. Full продолжает независимые cases после содержательного FAIL,
+сохраняет ошибки в receipt и в конце остаётся FAIL; setup/transport ошибки
+прерывают запуск. Прежние software/fullFAIL и незавершённые прогоны сохраняются.
+
+На checkpoint до последних MLP/free-headroom правок были выполнены963JVMunits,
+93Python harness checks и AndroidTest build29s; отдельно после MLP handoff
+зафиксирован maplib651/651PASS. Это исторические source/build свидетельства,
+не native GPU/эмулятор/2GiB/Full приёмка последнего содержимого. Native
+RenderMemorySafetyTest/style/geometry acceptance остаётся pending до отдельной
+квитанции. Факты и ограничения обновляются в
+[разборе224](../reference/mobile-crash-224-2026-10-27.md).
+
+После последней free-only/queue правки отдельно прошли23focused JVM/Robolectric
+tests: Guard2,Policy8,MapRuntime13,0failures/errors/skips,11s; квитанция
+free-memory-notice-units01.json. Это не повтор полного651-набора и не native
+приёмка. При4GiB свободной RAM queue_full не даёт ложное memory warning;
+новые free counters переживают restart, старые process-budget/private keys
+в диагностическую allowlist не проходят.
+
+## Ручной диагностический маршрут native heap
+
+`tools/native_heap_map_route.py` не входит в Full и не выполняется как приёмка.
+Оператор заранее проверяет фактический проект787/экран выбранного телефона,
+измеряет map rectangle и zoom controls и передаёт их вместе с active owned
+capture receipt. Скрипт требует project_id787/serial в receipt и перед каждым
+input проверяет foreground приложения, неизменный app PID и принадлежность
+Perfetto command/config/trace. Он посылает3zoom-out taps,32pan swipes и3zoom-in
+taps, сохраняя38действий в `map-route.json`; при потере ownership останавливается.
+Настройки, business features, установка APK и завершение процесса сюда не входят.
+
+Пример формы команды, только с уже проверенными текущими значениями:
+
+```powershell
+python tools/native_heap_map_route.py --adb <existing-adb> --serial <selected-phone> --capture <active-owned-capture.json> --map-rect <left,top,right,bottom> --zoom-controls <plus-x,plus-y,minus-x,minus-y>
+```
+
+`completed` означает лишь завершённую input sequence: этот script не проверяет
+реальное изменение camera, pixels, полноту объектов или качество heap trace.
+Trace отдельно проверяют по source/build identity, dumps/callsites/stacks,
+lost/overrun/client-error признакам. Наблюдение candidateRSSоколо1GB с5dumps
+без allocation stacks остаётся неполным свидетельством и не qualified attribution
+или PASS. Существующий complete-PBF disk cache не является файлом подкачки для
+native GeoJSONVT index. Direct SQLite CustomVectorSource paging реализован;
+его performance/полная style/editor/2GiB приёмка остаются отдельными gates.
+
+## Остановка запусков AVD после зависаний Windows — 27 октября
+
+На рабочем компьютере подтверждены три аварийных завершения Windows; два дневных
+совпадают с началом AVD в аппаратном режиме. Позднее27 октября владелец явно
+разрешил продолжение с программной графикой и запретил аппаратный режим.
+Stress09 остаётся оборванным, не PASS. Новые запуски выполняются только через
+software admission; первый boot подтвердил actual Google SwiftShader.
+Software-related01 прошёл настоящий pan/pinch workload, но FAIL по отсутствию
+MVT объектов в конце; software-full01 оборвался при следующем запуске AVD из-за
+нового зависания Windows. После него владелец отключил андервольтинг и явно
+поручил продолжить с прежними условиями. Причина host hang не установлена;
+software не объявляется исправлением. Незавершённые прогоны сохраняются отдельно.
+
+Runner теперь требует явный `-AllowEmulator` (`--allow-emulator`) для любого
+эмуляторного исполнения и использует `swiftshader_indirect -feature -Vulkan`
+для установленного Emulator35.6.11. По умолчанию остановка происходит до ADB/start.
+Перед workload читается actual GLES SurfaceFlinger: аппаратный или неизвестный
+renderer, включая существующий заимствованный AVD, отклоняется. Software/phone
+не считаются подтверждением исправления host GPU; реальный software run
+учитывается отдельно от source regressions. Эмуляторный GPU context сохраняется в device receipt.
+Related PhoneOnly по-прежнему требует явный serial и не запускает AVD.
+
+Основания: [режимы Android Emulator](https://developer.android.com/studio/run/emulator-acceleration),
+[Windows Event41](https://learn.microsoft.com/en-us/troubleshoot/windows-client/performance/event-id-41-restart),
+[факты и ограничения](../reference/mobile-crash-224-2026-10-27.md).
+
+## Адресная проверка инцидента 224
+
+Related -Area crash-startup выполняет новый empty-handles native case,
+существующий сценарий линейки и MapRuntimeDiagnosticsNativeTest, включая
+явный OS exit export. Оба новых метода входят в Full через прежние классы
+каталога; новый каталог содержит262 методов. Это технические fixtures отдельного
+verification APK, не пользовательский проект и не воспроизведение вылета224.
+[Разбор и фактические исходы](../reference/mobile-crash-224-2026-10-27.md).
+
+Related -Area render-stress сохраняет seed PID и требует другой workload PID:
+два actual direct SQLite CustomVectorSource,6480 технических полигонов по65
+вершин и подписи, не менее90s взаимодействия после source admission и два
+recreate. Каждый цикл проверяет effective native ID, current provider и пустой
+совместимый global Java feature list обоих слоёв. Schema2 evidence отвергает
+прежний logical-path/VectorSource counter и warm-process запуск. Финальная
+длительность записывается после последней паузы, startup/total отделены.
+Сохраняются native кадры, UI responsiveness,
+данные, actual GPU и peak PSS/Java/native memory. Независимое чтение native
+camera подтверждает минимум50 реально изменивших центр pan и15 изменивших
+zoom pinch: отправленные MotionEvent сами по себе не считаются нагрузкой.
+Стартовый viewport задаётся в private preferences fixture, без изменения
+GPS/производственной карты. После возврата actual camera zoom11/center0 из
+четырёх viewport corners и независимой сетки/radius140 вычисляется неизменный
+набор полностью видимых полигонов; каждый FID обязан присутствовать в Fill
+queries. Пограничные пересечения допустимы, неизвестные FID/Point label roles
+отклоняются. Малый слой может быть целиком вне viewport; это явно отражается
+в coverage, а не заменяется выдуманным ожиданием. Число кадров/peak memory —
+наблюдения живучести, не FPS benchmark, memory plateau/leak proof или парный787
+замер. При assertion owned AVD
+сохраняет снимок до закрытия Activity, native camera/lifecycle/style state,
+ограниченный logcat и ещё два отсчёта через5/10s. Поздний recovery не отменяет FAIL.
+Обычный Check-Publication требует текущую матрицу phone/tablet/emulator,
+включая физический SM-X115. Related и техническая карта не заменяют Full
+и приёмку пользовательского проекта.
+
+Related `-Area sqlite-marker` выбирает только существующий MultiPoint/custom-icon
+метод SQL класса, включая PhoneOnly; Full по-прежнему содержит этот класс один
+раз. Его failure PNG сохраняется в исходном разрешении (текущий AVD1080×2274)
+с encoded cap2MiB,
+а bounded JSON содержит global cyan/blue/magenta/red/green pixel counts и local
+sample matches/dimensions. Это диагностические свидетельства, не ослабление
+pixel assertions и не доказательство исправления исчезающего значка.
 
 С26 октября2026 основной маршрут полностью локальный. Android reliability и
 docs Actions оставлены только workflow_dispatch: push/PR не расходуют минуты
@@ -53,7 +325,7 @@ required skip или отсутствующий случай оставляет 
 не скрывает. Ошибки сборки, подготовки, транспорта или блокировка телефона
 прерывают запуск. Related собирает обычные native assertions на независимых
 phone checks, но timeout/setup/transport завершает запуск сразу. Runner regressions:
-61 cases.
+67 cases.
 
 Каждая instrumentation команда должна сообщить test-start marker за60s.
 Отсутствие маркера завершает только принадлежащий команде ADB client, сохраняет
@@ -274,9 +546,11 @@ Runner устанавливает/очищает только эту фикси�
 Related поддерживает область `styles`; она проверяет synthetic обычные векторы
 после сохранения rule JSON, native properties и pixels с bundled fonts/images.
 Configured local-vector-tiles исключены по режиму и GeoJsonSource guard.
-Графические проверки требуют host OpenGL: headless SwiftShader не отображает
-glyph/bitmap symbols. CI поднимает Xvfb/Mesa llvmpipe и сохраняет сведения о
-renderer; локальный runner использует `-gpu host`. В styles fixture стартовый
+Ранее host OpenGL и отдельный Linux Xvfb/Mesa использовались для graphical
+smoke; эти исторические условия не разрешают нынешний `-gpu host`. Текущий
+локальный admission допускает только подтверждённый software renderer с
+явным разрешением; glyph/bitmap pixels всё равно должны пройти native assertions,
+иначе сохраняется FAIL/непроверено. В styles fixture стартовый
 geo-dialog отключён только в verification preferences, camera и скрытый
 underlay синхронизированы с моделью карты.
 SharedTracksTest проверяет общую историю и сохранённый switch recording guard.
@@ -352,6 +626,32 @@ native классы. Эмуляторные системные настройк�
 автоматически созданный runner эмулятор завершается без сохранения snapshot.
 
 ## Результат и gate
+
+Перед первым device/ADB действием runner собирает либо проверяет точную пару
+verification app/test APK. Успешный normal/Full assemble сохраняет atomic
+`build/verification/apk-build.json`: fingerprint до/после сборки должен совпасть,
+фиксируются полные SHA256/размер/package/path обоих APK, точные verification
+Gradle flags/tasks и hashes wrapper/launcher. После ошибки/interruption сборки
+прежний basis этого assemble не остаётся зелёным. Секретные Gradle properties,
+keystore и credentials в receipt не копируются.
+
+`-SkipBuild` разрешён только для Related с существующим успешным basis,
+совпадающими текущими исходниками/recipe и той же byte-exact парой APK.
+Legacy/missing/stale/mixed/tampered receipt/APK отклоняются до выбора устройства.
+После введения guard первый запуск выполняется без `-SkipBuild`; известную
+ручную прошлую сборку нельзя задним числом объявить build basis. Далее один
+проверенный build переиспользуется для разных методов без повторной компиляции.
+Full по-прежнему сам собирает APK и запрещает SkipBuild.
+
+Пара повторно проверяется перед/после установки и до/после финализации прогона.
+Новые schema2 progress/result включают build_basis с его digest и hashes APK.
+Check-Publication требует basis внутри успешного Full и сверяет сохранённую
+пару с текущими файлами APK; прежний source fingerprint сам по себе недостаточен.
+Эта локальная цепочка доверяет штатному успешному Gradle и проверке package
+через aapt. Она не является подписью воспроизводимой/hermetic сборки и сама
+не подтверждает bytes установленного PackageManager APK. Публикация production
+release остаётся отдельным запрещённым без команды действием; связывание
+release candidate hash с Full/publisher — явный следующий delivery follow-up.
 
 Логи каждого класса и профиля, `progress.json` и `result.json` находятся в
 игнорируемом `build/verification/<UTC-run>/`. Только полностью успешный Full
@@ -465,3 +765,22 @@ Related `-Area track-candidates`: четыре stationary native сценари�
 полевая линия/точки после reload/reorder. Явный PhoneSerial использует только
 verification APK. Два новых метода TrackControlsTest обязательны в Full;
 текущий catalogue — 53 класса /253 native methods.
+
+## MOB-03: холодная тяжёлая карта и аварийная доставка
+
+Related render-stress сохраняет техническую карту в одном процессе, открывает её
+в другом и проверяет90s pan/pinch, два Activity recreate,6480 полигонов по65 вершин,
+живой UI/кадры/финальную отрисовку. Родитель сохраняет crash/exit/activity/workload
+свидетельства AVD до reset/finalization при assertion. Fixtures остаются только в
+verification APK. Related crash-delivery выполняет настоящий SIGKILL без SDK
+capture и SIGABRT с OS tombstone, затем replay/offline/reconnect через настоящий
+durable transport и локальный receiver. Нормальные User/update stops — отрицательный
+контроль. Неполный run либо сбой последнего case не становится PASS из-за успеха
+предыдущих фаз.
+
+Full включает stress на AVD и выбранном physical device. Check-Publication
+дополнительно требует hardware evidence с текущим source fingerprint: physical
+phone, physical tablet, emulator и incident model SM-X115. Матрица накапливается
+только после успешной фактической нагрузки. Отсутствующий Samsung — блокер
+обычного выпуска, не повод подставлять другое устройство или общий UI profile.
+Приватная диагностическая сборка по явному поручению отдельно, без публикации.

@@ -56,12 +56,12 @@ foreach ($candidate in $candidates) {
             Write-Host 'Documentation impact: no task/worktree changes; complete workspace validation still runs.'
         }
     }
-    & $candidate.Exe @($candidate.Prefix) 'docs/scripts/validate_docs.py' @localValidatorTask
+    & $candidate.Exe @($candidate.Prefix) -B 'docs/scripts/validate_docs.py' @localValidatorTask
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
     if ($RunTests) {
-        & $candidate.Exe @($candidate.Prefix) -m unittest discover -s docs/tests -p 'test_*.py' -v
+        & $candidate.Exe @($candidate.Prefix) -B -m unittest discover -s docs/tests -p 'test_*.py' -v
         exit $LASTEXITCODE
     }
     exit 0

@@ -11,6 +11,7 @@ import android.preference.PreferenceManager
 import com.nextgis.maplib.api.IGISApplication
 import com.nextgis.maplib.util.PermissionUtil
 import com.nextgis.mobile.util.AppDiagnostics
+import com.nextgis.mobile.util.DiagnosticsBackgroundLocationStart
 import java.util.Collections
 import java.util.IdentityHashMap
 
@@ -19,6 +20,7 @@ class BackgroundLocationController(private val application: Application) :
     Application.ActivityLifecycleCallbacks, SharedPreferences.OnSharedPreferenceChangeListener {
     private val policy = BackgroundLocationPolicy()
     private val visible = Collections.newSetFromMap(IdentityHashMap<Activity, Boolean>())
+    private val resumed = Collections.newSetFromMap(IdentityHashMap<Activity, Boolean>())
     private val handler = Handler(Looper.getMainLooper())
     private val preferences = PreferenceManager.getDefaultSharedPreferences(application)
     private val refresh = object : Runnable {
@@ -31,6 +33,7 @@ class BackgroundLocationController(private val application: Application) :
 
     fun start() {
         application.registerActivityLifecycleCallbacks(this)
+        observeLifecycle()
         preferences.registerOnSharedPreferenceChangeListener(this)
         (application as IGISApplication).gpsEventSource.setRecoveryReporter { snapshot ->
             AppDiagnostics.reportGpsRecovery(snapshot)
@@ -52,6 +55,10 @@ class BackgroundLocationController(private val application: Application) :
         }
     }
 
+    private fun observeLifecycle() {
+        DiagnosticsBackgroundLocationStart.lifecycle(visible.size, resumed.size)
+    }
+
     /** Release only automatic owners; Track/Walk services retain their recording listeners. */
     fun closeExplicitly() {
         policy.close()
@@ -63,6 +70,7 @@ class BackgroundLocationController(private val application: Application) :
 
     override fun onActivityStarted(activity: Activity) {
         visible.add(activity)
+        observeLifecycle()
         policy.foreground(SystemClock.elapsedRealtime())
         handler.removeCallbacks(timeout)
         if (PermissionUtil.hasAnyLocationPermission(application))
@@ -70,6 +78,8 @@ class BackgroundLocationController(private val application: Application) :
     }
 
     override fun onActivityResumed(activity: Activity) {
+        resumed.add(activity)
+        observeLifecycle()
         if (!policy.isOpened) return
         handler.removeCallbacks(refresh)
         handler.post(refresh)
@@ -77,6 +87,8 @@ class BackgroundLocationController(private val application: Application) :
 
     override fun onActivityStopped(activity: Activity) {
         visible.remove(activity)
+        resumed.remove(activity)
+        observeLifecycle()
         if (visible.isNotEmpty()) return
         policy.background(SystemClock.elapsedRealtime())
         (application as IGISApplication).gpsEventSource.releaseBackgroundUpdates(this)
@@ -89,7 +101,13 @@ class BackgroundLocationController(private val application: Application) :
         if (key == BackgroundLocationPolicy.PREFERENCE) handler.post { reconcile() }
     }
     override fun onActivityCreated(activity: Activity, state: Bundle?) = Unit
-    override fun onActivityPaused(activity: Activity) = Unit
+    override fun onActivityPaused(activity: Activity) {
+        resumed.remove(activity)
+        observeLifecycle()
+    }
     override fun onActivitySaveInstanceState(activity: Activity, state: Bundle) = Unit
-    override fun onActivityDestroyed(activity: Activity) = Unit
+    override fun onActivityDestroyed(activity: Activity) {
+        resumed.remove(activity)
+        observeLifecycle()
+    }
 }

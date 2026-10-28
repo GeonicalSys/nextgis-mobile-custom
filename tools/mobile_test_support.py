@@ -122,6 +122,8 @@ def check_publication_receipt(receipt: dict, fingerprint: str, required: set[str
         raise ValueError('Publication requires a successful full run, not a related/CI run')
     if receipt.get('source_fingerprint') != fingerprint:
         raise ValueError('The application or test sources changed after the full run')
+    from mobile_build_identity import validate_basis
+    validate_basis(receipt.get('build_basis'),fingerprint)
     if any(result.get('failed') for result in receipt.get('runs', [])):
         raise ValueError('The full run contains a failed native attempt, even if a repeat passed')
     if not required <= set(receipt.get('passed_cases', [])):
@@ -131,3 +133,6 @@ def check_publication_receipt(receipt: dict, fingerprint: str, required: set[str
     devices = receipt.get('devices', {})
     if not devices.get('phone') or not devices.get('emulator'):
         raise ValueError('Both the physical phone and emulator results are required')
+    from mobile_render_acceptance import STRESS_CASE, check_stress_matrix
+    if STRESS_CASE in required:
+        check_stress_matrix(receipt.get('checks', {}).get('render_stress'), fingerprint)

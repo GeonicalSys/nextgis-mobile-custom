@@ -448,12 +448,22 @@ build_inputs:
     optional: true
     purpose: NGID client identifier injected into BuildConfig
 storage:
+  diagnostic-process-owner:
+    owner: app
+    source: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
+    filename: diagnostic-process.json
+    purpose: Atomic bounded current process and four pending historical owners; OS fallback after restart keeps old identity and acknowledges only durable SDK envelopes. API30+ SIGNALED trace policy auto-recognizes bounded native or prior ANR frames with may-precede-exit association and explicit unknowns. No business data, no user setting.
+  process-exits-export:
+    owner: app
+    source: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    filename: process-exits.json
+    purpose: Explicit log ZIP member only, not persistent storage or a preference; up to eight main-process OS exit metadata records, with reporter identity separate from historical records. No new automatic capture, trace stream or business storage read.
   map-runtime-diagnostics:
     owner: maplib
     type: private_json_file
     source: maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
     filename: map-runtime-diagnostics.json
-    purpose: Atomic private 16 KiB diagnostic snapshot; timestamp matching keeps process/version ownership for delayed AppExitInfo, ordinary fast successes do not write.
+    purpose: Atomic private 16 KiB diagnostic snapshot; timestamp matching keeps process/version ownership for delayed AppExitInfo, ordinary fast legacy successes do not write. Typed SQLite phase summaries share the existing bounded observer/writer and local LISA-SqlitePhase tag with10s per-layer throttle,16 active scopes/32 layer summaries and explicit observation loss; no new preference, permission or data migration.
   hyperlog-local-only:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java

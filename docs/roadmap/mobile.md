@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
@@ -12,6 +12,116 @@ related_code:
 ---
 
 # Дорожная карта мобильного приложения ЛИСА и БЕЛКА
+
+## MOB-04 Ограничение памяти карты на устройствах от2GiB
+
+Приоритет P1, прямое поручение владельца27 октября после нового ng-logs11.
+Включено в текущую задачу app82/maplib61; обычная очередь остаётся отложенной.
+Владельцы: maplib — бюджет и GIS/render pipeline; app — lifecycle, предупреждение,
+системная память и приёмка. Зависимости MOB-02/03, точные library pins до выпуска.
+Состояние: реализация завершена, выполняется слияние исходников по поручению
+владельца28 октября. Полный прогон и публикация отложены; приёмка на физическом
+устройстве2GiB не завершена. Указатели приложения закрепляются на удалённых merge
+SHA maplib61/maplibui45; фактический merge-state — в связанных PR и
+[checkpoint слияния](../reference/mobile-crash-224-2026-10-27.md#слияние-исходников-без-выпуска-28-октября-2026).
+
+Последний PRIVATE D101: normalall3 PASS62s/versionmatrix PASS, sourcefp62de8740…
+59ec91 frozen/71focused PASS/independent review без blockers. Actual T40/API30
+проверил inline/PFD reads; сопоставимые121/110-feature BLOB stages83.57→13.28ms
+и134.11→15.37ms, но очередь остаётся и SDKreturn не полный кадр. FreshCURRENT787
+cab9→D10142+42 samples/6+6taps:lateRSS820.42→643.06MiB(-21.62%), sampledpeak
+896.19→751.16(-16.18%); Graphicslate143.36→210.14MiB вырос. Current configs/data
+изменились после старойABBA, actorUNKNOWN; серии не объединять. Полная видео
+приёмка sharp17→12/newextent,2–3s target/2GiB/Full остаются отдельными gates.
+Подробные ограничения — [разбор224](../reference/mobile-crash-224-2026-10-27.md).
+
+Конкретный strict full-scene video gate dense1403/11.7z:32.45–34.09s843d →
+13.68–15.65s6039 →10.33–12.27sD101, oneprocesscold run/build/diskretained;
+late map ROI MAE0 с обоими предыдущими. Это наблюдаемый выигрыш одной сцены,
+не повторная статистика/все стили и не2–3s target. Final allmaplib750PASS/59s,
+132classes/0fail/error/skip,source unchanged. TrackLayer по-прежнему полными
+GeoJSON snapshots, вне этого ordinary-vector улучшения; trackRAM не измерена.
+
+Подтверждены std::bad_alloc в main и RenderThread27 октября17:10:23UTC на
+SM-X115, OS SIGABRT и исторические LOW_MEMORY с RSS до5816068KiB. Java headroom
+сам по себе недостаточен. На проекте787 реальные sampled malloc-стеки показали
+673MiB в GeoJSONVT, включая не менее564MiB словарей свойств, из907MiB net retained;
+растры128MiB. Это удержание копий свойств обычных векторов, не свидетельство
+сложности исходной геометрии. Точный триггер223→224 и все native abort не установлены.
+
+Реализованный первый этап: компактные native свойства отдельно от rich editor
+features, полный geometry/ID/unknown/style contract, точный повторяющийся мотив
+штриховки, полный MVT на диске32/128MiB, два builder/один при малом свободном остатке,
+отмена ненужных jobs и cache trim. Ни прореживания объектов, ни упрощения геометрии,
+ни отключения слоёв. SQLite/draft/sync/outbox/model visibility не меняются.
+По уточнению владельца28 октября warning/замедление/cache economy определяются
+ТОЛЬКО свободным остатком системной памяти/Java heap и системным low-memory
+сигналом. RSS/native used и номинальные2/8/12GiB не являются такими триггерами.
+Один автоматический диалог на процесс; ручной статус остаётся доступным.
+
+Частный experimentalec71 APK на787 дал373MiB sampled retained против907MiB;
+GeoJSONVT265MiB, словари свойств199MiB. Профили180s/18dumps без ошибок,38 одинаковых
+команд, но разное время начала маршрута и прежняя RSS-политика candidate мешают
+считать это строгой приёмкой нового tip или выделить эффект одной оптимизации.
+Обычный GeoJSONVT ещё хранит посещённые участки без eviction; абсолютной гарантии
+против OOM нет. Исходные трассы и неуспешные прогоны сохранены.
+
+Второй этап в той жеMOB-04 реализован в текущем source tip: полная GeoJSON-копия
+поддерживаемого ordinary слоя, включая startup, заменена SQLite bbox/RTree→полные
+MVT→CustomVectorSource13.7.1 без HTTP. API есть в установленном SDK;
+собственная сборка MapLibre пока не потребовалась. Это ещё не опубликованный
+APK и не завершённая приёмка. Сохраняются original DB picking/copy/edit,
+rule/template/scale/labels/patterns, source owner/cancellation/content/style epochs.
+Необходима полная style parity: существующий прежний HTTP MVT polygon path допускает
+rule renderer, но кодирует не все его свойства. Нельзя просто включить его для
+всех слоёв или оставить глобальную GeoJSON-копию подписей. Низкомасштабный плотный
+тайл сам может быть большим; это отдельный peak-memory gate. JSON настроек,
+Collector/NGW interchange и сохранённые проекты сохраняют формат.
+Проверять cold start/hot add/restyle/recreate, MVT и classic, редактирование,
+направление/GPS во время жестов, освобождение источников и повтор после разгрузки.
+
+28 октября после возобновления собраны обычные приватные Debug/Lisa Release/
+Belka Release: build02 PASS83s, version matrix всех трёх PASS. Runtime source
+`1b0c09ce…`, app `dbbd453f77f3` с точными maplib8d41588/maplibui edc189cc pins
+не менялся. Первый обычный SQLite B diagnostic на SM-A566B завершил300s:
+total RSS460.7–614.3MiB, до включения владельцем подписей выделов. Это не
+строгий A/B и не физическая2GiB приёмка. Отдельная A-B-B-A серия с одинаково
+включёнными подписями, реальным PK3688 и камерой14.5→11.5→14.5 дала168 raw
+samples: A1/B1/B2/A2 retry по42/6/210s. Среднее двух run-level statistics:
+late60 RSS958.12→659.66MiB (−31.15%), sampled peak1043.82→792.76MiB (−24.05%).
+A1 collector FAIL сохранён; исходный A2 transport5037 partial исключён,
+успешный retry отдельный. Все DB bytes неизменны,16 configs совпадают с labels-ON
+basis; exact camera UNKNOWN, f80920px CENTER/TOP label difference остаётся.
+Phone video medians примерно0.2–0.5s перекрываются, ускорение не установлено.
+Tablet Collector1403 delay3–10s около12.1 не закрыта; требуются sharp17→12 и
+полностью новая область. Небольшие warm11.7 pans не являются его приёмкой.
+[Точная основа сборки, измерения и ограничения](../reference/mobile-crash-224-2026-10-27.md).
+Merge, публичный выпуск и Full этим checkpoint не закрыты.
+
+Приёмка: независимые unit границ1/2/4/8GiB и нескольких слоёв, actual software
+AVD с2GiB, настоящий длительный pan/pinch+heading workload, видимое предупреждение
+в обеих темах/ориентациях и при крупном интерфейсе; native memory/RSS/PSS evidence.
+Обязательная Full и физическая SM-X115 приёмка сохраняются; наличие политики
+и unit PASS не заменяют проверку реальных устройств и не разрешают выпуск.
+
+## MOB-02 Инцидент завершений после обновления 224
+
+Приоритет P1. Состояние: В Draft PR app82/maplib61; memory failure подтверждён,
+конкретный триггер регрессии и остальные abort ожидают свидетельств/проверок.
+Основание — поручение пользователя27 октября,
+логи повторных запусков Samsung Galaxy Tab при движении карты и GlitchTip53/67.
+Владельцы — app и maplib; зависимости — сохранённые pins MOB-01. Внеплановая
+причина — инцидент опубликованной224; на время разбора откладывается следующая
+обычная задача очереди, приоритеты остальных пунктов не меняются.
+
+Объём: убрать доказанно пустые marker/vertex native queries, буферизовать чтение
+прежнего индекса и добавить ограниченную OS exit metadata к явному экспорту ZIP.
+Данные/sync/фон/GPS не меняются. Полный async startup, переработка MVT и новое
+обновление SDK сюда не входят. Критерии: legacy byte-compatible persistence,
+пустой handle без native access, прежнее редактирование/линейка, bounded export,
+Related на изолированном AVD, обе release build-проверки и строгие docs.
+Прямая причина вылетов224 без fatal stack остаётся неизвестной; выпуск отдельно.
+[Свидетельства, карточки и порядок доставки](../reference/mobile-crash-224-2026-10-27.md).
 
 Версия от 25 октября 2026 года. Область — мобильные приложения ЛИСА и БЕЛКА, библиотеки maplib и maplibui и необходимые контракты с PostgreSQL и NextGIS Web.
 
@@ -360,3 +470,32 @@ AccurateLocationTaker использует разброс накопленных
 Проверены документация и исходники app 8cc630ad, maplib 7e7055e5, maplibui ff4a1cce с учётом незавершённых изменений checkout на 25 октября 2026 года. Точные ссылки на неизменённые участки приведены возле выводов. Это анализ для планирования; новые device, серверные и нагрузочные прогоны в данной работе не выполнялись.
 
 Дополнительная навигация: [архитектура синхронизации](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/architecture/ngw-sync-and-storage.md), [аудит надёжности](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/reference/mobile-reliability-audit.md), [карта Collector](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/roadmap/collector.md). Старые отчёты подтверждают только своё время и объём проверки.
+
+## MOB-03 Приёмка тяжёлой карты и гарантии диагностического сбора
+
+Приоритет P1, по прямому поручению пользователя27 октября после инцидента224.
+Состояние: В Draft PR app82/maplib61/publisher7; отзыв224 выполнен, диагностический
+APK передан, полевой отчёт ожидается. Владельцы app/maplib и publisher для публичного отзыва.
+Первая цель — получить OS native stack после реального SIGABRT и после kill,
+не пережившего SDK envelope. Вторая — cold-process MVT карта и длительные жесты
+с живыми UI/renderer и hardware identity. Критерии и аппаратная матрица —
+[автотесты](../runbooks/automated-tests.md). Samsung SM-X115 обязателен до обычного
+выпуска; emulator/другой планшет его не подменяют. Синтетическая техническая
+нагрузка не объявляется приёмкой клиентской карты.
+
+Публичная224 отозвана по отдельному поручению,223 восстановлена и проверена.
+Ручной диагностический APK отдельно разрешён пользователем, публикация запрещена.
+Причина регрессии13.0.2→13.7.1/новые стили пока не локализована. Обычные задачи
+очереди отложены на время инцидента; это не новый автономный roadmap run.
+
+После сообщения о трёх host hard hangs AVD были остановлены. Позднее27 октября
+владелец разрешил software-only продолжение, аппаратный режим запретил.
+Карточка android-20261027-emulator-host-safety: software-only runner,
+явный admission и запрет actual host/unknown GLES. Проверка нового маршрута
+source/unit PASS; новый реальный boot подтвердил actual SwiftShader. Итог
+native проверки фиксируется отдельно. Software-related01:60 actual pan,
+20 actual zoom changes,2 recreate, но FAIL по отсутствию конечной MVT отрисовки.
+Следующий Full оборвался при AVD startup после ещё одного hard hang; владелец
+отключил андервольтинг и явно поручил продолжить в software-only режиме.
+Это мера изоляции риска,
+а не установленная причина Windows hang или мобильного224 crash.
