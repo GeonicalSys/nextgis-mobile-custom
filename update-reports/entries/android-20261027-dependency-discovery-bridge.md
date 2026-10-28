@@ -44,3 +44,9 @@ hashes проверяются до impact и discovery обновляется п
 включая неизвестного consumer до изменения producer. Standalone readonly
 inventory необязателен; manual semantic closure и автоматическое сохранение
 новых подтверждённых связей остаются обязательными.
+
+Полная source-only проверка `tools/docs-check.ps1 -RunTests` выполнена после
+подключения трёх библиотек на точных закреплённых Git-коммитах: validator0errors,
+24 docs tests и26 reportguard tests PASS;94 карточки проверены. Прежние821 ошибки
+неполной копии исчезли. Указатели библиотек и занятые рабочие деревья не изменены;
+Gradle/native/device-приёмка этим результатом не подтверждается.
