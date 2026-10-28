@@ -8,6 +8,15 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-28 — Source-контракты всей ЛИСЫ и границы Android
+
+Новый `ECO-SHARED-SOURCE-CONTRACTS` связывает Android с общими scenario/resource
+registries и layer-resource-audit.json. Зафиксированы условные границы roles/
+установки, SQL/QLR/resources, форм/drafts, diagnostics/usage и build/release/
+ready-state; они не объявлены общей runtime-последовательностью. Static evidence,
+UNKNOWN, delivery и native/publication acceptance разделены. Product-код,
+Gradle/AVD/PG/Office, сервисы и выпуск этой документационной правкой не затрагиваются.
+
 ## 2026-10-28 — Воспроизводимый source basis и provisional observations
 
 Продолжение MOB-02/прежней карточки: обычный вход — один `plan --changed PATH`,

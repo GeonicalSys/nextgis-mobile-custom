@@ -36,6 +36,24 @@ systems:
     docs_url: https://github.com/GeonicalSys/lisa/blob/main/plugins/geonical-docs/START-HERE.md
     source_of_truth: QGIS plugin sources, desktop workflows, GIS resource publishing and central plugin documentation.
 contracts:
+  - id: ECO-SHARED-SOURCE-CONTRACTS
+    from: qgis-plugins
+    to: mobile-app
+    type: developer_source_contract
+    transport: Shared owner source/constraint metadata; not an APK input or runtime filesystem exchange.
+    statement: LISA change-impact review spans launcher and roles, templates and tenant overlays, PostgreSQL/QLR relations and triggers, NGW/Collector fields and portable form rules, diagnostic and usage queues, app/library variants, APK publication identity and saved updater/draft state. Read exact source evidence and conditions from the shared scenario/resource registries and layer-resource-audit; preserve protected consumers and unknown provider/runtime branches. These records describe separate conditional contracts rather than a single runtime pipeline. Static mapping and docs validation do not certify installed state, native acceptance, delivery or publication, and do not authorize edits of another owner's dirty source tree.
+    owners: [app, maplib, maplibui]
+    local_docs: [docs/architecture/lisa-ecosystem.md]
+    external_docs:
+      - system: qgis-plugins
+        path: geonical-docs/registry/scenario-contracts.yaml
+      - system: qgis-plugins
+        path: geonical-docs/registry/dependencies.yaml
+      - system: qgis-plugins
+        path: geonical-docs/registry/layer-resource-audit.json
+      - system: qgis-plugins
+        path: geonical-docs/architecture/mobile-client.md
+    verify: [AUTO-DOCS-VALIDATE]
   - id: ECO-DEPENDENCY-DISCOVERY
     from: qgis-plugins
     to: mobile-app

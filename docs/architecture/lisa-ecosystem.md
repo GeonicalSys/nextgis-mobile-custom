@@ -101,6 +101,41 @@ server writes или возобновление остановленных эт�
 структуру/ссылки app-side registry; это не автоматическое доказательство свежести
 shared source index или полноты смыслового разбора.
 
+## Общие source-контракты всей ЛИСЫ
+
+Межкомпонентный разбор не ограничен цепочкой PostgreSQL/NGW: launcher/roles,
+шаблоны и overlays, SQL/QLR, diagnostics, build/release и сохранённое состояние
+имеют собственных производителей, потребителей и условия. Точные общие записи
+находятся в доступном `qgis-plugins` source root:
+
+- `geonical-docs/registry/scenario-contracts.yaml` — сценарии, owners/consumers,
+  applicability, защищённые режимы и ожидаемые результаты;
+- `geonical-docs/registry/dependencies.yaml` — imports и resource contracts;
+- `geonical-docs/registry/layer-resource-audit.json` — source hashes, QLR/provider
+  поля и выражения, relations, trigger→table/view/function связи и явные unknowns.
+
+Ссылки проверяются через `ECO-SHARED-SOURCE-CONTRACTS` в
+[ecosystem.yaml](../registry/ecosystem.yaml). Android не дублирует эти реестры.
+Это source-only метаданные анализа; они не являются входными файлами APK,
+единой runtime-последовательностью служб или сертификатом исполнения.
+
+| Семейство | Граница и защищённое состояние |
+| --- | --- |
+| Desktop install/update/roles | Канонический plugin source/revision, доставленные data resources и включение UI плагина различаются. Legacy profile→etalon export не доказывает поставку task-ветки. Роли, updater journal, локальные caches и tenant overlays требуют отдельной проверки; Android не читает эти desktop файлы напрямую. |
+| PostgreSQL/QLR/resources | Поля/types, joins/expressions, relation keys и triggers/functions, styles/themes/layouts, visibility/scale/units — отдельные условия. Для опубликованных mobile слоёв проверить config/NGW/Collector/Android schema и обратных consumers; отсутствие mobile применимости обосновать, а не публиковать любой QGIS слой. |
+| Формы/шаблоны/drafts | Portable field/lisa_id namespaces и версии правил сохраняются при clone; pinned Android draft не равен текущей опубликованной форме. Изменение workbook/XML шаблона или эталона не мигрирует сохранённые user copies автоматически. |
+| Diagnostics/usage | Desktop Sentry event+отдельный ZIP ACK, mobile SDK envelope cache и usage outbox/commit ACK — разные протоколы и права. Общий hostname не объединяет их очереди; UUID/source origin и backup-excluded installation identity сохраняются по своему контракту. |
+| Android build/release/update | App/library variant versions, APK-derived package/flavor/signature/hash, publisher history/withdrawal и ready/pending installer state проверяются совместно. Source/doc PASS не заменяет Full/Check-Publication и не разрешает выпуск. |
+
+`layer-resource-audit.json` перечисляет исходные связи/ограничения; непроверенные
+provider/view types, выражения и runtime branches остаются UNKNOWN. Зелёный export,
+наличие файла или число записей в реестре не подтверждают результат. По каждой
+затронутой ветви агент проверяет реальные source anchors, applicability и старое
+состояние; новые подтверждённые связи фиксирует в owner registry в той же задаче.
+Source snapshots, текущие рабочие observations, delivery, native acceptance и
+publication разделены. Внешний недоступный/другой worktree не считается покрытым
+индексом выбранного LISA root; действуют правила source_context выше.
+
 ## Статистика мобильного приложения
 
 Отдельная интеграция связывает production Android с HTTPS сервисом
