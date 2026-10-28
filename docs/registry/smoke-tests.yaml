@@ -157,6 +157,25 @@ tests:
     scope: [app]
     command: powershell -NoProfile -File tools/verify-mobile-tests.ps1 -Scope Related -Area bugreports
     expected: On an isolated API 36 emulator, interrupted enqueue and pair acknowledgment reach physical shared_prefs XML, retain the other pair and restore caller interrupt. Blocked startup/query snapshots survive in SDK events, including a Backfillable AnrV2Hint without replacing original release or operation.
+  AUTO-SQLITE-ORIGINAL-BATCH-UNITS:
+    type: automatic
+    scope: [maplib]
+    command: .\gradlew.bat -PciReliabilityChecks=true :maplib:testDebugUnitTest --tests com.nextgis.maplib.map.SqliteVectorFeatureReaderTest --tests com.nextgis.maplib.map.SqliteVectorTileProviderTest
+    expected: Independent technical originals preserve65IDs/order/typedNULL/wide integers/fullBLOB;65 small buffers need three bounded geometry cursors and zero PFD reads, while16385-byte/multiMiB originals remain whole through lazy PFD. API26/27 do not query geometry windows; API30 SQLite CASE excludes large/TEXT/NULL payloads, attrs projection stays unchanged, mid-window fallback never duplicates callbacks, cancellation/cleanup/SQL/cardinality errors cannot cache partial PBF. Multipart/hole bytes and logical path diagnostics remain complete; this is not native/PSS/speed acceptance.
+  AUTO-SQLITE-PHASE-UNITS:
+    type: automatic
+    scope: [maplib]
+    command: .\gradlew.bat -PciReliabilityChecks=true :maplib:testDebugUnitTest --tests com.nextgis.maplib.util.MapRuntimeDiagnosticsTest --tests com.nextgis.maplib.map.SqliteVectorTileProviderTest --tests com.nextgis.maplib.map.SqliteVectorSourceBridgeTest
+    expected: Fixed phase timing and privacy, delayed cancellation flush,16 active/32 layer limits with explicit loss and inactive reuse, clock/writer/watch failure cleanup, compatible backend overload and unchanged bytes/cancellation pass on technical JVM fixtures only.
+  SMOKE-SQLITE-PHASE-TABLET:
+    type: device
+    scope: [app, maplib]
+    command: On the authorized physical tablet capture bounded UID logcat LISA-SqlitePhase from the exact ordinary private APK and repeat the recorded project/camera route.
+    steps:
+      - Record APK SHA, package/version, serial/model/API, project identity, zoom/camera route and effective labels before measuring; Collector1403 tablet evidence is separate from phone787. Use the user-directed sharp17to12 zoom and fullynew extent, not only small warm pans.
+      - Retain active stage timings, candidates/reads/BLOB/PBF bytes/cache/retries, explicit observation loss and distinct return/cancel/failure counts without URI/coordinates/attributes.
+      - Measure complete visible map contents independently; Java returned_to_sdk does not establish native content ready, and frames or absence of errors do not replace content acceptance.
+    expected: Phase evidence separates queue/read/decode/style/clip/label/PBF/Main waits under bounded diagnostics without changed geometry, layer visibility, workers, memory policy or storage permissions. Missing native readiness remains unverified; no speed improvement, Full or2GiB acceptance is inferred.
   SMOKE-MAP-RUNTIME-DIAGNOSTICS:
     type: device
     scope: [app, maplib]

@@ -13,6 +13,45 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+Final validation D101:allmaplib750PASS/132classes/0fail/error/skip59s. Actual
+dense1403/11.7z complete scene gate10.33–12.27s против13.68–15.65s6039 и
+32.45–34.09s843d; late map ROI MAE0 с обоими. Один processcold run/build при
+retaineddiskcache, не allstyle/2–3s/Full acceptance. TrackLayer сохранён прежним:
+saved/active tracks используют полные GeoJSON snapshots; их RAM не измерена.
+
+## Bounded small-BLOB transport — 2026-10-28
+
+Невыпущенный fork-кандидат после actual6039 BLOB1458ms/3051 originals добавляет
+geometry-only32-ID cursor: whole BLOB<=16KiB в explicit1MiB window на API28+;
+большие, API26/27 и safely unsupported driver сохраняют полный PFD путь.
+Attrs projection не расширяется, bytes/order/types/NULL/epochs/style не меняются.
+OrdinaryD101 normalall3/matrixPASS,71focusedPASS; physicalAPI30 cold1403 дал
+1350inline+2PFD/1352consumed originals без retained read/window failures.
+121/110-feature same9counter BLOB stages83.57→13.28ms и134.11→15.37ms, но
+IOqueue/limited snapshots не принимают весь кадр.512KiB small payload не означает
+общий RAM budget; native PSS/полный кадр и sharp17→12/new extent — отдельные gates.
+Freshcurrent787lateRSS820.42→643.06MiB в однойcab9/D101паре при выросшемGraphics
+143.36→210.14MiB, не pooledoldABBA/2GiB acceptance. Это не упрощение карты
+и не заявленный результат2–3s. Baseline6039 APK сохранён отдельно.
+
+## Локальные фазы SQLite отрисовки — 2026-10-28
+
+После подтверждённых tablet startup read timings подготовлен source-кандидат
+attributes-only cursors по32 прежним eligible IDs с exact CASE order и одним
+compiled BLOB statement на visit. Full originals/NULL/types/order/epochs и
+phase boundaries сохранены; missing/extra/bad rows не дают partial success.
+Это ещё не измеренное ускорение: обязательны sharp17→12 и новая область на
+том же планшете, old private843d остаётся отдельным baseline.
+
+В невыпущенном source добавлен bounded `LISA-SqlitePhase` для ordinary private
+build: IO/lock/gate/cache, SQLite BLOB/full decode, style/clip/labels, PBF и Main
+dispatch без повторных reads или изменения объектов/геометрии. Typed IDs/counts
+не содержат URI, координаты или значения полей; лимиты16 scopes/32 summaries,
+10s/слой и явные lost observations. Java provider/SDK return отличается от
+native content ready.39 focused JVM tests PASS; полная сцена12.1 на
+планшете Collector1403 и эффект нового read-кандидата ещё требуют runtime evidence. Это не release,
+не результат проекта787 и не закрытие Full/2GiB gate.
+
 ## Память карты без упрощения объектов — MOB-04, 2026-10-28
 
 В source tip ordinary Simple/Field Rule vectors всех шести geometry types

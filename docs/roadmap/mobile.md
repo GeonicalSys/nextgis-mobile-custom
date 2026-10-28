@@ -21,6 +21,23 @@ related_code:
 системная память и приёмка. Зависимости MOB-02/03, точные library pins до выпуска.
 Состояние: разработка; не выпущено, не принято на физическом устройстве2GiB.
 
+Последний PRIVATE D101: normalall3 PASS62s/versionmatrix PASS, sourcefp62de8740…
+59ec91 frozen/71focused PASS/independent review без blockers. Actual T40/API30
+проверил inline/PFD reads; сопоставимые121/110-feature BLOB stages83.57→13.28ms
+и134.11→15.37ms, но очередь остаётся и SDKreturn не полный кадр. FreshCURRENT787
+cab9→D10142+42 samples/6+6taps:lateRSS820.42→643.06MiB(-21.62%), sampledpeak
+896.19→751.16(-16.18%); Graphicslate143.36→210.14MiB вырос. Current configs/data
+изменились после старойABBA, actorUNKNOWN; серии не объединять. Полная видео
+приёмка sharp17→12/newextent,2–3s target/2GiB/Full остаются отдельными gates.
+Подробные ограничения — [разбор224](../reference/mobile-crash-224-2026-10-27.md).
+
+Конкретный strict full-scene video gate dense1403/11.7z:32.45–34.09s843d →
+13.68–15.65s6039 →10.33–12.27sD101, oneprocesscold run/build/diskretained;
+late map ROI MAE0 с обоими предыдущими. Это наблюдаемый выигрыш одной сцены,
+не повторная статистика/все стили и не2–3s target. Final allmaplib750PASS/59s,
+132classes/0fail/error/skip,source unchanged. TrackLayer по-прежнему полными
+GeoJSON snapshots, вне этого ordinary-vector улучшения; trackRAM не измерена.
+
 Подтверждены std::bad_alloc в main и RenderThread27 октября17:10:23UTC на
 SM-X115, OS SIGABRT и исторические LOW_MEMORY с RSS до5816068KiB. Java headroom
 сам по себе недостаточен. На проекте787 реальные sampled malloc-стеки показали
@@ -45,7 +62,7 @@ GeoJSONVT265MiB, словари свойств199MiB. Профили180s/18dumps
 Обычный GeoJSONVT ещё хранит посещённые участки без eviction; абсолютной гарантии
 против OOM нет. Исходные трассы и неуспешные прогоны сохранены.
 
-Второй этап в той жеMOB-04 реализуется в текущем source tip: полная GeoJSON-копия
+Второй этап в той жеMOB-04 реализован в текущем source tip: полная GeoJSON-копия
 поддерживаемого ordinary слоя, включая startup, заменена SQLite bbox/RTree→полные
 MVT→CustomVectorSource13.7.1 без HTTP. API есть в установленном SDK;
 собственная сборка MapLibre пока не потребовалась. Это ещё не опубликованный
@@ -58,6 +75,24 @@ rule renderer, но кодирует не все его свойства. Нел
 Collector/NGW interchange и сохранённые проекты сохраняют формат.
 Проверять cold start/hot add/restyle/recreate, MVT и classic, редактирование,
 направление/GPS во время жестов, освобождение источников и повтор после разгрузки.
+
+28 октября после возобновления собраны обычные приватные Debug/Lisa Release/
+Belka Release: build02 PASS83s, version matrix всех трёх PASS. Runtime source
+`1b0c09ce…`, app `dbbd453f77f3` с точными maplib8d41588/maplibui edc189cc pins
+не менялся. Первый обычный SQLite B diagnostic на SM-A566B завершил300s:
+total RSS460.7–614.3MiB, до включения владельцем подписей выделов. Это не
+строгий A/B и не физическая2GiB приёмка. Отдельная A-B-B-A серия с одинаково
+включёнными подписями, реальным PK3688 и камерой14.5→11.5→14.5 дала168 raw
+samples: A1/B1/B2/A2 retry по42/6/210s. Среднее двух run-level statistics:
+late60 RSS958.12→659.66MiB (−31.15%), sampled peak1043.82→792.76MiB (−24.05%).
+A1 collector FAIL сохранён; исходный A2 transport5037 partial исключён,
+успешный retry отдельный. Все DB bytes неизменны,16 configs совпадают с labels-ON
+basis; exact camera UNKNOWN, f80920px CENTER/TOP label difference остаётся.
+Phone video medians примерно0.2–0.5s перекрываются, ускорение не установлено.
+Tablet Collector1403 delay3–10s около12.1 не закрыта; требуются sharp17→12 и
+полностью новая область. Небольшие warm11.7 pans не являются его приёмкой.
+[Точная основа сборки, измерения и ограничения](../reference/mobile-crash-224-2026-10-27.md).
+Merge, публичный выпуск и Full этим checkpoint не закрыты.
 
 Приёмка: независимые unit границ1/2/4/8GiB и нескольких слоёв, actual software
 AVD с2GiB, настоящий длительный pan/pinch+heading workload, видимое предупреждение

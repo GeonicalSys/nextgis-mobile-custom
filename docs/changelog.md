@@ -8,6 +8,66 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-28 — Полный maplib gate и отдельный positive video witness
+
+ONE final allmaplib750PASS/132classes/0fail/error/skip59s при неизменномD101
+sourcefp. Same dense1403/11.7z gate с последней верхней розовой полосой:
+843d32.45–34.09s→6039 13.68–15.65s→D10110.33–12.27s; late map ROI MAE0.
+Один processcold run/build/diskretained, не повторная статистика/FPS/2–3s.
+Явно записано исключение TrackLayer: полные saved/active GeoJSON snapshots
+остаются, реальная память длинного трека этой задачей не принята.
+
+## 2026-10-28 — Последний private D101: physical reads и freshCURRENT RAM
+
+Normalall3 PASS62s/versionmatrixPASS/71focusedPASS/independent review без blockers,
+sourcefp62de8740…59ec91 неизменен. ActualAPI30 cold1403 проверил inline+PFD reads,
+same9counter121/110-feature BLOB stages83.57→13.28 и134.11→15.37ms; queue всё ещё
+до3.374s в representative, whole paint не принят. Current787 data/config после
+старойABBA изменились, actorUNKNOWN. Freshcab9→D10142+42samples дали lateRSS
+820.42→643.06MiB(-21.62%), sampledpeak896.19→751.16(-16.18%); Graphicslate
+143.36→210.14MiB вырос. Серии не объединены,2–3s/Full/2GiB/OOMfixed не заявлены.
+
+## 2026-10-28 — Полные малые BLOB отдельным ограниченным cursor
+
+После observed6039 BLOB1458.11ms для3051 originals подготовлен API28+
+geometry-only32-ID cursor с full small BLOB<=16KiB и явным1MiB window;
+API26/27, large originals и safely unsupported driver сохраняют полный PFD.
+Attrs projection, original bytes/types/NULL/order и style/epoch/free-only guards
+сохранены; phase attribution и consumed-buffer counts уточнены. RED65PFDvs0
+и5vs2 сохранены. Native window/PSS и полный новый extent пока не приняты.
+
+## 2026-10-28 — Ограниченные original reads после tablet phase evidence
+
+Actual startup tile проекта1403 показал9.909s, включая5.281s attributes и1.548s
+BLOB. Source-кандидат читает attributes-only cursors по32 прежних IDs в exact
+order и переиспользует один visit-owned BLOB statement, сохраняя полные originals
+и error/cancel semantics. RED call-count failures сохранены, первый GREEN55 PASS;
+final57 regressions PASS20s после admission-before-read guard fix; independent
+review без блокеров. Тот же sharp17→12/new-extent tablet route ещё pending.
+Геометрии/слои не упрощаются, измеренное ускорение и native readiness не заявлены.
+
+## 2026-10-28 — Фазовые свидетельства медленной SQLite карты
+
+Добавлены typed local SQLite phases с bounded `LISA-SqlitePhase`, явными
+ожиданиями/чтением/decode/clip/labels/PBF/Main, outcomes и observation loss.
+Согласованы runtime contract, limits/privacy и separate tablet content-ready
+gate;39 focused JVM tests PASS. Реальный tablet проект — Collector1403.
+Это диагностика перед установлением причины3–10s, без оптимизации, изменения
+геометрий, merge или публикации; замеры787 и их ограничения сохраняются.
+
+## 2026-10-28 — Приватная сборка и первые обычные замеры787
+
+По возобновлённому MOB-04 собраны обычные Debug/Lisa Release/Belka Release;
+build02 PASS83s и version matrix всех трёх PASS на неизменном runtime source.
+Первый SQLite B diagnostic завершил300s с RSS460.7–614.3MiB до включения
+подписей выделов и не объявлен строгим A/B. Парная A-B-B-A серия дала168 memory
+samples: средний late60 RSS−31.15%, sampled peak−24.05%; A1 collector FAIL и
+original A2 transport partial сохранены, completed A2 retry отдельный. DB bytes
+и16 labels-ON configs неизменны. Phone scene medians перекрываются, f80920px
+CENTER/TOP difference остаётся, tablet1403 delay ещё открыт.
+Обновлены MOB-04, performance и [разбор](reference/mobile-crash-224-2026-10-27.md).
+Это факты приватной проверки, без merge, публикации или завершения Full/2GiB gate.
+
 ## 2026-10-28 — Direct SQLite native источники и lifecycle
 
 Ordinary Simple/Field Rule слои всех шести geometry types переведены в source

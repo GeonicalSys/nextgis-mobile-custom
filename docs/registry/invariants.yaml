@@ -28,6 +28,9 @@ invariants:
       Resource admission uses only measured free remainder. JNI/PBF decode is not zero-copy, a
       bounded cache does not cap every native allocation, and native contents/performance/2GiB
       acceptance must be recorded independently of compilation and JVM results.
+      TrackLayer is outside VectorLayer admission: saved/active tracks retain preexisting
+      complete GeoJSON snapshots and point arrays. This contract does not certify track
+      residency/long-session RAM or remove all GeoJSON from the application.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
@@ -1173,6 +1176,59 @@ invariants:
       - app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java
     verify_smoke: [SMOKE-BACKGROUND-LOCATION-WARNING, AUTO-APP-RELEASES]
     must_update_docs: [docs/architecture/location-pipeline.md, docs/reference/settings-and-config.md, app/docs/README.md]
+  INV-SQLITE-BOUNDED-ORIGINAL-READS:
+    title: Bounded attribute cursors preserve every eligible full original and exact order
+    owners: [maplib, app]
+    statement: >
+      Read only existing eligible RTree candidate IDs, deduplicated in original order,
+      through attributes-only cursors of at most32 rows. On API28+ a separate explicit1MiB
+      geometry window contains at most32 whole BLOBs<=16KiB (512KiB payload); API26/27,
+      large originals and safely unsupported drivers retain full PFD reads. This is
+      not a total RAM bound; SQLite sorters plus one Java full buffer/decoded original remain.
+      SQL CASE typeof/length avoids large/TEXT payload materialization without truncation;
+      exact ID/order/length/cardinality checks reject incomplete or reordered originals.
+      One lazy compiled BLOB statement belongs to one visit, never a global/thread-shared
+      cache. Preserve all typed fields/NULLs/geometry, hidden/excluded masks, source epochs,
+      current/owner/content/style guards, free-only policy and existing style/clip/labels/PBF.
+      Cancel/error closes both cursors/descriptor/statement; current is rechecked between
+      queries. Mid-window capability fallback never repeats delivered IDs; cleanup and
+      real SQL/resource errors remain failures and a
+      bad/missing BLOB cannot become successful partial PBF/cache. Default Access fixtures
+      and public original editor/sync APIs remain compatible. No all-layer features list,
+      global GeoJSON cache, thinning or simplification. Existing phase boundaries stay
+      comparable, with geometry query/prefill/refill in BLOB_READ and inline/PFD counts
+      counting consumed full buffers rather than physical prefetched IO. Native readiness,
+      PSS and sharp17to12/new-extent speed require actual tablet evidence.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+    verify_smoke: [AUTO-SQLITE-ORIGINAL-BATCH-UNITS, SMOKE-SQLITE-PHASE-TABLET, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/registry/dependencies.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+  INV-SQLITE-PHASE-DIAGNOSTICS:
+    title: Bounded local SQLite phases preserve rendering and distinguish return from content ready
+    owners: [maplib, app]
+    statement: >
+      Fixed enum timings/counts observe the existing bridge IO queue, layer lock, gate,
+      cache, RTree, attributes/BLOB/full decode, style/clip/labels, PBF and Main dispatch
+      without extra DB, geometry, memory or native SDK reads. Preserve original geometry,
+      attributes, gates, free-only admission, cache keys and current/cancellation guards.
+      At most16 scopes and32 layer summaries share one observer and bounded writer;
+      local LISA-SqlitePhase logs are throttled10s per layer, final suppressed outcomes
+      flush later and observation loss is explicit. Clock/writer/watch failures do not
+      change caller outcomes or leak closed scopes; unavailable timing is not zero.
+      Only numeric layer/source/content IDs, zoom and allowlisted phases/counts may
+      appear, with no URI, tile X/Y, coordinates, business fields or exception messages.
+      provider_returned, returned_to_sdk, cancelled and failed are separate; Java return
+      never establishes native content ready or a performance/Full/2GiB acceptance.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileBackend.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+    verify_smoke: [AUTO-SQLITE-PHASE-UNITS, SMOKE-SQLITE-PHASE-TABLET, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
+    must_update_docs: [docs/architecture/error-reporting.md, docs/architecture/map-rendering.md, docs/architecture/map-performance.md, docs/runbooks/automated-tests.md]
   INV-DIAGNOSTIC-DELIVERY:
     title: Diagnostic events survive offline and temporary server failures
     owners: [app]

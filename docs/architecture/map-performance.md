@@ -23,7 +23,83 @@ related_code:
 
 # Производительность запуска карты
 
+## Диагностика задержки планшета — 2026-10-28
+
+Final same-dense1403/11.7z strict video content gate (включая последнюю верхнюю
+розовую полосу):843d32.45–34.09s,6039 13.68–15.65s,D10110.33–12.27s с clock/
+launch margin. Late map ROI вне HUD/controls попиксельно совпала с обоими(MAE0).
+Один processcold run/build с сохранённым disk/system cache, не FPS/CI/проверка
+всех объектов/стилей. Это отдельное positive native scene witness, не сумма
+phase timings. Target2–3s пока не достигнут. Final ALLmaplib750PASS/132classes/
+0fail/error/skip за59s; sourcefp62de8740…59ec91 неизменен.
+
+Первый private843d фазовый capture на T40/Collector1403 подтвердил application
+read hot path: один startup tile z11 занял9908.73ms для3051 объектов,
+attributes query/cursor/materialization5281.16ms, BLOB1547.78ms, IO queue1367.68ms.
+У других tiles очередь достигла3431.57ms; Main dispatch максимум0.596ms.
+В опубликованных слоях39 scopes не наблюдались из-за diagnostic cap16, это
+потеря telemetry, не rendering requests. У полностью unobserved слоя без
+первого snapshot счётчики пока могут не публиковаться; суммы reported layers
+не являются process-global denominator. Отсутствие native-ready witness явно.
+
+Private6039 bounded attributes/PFD вариант сохранил observed3051 originals,
+2,076,156B и356,630B PBF; BLOB stage всё ещё1458.11ms. Initial843d и cold6039
+дают5281.16→791.25ms attributes для этого scope, но это не matched-cold/full-scene
+оценка ускорения: тяжёлый scope отсутствует в cold843d telemetry.
+
+Следующий source-кандидат сохраняет32-ID attributes-only cursors и один
+compiled PFD statement на visit. Отдельный geometry-only cursor на API28+
+материализует не более32 полных BLOB<=16KiB в явном1MiB window; large BLOB,
+API26/27 и safely unsupported driver читаются прежним полным PFD путём.
+Nested CASE typeof/length исключает large/TEXT payload, без truncation.
+512KiB small payload — не общий RAM budget: sorter buffers, Java buffer и
+decoded geometry остаются отдельными. Query/getCount/refill/getBlob отнесены к
+BLOB_READ, attrs projection прежняя. Нет потери объектов/полей/NULL/geometry или
+изменения style/order/epochs/gate/free-only policy. Обязательный повтор —
+sharp17→12 и полностью новая область; полный кадр требует отдельного видео witness.
+
+Последний ordinary PRIVATE D101 собран normalall3 PASS62s, matrixall3 PASS,
+71focused JVM PASS/independent review. Actual API30 cold1403 подтвердил window
+и PFD:1350inline+2PFD в10 terminal representatives/1352 consumed originals,
+нулевые read/window/SQLite/fatal markers в retainedPIDlog. Same9logical-counter
+cohorts121features/140772B/PBF22217: BLOB83.57→13.28ms;110features/41376B/
+78labels/PBF16476:134.11→15.37ms;163line originals/47484B:42.24→8.59ms.
+Это совпадение объёмов, не cryptographic equality/tileidentity.110-feature elapsed
+при этом791.51→3775.86ms из-за IOqueue6.17→3374.41ms: каждый tile быстрее не
+объявлен.3051 terminal detail D101 не попал в throttle snapshot, поэтому его
+сравнение с6039 недоступно. Полностью unobserved layers/33published lost scopes
+оставляют process-global denominator/max/p95 неизвестными.
+
+Свежая CURRENT787 пара legacycab9→finalD101 после изменения2TMS/LVPC/bbox/data:
+42+42 meminfo/6+6taps/210s каждый,lateRSS820.42→643.06MiB(-21.62%), sampledpeak
+896.19→751.16(-16.18%),PSSlate700.41→522.28MiB. GraphicsPSSlate вырос143.36→
+210.14MiB(+46.58%). Одна последовательная пара не pooledABBA/CI и не draw-speed;
+старые31.15% относятся к другому прежнему состоянию. ExactcameraUNKNOWN,
+visible14.5z/99.4m/основные landmarks совпадают, label placement отличается.
+
+Для reported3–10s до полного кадра около12.1z на T40 Plus_ROW/API30 добавлены
+локальные typed phase timings `LISA-SqlitePhase`. На планшете фактически открыт
+Collector1403 (`collector_1403_f97c303e`), поэтому телефонные замеры787 не
+подтверждают его скорость. Фазы различают IO queue, layer lock/gate/cache,
+RTree, attributes/BLOB/full decode, style/clip/labels, PBF и Main dispatch;
+счётчики показывают candidates, reads, BLOB/PBF bytes, labels, hits/misses и
+retries без повторного чтения данных. Лог ограничен10s/слой,16 scopes и32
+summaries, observation loss и недоступные timings явны.
+
+Это сбор недостающих свидетельств. Геометрии, число объектов, scale gates,
+кэши, workers и политика свободного остатка сохранены. После private normal
+build нужен тот же планшет, проект и воспроизводимая камера; Java SDK return
+не равен полной отрисовке. Причина всей задержки12.1 и эффект нового read-кандидата
+на других сценах и sharp17→12/newextent требуют отдельной проверки.
+
 ## Текущий pipeline
+
+TrackLayer не VectorLayer и не допускается в новый ordinary tile path.
+Saved visible tracks держат все выбранные points/GeoMultiLineString в mTracks
+и полном GeoJSON; active unfinished snapshot тоже полный, без viewport limit.
+Это сохранённый прежний маршрут, не оптимизация этой итерации. Отдельная
+bounded pending queue recording service не ограничивает RAM rendering snapshot;
+реальная память длинного трека пока не измерена.
 
 Обычные поддерживаемые Simple/Field Rule векторные слои всех шести geometry
 types теперь подключаются через `SqliteVectorLayerController`: SQLite/RTree
@@ -37,6 +113,37 @@ Polygon anchors закодированы в том же PBF с отдельно�
 оригиналы. Малые edit/selection/cursor sources остаются GeoJSON. SQLite и
 project/interchange JSON не меняются. Новый source lifecycle, все стили и
 скорость требуют отдельной native приёмки; текущая реализация ещё не выпущена.
+
+### Обычная приватная сборка и первые замеры787,28Oct2026
+
+Runtime source `1b0c09ce…` (app `dbbd453f77f3`, maplib8d41588/maplibui edc189cc)
+собран обычными Debug/Lisa Release/Belka Release без verification flags:
+build02 PASS83s, полная version matrix PASS. Приватный Lisa Release имеет
+SHA-256 `ada0f5b806bc3d98a67037bd9e6020a01dbe55bb62455f4468d0292c3fbc0cb2`;
+это не merge, публикация или завершённый Full.
+
+В исходной конфигурации787 —11 видимых ordinary vectors,3 скрытых vectors и2
+видимых LocalTMS растра. Source gate направляет поддерживаемые ordinary layers
+в SQLite; первый журнал прямо подтвердил7 native ID и3 line-label overlays,
+но не перечислил четыре main source ID. Полнота всех объектов/подписей не
+следует из этих counters или снимков. Legacy «classic fallback» remote729/733
+печатается до SQLite apply и не является свидетельством полной GeoJSON копии.
+
+Первый B diagnostic на SM-A566B выполнил300s idle/pan/zoom/idle с total
+RSS460.7–614.3MiB. Он предшествует включению владельцем подписей выделов и
+не принимается за строгое A/B сравнение или retained-allocation attribution.
+Отдельная A-B-B-A серия обычных baselinecab9/SQLite APK с одинаковыми подписями
+и камерой реального PK3688 дала168 samples: A1/B1/B2/A2 retry по42/6/210s.
+Среднее двух run-level statistics A→B: median RSS последних60s958.12→659.66MiB
+(−31.15%), sampled peak1043.82→792.76MiB (−24.05%). Graphics PSS late60
+219.48→230.91MiB (+5.2%). Это не pooled median, confidence interval или
+retained-ownership profile. Во время memory нет heapprofd/видеозаписи.
+A1 итоговый UI export FAIL сохранён; original A2 partial после ADB5037 отказа
+исключён, completed retry отдельный. Все168 raw meminfo проверены, вся DB
+побайтно неизменна, все16 configs совпали с labels-ON basis. Exact camera UNKNOWN.
+Отдельные A1/B1/B2 phone scene medians примерно0.2–0.5s перекрываются, speedup
+не установлен. Остаётся f809 numeric20px legacy CENTER/generic TOP difference.
+[Подробные факты и незакрытые проверки](../reference/mobile-crash-224-2026-10-27.md).
 
 Классический путь для видимого векторного слоя читает все объекты и сохраняет полный
 rich Java снимок для редактирования. `NativeFeaturePayload` формирует отдельную
@@ -149,8 +256,11 @@ native heap. SDK GeoJSONVT внутренний index может пережит�
 
 ## Следующие кандидаты
 
-1. Повторить финальный free-only candidate на том же проекте787: cold/warm,
-   фиксированный pan/zoom, возврат камеры, задержки, RSS/native retained owners.
+1. Проверить сообщённые3–10s планшета Collector1403 при резком zoom17→12 и
+   переходе в полностью новую область. Две небольшие warm pan11.7 и быстрые
+   phone787 scenes этого не принимают. Фазы нового private843d — диагностика;
+   оптимизацию выбирать только по подтверждённому hot path и повторять тот же
+   route. RSS/PSS сами по себе не устанавливают retained owners.
 2. Проверить полноту всех поддерживаемых styles/labels, picking/edit и recovery503
    на реальном SDK, затем устройства2GiB и8GiB при дефиците свободной памяти.
 3. По профилю исследовать ограничение внутренних GeoJSONVT структур и точный

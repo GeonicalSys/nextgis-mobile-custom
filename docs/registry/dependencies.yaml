@@ -4,13 +4,15 @@ edges:
     to: maplib
     type: runtime
     scope: SQLite vector rendering and original editing
-    purpose: Read complete SQLite originals through bounded native tiles without full startup GeoJSON, while retaining actual provider/owner lifecycle and transient full-original overlays.
+    purpose: Read complete SQLite originals through bounded native tiles without full startup GeoJSON; keep attributes-only32-ID queries separate from API28+1MiB small-geometry windows, full large/API26PFD fallback, exact order/bytes/current/error semantics and actual provider/owner lifecycle with transient full-original overlays.
     contracts:
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileBackend.java
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileRequest.java
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
       - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileEncoder.java
       - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTilePropertyCodec.java
       - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileClipper.java
@@ -88,6 +90,18 @@ edges:
     purpose: Picker controls exposed by maplibui forms
     contracts: []
 runtime_contracts:
+  sqlite-bounded-original-reads:
+    owner: maplib
+    defined_in: maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java
+    implementers: [maplib]
+    callers: [maplib, app]
+    contract: Provider and visible-line visitors pass only existing deduplicated eligible IDs in original order to attributes-only cursors of at most32 rows ordered by CASE, with one full original BLOB/geometry at a time and one lazy visit-owned compiled BLOB statement. Preserve typed fields/NULLs/full geometry, hidden/excluded/current/owner/content/style guards and existing style/clip/anchor/PBF/cache/gate/free-only contracts. Close cursors/descriptors/statements on success/error/cancel; reject missing/extra/reordered IDs or BLOB/decode failure instead of partial successful tiles. Default Access visitor preserves fixtures, original editor/sync APIs and producer/schema/saved-state formats stay unchanged. Existing typed phase definitions stay comparable to private843d; no native-ready or speed acceptance is implied.
+  sqlite-phase-diagnostics:
+    owner: maplib
+    defined_in: maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+    implementers: [maplib]
+    callers: [maplib, app]
+    contract: Typed SqliteScope spans bridge IO queue through Java provider return and existing VectorLayer attributes/BLOB/full decode, style, clip, labels, PBF and cache operations without extra reads or changed rendering. The compatible backend overload retains old callers. One observer and bounded writer retain at most16 active scopes and32 layer summaries, throttle local LISA-SqlitePhase to10s per layer, report observation loss and release slots after clock/writer/watch failures. Numeric layer/source/content IDs, zoom and fixed count/phase arrays exclude URI, tile X/Y, coordinates, business attributes and error messages. Provider-return, SDK-return, cancelled and failed outcomes differ; native content ready stays unverified. No data/project/style migration, memory-policy change or producer resource-format change is involved.
   render-memory-pressure:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java

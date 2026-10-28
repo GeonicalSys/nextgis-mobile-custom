@@ -39,6 +39,57 @@ related_code:
 
 # MapLibre rendering и порядок слоёв
 
+## Ограниченные original reads — 2026-10-28
+
+Final D101 strict observed dense1403/11.7z video gate принят отдельно от phase
+log:10.33–12.27s против6039 13.68–15.65s и843d32.45–34.09s. Last upper pink
+strip/названные contents присутствуют; late map ROI вне HUD/controls MAE0 с
+обоими. Один processcold run/build/diskretained, не fullstyle catalogue/2–3s.
+Final allmaplib750PASS/132classes/0fail/error/skip;71focused — поднабор.
+TrackLayer остаётся вне ordinary vectors: saved/active complete GeoJSON
+snapshots не менялись, track RAM/throughput не принимались.
+
+Direct tile и visible-line visitors читают прежний RTree candidate набор через
+attributes-only cursors по32 eligible IDs. CASE order сохраняет исходный
+порядок после dedup/hidden/excluded; attributes projection не содержит geometry.
+API28+ добавляет отдельный geometry-only cursor с явным1MiB window: не более32
+whole BLOB<=16KiB, nested CASE не материализует large/TEXT payload. Large BLOB
+и API26/27 сохраняют полный PFD путь. Не более512KiB small payload в window
+сосуществует с одним Java full original/decoded geometry; sorter/native RAM
+не входит в эту границу и требует отдельного PSS измерения.
+Каждый original проходит прежние style/clip/anchor/PBF операции;
+один ленивый BLOB statement принадлежит только этому visit. Оба cursors/statement
+закрываются при cancellation/error. Missing/extra/reordered ID, null/bad BLOB
+дают ошибку всего тайла, не partial success/cache; реальные SQLite ошибки
+сохраняются. Safely unsupported driver переключает только ещё не доставленные
+IDs на PFD; cleanup/SQL/resource errors не становятся fallback success.
+Current проверяется между attrs и geometry queries и после полного read.
+Default Access visitor совместим со старыми read fixtures;
+public editor/sync original API не меняется. Epoch/current/free-only guards,
+gate/IO workers/cache и typed phase boundaries сохранены. Ordinary PRIVATE D101
+и actualAPI30 cold1403 проверили оба transport пути:1350inline+2PFD среди10
+terminal representatives, без retained read/window/SQLite failure markers.
+Same9counter121/110features сохранили BLOB/PBF/label counts и дали меньший
+BLOB stage;35xxms IOqueue и ограниченная telemetry не принимают полный кадр.
+Это native read-path witness, ещё не paint/label/pixel/Full acceptance.
+
+## Фазовая диагностика SQLite pipeline — 2026-10-28
+
+Typed scope начинается до IO dispatch в `SqliteVectorSourceBridge`, проходит
+совместимый overload backend и существующие чтения `VectorLayer`, а фаза Main
+dispatch отмечается ещё на IO. Она разделяет ожидания queue/lock/gate/cache,
+SQLite attributes/BLOB, full decode, style/clip/labels и PBF encode/write.
+`LISA-SqlitePhase` имеет общий bounded observer/writer, максимум16 scopes,
+32 layer summaries и10s/слой. Наблюдение не меняет geometry, gates, кэши,
+owner/current guards или free-only policy. Последний current guard остаётся
+перед возвратом без нового suspension/SDK вызова.
+
+`provider_returned`, `returned_to_sdk`, `cancelled` и `failed` различаются;
+завершение Java provider не доказывает native content ready. Последнее требует
+отдельного наблюдения реальной карты. Scope не содержит URI, tile X/Y,
+координаты или бизнес-поля и не делает дополнительных DB/memory/native reads.
+Подробности ограничений — [доставка диагностики](error-reporting.md).
+
 ## Память без потери геометрии — MOB-04, 2026-10-28
 
 Поддерживаемые ordinary Simple/Field Rule слои используют SQLite/RTree → MVT8192

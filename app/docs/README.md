@@ -6,6 +6,22 @@ last_verified: 2026-10-28
 
 # app — Android-приложение Lisa/Belka
 
+## Локальные SQLite phase timings — MOB-04, 2026-10-28
+
+Ordinary app использует maplib `MapRuntimeDiagnostics.SqliteScope` и локальный
+logcat `LISA-SqlitePhase`; нового app sender, preference, permission или UI нет.
+Scope охватывает очередь IO, lock/gate/cache, SQLite attributes/BLOB/full
+decode, style/clip/labels, PBF и Main dispatch без дополнительных reads.
+Максимум16 active scopes/32 layer summaries,10s/слой и bounded writer; dropped
+наблюдения, cancellation и недоступное timing явны. Только числовые
+layer/source/content IDs и counts, без URI/координат/полей. SDK return означает
+только Java provider return. Независимый tablet content-ready замер обязателен;
+телефон787 не принимает фактический Collector1403 планшета.
+
+39 focused maplib JVM tests PASS; normal build/tablet qualification проверяются
+отдельно. [Протокол](../../docs/runbooks/automated-tests.md) и
+[границы диагностики](../../docs/architecture/error-reporting.md).
+
 ## Ограниченный UID logcat verification APK — MOB-04, 2026-10-28
 
 `tools/mobile_native_log.py` начинает непрерывный host capture перед native

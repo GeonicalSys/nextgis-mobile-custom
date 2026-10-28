@@ -1,5 +1,37 @@
 schema_version: 1
 triggers:
+  - id: SQLITE-BOUNDED-ORIGINAL-READS
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorFeatureReaderTest.java
+      - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorTileProviderTest.java
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+      - maplib/src/test/java/com/nextgis/maplib/util/MapRuntimeDiagnosticsTest.java
+    owners: [maplib, app]
+    read: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/architecture/ngw-sync-and-storage.md]
+    invariants: [INV-SQLITE-BOUNDED-ORIGINAL-READS, INV-SQLITE-PHASE-DIAGNOSTICS, INV-SQLITE-NATIVE-VECTORS, INV-SPATIAL-CACHE-CONSISTENCY]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/architecture/error-reporting.md, docs/registry/dependencies.yaml, docs/runbooks/automated-tests.md, maplib/docs/README.md, maplib/docs/manifest.yaml]
+    verify: [AUTO-SQLITE-ORIGINAL-BATCH-UNITS, AUTO-APP-DEBUG, AUTO-APP-RELEASES, SMOKE-SQLITE-PHASE-TABLET]
+    strict_docs: true
+  - id: SQLITE-PHASE-DIAGNOSTICS
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileBackend.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java
+      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+      - maplib/src/test/java/com/nextgis/maplib/util/MapRuntimeDiagnosticsTest.java
+      - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorTileProviderTest.java
+      - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorSourceBridgeTest.kt
+    owners: [maplib, app]
+    read: [docs/architecture/error-reporting.md, docs/architecture/map-rendering.md, docs/architecture/map-performance.md]
+    invariants: [INV-SQLITE-PHASE-DIAGNOSTICS, INV-SQLITE-NATIVE-VECTORS, INV-RENDER-MEMORY-PRESSURE]
+    must_update_docs: [docs/architecture/error-reporting.md, docs/architecture/map-rendering.md, docs/architecture/map-performance.md, docs/runbooks/automated-tests.md, docs/registry/dependencies.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml, app/docs/README.md, app/docs/manifest.yaml]
+    verify: [AUTO-SQLITE-PHASE-UNITS, AUTO-APP-DEBUG, AUTO-APP-RELEASES, SMOKE-SQLITE-PHASE-TABLET]
+    strict_docs: true
   - id: SQLITE-NATIVE-VECTORS
     paths:
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java

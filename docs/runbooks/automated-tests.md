@@ -17,6 +17,89 @@ related_code:
 
 # Автоматические проверки
 
+## Final D101 closure gates — 2026-10-28
+
+ONE final `:maplib:testDebugUnitTest -Pkotlin.incremental=false -PciReliabilityChecks=true`
+дал750PASS/132classes/0fail/error/skip59s, sourcefp62de8740…59ec91 unchanged.
+71focused входят в эту suite, не складывать counts. Full logs и132JUnit XML
+сохранены; ADB/emulator/source changes в этом прогоне отсутствовали.
+Независимое видео dense1403/11.7z приняло один named positive fullscene gate:
+32.45–34.09s843d→13.68–15.65s6039→10.33–12.27sD101 с clockmargin, lateROI MAE0.
+Это не FPS/повторная статистика/fullcatalogue; sharp17→12/newextent и latestDB
+after-proof отдельные gates. TrackLayer fullGeoJSON excluded, trackRAM неизвестна.
+
+## Small-BLOB window — отдельный RED/GREEN и API gate
+
+До small-window реализации source/PFD baseline сохранил RED34tests/2expected
+failures:65small originals дали65PFD вместо0, full-byte boundary набор
+1/16383/16384/16385/3MiB дал5PFD вместо2; остальные32PASS. Сохранять также
+RED01 test-compilation failure, не называть его expected RED. Focused команда
+проверяет Reader/Provider/Bridge/Spatial/Diagnostics; отдельные API26/27 методы
+не открывают geometry cursor, API30 real SQLite проверяет nestedCASE и отсутствие
+large/TEXT/NULL payload в small-column. Отдельны cancel между queries,
+mid-window fallback без повторной доставки, exact length/ID/order/cardinality
+и three-resource cleanup; ошибки SQLite/resources не должны дать PFD success.
+GREEN01 PASS71/0fail/error/skip за1m58s (Reader26/Provider9/Bridge13/Spatial4/
+Diagnostics19); исходный RED34 и все5GREEN XML сохранены отдельно. Sourcefp
+62de8740ff56ee0abd76b880000a6049f2825d0bfe9d118f8c94e975c659ec91.
+Geometry query/prefill/refill входит в BLOB_READ, attrs projection прежняя;
+inline/PFD/BLOB_BYTES counts логические consumed buffers, не physical prefetch.
+
+Durable6039 сохранять как предыдущий ordinary PRIVATE baseline. Новый
+API28+1MiB window/<=512KiBsmall payload физически проверен coldD101/API30:
+1350inline+2PFD среди10terminal representatives;0retained read/window failures,
+same9counter121/110-feature cohorts сохранили объёмы и дали меньший BLOBstage.
+Полный кадр/PSS/sharp17→12/fullynewextent — отдельная приёмка, SDKreturn её не
+заменяет. Sorter/Java/decoded/native allocations отдельно,
+общий RAM прирост1MiB не обещать. Без normal build/native evidence focused JVM
+не принимают скорость или reported2–3s target.
+
+## Bounded SQLite original reads — RED/GREEN и tablet gate
+
+До оптимизации source extraction прежнего per-ID цикла дала RED9 tests с двумя
+независимыми failure:65 attributes queries вместо3 и5 BLOB statement opens
+вместо1. Остальные7 typed/order/NULL/fullBLOB/cancel/error checks прошли.
+Первый GREEN55 tests PASS24s по reader/provider/bridge/spatial/diagnostics;
+final GREEN02 —56 PASS17s, включая large multipart/hole/3001 vertices exact
+BLOB regression,0fail/error/skip. После исправления admission-before-read порядка
+final GREEN03 —57 PASS20s (reader13/provider9/bridge13/spatial4/diagnostics18):
+первый guard refusal даёт0queries/0BLOB/0statement, следующий row закрывает
+ресурсы. Independent helper/wiring review не нашёл блокеров; native descriptor,
+обычная новая сборка и тот же tablet speed/content route ещё pending.
+Это технические fixtures; Android BLOB descriptor/native speed отдельно не приняты.
+
+Сохранять исходный diagnostic843d APK и все RED receipts. Для нового private
+кандидата повторить на том же T40/Collector1403 именно sharp17→12 и полностью
+новую область с теми же полными геометриями/подписями. Сверять objects/BLOB bytes,
+тот же typed phase contract и независимое время полного содержимого, не только
+SDK return.39 unobserved scopes первого capture — diagnostic cap loss в
+опубликованных слоях, не потерянные render requests. Полностью unobserved слой
+может не иметь snapshot/counters; process-global denominator неизвестен.
+Небольшие warm11.7 pans не опровергают reported3–10s.
+
+## SQLite phase diagnostics — focused source и ordinary tablet
+
+Для typed phases выполнены39 JVM tests: `MapRuntimeDiagnosticsTest`18,
+`SqliteVectorTileProviderTest`8, `SqliteVectorSourceBridgeTest`13; failures,
+errors и skipped —0. Тесты проверяют timing/privacy, delayed outcomes,
+active/layer bounds и overflow/reuse, clock/writer/watch fail-open cleanup,
+совместимый backend overload и прежние bytes/cancellation. Команда из app root:
+
+```powershell
+.\gradlew.bat '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.util.MapRuntimeDiagnosticsTest' '--tests' 'com.nextgis.maplib.map.SqliteVectorTileProviderTest' '--tests' 'com.nextgis.maplib.map.SqliteVectorSourceBridgeTest'
+```
+
+Обычная приватная сборка и tablet capture остаются отдельной проверкой.
+Перед повтором зафиксировать SHA APK, package/version, serial/model/API,
+project identity, scale/camera route и effective labels. Сохранить bounded
+UID logcat с `LISA-SqlitePhase` и независимое наблюдение времени полного
+содержимого карты. Здесь фактическая tablet задача — Collector1403, не787.
+Сравнивать отдельно active phase, cumulative returned/cancelled/failed и
+observation loss: `returned_to_sdk` не устанавливает native content ready.
+Не менять scoped-storage permissions и не добавлять heap capture в memory run.
+Эти source checks не заменяют native/tablet/Full/2GiB acceptance и не разрешают
+приостановленные AVD/GUI stages.
+
 ## MOB-04: чтение SQLite без полной GeoJSON копии
 
 Related сохраняет каждый завершённый assertion/protocol FAIL и исполняет

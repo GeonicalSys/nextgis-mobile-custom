@@ -22,6 +22,46 @@ related_code:
 
 # Доставка диагностических отчётов
 
+## Локальные фазы SQLite rendering — 2026-10-28
+
+`MapRuntimeDiagnostics.SqliteScope` даёт обычной приватной сборке локальный
+logcat tag `LISA-SqlitePhase` через существующий bounded writer. Отдельные
+интервалы охватывают IO queue, layer lock, cache read/write, gate, RTree query,
+attributes/BLOB read, full geometry decode, style, clip, polygon/line label,
+PBF encode/finish и IO→Main dispatch. У активной операции виден текущий этап;
+provider return, SDK return, cancellation и failure считаются отдельно.
+Geometry-only query, initial getCount/prefill, refill и full getBlob/PFD read
+измеряются в BLOB_READ; attributes-only query/materialization остаются в
+SQL_ATTRIBUTES. Новые inline_blobs/pfd_blobs считают полные buffers, отданные
+decode; BLOB_BYTES сохраняет прежний логический объём consumed originals.
+Window может prefetch до32 small BLOB до отмены, поэтому эти counts не являются
+физическим объёмом SQLite IO или суммой всех prefetched bytes.
+`returned_to_sdk` означает возврат Java provider, а native content ready остаётся
+`unverified`. Подтверждён read hot path отдельных scopes; полная задержка
+планшетной сцены и эффект small-BLOB кандидата остаются отдельной проверкой.
+
+Контракт ограничен16 активными scopes,32 layer summaries и одним observer.
+Локальная запись производится не чаще10s/слой; финальный suppressed outcome
+получает отложенный flush. Saturation явно учитывает потерянные наблюдения,
+завершённые summaries переиспользуются после throttle interval. Clock failure
+обозначает недоступное timing, а не0ms. Сбой clock/writer/watch не меняет
+rendering/cancellation и не удерживает завершённый scope.
+
+В scope только фиксированные phase/count enums, числовые layer/source/content
+IDs, zoom без tile X/Y, counts/bytes и длительности. URI, координаты, значения
+полей, error messages и произвольные phase strings не принимаются. Новых
+SQLite/geometry/memory/MapLibre reads для диагностики нет; Main получает только
+записанные счётчики. Существующий16KiB private snapshot сохраняет прежнее
+владение process/version; отдельного сетевого отправителя или настройки нет.
+
+Известная граница первого tablet capture: слой, у которого все scopes попали
+под cap16 до первого наблюдения, может остаться с `last=null`; тогда его
+счётчики ещё не публикуются. `layer_totals` — сумма только опубликованных
+слоёв, не глобальный denominator процесса. В cold capture3 native terminal
+snapshots не показывают всю работу. Граница сохранена в evidence; исправление
+диагностики требует отдельного scoped изменения. Duration уже наблюдённого
+scope остаётся фактом, но отсутствие записи не означает отсутствие работы.
+
 ## Обработанный отказ фонового GPS — группа118, 2026-10-28
 
 Событие118 от27 октября17:03:22.891UTC относится к223/5050495 на Samsung/Android16,
