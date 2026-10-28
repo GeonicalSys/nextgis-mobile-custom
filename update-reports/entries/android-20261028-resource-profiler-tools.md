@@ -94,3 +94,5 @@ Imports повторно используют штатные profile_native_heap
 старые helpers, runtime app/maplib и publisher этим пакетом не изменены.
 Root canonical dependency index/UNKNOWN принадлежит владельцу общей задачи;
 NGW/SQLite schema, исходная геометрия и записи проектов не меняются.
+
+Сеанс остановлен по команде пользователя после19мин:3из5плановых180сокон,42990CPU samples/0lost,3×18native dumps,полный14МБapp export. Ownership/stop/immutable transfer PASS, stack attribution частично UNKNOWN, heapprofd существенно влияет на профиль. Итог и конкретный existing-cache bottleneck: [разбор T40](../../docs/reference/mobile-resource-profile-t40-2026-10-28.md). Остатки и review04.11 отражены в storage manifest; новых runtime/download копий нет.

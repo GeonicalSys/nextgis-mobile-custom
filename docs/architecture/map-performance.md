@@ -323,8 +323,11 @@ std::bad_alloc. Текущая Related/Full приёмка на устройст
 Она сохраняет package/signing/data, не является новым публичным выпуском.
 
 `RenderResourceProfiler` независимо от старых cap16/32 считает запросы, исходы,
-объёмы BLOB/PBF/подписей и wall/CPU по этапам. CPU известен только внутри одного
-TID; handoff wall не превращается в CPU. Глобальные/послойные агрегаты сохраняются
+объёмы BLOB/PBF/подписей и wall/CPU по этапам. CPU clock сравнивается только внутри
+одного TID, но этого недостаточно через coroutine suspension/cancellation:
+в trial28октября CPU `io_queue` признан непригодным и исключён из рейтингов;
+до повторного использования wait/suspend phases требуют CPU-unknown. Handoff
+wall не превращается в CPU. Глобальные/послойные агрегаты сохраняются
 при потере raw: явны queue/active/layer overflow и пропущенные подробности.
 Layer rows объединяют одинаковые numeric IDs; первая сессия ограничивается одним
 проектом, raw source_epoch позволяет отличать поколения. Это не присвоение
@@ -363,3 +366,12 @@ receipts; до них состояние — подготовлено, не пр
 Инструкция: [ручной сбор ресурсов](../runbooks/manual-resource-profiling.md).
 Карточки: android-20261028-private-render-resource-profiler,
 android-20261028-resource-profiler-tools и maplib-20261028-resource-profiler.
+
+Первый ручной сеанс завершён пользователем через19мин; получены3окна по180с,
+полный23270-record app footer и independently checked counts, loss0.
+Подтверждён приоритет обслуживания текущего disk cache перед геометрией:
+пустой/непустой новый тайл требует почти одинакового CPU, scan/regex/sort/stat
+каталога выполняется перед каждым put. Native profiler заметно влияет на CPU;
+эти времена не являются ordinary-build benchmark. Полные выводы/границы и
+приоритет без нового долговременного кэша:
+[разбор T40](../reference/mobile-resource-profile-t40-2026-10-28.md).

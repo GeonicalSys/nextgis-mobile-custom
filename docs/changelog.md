@@ -8,6 +8,18 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-28 — Ручной T40 resource trial: общий bottleneck перед геометрией
+
+Пользователь завершил19-минутный прогон:23270 app records/fullfooter/0loss,
+3×180с CPU/native, exact MapLibre symbols. Обслуживание существующего cache put
+занимает85,8% CPU измеренных фаз после исключения непригодного IO_QUEUE CPU;
+пустой/непустой тайл114,74/114,90мс. Native стеки подтверждают scan/regex/sort/stat
+в prune и~31–35% временных allocations в рабочих окнах. Heap profiler сам
+заметно нагружаетCPU; normal-build latency, project787, enabledlayer count,
+полные native owners и отсутствие утечек этим не подтверждены. Результаты:
+[разбор T40](reference/mobile-resource-profile-t40-2026-10-28.md).
+Продуктовые оптимизации/Full/публикация в этом follow-up не выполнялись.
+
 ## 2026-10-28 — Полный maplib gate и отдельный positive video witness
 
 ONE final allmaplib750PASS/132classes/0fail/error/skip59s при неизменномD101
