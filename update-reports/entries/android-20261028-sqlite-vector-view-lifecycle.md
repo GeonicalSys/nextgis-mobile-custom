@@ -7,6 +7,7 @@ title: Отмена SQLite заданий карты до уничтожения
 why: Новые источники читают базу асинхронно и не должны доставлять поздние ответы в уничтоженный native MapView
 covers:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+  - maplibui
 ---
 
 MOB-04, app82 после maplib61 и consuming maplibui project-retirement.
@@ -19,3 +20,11 @@ Walk service сохраняют собственный жизненный цик
 Передача поздних tiles/ошибок проверяется bridge JVM сценариями и isolated
 NativeSqliteVectorRenderingTest. Последние не заменяют полную Walk/Save/Full
 приёмку и длительные787 memory/render benchmarks. Текущий код ещё не выпущен.
+
+Parent pin maplibui обновлён до edc189cc41bd1a6f3092378ce66f421727505535:
+runtime ee5d924 из Draft PR45 отменяет SQLite работу ДО закрытия/замены проекта
+в GISApplication.resetMap/closeMapObj; поздний edc commit добавляет обязательный
+consumer smoke reference. Это необходимая зависимость вызывающего MapFragment,
+а не отдельная несвязанная библиотечная правка. Merge Commit maplib61 →
+Merge Commit maplibui45 → merged pins/app82; текущие unmerged pins разрешены
+для приватной проверки и блокируют публикацию.
