@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-10-23
+last_verified: 2026-10-28
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -12,6 +12,129 @@ related_code:
 ---
 
 # Экосистема ЛИСА — desktop, плагины и Android
+
+## Обнаружение зависимостей до правки
+
+Перед любым изменением поведения, API, данных, ресурсов или конфигурации агент
+самостоятельно выполняет discovery всего доступного desktop/mobile source-контура,
+затем разбирает затронутое замыкание в обе стороны. Registry, условие «это задача
+на границе» и перечисленные пользователем цепочки не заменяют поиска.
+
+Единственный общий механизм находится в LISA tooling: модуль
+`tools.ecosystem_tests.dependency_discovery`, source index
+`plugins/geonical-docs/registry/discovered-dependencies.json` и процедура
+`plugins/geonical-docs/guides/scenario-dependencies.md`. Registry links —
+`ECO-DEPENDENCY-DISCOVERY` в [ecosystem.yaml](../registry/ecosystem.yaml).
+Android не хранит копию scanner/index и не делает их runtime-зависимостью APK.
+
+Сначала определить доступный внешний `qgis-plugins` source root по
+`docs/registry/ecosystem.yaml` (location/current_machine_path), прочитать общий
+guide и проверить actual расположение/ревизии владельцев. Обычный вход —
+один адресный read-only план из корня доступного LISA source workspace:
+
+```powershell
+py -3.13 -B -m tools.ecosystem_tests plan --changed android_projects/android_gisapp/app/src/main/java/com/nextgis/mobile/MainApplication.java
+```
+
+До impact он сверяет manifest/hashes всего eligible current source-контура,
+при новых/удалённых/изменённых источниках обновляет discovery в памяти. Новый
+неизвестный consumer находится и до изменения существующего producer. Для
+clean CRLF text используется нормализованный hash, для бинарных ресурсов точный.
+Readonly `py -3.13 -B -m tools.ecosystem_tests.dependency_discovery` остаётся
+необязательным обзором, а не вторым обязательным полным parse. Начальный анализ
+наблюдает текущие деревья, включая чужие uncommitted источники; manual semantic
+closure и сохранение новых подтверждённых связей по-прежнему обязательны.
+
+Воспроизводимый `--write` по умолчанию использует live working tree LISA root
+`.` и committed HEAD остальных repositories. Это точные source snapshots,
+не признак публикации/приёмки. Для OWN Android task в этом же доступном контуре
+нужно явно включить собственные рабочие источники:
+
+```powershell
+py -3.13 -B -m tools.ecosystem_tests.dependency_discovery --write --live-repository . --live-repository android_projects/android_gisapp
+```
+
+Если также меняется собственный сабмодуль, добавить, например,
+`--live-repository android_projects/android_gisapp/maplib`; полные фиксированные
+IDs перечислены в общем guide. Для desktop/root task с чужой параллельной
+mobile задачей использовать обычный `--write`, а не включать чужой live repo.
+В PR/evidence указать `source_context`/basis/SHA и отдельно current/provisional
+observations; volatile live HEAD/dirty остаются наблюдением CLI.
+
+Перед source commit:
+
+```powershell
+py -3.13 -B -m tools.ecosystem_tests.dependency_discovery --check
+```
+
+`--check` повторяет stored basis/live-owner selection. Новый foreign commit
+даёт drift; foreign uncommitted рабочие изменения не считаются покрытыми HEAD
+snapshot. Они остаются source-backed provisional observations с next step,
+не отбрасываются и не разрешают переписывать чужие semantic owner contracts.
+`--write` автоматически сохраняет их в единой LISA history
+`plugins/geonical-docs/registry/dependency-observations.json`: source/hash/HEAD
+proof, definitions/references/dynamic refs/render facts, статус и next step.
+Это исторические provisional observations; `--check` валидирует их структуру,
+а не текущую свежесть движущихся foreign bytes. Raw data/исходники/произвольные
+config values не копируются; чувствительные literal targets хэшируются.
+Caps/errors остаются UNKNOWN и не удаляют сохранённых кандидатов молча.
+Новые подтверждённые/scope-owned связи сохраняются в той же задаче автоматически
+в generated index/curated contracts, без отдельной команды. Независимые ожидания
+не перегенерировать под дефект. Изменившиеся пути и условия требуют нового impact;
+working-tree impact в памяти отличать от сохранённого basis.
+
+Для явного другого LISA source root discovery принимает `--workspace PATH`.
+Он анализирует source contour выбранного root: отдельный Android Q-worktree
+автоматически не становится частью этого контура; `--live-repository` выбирает
+логический ID, а не переназначает физический путь. Если actual root/revision не
+покрыт, LISA/owner root недоступен, сабмодуль не получен или источник не поддержан,
+сохранить UNKNOWN с source/next step. Продолжать доступный локальный поиск и
+owner registry/evidence; не заменять текущую ветку индексом другой копии,
+не инициализировать чужие сабмодули и не создавать Android-дубликат индекса.
+
+Обязательно проверять PostgreSQL → desktop layer → mobile config → NGW/Collector
+→ Android consumer и обратное направление; это пример, а не полный список.
+Новые связи агент находит сам. Dirty/чужой owner checkout блокирует его правки,
+но не исключает обязательный follow-up и порядок доставки. Выполненный статический
+анализ не является native/NGW/DB/device приёмкой, не разрешает AVD, публикацию,
+server writes или возобновление остановленных этапов. AUTO-DOCS-VALIDATE проверяет
+структуру/ссылки app-side registry; это не автоматическое доказательство свежести
+shared source index или полноты смыслового разбора.
+
+## Общие source-контракты всей ЛИСЫ
+
+Межкомпонентный разбор не ограничен цепочкой PostgreSQL/NGW: launcher/roles,
+шаблоны и overlays, SQL/QLR, diagnostics, build/release и сохранённое состояние
+имеют собственных производителей, потребителей и условия. Точные общие записи
+находятся в доступном `qgis-plugins` source root:
+
+- `geonical-docs/registry/scenario-contracts.yaml` — сценарии, owners/consumers,
+  applicability, защищённые режимы и ожидаемые результаты;
+- `geonical-docs/registry/dependencies.yaml` — imports и resource contracts;
+- `geonical-docs/registry/layer-resource-audit.json` — source hashes, QLR/provider
+  поля и выражения, relations, trigger→table/view/function связи и явные unknowns.
+
+Ссылки проверяются через `ECO-SHARED-SOURCE-CONTRACTS` в
+[ecosystem.yaml](../registry/ecosystem.yaml). Android не дублирует эти реестры.
+Это source-only метаданные анализа; они не являются входными файлами APK,
+единой runtime-последовательностью служб или сертификатом исполнения.
+
+| Семейство | Граница и защищённое состояние |
+| --- | --- |
+| Desktop install/update/roles | Канонический plugin source/revision, доставленные data resources и включение UI плагина различаются. Legacy profile→etalon export не доказывает поставку task-ветки. Роли, updater journal, локальные caches и tenant overlays требуют отдельной проверки; Android не читает эти desktop файлы напрямую. |
+| PostgreSQL/QLR/resources | Поля/types, joins/expressions, relation keys и triggers/functions, styles/themes/layouts, visibility/scale/units — отдельные условия. Для опубликованных mobile слоёв проверить config/NGW/Collector/Android schema и обратных consumers; отсутствие mobile применимости обосновать, а не публиковать любой QGIS слой. |
+| Формы/шаблоны/drafts | Portable field/lisa_id namespaces и версии правил сохраняются при clone; pinned Android draft не равен текущей опубликованной форме. Изменение workbook/XML шаблона или эталона не мигрирует сохранённые user copies автоматически. |
+| Diagnostics/usage | Desktop Sentry event+отдельный ZIP ACK, mobile SDK envelope cache и usage outbox/commit ACK — разные протоколы и права. Общий hostname не объединяет их очереди; UUID/source origin и backup-excluded installation identity сохраняются по своему контракту. |
+| Android build/release/update | App/library variant versions, APK-derived package/flavor/signature/hash, publisher history/withdrawal и ready/pending installer state проверяются совместно. Source/doc PASS не заменяет Full/Check-Publication и не разрешает выпуск. |
+
+`layer-resource-audit.json` перечисляет исходные связи/ограничения; непроверенные
+provider/view types, выражения и runtime branches остаются UNKNOWN. Зелёный export,
+наличие файла или число записей в реестре не подтверждают результат. По каждой
+затронутой ветви агент проверяет реальные source anchors, applicability и старое
+состояние; новые подтверждённые связи фиксирует в owner registry в той же задаче.
+Source snapshots, текущие рабочие observations, delivery, native acceptance и
+publication разделены. Внешний недоступный/другой worktree не считается покрытым
+индексом выбранного LISA root; действуют правила source_context выше.
 
 ## Статистика мобильного приложения
 

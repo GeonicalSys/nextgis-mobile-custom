@@ -76,6 +76,41 @@ refresh INVALID из-за чужих меняющихся контрактных
 [разбор T40](reference/mobile-resource-profile-t40-2026-10-28.md).
 Продуктовые оптимизации/Full/публикация в этом follow-up не выполнялись.
 
+## 2026-10-28 — Source-контракты всей ЛИСЫ и границы Android
+
+Новый `ECO-SHARED-SOURCE-CONTRACTS` связывает Android с общими scenario/resource
+registries и layer-resource-audit.json. Зафиксированы условные границы roles/
+установки, SQL/QLR/resources, форм/drafts, diagnostics/usage и build/release/
+ready-state; они не объявлены общей runtime-последовательностью. Static evidence,
+UNKNOWN, delivery и native/publication acceptance разделены. Product-код,
+Gradle/AVD/PG/Office, сервисы и выпуск этой документационной правкой не затрагиваются.
+
+## 2026-10-28 — Воспроизводимый source basis и provisional observations
+
+Продолжение MOB-02/прежней карточки: обычный вход — один `plan --changed PATH`,
+проверяющий global current manifest/hashes и обновляющий discovery до impact;
+новый consumer находится без предварительной правки producer. Standalone readonly
+inventory необязателен, manual semantic closure сохраняется.
+Read-only all-current observations отделены
+от `--write` live root + foreign HEAD. OWN mobile sources явно выбираются
+`--live-repository`, `--check` повторяет stored basis. `source_context` и SHA
+фиксируются в evidence, без замораживания чужой параллельной задачи или ложного
+покрытия её uncommitted bytes. Shared --write автоматически сохраняет отдельную
+historical dependency-observations.json; проверка её структуры не означает
+freshness/acceptance. Android registry ссылается на общий файл, не дублирует его.
+Product/native/NGW/DB/AVD и выпуск по-прежнему вне этого документационного scope.
+
+## 2026-10-27 — Общий поиск зависимостей до любой доработки
+
+MOB-02: root/app инструкции и checklist требуют самостоятельного discovery всего
+доступного desktop/mobile контура, а не только известных пользователю цепочек.
+Все новые подтверждённые связи автоматически сохраняются в shared source index/
+curated contracts; ambiguous/dynamic refs остаются с источником/UNKNOWN/next step.
+ECO-DEPENDENCY-DISCOVERY связывает единую процедуру LISA, сценарные контракты и
+source index. Отдельный checkout/недоступные внешние исходники не получают PASS
+по индексу другой ветки; перед source commit проверяется свежесть.
+Это документационная доработка в изолированной ветке: product, сабмодули,
+NGW/DB/native/AVD и выпуск не меняются и не считаются проверенными.
 ## 2026-10-28 — Полный maplib gate и отдельный positive video witness
 
 ONE final allmaplib750PASS/132classes/0fail/error/skip59s при неизменномD101

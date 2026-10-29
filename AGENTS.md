@@ -71,7 +71,38 @@ organization/project и путь приватного доступа уже оп
    upstream-задач,
    [`docs/registry/upstream-overlaps.yaml`](docs/registry/upstream-overlaps.yaml).
 
-Для задач на границе desktop/mobile дополнительно прочитай
+Перед ЛЮБЫМ изменением поведения/API/данных/ресурсов/конфигурации агент сам
+выполняет discovery всего доступного desktop/mobile source-контура и затем
+разбирает затронутые связи в обе стороны. Реестры и примеры пользователя —
+начальная точка, а не предел поиска; не просить пользователя перечислять связи.
+Обычный вход — один LISA `plan --changed PATH`: он сверяет global eligible
+current manifest/hashes и обновляет discovery до impact, включая новых consumers
+неизменённого producer. Отдельный readonly inventory — необязательный обзор,
+а не второй обязательный parse; manual semantic closure сохраняется.
+Все новые подтверждённые связи сохранять автоматически в той же задаче:
+синтаксические — в едином generated source index LISA, семантические ограничения
+— в канонических owner registries. Ambiguous/dynamic refs сохранять с исходным
+местом, UNKNOWN и следующим шагом. Перед source commit обновить/проверить индекс;
+ожидания под текущее сломанное поведение автоматически не подгонять.
+Начальный read-only discovery наблюдает все текущие деревья; воспроизводимый
+`--write` по умолчанию сохраняет live root LISA + foreign committed HEAD.
+Для OWN mobile working repos явно перечислить `--live-repository`, включая `.`,
+по общему guide. Сохранять `source_context`/SHA и отдельно provisional наблюдения
+чужих uncommitted источников: HEAD не покрывает эти bytes и не означает приёмку.
+`--check` повторяет сохранённый basis; не замораживать/переписывать чужую задачу
+ради индекса. Отдельный Q-worktree не подменяется логическим repository ID.
+`--write` автоматически сохраняет source-backed provisional history в LISA
+`plugins/geonical-docs/registry/dependency-observations.json`; `--check` проверяет
+её структуру, а не текущую свежесть чужого рабочего дерева или runtime-приёмку.
+
+Обязательный маршрут discovery, включая доступность внешнего source root,
+отдельный worktree и границы общего индекса, описан в
+[`docs/architecture/lisa-ecosystem.md`](docs/architecture/lisa-ecosystem.md#обнаружение-зависимостей-до-правки).
+Shared LISA index/procedure единственные; Android-копию scanner/index не создавать.
+Отсутствие внешних исходников или свежего индекса — UNKNOWN, не отсутствие связи.
+Не менять занятый/чужой checkout: сохранить required follow-up и порядок доставки,
+продолжить независимую разрешённую работу. Source-анализ не разрешает native/AVD,
+NGW/DB writes, публикацию или изменение продукта. Для каждой такой задачи читать
 [`docs/architecture/lisa-ecosystem.md`](docs/architecture/lisa-ecosystem.md) и
 [`docs/registry/ecosystem.yaml`](docs/registry/ecosystem.yaml). Связанные
 проекты экосистемы:
