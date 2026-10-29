@@ -8,6 +8,29 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-29 — Глубина зависимостей: workspace, отмена и подтверждение sync
+
+Продолжение MOB-02 по новой команде владельца после merge Android85/LISA275:
+существующий sync/storage документ прослеживает owning map через callbacks,
+provider URI, map-path broadcasts, service tickets, lease и финальный drain.
+Разделены UID, directory/mapName, live token, recovery pair, import journal и
+full clock; pair ACK записывается раньше финального cleanup/clock. 60s expiry
+относится только к unclaimed delivery, не ко всем claimed children. Разбор
+полного service lifecycle отверг ложное подозрение о первом foreground-start.
+
+Углублены прежние dependency/invariant и change-impact записи, app AGENTS и
+чеклист ведут к каноническому объяснению. Исправлен устаревший active-project-only
+oracle SMOKE-MULTI-ACCOUNT-SYNC по фактическому default sync_all_projects=true;
+это правка документации, не изменение продукта. Новая адресная smoke-матрица
+сохраняет NOT_RUN и ссылки на три pending задачи единого LISA реестра. Не
+добавлены native test code, отдельный scanner или дублирующий список задач.
+
+Карточка: android-20261029-dependency-depth-01. Product/Gradle/версии/gitlinks,
+данные, настройки и схемы не меняются; миграции нет. Android/AVD/device/NGW/DB,
+сборки, публикации и приостановленные этапы не запускались. Документационные
+проверки и точные исходные ревизии сохраняются в связанном PR и evidence;
+наличие source witnesses не является выполнением runtime.
+
 ## 2026-10-29 — Новый разбор мобильных событий GlitchTip
 
 После первого среза520/516 выполнен свежий полный export:8открытых мобильных

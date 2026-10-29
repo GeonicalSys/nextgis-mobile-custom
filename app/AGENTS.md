@@ -164,6 +164,11 @@ untagged UI URI всегда относится к активной карте, 
 Полный pending project/account план сохраняется до первого прохода; Collector
 journals разделены по canonical map path. Проверять cancellation, equal layer/group
 IDs, сохранность draft и реальный fill на изолированном эмуляторе.
+До изменения async/provider/service или project storage прочитать раздел
+«Владение workspace и границы подтверждения» в том же architecture документе:
+lease не выбирает БД, pair ACK не равен full clock, а 60s expiry не ограничивает
+claimed child. Directory/mapName/UID/token имеют разные ключи и миграции;
+открытые риски ведутся в едином LISA dependency-audit-todo, не в отдельном списке.
 Подписи разделённых double_combobox брать из meta.fields keyname/display_name,
 затем layer alias; field key используется только при отсутствии обоих.
 

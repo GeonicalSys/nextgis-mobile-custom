@@ -218,7 +218,11 @@ units/CRS/freshness, сохранённым состоянием и незави
 ## MOB-02 Самостоятельное обнаружение и сохранение зависимостей
 
 Приоритет P1. Состояние: исходный entry bridge слит29.10 в PR83; shared LISA
-PR270 также слит. Следующий отдельный этап — MOB-UI-01, без изменения продуктовой очереди.
+PR270 также слит. MOB-UI-01 принят в Android PR85 и LISA PR275; его runtime
+пилоты остаются NOT_RUN. Следующий source/docs шаг29.10 — глубокий разбор
+workspace/sync ownership, сохранённых ключей, pair ACK/full clock и cancellation
+drain в прежнем MOB-02, по новой команде владельца продолжать аудит до остановки.
+Изменения продуктовой очереди и возобновления native этапов нет.
 Основание — поручение пользователя27 октября: агент пропустил зависимый ресурс;
 пользователь не должен перечислять связи или отдельно просить сохранить найденное.
 Владелец — Android root для входных инструкций; общий source index/процедура
@@ -244,6 +248,16 @@ PR270 также слит. Следующий отдельный этап — MO
 проверяется на свежесть. Недоступные owners/другой worktree не скрываются за
 чужим индексом или словом PASS. Проверки — source-only docs/report validators;
 доставка и фактические результаты фиксируются в PR отдельно от device/release.
+
+Текущий глубокий срез: `android-20261029-dependency-depth-01` дополняет
+существующие sync/storage контракты и исправляет устаревший active-project-only
+oracle в SMOKE-MULTI-ACCOUNT-SYNC. Приёмка среза — проверяемая по source цепочка
+owner→scope→provider/service→drain→pair ACK→cleanup→full clock, разные persisted
+keys и независимые ожидания. Статус: source/docs в собственной ветке, runtime
+NOT_RUN; три открытые ветви ведутся в едином LISA dependency-audit-todo по IDs
+AUDIT-TODO-SYNC-ACK-RECOVERY, AUDIT-TODO-SYNC-CLAIMED-LIVENESS,
+AUDIT-TODO-WORKSPACE-KEY-MIGRATION. Продукт, БД, NGW, APK и библиотечные gitlinks
+не меняются; этот список не становится параллельной очередью работ.
 
 # Уже начатая работа
 

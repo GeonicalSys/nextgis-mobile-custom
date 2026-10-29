@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-29
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
@@ -33,10 +33,161 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
   - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
   - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
+  - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
+  - maplib/src/main/java/com/nextgis/maplib/map/MapBase.java
+  - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
+  - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java
+  - app/src/androidTest/java/com/nextgis/mobile/util/ProjectSyncRunnerTest.java
+  - maplib/src/test/java/com/nextgis/maplib/reliability/SyncWorkspaceIsolationTest.java
   - app/src/main/res/xml/syncadapter.xml
 ---
 
 # NGW sync, локальное хранение и восстановление
+
+## Владение workspace и границы подтверждения
+
+Углублённый source-разбор29.10.2026 продолжает MOB-02 после UI-каталога
+MOB-UI-01. Он подтверждает цепочку по текущим app/maplib/maplibui источникам,
+но не выполняет Android, HTTP, SQLite или device-проверки. Описанные ниже
+независимые runtime ожидания этого этапа имеют статус **NOT_RUN**.
+
+### Разные ключи одной операции
+
+| Назначение | Фактическая идентичность | Владелец |
+| --- | --- | --- |
+| Collector-проект | `collector:<accountName>:<remote project ID>` | `CollectorProjectMetadata.buildProjectUid` |
+| Сохранённая цель account sync | `UID\|canonical directory\|mapName` | `ProjectSyncRunner.Target.key` и `SyncRecoveryJournal` |
+| Подтверждённый полный проход | UUID-хеш canonical directory, без UID и mapName | `ProjectSyncState.key` |
+| Незавершённый Collector import | preferences с SHA256 canonical directory | `CollectorImportJournal.preferences/workspacePath` |
+| Живой provider/service owner | случайный session token; отдельный ticket на доставку сервиса | `SyncWorkspaceSession` |
+| Запрет конкурентной операции | process-global lease; его workspaceKey читается из active preferences | `ProjectOperationCoordinator` |
+
+Имя проекта, remote resource ID, local layer/group ID, canonical directory,
+mapName, session token и lease — разные части контракта. Lease сам по себе
+не выбирает БД фонового проекта. Даже при работе с проектом B его workspaceKey
+может описывать активный проект A; реальное владение обеспечивают scoped map,
+parent chain слоя и live token. При переносе каталога, изменении mapName или
+новой схеме восстановления отдельно определить миграцию/инвалидацию recovery
+queue, import journal, full clock и черновиков. Их одинаковая судьба не следует
+из слова «проект»; обычная смена display name не доказывает смену этих ключей.
+
+Обратная граница desktop — `stand_project/ngw_collector_projects.py`,
+`_etalon_item_to_live_child`: keyname разрешается в NGW resource_id, передаются
+editable/visible/syncable/zoom. Мобильный UID добавляет account и remote project
+ID, а локальная работа — directory/mapName. Эти ключи не подменяют друг друга;
+desktop не имеет runtime-доступа к session token или телефонной БД.
+
+### От очереди к дочерним работам
+
+[`ProjectSyncRunner.run`](../../app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java)
+получает собственный DATA_SYNC lease либо использует уже удерживаемый lease
+вызывающей очереди, строит trusted inventory и сохраняет полный план
+project/account pairs **до первого прохода**. Фоновая `MapDrawable(..., false)`
+не активирует UI singleton. Scope направляет `MapBase.getInstance()` и
+`GISApplication.getMap()` к owning map; `MapBase.getActiveInstance()` остаётся
+источником видимой карты. `DatabaseContext.getMapForLayer` сначала проходит
+parent chain слоя и только затем использует scoped fallback.
+
+Scope должен переходить через каждую async границу. `SyncWorkspaceSession`
+capture/post/execute/start учитывают pending children и наследуют исходную
+cancellation generation. Rejected/discarded task освобождает pending ровно
+один раз; удаление задачи из executor без `discard` не равно её завершению.
+`ProjectSyncRunner.onMain` переносит scope на main thread через tracked post,
+а `awaitChildren` допускает только принадлежащие session fill/rebuild стадии.
+Обычный новый callback без owner propagation может разрешить совпавший layer
+path в A вместо B; совпадение ID не является oracle владения.
+
+`LayerFillService.startFillIntent` резервирует operation lease и external ticket
+до отправки foreground-service intent. `onStartCommand` проверяет live token,
+отмену и однократное claim ticket; чужой import не заимствует уже занятую
+фоновую карту. Worker исполняется в tracked scope. Drain, завершение callback,
+release ticket, release lease и закрытие background map — отдельные события,
+которые нельзя заменить одним флагом «сервис не busy».
+
+### Provider URI и уведомления
+
+[`SyncWorkspaceSession.bindUri`](../../maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java)
+проверяет parent owner и существующий token. Для неактивной карты нужен live
+token; expired token не имеет fallback на UI. `LayerContentProvider.getLayerByUri`
+разрешает tagged URI только через этот owner. **Untagged URI относится к active
+UI map даже внутри background scope**: `getActiveMap` явно использует
+`MapBase.getActiveInstance`. Исправления общего `getMap` недостаточно — каждый
+provider callsite должен явно сохранить owner.
+
+Broadcast использует другую границу: `bindNotification` добавляет owning map
+path; `MapContentProviderHelper.VectorLayerNotifyReceiver` принимает tagged
+notification только своей карты, а untagged — только active map. Path/ID в
+уведомлении и token в provider URI выполняют разные задачи.
+
+### Account ACK раньше полного clock
+
+Порядок в `ProjectSyncRunner.run`:
+
+1. Выполнить account pass и дождаться его детей.
+2. Проверить account error, session failure/cancel, готовый account outbox и
+   незавершённый Collector import. Лишь затем удалить точную пару через
+   `SyncRecoveryJournal.complete`.
+3. После accounts проверить весь обязательный набор account names, отсутствие
+   layer-only ограничения и готовых правок всего проекта.
+4. Ещё раз дождаться детей, закрыть session и background map, восстановить
+   runtime bookkeeping открытой карты.
+5. Только после успешного cleanup и при неизменной cancellation generation
+   выполнить durable `ProjectSyncState.markComplete`.
+
+Следовательно, пустой recovery journal **не доказывает полный project ACK**:
+pair ACK записывается раньше финального cleanup/clock. Это разные commit
+boundaries. Process death или cleanup failure между ними не разрешают агенту
+переносить часы вперёд по отсутствию очереди. Фактическое восстановление этого
+окна ещё не проверено. Быстрый `LocalChangesWorker` использует owner/drain/lease,
+но не пишет full clock. `LayersFragment` читает clock только active UI map.
+
+### Отмена и liveness
+
+`NgwSyncIo.requestCancellation` увеличивает process-wide generation и закрывает
+зарегистрированные read-only HTTP. Уже отправленная mutation намеренно не входит
+в этот набор: сначала разрешается её ответ, затем принимается решение об outbox;
+следующую mutation запрещает проверка cancellation. Это не обещание, что любой
+запрос на запись немедленно прервётся.
+
+`awaitChildren` временно снимает interrupt для drain и возвращает факт прерывания
+очереди. Та восстанавливает interrupt в финальном cleanup, перед этим закрывая
+собственный lease; при already-held пути внешний lease остаётся во владении
+вызывающего кода. Session не закрывается с pending work. 60-секундный
+`expireUndelivered` относится **только к unclaimed service deliveries**; claimed
+child/service не получает этим общего timeout. Принудительно закрывать его БД
+или отдавать lease по возрасту нельзя. Liveness такой работы остаётся отдельным
+неподтверждённым runtime свойством.
+
+Разобран и отвергнут ложный вывод: ранний token rejection в `onStartCommand`
+сам по себе не доказывает нарушение первого foreground-start. `LayerFillService.onCreate`
+уже вызывает `startForegroundWithSessionAwareNotification`. Проверять нужно весь
+lifecycle, включая повторную доставку уже существующему сервису; source-разбор
+не подтверждает каждый native исход.
+
+### Независимые ожидания и открытые ветви
+
+Существующие `SyncWorkspaceIsolationTest` и `ProjectSyncRunnerTest` содержат
+witnesses для одинаковых layer/group IDs в A/B, tagged provider update только B,
+expired token без fallback, rejected/discarded children, сохранности active map
+и draft, отмены с удерживаемым child, per-project clock и реального background
+fill. Здесь прочитаны исходники этих тестов; их наличие не является выполнением.
+
+`SMOKE-SYNC-OWNER-ACK-BOUNDARY` закрепляет адресную будущую проверку. Новые ветви
+имеют NOT_RUN, а задачи хранятся **в едином LISA реестре**
+`plugins/geonical-docs/registry/dependency-audit-todo.yaml`:
+
+- `AUDIT-TODO-SYNC-ACK-RECOVERY`: process death/cleanup failure между pair ACK
+  и full clock; различать корректный старый clock и потерю необходимого повтора.
+- `AUDIT-TODO-SYNC-CLAIMED-LIVENESS`: claimed child, который не возвращает
+  управление; определить наблюдение/восстановление без раннего закрытия БД.
+- `AUDIT-TODO-WORKSPACE-KEY-MIGRATION`: перенос directory/mapName и судьба всех
+  независимых persisted keys, включая legacy journals и draft owner.
+
+Непроверенные внешние async callsites, effective tenant/server/device варианты
+и native lifecycle остаются UNKNOWN. Этот этап не меняет product bytes,
+очереди, схемы, серверные данные, настройки или миграцию и не возобновляет
+приостановленные runtime этапы.
 
 ## Буферизация существующего индекса — 2026-10-27
 
