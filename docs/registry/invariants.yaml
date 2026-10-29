@@ -1,5 +1,27 @@
 schema_version: 1
 invariants:
+  INV-GPS-CACHE-WITNESS:
+    title: Passive system GPS cache evidence cannot change acquisition or disclose position
+    owners: [app, maplib]
+    statement: >
+      Source schema4 raw_fix_elapsed_realtime_ms describes the existing rawGps measurement,
+      including a possible cache seed, not exact callback entry time. Only an already emitted
+      classified recovery report may perform at most one system GPS lastKnown read. The app
+      extracts measurement time only and neither retains nor seeds the Location. Its ten fixed
+      numeric/enum witness keys distinguish missing, invalid, future, denied, read and clock
+      states; safe monotonic subtraction and relation enums preserve unknown/sentinel meaning.
+      No coordinates, extras, accounts, URI, Location text or exception messages are added.
+      No sensor activation, new observer, retry, classification, filter, recording or stored-data
+      change. Binder execution time is not bounded by this observer; duration is reported.
+      Cache/used-in-fix/registration evidence alone never establishes the root cause of a gap.
+      Prior report replay remains historical and never acquires a new observation retrospectively.
+    related_code:
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
+      - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+    verify_smoke: [AUTO-GPS-CACHE-WITNESS, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
+    must_update_docs: [docs/architecture/error-reporting.md, docs/architecture/location-pipeline.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
   INV-LOCAL-TILE-CACHE-ADMISSION:
     title: Complete derived tiles keep bounded shared cache accounting and cancellable pre-dispatch admission
     owners: [maplib, maplibui, app]
@@ -1268,7 +1290,7 @@ invariants:
       connected WorkManager job without reinitializing handlers. Event UUID and diagnostic
       stack/version/device/typed-operation context survive process restart. Preserve original
       historical identity, separate reporter identity, and reserve context/breadcrumb budget.
-      GPS snapshot v3 separates callback age from delivery lag, bounds history to 24 samples and correlates actual delivery-fault warning/recovery/cancel with an episode UUID. Reception/acquisition/filter waits stay local; reporting requires a continuous faulty-reason threshold and records observer/device-sleep gaps.
+      GPS snapshot v4 retains callback age/delivery lag,24-sample history and episode warning/recovery/cancel pairing and adds raw measurement time. Only an emitted report may add the passive system-cache witness; source seed time is not callback receipt time, unknown remains explicit and causes are not inferred. Reception/acquisition/filter waits stay local; reporting thresholds and observer/device-sleep gaps remain unchanged.
       Journal writes await durability without losing caller cancellation. Do not read
       business storage, photos or raw HyperLog in crash callbacks. Supplied event data,
       original HTTP URLs/query/headers/cookies, response metadata, custom context and

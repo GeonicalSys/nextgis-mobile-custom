@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-GPS-CACHE-WITNESS:
+    type: automatic
+    scope: [app, maplib]
+    command: Run focused DiagnosticsGpsFixWitnessTest, DiagnosticsGpsPlatformTest, AppDiagnosticsTest and GpsDisplayRetentionTest locally with existing GPS recovery/controller and HTTP/sync real-error preservation tests.
+    expected: Fifteen pure witness cases and API30/36 Robolectric adapters cover fixed ten-key numeric/enum output, missing/invalid/future/denied/read/clock states, older/same/newer arithmetic, scalar-only extraction, unchanged Location payload and legacy replay. Independent source/native fixture assertions distinguish measurement time from receipt age. A successful JVM run does not reproduce real vendor GNSS delivery loss; native emulator cases and physical follow-up are separate, never silently executed under a paused scope.
   AUTO-SQLITE-LAYER-PRIORITY:
     type: automatic
     scope: [maplib, app]

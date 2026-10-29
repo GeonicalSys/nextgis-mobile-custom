@@ -1,7 +1,7 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -14,6 +14,8 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStart.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
   - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt
   - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt
   - app/src/test/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStartTest.java
@@ -120,6 +122,45 @@ PID, reason, status/signal, importance, PSS/RSS в KiB. Нормальные п�
 Сведения нужны и когда ни один SDK envelope не пережил завершение.
 [Контракт Android ApplicationExitInfo](https://developer.android.com/reference/android/app/ApplicationExitInfo).
 [Текущий инцидент и ограничения](../reference/mobile-crash-224-2026-10-27.md).
+
+## Пассивное сравнение с системным GPS cache — 29 октября 2026
+
+GPS snapshot v4 добавляет `raw_fix_elapsed_realtime_ms` — время измерения
+текущего `rawGps`, в миллисекундах monotonic clock; отсутствие обозначается -1.
+Это измерение может происходить из уже существующего cache seed и не является
+точным временем входа callback. Пороги, причины, retry, фильтр и запись GPS
+не меняются. Старые snapshots и их replay сохраняются без обогащения новым
+наблюдением задним числом.
+
+Только внутри уже отправляемого `reportGpsRecovery` app делает не более одного
+`LocationManager.getLastKnownLocation(GPS_PROVIDER)`. API читает имеющийся cache,
+не запускает датчики и не требует нового измерения. Из временного `Location`
+извлекается только `elapsedRealtimeNanos`; объект не сохраняется, его координаты,
+extras и строковое представление не читаются и не передаются в источник,
+`processLocation` либо seed. Существующие platform permission/provider/background
+поля сохраняют schema1; вложенный `platform.gps_fix_witness` имеет schema1.
+
+Witness содержит ровно десять numeric/enum полей: `schema_version`, `read_status`,
+`probe_started_elapsed_realtime_ms`, `probe_finished_elapsed_realtime_ms`,
+`probe_duration_ms`, `cached_fix_elapsed_realtime_ms`, `cached_fix_age_ms`,
+`app_raw_timestamp_status`, `cache_vs_app_raw`, `cache_minus_app_raw_ms`.
+Отсутствие, недопустимое или будущее время, отказ permission/read и сбой clock
+явно отличаются от успешного нулевого возраста. Millisecond сравнение сообщает
+older/same/newer либо unknown; отрицательная delta отличима от sentinel по enum.
+Тексты исключений и произвольные значения в witness не входят, ошибка чтения
+не теряет исходный отчёт. Синхронный Binder getter не получает execution-time
+таймаут: размер и число полей ограничены, гарантия времени выполнения не заявлена.
+
+Более новый system cache при старом raw измерении сужает проверку до границы
+доставки/обработки, но сам не доказывает причину или пригодность позиции.
+Старый/пустой cache также не доказывает ошибку приложения. Used-in-fix status
+и успешное принятие повторного запроса не заменяют timestamp нового `Location`.
+Это улучшение сбора свидетельств для групп90/96, не устранённая GPS-пауза.
+См. [разбор29октября](../reference/glitchtip-triage-2026-10-29.md),
+[контракт cached API](https://developer.android.com/reference/android/location/LocationManager#getLastKnownLocation(java.lang.String))
+и [usedInFix](https://developer.android.com/reference/android/location/GnssStatus#usedInFix(int)).
+Технические pure и Robolectric API30/36 tests проверяют arithmetic, fail-open,
+fixed keys, privacy и replay; они не воспроизводят vendor GNSS delivery gap.
 
 ## Автоматическая диагностика восстановления GPS
 
@@ -435,8 +476,9 @@ Null даёт `missing`, ошибка getter/read — `unavailable` с огра�
 переполнение — `oversized` либо `captured_truncated`. Пропуск политикой теперь
 называется `not_requested_for_reason`, API ниже30 — `unsupported_api`.
 Byte/frame/privacy budgets прежние; никакие дополнительные native handlers не
-устанавливаются. Новые unit cases и реальная OS-проверка SIGNALED ещё не запускались;
-исторический native result ниже относится к прежнему ANR/native reason gate.
+устанавливаются.29октября повторены16JVM cases NativeTrace/ExitInfo/Reporter и
+4TracePolicy cases — PASS; реальная OS-проверка нового SIGNALED пути не выполнена.
+Исторический native result ниже относится к прежнему ANR/native reason gate.
 
 Проверено на API36 AVD: реальный SIGKILL без SDK envelope и SIGABRT, restart,
 исходная identity, наличие OS native_frames в durable envelope. В delivery06

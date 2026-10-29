@@ -1,7 +1,7 @@
 ---
 title: Подключение и разбор мобильных ошибок GlitchTip
 type: runbook
-last_verified: 2026-10-23
+last_verified: 2026-10-29
 related_code:
   - tools/glitchtip.py
   - tools/glitchtip.json
@@ -75,4 +75,6 @@ Resolve проверяет проект, сравнивает count/lastSeen с�
 не входят в этот workflow без отдельного поручения.
 
 Проверка CLI: `py -3.13 -B -m unittest discover -s tools -p test_glitchtip.py -v`.
-Последний разбор: [2026-10-23](../reference/glitchtip-triage-2026-10-23.md).
+Последний разбор: [2026-10-29](../reference/glitchtip-triage-2026-10-29.md)
+(свежие8групп/593записи;877JVM и сборки PASS, source commit и серверное закрытие пока pending). Предыдущий подтверждённый итог
+28 октября: [инцидент 224](../reference/mobile-crash-224-2026-10-27.md#итог-обработки-и-незавершённый-полевой-профиль-28-октября-2026).

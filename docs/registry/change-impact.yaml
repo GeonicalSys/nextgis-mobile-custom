@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: GPS-CACHE-WITNESS
+    paths: [maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java, maplib/src/test/java/com/nextgis/maplib/location/GpsDisplayRetentionTest.java, app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java, app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java, app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java, app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitnessTest.java, app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsPlatformTest.java, app/src/test/java/com/nextgis/mobile/util/AppDiagnosticsTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java]
+    owners: [maplib, app]
+    read: [docs/architecture/error-reporting.md, docs/architecture/location-pipeline.md, docs/reference/glitchtip-triage-2026-10-29.md]
+    invariants: [INV-GPS-CACHE-WITNESS, INV-DIAGNOSTIC-DELIVERY, INV-GPS-TRACK-FILTER]
+    must_update_docs: [docs/architecture/error-reporting.md, docs/architecture/location-pipeline.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+    verify: [AUTO-GPS-CACHE-WITNESS, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
+    strict_docs: true
   - id: SQLITE-NATIVE-LAYER-PRIORITY
     paths: [maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java, maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java, maplib/src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java]
     owners: [maplib, app]

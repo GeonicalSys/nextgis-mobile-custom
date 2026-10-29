@@ -28,7 +28,13 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
     responsibility: Independently verify all129 technical SQLite polygon IDs and65-coordinate Java inputs, complete native ID set and whole-row hashes, then exercise once-session notice across recreation and another layer plus eight bounded Russian component dialog profiles. This is no real memory-pressure, Full real-window or2GiB acceptance.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
-    responsibility: Add optional actual permission/provider/background policy evidence to existing rare classified GPS reports, fail open without reading coordinates, accounts or business storage.
+    responsibility: Add optional permission/provider/background policy and at most one passive system GPS last-known measurement-time read to already emitted recovery reports; retain fixed numeric/enum witness only, fail open without coordinates/extras/accounts/business storage or source seeding and without changing acquisition/retry.
+  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
+    responsibility: Pure Clock/Probe comparison with ten fixed numeric/enum fields, explicit missing/denied/read/clock/invalid/future states and overflow-safe millisecond arithmetic; compare only system cached and app raw measurement times, never infer freshness or a delivery cause.
+  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitnessTest.java
+    responsibility: Assert exact keys, older/same/newer and sentinel ambiguity, absent/invalid/future raw and cached times, one probe, clock failures/reversal, fixed failure enums and absence of payload/exception text.
+  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsPlatformTest.java
+    responsibility: Verify Android API30/36 cache adapters expose measurement time without coordinates/extras, preserve source Location, make denied permission explicit and retain older-platform/background-policy behavior.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
     responsibility: Persist bounded process ownership before startup; match abnormal OS exits after restart, delegate API/reason trace policy including SIGNALED, keep original/unknown identity and deterministic event IDs, and acknowledge owners only after durable transport storage.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java
@@ -94,7 +100,7 @@ key_components:
   - path: app/src/main/res/xml/preferences_location.xml
     responsibility: Location preferences, including the persisted default-off show_compass_accuracy_sector checkbox with a multiline title; MapFragment applies its choice on resume through the maplib visibility API.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java
-    responsibility: Replay no-fix and callback-stall snapshots against the native source, verify paired recovery, distinct callback ages, one same-listener retry and preserved recording resources on an isolated emulator.
+    responsibility: Replay no-fix and callback-stall snapshots against the native source, verify paired recovery, schema4 independent seeded raw measurement timestamp versus callback receipt age, one same-listener retry and preserved recording resources on an isolated emulator; this is not a reproduction of vendor GNSS callback loss.
   - path: app/src/main/java/com/nextgis/mobile/util/SyncJournalCommit.java
     responsibility: Confirm journal durability on an owned serial writer despite caller interruption and restore cancellation before returning.
   - path: app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java
@@ -206,7 +212,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java
     responsibility: Verify all 40 standard point, line and polygon style categories, symbols and canonical class/type defaults, including the actual mixed point form; isolated emulator only.
   - path: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-    responsibility: Initialize Sentry after the isolated UID guard, sync native build identity, preserve bounded diagnostic context and original cached identity, and pair classified GPS warnings with INFO recovery/cancel by episode UUID.
+    responsibility: Initialize Sentry after the isolated UID guard, sync native build identity, preserve bounded diagnostic context and original cached identity, pair classified GPS warnings with INFO recovery/cancel by episode UUID, and enrich only newly reported GPS snapshots with a passive numeric cache witness while retaining old replay schema/grouping.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java
     responsibility: Persist SDK envelopes before async HTTP, retain offline/5xx/rate-limited events, acknowledge SDK crash/replay hints and preserve TLS validation.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java

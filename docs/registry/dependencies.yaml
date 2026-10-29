@@ -3,8 +3,8 @@ edges:
   - from: app
     to: maplib
     type: runtime
-    scope: SQLite vector rendering and original editing
-    purpose: Read complete SQLite originals through bounded native tiles without full startup GeoJSON; keep attributes-only32-ID queries separate from API28+1MiB small-geometry windows, full large/API26PFD fallback, exact order/bytes/current/error semantics and actual provider/owner lifecycle with transient full-original overlays. Full/lite and standalone rebinds preserve whole current-source field/point groups above all saved/current track passes using canonical model order independently from registration arrival and retaining cached wrapper/filter identity; sqlite-priority observes actual SDK ranges/labels/pixels/SQL/hide/Undo, with nested/recreation native gaps explicit.
+    scope: SQLite vector rendering, original editing and GPS recovery observation
+    purpose: Read complete SQLite originals through bounded native tiles without full startup GeoJSON; keep attributes-only32-ID queries separate from API28+1MiB small-geometry windows, full large/API26PFD fallback, exact order/bytes/current/error semantics and actual provider/owner lifecycle with transient full-original overlays. Full/lite and standalone rebinds preserve whole current-source field/point groups above all saved/current track passes using canonical model order independently from registration arrival and retaining cached wrapper/filter identity; sqlite-priority observes actual SDK ranges/labels/pixels/SQL/hide/Undo, with nested/recreation native gaps explicit. GpsEventSource supplies additive schema4 raw measurement time to the app's rare passive framework-cache witness without a lower-layer dependency on app or a change to acquisition/recording.
     contracts:
       - maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java
@@ -21,6 +21,10 @@ edges:
       - maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelQuery.java
       - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
       - app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
+      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+      - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
+      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
   - from: app
     to: maplibui
     type: gradle
@@ -156,7 +160,13 @@ runtime_contracts:
     defined_in: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
     implementers: [app]
     callers: [app]
-    contract: Typed operation breadcrumbs, classified GPS episode snapshots with paired outcomes, and selected handled failures; SDK event cache, transport extension and WorkManager delivery remain independent of GIS sync and draft storage.
+    contract: Typed operation breadcrumbs, classified GPS episode snapshots with paired outcomes, and selected handled failures; emitted GPS reports alone may attach the app-owned passive numeric cache witness while preserving historical replay identity. SDK event cache, transport extension and WorkManager delivery remain independent of GIS sync and draft storage.
+  gps-cache-fix-witness:
+    owner: app
+    defined_in: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
+    implementers: [app]
+    callers: [app]
+    contract: Compare a single optional framework GPS cached measurement time with maplib schema4 rawGps measurement milliseconds using ten fixed numeric/enum keys and explicit unavailable/invalid/future states. rawGps may include a seed and is not exact callback receipt. No coordinates, retained Location, source injection, new acquisition or causal conclusion; no Binder wall-time timeout is promised.
   sync-workspace-session:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java

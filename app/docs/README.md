@@ -306,12 +306,19 @@ hot-add/lite reload, реальные rendered features и русскую под
 
 ## GPS diagnostic episodes
 
-Snapshot v2 separates reception loss, callback delivery and processing; bounded
-24-sample history and correlated recovery/cancel preserve the episode UUID.
-Short no-fix gaps stay local; long/repeated gaps are rate limited. Only sustained
-fresh used-in-fix statuses without callbacks allow one same-listener re-registration.
-Recorders, Network, precision leases, wake lock, filtering and segment rules remain owned
-by their existing controllers. See consuming root docs/architecture/location-pipeline.md.
+Snapshot v4 сохраняет прежние причины, пороги,24-sample history, episode UUID и
+парные recovery/cancel, добавляя время текущего rawGps измерения и пассивное
+сравнение с системным GPS cache. RawGps может происходить из существующего seed;
+это не точное время входа callback. Только при уже отправляемом recovery report
+app читает системный GPS cache не более одного раза и сохраняет10 фиксированных
+numeric/enum полей без координат, extras или текста исключений. Clock/read/
+permission failures остаются явными unknown; старые replay события не получают
+новое наблюдение задним числом. Ни классификация no-fix/callback_stalled, ни
+retry, фильтр, recording/Network/precision leases/wake lock не меняются.
+Показания usedInFix и более новый cache не устанавливают причину сбоя. Это
+улучшение диагностики, не исправленная GPS-пауза и не выполненная vendor/native
+приёмка. Контракт и границы синхронного чтения —
+[диагностика GPS](../../docs/architecture/error-reporting.md#пассивное-сравнение-с-системным-gps-cache--29-октября-2026).
 
 ## Статистика использования
 

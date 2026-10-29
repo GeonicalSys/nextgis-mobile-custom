@@ -8,6 +8,21 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-29 — Новый разбор мобильных событий GlitchTip
+
+После первого среза520/516 выполнен свежий полный export:8открытых мобильных
+групп,593записи/589SDK ID,59новых ID относительно тех же восьми групп28октября.
+Подготовлены68/88 already-fixed по прежней политике штатных GPS ожиданий и
+45/64/69/90/96/117 diagnostics; source commit и серверные комментарии/закрытие
+ещё pending. Поздняя030/224SDK/OS пара не названа новым падением57a;
+worker rethrow/terminate signature не устанавливает исходный exception или OOM.
+Для неизвестной причины GPS добавлено редкое сравнение cached framework fix
+и app raw без подачи cache в pipeline или изменения фильтра/подписки/retry.
+877JVM tests,docs50,три normal variants, instrumentation compile и version
+matrix PASS. Частный APK517c941d…0db8b01 собран, не установлен/не опубликован;
+emulator/native/Full и новых действий с устройствами не было. Итог и ограничения:
+[разбор 29 октября](reference/glitchtip-triage-2026-10-29.md).
+
 ## 2026-10-29 — Приоритет whole SQLite групп и native регрессия
 
 Уточнён контракт current style-controller alias, canonical bottom-to-top model

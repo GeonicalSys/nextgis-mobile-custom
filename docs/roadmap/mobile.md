@@ -128,6 +128,24 @@ AVD с2GiB, настоящий длительный pan/pinch+heading workload, 
 
 ## MOB-02 Инцидент завершений после обновления 224
 
+29 октября, адресное продолжение по поручению «разобрать ошибки в глитче»:
+после первого520/516получен свежий mobile-only snapshot02:8групп,593записи/
+589SDK ID,59новых ID относительно тех же восьми групп28октября.68/88 —
+прежняя локальная политика штатных GPS ожиданий;45/64/69/90/96/117 — diagnostics.
+Поздняя030/224native/OS пара не устанавливает новый crash последней сборки,
+исходный exception или OOM. Для текущих224GPS пауз причина неизвестна:
+добавлено редкое fail-open сравнение cached framework fix и app raw без
+координат, новой подписки или изменения фильтров/thresholds/владельцев.
+877JVM tests,docs50,три normal variants, instrumentation compile и versionmatrix
+PASS; два emulator-only native GPS case не запускались, полевой cause остаётся
+UNKNOWN. Частный обычный APK517c941d…0db8b01 собран, не установлен/не опубликован.
+Source commit и guarded server comments/resolve/readback ещё pending; Full,
+профилирование, новые native/device действия не выполнялись. Это уточнение
+свидетельств MOB-02/MOB-03, не исправление приёма GPS и не возобновление других
+этапов карты. Владельцы app/maplib, Draft84/62; карточка
+android-20261029-glitchtip-gps-evidence.
+[Решения и ограничения](../reference/glitchtip-triage-2026-10-29.md).
+
 Приоритет P1. Состояние: В Draft PR app82/maplib61; memory failure подтверждён,
 конкретный триггер регрессии и остальные abort ожидают свидетельств/проверок.
 Основание — поручение пользователя27 октября,

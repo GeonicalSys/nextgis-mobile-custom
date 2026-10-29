@@ -1,7 +1,7 @@
 ---
 title: Текущая позиция и запись GPS
 type: architecture
-last_verified: 2026-10-25
+last_verified: 2026-10-29
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
   - maplib/src/main/java/com/nextgis/maplib/gnss/NmeaParser.java
@@ -120,6 +120,24 @@ ages, used/visible, C/N0, решение фильтра, screen и owners. Ко�
 Порядок доставки: Merge Commit maplib, затем документационный maplibui,
 затем app с pin merged library commits. Draft pins до merge не являются выпуском.
 
+
+## Пассивное свидетельство времени GPS — 29 октября 2026
+
+Snapshot schema4 добавляет время измерения текущего rawGps отдельно от возраста
+его доставки. Это существующее измерение может включать cache seed; поле не
+равно времени вызова listener. При уже отправляемом classified report app один
+раз читает время fix из системного GPS cache и сравнивает monotonic milliseconds.
+На обычном500ms tick/no-fix probe не запускается. API не запрашивает новый fix,
+а полученный объект не подаётся обратно в поток, фильтр или запись.
+
+Размер witness ограничен десятью numeric/enum полями без координат и payload.
+Отказ, отсутствующее/будущее время и проблемы clock остаются явными unknown.
+Синхронный Binder read не имеет гарантированного wall-time timeout. Ни более
+новый cache, ни used-in-fix flags не устанавливают причину длительной паузы.
+Acquisition, частоты, retry, владельцы, точность и сохранение треков прежние.
+[Полный контракт и границы](error-reporting.md#пассивное-сравнение-с-системным-gps-cache--29-октября-2026).
+
+## Общий источник и подписки
 
 `GpsEventSource` принадлежит Application. Экран, трек и обход подписываются на
 один источник; снятие подписки экрана не останавливает активную запись. Основная

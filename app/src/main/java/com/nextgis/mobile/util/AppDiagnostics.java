@@ -63,7 +63,8 @@ public final class AppDiagnostics {
     public static void reportGpsRecovery(java.util.Map<String, Object> snapshot) {
         try {
             java.util.Map<String,Object> observed = new java.util.LinkedHashMap<>(snapshot);
-            try { observed.put("platform", DiagnosticsGpsPlatform.collect(diagnosticContext)); }
+            try { observed.put("platform", DiagnosticsGpsPlatform.collect(diagnosticContext,
+                    snapshot.get("raw_fix_elapsed_realtime_ms"))); }
             catch (RuntimeException unavailable) { observed.put("platform", java.util.Map.of("status", "unavailable")); }
             Sentry.captureEvent(gpsRecoveryEvent(observed));
         } catch (RuntimeException ignored) { }
