@@ -169,6 +169,16 @@ IDs, сохранность draft и реальный fill на изолиров
 lease не выбирает БД, pair ACK не равен full clock, а 60s expiry не ограничивает
 claimed child. Directory/mapName/UID/token имеют разные ключи и миграции;
 открытые риски ведутся в едином LISA dependency-audit-todo, не в отдельном списке.
+Legacy storage move и Reset Settings получают исключительный PROJECT_SWITCH
+lease до вычисления default directory, изменения prefs и постановки AsyncTask.
+Lease сохраняется через worker и UI completion; cancelSync не заменяет владение.
+Chooser listener возвращает false: proposed path/card не публикуются заранее.
+Проверять точный mMap без factory getMap; retirement — запрет новых запросов,
+не ожидание всех renderer reads. Rebind проверяет exact owner и cached actual
+path под тем же monitor, что resetMap. RESULT_OK здесь refresh Activity, не move
+ACK: после обычного отказа/отмены с retirement тоже нужен безопасный rebind, но
+без Reset defaults/delete. Runtime до подтверждённого cache не превращать в
+выдуманный rollback; disk/restart и миграции остаются отдельной границей.
 Подписи разделённых double_combobox брать из meta.fields keyname/display_name,
 затем layer alias; field key используется только при отсутствии обоих.
 

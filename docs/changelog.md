@@ -8,6 +8,26 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-29 — Владение переносом и сбросом настроек
+
+Исправлены оба legacy-входа storage/Reset: исключительный owner получается до
+preferences/default-directory/task effects и удерживается через worker/UI.
+Выбранные path/card не публикуются заранее. Reset defaults/delete выполняются
+только после достижения target и commit actual path; обычный отказ/отмена после
+retirement сохраняют проверенную actual-map перепривязку без этих Reset effects.
+RESULT_OK request777 — refresh Activity/drawable, не move ACK. Предикаты mMap не
+вызывают factory getMap, owner/path check и rebind атомарны под app monitor.
+
+До исправления6 actual-body JVM дали5 FAIL/1 штатный PASS; после21 PASS,
+LisaDebug/BelkaRelease Java/Kotlin compile PASS, независимый разбор CLEAR.
+Каталог UI38 содержит128 method и14 file tripwires, включая явный General Reset.
+Два существующих impact trigger и invariant уточнены, новый smoke только planned
+NOT_RUN. Исходные ID/history и F61 clock pin сохранены: полный текущий UI/docs
+gate NOTPASS из-за отдельной library63→app pointer delivery dependency.
+Реальное storage/WAL/renderer drain, registry/draft migration и disk/restart не
+принимаются моделями JVM. Related/Full, устройство, ordinary APK, merge и выпуск
+не запускались. Карточка android-20261029-storage-move-ownership, существующий MOB-02.
+
 ## 2026-10-29 — Глубина зависимостей: workspace, отмена и подтверждение sync
 
 Продолжение MOB-02 по новой команде владельца после merge Android85/LISA275:

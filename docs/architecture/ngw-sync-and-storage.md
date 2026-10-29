@@ -3,6 +3,9 @@ title: NGW sync, локальное хранение и восстановлен
 type: architecture
 last_verified: 2026-10-29
 related_code:
+  - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
+  - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
+  - app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
@@ -196,6 +199,11 @@ account-only ticks разных запусков не складываются �
 
 ### Неуспешный commit: память отдельно от диска
 
+Описание backend ниже относится к app pin maplib F61. Отдельный own library
+PR63 исправляет публикацию process-visible clock; до Merge Commit → app gitlink
+→ semantic UI pin review это не считается поставленным app-исправлением.
+Существующий F61 UI fingerprint здесь намеренно не переписывается.
+
 `ProjectSyncState.markComplete` вызывает обычный `SharedPreferences.Editor.commit`,
 а `lastComplete` читает тот же process-cached preferences. По
 [Android API](https://developer.android.com/reference/android/content/SharedPreferences.Editor#commit())
@@ -263,9 +271,57 @@ fill. Здесь прочитаны исходники этих тестов; и
   независимых persisted keys, включая legacy journals и draft owner.
 
 Непроверенные внешние async callsites, effective tenant/server/device варианты
-и native lifecycle остаются UNKNOWN. Этот этап не меняет product bytes,
+и native lifecycle остаются UNKNOWN. Исходный ACK source-аудит не менял product bytes,
 очереди, схемы, серверные данные, настройки или миграцию и не возобновляет
 приостановленные runtime этапы.
+
+## Storage move и Reset: lease, actual path и REFRESH — 2026-10-29
+
+`SettingsFragment` объединяет два входа, сохраняя разные эффекты. Storage chooser
+всегда получает false от listener, поэтому не пишет proposed path/card до worker.
+Reset confirmation только запускает admission. Публичный `tryBegin(PROJECT_SWITCH)`
+атомарно отказывает при занятом coordinated owner или walk draft; default
+resolver, prefs/defaults, retirement/reset и result не исполняются при отказе.
+Это исправляет подтверждённый source bypass общей защиты sync/fill, а не выбирает
+политику переноса всех saved-state stores.
+
+После admission caller/UI захватывает exact map. Worker использует её и вызывает
+`MainApplication.retireMapForStorageMove` до первого physical rename. Helper
+проверяет прямое поле владельца, не null-ит и не создаёт карту. `MapBase.moveTo`
+меняет mPath после всех rename; IOException пытается rollback и может вернуть
+старый path. Worker сохраняет actual path, не желаемый destination. Отсутствие
+достигнутого target или false commit — отдельный неуспех; false обычного
+SharedPreferences после memory update не означает unchanged cache/disk.
+
+Terminal callback удерживает lease до завершения UI effects. Direct-field
+predicate и atomic rebind проверяют exact map плюс raw cached path=actual path,
+не вызывая factory `getMap` на отказе. `RESULT_OK` для `RELOAD_ACTIVITY_DATA`
+просит MainActivity/MapFragment перепривязать drawable; он допустим после
+failed/cancelled retired move и **не подтверждает успешный перенос**. Такие
+ветви не выполняют Reset defaults/district/init/delete. Только нормальный
+Reset target/path completion запускает прежние preference removals/default XML,
+resetMap и существующий district/init/delete/init порядок с исключением OSM/tracks.
+
+Queued cancellation не трогает map; started cancellation освобождает lease
+после реального unwind worker и terminal refresh/cleanup. Late duplicate callback
+не меняет нового owner. Pre-lock failure не unlock-ит неприсвоенную orientation.
+Unexpected RuntimeException/Error до достоверного cached actual state сохраняет
+прежнее worker propagation/finally release; произвольная atomic recovery не
+выдумывается. Main-thread join/ожидание worker, новый synchronous path commit и factory не добавлены.
+
+Source-проверка:21 actual-body Robolectric/JVM cases PASS на frozen app bytes,
+LisaDebug source compilation и BelkaRelease Java/Kotlin compilation выполнены
+отдельно. Это не native move/DB/renderer/Reset acceptance. Retirement отменяет
+публикацию новых render generations и кооперативную работу, но не ждёт active
+blocking reads. Renderer drain, physical partial rollback, process restart,
+registry/project.json и независимые path-key journals/drafts остаются UNKNOWN
+в `AUDIT-TODO-WORKSPACE-MOVE-LEASE-DRAIN` и `AUDIT-TODO-WORKSPACE-KEY-MIGRATION`.
+Адресный `SMOKE-WORKSPACE-STORAGE-MUTATION` — будущий NOT_RUN, не разрешение на запуск.
+
+App UI clock anchor остаётся закреплённым на maplib F61. Отдельное исправление
+clock process-view в own library не считается поставленным до library Merge
+Commit → app gitlink → semantic UI pin review. Полная текущая UI/docs проверка
+с известным clock drift не называется PASS и не фильтруется.
 
 ## Буферизация существующего индекса — 2026-10-27
 

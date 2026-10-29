@@ -1063,3 +1063,35 @@ tests:
       - Capture a bounded control with actual SDK frame/resource counters, phase aggregates/checkpoint and CPU/native samples
       - Stop only exact owned collectors, verify app footer and pull hashes, then start a fresh process for the user trial
     expected: Verify signer/package/source, readable app_session and periodic checkpoint, real SDK resource counters, exact stop/footer/pull hashes and actual CPU/native samples/loss/coverage. Transfer alone is not quality PASS; no normal-project mutations or Full acceptance.
+  SMOKE-WORKSPACE-STORAGE-MUTATION:
+    type: device
+    scope:
+    - app
+    - maplib
+    - maplibui
+    steps:
+    - 'NOT_RUN plan only: after separate runtime authorization use an owned isolated copy of an existing map; record actual map
+      object/path, raw map_path, registry UID/path, retained journals/drafts and visible content before any destructive Reset.
+      Require another available app external storage or an unmatched current path for the chooser case.'
+    - Hold normal DATA_SYNC with a claimed child, then separately LAYER_FILL/SCHEMA_REBUILD and a walk draft. Invoke actual storage
+      choice and actual Reset positive button; whole preferences, selected storage summary/card, Activity result, render/map and
+      original owner must remain unchanged, with a nonblocking wait message. Do not force-expire or close live children.
+    - 'With no owner, same storage index remains a no-op. Admit another choice: no requested path is published by chooser; retire
+      the exact current map before the first rename, keep a competing sync blocked through worker and real UI refresh callbacks,
+      then compare actual path/prefs/widget and next sync admission.'
+    - Observe RESULT_OK through RELOAD_ACTIVITY_DATA and MainActivity refresh; it is not an oracle of physical move or durable
+      complete-workspace migration. Check renderer/view identity separately.
+    - 'On an owned copy confirm Reset: default resolver and prefs/default XML/reset/district/init/delete/init must wait for exclusive
+      admission and worker completion; preserve the existing OSM/tracks deletion exclusions. Cancel the confirmation separately.'
+    - Exercise target-not-reached, ordinary commit false after cache mutation, queued and started cancellation, pre-lock failure,
+      executor rejection and a late duplicate terminal. Failed/cancelled retired work may refresh only exact current owner plus
+      raw path=actual; no Reset defaults/delete/init and no early lease release.
+    - Use distinct foreign/null owner or raw path before completion and verify rejection does not call getMap to construct a replacement.
+      Inspect raw getter, durable file/restart and partial rollback independently; do not replace ordinary commit false with a
+      proxy that returns before cache mutation.
+    expected: Planned native acceptance remains NOT_RUN. Source implementation has21 focused actual-body JVM regressions, not
+      device/storage/DB/renderer coverage. Busy refusal preserves the original operation and settings; admitted work owns the
+      lease through all mutation/UI cleanup. Actual-path guarded REFRESH is separate from successful Reset and never implies physical
+      atomic rollback. No registry/project.json/recovery/import/clock/draft key migration is inferred. Renderer retirement is
+      cooperative cancellation/new-read fencing, not an active-reader drain; physical failure/restart and uncoordinated path changes
+      remain explicit owner TODO boundaries.

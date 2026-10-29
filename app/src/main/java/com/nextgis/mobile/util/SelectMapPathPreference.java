@@ -116,10 +116,7 @@ public class SelectMapPathPreference
             for (File file : files){
                 if (file != null) {
 
-                    String cardNamePart = "";
-                    String parts[] = file.getAbsolutePath().split("/");
-                    if (parts.length>2)
-                        cardNamePart = parts[2];
+                    String cardNamePart = storageCardName(file);
                     cardnames.add(cardNamePart);
 
 
@@ -224,6 +221,28 @@ public class SelectMapPathPreference
         if (!TextUtils.isEmpty(sdCardName)) {
             SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
             mSharedPreferences.edit().putString(KEY_PREF_SD_CARD_NAME, sdCardName).apply();
+        }
+    }
+
+    private static String storageCardName(File root) {
+        String[] parts = root.getAbsolutePath().split("/");
+        return parts.length > 2 ? parts[2] : "";
+    }
+
+    /** Publish only the worker's persisted result, never the proposed destination. */
+    public void applyMoveResult(String actualPath) {
+        if (TextUtils.isEmpty(actualPath)) return;
+        setText(actualPath);
+        setSummary(actualPath);
+        File[] roots = ContextCompat.getExternalFilesDirs(getContext(), null);
+        if (roots == null) return;
+        for (File root : roots) {
+            if (root == null) continue;
+            String prefix = root.getAbsolutePath();
+            if (actualPath.equals(prefix) || actualPath.startsWith(prefix + File.separator)) {
+                saveStoredCardNameToSettings(storageCardName(root));
+                return;
+            }
         }
     }
 

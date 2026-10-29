@@ -1505,46 +1505,66 @@ invariants:
       - docs/architecture/ngw-sync-and-storage.md
   INV-PROJECT-OPERATION-EXCLUSION:
     title: Active project identity is stable during database background work
-    owners: [app, maplib, maplibui]
-    statement: >
-      Manual and per-account scheduled sync share a serial project queue; sync_all_projects defaults
-      to true and false limits new full runs to the open map. A layer-specific run stays in the open map.
-      The queue holds one DATA_SYNC lease throughout every project, account and async child without
-      changing active preferences, MapBase active identity or drafts. Background maps use scoped lookup,
-      opaque provider/service tokens and tracked callbacks; expired tokens cannot fall back to the UI database.
-      Untagged provider URI remains bound to the active UI map even inside a background scope;
-      map-path-tagged broadcasts have a separate receiving-owner gate. Lease workspaceKey read from active
-      preferences is not the background database binding. Only unclaimed service deliveries have a 60s
-      expiry; claimed work retains ownership until it actually finishes and has no such timeout promise.
-      Only session-owned fill/rebuild stages may join a scoped queue and touch SQLite in its dependent phase.
-      Switch/create/rename/delete and unrelated imports wait for all owners, and duplicate full sync is refused.
-      Cancellation stops reads and rolls back interrupted apply while awaiting unresolved outbound writes
-      and children before releasing their database. The complete durable pair plan survives process death
-      and each successful pair is acknowledged separately. Collector journals are path-partitioned;
-      legacy migration, runtime state, schema guards and draft reservations validate the owning project.
-      An unchanged schema mismatch is circuit-broken after two attempts in 24 hours, with at least
-      ten minutes between attempts, and LayerFillService timeout must preserve the durable import journal.
+    owners:
+    - app
+    - maplib
+    - maplibui
+    statement: 'Manual and per-account scheduled sync share a serial project queue; sync_all_projects defaults to true and false
+      limits new full runs to the open map. A layer-specific run stays in the open map. The queue holds one DATA_SYNC lease throughout
+      every project, account and async child without changing active preferences, MapBase active identity or drafts. Background
+      maps use scoped lookup, opaque provider/service tokens and tracked callbacks; expired tokens cannot fall back to the UI
+      database. Untagged provider URI remains bound to the active UI map even inside a background scope; map-path-tagged broadcasts
+      have a separate receiving-owner gate. Lease workspaceKey read from active preferences is not the background database binding.
+      Only unclaimed service deliveries have a 60s expiry; claimed work retains ownership until it actually finishes and has no
+      such timeout promise. Only session-owned fill/rebuild stages may join a scoped queue and touch SQLite in its dependent phase.
+      Switch/create/rename/delete and unrelated imports wait for all owners, and duplicate full sync is refused. Cancellation
+      stops reads and rolls back interrupted apply while awaiting unresolved outbound writes and children before releasing their
+      database. The complete durable pair plan survives process death and each successful pair is acknowledged separately. Collector
+      journals are path-partitioned; legacy migration, runtime state, schema guards and draft reservations validate the owning
+      project. An unchanged schema mismatch is circuit-broken after two attempts in 24 hours, with at least ten minutes between
+      attempts, and LayerFillService timeout must preserve the durable import journal. Settings storage move and Reset Settings
+      acquire the existing exclusive PROJECT_SWITCH lease before default-destination resolution or any prefs/render/map/result effect. Busy refusal
+      preserves the held owner and all settings; chooser admission never persists a proposed path. Exact-map retirement precedes
+      physical move but does not prove active renderer read drain. The lease survives worker completion through guarded actual-path
+      map refresh, Reset callbacks and UI cleanup. RESULT_OK requests Activity rebind, not successful storage ACK. Failed target/commit
+      or cancellation after retirement may refresh only the exact owner whose raw cached path equals actual map path; they do
+      not execute Reset defaults or layer deletion. Atomic owner predicate/rebind never resolves a missing map through getMap.
+      Unexpected before-cache failures, partial rollback, restart and workspace-key migration remain separate unaccepted recovery
+      boundaries.
+
+      '
     related_code:
-      - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
-      - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
-      - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
-      - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
-      - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
-      - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
-      - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncIo.java
-      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
-      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
-      - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
-      - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
-      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    verify_smoke: [SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-INTERRUPT-ACTION, SMOKE-SCHEMA-REBUILD-GUARD]
+    - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+    - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+    - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+    - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
+    - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
+    - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncIo.java
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
+    - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    - app/src/main/java/com/nextgis/mobile/MainApplication.java
+    - app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java
+    - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
+    - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
+    verify_smoke:
+    - SMOKE-COLLECTOR-SWITCH
+    - SMOKE-PROJECT-MANAGEMENT
+    - SMOKE-MULTI-ACCOUNT-SYNC
+    - SMOKE-SYNC-INTERRUPT-ACTION
+    - SMOKE-SCHEMA-REBUILD-GUARD
+    - SMOKE-WORKSPACE-STORAGE-MUTATION
     must_update_docs:
-      - docs/architecture/collector-projects.md
-      - docs/architecture/ngw-sync-and-storage.md
+    - docs/architecture/collector-projects.md
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/architecture/ui-contracts.md
   INV-SPATIAL-CACHE-CONSISTENCY:
     title: Vector spatial cache remains consistent across sync and main-thread notifications
     owners: [maplib]

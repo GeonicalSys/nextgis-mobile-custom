@@ -13,6 +13,24 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Исключительное владение legacy storage/Reset — 2026-10-29
+
+В существующем fork project coordinator оба legacy Settings входа теперь
+получают PROJECT_SWITCH до preferences, default-directory resolution и AsyncTask.
+Chooser change listener откладывает path/card, Reset defaults/delete — до
+подтверждённого actual path. Worker и UI completion удерживают одного владельца;
+ошибка/отмена после retirement перепривязывает только согласованный actual map.
+Проверка direct mMap/cached path и rebind атомарны, без factory getMap в predicate.
+RESULT_OK request777 означает refresh Activity/drawable, а не move ACK.
+
+Адресная source-доработка MOB-02, карточка android-20261029-storage-move-ownership:
+baseline5 FAIL/1 контроль PASS; final21 JVM PASS, LisaDebug/BelkaRelease source
+compile PASS и независимый разбор CLEAR. Это отличие текущей task-ветки, без
+нового upstream merge, выпуска или device/Related/Full приёмки. Renderer read
+drain, file/WAL rollback, durable path/restart и миграции11 отдельных stores
+остаются открытыми. Library clock63 и app F61 pin имеют отдельный delivery gate;
+полный UI/docs PASS до него не заявлен.
+
 28 октября2026, MOB-04: поверх текущего fork SQLite/native path общий индекс
 производного PBF cache убирает повторный scan/regex/sort/stat каталога на каждом
 новом тайле; атомарные bytes/identity и прежние budgets сохранены. Shared

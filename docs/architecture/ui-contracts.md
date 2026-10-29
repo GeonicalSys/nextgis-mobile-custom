@@ -3,6 +3,10 @@ title: Контракты значений и действий мобильно�
 type: architecture
 last_verified: 2026-10-29
 related_code:
+  - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
+  - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
+  - app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java
+  - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
@@ -86,7 +90,7 @@ Lisa/Belka, но APK merge и native redraw здесь **NOT_RUN**.
 
 | Widget → binding | Producer и преобразование | Граница значения |
 | --- | --- | --- |
-| `info` → `updateInfo` → `setText` | Active map path → `ProjectSyncState.lastComplete` → `ControlHelper.getSyncTime`: `dd MMM` и `HH:mm`, default locale/timezone | Unix ms в storage; на экране нет года/секунд или относительной давности. Current maplib допускает новое cached значение после commit=false; это не durable oracle |
+| `info` → `updateInfo` → `setText` | Active map path → `ProjectSyncState.lastComplete` → `ControlHelper.getSyncTime`: `dd MMM` и `HH:mm`, default locale/timezone | Unix ms в storage; на экране нет года/секунд или относительной давности. Закреплённый app maplib F61 допускает новое cached значение после commit=false; это не durable oracle |
 | `sync_progress_ring` → `refreshSyncProgressRing` | `NgwSyncProgress.snapshot`: scale1000, pull10 + push до30, monotone display с5% reserve до finish | Взвешенная работа очереди, без percent text. `finishSessionLocked` завершает progress и при ошибке; inactive UI скрывает/сбрасывает кольцо |
 | `sync` → `isSyncActive`/receiver | `NGWSyncService.isSyncStarted OR ProjectOperationCoordinator.isDataSyncActive`; lifecycle broadcast и повторная проверка состояния | Busy/activity и окончание очереди отдельно от полного project ACK; SYNC_FINISH не доказывает успешную запись clock |
 | `sync_pending_badge` / `layer_pending_badge` → async query / row binding | `collectPendingLayers`: raw `VectorLayer.isChanges` либо разрешённый track pending; group IDs распространяются вверх, row проверяет `mPendingChanges.contains(layer.getId())` | Булева локальная очередь, не число ошибок и не тот же ready-outbox gate полного clock. Результат принимает только прежний map/generation |
@@ -99,25 +103,42 @@ Lisa/Belka, но APK merge и native redraw здесь **NOT_RUN**.
 oracles находятся в [sync/storage](ngw-sync-and-storage.md). Единая задача —
 `AUDIT-TODO-SYNC-ACK-RECOVERY`; точные failure branches **NOT_RUN**.
 
-### Путь к картам и физический перенос
+### Путь к картам и сброс настроек
 
-Новый `UI-SETTINGS-MAP-STORAGE-MOVE` доводит текущий каталог до37 контрактов.
-`menu_settings` ведёт через Settings header/fragment к custom
-`SelectMapPathPreference`. `map_path` — Preference key из XML, у него нет
-`android:id`: каталог не выдумывает для него widget ID. Выбор другого доступного
-app external storage формирует `chosenRoot/map`; worker захватывает текущую
-application map и вызывает `MapBase.moveTo`. Тот переносит referenced layer
-directories, database sidecars и map entry; это не перенос всех Collector
-проектов или shared storage по множественному слову «карты».
+`UI-SETTINGS-MAP-STORAGE-MOVE` и `UI-SETTINGS-RESET-WORKSPACE` описывают два
+разных входа общего Lisa/Belka SettingsActivity. `menu_settings` открывает
+GENERAL, а MAP header меняет fragment той же Activity. `map_path` и
+`reset_settings` — Preference keys, у них нет `android:id`.
 
-Тот же storage index закрывает chooser без move. Реальная достижимость другого
-выбора зависит от `getExternalFilesDirs` устройства или unmatched current path.
-UI и worker публикуют path на разных стадиях, а наличие rollback loop не
-подтверждает atomic recovery. Registry/project metadata, recovery/import
-preferences, clock и absolute draft paths не входят в физический move list.
-Согласованная migration/refusal policy остаётся
-`AUDIT-TODO-WORKSPACE-KEY-MIGRATION`; только отсутствие миграции не объявляется
-багом. На этом этапе нет native move, state witness или изменения поведения.
+Chooser строит `chosenRoot/map` из `getExternalFilesDirs`. Тот же storage index
+закрывает диалог без move; другой выбор требует доступного storage либо current
+path вне перечисленных roots. Listener всегда возвращает false, в том числе
+после admission: requested path/card/summary не становятся сохранённым результатом.
+Оба входа сначала получают публичный `PROJECT_SWITCH` lease. Busy refusal
+показывает wait message, сохраняя whole prefs, карту, result и чужого owner;
+default destination для Reset тоже разрешается только под lease.
+
+После admission caller/UI захватывает exact current map. Worker использует
+её, retire-ит SQLite rendering sources до `MapBase.moveTo`, затем commit-ит actual path. Direct-field predicate
+не создаёт отсутствующую карту; проверка owner/raw path и `resetMap` выполняются
+под одним app monitor. Lease остаётся до terminal UI callback и cleanup.
+`RESULT_OK` для `RELOAD_ACTIVITY_DATA` означает **REFRESH**, а не ACK переноса:
+MainActivity перезапускается, а MapFragment также проверяет identity при resume.
+
+Reset positive callback сам не меняет prefs. После нормального target/path
+completion применяются прежние remove/default XML правила, resetMap,
+district/init/delete/district/init. Существующая feature удаляет слои кроме
+OSM/tracks; объём удаления не расширен. Failed target/commit и cancel после
+retirement допускают refresh только при exact owner/raw actual path, без Reset defaults,
+init или удаления. Ordinary commit false моделируется после cache mutation;
+unexpected before-cache RuntimeException/Error сохраняет worker failure policy.
+
+`MapBase.moveTo` переносит referenced layer directories, database sidecars и
+map entry last. Registry/project.json, независимые journals/clock/draft keys
+не входят в этот список. Partial rollback, restart и migration policy остаются
+`AUDIT-TODO-WORKSPACE-KEY-MIGRATION`. Retirement — cancellation/generation fence,
+не доказанный drain active renderer reads.21 actual-body JVM cases и source
+compile не принимают native storage, визуальное восстановление или удаление данных.
 
 ### Доступность редактирования
 
@@ -151,10 +172,17 @@ py -3.13 -B docs/scripts/check_ui_contracts.py
 настройками карты/геопозиции и основной/русский каталоги подписей действий.
 XML с reviewed widget IDs также удерживаются целиком, чтобы изменение binding,
 handler или title при прежнем ID не считалось прежним контрактом.
-Углубление sync/storage добавляет progress constants и пять файлов
-settings/flavor/action routing; прежние три XML/string witnesses расширяют
-ссылки на новый map-storage contract без замены fingerprint. Итого13 non-method
-files и106 reviewed methods; прежние80 method fingerprints сохранены.
+Текущий каталог содержит38 контрактов,128 method tripwires и14 non-method
+files. Для V4 вручную пересмотрены затронутые Settings/widget bodies и добавлены
+admission/owner/terminal/reset/result-consumer anchors. General XML добавлен как
+Preference-key evidence. В EN/RU изменён ровно один failure string: все прежние
+378/375 значения и порядок независимо сохранены. Unaffected IDs/hashes удержаны.
+
+`WF-SYNC-CLOCK-STORE` намеренно остаётся исходным F61 fingerprint: отдельный own
+maplib clock fix ещё требует Merge Commit, app pointer и semantic pin review.
+Официальная проверка текущего рабочего контура поэтому показывает один известный
+clock drift и **не является PASS**. Другие app rows проверяются по текущим bytes;
+альтернативных hashes, фильтра результата или обхода checker нет.
 Они требуют semantic review при любом изменении
 этих файлов; это осознанно более широкая проверка, чем fingerprint отдельного
 метода. Формат/пороги не могут молча измениться при прежнем теле callback.

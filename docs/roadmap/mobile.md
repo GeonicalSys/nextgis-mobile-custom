@@ -269,6 +269,22 @@ account-only успехов между запусками.21 методов в5 
 NOT_RUN в AUDIT-TODO-SYNC-ACK-RECOVERY; library/source fix требует отдельного
 impact и решения владельца. Это не новый roadmap item и не закрытие runtime TODO.
 
+
+Адресное исправление по дополнительному прямому поручению владельца29 октября
+«явные баги исправлять сразу»: карточка
+[android-20261029-storage-move-ownership](../../update-reports/entries/android-20261029-storage-move-ownership.md).
+В существующем MOB-02 выявлен обход operation exclusion в legacy storage move
+и Reset Settings; baseline фактически дал5 FAIL/1 штатный PASS без GIS/БД/device.
+Оба входа исправляются до изменения preferences и сохраняют владельца через
+асинхронное завершение/перепривязку. RESULT_OK здесь refresh, не move ACK.
+Это адресная source-доработка по поручению владельца; прежняя граница docs-only
+выше относится к исходному entry bridge и не отменяет новое поручение.
+Приоритет продуктовых функций и native/Related/Full/публикация не возобновляются.
+Состояние — source-реализация завершена:21 actual-body JVM PASS, LisaDebug и
+BelkaRelease Java/Kotlin compile PASS, независимый разбор CLEAR; Git/docs closure
+продолжается. Merge, поставка библиотек и device-приёмка отмечаются отдельно. Политика миграции
+11 stores, disk/restart и renderer drain остаётся в едином LISA audit TODO.
+
 # Уже начатая работа
 
 ## MOB-01 Завершение текущего пакета стилей и треков

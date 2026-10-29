@@ -1257,8 +1257,9 @@
       "requires": [
         "case SettingsConstantsUI.ACTION_PREFS_MAP:",
         "setPreferencesFromResource(R.xml.preferences_map, null)",
-        "SettingsConstants.KEY_PREF_MAP_PATH",
-        "initializeMapPath(getActivity(), mapPath)"
+        "initializeMapPath(getActivity(), mapPath)",
+        "SettingsConstantsUI.KEY_PREF_RESET_SETTINGS",
+        "initializeReset(getActivity(), reset)"
       ],
       "forbids": [],
       "sha256": "0c84fad78b1bd382e51bd13caf041c804e1995a0e2b280f286235ec3153e7ce0"
@@ -1271,12 +1272,12 @@
       "requires": [
         "ContextCompat.getExternalFilesDirs(context, null)",
         "if(i == selectedItemFinal)",
-        "externalFilesPaths.get(i).getAbsolutePath()+ \"/map\"",
+        "getAbsolutePath()+ \"/map\"",
         "callChangeListener(finalValue)",
-        "setText(finalValue)"
+        "storageCardName(file)"
       ],
       "forbids": [],
-      "sha256": "e1ef471f81e8e6047c1a03b9a7652d50beaf00f6f97533f230dd364886cf2233"
+      "sha256": "48d67055cebeb1436e3493026a18af1f09ddab83154fbca33908d370eae5c6dd"
     },
     {
       "id": "WF-MAP-STORAGE-PERSIST-TEXT",
@@ -1296,13 +1297,14 @@
       "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
       "marker": "public static void initializeMapPath(\n            final Context context,\n            final SelectMapPathPreference mapPath)",
       "requires": [
-        "File newPath = new File((String) o)",
-        "moveMap(parent, newPath)",
+        "startMapMove(parent, newPath, false, mapPath)",
+        "return false"
+      ],
+      "forbids": [
         "resetMap()",
         "return true"
       ],
-      "forbids": [],
-      "sha256": "afe259a13fc7b69fad1f57d643d2161c5a1758663fb8fddbb5f7f6f91a8a3749"
+      "sha256": "6407fc5dc77d714e31f7969494c5c81e6b3dbc5c62019bda798d0e946321399d"
     },
     {
       "id": "WF-MAP-STORAGE-MOVE-START",
@@ -1310,36 +1312,39 @@
       "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
       "marker": "public static void moveMap(\n            Activity activity,\n            File path)",
       "requires": [
-        "ContentResolver.cancelSync(null, application.getAuthority())",
-        "new BackgroundMoveTask(activity, application.getMap(), path)",
-        "AsyncTask.THREAD_POOL_EXECUTOR"
+        "startMapMove(activity, path, false, null)"
       ],
       "forbids": [],
-      "sha256": "ebfac87da1eda877f2e2fbcf1372c8d750ced5d42a23f65db10feba41492b1b6"
+      "sha256": "c46a69b1c6c83f62bd73580c54ce5f8c351f1cafcde8c12403b773f972c16dc5"
     },
     {
       "id": "WF-MAP-STORAGE-MOVE-WORKER",
       "repository": "root",
       "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
-      "marker": "protected Void doInBackground(Void... voids)",
+      "marker": "protected MoveOutcome doInBackground(Void... voids)",
       "requires": [
+        "if (isCancelled()) return null",
+        "mApplication.retireMapForStorageMove(mMap)",
         "mMap.moveTo(mPath)",
-        "SettingsConstants.KEY_PREF_MAP_PATH, mMap.getPath().getAbsolutePath()"
+        "mActualPath = actualPath",
+        "SettingsConstants.KEY_PREF_MAP_PATH, actualPath.getAbsolutePath()",
+        "commit()",
+        "mTerminalClaimed.set(true)",
+        "mLease.close()"
       ],
       "forbids": [],
-      "sha256": "0a8b013aa36fe09d52837c4ac392ec6f409011c555f0380541e726ceda7aeb60"
+      "sha256": "fa0071d77455692ec4877a291edbd248d49452b58d50e008c988dec84e98014c"
     },
     {
       "id": "WF-MAP-STORAGE-MOVE-FINISH",
       "repository": "root",
       "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
-      "marker": "protected void onPostExecute(Void aVoid)",
+      "marker": "protected void onPostExecute(MoveOutcome outcome)",
       "requires": [
-        "mProgressDialog.dismiss()",
-        "resetMap()"
+        "finish(outcome, false)"
       ],
       "forbids": [],
-      "sha256": "4d30cf444c18e69984525c5ccc78e681f1b508fd821d51b78b1ddded86c7e1d5"
+      "sha256": "ad6bb5238ac9f954204ae1d7a7ee19792d24c4ef3f515aba60fd3e6129bc19dd"
     },
     {
       "id": "WF-MAP-STORAGE-MOVE-MAP",
@@ -1485,6 +1490,298 @@
       ],
       "forbids": [],
       "sha256": "fc91594dbfd89e6938beccb02b377b100b02b32c79fc4e1cf7cab1891d8db5e4"
+    },
+    {
+      "id": "WF-MAP-STORAGE-ADMISSION",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "private static boolean startMapMove(Activity activity, File path, boolean reset,\n                                        SelectMapPathPreference preference)",
+      "requires": [
+        "ProjectOperationCoordinator.tryBegin(activity,",
+        "ProjectOperationCoordinator.Kind.PROJECT_SWITCH",
+        "R.string.project_operation_wait",
+        "destination = activity.getExternalFilesDir(KEY_PREF_MAP)",
+        "task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)",
+        "task.failToStart(failure)"
+      ],
+      "forbids": [],
+      "sha256": "e07226a2846c340251021351f14d951cebd1dfa49544b4bd75fe67fe5c60f75e"
+    },
+    {
+      "id": "WF-MAP-STORAGE-RETIRE-OWNER",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+      "marker": "public synchronized boolean retireMapForStorageMove(MapBase expected)",
+      "requires": [
+        "expected == null || mMap != expected",
+        "mMap.retireSqliteVectorSources()"
+      ],
+      "forbids": [
+        "getMap()"
+      ],
+      "sha256": "a99124d75425d378c27ea572c671c03a73c0cf7e049ab3f2bf023aae2bdf1c66"
+    },
+    {
+      "id": "WF-MAP-STORAGE-OWNER-PREDICATE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+      "marker": "public synchronized boolean canRebindMapAfterStorageMove(MapBase expected, java.io.File actualPath)",
+      "requires": [
+        "storageMoveOwnerMatches(expected, actualPath)"
+      ],
+      "forbids": [
+        "getMap()"
+      ],
+      "sha256": "b76f23602f94d1458ca152a205ee72e8074cd734c3d99d7350d6b17fb082d7b1"
+    },
+    {
+      "id": "WF-MAP-STORAGE-OWNER-MATCH",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+      "marker": "private boolean storageMoveOwnerMatches(MapBase expected, java.io.File actualPath)",
+      "requires": [
+        "mMap != expected",
+        "actualPath.getAbsolutePath().equals(",
+        "SettingsConstants.KEY_PREF_MAP_PATH"
+      ],
+      "forbids": [
+        "getMap()"
+      ],
+      "sha256": "e0a94af28431d8af595b498b38e2bf8318cd07230b03c68267583f70597261f6"
+    },
+    {
+      "id": "WF-MAP-STORAGE-ATOMIC-REBIND",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+      "marker": "public synchronized boolean rebindMapAfterStorageMove(MapBase expected, java.io.File actualPath)",
+      "requires": [
+        "if (!storageMoveOwnerMatches(expected, actualPath)) return false",
+        "resetMap()",
+        "return true"
+      ],
+      "forbids": [],
+      "sha256": "10fbd9e237d51c28bcc7f235f3d1021777b3d33e6cd4c8304e4911a284e8b46c"
+    },
+    {
+      "id": "WF-MAP-STORAGE-TERMINAL",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "private void finish(MoveOutcome outcome, boolean cancelled)",
+      "requires": [
+        "mTerminalClaimed.compareAndSet(false, true)",
+        "canRebindActualMap()",
+        "successful && mReset",
+        "applyResetPreferences(mActivity, outcome.actualPath)",
+        "rebindActualMap()",
+        "deleteLayers(mActivity)",
+        "releaseUiAndLease()"
+      ],
+      "forbids": [],
+      "sha256": "5dcb83ad92eced07d4a08dd7438d3b4a6b3660caa65de1906d43cb8480808f21"
+    },
+    {
+      "id": "WF-MAP-STORAGE-TASK-OWNER",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "private boolean canRebindActualMap()",
+      "requires": [
+        "mApplication.canRebindMapAfterStorageMove(mMap, mActualPath)"
+      ],
+      "forbids": [],
+      "sha256": "739d13ebf90f563055f2e05e042a0cb04008e7a1f8dff947c1728a33ba1c25e5"
+    },
+    {
+      "id": "WF-MAP-STORAGE-REFRESH",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "private void rebindActualMap()",
+      "requires": [
+        "mApplication.rebindMapAfterStorageMove(mMap, mActualPath)",
+        "mActivity.setResult(RESULT_OK)",
+        "mPreference.applyMoveResult(mActualPath.getAbsolutePath())"
+      ],
+      "forbids": [],
+      "sha256": "87893860f8f05a7e65facfab28e48039bc91c677da823a9bc051d7baa7c8e2b2"
+    },
+    {
+      "id": "WF-MAP-STORAGE-CANCEL",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "protected void onCancelled(MoveOutcome outcome)",
+      "requires": [
+        "finish(outcome, true)"
+      ],
+      "forbids": [],
+      "sha256": "2e596d144bc350cd86aca6ed777ff5619611371930c0402545083bd6a8aa5315"
+    },
+    {
+      "id": "WF-MAP-STORAGE-CANCEL-EMPTY",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "protected void onCancelled()",
+      "requires": [
+        "finish(null, true)"
+      ],
+      "forbids": [],
+      "sha256": "7cccb409d952f88af9ea63f08b5550de5efc1b0ccf6d8c78fb2e7bfb3f09b254"
+    },
+    {
+      "id": "WF-MAP-STORAGE-PRE-EXECUTE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "protected void onPreExecute()",
+      "requires": [
+        "ControlHelper.lockScreenOrientation(mActivity)",
+        "mOrientationLocked = true",
+        "mProgressDialog.setCancelable(false)",
+        "mProgressDialog.show()"
+      ],
+      "forbids": [],
+      "sha256": "32943ba0a3642682cd1cf7f9b3aeee50ad0d0f47c50a73f3e8fbc594bd886064"
+    },
+    {
+      "id": "WF-MAP-STORAGE-START-FAILURE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "private void failToStart(Throwable failure)",
+      "requires": [
+        "mTerminalClaimed.compareAndSet(false, true)",
+        "releaseUiAndLease()"
+      ],
+      "forbids": [],
+      "sha256": "20b5a72465a53ffc836ff6764834f4bf19ceeb0e5c8afe4450cf6fe793778e25"
+    },
+    {
+      "id": "WF-MAP-STORAGE-RELEASE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "private void releaseUiAndLease()",
+      "requires": [
+        "mProgressDialog.dismiss()",
+        "if (mOrientationLocked)",
+        "ControlHelper.unlockScreenOrientation(mActivity)",
+        "mLease.close()"
+      ],
+      "forbids": [],
+      "sha256": "744aec1c189d4c9c38489f148defc45545858b392123249ac6a24aba827c5c33"
+    },
+    {
+      "id": "WF-MAP-STORAGE-WIDGET-RESULT",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
+      "marker": "public void applyMoveResult(String actualPath)",
+      "requires": [
+        "setText(actualPath)",
+        "setSummary(actualPath)",
+        "actualPath.startsWith(prefix + File.separator)",
+        "saveStoredCardNameToSettings(storageCardName(root))"
+      ],
+      "forbids": [],
+      "sha256": "fabca726f14d60cb61c9a33e8df91c1626e378310faddc8ce3d3fb02f5ee1f21"
+    },
+    {
+      "id": "WF-MAP-STORAGE-CARD-NAME",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
+      "marker": "private static String storageCardName(File root)",
+      "requires": [
+        "root.getAbsolutePath().split(\"/\")",
+        "parts.length > 2 ? parts[2] : \"\""
+      ],
+      "forbids": [],
+      "sha256": "0b04f41f75ad78a757e54210d80362bd6176953eddf9dbba98ec4f4123294f3d"
+    },
+    {
+      "id": "WF-MAP-STORAGE-CARD-SAVE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
+      "marker": "public void saveStoredCardNameToSettings(final String sdCardName)",
+      "requires": [
+        "KEY_PREF_SD_CARD_NAME, sdCardName",
+        "apply()"
+      ],
+      "forbids": [],
+      "sha256": "e87d88a7d9e60933bafdd10b71af42c3b399a632b4a71b4b5713e14141ed747c"
+    },
+    {
+      "id": "WF-MAP-STORAGE-RESULT-CONSUMER",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+      "marker": "override fun onActivityResult(\n        requestCode: Int,\n        resultCode: Int,\n        data: Intent?)",
+      "requires": [
+        "RELOAD_ACTIVITY_DATA -> if (resultCode == RESULT_OK)",
+        "finish()",
+        "startActivity(intent)"
+      ],
+      "forbids": [],
+      "sha256": "9acc94200817c748f914205976430b69971b69b1b55f98878ef8a43471fdf4b4"
+    },
+    {
+      "id": "WF-SETTINGS-RESET-CONFIRM",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "public static void initializeReset(\n            final Activity activity,\n            final Preference preference)",
+      "requires": [
+        "R.string.reset_settings_title",
+        "setPositiveButton(android.R.string.ok",
+        "resetSettings(activity)"
+      ],
+      "forbids": [],
+      "sha256": "a88358fbdfc9e01932287b8056ded33a991405052679195f453fa5e126431863"
+    },
+    {
+      "id": "WF-SETTINGS-RESET-START",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "protected static void resetSettings(Activity activity)",
+      "requires": [
+        "startMapMove(activity, null, true, null)"
+      ],
+      "forbids": [],
+      "sha256": "3c932cdcd3520d0a8424e3659892a99c48cc720386f7237919792d97854080f3"
+    },
+    {
+      "id": "WF-SETTINGS-RESET-PREFERENCES",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "private static void applyResetPreferences(Activity activity, File actualPath)",
+      "requires": [
+        "editor.remove(SettingsConstantsUI.KEY_PREF_THEME)",
+        "SettingsConstants.KEY_PREF_MAP_PATH, actualPath.getAbsolutePath()",
+        "editor.apply()",
+        "R.xml.preferences_general, true",
+        "R.xml.preferences_map, true",
+        "R.xml.preferences_location, true",
+        "R.xml.preferences_tracks, true"
+      ],
+      "forbids": [],
+      "sha256": "844d92b250db52a02e069ea2d47c6447b4dba0eab4b7a449f73ae30c94484273"
+    },
+    {
+      "id": "WF-SETTINGS-RESET-DELETE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "protected static void deleteLayers(Activity activity)",
+      "requires": [
+        "MainApplication.LAYER_OSM",
+        "MainApplication.LAYER_TRACKS",
+        "layer.delete(false)",
+        "execSQL(\"VACUUM\")"
+      ],
+      "forbids": [],
+      "sha256": "bf2bb5f2c2fa271c4c26524ee7f1a2d4113239a6d335dbb9fe897e5b104b2bb0"
+    },
+    {
+      "id": "WF-SETTINGS-RESET-DISTRICT",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "protected static void resetCollectorDistrict(MainApplication application)",
+      "requires": [
+        "map.clearCollectorDistrictRecursive()",
+        "map.save()"
+      ],
+      "forbids": [],
+      "sha256": "00736661f7455e01fd42a7571008f7d315de91ee488822e4b1601e25d89e656f"
     }
   ],
   "contracts": [
@@ -2991,11 +3288,11 @@
         "menu_settings"
       ],
       "meaning": "Параметр «Путь к картам» выбирает каталог данных текущей application map. Обработчик физически переносит только её referenced layer directories, database files и .ngm; множественное слово «карты» не означает перенос всего Collector registry или shared storage. Это отдельное действие от display-name переименования проекта.",
-      "value_origin": "menu_settings → MainApplication.showSettings(GENERAL) → SettingsActivity/SettingsHeaderFragment(PREFS_MAP) → NGPreferenceActivity default sub-screen → SettingsFragment ACTION_PREFS_MAP → map_path custom preference. Chooser получает ContextCompat.getExternalFilesDirs(context,null); выбранный value=externalFilesPaths[i].absolutePath + /map. BackgroundMoveTask захватывает application.getMap() до запуска и вызывает MapBase.moveTo(value).",
+      "value_origin": "menu_settings → MainApplication.showSettings(GENERAL) → SettingsActivity/SettingsHeaderFragment(PREFS_MAP) → NGPreferenceActivity default sub-screen → SettingsFragment ACTION_PREFS_MAP → map_path custom preference. Chooser получает ContextCompat.getExternalFilesDirs(context,null), value=selectedRoot/map. startMapMove после tryBegin(PROJECT_SWITCH) захватывает application.getMap на caller/UI и передаёт exact map в BackgroundMoveTask. Worker использует captured owner, retire-ит его и вызывает moveTo; direct-field MainApplication predicate и atomic rebind проверяют exact owner/raw actual path под app monitor.",
       "units": "Filesystem directory path в app-specific external storage; mapName/.ngm и Collector UID отдельны. CRS, координат или геометрических единиц у этого значения нет.",
       "updates": [
-        "Текущий выбор storage определяется в onClick по сохранённому active map_path и prefix каждого app external root.",
-        "callChangeListener запускает async move и immediate resetMap; widget setText сохраняет requested path. Worker после move attempt commit-ит фактический mMap.getPath(), затем onPostExecute ещё раз resetMap."
+        "Chooser определяет текущий storage по сохранённому map_path; тот же индекс — no-op. Capture current map и default destination resolver для Reset выполняются после успешного PROJECT_SWITCH admission.",
+        "Listener всегда возвращает false: requested path/card/summary не публикуются chooser до результата. Worker retire-ит exact live map перед moveTo, затем commit-ит фактический path; owned terminal обновляет widget и запрашивает REFRESH."
       ],
       "actions": [
         "Открыть storage chooser и выбрать другую доступную storage root.",
@@ -3004,10 +3301,10 @@
       ],
       "conditions": [
         "Доступность физического переноса зависит от getExternalFilesDirs: нужен другой selectable storage либо unmatched current path; на обычном single-storage/same-index выборе действие не выполняется.",
-        "В просмотренном общем Lisa/Belka source chain нет Collector/local-project или ProjectOperationCoordinator gate для этого control. Header AccountUtil check ограничивает NGW preferences, не MAP. Это наблюдение текущего кода, не требование сохранять отсутствие gate.",
+        "Held DATA_SYNC/LAYER_FILL/SCHEMA_REBUILD либо walk draft запрещает admission до resolver/prefs/reset/render/move/result; UI показывает существующее project_operation_wait без ожидания на main thread. Header AccountUtil check относится к NGW, не к MAP.",
         "Lisa/Belka используют общие main Java/XML declarations; одноимённых variant/qualified XML overrides под app/src не найдено. APK merge и реальные device capabilities не выполнялись."
       ],
-      "saved_state": "MapBase сохраняет исходную карту, перемещает referenced children + layers.db/journal/WAL/SHM и map entry last; при IOException пытается обратный move, затем clear/load. UI и worker отдельно публикуют map_path. Registry/project.json, full-sync clock, recovery/import preferences, retry guards и draft absolute paths не входят в этот move list. Их согласованная migration/invalidation policy остаётся AUDIT-TODO-WORKSPACE-KEY-MIGRATION; новый persistent format или выбранная политика этим контрактом не вводятся.",
+      "saved_state": "MapBase.moveTo переносит referenced children, layers.db/journal/WAL/SHM и map entry last; mPath меняется после всех rename, IOException пытается rollback и может вернуть старый path. Requested≠actual означает target not reached, не atomic recovery. Обычный commit(false) после memory mutation и cancel после retirement допускают guarded rebind actual map и RESULT_OK=REFRESH, без Reset defaults/deletes. Unexpected RuntimeException/Error сохраняет worker propagation/finally lease close; mismatch owner/raw path не заменяет карту. Registry/project.json и независимые journals/clock/draft keys не мигрируются; renderer retirement не является active-reader drain.",
       "source_ids": [
         "WF-MAP-STORAGE-MENU",
         "WF-MAP-STORAGE-SETTINGS-INTENT",
@@ -3026,18 +3323,108 @@
         "WF-MAP-STORAGE-MOVE-WORKER",
         "WF-MAP-STORAGE-MOVE-FINISH",
         "WF-MAP-STORAGE-MOVE-MAP",
-        "WF-MAP-STORAGE-MAP-OWNER"
+        "WF-MAP-STORAGE-MAP-OWNER",
+        "WF-MAP-STORAGE-ADMISSION",
+        "WF-MAP-STORAGE-RETIRE-OWNER",
+        "WF-MAP-STORAGE-OWNER-PREDICATE",
+        "WF-MAP-STORAGE-OWNER-MATCH",
+        "WF-MAP-STORAGE-ATOMIC-REBIND",
+        "WF-MAP-STORAGE-TERMINAL",
+        "WF-MAP-STORAGE-TASK-OWNER",
+        "WF-MAP-STORAGE-REFRESH",
+        "WF-MAP-STORAGE-CANCEL",
+        "WF-MAP-STORAGE-CANCEL-EMPTY",
+        "WF-MAP-STORAGE-PRE-EXECUTE",
+        "WF-MAP-STORAGE-START-FAILURE",
+        "WF-MAP-STORAGE-RELEASE",
+        "WF-MAP-STORAGE-WIDGET-RESULT",
+        "WF-MAP-STORAGE-CARD-NAME",
+        "WF-MAP-STORAGE-CARD-SAVE",
+        "WF-MAP-STORAGE-RESULT-CONSUMER"
       ],
       "expectations": [
         "Oracle: same selected storage index dismisses without async move; different storage derives exactly chosenRoot/map and captures the current application map, а не все registry workspaces.",
         "Oracle для source-only состава: move list содержит только referenced layer paths, существующие database sidecars и текущий map entry; shared catalog/registry не должны объявляться перенесёнными по одному изменению summary.",
         "Независимая будущая state-проверка различает active path B, registry path A, UID, mapName, recovery target и каждый draft owner. Совпавшее display name или toast не доказывают согласованную миграцию.",
-        "Failure acceptance должна отдельно проверить фактический old/new mPath, preference publication и rollback outcome; source presence rollback loop не доказывает atomic move."
+        "Failure acceptance должна отдельно проверить фактический old/new mPath, preference publication и rollback outcome; source presence rollback loop не доказывает atomic move.",
+        "Busy обеих action routes: whole prefs/result/owner unchanged, zero retire/move/reset; admitted listener всё ещё false до worker actual-path publication.",
+        "Lease удерживается до завершения actual UI reset/widget/result; cancellation callback следует после unwind worker; duplicate old terminal не меняет нового owner.",
+        "RESULT_OK связан с RELOAD_ACTIVITY_DATA и перезапуском MainActivity, не с ACK физического move. Failure/cancel после retire восстанавливает view только при exact owner и raw cached path=actual path; чужой/null owner не вызывает getMap factory."
       ],
       "unknowns": [
-        "Runtime NOT_RUN: storage chooser, Android permission/storage capability, asynchronous ordering, failure rollback, lifecycle and APK resource merge не исполнялись.",
-        "Поддерживаемая migration/refusal policy для managed workspace, pending sync/import и form/geometry/walk drafts пока не выбрана; отсутствие миграции само по себе не объявляется багом.",
+        "Native runtime NOT_RUN: storage capability, physical rename/rollback, active renderer read drain, visual/recreation and APK resource merge не принимаются21 техническими JVM-regressions.",
+        "Managed-workspace migration/refusal policy и непредвиденные before-cache exception/restart исходы отдельно UNKNOWN; scoped lease fix не выбирает судьбу registry/journals/drafts.",
         "Source risk: успешный A→B move не переписывает registry A; trusted inventory dedup по path может получить две цели одного UID, registry activation публикует A. Адресный actual-body/state witness ещё требуется; потери данных не воспроизведены."
+      ]
+    },
+    {
+      "id": "UI-SETTINGS-RESET-WORKSPACE",
+      "group": "project",
+      "title": "Сброс настроек: исключительное владение и отложенная очистка карты",
+      "surface": "Настройки → Общие → Preference key reset_settings → confirmation positive button",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_settings"
+      ],
+      "meaning": "Сброс — не только смена UI preferences: после принятого переноса к default destination существующая feature очищает district и удаляет layers кроме OSM/tracks, затем инициализирует base layers. Эти старые разрушительные эффекты не расширены.",
+      "value_origin": "menu_settings → showSettings(GENERAL) → SettingsActivity/SettingsFragment createPreferences(preferences_general.xml) → reset_settings → initializeReset confirmation → resetSettings → startMapMove(reset=true). Default app map directory resolver вызывается после lease; actual-path worker commit предшествует applyResetPreferences и UI cleanup.",
+      "units": "Filesystem directory path в app-specific external storage; mapName/.ngm и Collector UID отдельны. CRS, координат или геометрических единиц у этого значения нет.",
+      "updates": [
+        "Busy admission оставляет whole prefs/map/result/owner без изменений; positive button сам не меняет настройки.",
+        "После нормального target/path persistence terminal применяет прежние remove/default XML правила к actual path, resetMap, district/init/delete/district/init и RESULT_OK=REFRESH под lease.",
+        "Failed target/commit или cancellation после retirement допускают actual-map refresh только при exact owner/raw actual path; иначе rebind отвергается. Defaults/delete/init не исполняются."
+      ],
+      "actions": [
+        "Подтвердить reset_settings после просмотра предупреждения либо отменить диалог.",
+        "Повторить только после завершения существующей sync/fill/schema/walk работы; отказ не отменяет чужого owner."
+      ],
+      "conditions": [
+        "Общий Lisa/Belka main XML; reset_settings — Preference key, не android:id.",
+        "Публичный PROJECT_SWITCH mutation lease атомарно исключает coordinated owners и walk draft; no isBusy-only check/use gap.",
+        "Task terminal claim, UI cleanup и exact lease release однократны; main-thread join/ожидание worker и новый synchronous path commit не добавлены."
+      ],
+      "saved_state": "До admission ни один mutation effect не исполняется. После admission worker может переместить owned files и публикует actual map_path; остальные Reset preferences/defaults и прежнее удаление отложены до нормального target/path completion. Arbitrary workspace key migration и atomic rollback не добавлены. RESULT_OK просит rebind, поэтому допустим и после failed/cancelled retired move при exact owner/raw actual path, без Reset разрушительной части.",
+      "source_ids": [
+        "WF-MAP-STORAGE-MENU",
+        "WF-MAP-STORAGE-SETTINGS-INTENT",
+        "WF-MAP-STORAGE-MAP-PREFS",
+        "WF-MAP-STORAGE-ADMISSION",
+        "WF-MAP-STORAGE-RETIRE-OWNER",
+        "WF-MAP-STORAGE-OWNER-PREDICATE",
+        "WF-MAP-STORAGE-OWNER-MATCH",
+        "WF-MAP-STORAGE-ATOMIC-REBIND",
+        "WF-MAP-STORAGE-TERMINAL",
+        "WF-MAP-STORAGE-TASK-OWNER",
+        "WF-MAP-STORAGE-REFRESH",
+        "WF-MAP-STORAGE-CANCEL",
+        "WF-MAP-STORAGE-CANCEL-EMPTY",
+        "WF-MAP-STORAGE-PRE-EXECUTE",
+        "WF-MAP-STORAGE-START-FAILURE",
+        "WF-MAP-STORAGE-RELEASE",
+        "WF-MAP-STORAGE-WIDGET-RESULT",
+        "WF-MAP-STORAGE-CARD-NAME",
+        "WF-MAP-STORAGE-CARD-SAVE",
+        "WF-MAP-STORAGE-RESULT-CONSUMER",
+        "WF-SETTINGS-RESET-CONFIRM",
+        "WF-SETTINGS-RESET-START",
+        "WF-SETTINGS-RESET-PREFERENCES",
+        "WF-SETTINGS-RESET-DELETE",
+        "WF-SETTINGS-RESET-DISTRICT",
+        "WF-MAP-STORAGE-MOVE-WORKER",
+        "WF-MAP-STORAGE-MOVE-FINISH"
+      ],
+      "expectations": [
+        "Hold real DATA_SYNC/fill/schema owner: actual positive callback не вызывает prefs.edit/default destination resolver/reset/delete/result; operation count/kind/workspace сохраняются и исходный owner не отменяется.",
+        "Idle actual Reset: prefs и destructive callbacks не меняются во время held worker; после completion прежние effects исполняются один раз под owner.",
+        "Target-not-reached, false-after-cache и started cancellation: actual path/UI refresh отдельно от defaults/delete, foreign/null owner не создаёт map.",
+        "Pre-lock window failure не unlock-ит неприсвоенную orientation; rejection/duplicate terminal освобождает только свою lease."
+      ],
+      "unknowns": [
+        "21 Robolectric/JVM cases — technical source verification, native Reset/data deletion/storage/renderer not executed.",
+        "Renderer drain, partial file rollback, registry/journal/draft migration и restart durability остаются owner TODO; этот контракт не сертифицирует destructive native acceptance."
       ]
     }
   ],
@@ -3362,6 +3749,19 @@
       "maplib": "f61ba7839cf9e44b08eefa98d72d83966d1c3c3d",
       "maplibui": "e66b9859ffc86114aaa7afac0e57942f5ce89925",
       "basis": "Merged product source; task changes documentation and source-only checks, not product code."
+    },
+    "workspace_move_review": {
+      "reviewed_at": "2026-10-29",
+      "basis": "Owned frozen app V4 source and21 actual-body JVM cases; native runtime NOT_RUN. Initial source_context above remains historical.",
+      "clock_delivery": "WF-SYNC-CLOCK-STORE remains original F61 hash/requirements; own working maplib clock drift is pending library Merge Commit then app pointer and semantic pin review. No alternate fingerprints.",
+      "source_sha256": {
+        "app/src/main/java/com/nextgis/mobile/MainApplication.java": "80608577888f59e9719716f0e5f2d3579ff0836c708af4541e4fe112918d4340",
+        "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java": "4be0682b74b7166462ded5e01ad155ec584536ad326cf21f787ed9eb792fe4ec",
+        "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java": "cbc12abd7be89cbfbd29d54701d641c78ee29ab98891825934d76f556cd00820",
+        "app/src/main/res/values/strings.xml": "13d137f8f6654501991df5598521c7709dbe764458cbaf620d1e34a481eb3690",
+        "app/src/main/res/values-ru/strings.xml": "f2c1cf08be0aff18257ee6d1e343121ff275dcade9b3f232558853c1e753dd7d",
+        "app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java": "0320e557b2fa0a5bb485cb8affb7d33467200406b1a0dc7f6f653390f6bb9fb1"
+      }
     }
   },
   "non_method_evidence": [
@@ -3398,13 +3798,14 @@
     {
       "repository": "root",
       "path": "app/src/main/res/xml/preferences_map.xml",
-      "purpose": "Reviewed XML defaults and keys for coordinates/precision/units/status/location/compass/ruler/zoom; deployed overrides and old preferences remain separate. map_path has android:key, no resource android:id; custom SelectMapPathPreference binding and restore_layers are independent controls.",
+      "purpose": "Reviewed XML defaults and keys for coordinates/precision/units/status/location/compass/ruler/zoom; deployed overrides and old preferences remain separate. map_path has android:key, no resource android:id; custom SelectMapPathPreference binding and restore_layers are independent controls. Reset default XML is applied only after owned completion.",
       "contract_ids": [
         "UI-MAP-STATUS-COORDINATES",
         "UI-MAP-SCALE-RULER",
         "UI-MAP-ZOOM",
         "UI-MAP-COMPASS",
-        "UI-SETTINGS-MAP-STORAGE-MOVE"
+        "UI-SETTINGS-MAP-STORAGE-MOVE",
+        "UI-SETTINGS-RESET-WORKSPACE"
       ],
       "sha256": "dc8ef3537bbe3e1679b456c30d4ad0f4f98461944a1582121d2304d1af0f7536"
     },
@@ -3422,22 +3823,24 @@
     {
       "repository": "root",
       "path": "app/src/main/res/values/strings.xml",
-      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. Map path labels/summary are presentation, not authority for multi-project move semantics.",
+      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. Map path labels/summary are presentation, not authority for multi-project move semantics. Reviewed one added map_storage_move_failed string; all prior values/order preserved; Reset confirmation and move failure/refresh semantics.",
       "contract_ids": [
         "UI-NAVIGATION-STAKEOUT-TARGET",
-        "UI-SETTINGS-MAP-STORAGE-MOVE"
+        "UI-SETTINGS-MAP-STORAGE-MOVE",
+        "UI-SETTINGS-RESET-WORKSPACE"
       ],
-      "sha256": "1c11043deacad8b862413ea9a8d800117a49d0d9579413b085f25f5b715ef8fc"
+      "sha256": "5664a44ba6e93a254e769aa4172280de18a4509fdc459cb8e0d976007f615603"
     },
     {
       "repository": "root",
       "path": "app/src/main/res/values-ru/strings.xml",
-      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. RU «Путь к картам» label remains plural while actual producer moves one map.",
+      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. RU «Путь к картам» label remains plural while actual producer moves one map. Reviewed one added map_storage_move_failed string; all prior values/order preserved; Reset confirmation and move failure/refresh semantics.",
       "contract_ids": [
         "UI-NAVIGATION-STAKEOUT-TARGET",
-        "UI-SETTINGS-MAP-STORAGE-MOVE"
+        "UI-SETTINGS-MAP-STORAGE-MOVE",
+        "UI-SETTINGS-RESET-WORKSPACE"
       ],
-      "sha256": "1c3e10073a674b39e9c746f6894a9883283facf615fa89432297c7015800d62f"
+      "sha256": "11db8bb6fe29841f9692b614ea53e57d4979c473cf3348585ad0c3c772138913"
     },
     {
       "repository": "root",
@@ -3492,6 +3895,15 @@
         "UI-MANUAL-SYNC"
       ],
       "sha256": "96fd7f65bc72560451030deace99f8e3fa65a9d4b0b441bd59809b64a1e9286d"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/xml/preferences_general.xml",
+      "purpose": "Reviewed reset_settings Preference key/title and common general-settings binding; no invented Android widget ID.",
+      "contract_ids": [
+        "UI-SETTINGS-RESET-WORKSPACE"
+      ],
+      "sha256": "1cb80f9294eefbdf9348d15ba042195d3f9dc82c6668f908e5d8ef01c859d42b"
     }
   ]
 }

@@ -266,6 +266,31 @@ public class MainApplication extends GISApplication
         return getMap();
     }
 
+    /** Retire only the captured live map; this does not wait for blocking renderer IO. */
+    public synchronized boolean retireMapForStorageMove(MapBase expected) {
+        if (expected == null || mMap != expected) return false;
+        mMap.retireSqliteVectorSources();
+        return true;
+    }
+
+    public synchronized boolean canRebindMapAfterStorageMove(MapBase expected, java.io.File actualPath) {
+        return storageMoveOwnerMatches(expected, actualPath);
+    }
+
+    /** Check and replacement share the same monitor as resetMap/closeMapObj. */
+    public synchronized boolean rebindMapAfterStorageMove(MapBase expected, java.io.File actualPath) {
+        if (!storageMoveOwnerMatches(expected, actualPath)) return false;
+        resetMap();
+        return true;
+    }
+
+    private boolean storageMoveOwnerMatches(MapBase expected, java.io.File actualPath) {
+        if (expected == null || actualPath == null || mMap != expected) return false;
+        return actualPath.getAbsolutePath().equals(
+                android.preference.PreferenceManager.getDefaultSharedPreferences(this)
+                        .getString(com.nextgis.maplib.util.SettingsConstants.KEY_PREF_MAP_PATH, ""));
+    }
+
     @Override
     public void startCreateNGWLayerSync(String lpath) {
         OfflineSyncIntentService.startActionFoo(this, lpath);

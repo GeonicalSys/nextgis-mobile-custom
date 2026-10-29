@@ -406,6 +406,47 @@ owning project со всеми account/children и пустой готовой �
 строки коррекции в окне выноса нет; compass guidance/пороги сохраняются.
 Обе панели используют адаптивное вписывание и независимые видимые действия.
 
+## Перенос карты и сброс настроек — MOB-02, 29 октября2026
+
+`SettingsFragment` использует существующий `ProjectOperationCoordinator.PROJECT_SWITCH`
+до любых изменений storage/reset: даже вычисление Android default directory может
+создать папку. Занятый sync/fill/schema owner или walk оставляет прежнее состояние;
+отказ не отменяет чужую операцию. Успешно взятый lease удерживается до завершения
+worker и его UI callback, включая обычный отказ, отмену и освобождение ресурсов.
+Это исключительное владение, а не ожидание после `ContentResolver.cancelSync`.
+
+Preference change listener возвращает false также при принятой задаче: выбранные path/card
+не сохраняются до результата. Worker проверяет exact captured map, запрещает новые
+renderer requests и перемещает одну карту; затем сохраняет её actual path.
+`MainApplication` проверяет поле mMap напрямую, без побочного создания карты через
+getMap. Проверка cached path/owner и rebind выполняются под одним application
+monitor. Card label берётся от фактического storage root, прежний label сохраняется
+при отсутствии соответствия. Сохранённые preference keys и публичные void-входы
+moveMap/resetSettings прежние.
+
+Reset defaults, district/base layer setup и существующее удаление слоёв отложены
+до окончания перемещения в запрошенный каталог и успешного commit actual path.
+Обычный отказ или отмена после retirement перепривязывает UI только при совпадении
+actual path, cached prefs и exact owner; Reset defaults/delete при этом не запускаются.
+RESULT_OK для request777 означает перезагрузку Activity/drawable, а не успех переноса.
+MapFragment также имеет identity-based onResume fallback, но тот же retired object
+не восстанавливается этим сравнением. Неожиданные worker Runtime/Error сохраняют
+прежнее распространение с завершением собственного lease, без mutating post callback.
+
+На прежнем коде6 actual-body Robolectric-проверок дали5 FAIL и1 штатный PASS;
+окончательные JVM-проверки и source compile фиксируются в
+[карточке](../../update-reports/entries/android-20261029-storage-move-ownership.md).
+Тестовые map/renderer/database probes не запускают GIS/SQLite engine или business
+данные. AGP unit-resource archive нужен для Robolectric; ordinary APK, устройство,
+Related/Full и реальный перенос не принимались.
+
+Retirement — nonblocking cancellation/publication fence, не renderer DB drain.
+`MapBase.moveTo` использует renameTo и может попытаться частично откатить файлы;
+успех файловой миграции, durable prefs после false/restart и перенос registry,
+очередей/черновиков отдельно не приняты. AOSP commit false следует за изменением
+cache, поэтому actual cached path и durable path нельзя отождествлять. Эта доработка
+не заменяет библиотечный clock fix и его отдельную Git-доставку.
+
 ## Проверка жизненного цикла вкладок
 
 CascadingFormsTest переключает вкладку при уже сохранённом FragmentManager state,

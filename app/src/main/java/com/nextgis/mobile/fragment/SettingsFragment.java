@@ -64,10 +64,13 @@ import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.util.FileUtil;
 import com.nextgis.maplib.gnss.GnssInputPrefs;
 import com.nextgis.maplib.util.SettingsConstants;
+import com.nextgis.maplib.util.Constants;
+import com.hypertrack.hyperlog.HyperLog;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.fragment.NGPreferenceSettingsFragment;
 import com.nextgis.maplibui.util.ControlHelper;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.BuildConfig;
 import com.nextgis.mobile.MainApplication;
 import com.nextgis.mobile.R;
@@ -362,25 +365,6 @@ public class SettingsFragment
                                         {
 
                                             resetSettings(activity);
-
-                                            ((GISApplication) MapBase.getInstance().getContext().getApplicationContext())
-                                                    .resetMap();
-                                            MainApplication application =
-                                                    (MainApplication) activity.getApplication();
-                                            resetCollectorDistrict(application);
-                                            application.initBaseLayers();
-                                            try {
-                                                deleteLayers(activity);
-                                            } catch (Exception ex) {
-                                                //Log.e("f", "g");
-                                            }
-                                            resetCollectorDistrict(application);
-                                            application.initBaseLayers();
-                                            // RESULT_OK restarts MainActivity so MapFragment binds to the new MapDrawable
-                                            // from resetMap(). RESULT_CANCELED left the old MapView on a stale drawable
-                                            // while the app used a new instance — layers from import did not show until
-                                            // process restart.
-                                            activity.setResult(RESULT_OK);
                                         }
                                     })
                             .show();
@@ -632,11 +616,9 @@ public class SettingsFragment
                         return false;
                     }
                     File newPath = new File((String) o);
-                    moveMap(parent, newPath);
-                    ((GISApplication)MapBase.getInstance().getContext().getApplicationContext())
-                            .resetMap();
-                    parent.setResult(RESULT_OK);
-                    return true;
+                    startMapMove(parent, newPath, false, mapPath);
+                    // The chooser must not persist a proposed path before the worker's result.
+                    return false;
                 }
             });
         }
@@ -965,6 +947,11 @@ public class SettingsFragment
 
     protected static void resetSettings(Activity activity)
     {
+        startMapMove(activity, null, true, null);
+    }
+
+    private static void applyResetPreferences(Activity activity, File actualPath)
+    {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove(SettingsConstantsUI.KEY_PREF_THEME);
@@ -1006,12 +993,7 @@ public class SettingsFragment
         editor.remove(KEY_PREF_SD_CARD_NAME);
         editor.remove(SettingsConstants.KEY_PREF_VERBOSE_LOG);
 
-        File defaultPath = activity.getExternalFilesDir(KEY_PREF_MAP);
-        if (defaultPath == null) {
-            defaultPath = new File(activity.getFilesDir(), KEY_PREF_MAP);
-        }
-
-        editor.putString(SettingsConstants.KEY_PREF_MAP_PATH, defaultPath.getPath());
+        editor.putString(SettingsConstants.KEY_PREF_MAP_PATH, actualPath.getAbsolutePath());
         editor.apply();
 
         PreferenceManager.setDefaultValues(activity, R.xml.preferences_general, true);
@@ -1019,7 +1001,6 @@ public class SettingsFragment
         PreferenceManager.setDefaultValues(activity, R.xml.preferences_location, true);
         PreferenceManager.setDefaultValues(activity, R.xml.preferences_tracks, true);
 
-        moveMap(activity, defaultPath);
     }
 
 
@@ -1051,52 +1032,141 @@ public class SettingsFragment
     public static void moveMap(
             Activity activity,
             File path) {
-        MainApplication application = (MainApplication) activity.getApplication();
-        if (null == application) {
-            return;
-        }
-
-        ContentResolver.cancelSync(null, application.getAuthority());
-
-        BackgroundMoveTask moveTask = new BackgroundMoveTask(activity, application.getMap(), path);
-        moveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        startMapMove(activity, path, false, null);
     }
 
+    private static boolean startMapMove(Activity activity, File path, boolean reset,
+                                        SelectMapPathPreference preference) {
+        if (activity == null || activity.isFinishing() || activity.isDestroyed()) return false;
+        ProjectOperationCoordinator.Lease lease = null;
+        BackgroundMoveTask task = null;
+        try {
+            MainApplication application = (MainApplication) activity.getApplication();
+            lease = ProjectOperationCoordinator.tryBegin(activity,
+                    ProjectOperationCoordinator.Kind.PROJECT_SWITCH);
+            if (lease == null) {
+                Toast.makeText(activity, R.string.project_operation_wait, Toast.LENGTH_LONG).show();
+                return false;
+            }
+            MapBase map = application.getMap();
+            if (map == null) throw new IllegalStateException("Map move owner is absent");
+            File destination = path;
+            if (reset) {
+                destination = activity.getExternalFilesDir(KEY_PREF_MAP);
+                if (destination == null) destination = new File(activity.getFilesDir(), KEY_PREF_MAP);
+            }
+            if (destination == null) throw new IllegalStateException("Map move path is absent");
+            task = new BackgroundMoveTask(activity, application, map, destination, lease, reset, preference);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            return true;
+        } catch (RuntimeException failure) {
+            if (task != null) task.failToStart(failure);
+            else {
+                try { reportMoveFailure(activity, failure); }
+                finally { if (lease != null) lease.close(); }
+            }
+            return false;
+        } catch (Error fatal) {
+            if (task != null) task.failToStart(fatal);
+            else if (lease != null) {
+                try { lease.close(); }
+                catch (Throwable cleanup) { fatal.addSuppressed(cleanup); }
+            }
+            throw fatal;
+        }
+    }
+
+    private static void reportMoveFailure(Activity activity, Throwable failure) {
+        HyperLog.w(Constants.TAG, "Map storage move could not complete", failure);
+        if (!activity.isFinishing() && !activity.isDestroyed())
+            Toast.makeText(activity, R.string.map_storage_move_failed, Toast.LENGTH_LONG).show();
+    }
+
+    protected static final class MoveOutcome {
+        final File actualPath;
+        final RuntimeException failure;
+        MoveOutcome(File actualPath, RuntimeException failure) {
+            this.actualPath = actualPath;
+            this.failure = failure;
+        }
+    }
 
     protected static class BackgroundMoveTask
-            extends AsyncTask<Void, Void, Void>
+            extends AsyncTask<Void, Void, MoveOutcome>
     {
         private ProgressDialog mProgressDialog;
-        private Activity       mActivity;
-        private MapBase        mMap;
-        private File           mPath;
+        private final Activity mActivity;
+        private final MainApplication mApplication;
+        private final MapBase mMap;
+        private final File mPath;
+        private final ProjectOperationCoordinator.Lease mLease;
+        private final boolean mReset;
+        private final SelectMapPathPreference mPreference;
+        private final java.util.concurrent.atomic.AtomicBoolean mTerminalClaimed =
+                new java.util.concurrent.atomic.AtomicBoolean();
+        private boolean mOrientationLocked;
+        private volatile boolean mRetired;
+        private volatile File mActualPath;
 
 
         BackgroundMoveTask(
                 Activity activity,
+                MainApplication application,
                 MapBase map,
-                File path){
+                File path,
+                ProjectOperationCoordinator.Lease lease,
+                boolean reset,
+                SelectMapPathPreference preference){
             mActivity = activity;
+            mApplication = application;
             mMap = map;
             mPath = path;
+            mLease = lease;
+            mReset = reset;
+            mPreference = preference;
         }
 
 
         @Override
-        protected Void doInBackground(Void... voids)
+        protected MoveOutcome doInBackground(Void... voids)
         {
-            mMap.moveTo(mPath);
-            PreferenceManager.getDefaultSharedPreferences(mActivity).edit()
-                    .putString(SettingsConstants.KEY_PREF_MAP_PATH, mMap.getPath().getAbsolutePath()).commit();
-            return null;
+            Throwable escaped = null;
+            try {
+                if (isCancelled()) return null;
+                if (!mApplication.retireMapForStorageMove(mMap))
+                    return new MoveOutcome(null, new IllegalStateException("Map move owner was replaced"));
+                mRetired = true;
+                mMap.moveTo(mPath);
+                File actualPath = mMap.getPath();
+                if (actualPath == null) throw new IllegalStateException("Map move result has no path");
+                mActualPath = actualPath;
+                boolean committed = PreferenceManager.getDefaultSharedPreferences(mActivity).edit()
+                        .putString(SettingsConstants.KEY_PREF_MAP_PATH, actualPath.getAbsolutePath()).commit();
+                RuntimeException failure = !committed
+                        ? new IllegalStateException("Cannot persist map move result")
+                        : !actualPath.getAbsoluteFile().equals(mPath.getAbsoluteFile())
+                        ? new IllegalStateException("Map did not reach the requested destination") : null;
+                return new MoveOutcome(actualPath, failure);
+            } catch (RuntimeException | Error failure) {
+                // Unexpected before-cache failures have no transactional recovery contract.
+                escaped = failure;
+                throw failure;
+            } finally {
+                if (escaped != null) {
+                    // AsyncTask will still post cancellation after the worker unwinds.
+                    mTerminalClaimed.set(true);
+                    try { mLease.close(); }
+                    catch (Throwable cleanup) { escaped.addSuppressed(cleanup); }
+                }
+            }
         }
 
 
         @Override
         protected void onPreExecute()
         {
-            //not good solution but rare used so let it be
             ControlHelper.lockScreenOrientation(mActivity);
+            mOrientationLocked = true;
             mProgressDialog = new ProgressDialog(mActivity);
             mProgressDialog.setTitle(R.string.moving);
             mProgressDialog.setMessage(mActivity.getString(R.string.warning_map_moving));
@@ -1108,13 +1178,86 @@ public class SettingsFragment
 
 
         @Override
-        protected void onPostExecute(Void aVoid)
+        protected void onPostExecute(MoveOutcome outcome)
         {
-            mProgressDialog.dismiss();
-            ControlHelper.unlockScreenOrientation(mActivity);
-            mMap=null;
-            ((GISApplication)MapBase.getInstance().getContext().getApplicationContext())
-                    .resetMap();
+            finish(outcome, false);
+        }
+
+        @Override protected void onCancelled(MoveOutcome outcome) { finish(outcome, true); }
+        @Override protected void onCancelled() { finish(null, true); }
+
+        private void finish(MoveOutcome outcome, boolean cancelled) {
+            if (!mTerminalClaimed.compareAndSet(false, true)) return;
+            boolean rebindAttempted = false;
+            try {
+                if (!mRetired) {
+                    if (!cancelled) reportMoveFailure(mActivity, outcome == null ? null : outcome.failure);
+                    return;
+                }
+                boolean successful = !cancelled && outcome != null && outcome.failure == null;
+                if (!canRebindActualMap()) {
+                    reportMoveFailure(mActivity, new IllegalStateException("Map move owner/path no longer matches"));
+                    return;
+                }
+                if (successful && mReset) {
+                    applyResetPreferences(mActivity, outcome.actualPath);
+                }
+                rebindAttempted = true;
+                rebindActualMap();
+                if (successful && mReset) {
+                    resetCollectorDistrict(mApplication);
+                    mApplication.initBaseLayers();
+                    deleteLayers(mActivity);
+                    resetCollectorDistrict(mApplication);
+                    mApplication.initBaseLayers();
+                }
+                if (!successful && !cancelled)
+                    reportMoveFailure(mActivity, outcome == null ? null : outcome.failure);
+            } catch (RuntimeException failure) {
+                reportMoveFailure(mActivity, failure);
+                // A reset-default callback can fail before the retired renderer was replaced.
+                if (!rebindAttempted && canRebindActualMap()) {
+                    rebindAttempted = true;
+                    rebindActualMap();
+                }
+            } finally {
+                releaseUiAndLease();
+            }
+        }
+
+        private boolean canRebindActualMap() {
+            return mApplication.canRebindMapAfterStorageMove(mMap, mActualPath);
+        }
+
+        private void rebindActualMap() {
+            if (!mApplication.rebindMapAfterStorageMove(mMap, mActualPath))
+                throw new IllegalStateException("Map move owner/path changed before refresh");
+            // Request777 means reload the Activity's drawable, not durable move success.
+            mActivity.setResult(RESULT_OK);
+            if (mPreference != null) mPreference.applyMoveResult(mActualPath.getAbsolutePath());
+        }
+
+        private void failToStart(Throwable failure) {
+            if (!mTerminalClaimed.compareAndSet(false, true)) return;
+            if (failure instanceof Error) {
+                try { releaseUiAndLease(); }
+                catch (Throwable cleanup) { failure.addSuppressed(cleanup); }
+            } else {
+                try { reportMoveFailure(mActivity, failure); }
+                finally { releaseUiAndLease(); }
+            }
+        }
+
+        private void releaseUiAndLease() {
+            try {
+                if (mProgressDialog != null) mProgressDialog.dismiss();
+            } finally {
+                try {
+                    if (mOrientationLocked) ControlHelper.unlockScreenOrientation(mActivity);
+                } finally {
+                    mLease.close();
+                }
+            }
         }
     }
 
