@@ -1139,6 +1139,352 @@
       ],
       "forbids": [],
       "sha256": "f89aa11076121a02b2e18292888f303b3549655de9f161c43e1804e74c630a5b"
+    },
+    {
+      "id": "WF-MAP-STORAGE-MENU",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+      "marker": "override fun onOptionsItemSelected(item: MenuItem): Boolean",
+      "requires": [
+        "R.id.menu_settings ->",
+        "SettingsConstantsUI.ACTION_PREFS_GENERAL",
+        "app.showSettings("
+      ],
+      "forbids": [],
+      "sha256": "cde7b032024f19e8ebaac2e7c641838a30e43f3a3fb66897fcac701200afd0cd"
+    },
+    {
+      "id": "WF-MAP-STORAGE-SETTINGS-INTENT",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+      "marker": "public void showSettings(String settings, int code, final Activity activity)",
+      "requires": [
+        "new Intent(this, SettingsActivity.class)",
+        "intent.setAction(settings)"
+      ],
+      "forbids": [],
+      "sha256": "b7f086ff02a09ca418891f3ad0182184ae60be545052587f1d0b525a3ebaf01d"
+    },
+    {
+      "id": "WF-MAP-STORAGE-HEADER-FACTORY",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java",
+      "marker": "protected NGPreferenceHeaderFragment getNewPreferenceHeaderFragment()",
+      "requires": [
+        "new SettingsHeaderFragment()"
+      ],
+      "forbids": [],
+      "sha256": "70a2f3c294167a8d663cb0da463a8bd4778f304f3b068a01b9db6b5bfa8c0bbd"
+    },
+    {
+      "id": "WF-MAP-STORAGE-HEADERS",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsHeaderFragment.java",
+      "marker": "protected void createPreferences(PreferenceScreen screen)",
+      "requires": [
+        "addPreferencesFromResource(R.xml.preference_headers)",
+        "SettingsConstantsUI.ACTION_PREFS_NGW"
+      ],
+      "forbids": [],
+      "sha256": "5da72fe760a953ecb8f1993d1dcc963fdf45741511cf0d79b18fade3f5d9c5f3"
+    },
+    {
+      "id": "WF-MAP-STORAGE-SUBSCREEN",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java",
+      "marker": "protected void onStartSubScreen(PreferenceScreen preferenceScreen)",
+      "requires": [
+        "super.onStartSubScreen(preferenceScreen)",
+        "new Intent(this, ProjectSettingsActivity.class)"
+      ],
+      "forbids": [],
+      "sha256": "f4a9cff03ffc737d47864af0d41d640a19fe3e351826a8ced077eb5739458675"
+    },
+    {
+      "id": "WF-MAP-STORAGE-SUBSCREEN-BASE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/NGPreferenceActivity.java",
+      "marker": "protected void onStartSubScreen(PreferenceScreen preferenceScreen)",
+      "requires": [
+        "PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey()",
+        "replaceSettingsFragment(args)"
+      ],
+      "forbids": [],
+      "sha256": "fdd1c8fdc704d9a3f3ffbf620edcbafd747ed531d78113d30a74052201948878"
+    },
+    {
+      "id": "WF-MAP-STORAGE-FRAGMENT-BASE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/NGPreferenceActivity.java",
+      "marker": "public void replaceSettingsFragment(Bundle args)",
+      "requires": [
+        "subScreenKey = args.getString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT)",
+        "fragment = getNewPreferenceSettingsFragment(subScreenKey)",
+        "fragment.setArguments(args)"
+      ],
+      "forbids": [],
+      "sha256": "b7ef07ae7badaaa4452785a0c8a18f9b2c2d57342318e6bc540cf9220a9f7f5b"
+    },
+    {
+      "id": "WF-MAP-STORAGE-FRAGMENT-FACTORY",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java",
+      "marker": "protected NGPreferenceSettingsFragment getNewPreferenceSettingsFragment(String subScreenKey)",
+      "requires": [
+        "default:",
+        "fragment = new SettingsFragment()"
+      ],
+      "forbids": [],
+      "sha256": "d8d10af45e696f5dbc91f1a22fdf1526330976b1aa1aa24178f8bf5ee2a98aaa"
+    },
+    {
+      "id": "WF-MAP-STORAGE-ACTION-ROOT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/fragment/NGPreferenceSettingsFragment.java",
+      "marker": "public void onCreatePreferences(\n            Bundle savedInstanceState,\n            String rootKey)",
+      "requires": [
+        "mAction = rootKey",
+        "super.onCreatePreferences(savedInstanceState, rootKey)"
+      ],
+      "forbids": [],
+      "sha256": "575350b02ebc04f3d36ae9f0c5dc14e68ab0415ff793e230697cebf0c827741b"
+    },
+    {
+      "id": "WF-MAP-STORAGE-MAP-PREFS",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "protected void createPreferences(PreferenceScreen screen)",
+      "requires": [
+        "case SettingsConstantsUI.ACTION_PREFS_MAP:",
+        "setPreferencesFromResource(R.xml.preferences_map, null)",
+        "SettingsConstants.KEY_PREF_MAP_PATH",
+        "initializeMapPath(getActivity(), mapPath)"
+      ],
+      "forbids": [],
+      "sha256": "0c84fad78b1bd382e51bd13caf041c804e1995a0e2b280f286235ec3153e7ce0"
+    },
+    {
+      "id": "WF-MAP-STORAGE-STORAGE-CHOOSER",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
+      "marker": "protected void onClick()",
+      "requires": [
+        "ContextCompat.getExternalFilesDirs(context, null)",
+        "if(i == selectedItemFinal)",
+        "externalFilesPaths.get(i).getAbsolutePath()+ \"/map\"",
+        "callChangeListener(finalValue)",
+        "setText(finalValue)"
+      ],
+      "forbids": [],
+      "sha256": "e1ef471f81e8e6047c1a03b9a7652d50beaf00f6f97533f230dd364886cf2233"
+    },
+    {
+      "id": "WF-MAP-STORAGE-PERSIST-TEXT",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
+      "marker": "public void setText(String text)",
+      "requires": [
+        "mText = text",
+        "persistString(text)"
+      ],
+      "forbids": [],
+      "sha256": "fe84147d1eccf4d5c2e86afd41dabba629f7d150c6d0ba4c9b3270160ece1f00"
+    },
+    {
+      "id": "WF-MAP-STORAGE-CHANGE-LISTENER",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "public static void initializeMapPath(\n            final Context context,\n            final SelectMapPathPreference mapPath)",
+      "requires": [
+        "File newPath = new File((String) o)",
+        "moveMap(parent, newPath)",
+        "resetMap()",
+        "return true"
+      ],
+      "forbids": [],
+      "sha256": "afe259a13fc7b69fad1f57d643d2161c5a1758663fb8fddbb5f7f6f91a8a3749"
+    },
+    {
+      "id": "WF-MAP-STORAGE-MOVE-START",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "public static void moveMap(\n            Activity activity,\n            File path)",
+      "requires": [
+        "ContentResolver.cancelSync(null, application.getAuthority())",
+        "new BackgroundMoveTask(activity, application.getMap(), path)",
+        "AsyncTask.THREAD_POOL_EXECUTOR"
+      ],
+      "forbids": [],
+      "sha256": "ebfac87da1eda877f2e2fbcf1372c8d750ced5d42a23f65db10feba41492b1b6"
+    },
+    {
+      "id": "WF-MAP-STORAGE-MOVE-WORKER",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "protected Void doInBackground(Void... voids)",
+      "requires": [
+        "mMap.moveTo(mPath)",
+        "SettingsConstants.KEY_PREF_MAP_PATH, mMap.getPath().getAbsolutePath()"
+      ],
+      "forbids": [],
+      "sha256": "0a8b013aa36fe09d52837c4ac392ec6f409011c555f0380541e726ceda7aeb60"
+    },
+    {
+      "id": "WF-MAP-STORAGE-MOVE-FINISH",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+      "marker": "protected void onPostExecute(Void aVoid)",
+      "requires": [
+        "mProgressDialog.dismiss()",
+        "resetMap()"
+      ],
+      "forbids": [],
+      "sha256": "4d30cf444c18e69984525c5ccc78e681f1b508fd821d51b78b1ddded86c7e1d5"
+    },
+    {
+      "id": "WF-MAP-STORAGE-MOVE-MAP",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/MapBase.java",
+      "marker": "public void moveTo(File newPath)",
+      "requires": [
+        "if (mPath.equals(newPath))",
+        "if (newPath == null || !save())",
+        "for (com.nextgis.maplib.api.ILayer layer : getLayers()) owned.add(layer.getPath())",
+        "\"layers.db\", \"layers.db-journal\", \"layers.db-wal\", \"layers.db-shm\"",
+        "owned.add(getFileName())",
+        "if (destination.exists())",
+        "mPath = newPath",
+        "java.util.Collections.reverse(moved)",
+        "clearLayers()",
+        "load()"
+      ],
+      "forbids": [],
+      "sha256": "e404a43599aa678fa9ab50c473986dd5b9342501d9afbdc1438e28ecbf725d99"
+    },
+    {
+      "id": "WF-MAP-STORAGE-MAP-OWNER",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/GISApplication.java",
+      "marker": "public synchronized MapBase getMap()",
+      "requires": [
+        "SyncWorkspaceSession.currentMap()",
+        "if (null != mMap)",
+        "SettingsConstants.KEY_PREF_MAP_PATH",
+        "SettingsConstantsUI.KEY_PREF_MAP_NAME",
+        "new MapDrawable(bkBitmap, this, mapFullPath, getLayerFactory())"
+      ],
+      "forbids": [],
+      "sha256": "04248985b022e364ad53ebb900c1b90a6142b015a5d355894a6f4b52aa2d7433"
+    },
+    {
+      "id": "WF-SYNC-WIDGET-BINDING",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "public View onCreateView(\n            LayoutInflater inflater,\n            ViewGroup container,\n            Bundle savedInstanceState)",
+      "requires": [
+        "inflater.inflate(R.layout.fragment_layers, container, false)",
+        "mSyncProgressRing = view.findViewById(R.id.sync_progress_ring)",
+        "mSyncPendingBadge = view.findViewById(R.id.sync_pending_badge)",
+        "mInfoText = view.findViewById(R.id.info)"
+      ],
+      "forbids": [],
+      "sha256": "ba0f4a76d9b38d6b38973c9986e83e96d0f3ab3d42b27429bf202bbbfd2b63f4"
+    },
+    {
+      "id": "WF-SYNC-RING",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "private void refreshSyncProgressRing(boolean start)",
+      "requires": [
+        "mSyncProgressRing.setVisibility(View.GONE)",
+        "mSyncProgressRing.setProgress(0)",
+        "NgwSyncProgress.snapshot()",
+        "mSyncProgressRing.setMax(NgwSyncProgress.SCALE)",
+        "mSyncProgressRing.setProgress(snapshot.determinate ? snapshot.done : 0)"
+      ],
+      "forbids": [],
+      "sha256": "12bdb0174c91dbb3e54dac949af3f88feca1861d6d76843b95740a65f9358b2e"
+    },
+    {
+      "id": "WF-SYNC-ACTIVE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "private boolean isSyncActive()",
+      "requires": [
+        "NGWSyncService.isSyncStarted()",
+        "ProjectOperationCoordinator.isDataSyncActive()"
+      ],
+      "forbids": [],
+      "sha256": "9e66060e0f52670599e5fe9c55b956e9381a22eda5997a87bb2e68030b0be435"
+    },
+    {
+      "id": "WF-SYNC-RECEIVER",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "public void onReceive(\n                Context context,\n                Intent intent)",
+      "requires": [
+        "NgwSyncProgress.SYNC_PROGRESS.equals(intent.getAction())",
+        "refreshSyncProgressRing(isSyncActive())",
+        "intent.hasExtra(SyncAdapter.EXCEPTION)",
+        "updateInfo()",
+        "refreshPendingChangesBadge()"
+      ],
+      "forbids": [],
+      "sha256": "43d064cb96a939392222e68f0f1e2194eaeb1128d48f66722a4b4d625ed1856f"
+    },
+    {
+      "id": "WF-SYNC-CLOCK-FORMAT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/ControlHelper.java",
+      "marker": "public static String getSyncTime(\n            Context context,\n            long timeStamp)",
+      "requires": [
+        "new SimpleDateFormat(\"dd MMM\", Locale.getDefault())",
+        "new SimpleDateFormat(\"HH:mm\", Locale.getDefault())",
+        "context.getString(R.string.last_sync_time)"
+      ],
+      "forbids": [],
+      "sha256": "1102f67516a4133145959194aede976f06b6fe0e58f6b51214d6d25640a3b6d7"
+    },
+    {
+      "id": "WF-SYNC-BADGE-COLLECT",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "private static boolean collectPendingLayers(LayerGroup group, java.util.Set<Integer> result, boolean showPendingTracks)",
+      "requires": [
+        "showPendingTracks && com.nextgis.maplibui.mapui.TrackUploader.hasPending(group.getContext(), (TrackLayer) layer)",
+        "layer instanceof VectorLayer && ((VectorLayer) layer).isChanges()",
+        "result.add(layer.getId())"
+      ],
+      "forbids": [],
+      "sha256": "1deccdcb39647af2eade4b828b98768601cca5d84940926287d8535d6216a3cd"
+    },
+    {
+      "id": "WF-SYNC-PROGRESS-COMPUTE",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java",
+      "marker": "private static Snapshot computeLocked()",
+      "requires": [
+        "double capped = finished ? 1d : raw * (1d - FINISH_RESERVE)",
+        "displayed = Math.max(displayed, capped)",
+        "int done = (int) Math.round(displayed * SCALE)"
+      ],
+      "forbids": [],
+      "sha256": "2bf37f22e2f1836fddfa61c376ea639e4a778afab7e4402557e57b690e6ec86d"
+    },
+    {
+      "id": "WF-SYNC-PROGRESS-FINISH",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java",
+      "marker": "private static void finishSessionLocked()",
+      "requires": [
+        "finished = true",
+        "active = false",
+        "displayed = 1d",
+        "publishLocked(true)",
+        "resetAfterInactiveLocked()"
+      ],
+      "forbids": [],
+      "sha256": "fc91594dbfd89e6938beccb02b377b100b02b32c79fc4e1cf7cab1891d8db5e4"
     }
   ],
   "contracts": [
@@ -2377,14 +2723,17 @@
         "belka"
       ],
       "widgets": [
-        "sync"
+        "sync",
+        "sync_progress_ring"
       ],
-      "meaning": "Короткое нажатие запускает штатный serial service; forced recheck — отдельный режим, не создание второго параллельного обмена.",
-      "value_origin": "Current accounts, preferences offline_sync/ngid_url, forceRecheck → OfflineSyncIntentService; ProjectSyncRunner управляет session completion.",
-      "units": "Нет физических единиц.",
+      "meaning": "Короткое нажатие запускает штатный serial service; forced recheck — отдельный режим. Анимация и кольцо показывают lifecycle/взвешенную работу очереди, не durable подтверждение полного проекта.",
+      "value_origin": "Current accounts, preferences offline_sync/ngid_url, forceRecheck → OfflineSyncIntentService; ProjectSyncRunner управляет session completion. onCreateView связывает XML sync/sync_progress_ring; ring читает NgwSyncProgress.snapshot, activity — NGWSyncService OR ProjectOperationCoordinator.",
+      "units": "Кольцо 0–1000 условных единиц; не числовой процент точности/полноты данных. Веса pull10 + push до30, reserve5% до finish.",
       "updates": [
         "После принятия запуска обновляются анимация, info и badges.",
-        "Занятая операция показывает wait."
+        "Занятая операция показывает wait.",
+        "refreshSyncProgressRing скрывает и сбрасывает кольцо при inactive; при active показывает determinate done либо0.",
+        "SYNC_PROGRESS и lifecycle receiver перечитывают snapshot; finishSessionLocked устанавливает1 и при окончании ошибочной очереди, поэтому это не project ACK."
       ],
       "actions": [
         "Синхронизировать",
@@ -2393,19 +2742,29 @@
       "conditions": [
         "Есть context и сеть.",
         "Без accounts возможен отдельный track work, а не фиктивный полный NGW sync.",
-        "Root completion требует account/children/pending-edit gates."
+        "Root completion требует account/children/pending-edit gates.",
+        "Общие main XML/controller используются Lisa/Belka; flavor source override этой панели не найден, APK/resource merge NOT_RUN.",
+        "Snapshot растёт без rewind, а завершение session и успешное сохранение full clock имеют разные gates."
       ],
       "saved_state": "Служба/queue владеют pending work; кнопка сама не подтверждает полный обмен проекта.",
       "source_ids": [
         "WF-SYNC-MANUAL",
-        "WF-SYNC-RUN"
+        "WF-SYNC-RUN",
+        "WF-SYNC-WIDGET-BINDING",
+        "WF-SYNC-RING",
+        "WF-SYNC-ACTIVE",
+        "WF-SYNC-RECEIVER",
+        "WF-SYNC-PROGRESS-COMPUTE",
+        "WF-SYNC-PROGRESS-FINISH"
       ],
       "expectations": [
         "Oracle: один ручной запуск не создаёт два независимых workers; busy отказ оставляет прежние pending edits.",
-        "Контрпример: одновременно framework sync и serial service для одного tap либо запись полного clock при простом запуске."
+        "Контрпример: одновременно framework sync и serial service для одного tap либо запись полного clock при простом запуске.",
+        "Oracle: fail после pair ACK не становится успешным full project только из-за finish broadcast, завершённого кольца или закрывшегося spinner; отдельно сверить clock и durable pairs."
       ],
       "unknowns": [
-        "Фактическая single-flight/cancellation цепочка и all-project preference screen в этой source-подборке не приняты native."
+        "Фактическая single-flight/cancellation цепочка и all-project preference screen в этой source-подборке не приняты native.",
+        "Native ring/spinner redraw и post-last-ACK failure NOT_RUN; lifecycle progress не проверяет фактическую серверную полноту."
       ]
     },
     {
@@ -2420,12 +2779,12 @@
       "widgets": [
         "info"
       ],
-      "meaning": "Показана последняя подтверждённая полная синхронизация текущего workspace; не время последнего tap или partial upload.",
+      "meaning": "Показано сохранённое в process-cached ProjectSyncState время текущего workspace, предназначенное для последнего полного обмена. Текущая библиотека допускает новое in-memory значение после commit=false; подпись сама не доказывает durable запись.",
       "value_origin": "MapBase.getActiveInstance path → ProjectSyncState.lastComplete canonical-path key; ProjectSyncRunner.markComplete после full-project gates.",
-      "units": "Хранимое время — Unix milliseconds; экран форматирует дату/давность.",
+      "units": "Хранимое время — Unix milliseconds; ControlHelper форматирует dd MMM и HH:mm с Locale.getDefault и default timezone, без года/секунд и без относительной давности.",
       "updates": [
         "updateInfo читает clock active map даже внутри scoped callback другого проекта.",
-        "Отсутствующий/нечитаемый clock даёт никогда не выполнено."
+        "Нулевой/отсутствующий clock или IOException canonical path даёт никогда не выполнено; disk failure не обязательно возвращает cached значение к прежнему."
       ],
       "actions": [
         "Посмотреть состояние",
@@ -2435,18 +2794,23 @@
         "Partial uploads и другой проект не должны обновлять этот displayed clock.",
         "markComplete вызывается только после завершения project pass и cleanup conditions."
       ],
-      "saved_state": "Clock сохраняется по canonical path; отсутствие записи не мигрируется из общего legacy timestamp.",
+      "saved_state": "Clock сохраняется по canonical path; отсутствие записи не мигрируется из общего legacy timestamp. Известный source gap AUDIT-TODO-SYNC-ACK-RECOVERY: AOSP commitToMemory предшествует disk result; false не откатывает cached map. Disk/restart oracles остаются отдельными.",
       "source_ids": [
         "WF-SYNC-CLOCK",
         "WF-SYNC-CLOCK-STORE",
-        "WF-SYNC-RUN"
+        "WF-SYNC-RUN",
+        "WF-SYNC-WIDGET-BINDING",
+        "WF-SYNC-CLOCK-FORMAT",
+        "WF-SYNC-RECEIVER"
       ],
       "expectations": [
         "Oracle: фоновой sync проектаB не меняет подпись открытогоA; первая записьA появляется после успешного fullA, не после track-only upload.",
-        "Контрпример: использовать global last_sync timestamp или now при tap и показывать ложную свежесть данных."
+        "Контрпример: использовать global last_sync timestamp или now при tap и показывать ложную свежесть данных.",
+        "Oracle: при реальном failed write разделить markComplete return, cached lastComplete, physical XML/backup после writer и fresh-process reload; false-before-delegate proxy недостаточен."
       ],
       "unknowns": [
-        "Формат локали/часового пояса и native redraw ещё не проверены; source не подтверждает точность серверных данных."
+        "Native redraw, фактическое применение locale/timezone и реальный failed-write/restart NOT_RUN. Current maplib remains f61ba7839cf9e44b08eefa98d72d83966d1c3c3d; будущий library fix не заявлен и старый WF-SYNC-CLOCK-STORE fingerprint сохранён.",
+        "Source не подтверждает точность серверных данных; cached clock также читает reminder age и tracked reload since, чьи эффекты требуют независимой проверки."
       ]
     },
     {
@@ -2464,7 +2828,7 @@
         "sync"
       ],
       "meaning": "Отметка описывает локальную очередь, а не полноту загрузки или общую сетевую ошибку.",
-      "value_origin": "Фоновый query owning map → pending layer ID set; track pending дополнительно зависит от подтверждённой registration fingerprint и send preference.",
+      "value_origin": "XML sync_pending_badge связан в onCreateView; collectPendingLayers рекурсивно собирает group IDs и VectorLayer.isChanges либо разрешённый registered/enabled TrackUploader.hasPending. Row badge связан getStandardLayerView с mPendingChanges.contains(layer.getId()). Это отличается от full-clock ready-outbox gate.",
       "units": "Булево pending; не количество ошибок.",
       "updates": [
         "Result применяется только к тому же map и поколению UI.",
@@ -2476,17 +2840,21 @@
       ],
       "conditions": [
         "TrackSendSettings и положительное подтверждение конкретного device URL обязательны для track badge.",
-        "Старый result другой карты/Activity игнорируется."
+        "Старый result другой карты/Activity игнорируется.",
+        "Пустой badge, raw isChanges и готовый к отправке outbox не являются взаимозаменяемыми full-success oracles."
       ],
       "saved_state": "Данные очереди остаются в storage; переиспользованная строка не должна хранить самостоятельный badge state.",
       "source_ids": [
         "WF-SYNC-BADGE",
         "WF-TRACK-REGISTRATION",
-        "WF-LAYER-ROW"
+        "WF-LAYER-ROW",
+        "WF-SYNC-WIDGET-BINDING",
+        "WF-SYNC-BADGE-COLLECT"
       ],
       "expectations": [
         "Oracle: результат queryA после switchB не меняет badgesB; незарегистрированный tracker не показывает подтверждённую pending-track метку.",
-        "Контрпример: наличие track row считается регистрацией; старый async result переносится в другой проект."
+        "Контрпример: наличие track row считается регистрацией; старый async result переносится в другой проект.",
+        "Oracle: staged/TEMP/NOT_SYNC draft и готовая очередь проверяются отдельно; исчезновение pending badge не переносит project clock."
       ],
       "unknowns": [
         "Разница canSendTracks/canShowPending намеренная; полный TrackUploader ACK protocol здесь не исполнялся."
@@ -2608,6 +2976,68 @@
       "unknowns": [
         "Детали остановки собственного/чужого recording session и drain — следующий source/runtime этап владельца сервиса, не GPS/model обещание этой карточки.",
         "XML binding detector не покрывает programmatic track controls; это ограничение XML-проверки, не неизвестный смысл проверенных команд. Native appearance/hit targets NOT_RUN."
+      ]
+    },
+    {
+      "id": "UI-SETTINGS-MAP-STORAGE-MOVE",
+      "group": "project",
+      "title": "Путь к картам: перенос текущей карты между хранилищами",
+      "surface": "Настройки → Карта → preference key map_path; SelectMapPathPreference storage chooser",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_settings"
+      ],
+      "meaning": "Параметр «Путь к картам» выбирает каталог данных текущей application map. Обработчик физически переносит только её referenced layer directories, database files и .ngm; множественное слово «карты» не означает перенос всего Collector registry или shared storage. Это отдельное действие от display-name переименования проекта.",
+      "value_origin": "menu_settings → MainApplication.showSettings(GENERAL) → SettingsActivity/SettingsHeaderFragment(PREFS_MAP) → NGPreferenceActivity default sub-screen → SettingsFragment ACTION_PREFS_MAP → map_path custom preference. Chooser получает ContextCompat.getExternalFilesDirs(context,null); выбранный value=externalFilesPaths[i].absolutePath + /map. BackgroundMoveTask захватывает application.getMap() до запуска и вызывает MapBase.moveTo(value).",
+      "units": "Filesystem directory path в app-specific external storage; mapName/.ngm и Collector UID отдельны. CRS, координат или геометрических единиц у этого значения нет.",
+      "updates": [
+        "Текущий выбор storage определяется в onClick по сохранённому active map_path и prefix каждого app external root.",
+        "callChangeListener запускает async move и immediate resetMap; widget setText сохраняет requested path. Worker после move attempt commit-ит фактический mMap.getPath(), затем onPostExecute ещё раз resetMap."
+      ],
+      "actions": [
+        "Открыть storage chooser и выбрать другую доступную storage root.",
+        "Текущий selected storage index закрывает диалог без вызова move.",
+        "Непустой destination запрашивает подтверждение; MapBase.moveTo отдельно отказывает, если owned destination уже существует."
+      ],
+      "conditions": [
+        "Доступность физического переноса зависит от getExternalFilesDirs: нужен другой selectable storage либо unmatched current path; на обычном single-storage/same-index выборе действие не выполняется.",
+        "В просмотренном общем Lisa/Belka source chain нет Collector/local-project или ProjectOperationCoordinator gate для этого control. Header AccountUtil check ограничивает NGW preferences, не MAP. Это наблюдение текущего кода, не требование сохранять отсутствие gate.",
+        "Lisa/Belka используют общие main Java/XML declarations; одноимённых variant/qualified XML overrides под app/src не найдено. APK merge и реальные device capabilities не выполнялись."
+      ],
+      "saved_state": "MapBase сохраняет исходную карту, перемещает referenced children + layers.db/journal/WAL/SHM и map entry last; при IOException пытается обратный move, затем clear/load. UI и worker отдельно публикуют map_path. Registry/project.json, full-sync clock, recovery/import preferences, retry guards и draft absolute paths не входят в этот move list. Их согласованная migration/invalidation policy остаётся AUDIT-TODO-WORKSPACE-KEY-MIGRATION; новый persistent format или выбранная политика этим контрактом не вводятся.",
+      "source_ids": [
+        "WF-MAP-STORAGE-MENU",
+        "WF-MAP-STORAGE-SETTINGS-INTENT",
+        "WF-MAP-STORAGE-HEADER-FACTORY",
+        "WF-MAP-STORAGE-HEADERS",
+        "WF-MAP-STORAGE-SUBSCREEN",
+        "WF-MAP-STORAGE-SUBSCREEN-BASE",
+        "WF-MAP-STORAGE-FRAGMENT-BASE",
+        "WF-MAP-STORAGE-FRAGMENT-FACTORY",
+        "WF-MAP-STORAGE-ACTION-ROOT",
+        "WF-MAP-STORAGE-MAP-PREFS",
+        "WF-MAP-STORAGE-STORAGE-CHOOSER",
+        "WF-MAP-STORAGE-PERSIST-TEXT",
+        "WF-MAP-STORAGE-CHANGE-LISTENER",
+        "WF-MAP-STORAGE-MOVE-START",
+        "WF-MAP-STORAGE-MOVE-WORKER",
+        "WF-MAP-STORAGE-MOVE-FINISH",
+        "WF-MAP-STORAGE-MOVE-MAP",
+        "WF-MAP-STORAGE-MAP-OWNER"
+      ],
+      "expectations": [
+        "Oracle: same selected storage index dismisses without async move; different storage derives exactly chosenRoot/map and captures the current application map, а не все registry workspaces.",
+        "Oracle для source-only состава: move list содержит только referenced layer paths, существующие database sidecars и текущий map entry; shared catalog/registry не должны объявляться перенесёнными по одному изменению summary.",
+        "Независимая будущая state-проверка различает active path B, registry path A, UID, mapName, recovery target и каждый draft owner. Совпавшее display name или toast не доказывают согласованную миграцию.",
+        "Failure acceptance должна отдельно проверить фактический old/new mPath, preference publication и rollback outcome; source presence rollback loop не доказывает atomic move."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: storage chooser, Android permission/storage capability, asynchronous ordering, failure rollback, lifecycle and APK resource merge не исполнялись.",
+        "Поддерживаемая migration/refusal policy для managed workspace, pending sync/import и form/geometry/walk drafts пока не выбрана; отсутствие миграции само по себе не объявляется багом.",
+        "Source risk: успешный A→B move не переписывает registry A; trusted inventory dedup по path может получить две цели одного UID, registry activation публикует A. Адресный actual-body/state witness ещё требуется; потери данных не воспроизведены."
       ]
     }
   ],
@@ -2887,6 +3317,18 @@
       "path": "app/src/main/res/layout/fragment_layers.xml",
       "id": "sync_pending_badge",
       "sha256": "d71636c3c21b26c362c4a1b76be173d89a6b8f513864efa29e2bd1725a62a5f5"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/main.xml",
+      "id": "menu_settings",
+      "sha256": "ad1512099be9cb10b67c531b905473f36dbf145f48bd5e18075cea63b487f3a0"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/fragment_layers.xml",
+      "id": "sync_progress_ring",
+      "sha256": "d71636c3c21b26c362c4a1b76be173d89a6b8f513864efa29e2bd1725a62a5f5"
     }
   ],
   "coverage": {
@@ -2956,12 +3398,13 @@
     {
       "repository": "root",
       "path": "app/src/main/res/xml/preferences_map.xml",
-      "purpose": "Reviewed XML defaults and keys for coordinates/precision/units/status/location/compass/ruler/zoom; deployed overrides and old preferences remain separate.",
+      "purpose": "Reviewed XML defaults and keys for coordinates/precision/units/status/location/compass/ruler/zoom; deployed overrides and old preferences remain separate. map_path has android:key, no resource android:id; custom SelectMapPathPreference binding and restore_layers are independent controls.",
       "contract_ids": [
         "UI-MAP-STATUS-COORDINATES",
         "UI-MAP-SCALE-RULER",
         "UI-MAP-ZOOM",
-        "UI-MAP-COMPASS"
+        "UI-MAP-COMPASS",
+        "UI-SETTINGS-MAP-STORAGE-MOVE"
       ],
       "sha256": "dc8ef3537bbe3e1679b456c30d4ad0f4f98461944a1582121d2304d1af0f7536"
     },
@@ -2979,20 +3422,76 @@
     {
       "repository": "root",
       "path": "app/src/main/res/values/strings.xml",
-      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited.",
+      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. Map path labels/summary are presentation, not authority for multi-project move semantics.",
       "contract_ids": [
-        "UI-NAVIGATION-STAKEOUT-TARGET"
+        "UI-NAVIGATION-STAKEOUT-TARGET",
+        "UI-SETTINGS-MAP-STORAGE-MOVE"
       ],
       "sha256": "1c11043deacad8b862413ea9a8d800117a49d0d9579413b085f25f5b715ef8fc"
     },
     {
       "repository": "root",
       "path": "app/src/main/res/values-ru/strings.xml",
-      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited.",
+      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. RU «Путь к картам» label remains plural while actual producer moves one map.",
       "contract_ids": [
-        "UI-NAVIGATION-STAKEOUT-TARGET"
+        "UI-NAVIGATION-STAKEOUT-TARGET",
+        "UI-SETTINGS-MAP-STORAGE-MOVE"
       ],
       "sha256": "1c3e10073a674b39e9c746f6894a9883283facf615fa89432297c7015800d62f"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/xml/preference_headers.xml",
+      "purpose": "PREFS_MAP header entry and separate PREFS_PROJECT action; no Collector gating in this declaration.",
+      "contract_ids": [
+        "UI-SETTINGS-MAP-STORAGE-MOVE"
+      ],
+      "sha256": "504775e3347291bb9fb2a7ee4586e9044575f25d280f0e20b2683bcf88865ff2"
+    },
+    {
+      "repository": "root",
+      "path": "app/build.gradle",
+      "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI.",
+      "contract_ids": [
+        "UI-SETTINGS-MAP-STORAGE-MOVE"
+      ],
+      "sha256": "f5657eebe67e5e741b1d5b35b9a052037a375d65dfc774d3e751a1611a8acab3"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/AndroidManifest.xml",
+      "purpose": "Shared SettingsActivity declaration; no Lisa/Belka-specific replacement in app/src.",
+      "contract_ids": [
+        "UI-SETTINGS-MAP-STORAGE-MOVE"
+      ],
+      "sha256": "fa3483dd90b4cbadce68e4180ef8a2c80df4734de3226a50a629d57f38dc6193"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/SettingsConstantsUI.java",
+      "purpose": "ACTION_PREFS_MAP/PREFS_GENERAL/PREFS_PROJECT constants tie header keys to fragment action routing.",
+      "contract_ids": [
+        "UI-SETTINGS-MAP-STORAGE-MOVE"
+      ],
+      "sha256": "34d90b53f31d6680ac8971ddf6d93ed9b9ef5352a82b44a799bd9440b1f89ed5"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/SettingsConstants.java",
+      "purpose": "KEY_PREF_MAP_PATH literal ties preference key map_path to current map path store.",
+      "contract_ids": [
+        "UI-SETTINGS-MAP-STORAGE-MOVE"
+      ],
+      "sha256": "57fb12210c3ff2562037c5f01a61aa5da1e5107a81e1e171908eca470b921be9"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java",
+      "purpose": "Reviewed non-method PULL_UNITS10,MAX_PUSH_UNITS30,SCALE1000,FINISH_RESERVE0.05; lifecycle progress is not a durable success ACK.",
+      "contract_ids": [
+        "UI-MANUAL-SYNC"
+      ],
+      "sha256": "96fd7f65bc72560451030deace99f8e3fa65a9d4b0b441bd59809b64a1e9286d"
     }
   ]
 }

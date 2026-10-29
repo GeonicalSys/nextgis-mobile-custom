@@ -31,6 +31,20 @@ oracle SMOKE-MULTI-ACCOUNT-SYNC по фактическому default sync_all_p
 проверки и точные исходные ревизии сохраняются в связанном PR и evidence;
 наличие source witnesses не является выполнением runtime.
 
+Продолжение той же карточки уточняет post-ACK cleanup failure, startup retained-pair
+recovery, новый manual plan и scheduled request dispatch. Clock требует всех
+обязательных accounts одного прохода. AOSP14/16 показывает, что commit false
+может оставить новое значение в памяти: getter/UI и disk/restart — разные oracles.
+Source-каталог проверок прочитан (21 methods/5 files), выполнено0; точные fault
+injections и native приёмка остаются NOT_RUN. Product/library bytes не исправлялись.
+
+В существующем UI-каталоге углублены три sync ID и добавлен один source-backed
+map-storage control:37 контрактов/106 reviewed methods, прежние36 IDs/80 hashes
+сохранены. Widget binding, formatter, ring lifecycle и raw badges разделены;
+`map_path` остаётся Preference key. Source/storage capabilities и миграционные
+неизвестности не подменяются подписью или native PASS. Текущий library gap
+остаётся открытым; sourcechecker и библиотека не менялись.
+
 ## 2026-10-29 — Новый разбор мобильных событий GlitchTip
 
 После первого среза520/516 выполнен свежий полный export:8открытых мобильных

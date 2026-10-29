@@ -259,6 +259,16 @@ AUDIT-TODO-SYNC-ACK-RECOVERY, AUDIT-TODO-SYNC-CLAIMED-LIVENESS,
 AUDIT-TODO-WORKSPACE-KEY-MIGRATION. Продукт, БД, NGW, APK и библиотечные gitlinks
 не меняются; этот список не становится параллельной очередью работ.
 
+Следующее углубление той же карточки прослеживает окно после последнего pair
+ACK до cleanup/full clock, manual service против framework SyncAdapter,
+startup recovery против следующего enabled schedule и отсутствие накопления
+account-only успехов между запусками.21 методов в5 focused source test files
+только прочитаны, выполнено0; точной post-ACK fault injection нет. AOSP14/16
+подтверждает возможное расхождение failed-commit memory/disk: cached clock не
+доказывает durable completion. Независимые disk/restart и retry oracles остаются
+NOT_RUN в AUDIT-TODO-SYNC-ACK-RECOVERY; library/source fix требует отдельного
+impact и решения владельца. Это не новый roadmap item и не закрытие runtime TODO.
+
 # Уже начатая работа
 
 ## MOB-01 Завершение текущего пакета стилей и треков

@@ -8,6 +8,7 @@ why: Продолжение глубокого аудита экосистемы
 covers:
   - app/AGENTS.md
   - docs/architecture/ngw-sync-and-storage.md
+  - docs/architecture/ui-contracts.md
   - docs/changelog.md
   - docs/guides/change-checklist.md
   - docs/registry/dependencies.yaml
@@ -15,6 +16,7 @@ covers:
   - docs/registry/ecosystem.yaml
   - docs/registry/change-impact.yaml
   - docs/registry/smoke-tests.yaml
+  - docs/registry/ui-contracts.json
   - docs/roadmap/mobile.md
 ---
 
@@ -49,3 +51,31 @@ NGW/Collector и deployed services не меняются; миграции не�
 DB/Office, сборки, публикации и приостановленные этапы не запускались. Проверки
 этого этапа ограничены стандартными docs/report validators; результаты и
 source_context фиксируются в PR. Документационный PASS не закрывает native TODO.
+
+Дополнительный bounded срез той же области проследил последний durable pair ACK
+до финального cleanup/clock: cleanup catch не возвращает пары, а startup recovery
+читает только retained pairs. Обычный manual повтор строит новый план; scheduled
+worker подтверждает request dispatch и next tick, не выполнение. Полный clock
+требует всех required accounts одного запуска. SYNC_FINISH и ring lifecycle сами
+по себе не удостоверяют full completion.
+
+По первичным AOSP14/16 источникам failed SharedPreferences commit не откатывает
+in-memory map; поэтому markComplete=false может сочетаться с новым cached getter
+и старым диском. Interrupted await отдельно может закончиться поздней записью.
+Описаны независимые return/memory/physical XML+backup/fresh-process oracles;
+исходники библиотеки не менялись. Прочитаны21 методов5 focused test files,
+исполнено0. В них нет точной post-last-ACK cleanup/full-clock fault injection;
+false-before-delegate proxy не доказывает реальное failed-write поведение.
+Новый source gap и runtime ветви ведутся в прежнем AUDIT-TODO-SYNC-ACK-RECOVERY.
+
+UI-каталог сохраняет прежние36 IDs и80 method fingerprints;26 новых reviewed
+methods и bindings углубляют три существующих sync контракта и добавляют
+UI-SETTINGS-MAP-STORAGE-MOVE (итого37). Кольцо — weighted lifecycle progress,
+badge — raw pending query, clock — cached значение с текущим failed-write gap;
+они не объединяются в доказательство полного durable обмена. Формат часов
+прослежен до dd MMM/HH:mm с default locale/timezone. `map_path` подтверждён как
+Preference key, не widget ID; перенос относится к current application map,
+не ко всем проектам по подписи.8 новых non-method наблюдений сливаются с тремя
+существующими XML/string rows; новые progress constants отдельно защищены.
+Library fix, gitlink update, APK/resource merge, move/state/native приёмка не
+выполнены. Runtime неизвестности остаются в прежних общих TODO.

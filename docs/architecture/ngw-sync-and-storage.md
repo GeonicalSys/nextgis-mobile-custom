@@ -32,13 +32,20 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
   - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
   - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+  - app/src/main/java/com/nextgis/mobile/MainApplication.java
+  - app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
   - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
+  - app/src/main/java/com/nextgis/mobile/util/SyncJournalCommit.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapBase.java
   - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
   - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java
   - app/src/androidTest/java/com/nextgis/mobile/util/ProjectSyncRunnerTest.java
+  - app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/util/SyncRecoveryJournalNativeTest.java
+  - maplib/src/test/java/com/nextgis/maplib/util/ProjectSyncStateTest.java
+  - app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java
   - maplib/src/test/java/com/nextgis/maplib/reliability/SyncWorkspaceIsolationTest.java
   - app/src/main/res/xml/syncadapter.xml
 ---
@@ -133,14 +140,84 @@ notification только своей карты, а untagged — только ac
 4. Ещё раз дождаться детей, закрыть session и background map, восстановить
    runtime bookkeeping открытой карты.
 5. Только после успешного cleanup и при неизменной cancellation generation
-   выполнить durable `ProjectSyncState.markComplete`.
+   вызвать `ProjectSyncState.markComplete` и потребовать успешный результат
+   записи; legacy account clocks обновляются лишь после этого результата.
 
 Следовательно, пустой recovery journal **не доказывает полный project ACK**:
 pair ACK записывается раньше финального cleanup/clock. Это разные commit
 boundaries. Process death или cleanup failure между ними не разрешают агенту
-переносить часы вперёд по отсутствию очереди. Фактическое восстановление этого
-окна ещё не проверено. Быстрый `LocalChangesWorker` использует owner/drain/lease,
-но не пишет full clock. `LayersFragment` читает clock только active UI map.
+переносить часы вперёд по отсутствию очереди. Быстрый `LocalChangesWorker`
+использует owner/drain/lease, но не пишет full clock. `LayersFragment` читает
+clock только active UI map; особенности неуспешной записи описаны ниже.
+
+### Окно после последнего pair ACK и реальные повторные запуски
+
+В `ProjectSyncRunner.run` вызов `SyncRecoveryJournal.complete` находится внутри
+account loop. При успешной записи последнего ACK journal уже не содержит этих
+пар, а `awaitChildren`, `session.close`, `closeSyncWorkspace` и
+`prepareProjectSyncState` ещё впереди. Исключение финального cleanup снимает
+`fullProjectComplete`, увеличивает `numIoExceptions` и добавляет проект в
+`failedProjects`; пара обратно не ставится и `markComplete` не вызывается.
+При старом исходном clock он остаётся старым. Это условный source-контрпример
+утверждению «пустая очередь означает завершённый полный обмен», а не выполненный
+crash-тест или доказанная потеря feature/outbox.
+
+| Событие | Recovery pairs | Full-project clock | Следующий запуск |
+| --- | --- | --- | --- |
+| Account pass отказал до ACK | Точная пара сохраняется | Не записывается этим проходом | Startup recovery может запросить сохранённую пару |
+| Последний ACK сохранён, затем cleanup отказал | Завершённые пары уже удалены | `markComplete` не вызывается | Startup journal не воссоздаёт отсутствующую пару |
+| Процесс погиб после durable ACK до clock | Удалённые пары не возвращаются от старого clock | На диске прежний clock, если новая запись ещё не началась | Восстанавливаются оставшиеся пары; новый обычный запуск строит новый план |
+| Cleanup завершён, запись clock вернула false | Это отдельная запись после pair ACK | Память и диск могут различаться | Нельзя решать исход по одному cached getter или одному boolean |
+
+`MainApplication` планирует `schedulePendingIfNeeded` через3s после старта.
+Этот метод разрешает только сохранённые пары через trusted inventory/accounts;
+старый clock не является сканером пропущенной финализации. Не-manual пару с
+выключенным automatic sync он не запускает. Обычное восстановление расписаний
+в `GISApplication` — другой путь, а `SyncAccountWorker` вызывает `requestSync`
+и планирует следующий tick только в соответствующей ветви. `Result.success()`
+также возвращается без отправки при удалённом account или выключенном auto sync.
+В ветви `requestSync` это результат доставки запроса, не завершение синхронизации.
+
+Ручной повтор из `LayersFragment.showSyncFailureDialog` идёт через
+`startManualSync` и `OfflineSyncIntentService` с новым планом. Service передаёт
+свой `new SyncResult()` непосредственно runner, поэтому framework не получает
+этот объект для собственного retry. Scheduled `datasource.SyncAdapter` передаёт
+настоящий framework `SyncResult`. Оба пути заново сохраняют выбранный план до
+работы. Это возможность повторного прохода, не гарантия срока при выключенном
+расписании, отсутствии сети или отсутствии нового ручного действия.
+
+Полный clock требует весь `LocalChangesWorker.projectAccounts(map)` в
+`completedAccounts` **одного запуска**, без layer-only ограничения. Успешные
+account-only ticks разных запусков не складываются в полный project completion.
+`SYNC_FINISH` означает окончание очереди: runner может отправить его и при
+ошибке cleanup/clock, используя `SYNC_CHANGES` для error notification.
+`failedProjects` дополнительно даёт ручной incomplete alert; ошибка записи clock
+попадает во внешний queue catch и сама по себе не добавляет туда имя проекта.
+
+### Неуспешный commit: память отдельно от диска
+
+`ProjectSyncState.markComplete` вызывает обычный `SharedPreferences.Editor.commit`,
+а `lastComplete` читает тот же process-cached preferences. По
+[Android API](https://developer.android.com/reference/android/content/SharedPreferences.Editor#commit())
+true подтверждает persistent write. В AOSP
+[Android14, `SharedPreferencesImpl`](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-14.0.0_r1/core/java/android/app/SharedPreferencesImpl.java)
+`commitToMemory`477–546 изменяет map до disk write; `commit`551–573 не откатывает
+её при false. Например, отказ rename723–727 оставляет прежний файл, но новый
+`getLong`301–305 видит память. Порядок сохраняется в
+[Android16](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-16.0.0_r1/core/java/android/app/SharedPreferencesImpl.java)
+(`getLong`309, `commit`559). Это source-подтверждённый пробел между намерением
+«подтверждённый clock» и текущим cached UI; на устройстве он **NOT_RUN**.
+
+False из interrupted await имеет другую ветвь: writer уже запущен и может
+сохранить файл. Поэтому false не доказывает ни прежний диск, ни новый диск.
+`SyncJournalCommit` изолирует journal writer от interrupt вызывающего потока,
+но сам по себе не возвращает SharedPreferences memory к прежнему состоянию при
+ошибке записи. Пустой cached journal также не заменяет durable oracle.
+
+Независимая будущая проверка должна разделять return value, getter текущего
+процесса, physical XML/backup после окончания writer и fresh-process reload.
+Proxy, возвращающий false **до** настоящего commit, не моделирует этот исход.
+Не исправлять его записью `now` или удалением очереди по UI/расписанию.
 
 ### Отмена и liveness
 
@@ -178,7 +255,8 @@ fill. Здесь прочитаны исходники этих тестов; и
 `plugins/geonical-docs/registry/dependency-audit-todo.yaml`:
 
 - `AUDIT-TODO-SYNC-ACK-RECOVERY`: process death/cleanup failure между pair ACK
-  и full clock; различать корректный старый clock и потерю необходимого повтора.
+  и full clock, реальный retry и commit-false memory/disk divergence; определить
+  политику финализации без повторного подтверждения уже ACKed данных по догадке.
 - `AUDIT-TODO-SYNC-CLAIMED-LIVENESS`: claimed child, который не возвращает
   управление; определить наблюдение/восстановление без раннего закрытия БД.
 - `AUDIT-TODO-WORKSPACE-KEY-MIGRATION`: перенос directory/mapName и судьба всех
@@ -231,15 +309,16 @@ pull данных/форм/состава проекта нет. TrackWorker с�
 сохраняют owning map; фоновые карты не меняют mMap или active preferences.
 Потеря сети/ошибка дают retry, не успешное подтверждение очереди.
 
-`ProjectSyncState` хранит подтверждённый full-sync clock по canonical map path
+`ProjectSyncState` предназначен для подтверждённого full-sync clock по canonical map path
 в full-project-sync-state и используется [недельным напоминанием](maintenance-reminders.md) только для
 активных онлайн-проектов. Локальные карты исключены; проверка manifest updater
 имеет собственные часы и не подтверждает синхронизацию данных.
 
-`ProjectSyncRunner` пишет его после всех account
+`ProjectSyncRunner` пытается сохранить его после всех account
 проходов текущего проекта, ожидания children, проверки отсутствия готовых
-local edits и успешной очистки session. Ошибка, отмена, layer-only запуск,
-другая account и track-only обмен не обновляют project clock. Для проекта с
+local edits и успешной очистки session. Отказ до этого gate, отмена, layer-only
+запуск, другая account и track-only обмен не запускают запись project clock.
+Неуспешный commit имеет отдельный memory/disk исход, разобранный выше. Для проекта с
 несколькими account полный запуск должен охватить их все. Успех другого проекта
 может быть сохранён независимо от ошибки одного проекта общей очереди.
 
