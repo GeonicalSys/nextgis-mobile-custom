@@ -6,7 +6,12 @@
 2. [`../docs/registry/change-impact.yaml`](../docs/registry/change-impact.yaml).
 3. Связанные invariant IDs из [`../docs/registry/invariants.yaml`](../docs/registry/invariants.yaml).
 4. Для release/update — [`../docs/runbooks/release-apk.md`](../docs/runbooks/release-apk.md).
-5. Для NGW/Collector связи с desktop QGIS —
+5. До любого изменения поведения/API/данных/ресурсов/config самостоятельно
+   выполнить общий discovery и разбор зависимостей из root `AGENTS.md`, а не
+   ждать, что пользователь назовёт cross-project связь. Автоматически сохранить
+   все новые подтверждённые связи и ambiguous/dynamic refs в той же задаче;
+   проверить source index перед commit. Общий маршрут и UNKNOWN для недоступного
+   внешнего root/другого worktree —
    [`../docs/architecture/lisa-ecosystem.md`](../docs/architecture/lisa-ecosystem.md)
    и [`../docs/registry/ecosystem.yaml`](../docs/registry/ecosystem.yaml).
 

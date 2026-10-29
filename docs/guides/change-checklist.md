@@ -1,7 +1,7 @@
 ---
 title: Чеклист изменения Android-форка
 type: guide
-last_verified: 2026-10-25
+last_verified: 2026-10-28
 related_code:
   - AGENTS.md
   - docs/registry/change-impact.yaml
@@ -17,10 +17,23 @@ related_code:
   или объёма согласовать с владельцем продукта. Срочный инцидент оформить до merge.
 - [ ] Проверить status/branch root и каждого затрагиваемого сабмодуля.
 - [ ] Прочитать root и ближайший `AGENTS.md`, README и manifest модуля.
-- [ ] Найти path trigger в `registry/change-impact.yaml`.
+- [ ] До любого изменения поведения/API/данных/ресурсов/config выполнить один
+  LISA `plan --changed PATH`: global eligible current manifest/hashes проверяются,
+  discovery обновляется до impact, включая нового consumer неизменённого producer.
+  Standalone readonly inventory необязателен; manual semantic closure — по
+  [единому маршруту](../architecture/lisa-ecosystem.md#обнаружение-зависимостей-до-правки).
+  Проверить actual owner roots/revisions; реестр и пользовательские примеры
+  не ограничивают поиск, пользователь не перечисляет зависимости.
+- [ ] Сверить source index/registry с исходниками и consumers в обе стороны;
+  сохранить условия/обоснованные исключения, независимые ожидания и UNKNOWN
+  для недоступных/неподдержанных путей или чужого/устаревшего индекса.
+- [ ] Найти path trigger в `registry/change-impact.yaml` как начало разбора,
+  а не доказательство отсутствия других связей.
 - [ ] Выписать invariant IDs и upstream hotspots.
 - [ ] Определить владельца контракта: `app`, `maplibui`, `maplib` или central.
-- [ ] Для desktop/mobile изменения определить publisher/consumer по
+- [ ] Проверить возможную desktop/mobile границу самостоятельно: PostgreSQL/
+  desktop layer → mobile config → NGW/Collector → Android и обратно; это
+  обязательный пример, а не исчерпывающий перечень связей. Определить owners по
   `registry/ecosystem.yaml` и прочитать инструкции внешнего проекта-владельца.
 - [ ] Выбрать минимальные unit/build/device smoke.
 
@@ -38,6 +51,16 @@ related_code:
 | NGW/Collector между QGIS и Android | server resource identity/schema/permissions, publisher docs, consumer smoke |
 
 ## После правки
+
+- [ ] Все новые подтверждённые связи автоматически сохранены в той же задаче
+  в shared source index/curated owner contracts, без отдельной команды.
+  Ambiguous/dynamic refs сохранены с source/UNKNOWN/next step.
+- [ ] Source index обновлён/проверен перед source commit по actual roots/revisions;
+  независимые ожидания не перегенерированы под дефект. Требуемый dirty/foreign
+  owner остаётся follow-up с порядком доставки, не исключается молча.
+- [ ] В evidence указан source_context/basis/SHA; автоматически сохранённая
+  `--write` shared dependency-observations.json history проверена структурно,
+  не выдана за freshness чужих uncommitted bytes или runtime-приёмку.
 
 - [ ] В PR заполнены ID дорожной карты, связь с целью, влияние и проверки по
   [шаблону](../../.github/PULL_REQUEST_TEMPLATE.md). ID update-reports учитывается отдельно.
