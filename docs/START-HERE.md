@@ -1,7 +1,7 @@
 ---
 title: С чего начать — GeonicalSystem NextGIS Mobile
 type: guide
-last_verified: 2026-10-25
+last_verified: 2026-10-29
 related_code:
   - app/build.gradle
   - settings.gradle
@@ -54,6 +54,13 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 
 ## Источники истины
 
+Для интерпретации показателей и действий начать с
+[контрактов интерфейса](architecture/ui-contracts.md) и
+[их source-реестра](registry/ui-contracts.json). Там разделены происхождение
+данных, действия, условия, сохранённое состояние, ожидания и неизвестные ветви.
+Если элемента нет, исследовать binding/producer/consumer и дополнить каталог;
+не переносить назначение соседнего индикатора по внешнему сходству.
+
 1. Код и Gradle/manifest — фактическое поведение.
 2. `docs/registry/*.yaml` — стабильные IDs, зависимости, инварианты и проверки.
 3. `docs/registry/ecosystem.yaml` — владельцы и границы между тремя проектами
@@ -66,6 +73,7 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 
 | Если меняется | Читать |
 |---|---|
+| Показатель, кнопка, жест, источник UI-значения или способ наблюдения в тесте | `architecture/ui-contracts.md`, `registry/ui-contracts.json`, затем owning code/layout/settings |
 | Общая синхронизация проектов, очередь и фоновые БД | architecture/ngw-sync-and-storage.md, guides/project-synchronization-user-guide.md, SyncWorkspaceSession |
 | NGFP required, зависимые условия или навигация вкладок | `architecture/conditional-form-rules.md`, `guides/form-behavior-user-guide.md` |
 | `MapDrawable`, style/source/layer | `architecture/map-rendering.md`, `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY` |

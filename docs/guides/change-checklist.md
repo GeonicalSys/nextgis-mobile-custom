@@ -1,7 +1,7 @@
 ---
 title: Чеклист изменения Android-форка
 type: guide
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 related_code:
   - AGENTS.md
   - docs/registry/change-impact.yaml
@@ -10,6 +10,15 @@ related_code:
 # Чеклист изменения Android-форка
 
 ## До правки
+
+- [ ] Для UI/диагностики/GUI-наблюдения найти ID в `registry/ui-contracts.json`:
+  widget → producer/transform и action → handler/state/side effects, variant,
+  permissions/preferences, units/CRS/axes/freshness. Прочитать
+  [контракты интерфейса](../architecture/ui-contracts.md). Если записи нет,
+  исследовать и сохранить её, не перекладывая перечисление связей на пользователя.
+- [ ] Выбрать независимый различающий oracle: позиция устройства и камера
+  специально различны; UI action проверяется по своему результату/владельцу,
+  а не по названию/значку или совпадению координат при follow.
 
 - [ ] Прочитать [дорожную карту](../roadmap/mobile.md), выбрать её ID либо добавить
   новый пункт с причиной, приоритетом, зависимостями и критериями приёмки.
@@ -51,6 +60,10 @@ related_code:
 | NGW/Collector между QGIS и Android | server resource identity/schema/permissions, publisher docs, consumer smoke |
 
 ## После правки
+
+- [ ] Выполнить `py -3.13 -B docs/scripts/check_ui_contracts.py`; при source
+  drift пересмотреть смысл/consumers и ожидания перед обновлением fingerprint.
+  Указать отдельно source PASS, runtime NOT_RUN и оставшиеся UNKNOWN.
 
 - [ ] Все новые подтверждённые связи автоматически сохранены в той же задаче
   в shared source index/curated owner contracts, без отдельной команды.

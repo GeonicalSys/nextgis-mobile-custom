@@ -1,5 +1,15 @@
 # app — инструкции для ИИ-агентов
 
+Перед интерпретацией UI или выбором GUI-действия читать
+[`../docs/architecture/ui-contracts.md`](../docs/architecture/ui-contracts.md)
+и соответствующий ID в `../docs/registry/ui-contracts.json`. Проверять источник
+значения, формат/CRS, режим и последствия обработчика по текущему коду. Положение
+элемента и его подпись не доказывают назначение: device/display location,
+camera center, saved viewport и selected geometry — разные состояния.
+Недостающий контракт исследовать и сохранить самостоятельно; проверку строить
+на независимо различающихся значениях. `check_ui_contracts.py` — source drift
+gate, не реальное выполнение Android. Продуктовые/native ограничения остаются.
+
 Перед изменением `app` прочитай:
 
 1. [`docs/README.md`](docs/README.md) и [`docs/manifest.yaml`](docs/manifest.yaml).

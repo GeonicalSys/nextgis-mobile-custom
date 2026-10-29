@@ -1,5 +1,20 @@
 schema_version: 1
 invariants:
+  INV-UI-VALUE-PROVENANCE:
+    title: UI meaning follows its producer and effective action, not visual position
+    owners: [app, maplib, maplibui]
+    statement: >
+      Device raw/display location, camera center, saved viewport/project extent,
+      selected geometry and entered coordinates are distinct. Trace effective
+      widget/binding, units/CRS/axes/freshness, state gates and action side effects
+      before using UI as evidence. Preserve source review and runtime UNKNOWN
+      separately; new confirmed links are persisted without a separate request.
+    related_code:
+      - docs/registry/ui-contracts.json
+      - docs/scripts/check_ui_contracts.py
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    must_update_docs: [docs/architecture/ui-contracts.md, docs/registry/ui-contracts.json]
+    verify_smoke: [AUTO-UI-SOURCE-CONTRACTS, SMOKE-UI-VALUE-PROVENANCE]
   INV-GPS-CACHE-WITNESS:
     title: Passive system GPS cache evidence cannot change acquisition or disclose position
     owners: [app, maplib]
