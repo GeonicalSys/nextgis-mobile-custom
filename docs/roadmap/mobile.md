@@ -139,7 +139,8 @@ AVD с2GiB, настоящий длительный pan/pinch+heading workload, 
 877JVM tests,docs50,три normal variants, instrumentation compile и versionmatrix
 PASS; два emulator-only native GPS case не запускались, полевой cause остаётся
 UNKNOWN. Частный обычный APK517c941d…0db8b01 собран, не установлен/не опубликован.
-Source commit и guarded server comments/resolve/readback ещё pending; Full,
+Source commits и guarded server comments/resolve/readback завершены:
+8resolved,599записей/595SDK ID; причины неизвестных сбоев не объявлены исправленными. Full,
 профилирование, новые native/device действия не выполнялись. Это уточнение
 свидетельств MOB-02/MOB-03, не исправление приёма GPS и не возобновление других
 этапов карты. Владельцы app/maplib, Draft84/62; карточка
