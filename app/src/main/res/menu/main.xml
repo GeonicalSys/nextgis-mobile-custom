@@ -60,6 +60,13 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/menu_render_memory"
+        android:title="@string/render_memory_menu"
+        android:orderInCategory="74"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/menu_collector_projects"
         android:title="@string/collector_project_switch"
         android:orderInCategory="84"

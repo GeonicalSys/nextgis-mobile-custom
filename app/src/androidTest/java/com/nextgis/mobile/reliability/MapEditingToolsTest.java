@@ -1328,6 +1328,30 @@ public class MapEditingToolsTest {
         });
     }
 
+    @Test public void emptyEditHandlesNeverEnterTheNativeRenderer() {
+        scenario.onActivity(activity -> {
+            try {
+                MapDrawable map = (MapDrawable) app.getMap();
+                assertEquals(MapFragment.MODE_NORMAL, mode(activity));
+                map.hideMarker();
+                java.lang.reflect.Method query = java.util.Arrays.stream(MapDrawable.class.getDeclaredMethods())
+                        .filter(method -> method.getName().equals("queryTouchFeatures")).findFirst().get();
+                query.setAccessible(true);
+                android.graphics.RectF rect = new android.graphics.RectF(0, 0, 40, 40);
+                // A null renderer makes any accidental native/style access fail immediately.
+                // Use the real loaded map model; only empty owned handles may skip the query.
+                assertTrue(((List<?>) query.invoke(map, null, rect, "marker-layer", activity.getMapFragment())).isEmpty());
+                assertTrue(((List<?>) query.invoke(map, null, rect, "vertex-layer", activity.getMapFragment())).isEmpty());
+                try {
+                    query.invoke(map, null, rect, "ordinary-business-layer", activity.getMapFragment());
+                    fail("Ordinary layer picking must keep its renderer path");
+                } catch (java.lang.reflect.InvocationTargetException expected) {
+                    assertTrue(expected.getCause() instanceof NullPointerException);
+                }
+            } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+        });
+    }
+
     @Test public void pendingNativeTapIsCancelledBeforeViewDestruction() throws Exception {
         for (int iteration = 0; iteration < 3; iteration++) {
             java.util.concurrent.atomic.AtomicReference<org.maplibre.android.maps.MapView> previous =

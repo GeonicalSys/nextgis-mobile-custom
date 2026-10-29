@@ -1,7 +1,7 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-23
+last_verified: 2026-10-28
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -10,10 +10,116 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStart.java
+  - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt
+  - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt
+  - app/src/test/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStartTest.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
 ---
 
 # Доставка диагностических отчётов
+
+## Локальные фазы SQLite rendering — 2026-10-28
+
+`MapRuntimeDiagnostics.SqliteScope` даёт обычной приватной сборке локальный
+logcat tag `LISA-SqlitePhase` через существующий bounded writer. Отдельные
+интервалы охватывают IO queue, layer lock, cache read/write, gate, RTree query,
+attributes/BLOB read, full geometry decode, style, clip, polygon/line label,
+PBF encode/finish и IO→Main dispatch. У активной операции виден текущий этап;
+provider return, SDK return, cancellation и failure считаются отдельно.
+Geometry-only query, initial getCount/prefill, refill и full getBlob/PFD read
+измеряются в BLOB_READ; attributes-only query/materialization остаются в
+SQL_ATTRIBUTES. Новые inline_blobs/pfd_blobs считают полные buffers, отданные
+decode; BLOB_BYTES сохраняет прежний логический объём consumed originals.
+Window может prefetch до32 small BLOB до отмены, поэтому эти counts не являются
+физическим объёмом SQLite IO или суммой всех prefetched bytes.
+`returned_to_sdk` означает возврат Java provider, а native content ready остаётся
+`unverified`. Подтверждён read hot path отдельных scopes; полная задержка
+планшетной сцены и эффект small-BLOB кандидата остаются отдельной проверкой.
+
+Контракт ограничен16 активными scopes,32 layer summaries и одним observer.
+Локальная запись производится не чаще10s/слой; финальный suppressed outcome
+получает отложенный flush. Saturation явно учитывает потерянные наблюдения,
+завершённые summaries переиспользуются после throttle interval. Clock failure
+обозначает недоступное timing, а не0ms. Сбой clock/writer/watch не меняет
+rendering/cancellation и не удерживает завершённый scope.
+
+В scope только фиксированные phase/count enums, числовые layer/source/content
+IDs, zoom без tile X/Y, counts/bytes и длительности. URI, координаты, значения
+полей, error messages и произвольные phase strings не принимаются. Новых
+SQLite/geometry/memory/MapLibre reads для диагностики нет; Main получает только
+записанные счётчики. Существующий16KiB private snapshot сохраняет прежнее
+владение process/version; отдельного сетевого отправителя или настройки нет.
+
+Известная граница первого tablet capture: слой, у которого все scopes попали
+под cap16 до первого наблюдения, может остаться с `last=null`; тогда его
+счётчики ещё не публикуются. `layer_totals` — сумма только опубликованных
+слоёв, не глобальный denominator процесса. В cold capture3 native terminal
+snapshots не показывают всю работу. Граница сохранена в evidence; исправление
+диагностики требует отдельного scoped изменения. Duration уже наблюдённого
+scope остаётся фактом, но отсутствие записи не означает отсутствие работы.
+
+## Обработанный отказ фонового GPS — группа118, 2026-10-28
+
+Событие118 от27 октября17:03:22.891UTC относится к223/5050495 на Samsung/Android16,
+имеет `failure_kind=handled` и цепочку SecurityException/RemoteException.
+MainActivity уже получила stopped за48ms до отказа `startForeground`.
+Это свидетельство гонки eligibility при доставке pending service launch,
+а не подтверждённое падение или OOM. Отказ уже перехватывался сервисом.
+
+К прежнему допущенному handled LOCATION report добавлен `background_gps_start`
+schema1. В нём только фиксированный `stage`, монотонный `request_age_ms` и два
+снимка `request`/`failure`: `visible_activities`, `resumed_activities`,
+`fine_permission`, `coarse_permission`, `background_permission`,
+`process_importance`. Снимок request создаётся до `startForegroundService`,
+failure — в существующем catch. Request хранит независимые scalar значения,
+не Context/Activity и не живой изменяемый lifecycle снимок. По нему можно увидеть
+остановку экрана или изменение разрешений между запросом и promotion.
+
+Допустимы только пять этапов: launch, notification, start_foreground,
+acquire_background_updates, schedule_permission_check. Неизвестные stage,
+утраченный owner/request, отрицательный clock delta и недоступные отдельные
+платформенные сведения отмечаются `unknown`; до API29 background permission
+имеет `not_required`. Нет координат, SQL, accounts, Intent payload или файлов
+проекта. Context прикладывается в отдельном временном SDK scope и не остаётся
+у соседних событий; sanitize/replay сохраняет его с диагностическим приоритетом
+в прежнем общем16KiB бюджете. Отдельной категории/отправки событий нет.
+
+Наблюдение не принимает решений: FGS type, разрешения, eligibility, promotion,
+pending-cancel fulfillment, START_NOT_STICKY, session/GPS lease cleanup и
+политика повторов сохраняются. Существующий permission-gated report и его
+rate limit тоже прежние. Если optional witness недоступен, исходный отчёт
+не должен теряться. Это улучшение сбора, не доказанное устранение Android/OEM
+отказов. Нужен следующий полевой report после установки соответствующего APK.
+
+Технические unit regressions проверяют delayed promotion после сообщённого
+onPause/onStop, отдельные permission states/unknown/API28, scoped handled
+delivery и сохранность witness при настоящем sanitize с большим соседним
+payload и повторным replay. Они не запускают Android FGS и не являются native
+приёмкой гонки. Результат исполнения и факт выпуска фиксируются отдельно в
+[карточке](../../update-reports/entries/android-20261028-background-gps-start-evidence.md).
+
+## Системная история в отправляемом ZIP — 2026-10-27
+
+При явной команде отправки журнала MainActivity добавляет process-exits.json
+непосредственно в ZIP. На Android 11+ читаются максимум восемь записей OS history,
+затем выбирается основной package process. У каждой записи только timestamp,
+PID, reason, status/signal, importance, PSS/RSS в KiB. Нормальные причины тоже
+сохраняются как системные факты, а не объявляются crash. Сам явный ZIP export
+не создаёт автоматических событий; restart fallback описан отдельно ниже.
+Описания, trace streams, accounts,
+карта, файлы объектов и фотографии здесь не читаются.
+
+Модель/Android и reporter_version/build стоят на уровне экспорта; историческим
+записям текущая версия не назначается. Android ниже 30 возвращает unsupported,
+отсутствие сервиса/отказ API — unavailable, доступная пустая история — available
+с пустым exits. Это отсутствие свидетельства, не отсутствие падений.
+Сведения нужны и когда ни один SDK envelope не пережил завершение.
+[Контракт Android ApplicationExitInfo](https://developer.android.com/reference/android/app/ApplicationExitInfo).
+[Текущий инцидент и ограничения](../reference/mobile-crash-224-2026-10-27.md).
 
 ## Автоматическая диагностика восстановления GPS
 
@@ -283,3 +389,69 @@ Sync PersistenceFailure добавляет sync_journal: phase, projects/account
 bytes, storage_available_bytes, caller_interrupted_at_entry/caller_interrupted и
 write_mode=owned_thread. Причина IOException сохраняется, сами пары и credentials
 не копируются. [Результаты разбора](../reference/glitchtip-triage-2026-10-17.md).
+
+## Автоматический restart fallback — 2026-10-27
+
+До SDK/загрузки карты DiagnosticsProcessExitReporter атомарно сохраняет
+маленький owner marker с PID, временем, исходной версией и source revision.
+После запуска фоновый поток сопоставляет предыдущие процессы с OS exit history
+по имени, PID и lifetime. Ненормальный exit получает отдельный ERROR event
+process_exit_fallback; User/update/permission/self stops его не создают.
+В очереди максимум четыре owner; удаление из неё — после DiskFlushNotification
+от существующего durable transport. Event ID детерминирован по process/PID/time,
+поэтому retry не создаёт новую identity. Возможен отдельный fallback рядом с
+основным SDK crash: число отчётов не считается числом независимых падений.
+
+Первое обновление может прочитать до восьми OS записей последних24h без owner
+старого APK. Их версия и source revision явно unknown, текущая версия не
+приписывается. История/trace могут отсутствовать; Android до11 не предоставляет
+этот fallback. Это ограничение сбора, не гарантия обнаружить любое завершение.
+
+Для ANR читается main-thread stack. Android12+ native tombstone читается с
+пределом1MiB; allowlist parser оставляет до24 crashing-thread native frames,
+function/library basename/rel_pc/build_id и ограниченную безопасную abort message.
+Регистры, raw memory, memory maps, OS log buffers и open files исключены.
+Malformed/oversized/unavailable/missing trace имеют явный статус. Никаких новых
+Binder/file операций в fatal callback: сбор только после следующего запуска.
+
+Уточнение28 октября: `REASON_SIGNALED` тоже запрашивает trace начиная с API30.
+Прежний reason gate пропускал эти записи целиком и выдавал
+`not_available_for_reason`, хотя публичный Android API не гарантирует отсутствие
+trace. Javadoc/implementation `ApplicationExitInfo.getTraceInputStream()` в
+установленных Android36 SDK sources допускает сохранённый прежний ANR после
+восстановления процесса и последующей смерти по другой причине; getter не имеет
+проверки reason. Native protobuf документирован с API31; null допустим, в том
+числе после перезаписи системного circular buffer.
+
+`DiagnosticsTracePolicy` сохраняет прежний ANR/native API gate, добавляя для
+SIGNALED режим `requested_format=auto`. Parser принимает native format только
+при наличии crashing TID и непустых allowlisted frames; иначе ищет только main
+ANR stack. `format` равен `native_protobuf`, `anr_text` либо `unknown`.
+`association=may_precede_exit` у signal trace означает возможную связь с более
+ранним ANR, а не установленную причину текущего завершения. Исходные reason/status,
+owner identity и fingerprint остаются прежними; reason2/status6 не доказывает OOM.
+Null даёт `missing`, ошибка getter/read — `unavailable` с ограниченным именем
+класса ошибки без её сообщения, нераспознанные bytes — `unrecognized_format`,
+переполнение — `oversized` либо `captured_truncated`. Пропуск политикой теперь
+называется `not_requested_for_reason`, API ниже30 — `unsupported_api`.
+Byte/frame/privacy budgets прежние; никакие дополнительные native handlers не
+устанавливаются. Новые unit cases и реальная OS-проверка SIGNALED ещё не запускались;
+исторический native result ниже относится к прежнему ANR/native reason gate.
+
+Проверено на API36 AVD: реальный SIGKILL без SDK envelope и SIGABRT, restart,
+исходная identity, наличие OS native_frames в durable envelope. В delivery06
+все9 native phases PASS, включая приём fallback локальным HTTP сервером после
+возврата сети и WorkManager retry после503. Owned AVD остановлен с cleanup
+readback PASS. Первый delivery01 оставлен как FAIL на HTTP retry; новый результат
+его не переписывает. Fresh verification fixture исключает OS историю прежних
+независимых тестов. Клиентский224 crash не устранён; физический Samsung не проверен.
+
+
+К классифицированным редким GPS отчётам добавлен platform snapshot: fine/coarse/
+background permission, GPS/global location enabled, app standby bucket,
+background restriction, process importance и observer_on_main. Это данные
+недостающие в provider_silent после screen off; они не устанавливают причину.
+Координаты/accounts/storage не читаются; необязательная ошибка сбора не теряет
+исходный отчёт. Пороги, retry и подавление нормального no_fix/acquisition/filter
+wait не изменены. Card android-20261027-gps-provider-evidence; первый ручной
+crash APK030f303 этого GPS addon ещё не содержит.

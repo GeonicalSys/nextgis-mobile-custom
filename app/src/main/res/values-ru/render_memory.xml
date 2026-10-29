@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="render_memory_title">Экономия памяти</string>
+    <string name="render_memory_menu">Память карты</string>
+    <string name="render_memory_message">Свободной памяти стало мало. Включён экономный режим, карта может загружаться медленнее. Данные и точность геометрии сохраняются.</string>
+    <string name="render_memory_layers">Затронутые слои:</string>
+    <string name="render_memory_more">И ещё %1$d слоёв</string>
+    <string name="render_memory_retry">Повторить</string>
+    <string name="render_memory_continue">Продолжить</string>
+    <string name="render_memory_normal">Карта загружается без ресурсных ограничений.</string>
+</resources>

@@ -7,6 +7,7 @@ import com.nextgis.mobile.MainApplication;
 
 public final class VerificationTestApplication extends MainApplication {
     static boolean phoneOptIn;
+    static boolean memoryNoticeUnderTest;
     static final java.util.concurrent.CountDownLatch startupCallbacks =
             new java.util.concurrent.CountDownLatch(1);
 
@@ -21,6 +22,9 @@ public final class VerificationTestApplication extends MainApplication {
             throw new IllegalStateException("Verification requires its separate test-only APK identity");
         if (!VerificationEnvironment.isEmulator() && !phoneOptIn)
             throw new IllegalStateException("A physical verification phone must be explicitly selected");
+        // Unrelated gesture/layout cases acknowledge this one known onboarding notice.
+        // The dedicated memory suite keeps production delivery and tests it across recreation.
+        if (!memoryNoticeUnderTest) RenderMemoryNotice.claim();
         if (!VerificationEnvironment.isEmulator()) {
             // These preferences belong only to this disposable app, never to the user's app/device.
             PreferenceManager.getDefaultSharedPreferences(this).edit()
@@ -47,6 +51,14 @@ public final class VerificationTestApplication extends MainApplication {
     }
 
     @Override protected void initializeDiagnostics() {
+        // pm clear resets this test workspace, but Android retains OS exit history from
+        // earlier disposable runs. Do not import that history into an unrelated new fixture.
+        // Owned marker/replay phases survive reset=False and exercise the real fallback.
+        java.io.File marker = new java.io.File(getFilesDir(), "diagnostic-process.json");
+        if (!marker.exists()) try {
+            java.nio.file.Files.write(marker.toPath(), "{\"history_scanned\":true,\"pending\":[]}"
+                    .getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        } catch (java.io.IOException error) { throw new IllegalStateException(error); }
         AppDiagnostics.initialize(this, "http://synthetic@127.0.0.1:18539/1");
     }
 }

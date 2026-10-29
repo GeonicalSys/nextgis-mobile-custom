@@ -1,10 +1,142 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 ---
 
 # app — Android-приложение Lisa/Belka
+
+## Локальные SQLite phase timings — MOB-04, 2026-10-28
+
+Ordinary app использует maplib `MapRuntimeDiagnostics.SqliteScope` и локальный
+logcat `LISA-SqlitePhase`; нового app sender, preference, permission или UI нет.
+Scope охватывает очередь IO, lock/gate/cache, SQLite attributes/BLOB/full
+decode, style/clip/labels, PBF и Main dispatch без дополнительных reads.
+Максимум16 active scopes/32 layer summaries,10s/слой и bounded writer; dropped
+наблюдения, cancellation и недоступное timing явны. Только числовые
+layer/source/content IDs и counts, без URI/координат/полей. SDK return означает
+только Java provider return. Независимый tablet content-ready замер обязателен;
+телефон787 не принимает фактический Collector1403 планшета.
+
+39 focused maplib JVM tests PASS; normal build/tablet qualification проверяются
+отдельно. [Протокол](../../docs/runbooks/automated-tests.md) и
+[границы диагностики](../../docs/architecture/error-reporting.md).
+
+## Ограниченный UID logcat verification APK — MOB-04, 2026-10-28
+
+`tools/mobile_native_log.py` начинает непрерывный host capture перед native
+instrumentation только для UID точного `com.nextgis.mobile.verification.debug`.
+Сначала read-only определяется текущий Android user, затем package query получает
+явный `--user`. Из substring-ответа выбирается ровно один точный app package;
+известный instrumentation `.test` допускается отдельно, его UID не читается.
+Дубликаты/конфликты/другие строки/несовпадающий user отвергаются. Logcat получает `--uid`, `-T1`, `-vthreadtime`, без очистки журналов
+и whole-system capture. Caller передаёт новый owned output на Q.
+
+Файл сохраняет первые2MiB и последние2MiB. Во время исполнения tail — bounded
+disk ring; `capture.stop()` останавливает только свой host ADB client, join/close
+reader, один раз упорядочивает tail и возвращает metadata с UID/path/times,
+retained/dropped bytes, layout, errors и состоянием закрытия. Partial file остаётся
+при ошибке; diagnostic outcome не меняет исходный native assertion. При start
+failure caller получает только fixed code/type. Runner integration — отдельная
+часть текущей задачи.14 fake-process unit tests PASS. На SM-A566B проверены
+реальные current-user0/verification UID10426 и корректная остановка клиента;
+пустой probe не запускал приложение и не доказывает сбор нового stack. Native05
+ещё имел9 ошибок прежнего UID query; они сохранены. Production APK не меняется.
+
+## Независимый PBF witness — MOB-04, 2026-10-28
+
+Test-only `SqliteMvtEvidence` декодирует готовые bytes от SQLite provider без
+encoder helpers и выводит counts Point/Line/Polygon и allowlisted свойства
+технических FID31/62/99. Input≤4MiB, JSON≤12KiB; coordinates/geometry и произвольные
+атрибуты не экспортируются. Это средство локализовать расхождение mapper/PBF/SDK,
+а не отдельный тест или native PASS. Интеграция и запуск принадлежат NativeSQL
+instrumentation test; production APK helper не содержит.
+
+## OS trace после завершения сигналом — MOB-03, 2026-10-28
+
+Restart fallback теперь запрашивает OS trace и для `REASON_SIGNALED` на Android11+.
+`DiagnosticsTracePolicy` выбирает AUTO: прежний bounded parser распознаёт native
+protobuf с crashing-thread frames либо текст прежнего ANR с main-thread frames.
+Android может приложить восстановленный ANR к более позднему завершению по другой
+причине, поэтому `association=may_precede_exit` не позволяет считать этот стек
+доказательством причины сигнала. Reason/status остаются исходными; SIGABRT не
+объявляется OOM. Null, IO failure и неизвестный формат различаются явно.
+
+Предел чтения остаётся1MiB плюс один sentinel byte, до24 frames; registers,
+memory/log buffers, open files и другие потоки не передаются. Чтение происходит
+в прежнем restart worker, без изменений fatal handlers, ZIP metadata export,
+процессного owner marker или durable ACK.16 unit cases прошли в fullbuild06;
+реальная OS-проверка нового reason2 пути ещё не выполнена.
+
+## Память карты — MOB-04, 2026-10-28
+
+App использует библиотечную экономию кэшей по фактической свободной RAM,
+системному порогу/OS low-memory state и Java headroom. Занятая память процесса,
+RSS и native heap — только диагностика. Номинальные2GiB сами по себе не
+вызывают предупреждение/замедление, а занятое другими приложениями устройство8GiB
+может перейти к экономии по текущему остатку. `MapFragment` передаёт lifecycle текущего
+MapView, включает/отключает SDK tile cache и принимает owner-fenced callback.
+`RenderMemoryNotice` даёт одно автоматическое предупреждение за процесс,
+включая другую карту/слой и Activity recreation; ручной статус доступен повторно.
+«Повторить» пересматривает cache policy, без полной повторной загрузки всех
+GeoJSON. Нет сохранённой настройки ограничений или записи visibility/data.
+
+Rich Java features редактора, все исходные координаты и объекты остаются полными.
+`NativeFeaturePayload` передаёт SDK отдельную компактную проекцию свойств без
+дублирования уже заданных констант layout; сохраняет используемые paint/labels,
+zoom gates, IDs/bbox/unknowns и line label fallback. Непустые polygon labels
+получают только нужные label свойства. Текстуры штриховки уменьшаются только
+до пиксельно точного повторяемого ARGB мотива. Geometry/style JSON, SQLite,
+sync/outbox, draft и видимость не меняются; новые LOD и ID thinning не вводятся.
+
+Local MVT сохраняет два worker/очередь16 и один builder при малом измеренном
+свободном system/Java остатке. Coarse prefetch выключен; полный derived PBF read-only
+слоёв имеет private disk limit32/128MiB,1024 файлов и4MiB на запись с
+process/map/content/style ключом. Это не подкачка native heap. Неполный тайл
+не становится200 или записью кэша; явный503 требует отдельной проверки SDK
+recovery после освобождения памяти.
+
+`MapRenderStressTest` проверяет отдельные6480technical polygons по65координат,
+другой PID после seed,90s взаимодействия, реальные pan/pinch/recreate/heading
+и current direct SQLite sources с пустыми global feature lists. Schema2 требует
+все независимо ожидаемые полностью видимые FID из заранее известной сетки,
+без смешивания Fill geometry с Point label anchors; offscreen/edge объекты
+не получают выдуманных ожиданий. Итоговый таймер измеряется после workload,
+а прежние logical VectorSource counters/receipts не принимаются. Это stress
+живучести и полноты, не парный benchmark787 или доказательство отсутствия OOM.
+
+Адресный Related `sqlite-marker` использует один прежний MultiPoint/custom-icon
+метод, без дубля в Full. Failure artifact хранит исходный PNG с bounded encoded
+cap2MiB и full-resolution global/local pixel counts в JSON; наличие этих данных
+не означает PASS отображения значка и не меняет цветовые/пиксельные ожидания.
+
+Профиль787 показал большой retained GeoJSONVT property payload, но высокий
+уровень памяти не доказывает монотонную утечку. Внутренний index SDK остаётся
+без добавленного eviction; порогов used/RSS и hard cap нет. Триггер223→224
+и гарантированная работа2GiB не установлены. Точные sample доли и контракт —
+[производительность](../../docs/architecture/map-performance.md), карточки
+[cache economy](../../maplib/update-reports/entries/maplib-20261027-render-memory-budget.md),
+[payload](../../maplib/update-reports/entries/maplib-20261028-native-geojson-payload.md),
+[мотивы](../../maplib/update-reports/entries/maplib-20261027-pattern-exact-motif.md).
+
+`RenderMemorySafetyTest` проверяет129 технических SQLite полигонов по65coords,
+точные ID/Java координаты, native ID set и полный hash строк, warning across
+recreation/second layer/manual status. Его8 component dialog profiles не
+заменяют Full real-window matrix и не имитируют настоящий OOM. Related/Full
+на устройстве/эмуляторе и финальный free-only A/B787 остаются незавершённой
+приёмкой. Измерение experimentalec71 относится к прежней RSS-policy;
+его результаты и ограничения приведены в контракте производительности. Эти правки
+не выпущены; текущая документация не является разрешением публикации.
+
+## Разбор завершений 224 — 2026-10-27
+
+Явная отправка логов включает process-exits.json с ограниченной системной
+историей основного процесса. Полный контракт и границы —
+[диагностика](../../docs/architecture/error-reporting.md); подтверждённые ANR,
+неподтверждённые вылеты 224 и проверки —
+[разбор](../../docs/reference/mobile-crash-224-2026-10-27.md).
+Related crash-startup проверяет пустые edit handles, линейку и OS/observer export
+на изолированном эмуляторе. Рабочие данные пользователей не участвуют.
 
 Автоматические Actions Android/docs переведены в manual-only по поручению
 пользователя ради лимитов GitHub. Related/Full и docs/report impact выполняются
@@ -988,3 +1120,22 @@ Graphics LocationOrbitTest теперь ждёт завершения текущ
 MapSelectionDialog переносит длинные строки общего списка, оставляет прокрутку
 и Cancel. Полевые линейные рисуются над треками/обычными данными, но под точками,
 включая отдельные подписи. Related track-candidates 4/4 native PASS; Full обязателен.
+
+## Автоматическая диагностика после закрытия процесса
+
+Новый restart fallback восстанавливает OS exit reason и доступные native/ANR
+frames даже при отсутствии исходного SDK envelope. Контракт, ограничения и
+исходная identity — docs/architecture/error-reporting.md. По поручению пользователя
+передан приватный подписанный APK030f303 поверх224, без публичного выпуска и без
+изменения renderer13.7.1. Публичная224 отдельно отозвана: latest/manifest223;
+исправлен и портал. Приёмка клиента Samsung ещё не выполнена.
+
+
+К классифицированным редким GPS отчётам добавлен platform snapshot: fine/coarse/
+background permission, GPS/global location enabled, app standby bucket,
+background restriction, process importance и observer_on_main. Это данные
+недостающие в provider_silent после screen off; они не устанавливают причину.
+Координаты/accounts/storage не читаются; необязательная ошибка сбора не теряет
+исходный отчёт. Пороги, retry и подавление нормального no_fix/acquisition/filter
+wait не изменены. Card android-20261027-gps-provider-evidence; первый ручной
+crash APK030f303 этого GPS addon ещё не содержит.

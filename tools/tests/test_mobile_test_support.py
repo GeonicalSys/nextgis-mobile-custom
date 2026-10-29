@@ -1,10 +1,25 @@
 import sys
+import json
 from pathlib import Path
 import unittest
+import hashlib
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from mobile_test_support import avd_names, check_publication_receipt, parse_instrumentation, phone_unlocked, validate_plan
+from mobile_test_support import avd_names, check_publication_receipt, native_catalog, parse_instrumentation, phone_unlocked, validate_plan
 
 CASE = 'example.Test#works'
+
+def valid_build_basis(fingerprint='abc'):
+    value={'schema_version':1,'status':'built','source_fingerprint':fingerprint,
+           'recipe':{'id':'lisa-field-verification-v1',
+                     'arguments':['-PfieldVerificationChecks=true','-PciReliabilityChecks=true',
+                                  '-Pkotlin.incremental=false','--console=plain',
+                                  ':app:assembleLisaDebug',':app:assembleLisaDebugAndroidTest'],
+                     'launcher_sha256':'a'*64,'wrapper_properties_sha256':'b'*64},
+           'apks':{role:{'path':role+'.apk','package':'com.nextgis.mobile.verification.debug'+suffix,
+                         'sha256':digest*64,'bytes':123}
+                   for role,suffix,digest in [('app','','c'),('test','.test','d')]}}
+    value['basis_sha256']=hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
+    return value
 
 def output(code=0, summary='OK (1 test)'):
     return ('INSTRUMENTATION_STATUS: class=example.Test\nINSTRUMENTATION_STATUS: test=works\n'
@@ -54,10 +69,15 @@ class PhoneLockStateTest(unittest.TestCase):
 class FullReceiptTest(unittest.TestCase):
     def receipt(self):
         return {'scope':'full','status':'passed','source_fingerprint':'abc','passed_cases':[CASE],
+                'build_basis':valid_build_basis(),
                 'checks':dict.fromkeys(('units','docs','versions','ui_matrix','real_window_matrix','test_project'),True),
                 'devices':{'phone':{'sdk':36},'emulator':{'sdk':36}}}
     def test_a_complete_current_full_run_is_accepted(self):
         check_publication_receipt(self.receipt(),'abc',{CASE})
+    def test_legacy_full_without_build_basis_or_with_another_build_cannot_publish(self):
+        for value in (None,valid_build_basis('another-source')):
+            receipt=self.receipt(); receipt['build_basis']=value
+            with self.assertRaises(ValueError): check_publication_receipt(receipt,'abc',{CASE})
     def test_chooser_profiles_alone_cannot_certify_the_real_enlarged_windows(self):
         receipt=self.receipt();receipt['checks'].pop('real_window_matrix')
         with self.assertRaises(ValueError):check_publication_receipt(receipt,'abc',{CASE})
@@ -76,6 +96,14 @@ class FullReceiptTest(unittest.TestCase):
         plan={'phone':['example.Test'],'emulator':[],'diagnostics':[],'areas':{'one':['example.Test']}}
         self.assertEqual({CASE}, validate_plan(plan,{'example.Test':{CASE}}))
         with self.assertRaises(ValueError): validate_plan(plan,{'example.Test':{CASE},'new.Test':{'new.Test#case'}})
+
+    def test_versioned_plan_routes_the_actual_native_catalog_without_duplicates(self):
+        root = Path(__file__).resolve().parents[2]
+        catalog = native_catalog(root)
+        self.assertTrue(catalog, 'An empty source catalogue cannot certify test routing')
+        plan = json.loads((root / 'tools/mobile-test-plan.json').read_text(encoding='utf-8'))
+        expected = {case for cases in catalog.values() for case in cases}
+        self.assertEqual(expected, validate_plan(plan, catalog))
     def test_per_method_isolation_cannot_name_an_unrouted_class(self):
         plan={'phone':['example.Test'],'emulator':[],'diagnostics':[],'areas':{},
               'isolated_methods':['example.Test']}

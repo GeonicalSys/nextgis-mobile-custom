@@ -9,6 +9,7 @@ import androidx.test.runner.AndroidJUnitRunner;
 public final class VerificationTestRunner extends AndroidJUnitRunner {
     @Override public void onCreate(Bundle arguments) {
         VerificationTestApplication.phoneOptIn = "true".equals(arguments.getString("verificationPhone"));
+        VerificationTestApplication.memoryNoticeUnderTest = arguments.getString("class", "").contains("RenderMemorySafetyTest");
         super.onCreate(arguments);
     }
 

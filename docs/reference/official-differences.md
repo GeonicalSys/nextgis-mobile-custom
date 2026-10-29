@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-27
+last_verified: 2026-10-28
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,97 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+Final validation D101:allmaplib750PASS/132classes/0fail/error/skip59s. Actual
+dense1403/11.7z complete scene gate10.33–12.27s против13.68–15.65s6039 и
+32.45–34.09s843d; late map ROI MAE0 с обоими. Один processcold run/build при
+retaineddiskcache, не allstyle/2–3s/Full acceptance. TrackLayer сохранён прежним:
+saved/active tracks используют полные GeoJSON snapshots; их RAM не измерена.
+
+## Bounded small-BLOB transport — 2026-10-28
+
+Невыпущенный fork-кандидат после actual6039 BLOB1458ms/3051 originals добавляет
+geometry-only32-ID cursor: whole BLOB<=16KiB в explicit1MiB window на API28+;
+большие, API26/27 и safely unsupported driver сохраняют полный PFD путь.
+Attrs projection не расширяется, bytes/order/types/NULL/epochs/style не меняются.
+OrdinaryD101 normalall3/matrixPASS,71focusedPASS; physicalAPI30 cold1403 дал
+1350inline+2PFD/1352consumed originals без retained read/window failures.
+121/110-feature same9counter BLOB stages83.57→13.28ms и134.11→15.37ms, но
+IOqueue/limited snapshots не принимают весь кадр.512KiB small payload не означает
+общий RAM budget; native PSS/полный кадр и sharp17→12/new extent — отдельные gates.
+Freshcurrent787lateRSS820.42→643.06MiB в однойcab9/D101паре при выросшемGraphics
+143.36→210.14MiB, не pooledoldABBA/2GiB acceptance. Это не упрощение карты
+и не заявленный результат2–3s. Baseline6039 APK сохранён отдельно.
+
+## Локальные фазы SQLite отрисовки — 2026-10-28
+
+После подтверждённых tablet startup read timings подготовлен source-кандидат
+attributes-only cursors по32 прежним eligible IDs с exact CASE order и одним
+compiled BLOB statement на visit. Full originals/NULL/types/order/epochs и
+phase boundaries сохранены; missing/extra/bad rows не дают partial success.
+Это ещё не измеренное ускорение: обязательны sharp17→12 и новая область на
+том же планшете, old private843d остаётся отдельным baseline.
+
+В невыпущенном source добавлен bounded `LISA-SqlitePhase` для ordinary private
+build: IO/lock/gate/cache, SQLite BLOB/full decode, style/clip/labels, PBF и Main
+dispatch без повторных reads или изменения объектов/геометрии. Typed IDs/counts
+не содержат URI, координаты или значения полей; лимиты16 scopes/32 summaries,
+10s/слой и явные lost observations. Java provider/SDK return отличается от
+native content ready.39 focused JVM tests PASS; полная сцена12.1 на
+планшете Collector1403 и эффект нового read-кандидата ещё требуют runtime evidence. Это не release,
+не результат проекта787 и не закрытие Full/2GiB gate.
+
+## Память карты без упрощения объектов — MOB-04, 2026-10-28
+
+В source tip ordinary Simple/Field Rule vectors всех шести geometry types
+читаются напрямую из SQLite/RTree в полные MVT8192 и штатный
+CustomVectorSource13.7.1, без HTTP и общей startup GeoJSON коллекции. Edit
+получает один полный DB original; native polygon/anchor роли разделены, source
+work отменяется до смены owner/style/view. Форматы DB/Collector/project JSON
+сохранены. Реальная скорость, Full и2GiB приёмка ещё открыты; APK не опубликован.
+
+Текущая доработка fork отделяет полный rich Java снимок редактора от компактного
+`NativeFeaturePayload`, передаваемого SDK. Геометрия/bbox/IDs/unknowns и нужные
+paint/label/zoom свойства сохраняются; константы native layout не дублируются
+в каждом объекте. Polygon label points создаются только для непустого текста
+и несут нужные label поля, line fallback query сохраняет свои inputs.
+Штриховки используют меньший bitmap только при полном попиксельном совпадении
+повторяемого мотива исходной512×512ARGB решётки. Исходные данные и стиль не
+переписываются; новые LOD, отбор ID или отключение слоёв не вводятся.
+
+Cache economy учитывает текущую свободную системную/Java память и OS low-memory,
+в том числе занятое устройство8GiB. Used/native/RSS и номинальный low-RAM класс
+сами по себе не включают предупреждение/замедление; RSS хранится как диагностика.
+SDK cache trim, local MVT coarse-prefetch off, два normal builder/один constrained
+и private complete-PBF disk cache32/128MiB снижают лишнюю работу. App предупреждает
+один раз за процесс с ручным повторным статусом. Это не hard native cap,
+не файл подкачки и не eviction внутреннего GeoJSONVT index. Явный503 никогда
+не маскируется неполным200; восстановление SDK после возвращения RAM ещё
+требует native приёмки.
+
+Квалифицированная выборка787 отнесла673MiB/74,2% из907MiB retained allocations
+к GeoJSONVT index, включая≥564MiB property maps; около128MiB — растровые данные.
+Эти числа не разлагают весь RSS. Плато само по себе не доказывает утечку,
+точный триггер223→224 неизвестен. Unit/build и текущая native приёмка различаются;
+нового Full PASS или выпуска здесь нет.28 октября адресно fetched official
+master: app `6113485be698606240b9bc7f0740a18ecc084aaa`, maplib
+`014247eea4a424e828c24d9e52e45fefed362f8d`, maplibui
+`ed4dac77d51746509a2b59f3cc6b99151b841967`. В прочитанных tracked main-source
+деревьях этих revisions нет CustomVectorSource entry point. Это адресная
+source-сверка нового пути, не доказательство отсутствия всех аналогичных
+оптимизаций official и не upstream merge. [Контракт](../architecture/map-performance.md), карточки
+[cache economy](../../maplib/update-reports/entries/maplib-20261027-render-memory-budget.md),
+[payload](../../maplib/update-reports/entries/maplib-20261028-native-geojson-payload.md),
+[мотивы](../../maplib/update-reports/entries/maplib-20261027-pattern-exact-motif.md).
+
+## Разбор зависаний и завершений 224 — 2026-10-27
+
+MOB-02: fork пропускает пустые editor hit-tests и буферизует чтение GeometryRTree,
+а явный ZIP export дополняет системной историей без назначения текущей версии
+старому процессу. Official app master проверен через API:6113485be698606240b9bc7f0740a18ecc084aaa;
+maplib master:014247eea4a424e828c24d9e52e45fefed362f8d.
+Эти правки не являются upstream merge или доказанным устранением native crash 224.
+[Разбор и приёмка](mobile-crash-224-2026-10-27.md).
 
 ## Native verification после Full14 — 2026-10-27
 
@@ -138,6 +229,10 @@ acquisition/filter wait и явно распознанный локальный 
 snapshot v3 сохраняет длительность причины и интервалы observer/сна устройства.
 OS process_exit metadata дополняет historical ANR/native failures только при
 совпадении процесса, типа завершения и времени. Native scope хранит operation/phase.
+Отдельный restart fallback форка на API30+ пробует OS trace для SIGNALED:
+bounded AUTO parser сохраняет native либо ANR frames с возможной связью с прежним
+зависанием (`association=may_precede_exit`), без вывода о причине сигнала/OOM.
+Пределы и явные unknown/missing/IO состояния описаны в [контракте](../architecture/error-reporting.md).
 CLI подключения и workflow закрытия уже находятся в репозитории:
 [runbook](../runbooks/glitchtip-triage.md), [разбор](glitchtip-triage-2026-10-23.md).
 API комментариев использует nested data.text; wire shape закреплён regression test.
@@ -1312,7 +1407,10 @@ reload. Так Gson `LinkedTreeMap` одного MapLibre feature не запи�
 шаблонов подписей может дочитывать атрибуты из SQLite. Экспериментальный путь
 `USE_MAPLIBRE_NATIVE_GEOJSON_URI` (передача file URI в MapLibre для native parse)
 в production выключен (`false`) из-за риска пустых слоёв на части устройств.
-Флаг `VECTOR_RENDER_DISK_CACHE_ENABLED` отключает весь механизм.
+Флаг `VECTOR_RENDER_DISK_CACHE_ENABLED` сейчас также false и отключает весь
+legacy whole-layer механизм. Новый bounded complete-PBF кэш local MVT независим
+от него. Native handoff проходит через компактный payload, поэтому старый
+styled URI не может обойти проекцию.
 
 #### Локальные vector tiles (`local_vector_tiles`)
 
@@ -1338,20 +1436,24 @@ reload. Так Gson `LinkedTreeMap` одного MapLibre feature не запи�
 
 Loopback server держит максимум два worker и 16 ожидающих запросов вместо
 неограниченного cached pool. Сборки одного слоя сериализованы, очередь прошлого
-поколения карты закрывается при reload, а переполнение или остаток менее 64 МБ
-до heap growth limit дают retryable `503`. Это предотвращает наблюдавшийся OOM,
-где MapLibre создал более ста одновременных запросов тяжёлого слоя и каждый
-разбирал геометрию из SQLite.
+поколения карты закрывается при reload. Fair two-permit gate сохраняет два builder
+при нормальных ресурсах и один при малом измеренном свободном system/Java остатке.
+Переполнение, остаток менее64MiB до heap growth limit или системный дефицит дают
+retryable503. Это ограничивает известный fan-out тяжёлых SQLite разборов,
+но не гарантирует отсутствие всех native OOM. Coarse prefetch выключен;
+private derived cache хранит только полный PBF:32/128MiB,1024 файлов,
+4MiB на запись, process/map/content/style ключ. Неполных200/cache записей нет.
 
 **Условия и fallback.** Поддерживаются `Polygon` / `MultiPolygon`, а также
 read-only `Point` с простым renderer и обычным круговым маркером без custom
 icon. Подпись точки может быть фиксированным текстом или значением одного поля
 (`_id` также поддерживается). `MultiPoint`, rule-style, label template,
 editable-слои и линейные геометрии остаются на classic path. Если
-сервер не запустился, геометрия неподдерживаема или provider вернул ошибку —
+сервер не запустился, геометрия неподдерживаема или регистрация provider не удалась —
 `MapDrawable` логирует fallback и строит слой через обычный `GeoJsonSource` +
-render cache. Пользователь видит слой в любом случае, возможно с большей
-задержкой первого кадра.
+прежний путь подготовки данных. Ответ503 уже работающего tile source не
+переключает rendering mode: автоматическое восстановление тайла после
+возвращения RAM остаётся native gate, без обещания немедленного полного кадра.
 
 Выключение отображения такого слоя не отключает локальную идентификацию: tap и
 long-press могут показать объект и его атрибуты из SQLite, не включая слой на
@@ -2210,3 +2312,8 @@ Durable UUID защищает новый сеанс от старого диал
 ## Прямые подписи видимых линий
 
 Одна цельная подпись на текущую видимую часть LineString/MultiLineString поворачивается по преобладающему направлению видимых сегментов и может пересекать изгибы. Точка остаётся на линии; native styles/categories/zoom/collision и исходная геометрия сохранены. Обработка идёт в фоне после settle, без нового SQLite-чтения. Контракт: [visible-line-labels](../architecture/visible-line-labels.md).
+
+Автоматический OS restart fallback и отдельный hardware render-stress gate
+добавлены по MOB-02/MOB-03. Ограничения и точные свидетельства —
+[разбор224](mobile-crash-224-2026-10-27.md). Публичная224 отозвана; приватная диагностическая сборка без
+публикации не является обычным release PASS.

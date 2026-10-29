@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="render_memory_title">Memory saving mode</string>
+    <string name="render_memory_menu">Map memory</string>
+    <string name="render_memory_message">Free memory is running low. Memory saving mode is enabled, so the map may load more slowly. Your data and geometry precision are preserved.</string>
+    <string name="render_memory_layers">Affected layers:</string>
+    <string name="render_memory_more">And %1$d more layers</string>
+    <string name="render_memory_retry">Reload</string>
+    <string name="render_memory_continue">Continue</string>
+    <string name="render_memory_normal">The map is loading without resource restrictions.</string>
+</resources>
