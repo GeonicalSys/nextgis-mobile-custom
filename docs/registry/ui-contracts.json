@@ -1,0 +1,2998 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "map-last-display",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "fun updateLastLocation()",
+      "requires": [
+        "mGpsEventSource?.lastDisplayLocation",
+        "if (location == null) onLocationUnavailable() else onLocationChanged(location)"
+      ],
+      "forbids": [],
+      "sha256": "73942ef18aca73f4900c623f1640ca837b3cace0ddc2fc90bb92068d7d0a961b"
+    },
+    {
+      "id": "map-status-location",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun fillTextViews(location: Location?)",
+      "requires": [
+        "location.latitude",
+        "location.longitude",
+        "mStatusLatitude!!.text",
+        "mStatusLongitude!!.text",
+        "displayAccuracy(location)",
+        "GpsEventSource.DISPLAY_NETWORK_AGE_SECONDS"
+      ],
+      "forbids": [
+        "cameraPosition",
+        "getMaplibreCenter("
+      ],
+      "sha256": "9b33a4423977a86abfe322652e7c5748f223f9ef4d3bd83b63dd9c9ca24bb210"
+    },
+    {
+      "id": "map-status-bind",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun defineTextViews(panel: View)",
+      "requires": [
+        "R.id.tv_source",
+        "R.id.tv_accuracy",
+        "R.id.tv_latitude",
+        "R.id.tv_longitude",
+        "R.id.tv_zoom",
+        "AppSettingsConstants.KEY_PREF_SHOW_ZOOM"
+      ],
+      "forbids": [],
+      "sha256": "09993c46c463241b83b9d6150f10ae2863485da9009dd9253ccdd7c7b40a2469"
+    },
+    {
+      "id": "map-status-empty",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun setDefaultTextViews()",
+      "requires": [
+        "mStatusSource!!.text = \"\"",
+        "mStatusLatitude!!.text = getString(com.nextgis.maplibui.R.string.n_a)",
+        "mStatusLongitude!!.text = getString(com.nextgis.maplibui.R.string.n_a)"
+      ],
+      "forbids": [],
+      "sha256": "9b46fd2704a9fac7da0f60c3a456f9865ee08b99d64ebd3376104e3ed081f0ed"
+    },
+    {
+      "id": "map-format-coordinate",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun formatCoordinate(value: Double, appendix: Int): String",
+      "requires": [
+        "LocationUtil.formatCoordinate(",
+        "mCoordinatesFormat",
+        "mCoordinatesFraction"
+      ],
+      "forbids": [],
+      "sha256": "5a3cd6294b57fa690092e00fbf307342fb89151525931160d9809935a4772f8a"
+    },
+    {
+      "id": "map-resume-settings",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onResume()",
+      "requires": [
+        "AppSettingsConstants.KEY_PREF_SHOW_COMPASS_ACCURACY_SECTOR, false",
+        "SettingsConstantsUI.KEY_PREF_COORD_FORMAT",
+        "SettingsConstantsUI.KEY_PREF_COORD_FRACTION",
+        "mGpsEventSource!!.addListener(this)"
+      ],
+      "forbids": [],
+      "sha256": "cd855682aaad8c4fb79586bba3972e146b50fe24e927cfcc579afed0b4791942"
+    },
+    {
+      "id": "gps-current-fix",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/location/GpsEventSource.java",
+      "marker": "public Location getLastKnownLocation()",
+      "requires": [
+        "isFresh(gps)",
+        "PermissionUtil.hasLocationPermissions(context)",
+        "isFresh(network)",
+        "LocationFixPolicy.preferGps("
+      ],
+      "forbids": [],
+      "sha256": "69ad052d4642a8aafa2c47513f46eaad44153bcec9f9d4c0fb5e529e25e48e98"
+    },
+    {
+      "id": "gps-display-retention",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/location/GpsEventSource.java",
+      "marker": "public Location getLastDisplayLocation()",
+      "requires": [
+        "Location current = getLastKnownLocation();",
+        "!isExternalInput()",
+        "LocationFixPolicy.canRetainNetworkDisplay(",
+        "current = copy(network);",
+        "extras.putLong(DISPLAY_NETWORK_AGE_SECONDS"
+      ],
+      "forbids": [
+        "setTime(",
+        "setElapsedRealtimeNanos("
+      ],
+      "sha256": "9a7eb84dcc2c9516664016e57518fa4accee0ddd0d4195fa1a393f556a90ebeb"
+    },
+    {
+      "id": "fix-freshness",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java",
+      "marker": "public static boolean isFresh(long fixNanos, long nowNanos, long maxAgeMs)",
+      "requires": [
+        "if (fixNanos <= 0 || nowNanos <= 0) return false;",
+        "age >= -FUTURE_TOLERANCE_MS && age <= maxAgeMs"
+      ],
+      "forbids": [],
+      "sha256": "44194a9cf110ff04e1526a7ef71d67fe62625c5fed97e69028cb9199494acb32"
+    },
+    {
+      "id": "accuracy-display",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/location/LocationDisplayAccuracy.java",
+      "marker": "public static float meters(Location location, boolean externalInput)",
+      "requires": [
+        "!externalInput",
+        "LocationManager.GPS_PROVIDER.equals(location.getProvider())",
+        "!LocationTrackFilter.isReceiverStream(location)",
+        "return Math.max(PHONE_GPS_MIN_METERS, accuracy);"
+      ],
+      "forbids": [
+        "setAccuracy("
+      ],
+      "sha256": "04db6dc5744e428f409d9188d37e0940783815a42d07afb88452f4e74bc1a669"
+    },
+    {
+      "id": "gnss-hud",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun fillGnssHud(fix: GnssFix?, status: String?)",
+      "requires": [
+        "mGpsEventSource?.isExternalInput != true",
+        "hud.visibility = View.GONE",
+        "ExternalGnssSession.STATUS_NO_DEVICE",
+        "fix == null || !fix.hasFix()",
+        "fix.horizontalAccuracyM()",
+        "fix.satellites, hdop"
+      ],
+      "forbids": [],
+      "sha256": "bb5aaa5563af122f41fe6894d3eeb46ff67f9fc030011856bccc90bb0297e7c0"
+    },
+    {
+      "id": "gnss-quality",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun gnssHudQualityLabel(quality: Int): String",
+      "requires": [
+        "4 -> R.string.gnss_hud_quality_fix",
+        "5 -> R.string.gnss_hud_quality_float",
+        "2 -> R.string.gnss_hud_quality_dgps"
+      ],
+      "forbids": [],
+      "sha256": "02ebf2d766f5e45ed6c452b5444f94fe84a21096a8bd640067cfc8da27424b4a"
+    },
+    {
+      "id": "map-zoom-text",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "fun getZText(): String",
+      "requires": [
+        "\"%.1fz\".format(Locale.US, mapLibreMap.zoom)",
+        "return \".z\""
+      ],
+      "forbids": [],
+      "sha256": "dc8c04999dfcb414361e8acffc843740718273d09c9600f9622fdad947de11b5"
+    },
+    {
+      "id": "map-camera-idle",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onCameraIdle()",
+      "requires": [
+        "mScaleRulerText!!.text = rulerText",
+        "mZoom!!.text = zoomText",
+        "setMapLibreZoomInEnabled()",
+        "lastStakeoutUiState?.let { updateStakeoutWidget(it) }"
+      ],
+      "forbids": [],
+      "sha256": "5235678cc041d3c18c974073f8c6967964ca9883047b5a289b8f4f78cce0ddff"
+    },
+    {
+      "id": "map-scale-bitmap",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "protected fun drawScaleRuler()",
+      "requires": [
+        "TypedValue.COMPLEX_UNIT_MM, 10f",
+        "TypedValue.COMPLEX_UNIT_MM, 1f",
+        "scaleRuler.setImageBitmap(ruler)"
+      ],
+      "forbids": [],
+      "sha256": "500fcdfadd74c8dccc7563f1211f16052840d87159b49cca28195fb67c84bfe7"
+    },
+    {
+      "id": "map-click-actions",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onClick(v: View)",
+      "requires": [
+        "R.id.action_zoom_in ->",
+        "var newZoom = currentZoom + 1.0",
+        "R.id.action_zoom_out ->",
+        "var newZoom = currentZoom - 1.0",
+        "R.id.fl_compass -> showFullCompass()"
+      ],
+      "forbids": [],
+      "sha256": "3dff19b2c9fb2c0663a406e6a72a0f4f19adb344227e4242190431c1c09c119a"
+    },
+    {
+      "id": "map-locate",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "fun locateCurrentPosition()",
+      "requires": [
+        "maxOf(mapLibreMap.cameraPosition.zoom, LOCATE_MIN_ZOOM)",
+        "mapViewOrNull!!.panTo(mCurrentCenter)",
+        ".bearing(0.0)",
+        ".tilt(0.0)",
+        "updateLastLocation()",
+        "else if (!locateFirstLayerExtent())"
+      ],
+      "forbids": [
+        "setAutopanningEnabled("
+      ],
+      "sha256": "d082cfff4e90e26182a537f46328466a6c0bf406aa051ddedec934689420ce69"
+    },
+    {
+      "id": "map-locate-permission",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+      "marker": "protected fun locateCurrentPosition()",
+      "requires": [
+        "if (!hasLocationPermissions())",
+        "Manifest.permission.ACCESS_COARSE_LOCATION",
+        "Manifest.permission.ACCESS_FINE_LOCATION",
+        "mapFragment!!.locateCurrentPosition()"
+      ],
+      "forbids": [],
+      "sha256": "63b05e4d3a2c88b247575af81cfc85268c61265a5b776b03ac5a258cdde60cf6"
+    },
+    {
+      "id": "map-locate-fallback",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun locateFirstLayerExtent(): Boolean",
+      "requires": [
+        "for (candidate in mapView.getAllLayers())",
+        "if (isUsableExtent(extent))",
+        "break",
+        "val center = extent.center",
+        "val fallbackZoom = LOCATE_MIN_ZOOM.coerceIn("
+      ],
+      "forbids": [
+        "fitBounds",
+        "LatLngBounds"
+      ],
+      "sha256": "0e00a779a580938a5927753a584e78c1f57dad45d484c6e3ce3baaf42c702c72"
+    },
+    {
+      "id": "map-rotation-toggle",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "fun toggleMapRotation(): Boolean",
+      "requires": [
+        "val enabled = !isMapRotationEnabled",
+        "putBoolean(AppSettingsConstants.KEY_PREF_MAP_ROTATION_ENABLED, enabled)",
+        "if (!enabled)",
+        "persistMapBearing(0f)",
+        "setMapBearing(mapLibreMap, 0.0, true)"
+      ],
+      "forbids": [],
+      "sha256": "b0c29a82bd15f4d62235d5b0ff3a2defb1b65fb73a29cbc3557798aeb83163ae"
+    },
+    {
+      "id": "map-rotation-gestures",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun configureMapRotationGestures(mapLibreMap: MapLibreMap, enabled: Boolean)",
+      "requires": [
+        "isRotateGesturesEnabled = enabled",
+        "isTiltGesturesEnabled = false",
+        "isDisableRotateWhenScaling = false"
+      ],
+      "forbids": [],
+      "sha256": "a9d3a89b5725cc89c99aa7fe9378b41086844524878f2409066dd77b6d0284cf"
+    },
+    {
+      "id": "map-persist-camera",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onPause()",
+      "requires": [
+        "SettingsConstantsUI.KEY_PREF_ZOOM_LEVEL",
+        "val point2 = mMapRef.get()!!.map.getMaplibreCenter()",
+        "SettingsConstantsUI.KEY_PREF_SCROLL_X",
+        "SettingsConstantsUI.KEY_PREF_SCROLL_Y",
+        "AppSettingsConstants.KEY_PREF_MAP_BEARING"
+      ],
+      "forbids": [],
+      "sha256": "d2e3d43bd33fed8e243763a95a7c9f9f000c8c0f24b52a53f0773696d783dfc2"
+    },
+    {
+      "id": "map-init-autopan",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onCreateView(\n        inflater: LayoutInflater,\n        container: ViewGroup?,\n        savedInstanceState: Bundle? ): View?",
+      "requires": [
+        "mCurrentLocationOverlay = CurrentLocationOverlay(mActivity, mMapRef.get())",
+        "mCurrentLocationOverlay!!.setAutopanningEnabled(true)",
+        "mMapRef.get()!!.addOverlay(mCurrentLocationOverlay)",
+        "R.id.gnss_hud"
+      ],
+      "forbids": [],
+      "sha256": "9ba3a10af10ea67c4129527ace1e76a8ca863f280eea0b9f061706515d3bab5b"
+    },
+    {
+      "id": "map-point-pauses-autopan",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun beginPointCreation(tool: Int): Boolean",
+      "requires": [
+        "WalkSessionStore.beginPoint(ctx, tool)",
+        "mCurrentLocationOverlay?.setAutopanningEnabled(false)"
+      ],
+      "forbids": [],
+      "sha256": "e004c6b81c177a42a213f8e10f690bbe4115575065f601751b9fce56586d1765"
+    },
+    {
+      "id": "overlay-autopan-policy",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/overlay/CurrentLocationOverlay.java",
+      "marker": "public void onLocationChanged(Location location)",
+      "requires": [
+        "if (mIsAutopanningEnabled)",
+        "mInitialLocation == null || mMapViewOverlays.isLockMap()",
+        "mInitialLocation.distanceTo(location) >= getPanThreshold()",
+        "if (mIsInScreenBounds)",
+        "autopanTo(mInitialLocation, location)"
+      ],
+      "forbids": [],
+      "sha256": "3c599cfd37915e363af5bbf9003063f659570199ba905fa1f9dd537e983fe8b6"
+    },
+    {
+      "id": "overlay-autopan-transform",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/overlay/CurrentLocationOverlay.java",
+      "marker": "private void autopanTo(Location autopanLocation, Location location)",
+      "requires": [
+        "oldLocation.setCRS(GeoConstants.CRS_WGS84)",
+        "oldLocation.project(GeoConstants.CRS_WEB_MERCATOR)",
+        "newCenter.setX(newCenter.getX() - dx)",
+        "newCenter.setY(newCenter.getY() - dy)",
+        "mMapViewOverlays.panTo(newCenter)"
+      ],
+      "forbids": [],
+      "sha256": "0ee1b8b69ea8d735e6acf723a626a9bf0d6f63ec79c14d4bdfe686b85d6438c4"
+    },
+    {
+      "id": "map-device-fix",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun applyLocationFixToMap(location: Location)",
+      "requires": [
+        "mCurrentCenter!!.setCoordinates(location.longitude, location.latitude)",
+        "mCurrentCenter!!.crs = GeoConstants.CRS_WGS84",
+        "mCurrentCenter!!.project(GeoConstants.CRS_WEB_MERCATOR)",
+        "mapDrawable.updateLocation("
+      ],
+      "forbids": [
+        "animateCamera(",
+        "moveCamera("
+      ],
+      "sha256": "931ea1a2b82caf8068f98319b63d6dfb6d90e71df1b49cc3f7668e4d62db7c54"
+    },
+    {
+      "id": "map-location-unavailable",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onLocationUnavailable()",
+      "requires": [
+        "mCurrentCenter = null",
+        "mapDrawableOrNull?.clearLocation()",
+        "fillStatusPanel(null)"
+      ],
+      "forbids": [],
+      "sha256": "29fd5e10bddf7db9befd9a511c17a99c2a2f21a5daa44e7ef9b76e43424a8568"
+    },
+    {
+      "id": "maplib-publish-location",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+      "marker": "private void publishUserLocation()",
+      "requires": [
+        "locationSource.setGeoJson(",
+        "UserLocationGeometry.overlayFeaturesForScale(",
+        "lastUserLocationPoint",
+        "lastUserLocationAccuracyMeters",
+        "lastUserHeadingTrueDegrees"
+      ],
+      "forbids": [
+        "animateCamera(",
+        "moveCamera("
+      ],
+      "sha256": "b774f13cc609d20ee58872f5737d9ed806721e899b601979ad715ff08a796734"
+    },
+    {
+      "id": "maplib-sector-visibility",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+      "marker": "public void setCompassAccuracySectorVisible(boolean visible)",
+      "requires": [
+        "showUserHeadingAccuracySector = visible",
+        "USER_HEADING_LAYER_ID",
+        "visible ? Property.VISIBLE : Property.NONE"
+      ],
+      "forbids": [],
+      "sha256": "5bab8be78857758eb245e97813144dcaea8772eb7e9d34582e177a0476db8cd1"
+    },
+    {
+      "id": "device-true-heading",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt",
+      "marker": "fun heading(): Sample?",
+      "requires": [
+        "if (rotationSensor == null) return null",
+        "SystemClock.elapsedRealtime() - headingElapsedMillis > SENSOR_STALE_MILLIS",
+        "Sample(normalize(magnetic + declinationDegrees), halfAngle)"
+      ],
+      "forbids": [],
+      "sha256": "c7c3275fe668db468ee3b5c50f9bf7fe8fd6b0f878dcbe60adff65063917f0ea"
+    },
+    {
+      "id": "device-heading-declination",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt",
+      "marker": "fun updateLocation(location: Location)",
+      "requires": [
+        "WorldMagneticModel2025(",
+        "location.latitude.toFloat()",
+        "location.longitude.toFloat()",
+        "declinationLocation = Location(location)"
+      ],
+      "forbids": [],
+      "sha256": "c64f2cadaeff93895e2ea6221f7209f23474561d254d0cbd23efdc85232817d8"
+    },
+    {
+      "id": "legacy-compass-value",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/fragment/CompassFragment.java",
+      "marker": "public void updateCompass(float azimuth)",
+      "requires": [
+        "!mTrueNorth || mCurrentLocation == null",
+        "azimuth + mDeclination + getDeviceRotation()",
+        "mTvAzimuth.setText(azimuthText)",
+        "mCompassNeedle.setAngle(360 - rotation)",
+        "mCompassNeedleMagnetic.setAngle(360 - rotation + mDeclination)"
+      ],
+      "forbids": [],
+      "sha256": "a187562e2089e55eb9867a0ee101c549cc7e096ca541fe41ba7a05120bf43dd5"
+    },
+    {
+      "id": "legacy-compass-prefs",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/fragment/CompassFragment.java",
+      "marker": "public void onResume()",
+      "requires": [
+        "KEY_PREF_COMPASS_TRUE_NORTH, true",
+        "KEY_PREF_COMPASS_MAGNETIC, true",
+        "KEY_PREF_COMPASS_VIBRATE, true",
+        "Sensor.TYPE_ORIENTATION"
+      ],
+      "forbids": [],
+      "sha256": "fa3943444cb6f9d3f96ad11c5c9439c72b4304451381b8f22fbef6e10d0ecd62"
+    },
+    {
+      "id": "map-stakeout-start",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun startStakeout()",
+      "requires": [
+        "editLayerOverlay?.selectedFeatureId",
+        "editLayerOverlay?.selectedFeatureGeometry",
+        "layer.getLargeGeometryForId(featureId)",
+        "mStakeoutController?.start(geometry)",
+        "setNewMode(MODE_STAKEOUT)"
+      ],
+      "forbids": [],
+      "sha256": "ed73bba5c6977efe9b3bc1e55f4278145ac61345ed738b4d5aef445a617ad7ee"
+    },
+    {
+      "id": "stakeout-start",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+      "marker": "fun start(geometry: GeoGeometry, enableSound: Boolean = true)",
+      "requires": [
+        "target = StakeoutGeometryTarget(geometry)",
+        "StakeoutSettings.loadThresholds(preferences)",
+        "soundAllowed = enableSound",
+        "waitingForFix = true",
+        "startActiveResources()"
+      ],
+      "forbids": [],
+      "sha256": "8af6f7d6a62c3cdda0a1ac06153d3404226e8e0d966eb409c052a516390a5ce7"
+    },
+    {
+      "id": "stakeout-geometry-calculate",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java",
+      "marker": "public Result calculate(double longitude, double latitude)",
+      "requires": [
+        "longitude < -180.0 || longitude > 180.0",
+        "currentMercator.project(CRS_WEB_MERCATOR)",
+        "indexedDistance.nearestPoints(current)",
+        "nearestWgs84.project(CRS_WGS84)",
+        "GeodesicResult geodesic = inverseWgs84("
+      ],
+      "forbids": [],
+      "sha256": "0445878e3a9b36a2ecda4ace10085cf7a931f0ec748aa057927d570c65885797"
+    },
+    {
+      "id": "stakeout-fix",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+      "marker": "fun updateLocation(location: Location)",
+      "requires": [
+        "if (!active) return",
+        "latestLocation = Location(location)",
+        "if (!hasFreshFix(now))",
+        "target?.calculate(location.longitude, location.latitude)",
+        "isPrecisionFix(location)",
+        "reachedConfirmations >= REQUIRED_REACHED_FIXES"
+      ],
+      "forbids": [],
+      "sha256": "e3e2e0177223bad9b3e43f17880d17a80fbbc43900375831f4573a5d08da5f3a"
+    },
+    {
+      "id": "stakeout-freshness",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+      "marker": "private fun hasFreshFix(nowElapsedMillis: Long): Boolean",
+      "requires": [
+        "LocationTrackFilter.isNativeNmea(location)",
+        "LocationFixPolicy.FRESHNESS_MS",
+        "MAX_FIX_AGE_MILLIS",
+        "location.elapsedRealtimeNanos",
+        "age >= -LocationFixPolicy.FUTURE_TOLERANCE_MS && age <= maxAge"
+      ],
+      "forbids": [],
+      "sha256": "d6c065c86dcaaf20294af0436c800f3fe0a0cfd98d4a12c3c34c3c008e134585"
+    },
+    {
+      "id": "stakeout-publish",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+      "marker": "private fun publishLatestState()",
+      "requires": [
+        "if (!active || !uiForeground) return",
+        "magneticHeading = headingProvider.magneticHeading()",
+        "StakeoutSettings.loadCorrection(preferences)",
+        "MagneticAzimuthCalculator.fromTrueBearing(",
+        "normalize(magneticBearing - magneticHeading)",
+        "usesDeviceCompass = magneticHeading != null"
+      ],
+      "forbids": [],
+      "sha256": "f6ab6e2e2db96bca4d9e46f60f29be4f6f005af6e3a4bb15477815fbe8b9b904"
+    },
+    {
+      "id": "map-stakeout-widget",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun updateStakeoutWidget(state: StakeoutController.UiState)",
+      "requires": [
+        "state.waitingForFix || state.distanceMeters == null",
+        "mStakeoutDistance?.setText(R.string.stakeout_waiting_for_gps)",
+        "if (state.distanceMeters < 10.0) 2 else 1",
+        "state.absoluteBearingDegrees -",
+        "cameraPosition?.bearing",
+        "state.relativeBearingDegrees"
+      ],
+      "forbids": [],
+      "sha256": "4f84a94d192639419e3449456587945a641ba2c5f7d5048213fa38ffa6d7f32b"
+    },
+    {
+      "id": "stakeout-mute",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+      "marker": "fun toggleMuted()",
+      "requires": [
+        "if (!soundAllowed) return",
+        "muted = !muted",
+        "if (muted) audioCue?.stop()",
+        "publishLatestState()"
+      ],
+      "forbids": [
+        "putBoolean("
+      ],
+      "sha256": "44e9acc40628983ffe00c7585f5c3bb0fd57d7180a62c81547adb9541e30ebb3"
+    },
+    {
+      "id": "stakeout-release",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+      "marker": "private fun stopActiveResources()",
+      "requires": [
+        "gpsEventSource.releaseHighFrequencyUpdates(highFrequencyOwner)",
+        "gpsEventSource.removeRawListener(this)",
+        "headingProvider.stop()",
+        "audioCue?.stop()",
+        "StakeoutForegroundService.stop("
+      ],
+      "forbids": [],
+      "sha256": "c6df29ae22f621c2cc61f18031b1c9c201d555706627808c3ccabef9bb9d6f44"
+    },
+    {
+      "id": "azimuth-current-target",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun selectCurrentLocationAzimuthTarget(screenX: Float, screenY: Float)",
+      "requires": [
+        "val target = mapPointFromScreen(screenX, screenY)",
+        "azimuthStartPoint = null",
+        "azimuthTargetPoint = target",
+        "mStakeoutController?.start(target, enableSound = false)"
+      ],
+      "forbids": [],
+      "sha256": "b2842a06ba792d1e783e916c92a3172837e58ad0dcb19e5c8624cfd7aa7c2188"
+    },
+    {
+      "id": "map-screen-wgs84",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun mapPointFromScreen(screenX: Float, screenY: Float): GeoPoint?",
+      "requires": [
+        "map.projection.fromScreenLocation(PointF(screenX, screenY))",
+        "GeoPoint(coordinate.longitude, coordinate.latitude)",
+        "crs = GeoConstants.CRS_WGS84"
+      ],
+      "forbids": [],
+      "sha256": "acc46fe70b82d637a3af37e3a2bc2cb3c723578cd4b80e7f27de7c4ce94fec6d"
+    },
+    {
+      "id": "azimuth-two-points",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun selectFreeAzimuthPoint(screenX: Float, screenY: Float)",
+      "requires": [
+        "azimuthStartPoint = point",
+        "azimuthTargetPoint = null",
+        "R.string.azimuth_select_end",
+        "azimuthTargetPoint = point",
+        "updateFreePointAzimuthResult()"
+      ],
+      "forbids": [],
+      "sha256": "a6fca9e54103b16cc2b44b87b8cc0bbe9630c62fe8428f8936367e7457399359"
+    },
+    {
+      "id": "azimuth-two-point-result",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun updateFreePointAzimuthResult()",
+      "requires": [
+        "StakeoutGeometryTarget(target).calculate(start.x, start.y)",
+        "WorldMagneticModel2025(",
+        "StakeoutSettings.loadCorrection(mPreferences)",
+        "MagneticAzimuthCalculator.fromTrueBearing(",
+        "renderAzimuthDistance(result.distanceMeters)",
+        "renderMagneticAzimuth(magneticBearing)"
+      ],
+      "forbids": [],
+      "sha256": "4211fdd49c2a0e40189394609ec09f3a574942cd0c90aa445771e970b7567c6e"
+    },
+    {
+      "id": "azimuth-magnetic-transform",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt",
+      "marker": "fun fromTrueBearing(\n        trueBearingDegrees: Double,\n        declinationDegrees: Float,\n        distanceMeters: Double\n    ): Float?",
+      "requires": [
+        "if (distanceMeters <= UNDEFINED_DISTANCE_METERS) return null",
+        "return normalize((trueBearingDegrees - declinationDegrees).toFloat())"
+      ],
+      "forbids": [],
+      "sha256": "584bd876b3d5efd03aa634b42ddcc177a5faf18ad6637588f2338ea249a757c7"
+    },
+    {
+      "id": "azimuth-correction-save",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java",
+      "marker": "public static void saveCorrection(SharedPreferences preferences, float value)",
+      "requires": [
+        "KEY_DECLINATION_CORRECTION",
+        "Float.toString(clampCorrection(value))"
+      ],
+      "forbids": [],
+      "sha256": "01b4c7703f1686b3adf5e424df31c9ca691d064780c48775a0a4b522af7ed86e"
+    },
+    {
+      "id": "gps-recording-fix",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/location/GpsEventSource.java",
+      "marker": "public Location getLastRecordingLocation()",
+      "requires": [
+        "Location location = filter.getLastAcceptedLocation();",
+        "if (!isFresh(location)) return null;",
+        "if (isExternalInput()) return location;",
+        "isProviderEnabled(LocationManager.GPS_PROVIDER)"
+      ],
+      "forbids": [
+        "getLastDisplayLocation("
+      ],
+      "sha256": "6f2a665ab6ef77bba7d082b5a92f44246326cc8a50e06a7ac74f91f8ff5b3953"
+    },
+    {
+      "id": "gnss-accuracy-format",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun formatGnssAccuracy(accuracyM: Float): String",
+      "requires": [
+        "!GnssFix.isFinite(accuracyM) || accuracyM <= 0f",
+        "if (accuracyM < 1f)",
+        "\"%.0f cm\", accuracyM * 100f",
+        "getString(com.nextgis.maplib.R.string.unit_meter)"
+      ],
+      "forbids": [],
+      "sha256": "36a26ab283593c8be3c35200d3828235961581b0eb84c627810ac8338ab35733"
+    },
+    {
+      "id": "WF-PROJECT-CHOOSER",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt",
+      "marker": "fun show(\n        context: Context,\n        projects: List<CollectorProjectRegistry.ProjectInfo>,\n        onSelected: (CollectorProjectRegistry.ProjectInfo) -> Unit\n    )",
+      "requires": [
+        "text = project.name",
+        "projects.indexOfFirst { it.isActive(context) }",
+        "onSelected(projects[index])"
+      ],
+      "forbids": [],
+      "sha256": "ae21000a1d9a036542fd881de95d0f7df236a4b2f014c16279e6cb741b2818c6"
+    },
+    {
+      "id": "WF-PROJECT-SWITCH",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+      "marker": "private fun switchCollectorProject(project: CollectorProjectRegistry.ProjectInfo)",
+      "requires": [
+        "TrackerService.isTrackerServiceRunning(this)",
+        "mapFragment?.isEditMode == true",
+        "CollectorProjectRegistry.activateProject(this, project.projectUid)",
+        "recreate()"
+      ],
+      "forbids": [],
+      "sha256": "57b44422ba81a6f166053110fc8d39a575a2d00b70cddf72710656c6d373221f"
+    },
+    {
+      "id": "WF-PROJECT-ACTIVATE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java",
+      "marker": "private static boolean activateProjectUnderLease(Context context, String projectUid)",
+      "requires": [
+        "isWorkspacePathSafe(context, project.getMapPath())",
+        "currentMap != null && !currentMap.save()",
+        "persistActiveProjectPreferences(preferences, project)",
+        "gisApplication.closeMapObj()"
+      ],
+      "forbids": [],
+      "sha256": "3bff589ba38c66b210b42b7596807503a8c859098fe44cd3bd1f339845cf88ab"
+    },
+    {
+      "id": "WF-LAYER-ROW",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java",
+      "marker": "private View getStandardLayerView(final ILayer layer, View view)",
+      "requires": [
+        "tvPaneName.setText(layer.getName())",
+        "mPendingChanges.contains(layer.getId())",
+        "((Layer) layer).setVisible(!((Layer) layer).isVisible())",
+        "layer.save()",
+        "((VectorLayer) layerui).isEditingAllowed()"
+      ],
+      "forbids": [],
+      "sha256": "802fd4294c4547e1a56672b3e2fc9a9e08aa004d1ad6fc3053afd730b981cef1"
+    },
+    {
+      "id": "WF-LAYER-ORDER",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java",
+      "marker": "public Object getItem(int i)",
+      "requires": [
+        "int nIndex = getCount() - 1 - i",
+        "return mMap.getLayer(nIndex)"
+      ],
+      "forbids": [],
+      "sha256": "9f7b128e63bc5395479cd1b578769179bcbbc11cc8f795a2f598293b1ae9cd91"
+    },
+    {
+      "id": "WF-EDIT-POLICY",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/LayerEditingPolicy.java",
+      "marker": "static boolean isEditingAllowed(\n            boolean layerEditable,\n            boolean collectorEditable,\n            boolean collectorManaged,\n            boolean outboundSyncAllowed)",
+      "requires": [
+        "if (collectorManaged)",
+        "return collectorEditable && outboundSyncAllowed",
+        "return layerEditable && collectorEditable"
+      ],
+      "forbids": [],
+      "sha256": "3008e79784e3f7798bb062da6891ae2787e1bd58523998312bf912af6eecfb13"
+    },
+    {
+      "id": "WF-NGW-EDIT-POLICY",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+      "marker": "public boolean isEditingAllowed()",
+      "requires": [
+        "mLayerOriginMetadata.isManagedByProject()",
+        "LayerEditingPolicy.isEditingAllowed(",
+        "isRemoteSendAllowed()"
+      ],
+      "forbids": [],
+      "sha256": "067939c1601c864b7ba8604cd6c7d1c702d63f84f399183e977fddf28b263ab7"
+    },
+    {
+      "id": "WF-IDENTIFY-SELECT",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/AttributesFragment.java",
+      "marker": "public void setSelectedFeature(\n            VectorLayer selectedLayer,\n            long selectedItemId)",
+      "requires": [
+        "mItemId = selectedItemId",
+        "mLayer.queryAllFeatureIdsFromDb()",
+        "setAttributes()"
+      ],
+      "forbids": [],
+      "sha256": "fc2e84c625e85fc397e9978adffaeb7c01b3280d837c06dbe6ae314e59281f53"
+    },
+    {
+      "id": "WF-IDENTIFY-NEXT",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/AttributesFragment.java",
+      "marker": "public void selectItem(boolean isNext)",
+      "requires": [
+        "mItemPosition < mFeatureIDs.size() - 1",
+        "mItemPosition > 0",
+        "mItemId = mFeatureIDs.get(mItemPosition)",
+        "mEditLayerOverlay.setSelectedFeature(mItemId)"
+      ],
+      "forbids": [],
+      "sha256": "1e6256f341d36ceeb96e77e23c67ebdf809c5b5d6ec47c34ea40bdb811ba063a"
+    },
+    {
+      "id": "WF-IDENTIFY-TOOLBAR",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/AttributesFragment.java",
+      "marker": "public void setToolbar(\n            final BottomToolbar toolbar,\n            EditLayerOverlay overlay,\n            boolean readOnly)",
+      "requires": [
+        "boolean editingAllowed = mLayer.isEditingAllowed()",
+        "toolbar.inflateMenu(editingAllowed ? R.menu.attributes_editable : R.menu.attributes)",
+        "if (!mLayer.isEditingAllowed())",
+        "startAttributeFormFromIdentify(mItemId)"
+      ],
+      "forbids": [],
+      "sha256": "a3a599d462d0a99aa694a5feb683ac8d5c2dd8e554da9b42940493b5346155f5"
+    },
+    {
+      "id": "WF-FORM-REQUIRED",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+      "marker": "private boolean validateRequiredFields(ContentValues values)",
+      "requires": [
+        "RequiredFieldUi.fieldView(field, mFields) == null",
+        "values.containsKey(field.getName()) ? values.get(field.getName()) : stored.get(field.getName())",
+        "RequiredFieldValidation.isMissing(value)",
+        "R.string.form_required_field_unavailable"
+      ],
+      "forbids": [],
+      "sha256": "22f1d3df14139428a9aa524a684e3ccc5febc8d927505c85f40c9844b5a26d33"
+    },
+    {
+      "id": "WF-FORM-DRAFT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+      "marker": "private boolean captureFormDraft(boolean force)",
+      "requires": [
+        "snapshot.operationId = mFormOperationId",
+        "snapshot.mapPath = com.nextgis.maplib.util.DatabaseContext.getMapForLayer(mLayer) .getPath().getAbsolutePath()",
+        "saveAdditionalFormState(controlState)",
+        "FeatureFormDraftStore.save(this, snapshot)"
+      ],
+      "forbids": [],
+      "sha256": "2f0dc1a9ea4b867a3300eac15cfbe7f89f02150821584c20bb49e1421efe8a12"
+    },
+    {
+      "id": "WF-FORM-DRAFT-STORE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java",
+      "marker": "public static boolean save(Context context, Snapshot snapshot)",
+      "requires": [
+        "!snapshot.isValid()",
+        "snapshot.updatedAtMs = System.currentTimeMillis()",
+        ".putString(KEY_STATE, encode(snapshot).toString()) .commit()",
+        "return committed"
+      ],
+      "forbids": [],
+      "sha256": "f0c7223194d68ab6f29a68c18c3347807ba9a50f82beec148bf66f98002d4853"
+    },
+    {
+      "id": "WF-FORM-SAVE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+      "marker": "protected boolean saveFeatureInternal(\n            PhotoOverlayData overlayData,\n            PhotoOverlaySettings overlaySettings)",
+      "requires": [
+        "if (mIsViewOnly)",
+        "FeatureSaveJournal.find(",
+        "if (!validateRequiredFields(values)) return false",
+        "app.getMap() != com.nextgis.maplib.util.DatabaseContext.getMapForLayer(mLayer)",
+        "getContentResolver().update(updateUri, values, null, null) == 1"
+      ],
+      "forbids": [],
+      "sha256": "95ec3775ffbfb64d3fb8c4ebbe9fb5339d0ba4c57c635540aa4615a25546fb54"
+    },
+    {
+      "id": "WF-FORM-ABSENT-FIELD",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+      "marker": "protected Object putFieldValue(\n            ContentValues values,\n            Field field)",
+      "requires": [
+        "IControl control = mFields.get(fieldName)",
+        "if (null == control) { return null; }",
+        "Object value = control.getValue()"
+      ],
+      "forbids": [],
+      "sha256": "22068dabf8b29bd07f1e2848caf11795eca91991648608474a8815a750e440af"
+    },
+    {
+      "id": "WF-LOCAL-PARTIAL-UPDATE",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+      "marker": "public static int updateViaSql(SQLiteDatabase db,\n                                 String table,\n                                 ContentValues values,\n                                 String whereClause,\n                                 String[] whereArgs)",
+      "requires": [
+        "for (Map.Entry<String, Object> e : values.valueSet())",
+        "sql.append(escapeIdentifier(e.getKey())).append(\" = ?\")",
+        "return stmt.executeUpdateDelete()"
+      ],
+      "forbids": [],
+      "sha256": "86e44b74427307636008dea37b6fb2a2ce36ba4d452888c52d386da3b39b9492"
+    },
+    {
+      "id": "WF-SYNC-MANUAL",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "protected void startManualSync(boolean forceRecheck)",
+      "requires": [
+        "if (!new NetworkUtil(context).isNetworkAvailable())",
+        "showSyncFailureDialog(null)",
+        "OfflineSyncIntentService.startActionFoo(context, null, forceRecheck)",
+        "refreshPendingChangesBadge()"
+      ],
+      "forbids": [],
+      "sha256": "5583acdbe5f7b20cbebde0a91fc7120c3d0a05e9f299cc873cc9f21d20913f7e"
+    },
+    {
+      "id": "WF-SYNC-RETRY",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "private void showSyncFailureDialog(final String error)",
+      "requires": [
+        "storePendingSyncError(error)",
+        "R.string.sync_no_internet",
+        "startManualSync()",
+        "mSyncFailureDialogShowing = false"
+      ],
+      "forbids": [],
+      "sha256": "c4e76041814d55e842fa164a77b9a8d7790ed0251cc702eb3516af2bdafedda5"
+    },
+    {
+      "id": "WF-SYNC-CLOCK",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "protected void updateInfo()",
+      "requires": [
+        "MapBase.getActiveInstance()",
+        "ProjectSyncState.lastComplete(getContext(),",
+        "R.string.project_sync_never_completed"
+      ],
+      "forbids": [],
+      "sha256": "69f2216a3f52a7ae5ad85898e376d8e8b35a0f6aeb8408b4c4e13c66514bd3a7"
+    },
+    {
+      "id": "WF-SYNC-CLOCK-STORE",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/ProjectSyncState.java",
+      "marker": "public static long lastComplete(Context context, String path)",
+      "requires": [
+        "if (path == null) return 0L",
+        "getLong(key(path), 0L)",
+        "catch (IOException error) { return 0L; }"
+      ],
+      "forbids": [],
+      "sha256": "235f38df1bf9c9bb57be86f5070cd5d0f37d421aca6da3c2f9daeaa6b872cbfb"
+    },
+    {
+      "id": "WF-SYNC-RUN",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java",
+      "marker": "static void run(Context context, List<Account> accounts, Bundle extras, String authority,\n                    ContentProviderClient provider, SyncResult result, Pass pass)",
+      "requires": [
+        "SyncWorkspaceSession session",
+        "fullProjectComplete = projectComplete && fullProject",
+        "ProjectSyncState.markComplete(context, target.path, now)",
+        "!com.nextgis.maplibui.mapui.LocalChangesWorker.hasPending(map, null)"
+      ],
+      "forbids": [],
+      "sha256": "eb5556de998a800fa9f52ce4c5f5134014acaacb8ef6ad883f3a9e2d5d495fc8"
+    },
+    {
+      "id": "WF-SYNC-BADGE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "protected void refreshPendingChangesBadge()",
+      "requires": [
+        "TrackRegistrationState.canShowPending(requireContext())",
+        "int generation = ++mBadgeGeneration",
+        "fragment.mBadgeGeneration != generation",
+        "app.getMap() == map",
+        "mListAdapter.setPendingChanges(result)"
+      ],
+      "forbids": [],
+      "sha256": "11af43c73c614ddcf9705f5efd627eab017074a3d6f52d8290b246aa1eb5fd5a"
+    },
+    {
+      "id": "WF-TRACK-REGISTRATION",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java",
+      "marker": "public static boolean canShowPending(Context context)",
+      "requires": [
+        "TrackSendSettings.isEnabled(preferences)",
+        "fingerprint(deviceUrl(context)).equals(preferences.getString(PREF_REGISTERED_DEVICE, null))"
+      ],
+      "forbids": [],
+      "sha256": "d9871bfa786b10ed6ec9ca7bc3e115a1a780bbcd64a162cc0cdf496a61486d24"
+    },
+    {
+      "id": "WF-TRACK-PANEL",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java",
+      "marker": "public void bind(TrackLayer.TrackInfo info, Listener listener)",
+      "requires": [
+        "title.setText(info.visible ? info.name",
+        "visibility.setText(info.visible ? R.string.menu_visibility_off : R.string.menu_visibility_on)",
+        "setVisibility(VISIBLE)"
+      ],
+      "forbids": [],
+      "sha256": "bea909f5cfc833bd320a784730c7ca832e385ff784c1717886972284a4d45d93"
+    },
+    {
+      "id": "WF-TRACK-RENAME",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/TrackActions.java",
+      "marker": "public static AlertDialog rename(Context context, long id, Runnable changed)",
+      "requires": [
+        "input.setId(R.id.track_name_input)",
+        "String name = input.getText().toString().trim()",
+        "if (name.isEmpty())",
+        "values.put(TrackLayer.FIELD_NAME, name)",
+        "if (update(context, new String[]{Long.toString(id)}, values, changed)) dialog.dismiss()"
+      ],
+      "forbids": [],
+      "sha256": "21eed918e3a01b72c1c0de59fe1b9e64bd121a6994a5150b5ad6092da537a1ef"
+    },
+    {
+      "id": "WF-TRACK-DELETE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/TrackActions.java",
+      "marker": "public static AlertDialog delete(Context context, String[] selectedIds, Runnable changed)",
+      "requires": [
+        "String[] ids = selectedIds.clone()",
+        "TrackerService.includesRecordingTrack(context, ids)",
+        "R.string.track_stop_delete_confirm",
+        "TrackerService.deleteTracks(context, ids)"
+      ],
+      "forbids": [],
+      "sha256": "04f21d7fcb4a532cc86c6333180d4c3ac281e7fc2bb6b90c54c9c1b289cef04f"
+    },
+    {
+      "id": "WF-TRACK-UPDATE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/TrackActions.java",
+      "marker": "private static boolean update(Context context, String[] ids, ContentValues values, Runnable changed)",
+      "requires": [
+        "context.getContentResolver().update(uri(context), values,",
+        "TrackLayer.getSelection(ids.length), ids",
+        "changed.run()"
+      ],
+      "forbids": [],
+      "sha256": "4845859cfb55d71357448b417c5b21c9a2cbfecbb95f09147d444efcb3c176b0"
+    },
+    {
+      "id": "WF-TRACK-DATABASE",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/TrackLayer.java",
+      "marker": "public SQLiteDatabase getDatabase(boolean readOnly)",
+      "requires": [
+        "return mStore.getDatabase(readOnly)"
+      ],
+      "forbids": [],
+      "sha256": "fb68c6148f58b61264ed8d978a17e823d53de515677c20edb937f3f19d0c3cc8"
+    },
+    {
+      "id": "WF-NGW-FIELD-SCHEMA",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NGWUtil.java",
+      "marker": "public static List<Field> getFieldsFromJson(JSONArray fieldsJSONArray)\n            throws JSONException",
+      "requires": [
+        "fieldJSONObject.getString(\"datatype\")",
+        "fieldJSONObject.getString(\"keyname\")",
+        "fieldJSONObject.optBoolean(\"required\", false)"
+      ],
+      "forbids": [],
+      "sha256": "f89aa11076121a02b2e18292888f303b3549655de9f161c43e1804e74c630a5b"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "UI-MAP-STATUS-COORDINATES",
+      "group": "location",
+      "title": "Координаты устройства в нижней панели",
+      "surface": "Map status panel",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "tv_latitude",
+        "tv_longitude",
+        "fl_status_panel"
+      ],
+      "meaning": "Latitude/longitude of the selected display Location, not camera centre, project extent centre or selected feature. mCurrentCenter is also a device-position field despite its name.",
+      "value_origin": "GpsEventSource.lastDisplayLocation -> callbacks -> fillTextViews -> formatCoordinate -> tv_latitude/tv_longitude",
+      "units": "WGS84 angular latitude/longitude; coordinates_format and coordinates_fraction_digits change presentation only.",
+      "updates": [
+        "GPS/display callback and updateLastLocation; resume reloads format preferences."
+      ],
+      "actions": [
+        "Pan/zoom separately; coordinate settings change representation."
+      ],
+      "conditions": [
+        "show_status_panel/mode visibility; available display Location; upstream permissions/provider eligibility."
+      ],
+      "saved_state": "Formatting/display preferences persist; camera scroll state and geometry are separate.",
+      "source_ids": [
+        "map-last-display",
+        "map-status-location",
+        "map-status-bind",
+        "map-format-coordinate",
+        "map-resume-settings",
+        "map-device-fix"
+      ],
+      "expectations": [
+        "With identical display fix and displaced camera, panel must identify that fix. Counterexample: reading map centre as phone coordinates is invalid.",
+        "Changing format must not modify underlying Location or feature geometry."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+      ]
+    },
+    {
+      "id": "UI-LOCATION-DISPLAY-FRESHNESS",
+      "group": "location",
+      "title": "Свежая и сохранённая сетевая позиция",
+      "surface": "Status coordinates and source age",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "tv_latitude",
+        "tv_longitude",
+        "tv_source",
+        "tv_accuracy"
+      ],
+      "meaning": "Display can retain an eligible older Network fix; this does not make it a fresh measurement or recording point. No usable display value clears coordinates/accuracy to n/a.",
+      "value_origin": "getLastKnownLocation fresh GPS/Network policy -> getLastDisplayLocation optional Network retention/age extra -> fillTextViews/defaults",
+      "units": "Measurement age since boot; seconds rounded to5s after freshness limit. Source constants: fresh8s/future tolerance1s.",
+      "updates": [
+        "Current fixes and retained Network display age; unavailable callback clears panel/cursor."
+      ],
+      "actions": [
+        "Wait beyond freshness or remove eligibility; visible text alone does not prove recording availability."
+      ],
+      "conditions": [
+        "Location permissions/provider enabled; external input cannot use system Network retention."
+      ],
+      "saved_state": "Display retention preserves raw measurement timestamps and does not rewrite project/device records.",
+      "source_ids": [
+        "gps-current-fix",
+        "gps-display-retention",
+        "gps-recording-fix",
+        "fix-freshness",
+        "map-status-location",
+        "map-status-empty",
+        "map-location-unavailable"
+      ],
+      "expectations": [
+        "Old retained Network coordinates must be distinguished by source/age and never described as fresh GPS.",
+        "Without usable display fix show n/a. Counterexample: camera centre is not a fallback phone fix."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "Periodic subscription/tick lifecycle and actual permission transitions not exhaustively audited."
+      ]
+    },
+    {
+      "id": "UI-LOCATION-DISPLAY-ACCURACY",
+      "group": "location",
+      "title": "Отображаемая точность и исходный fix",
+      "surface": "Status accuracy and location circle",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "tv_accuracy"
+      ],
+      "meaning": "Display accuracy is a metric radius with a3m floor only for eligible phone GPS; it does not mutate the fix and is not heading uncertainty or range to a target.",
+      "value_origin": "Location.accuracy -> LocationDisplayAccuracy.meters -> status text and MapDrawable.updateLocation",
+      "units": "Metres; phone GPS min3m; external/receiver streams/Network keep reported value.",
+      "updates": [
+        "Each displayed fix/overlay update."
+      ],
+      "actions": [
+        "Compare display result with unchanged input fix."
+      ],
+      "conditions": [
+        "Floor requires positive finite GPS accuracy, no external input, no receiver stream."
+      ],
+      "saved_state": "Display transform stores no rewritten accuracy or provenance.",
+      "source_ids": [
+        "accuracy-display",
+        "map-status-location",
+        "map-device-fix"
+      ],
+      "expectations": [
+        "Phone1m displays3m while original remains1m; external1m remains1m.",
+        "Counterexample: displayed3m does not mean arrival tolerance3m or externally supplied accuracy was modified."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+      ]
+    },
+    {
+      "id": "UI-LOCATION-SOURCE-GNSS-HUD",
+      "group": "location",
+      "title": "Источник, спутники и внешний GNSS",
+      "surface": "Status source and GNSS HUD",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "tv_source",
+        "gnss_hud",
+        "gnss_hud_quality",
+        "gnss_hud_detail"
+      ],
+      "meaning": "Status icon/satellites describe displayed Location; external HUD separately describes selected receiver/session/fix quality. Connected does not equal usable fix.",
+      "value_origin": "Location.provider/extras -> tv_source; external session+GnssFix -> fillGnssHud -> quality/detail",
+      "units": "Satellite count, HDOP, horizontal accuracy cm below1m else metres;4fix/5float/2DGPS/other auto.",
+      "updates": [
+        "Location, external fix and external status callbacks."
+      ],
+      "actions": [
+        "Select system/external; connect or lose receiver fix."
+      ],
+      "conditions": [
+        "HUD hidden unless external input; no-device, connecting and no-fix are distinct branches."
+      ],
+      "saved_state": "Input choice persists upstream; transient HUD is rebuilt from session state.",
+      "source_ids": [
+        "map-status-location",
+        "gnss-hud",
+        "gnss-quality",
+        "gnss-accuracy-format",
+        "map-init-autopan"
+      ],
+      "expectations": [
+        "Connecting/no-fix must not display old positive fix quality; system input hides external HUD.",
+        "Counterexample: satellite count is not project object count and cannot certify recorder readiness."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+      ]
+    },
+    {
+      "id": "UI-MAP-ZOOM",
+      "group": "map",
+      "title": "Число zoom и кнопки масштаба",
+      "surface": "Status zoom and right controls",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "tv_zoom",
+        "action_zoom_in",
+        "action_zoom_out"
+      ],
+      "meaning": "z is MapLibre camera zoom, not1:N drawing scale or phone accuracy.",
+      "value_origin": "MapLibre zoom -> getZText one decimal -> camera idle tv_zoom; plus/minus -> clamped camera zoom",
+      "units": "Dimensionless zoom level, Locale.US one decimal with z suffix.",
+      "updates": [
+        "Camera idle/relevant redraw; button enabled state follows min/max."
+      ],
+      "actions": [
+        "Buttons change zoom by1 then clamp to active limits."
+      ],
+      "conditions": [
+        "show_zoom_level/show_zoom_controls preferences; ready map."
+      ],
+      "saved_state": "Camera zoom persists with viewport, separately from device position.",
+      "source_ids": [
+        "map-zoom-text",
+        "map-camera-idle",
+        "map-click-actions",
+        "map-status-bind",
+        "map-persist-camera"
+      ],
+      "expectations": [
+        "Camera zoom changes z without changing phone coordinates;17z is not1:17000.",
+        "Counterexample: a disabled boundary control must not be reported as GPS failure."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "Min/max initialization and all fit-bounds entry points not fully audited."
+      ]
+    },
+    {
+      "id": "UI-MAP-SCALE-RULER",
+      "group": "map",
+      "title": "Линейка расстояния на карте",
+      "surface": "Map scale ruler",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "iv_ruler",
+        "tv_ruler",
+        "ll_ruler"
+      ],
+      "meaning": "Ruler measures map distance represented by its screen span, not a GPS range or selected feature length.",
+      "value_origin": "rulerText property: screen endpoints -> screenToMap -> EPSG3857 GeoLineString.length -> LocationUtil.formatLength; camera idle binds text",
+      "units": "Map distance formatted using preferred_units; bitmap span10mm/notch1mm.",
+      "updates": [
+        "Camera idle/relevant redraw; initial binding."
+      ],
+      "actions": [
+        "Change zoom/latitude; toggle show_scale_ruler."
+      ],
+      "conditions": [
+        "Laid-out ruler and projection available; show_scale_ruler defaults false; current mode can hide it."
+      ],
+      "saved_state": "Visibility/units preferences persist; text is derived, not feature data.",
+      "source_ids": [
+        "map-scale-bitmap",
+        "map-camera-idle",
+        "map-init-autopan"
+      ],
+      "expectations": [
+        "Fixed GPS with changed camera zoom changes represented span. Counterexample: ruler does not measure distance to phone."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "rulerText is a property, not a method: exact source/prose is in map-review.md. Projection/metric correctness and layout measurement remain separate acceptance."
+      ]
+    },
+    {
+      "id": "UI-MAP-LOCATE",
+      "group": "map",
+      "title": "Разовое Найти местоположение",
+      "surface": "Main toolbar Locate",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_locate"
+      ],
+      "meaning": "Locate moves camera to cached device position north-up without zooming out. It does not itself start Stakeout or enable autopanning.",
+      "value_origin": "MainActivity permission request -> locateCurrentPosition -> projected device mCurrentCenter -> camera transaction -> refresh marker",
+      "units": "Camera WGS84 target; internal centre EPSG3857; max(current zoom,12) clamped; bearing/tilt0.",
+      "updates": [
+        "Explicit Locate press."
+      ],
+      "actions": [
+        "Move to device when usable; otherwise invoke layer fallback."
+      ],
+      "conditions": [
+        "Activity requests coarse/fine permission if absent but still calls fragment; upstream fix eligibility remains authoritative."
+      ],
+      "saved_state": "North-up bearing saved; rotation-enabled preference and geometry are unchanged by this action.",
+      "source_ids": [
+        "map-locate-permission",
+        "map-locate",
+        "map-device-fix"
+      ],
+      "expectations": [
+        "From zoom15 Locate stays15; from10 requests12 within limits.",
+        "Counterexample: Locate is not a continuous-follow toggle and not project-extent proof."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+      ]
+    },
+    {
+      "id": "UI-MAP-LOCATE-FALLBACK",
+      "group": "map",
+      "title": "Найти без позиции устройства",
+      "surface": "Locate without fix",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_locate"
+      ],
+      "meaning": "Fallback targets first enumerated layer with valid extent, not the union of every project extent.",
+      "value_origin": "locateCurrentPosition -> locateFirstLayerExtent -> ordered getAllLayers finite extent -> extent centre -> camera",
+      "units": "WGS84 camera target from EPSG3857 centre; zoom12 clamped; north-up/tilt0.",
+      "updates": [
+        "Explicit Locate without current device centre."
+      ],
+      "actions": [
+        "Skip unsuitable extents; report no location if none usable."
+      ],
+      "conditions": [
+        "Map/camera ready; initialized finite extent."
+      ],
+      "saved_state": "Camera state changes; no project centre metadata or feature is created.",
+      "source_ids": [
+        "map-locate",
+        "map-locate-fallback"
+      ],
+      "expectations": [
+        "Two far-apart valid layers are not a combined fitted project: source selects first.",
+        "Counterexample: successful fallback is not acquired GPS and cannot supply phone coordinates."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+      ]
+    },
+    {
+      "id": "UI-MAP-CAMERA-ROTATION-STATE",
+      "group": "map",
+      "title": "Вращение камеры и сохранённый viewport",
+      "surface": "Toolbar rotation and camera",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_map_rotation"
+      ],
+      "meaning": "Rotation permission/bearing is camera state, independent from device compass, position and target magnetic azimuth.",
+      "value_origin": "toggleMapRotation -> stored flag -> gesture settings; onCameraIdle/onPause -> bearing/zoom/getMaplibreCenter",
+      "units": "Camera bearing degrees; stored scroll centre EPSG3857; MapLibre zoom.",
+      "updates": [
+        "Toggle, gesture idle and pause/restore route."
+      ],
+      "actions": [
+        "Enable rotation; disabling returns north-up; tilt stays disabled and pinch can coexist."
+      ],
+      "conditions": [
+        "Rotation-enabled default false; flag determines stored/restored bearing."
+      ],
+      "saved_state": "Enabled flag, bearing, zoom and scroll X/Y persist separately from Location.",
+      "source_ids": [
+        "map-rotation-toggle",
+        "map-rotation-gestures",
+        "map-persist-camera",
+        "map-camera-idle"
+      ],
+      "expectations": [
+        "Camera turning must not change target numeric magnetic azimuth; disabling stores0bearing.",
+        "Counterexample: rotated map is not proof the phone rotated or moved."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "Cold start/Activity recreation acceptance not run."
+      ]
+    },
+    {
+      "id": "UI-MAP-CONDITIONAL-AUTOPAN",
+      "group": "map",
+      "title": "Условный автосдвиг карты",
+      "surface": "CurrentLocationOverlay camera movement",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Separate conditional autopan shifts camera by device movement; it is not perpetual absolute centring or command «Слежение».",
+      "value_origin": "onCreateView enables overlay -> location callback threshold/in-screen/lock checks -> projected old/new fix delta -> current centre shift -> panTo",
+      "units": "WGS84 fixes projected EPSG3857; threshold derives from10dp screen tolerance.",
+      "updates": [
+        "Eligible location callbacks; point creation can disable."
+      ],
+      "actions": [
+        "Initial view enables; beginPointCreation disables; lock resets reference location."
+      ],
+      "conditions": [
+        "Autopan flag true, movement threshold and in-screen state; bounds depend on overlay draw."
+      ],
+      "saved_state": "Flag is overlay-instance state; durable follow preference or guaranteed re-enable not established.",
+      "source_ids": [
+        "map-init-autopan",
+        "map-point-pauses-autopan",
+        "overlay-autopan-policy",
+        "overlay-autopan-transform"
+      ],
+      "expectations": [
+        "Point creation disabling autopan prevents assuming later fix recentres map.",
+        "Counterexample: status coordinates updating does not prove autopan conditions passed."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "Actual MapLibre/legacy overlay draw bounds/pan bridge, re-enable lifecycle and physical movement remain UNKNOWN runtime."
+      ]
+    },
+    {
+      "id": "UI-LOCATION-CURSOR-HEADING-SECTOR",
+      "group": "location",
+      "title": "Курсор позиции и сектор направления",
+      "surface": "Map location overlay",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Cursor position uses displayed fix; heading sector uses fresh device-heading uncertainty, separate from metric GPS accuracy and stakeout correction.",
+      "value_origin": "Location -> DeviceHeadingProvider/WMM -> MapDrawable user-location GeoJSON; preference controls sector layers",
+      "units": "WGS84 point, metre accuracy radius, true heading degrees/angular half-angle.",
+      "updates": [
+        "Location, independent heading callbacks and camera-idle scale refresh."
+      ],
+      "actions": [
+        "Toggle sector; stale/missing heading removes angular information."
+      ],
+      "conditions": [
+        "Fresh device rotation sensor sample for heading; default setting false; location independently required."
+      ],
+      "saved_state": "Sector preference persists; fix/heading memory rebuilt; recording inputs are unchanged.",
+      "source_ids": [
+        "map-device-fix",
+        "maplib-publish-location",
+        "maplib-sector-visibility",
+        "device-true-heading",
+        "device-heading-declination",
+        "map-resume-settings"
+      ],
+      "expectations": [
+        "Heading uncertainty can widen without GPS metre change; hiding sector must not clear fix.",
+        "Counterexample: heading sector is not accuracy circle or direction to selected object."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "Overlay is programmatic MapLibre source/layers, not a resource widget: widgets intentionally empty. Native pixels and all geometry builder branches not fully audited."
+      ]
+    },
+    {
+      "id": "UI-MAP-COMPASS",
+      "group": "map",
+      "title": "Отдельный компас устройства",
+      "surface": "Map/full compass",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "fl_compass",
+        "azimuth"
+      ],
+      "meaning": "CompassFragment uses device orientation with north preference and display rotation; separate from camera bearing and DeviceHeadingProvider sector.",
+      "value_origin": "TYPE_ORIENTATION -> updateCompass -> applicable declination+display rotation -> caption and needles",
+      "units": "Compass degrees/cardinal code; legacy Android GeomagneticField declination.",
+      "updates": [
+        "Compass resume preferences and orientation sensor callbacks."
+      ],
+      "actions": [
+        "Small compass opens FullCompassFragment; true/magnetic visibility preferences apply."
+      ],
+      "conditions": [
+        "show compass, sensors/permissions; true-north uses cached current location."
+      ],
+      "saved_state": "True-north/magnetic/vibration preferences persist; declination cache independent from camera.",
+      "source_ids": [
+        "legacy-compass-value",
+        "legacy-compass-prefs",
+        "map-click-actions"
+      ],
+      "expectations": [
+        "Camera fixed/device rotated can change compass; camera-only rotation need not change compass number.",
+        "Counterexample: compass is not target azimuth or north-up toggle."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "Cached legacy location/declination freshness, absent sensors and full-compass layout not closed."
+      ]
+    },
+    {
+      "id": "UI-NAVIGATION-STAKEOUT-TARGET",
+      "group": "navigation",
+      "title": "Слежение: цель — выбранная геометрия",
+      "surface": "Selected feature «Слежение» / «Вынос координат»",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_feature_stakeout",
+        "stakeout_panel",
+        "stakeout_distance"
+      ],
+      "meaning": "Russian «Слежение» is Stakeout to selected geometry, not camera follow. Line/polygon range is to nearest indexed target point, not automatically centroid or first vertex.",
+      "value_origin": "Selected feature identity/geometry -> controller target -> indexed nearest point -> geodesic inverse -> widget",
+      "units": "Input geometry WGS84/EPSG3857; calculation lon/lat WGS84; geodesic metres/true initial bearing degrees.",
+      "updates": [
+        "Feature action starts; eligible fixes recalculate."
+      ],
+      "actions": [
+        "Enter Stakeout; stop/exit releases owned resources."
+      ],
+      "conditions": [
+        "Selected layer/valid feature geometry; target constructor validates supported types/CRS."
+      ],
+      "saved_state": "Runtime target copy/index; session/project lifecycle cannot be inferred from display name.",
+      "source_ids": [
+        "map-stakeout-start",
+        "stakeout-start",
+        "stakeout-geometry-calculate",
+        "map-stakeout-widget",
+        "stakeout-release"
+      ],
+      "expectations": [
+        "A long line can have nearest edge distinct from centroid; independent expectation must use nearest-target semantics.",
+        "Counterexample: «Слежение» does not edit geometry or toggle camera follow."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "Constructor CRS/copy evidence is prose-linked; Activity/session restoration and every geometry type remain unverified."
+      ]
+    },
+    {
+      "id": "UI-NAVIGATION-STAKEOUT-FRESHNESS",
+      "group": "navigation",
+      "title": "Ожидание GPS, расстояние и достигнуто",
+      "surface": "Live Stakeout",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "stakeout_distance",
+        "stakeout_details",
+        "stakeout_direction"
+      ],
+      "meaning": "Range/reached uses live target/freshness, not retained status text. Arrival requires repeated eligible precision fixes.",
+      "value_origin": "Raw fix -> hasFreshFix -> target calculation -> precision distance band -> consecutive confirmations -> UiState -> widget",
+      "units": "Metres; ordinary max3s, native NMEA freshness8s, future tolerance1s; under10m two decimals otherwise maxone.",
+      "updates": [
+        "Raw fixes and scheduler; waiting hides details and dims arrow."
+      ],
+      "actions": [
+        "Wait/recover fix; configured distance thresholds."
+      ],
+      "conditions": [
+        "Active controller/foreground acquisition; GNSS/mock precision policy; Network is not precision."
+      ],
+      "saved_state": "Thresholds loaded at start; reached count transient, not stored feature proof.",
+      "source_ids": [
+        "stakeout-fix",
+        "stakeout-freshness",
+        "stakeout-publish",
+        "map-stakeout-widget"
+      ],
+      "expectations": [
+        "Old retained Network coordinates cannot certify fresh guidance or reached.",
+        "One within-threshold precision fix is insufficient: source needs two consecutive eligible fixes."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "Scheduler/service permissions and sound/arrival delivery not executed."
+      ]
+    },
+    {
+      "id": "UI-NAVIGATION-DIRECTION",
+      "group": "navigation",
+      "title": "Стрелка направления и магнитный азимут",
+      "surface": "Stakeout arrow/azimuth",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "stakeout_direction",
+        "stakeout_details",
+        "azimuth_bearing"
+      ],
+      "meaning": "With compass, arrow is relative magnetic direction; without compass it compensates absolute true target bearing by camera bearing. Numeric target azimuth stays magnetic.",
+      "value_origin": "True target bearing -> WMM+saved correction -> magnetic bearing; subtract device magnetic heading or camera bearing in respective branches",
+      "units": "Clockwise degrees: true, magnetic and screen-relative references distinct.",
+      "updates": [
+        "Fix/heading/correction and camera-idle refresh."
+      ],
+      "actions": [
+        "Rotate camera without compass; adjust correction."
+      ],
+      "conditions": [
+        "Valid guidance result/current mode; compass availability chooses reference frame."
+      ],
+      "saved_state": "Correction persists; arrow/target bearing recomputed without geometry mutation.",
+      "source_ids": [
+        "stakeout-publish",
+        "map-stakeout-widget",
+        "azimuth-magnetic-transform",
+        "map-camera-idle"
+      ],
+      "expectations": [
+        "Without compass, camera+90 changes screen arrow-90 while numeric target magnetic azimuth stays constant.",
+        "Counterexample: arrow rotation is not numeric absolute magnetic bearing."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "StakeoutHeadingProvider calibration/freshness and independent WMM oracle not fully audited."
+      ]
+    },
+    {
+      "id": "UI-NAVIGATION-SOUND",
+      "group": "navigation",
+      "title": "Звук, mute и остановка выноса",
+      "surface": "Stakeout sound/stop",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "stakeout_sound",
+        "stakeout_stop"
+      ],
+      "meaning": "Mute affects current guidance audio, not GPS permissions, freshness, camera follow or track recording; current-location azimuth starts sound-disabled.",
+      "value_origin": "toggleMuted -> session flag/audio stop -> UiState icon; stop releases raw GPS/high-frequency/heading/audio/service",
+      "units": "Boolean session mute; cadence from distance-band policy.",
+      "updates": [
+        "Mute action and controller publication."
+      ],
+      "actions": [
+        "Mute/unmute if allowed; Stop releases owned resources."
+      ],
+      "conditions": [
+        "soundAllowed by mode; initial saved default separate from session toggle."
+      ],
+      "saved_state": "Start reads stakeout_sound_enabled; toggleMuted does not write preferences.",
+      "source_ids": [
+        "stakeout-start",
+        "stakeout-mute",
+        "stakeout-release",
+        "map-stakeout-widget",
+        "azimuth-current-target"
+      ],
+      "expectations": [
+        "Mute must not freeze coordinates or stop independent recording.",
+        "Counterexample: audio muted is not track/walk pause."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+      ]
+    },
+    {
+      "id": "UI-NAVIGATION-AZIMUTH-CURRENT",
+      "group": "navigation",
+      "title": "Азимут от местоположения",
+      "surface": "Measurements current-location azimuth",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "measurement_azimuth_current",
+        "azimuth_panel",
+        "azimuth_distance",
+        "azimuth_bearing",
+        "azimuth_details"
+      ],
+      "meaning": "Tapped screen target is fixed WGS84; start is live device fix, not camera centre. Waiting hides bearing/details.",
+      "value_origin": "Screen projection -> target -> controller.start(sound=false) -> live distance/magnetic state -> azimuth widget",
+      "units": "WGS84 target, metres/magnetic degrees; effective declination includes saved correction.",
+      "updates": [
+        "Target tap then live fix/heading/correction."
+      ],
+      "actions": [
+        "Choose target; Close normal mode; no sound/stakeout sound row."
+      ],
+      "conditions": [
+        "Current-location azimuth mode; usable live fix/map projection."
+      ],
+      "saved_state": "Temporary target/mode are not saved feature; correction preference persists.",
+      "source_ids": [
+        "map-screen-wgs84",
+        "azimuth-current-target",
+        "stakeout-publish",
+        "map-stakeout-widget",
+        "azimuth-magnetic-transform"
+      ],
+      "expectations": [
+        "Pan after selecting target without changing fix must not redefine device start.",
+        "Counterexample: camera centre or selected feature is not current-location origin."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+        "Overlay can use lastKnownLocation while widget waits for controller freshness; timing equivalence needs runtime acceptance."
+      ]
+    },
+    {
+      "id": "UI-NAVIGATION-AZIMUTH-TWO-POINTS",
+      "group": "navigation",
+      "title": "Азимут A→B и коррекция",
+      "surface": "Measurements two-point azimuth",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "measurement_azimuth_points",
+        "azimuth_panel",
+        "azimuth_distance",
+        "azimuth_bearing",
+        "stakeout_correction_value"
+      ],
+      "meaning": "Two map taps define A/B independently from GPS. Magnetic azimuth subtracts WMM declination plus saved correction at A; near-zero range is undefined.",
+      "value_origin": "Map projection -> A then B -> geodesic result -> WMM2025(A,time)+correction -> true-minus-declination normalize -> fields",
+      "units": "WGS84 points, metres, clockwise magnetic degrees; distance<=0.01m undefined; correction degrees clamp[-180,180].",
+      "updates": [
+        "Second tap computes; next tap resets A; correction change recomputes."
+      ],
+      "actions": [
+        "Pick A/B; adjust/reset correction; Close clears temporary measurement."
+      ],
+      "conditions": [
+        "Two-point azimuth mode/projection; input coordinates need no live GPS."
+      ],
+      "saved_state": "Clamped correction string persists; temporary A/B separate from project features.",
+      "source_ids": [
+        "map-screen-wgs84",
+        "azimuth-two-points",
+        "azimuth-two-point-result",
+        "azimuth-magnetic-transform",
+        "azimuth-correction-save"
+      ],
+      "expectations": [
+        "Phone movement cannot redefine fixed A/B. True90/effective declination10 yields magnetic80.",
+        "Counterexample: adding declination or taking GPS as A changes semantics; coincident A/B gives undefined bearing."
+      ],
+      "unknowns": [
+        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+      ]
+    },
+    {
+      "id": "UI-PROJECT-CHOOSER",
+      "group": "project",
+      "title": "Выбор проекта по строке",
+      "surface": "Диалог выбора проекта",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Строка показывает имя проекта; выбор строки ещё не переключает рабочую область.",
+      "value_origin": "ProjectInfo.name и isActive(context); callback получает выбранный ProjectInfo, а не имя.",
+      "units": "Нет физических единиц; одна выбранная строка.",
+      "updates": [
+        "При открытии отмечается активный проект.",
+        "Нажатие строки переносит radio selection; подтверждение передаёт выбранный индекс."
+      ],
+      "actions": [
+        "Выбрать строку",
+        "Открыть",
+        "Отмена"
+      ],
+      "conditions": [
+        "Пустой список обрабатывается вызывающим экраном.",
+        "Один shared main source set; отдельных flavor-веток этого метода нет."
+      ],
+      "saved_state": "Выбор живёт в открытом диалоге; активная project identity меняется отдельной операцией.",
+      "source_ids": [
+        "WF-PROJECT-CHOOSER"
+      ],
+      "expectations": [
+        "Oracle: два разных ProjectInfo с одинаковым name должны открывать именно выбранную identity; отмена не меняет активный проект.",
+        "Контрпример: выбор по совпадению имени или автоматическая активация при простом нажатии строки нарушают контракт."
+      ],
+      "unknowns": [
+        "Строки создаются динамически без собственного R.id; устойчивого widget ID для каждой строки в этом методе нет.",
+        "Поведение radio/диалога после Android recreation требует отдельной native-проверки."
+      ]
+    },
+    {
+      "id": "UI-PROJECT-SWITCH",
+      "group": "project",
+      "title": "Безопасное переключение рабочей области",
+      "surface": "Меню Проекты → открыть",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_collector_projects"
+      ],
+      "meaning": "Смена проекта заменяет owning workspace, а не только заголовок экрана.",
+      "value_origin": "projectUid → CollectorProjectRegistry, безопасный mapPath, persisted active preferences; затем Activity recreate.",
+      "units": "Нет физических единиц.",
+      "updates": [
+        "После успешной активации обновляется Activity.",
+        "Допустимый account может получить ближайшую плановую sync."
+      ],
+      "actions": [
+        "Открыть другой проект"
+      ],
+      "conditions": [
+        "Запись трека, walk session, режим редактирования, fill и занятая операция запрещают прямое переключение.",
+        "Синхронизация имеет отдельный confirm/interrupt gate.",
+        "Registry проверяет сохранение старой карты и безопасный путь под lease."
+      ],
+      "saved_state": "Старая карта сохраняется до публикации новой identity; registry и preferences относятся к выбранному workspace.",
+      "source_ids": [
+        "WF-PROJECT-SWITCH",
+        "WF-PROJECT-ACTIVATE"
+      ],
+      "expectations": [
+        "Oracle: при занятой записи/редактировании остаются прежние projectUid, map path и данные; при успешном switch появляется выбранный workspace.",
+        "Контрпример: сменился заголовок, но provider продолжает читать старую БД; либо save failure всё равно меняет active preferences."
+      ],
+      "unknowns": [
+        "Реальная отмена фонового HTTP, SDK teardown и восстановление после process kill здесь не выполнялись."
+      ]
+    },
+    {
+      "id": "UI-LAYER-VISIBILITY",
+      "group": "layers",
+      "title": "Видимость слоя и отметка изменений",
+      "surface": "Панель слоёв",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "btShow",
+        "tvLayerName",
+        "layer_pending_badge",
+        "ivEdited"
+      ],
+      "meaning": "Глаз управляет видимостью слоя; жёлтая отметка означает ожидающие изменения, а карандаш — занятую редактированием/обходом строку.",
+      "value_origin": "layer.getName/isVisible, pending set по layer ID, isLocked/isLayerReservedForWalk; изменение setVisible затем layer.save.",
+      "units": "Булевы состояния; не количество объектов.",
+      "updates": [
+        "Повторное bind сбрасывает видимость badge для переиспользованной строки.",
+        "Глаз инвертирует сохранённую видимость."
+      ],
+      "actions": [
+        "Показать/скрыть слой"
+      ],
+      "conditions": [
+        "Lookup tables не получают обычную строку.",
+        "Locked/walk-reserved слой скрывает btMore и btShow и показывает ivEdited."
+      ],
+      "saved_state": "Видимость сохраняется в слое; pending badge берётся из отдельного состояния очереди.",
+      "source_ids": [
+        "WF-LAYER-ROW"
+      ],
+      "expectations": [
+        "Oracle: скрытие слоя сохраняет его объекты и принадлежность проекту; переиспользованная чистая строка не наследует чужой badge.",
+        "Контрпример: скрытие удаляет объект либо у чистого слоя остаётся жёлтая метка предыдущей строки."
+      ],
+      "unknowns": [
+        "Фактическая карта после toggle, pickability скрытых объектов и native размеры кнопок ещё не проверены."
+      ]
+    },
+    {
+      "id": "UI-LAYER-ORDER",
+      "group": "layers",
+      "title": "Порядок строк соответствует стеку карты",
+      "surface": "Панель слоёв",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "tvLayerName"
+      ],
+      "meaning": "Первой строке списка соответствует верхний индекс модели слоя, а не индекс0.",
+      "value_origin": "LayersListAdapter.getItem: getCount()-1-i → mMap.getLayer(nIndex).",
+      "units": "Целочисленный индекс, не расстояние.",
+      "updates": [
+        "После изменения списка adapter вычисляет строку из текущего стека."
+      ],
+      "actions": [
+        "Просмотреть стек"
+      ],
+      "conditions": [
+        "Модель карты присутствует; для отсутствующей карты возвращается null."
+      ],
+      "saved_state": "Этот контракт описывает чтение порядка; drag/reorder persistence отдельным методом здесь не сертифицирован.",
+      "source_ids": [
+        "WF-LAYER-ORDER"
+      ],
+      "expectations": [
+        "Oracle: для стека A(0), B(1), C(2) порядок списка C,B,A; строка сохраняет identity соответствующего слоя.",
+        "Контрпример: верхняя строка управляет нижним слоем из-за прямого i вместо обратного индекса."
+      ],
+      "unknowns": [
+        "Полная цепочка перетаскивания/сохранения порядка пока вне проверенного набора; не обещать её PASS."
+      ]
+    },
+    {
+      "id": "UI-EDIT-PERMISSION",
+      "group": "editing",
+      "title": "Редактирование разрешённых объектов",
+      "surface": "Меню слоя и панель атрибутов",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_edit",
+        "menu_edit_attributes"
+      ],
+      "meaning": "Наличие слоя на карте не означает доступность редактирования.",
+      "value_origin": "NGWVectorLayer.isEditingAllowed → LayerEditingPolicy: managed Collector использует collectorEditable AND outboundSyncAllowed; прочие слои layerEditable AND collectorEditable.",
+      "units": "Булево разрешение.",
+      "updates": [
+        "Меню вычисляет разрешение при построении и повторно перед edit action."
+      ],
+      "actions": [
+        "Открыть редактирование только допустимого слоя"
+      ],
+      "conditions": [
+        "Для managed NGW важна project policy и разрешённое направление отправки.",
+        "lh_mera.lh_mery и lh_mera.nep текущей реализации подтверждены пользователем read-only; area_origin остаётся desktop/server-only и намеренно отсутствует в mobile config.",
+        "Общие Save/PUT методы не доказывают редактируемость этих двух слоёв."
+      ],
+      "saved_state": "Действуют сохранённые layer/project policy и sync direction; новый контракт сервера требует повторной оценки.",
+      "source_ids": [
+        "WF-LAYER-ROW",
+        "WF-NGW-EDIT-POLICY",
+        "WF-EDIT-POLICY",
+        "WF-IDENTIFY-TOOLBAR"
+      ],
+      "expectations": [
+        "Oracle: managed слой с collectorEditable=false либо outbound=false не предлагает edit; read-only lh_mery/nep не получают требования CREATE/PUT для area_origin.",
+        "Контрпример: включить edit только потому, что тип слоя vector, либо потребовать добавить area_origin в мобильную форму ради полного списка полей."
+      ],
+      "unknowns": [
+        "Эффективные tenant overrides/server permissions не запрашивались; native доступность конкретного опубликованного ресурса не проверена."
+      ]
+    },
+    {
+      "id": "UI-IDENTIFY-NAVIGATION",
+      "group": "identify",
+      "title": "Просмотр соседних объектов по ID",
+      "surface": "Панель идентификации",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_prev",
+        "menu_next"
+      ],
+      "meaning": "Переход выбирает соседнюю запись списка существующих DB IDs, не арифметически следующий FID.",
+      "value_origin": "queryAllFeatureIdsFromDb → mFeatureIDs; mItemPosition → mItemId; overlay получает выбранный ID.",
+      "units": "Позиция списка; FID является идентификатором.",
+      "updates": [
+        "При выборе слоя собираются ID.",
+        "Следующий/предыдущий обновляет атрибуты и выделение только в границах списка."
+      ],
+      "actions": [
+        "Следующий",
+        "Предыдущий"
+      ],
+      "conditions": [
+        "Границы не увеличивают/уменьшают position.",
+        "Повторная внешняя фильтрация/изменение БД требует нового списка."
+      ],
+      "saved_state": "Activity сохраняет selected item отдельно; актуальность списка после параллельного удаления требует проверки.",
+      "source_ids": [
+        "WF-IDENTIFY-SELECT",
+        "WF-IDENTIFY-NEXT"
+      ],
+      "expectations": [
+        "Oracle: у набора FID10,50,900 переход с10 ведёт к50, затем900; на концах список не переполняется.",
+        "Контрпример: поиск FID11 или выход за размер списка вместо выбора следующей существующей записи."
+      ],
+      "unknowns": [
+        "Сортировка и freshness queryAllFeatureIdsFromDb после конкурентных правок этим UI-обзором не приняты."
+      ]
+    },
+    {
+      "id": "UI-IDENTIFY-ACTIONS",
+      "group": "identify",
+      "title": "Действия идентификации учитывают права",
+      "surface": "Нижняя панель идентификации",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_prev",
+        "menu_next",
+        "menu_edit_attributes"
+      ],
+      "meaning": "Просмотр атрибутов разрешён независимо от того, разрешено ли их менять; edit присутствует только в editable menu.",
+      "value_origin": "mLayer.isEditingAllowed; R.menu.attributes_editable/attributes; выбранный mItemId передаётся штатной форме.",
+      "units": "Нет физических единиц.",
+      "updates": [
+        "Панель очищается и строится по текущей политике слоя.",
+        "Перед edit permission проверяется повторно."
+      ],
+      "actions": [
+        "Навигация",
+        "Редактирование доступного объекта"
+      ],
+      "conditions": [
+        "Tablet/background styling не меняет layer permission.",
+        "Read-only view routing и permission layer являются разными условиями."
+      ],
+      "saved_state": "Открывается форма конкретного текущего mItemId; сами атрибуты не изменяются переходом в просмотр.",
+      "source_ids": [
+        "WF-IDENTIFY-TOOLBAR"
+      ],
+      "expectations": [
+        "Oracle: read-only объект можно просмотреть и перелистать; даже прямое нажатие старого edit action после запрета не открывает запись.",
+        "Контрпример: скрыть весь просмотр из-за отсутствия write rights либо оставить активной старую кнопку Edit."
+      ],
+      "unknowns": [
+        "Фактическое распределение кнопок и доступность при large-font не проверены на устройстве."
+      ]
+    },
+    {
+      "id": "UI-FORM-REQUIRED",
+      "group": "forms",
+      "title": "Обязательные поля и сохранённые значения",
+      "surface": "Обычная/NGFP форма",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "form_save",
+        "controls_list"
+      ],
+      "meaning": "Save проверяет обязательные данные; значение существующего поля вне формы читается из сохранённой строки, а не считается автоматически пустым.",
+      "value_origin": "requiredFieldDefinitions/Field.required, controls ContentValues, stored values из SQLite; NGW metadata parser переносит required.",
+      "units": "Единицы принадлежат полю; required сам единиц не задаёт.",
+      "updates": [
+        "Перед Save пересчитываются required definitions и отсутствующие значения.",
+        "Показывается список caption и ошибка доступного control."
+      ],
+      "actions": [
+        "Сохранить",
+        "Перейти к полю ошибки"
+      ],
+      "conditions": [
+        "Явно очищенное поле и отсутствующий control различаются.",
+        "Новому объекту недоступное required поле нельзя считать заполненным из старой строки."
+      ],
+      "saved_state": "Проверка не должна терять черновик или старое значение вне формы.",
+      "source_ids": [
+        "WF-FORM-REQUIRED",
+        "WF-NGW-FIELD-SCHEMA"
+      ],
+      "expectations": [
+        "Oracle: существующее заполненное required поле вне NGFP не блокирует сохранение другого поля; новое обязательное без значения блокирует Save с понятным указанием.",
+        "Контрпример: невидимое заполненное поле обнулено; либо отсутствующее required у нового объекта пропущено без проверки."
+      ],
+      "unknowns": [
+        "Полная conditional visibility/cascade engine и серверные ограничения имеют собственные контракты; здесь не заявлена их runtime-приёмка."
+      ]
+    },
+    {
+      "id": "UI-FORM-DRAFT",
+      "group": "forms",
+      "title": "Черновик привязан к проекту и операции",
+      "surface": "Форма объекта",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "form_save",
+        "controls_list"
+      ],
+      "meaning": "Черновик хранит незавершённую работу и identity операции, а не подтверждает сохранение объекта или отправку.",
+      "value_origin": "captureFormDraft: mapPath/layerId/featureId/operationId, form/meta paths, typed control state, script pin, geometry и photo paths → FeatureFormDraftStore.commit.",
+      "units": "updatedAtMs — Unix milliseconds; остальные значения типизированы полями.",
+      "updates": [
+        "Checkpoint собирает актуальные controls и дополнительные pins.",
+        "Store обновляет время и сообщает результат commit."
+      ],
+      "actions": [
+        "Продолжить заполнение",
+        "Попытаться сохранить"
+      ],
+      "conditions": [
+        "View-only/finalized draft не записывается этим capture path.",
+        "Невалидный snapshot не принимается."
+      ],
+      "saved_state": "Durable snapshot содержит owning map и operation UUID; сохранение controls не является созданием business row.",
+      "source_ids": [
+        "WF-FORM-DRAFT",
+        "WF-FORM-DRAFT-STORE"
+      ],
+      "expectations": [
+        "Oracle: после прерывания восстанавливается именно owning-project черновик с operationId, прежними controls и pins; другой проект не получает его значения.",
+        "Контрпример: восстановление по одному layerId в другой карте либо сообщение об успешном Save только из-за наличия snapshot."
+      ],
+      "unknowns": [
+        "Реальный process kill/restore, вложения и точная pin-проверка не исполнялись; source facts не заменяют native regression."
+      ]
+    },
+    {
+      "id": "UI-FORM-SAVE",
+      "group": "forms",
+      "title": "Сохранение формы в owning workspace",
+      "surface": "Форма объекта",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "form_save"
+      ],
+      "meaning": "Save проходит checkpoint и validation, проверяет owning map и применяет локальный insert/update; успех локального Save отличается от sync ACK.",
+      "value_origin": "Controls/copy defaults → ContentValues; FeatureSaveJournal по map/layer/operationId; provider выбранного слоя.",
+      "units": "Типы и единицы берутся из схемы полей.",
+      "updates": [
+        "Перед записью готовится checkpoint и выполняются validators/scripts.",
+        "Найденная операция повторно использует уже сохранённый feature ID."
+      ],
+      "actions": [
+        "Сохранить допустимый объект"
+      ],
+      "conditions": [
+        "View-only и неинициализированный слой отказывают.",
+        "app.getMap должен совпадать с DatabaseContext owning map.",
+        "Ошибка validation/provider не должна становиться успехом."
+      ],
+      "saved_state": "Operation journal позволяет сопоставить повторную попытку; очередь синхронизации и remote ACK отдельны.",
+      "source_ids": [
+        "WF-FORM-SAVE"
+      ],
+      "expectations": [
+        "Oracle: повтор Save одной операции не создаёт второй объект; при смене owning map запись отклоняется без изменения чужой карты.",
+        "Контрпример: закрытие формы после provider error, создание дубликата при retry или запись в новый активный проект."
+      ],
+      "unknowns": [
+        "Атомарность transaction/journal, полный attachment workflow и server acknowledgement требуют отдельного исполнения."
+      ]
+    },
+    {
+      "id": "UI-FORM-UNBOUND-PRESERVATION",
+      "group": "forms",
+      "title": "Поля вне формы не затираются обычным локальным update",
+      "surface": "NGFP с неполным набором controls",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "form_save",
+        "controls_list"
+      ],
+      "meaning": "Отсутствующий control не добавляет колонку в ContentValues; локальный UPDATE меняет только явно переданные keys.",
+      "value_origin": "ModifyAttributesActivity.putFieldValue → VectorLayer.updateViaSql(values.valueSet).",
+      "units": "Без преобразования единиц.",
+      "updates": [
+        "При сборе Save поля без control пропускаются.",
+        "SQL SET формируется из значений данного изменения."
+      ],
+      "actions": [
+        "Изменить доступное поле",
+        "Сохранить"
+      ],
+      "conditions": [
+        "Это normal existing-row edit path без явного script/cascade/copy writer для исключённого поля.",
+        "Текущие lh_mery/nep read-only: этот общий writer не является их применимым требованием; будущая editing feature требует отдельного пересмотра area_origin."
+      ],
+      "saved_state": "Существующие локальные значения вне формы сохраняются; это не доказательство серверной PUT omission semantics.",
+      "source_ids": [
+        "WF-FORM-ABSENT-FIELD",
+        "WF-LOCAL-PARTIAL-UPDATE"
+      ],
+      "expectations": [
+        "Oracle: изменение комментария в существующей записи сохраняет остальные whole-row значения вне формы.",
+        "Контрпример: из отсутствующего control синтезируется SQL NULL или все поля автоматически записываются пустыми."
+      ],
+      "unknowns": [
+        "Custom scripts/cascades/copy defaults могут иметь отдельное намеренное поведение; NGW server write semantics не исследовались."
+      ]
+    },
+    {
+      "id": "UI-OFFLINE-SYNC-RETRY",
+      "group": "offline",
+      "title": "Нет сети: обмен не начинается, доступен повтор",
+      "surface": "Панель слоёв → синхронизация",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "sync"
+      ],
+      "meaning": "Отсутствие connected network даёт отдельное сообщение; это не успешная синхронизация и не удаление очереди.",
+      "value_origin": "NetworkUtil.isNetworkAvailable → showSyncFailureDialog; текст различает no internet и server error.",
+      "units": "Нет физических единиц.",
+      "updates": [
+        "Сеть проверяется до запуска службы.",
+        "Retry повторно идёт через тот же network gate."
+      ],
+      "actions": [
+        "Повторить",
+        "Отмена"
+      ],
+      "conditions": [
+        "Недоступная Activity сохраняет pending error вместо попытки открыть окно.",
+        "Диалог уже открыт — новое сообщение откладывается."
+      ],
+      "saved_state": "Пользовательский Cancel закрывает сообщение; нет source-основания очищать offline edits.",
+      "source_ids": [
+        "WF-SYNC-MANUAL",
+        "WF-SYNC-RETRY"
+      ],
+      "expectations": [
+        "Oracle: при отсутствии сети не стартует NGW sync, остаются локальные правки; после восстановления Retry использует штатную очередь.",
+        "Контрпример: до проверки сети изменён режим/поставлена служба, потеряны edits или no-network объявлен успешным обменом."
+      ],
+      "unknowns": [
+        "Доступность offline карт/подложек и их полнота не выводятся из этого network gate; map/render cache — отдельная область."
+      ]
+    },
+    {
+      "id": "UI-MANUAL-SYNC",
+      "group": "sync",
+      "title": "Ручной запуск использует единую очередь",
+      "surface": "Кнопка синхронизации панели слоёв",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "sync"
+      ],
+      "meaning": "Короткое нажатие запускает штатный serial service; forced recheck — отдельный режим, не создание второго параллельного обмена.",
+      "value_origin": "Current accounts, preferences offline_sync/ngid_url, forceRecheck → OfflineSyncIntentService; ProjectSyncRunner управляет session completion.",
+      "units": "Нет физических единиц.",
+      "updates": [
+        "После принятия запуска обновляются анимация, info и badges.",
+        "Занятая операция показывает wait."
+      ],
+      "actions": [
+        "Синхронизировать",
+        "Повторная проверка пропущенного по подтверждению"
+      ],
+      "conditions": [
+        "Есть context и сеть.",
+        "Без accounts возможен отдельный track work, а не фиктивный полный NGW sync.",
+        "Root completion требует account/children/pending-edit gates."
+      ],
+      "saved_state": "Служба/queue владеют pending work; кнопка сама не подтверждает полный обмен проекта.",
+      "source_ids": [
+        "WF-SYNC-MANUAL",
+        "WF-SYNC-RUN"
+      ],
+      "expectations": [
+        "Oracle: один ручной запуск не создаёт два независимых workers; busy отказ оставляет прежние pending edits.",
+        "Контрпример: одновременно framework sync и serial service для одного tap либо запись полного clock при простом запуске."
+      ],
+      "unknowns": [
+        "Фактическая single-flight/cancellation цепочка и all-project preference screen в этой source-подборке не приняты native."
+      ]
+    },
+    {
+      "id": "UI-SYNC-COMPLETION-CLOCK",
+      "group": "sync",
+      "title": "Время полного обмена относится к видимому проекту",
+      "surface": "Подпись под синхронизацией",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "info"
+      ],
+      "meaning": "Показана последняя подтверждённая полная синхронизация текущего workspace; не время последнего tap или partial upload.",
+      "value_origin": "MapBase.getActiveInstance path → ProjectSyncState.lastComplete canonical-path key; ProjectSyncRunner.markComplete после full-project gates.",
+      "units": "Хранимое время — Unix milliseconds; экран форматирует дату/давность.",
+      "updates": [
+        "updateInfo читает clock active map даже внутри scoped callback другого проекта.",
+        "Отсутствующий/нечитаемый clock даёт никогда не выполнено."
+      ],
+      "actions": [
+        "Посмотреть состояние",
+        "Запустить полноценную sync отдельно"
+      ],
+      "conditions": [
+        "Partial uploads и другой проект не должны обновлять этот displayed clock.",
+        "markComplete вызывается только после завершения project pass и cleanup conditions."
+      ],
+      "saved_state": "Clock сохраняется по canonical path; отсутствие записи не мигрируется из общего legacy timestamp.",
+      "source_ids": [
+        "WF-SYNC-CLOCK",
+        "WF-SYNC-CLOCK-STORE",
+        "WF-SYNC-RUN"
+      ],
+      "expectations": [
+        "Oracle: фоновой sync проектаB не меняет подпись открытогоA; первая записьA появляется после успешного fullA, не после track-only upload.",
+        "Контрпример: использовать global last_sync timestamp или now при tap и показывать ложную свежесть данных."
+      ],
+      "unknowns": [
+        "Формат локали/часового пояса и native redraw ещё не проверены; source не подтверждает точность серверных данных."
+      ]
+    },
+    {
+      "id": "UI-SYNC-PENDING-BADGES",
+      "group": "sync",
+      "title": "Метки ожидающих отправки данных",
+      "surface": "Кнопка sync и строки слоёв",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "sync_pending_badge",
+        "layer_pending_badge",
+        "sync"
+      ],
+      "meaning": "Отметка описывает локальную очередь, а не полноту загрузки или общую сетевую ошибку.",
+      "value_origin": "Фоновый query owning map → pending layer ID set; track pending дополнительно зависит от подтверждённой registration fingerprint и send preference.",
+      "units": "Булево pending; не количество ошибок.",
+      "updates": [
+        "Result применяется только к тому же map и поколению UI.",
+        "Новая регистрационная доступность вызывает повторный расчёт."
+      ],
+      "actions": [
+        "Открыть слои",
+        "Запустить обмен"
+      ],
+      "conditions": [
+        "TrackSendSettings и положительное подтверждение конкретного device URL обязательны для track badge.",
+        "Старый result другой карты/Activity игнорируется."
+      ],
+      "saved_state": "Данные очереди остаются в storage; переиспользованная строка не должна хранить самостоятельный badge state.",
+      "source_ids": [
+        "WF-SYNC-BADGE",
+        "WF-TRACK-REGISTRATION",
+        "WF-LAYER-ROW"
+      ],
+      "expectations": [
+        "Oracle: результат queryA после switchB не меняет badgesB; незарегистрированный tracker не показывает подтверждённую pending-track метку.",
+        "Контрпример: наличие track row считается регистрацией; старый async result переносится в другой проект."
+      ],
+      "unknowns": [
+        "Разница canSendTracks/canShowPending намеренная; полный TrackUploader ACK protocol здесь не исполнялся."
+      ]
+    },
+    {
+      "id": "UI-TRACK-SELECTION-PANEL",
+      "group": "tracks",
+      "title": "Панель выбранного трека показывает следующую команду",
+      "surface": "Нижняя панель трека; controls создаются программно, их смысл подтверждён Java source, XML android:id evidence отсутствует",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Панель относится к выбранному TrackInfo; кнопка видимости сообщает действие, которое произойдёт после нажатия.",
+      "value_origin": "TrackInfo.name/visible; bind выставляет hidden-name variant и противоположное действие visibility.",
+      "units": "Имя и булева видимость; координаты/GPS не вычисляются.",
+      "updates": [
+        "Bind обновляет title, текст, icon и contentDescription видимости."
+      ],
+      "actions": [
+        "Показать/скрыть",
+        "Цвет",
+        "Переименовать",
+        "Удалить",
+        "Закрыть панель"
+      ],
+      "conditions": [
+        "TrackInfo уже выбран вызывающим UI; CLOSE не является удалением трека."
+      ],
+      "saved_state": "Панель показывает модель и callback; persistence выполняется отдельными TrackActions/provider.",
+      "source_ids": [
+        "WF-TRACK-PANEL"
+      ],
+      "expectations": [
+        "Oracle: для скрытого трека написано Показать, для видимого Скрыть; закрытие панели оставляет сам трек.",
+        "Контрпример: текст описывает старое состояние вместо следующей команды либо Close удаляет track."
+      ],
+      "unknowns": [
+        "Callback wiring всех действий, реальное выделение линии и large-font hit targets проверяются отдельно; core GPS scope не затронут.",
+        "XML binding detector не покрывает programmatic track controls; это ограничение XML-проверки, не неизвестный смысл проверенных команд. Native appearance/hit targets NOT_RUN."
+      ]
+    },
+    {
+      "id": "UI-TRACK-RENAME",
+      "group": "tracks",
+      "title": "Переименование трека сохраняет непустое имя",
+      "surface": "Диалог имени трека; controls создаются программно, их смысл подтверждён Java source, XML android:id evidence отсутствует",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Имя меняется только после подтверждения непустого trim результата и успешной записи выбранной identity.",
+      "value_origin": "TrackActions.find/current TrackInfo → EditText; ContentValues FIELD_NAME → provider WHERE selected IDs; TrackLayer использует SharedTrackStore.",
+      "units": "Текстовое имя, не идентификатор или метрика.",
+      "updates": [
+        "Диалог открывается с текущим именем и выделением текста.",
+        "При ошибке/пустом имени окно не выдаёт успех."
+      ],
+      "actions": [
+        "Сохранить имя",
+        "Отмена"
+      ],
+      "conditions": [
+        "Отсутствующий track не открывает диалог.",
+        "Пробельное имя блокируется до update."
+      ],
+      "saved_state": "Изменяется имя выбранного track ID в общем track storage; принадлежность проекта/geometry не меняется этим UI.",
+      "source_ids": [
+        "WF-TRACK-RENAME",
+        "WF-TRACK-UPDATE",
+        "WF-TRACK-DATABASE"
+      ],
+      "expectations": [
+        "Oracle: ввод пробелов показывает ошибку и сохраняет прежнее имя; совпадение имён разных IDs не меняет соседний трек.",
+        "Контрпример: имя используется как WHERE identity или диалог закрывается после update count0."
+      ],
+      "unknowns": [
+        "Реальная provider storage mutation и реакция всех экранов не выполнялись.",
+        "XML binding detector не покрывает programmatic track controls; это ограничение XML-проверки, не неизвестный смысл проверенных команд. Native appearance/hit targets NOT_RUN."
+      ]
+    },
+    {
+      "id": "UI-TRACK-DELETE-CONFIRM",
+      "group": "tracks",
+      "title": "Удаление трека требует отдельного подтверждения",
+      "surface": "Диалог удаления трека; controls создаются программно, их смысл подтверждён Java source, XML android:id evidence отсутствует",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Удаление выбранных tracks — отдельная команда с предупреждением об активной записи, не эффект закрытия панели.",
+      "value_origin": "Копия selectedIds → includesRecordingTrack → соответствующий текст → TrackerService.deleteTracks.",
+      "units": "Набор идентификаторов; не время записи.",
+      "updates": [
+        "Confirmation text выбирается по принадлежности выбранного набора к recording track.",
+        "Изменённый UI обновляется после успешного delete callback."
+      ],
+      "actions": [
+        "Подтвердить удаление",
+        "Отмена"
+      ],
+      "conditions": [
+        "Пустой selectedIds не открывает диалог.",
+        "Mutable caller selection клонируется до confirmation."
+      ],
+      "saved_state": "Сеанс и durable drain принадлежат TrackerService; данный UI source не доказывает внутреннюю атомарность удаления.",
+      "source_ids": [
+        "WF-TRACK-DELETE",
+        "WF-TRACK-DATABASE"
+      ],
+      "expectations": [
+        "Oracle: Cancel сохраняет выбранные tracks; изменение внешнего selection во время диалога не расширяет подтверждённый набор.",
+        "Контрпример: при подтверждении берётся новый mutable selection либо удаление начинается до Positive button."
+      ],
+      "unknowns": [
+        "Детали остановки собственного/чужого recording session и drain — следующий source/runtime этап владельца сервиса, не GPS/model обещание этой карточки.",
+        "XML binding detector не покрывает programmatic track controls; это ограничение XML-проверки, не неизвестный смысл проверенных команд. Native appearance/hit targets NOT_RUN."
+      ]
+    }
+  ],
+  "widget_evidence": [
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_azimuth_panel.xml",
+      "id": "azimuth_panel",
+      "sha256": "ef0678194ed38f7cf51d4b49cb3ad00521591cda31b91f65bd38e7cab594b440"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_azimuth_panel.xml",
+      "id": "azimuth_distance",
+      "sha256": "ef0678194ed38f7cf51d4b49cb3ad00521591cda31b91f65bd38e7cab594b440"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_azimuth_panel.xml",
+      "id": "azimuth_bearing",
+      "sha256": "ef0678194ed38f7cf51d4b49cb3ad00521591cda31b91f65bd38e7cab594b440"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_azimuth_panel.xml",
+      "id": "azimuth_details",
+      "sha256": "ef0678194ed38f7cf51d4b49cb3ad00521591cda31b91f65bd38e7cab594b440"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_azimuth_panel.xml",
+      "id": "stakeout_correction_value",
+      "sha256": "ef0678194ed38f7cf51d4b49cb3ad00521591cda31b91f65bd38e7cab594b440"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "fl_compass",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "gnss_hud",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "gnss_hud_quality",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "gnss_hud_detail",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "action_zoom_in",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "action_zoom_out",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "fl_status_panel",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "ll_ruler",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "iv_ruler",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "tv_ruler",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_stakeout_panel.xml",
+      "id": "stakeout_panel",
+      "sha256": "0deee4c263a946febcf62f862d069daf13c9cca0eb7bf406310ccaf3d89964bf"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_stakeout_panel.xml",
+      "id": "stakeout_direction",
+      "sha256": "0deee4c263a946febcf62f862d069daf13c9cca0eb7bf406310ccaf3d89964bf"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_stakeout_panel.xml",
+      "id": "stakeout_distance",
+      "sha256": "0deee4c263a946febcf62f862d069daf13c9cca0eb7bf406310ccaf3d89964bf"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_stakeout_panel.xml",
+      "id": "stakeout_details",
+      "sha256": "0deee4c263a946febcf62f862d069daf13c9cca0eb7bf406310ccaf3d89964bf"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_stakeout_panel.xml",
+      "id": "stakeout_stop",
+      "sha256": "0deee4c263a946febcf62f862d069daf13c9cca0eb7bf406310ccaf3d89964bf"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_stakeout_panel.xml",
+      "id": "stakeout_sound",
+      "sha256": "0deee4c263a946febcf62f862d069daf13c9cca0eb7bf406310ccaf3d89964bf"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/status_panel_content.xml",
+      "id": "tv_latitude",
+      "sha256": "7e7670b0e0f31cc14e371bbf2012d4f1cf421c58a1ae5d13a685289ab32ed5a3"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/status_panel_content.xml",
+      "id": "tv_longitude",
+      "sha256": "7e7670b0e0f31cc14e371bbf2012d4f1cf421c58a1ae5d13a685289ab32ed5a3"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/status_panel_content.xml",
+      "id": "tv_zoom",
+      "sha256": "7e7670b0e0f31cc14e371bbf2012d4f1cf421c58a1ae5d13a685289ab32ed5a3"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/status_panel_content.xml",
+      "id": "tv_source",
+      "sha256": "7e7670b0e0f31cc14e371bbf2012d4f1cf421c58a1ae5d13a685289ab32ed5a3"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/status_panel_content.xml",
+      "id": "tv_accuracy",
+      "sha256": "7e7670b0e0f31cc14e371bbf2012d4f1cf421c58a1ae5d13a685289ab32ed5a3"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/main.xml",
+      "id": "menu_map_rotation",
+      "sha256": "ad1512099be9cb10b67c531b905473f36dbf145f48bd5e18075cea63b487f3a0"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/main.xml",
+      "id": "menu_locate",
+      "sha256": "ad1512099be9cb10b67c531b905473f36dbf145f48bd5e18075cea63b487f3a0"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/menu_measurements.xml",
+      "id": "measurement_azimuth_current",
+      "sha256": "1ac77660ccf5837e92aa18572e05639e3930395b1b1845c693864302d1bffbae"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/menu_measurements.xml",
+      "id": "measurement_azimuth_points",
+      "sha256": "1ac77660ccf5837e92aa18572e05639e3930395b1b1845c693864302d1bffbae"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/select_action.xml",
+      "id": "menu_feature_stakeout",
+      "sha256": "2e734dd5a2b79a92eba7d835df661be7244fd4abe41abbadc500c4490baa18e6"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/fragment_compass.xml",
+      "id": "azimuth",
+      "sha256": "e260f6bbec70e97204cda4893a4d784262b1ee0e442c9e5fbc971e57e0b86d0b"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/main.xml",
+      "id": "menu_collector_projects",
+      "sha256": "ad1512099be9cb10b67c531b905473f36dbf145f48bd5e18075cea63b487f3a0"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_layer.xml",
+      "id": "btShow",
+      "sha256": "53d765de2c0e9eb1d19c50978720da3d93c48866a315d65b3209c6ceffd49589"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_layer.xml",
+      "id": "tvLayerName",
+      "sha256": "53d765de2c0e9eb1d19c50978720da3d93c48866a315d65b3209c6ceffd49589"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_layer.xml",
+      "id": "layer_pending_badge",
+      "sha256": "53d765de2c0e9eb1d19c50978720da3d93c48866a315d65b3209c6ceffd49589"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_layer.xml",
+      "id": "ivEdited",
+      "sha256": "53d765de2c0e9eb1d19c50978720da3d93c48866a315d65b3209c6ceffd49589"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/menu/layer_popup.xml",
+      "id": "menu_edit",
+      "sha256": "07df001c892399cfdc26c4815577b32758ae7fdebecfd31adc48ffad0324ca36"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/attributes_editable.xml",
+      "id": "menu_edit_attributes",
+      "sha256": "5e6d5e741836c27e9d87f5a8cf03dc4eefe94c69cddc4d9cfb972dd5327b9df4"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/attributes.xml",
+      "id": "menu_prev",
+      "sha256": "03b10d68bd79fd64d2ecec5e319f7a9833cf2a261170c2da0162e4b479fff7ec"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/attributes.xml",
+      "id": "menu_next",
+      "sha256": "03b10d68bd79fd64d2ecec5e319f7a9833cf2a261170c2da0162e4b479fff7ec"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/activity_standard_attributes.xml",
+      "id": "form_save",
+      "sha256": "ae6e14beb19a22ab3337838f1342145a994abd0989bd223bd32d59c572f9886d"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/activity_standard_attributes.xml",
+      "id": "controls_list",
+      "sha256": "ae6e14beb19a22ab3337838f1342145a994abd0989bd223bd32d59c572f9886d"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/fragment_layers.xml",
+      "id": "sync",
+      "sha256": "d71636c3c21b26c362c4a1b76be173d89a6b8f513864efa29e2bd1725a62a5f5"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/fragment_layers.xml",
+      "id": "info",
+      "sha256": "d71636c3c21b26c362c4a1b76be173d89a6b8f513864efa29e2bd1725a62a5f5"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/fragment_layers.xml",
+      "id": "sync_pending_badge",
+      "sha256": "d71636c3c21b26c362c4a1b76be173d89a6b8f513864efa29e2bd1725a62a5f5"
+    }
+  ],
+  "coverage": {
+    "status": "bounded_source_review",
+    "runtime": "not_run",
+    "reviewed_groups": [
+      "editing",
+      "forms",
+      "identify",
+      "layers",
+      "location",
+      "map",
+      "navigation",
+      "offline",
+      "project",
+      "sync",
+      "tracks"
+    ],
+    "not_reviewed": [
+      "Not an exhaustive catalogue of every dialog, resource, branch or device variant.",
+      "Real GNSS/device callback freshness, conditional autopan, lifecycle/rotation and field UI transitions were not executed.",
+      "Runtime permissions, tenant overlays, server policies and already stored projects need owner-specific acceptance.",
+      "Programmatic widgets have method evidence; XML declaration coverage is intentionally absent for them.",
+      "Desktop UI remains subject to the same provenance workflow, without a claim of a complete desktop UI catalogue.",
+      "Other locale/flavor/resource overlays outside the declared source/XML witnesses require fresh review; defaults and resource IDs alone do not prove effective runtime UI."
+    ],
+    "source_context": {
+      "reviewed_at": "2026-10-29",
+      "root_base": "0a23486beedc309f7514cb19f1503e33fd572c50",
+      "app_base": "69edfe78e1ac41c8c1418ea44cbb86f3e0e6657e",
+      "maplib": "f61ba7839cf9e44b08eefa98d72d83966d1c3c3d",
+      "maplibui": "e66b9859ffc86114aaa7afac0e57942f5ce89925",
+      "basis": "Merged product source; task changes documentation and source-only checks, not product code."
+    }
+  },
+  "non_method_evidence": [
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport.",
+      "contract_ids": [
+        "UI-MAP-SCALE-RULER",
+        "UI-MAP-ZOOM",
+        "UI-MAP-CAMERA-ROTATION-STATE"
+      ],
+      "sha256": "0100397e30441b1dcef6e8c6113845b701ce98ab17bd3e4c305fb4b915b7d06f"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java",
+      "purpose": "Non-method FRESHNESS_MS=8000 and FUTURE_TOLERANCE_MS=1000; retained network display never proves a fresh fix.",
+      "contract_ids": [
+        "UI-LOCATION-DISPLAY-FRESHNESS"
+      ],
+      "sha256": "17afc600d0665dfea50d9412cc6a17831dec25eeb4b3a9d24fc2e3fa91bd3a0d"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+      "purpose": "Non-method max fix age3000ms, two reached confirmations and100ms scheduler tick; guidance thresholds stay separate from display retention.",
+      "contract_ids": [
+        "UI-NAVIGATION-STAKEOUT-FRESHNESS",
+        "UI-NAVIGATION-SOUND"
+      ],
+      "sha256": "c0458ee8df5ab59c9aaf99057ff08ea62fa143a1b8e985c6bc9b4075f4b0b24e"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/xml/preferences_map.xml",
+      "purpose": "Reviewed XML defaults and keys for coordinates/precision/units/status/location/compass/ruler/zoom; deployed overrides and old preferences remain separate.",
+      "contract_ids": [
+        "UI-MAP-STATUS-COORDINATES",
+        "UI-MAP-SCALE-RULER",
+        "UI-MAP-ZOOM",
+        "UI-MAP-COMPASS"
+      ],
+      "sha256": "dc8ef3537bbe3e1679b456c30d4ad0f4f98461944a1582121d2304d1af0f7536"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/xml/preferences_location.xml",
+      "purpose": "Reviewed XML defaults and keys for background GPS, heading sector, source/receiver and stakeout preferences; source defaults are not runtime permissions.",
+      "contract_ids": [
+        "UI-LOCATION-SOURCE-GNSS-HUD",
+        "UI-LOCATION-CURSOR-HEADING-SECTOR",
+        "UI-NAVIGATION-STAKEOUT-TARGET"
+      ],
+      "sha256": "af61fb1444e70b87ab7256ba997c2d9b27b07afae5d82f3eb4af2f70bfdcb369"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values/strings.xml",
+      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited.",
+      "contract_ids": [
+        "UI-NAVIGATION-STAKEOUT-TARGET"
+      ],
+      "sha256": "1c11043deacad8b862413ea9a8d800117a49d0d9579413b085f25f5b715ef8fc"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values-ru/strings.xml",
+      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited.",
+      "contract_ids": [
+        "UI-NAVIGATION-STAKEOUT-TARGET"
+      ],
+      "sha256": "1c3e10073a674b39e9c746f6894a9883283facf615fa89432297c7015800d62f"
+    }
+  ]
+}

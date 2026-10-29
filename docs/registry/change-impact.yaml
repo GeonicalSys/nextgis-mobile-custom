@@ -1,5 +1,13 @@
 schema_version: 1
 triggers:
+  - id: UI-VALUE-PROVENANCE
+    paths: [app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt, app/src/main/res/layout/**, app/src/main/res/menu/**, app/src/main/java/com/nextgis/mobile/adapter/**, maplib/src/main/java/com/nextgis/maplib/display/**, maplibui/src/main/java/com/nextgis/maplibui/**, docs/registry/ui-contracts.json, docs/scripts/check_ui_contracts.py]
+    owners: [app, maplib, maplibui]
+    read: [docs/architecture/ui-contracts.md, docs/registry/ui-contracts.json, docs/architecture/location-pipeline.md]
+    invariants: [INV-UI-VALUE-PROVENANCE]
+    must_update_docs: [docs/architecture/ui-contracts.md, docs/registry/ui-contracts.json]
+    verify: [AUTO-UI-SOURCE-CONTRACTS, SMOKE-UI-VALUE-PROVENANCE]
+    strict_docs: true
   - id: GPS-CACHE-WITNESS
     paths: [maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java, maplib/src/test/java/com/nextgis/maplib/location/GpsDisplayRetentionTest.java, app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java, app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java, app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java, app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitnessTest.java, app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsPlatformTest.java, app/src/test/java/com/nextgis/mobile/util/AppDiagnosticsTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java]
     owners: [maplib, app]

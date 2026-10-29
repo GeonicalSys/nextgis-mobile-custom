@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import configparser
 import re
+import runpy
 import sys
 from collections.abc import Iterable, Mapping
 from pathlib import Path, PurePosixPath
@@ -1003,6 +1004,11 @@ def main(argv: Iterable[str] | None = None) -> int:
     )
     if args.changed_file:
         report_changed_files(triggers, args.changed_file, args.enforce_diff, validation)
+    ui_checker = runpy.run_path(str(Path(__file__).with_name("check_ui_contracts.py")))
+    ui_errors, ui_summary = ui_checker["check_catalog"](workspace)
+    validation.info(ui_summary)
+    for error in ui_errors:
+        validation.error("registry/ui-contracts.json", error)
     return validation.finish()
 
 

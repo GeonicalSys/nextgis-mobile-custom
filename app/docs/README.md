@@ -6,6 +6,14 @@ last_verified: 2026-10-29
 
 # app — Android-приложение Lisa/Belka
 
+Знания о показателях и действиях карты начинаются с
+[`../../docs/architecture/ui-contracts.md`](../../docs/architecture/ui-contracts.md)
+и source-реестра `../../docs/registry/ui-contracts.json`. Они различают device
+location, camera/viewport, selected feature, права записи и состояние доставки.
+Сначала подтвердить producer/binding/условия по текущему коду; missing contract
+исследовать и сохранить в этой же задаче. Source fingerprint требует review
+при изменении, но не означает Android GUI-приёмку.
+
 ## Приватный сбор ресурсов карты — MOB-04, 2026-10-28
 
 Только явный `-PprivateResourceProfiling=true` включает
