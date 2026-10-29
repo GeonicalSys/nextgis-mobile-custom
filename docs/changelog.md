@@ -1,12 +1,80 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-29 — Новый разбор мобильных событий GlitchTip
+
+После первого среза520/516 выполнен свежий полный export:8открытых мобильных
+групп,593записи/589SDK ID,59новых ID относительно тех же восьми групп28октября.
+Подготовлены68/88 already-fixed по прежней политике штатных GPS ожиданий и
+45/64/69/90/96/117 diagnostics. Source commits отправлены; guarded close и
+независимый readback подтвердили8resolved,599записей/595SDK ID без удаления.
+Первый96close отказал до комментария при новых событиях; delta прочитана. Поздняя030/224SDK/OS пара не названа новым падением57a;
+worker rethrow/terminate signature не устанавливает исходный exception или OOM.
+Для неизвестной причины GPS добавлено редкое сравнение cached framework fix
+и app raw без подачи cache в pipeline или изменения фильтра/подписки/retry.
+877JVM tests,docs50,три normal variants, instrumentation compile и version
+matrix PASS. Частный APK517c941d…0db8b01 собран, не установлен/не опубликован;
+emulator/native/Full и новых действий с устройствами не было. Итог и ограничения:
+[разбор 29 октября](reference/glitchtip-triage-2026-10-29.md).
+
+## 2026-10-29 — Приоритет whole SQLite групп и native регрессия
+
+Уточнён контракт current style-controller alias, canonical bottom-to-top model
+order вместо cache insertion, cached SDK wrapper/filter-owner identity и четырёх
+standalone rebind путей. Сохраняются cache/queue оптимизации, данные, sync и
+формат проектов. Добавлены новые user/internal cards, module packs, Android
+invariant/dependency/impact/smoke links и адресный `sqlite-priority` runbook.
+Первый81 JVM/20 Python batch PASS; первый native run выявил реальный relative-order
+дефект. Oracle сохранён; canonical traversal исправлен,13 planner unit PASS.
+Focused native case1/1 PASS на T40/API30 (`priority-related-t40-02`), затем весь
+NativeSqliteVectorRenderingTest10 distinct методов PASS на той же source
+fingerprint (`sqlite-related-t40-03/result.json`, `native-run03.log`). Exact
+final83 JVM/10classes PASS, 0fail/error/skip. Три обычных variant PASS71с,
+version matrix PASS. Lisa224/3.1.2.30 APK70580085bytes SHA256
+`57a495854c9c18a5265bf42074101b9dd6d5750ad0fe5e3d6e606c5ef10984bd`
+с прежней подписью установлен поверх T40 без очистки данных. Release
+DEBUG/FIELD_VERIFICATION/PRIVATE_RESOURCE_PROFILING false, profileable отсутствует,
+postprocessing не применялся. Runtime1658-file fingerprint совпал до/после сборки;
+восстановлена карта14.2 и просмотрен normal screenshot, без действий редактора/
+recorder/walk. Это normal smoke отдельно от10 verification native методов,
+не real-project content/pixel/Full приёмка. UID logcat collector `--uid` не поддержан T40 и остаётся
+diagnostic gap. Новый corpus использует прямых root children, nested/recreation
+не проверены.
+Исторический classic-route PASS, build и review не заменяют эту приёмку, Full
+или real-project787 content verification. Публикация не выполняется.
+
+## 2026-10-28 — Cache index и отменяемый native IO допуск
+
+Убраны полный scan/regex/sort/stat каталога перед каждым put: общий bounded
+canonical-root metadata ledger, incremental recency и отдельная reconciliation
+с прежними PBF/identity/byte/file budgets. Перед native IO dispatcher — общий
+отменяемый допуск2, permit до настоящего unwind и release до Main. SDK current
+tiles/геометрии/подписи не отбрасываются.70focused JVM/9classes PASS50с;
+обычные LisaDebug/LisaRelease/BelkaRelease PASS110с/versionmatrixPASS.
+LisaAPK224/3.1.2.30 SHA256b0f55cda…bb67e37, прежняя подпись, profiler/verification
+false и нет profileable. Агент не устанавливал APK и не готовил новые замеры.
+Владелец сообщил о почти моментальной отрисовке; формальная content/скорость
+приёмка, Full/публикация/новый merge остаются отложены. Final whole-contour
+refresh INVALID из-за чужих меняющихся контрактных docs; index follow-up UNKNOWN.
+
+## 2026-10-28 — Ручной T40 resource trial: общий bottleneck перед геометрией
+
+Пользователь завершил19-минутный прогон:23270 app records/fullfooter/0loss,
+3×180с CPU/native, exact MapLibre symbols. Обслуживание существующего cache put
+занимает85,8% CPU измеренных фаз после исключения непригодного IO_QUEUE CPU;
+пустой/непустой тайл114,74/114,90мс. Native стеки подтверждают scan/regex/sort/stat
+в prune и~31–35% временных allocations в рабочих окнах. Heap profiler сам
+заметно нагружаетCPU; normal-build latency, project787, enabledlayer count,
+полные native owners и отсутствие утечек этим не подтверждены. Результаты:
+[разбор T40](reference/mobile-resource-profile-t40-2026-10-28.md).
+Продуктовые оптимизации/Full/публикация в этом follow-up не выполнялись.
 
 ## 2026-10-28 — Source-контракты всей ЛИСЫ и границы Android
 
@@ -1933,3 +2001,12 @@ VisibleLineLabelLayout/Controller размещают один целый бло�
 добавлены по MOB-02/MOB-03. Ограничения и точные свидетельства —
 [разбор224](reference/mobile-crash-224-2026-10-27.md). Публичная224 отозвана; приватная диагностическая сборка без
 публикации не является обычным release PASS.
+
+## Приватное исследование холодной отрисовки, 28 октября 2026
+
+- MOB-04: default-OFF подробный локальный tile/CPU/counts collector с точными
+  агрегатами и явными потерями; SDK frame/texture/buffer stats и процессная память.
+- Приватный JSONL с bounded writer/checkpoints/STOP и подписанная profileable-копия
+  без debuggable/root; T40 manual tooling с ограниченными native/CPU окнами,
+  точным владением процессами и проверяемой выгрузкой.
+- Долговременный кеш, Full и публичный APK в этот этап не входят.

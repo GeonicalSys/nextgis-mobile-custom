@@ -1,10 +1,53 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 ---
 
 # app — Android-приложение Lisa/Belka
+
+## Приватный сбор ресурсов карты — MOB-04, 2026-10-28
+
+Только явный `-PprivateResourceProfiling=true` включает
+`PrivateRenderResourceProfiler`; обычные сборки оставляют его выключенным.
+Он не меняет rendering/cache policy, бизнес-данные, слои, координаты и Sentry.
+Profileable/shell добавляет отдельный проверенный developer helper к приватной
+копии release APK, основной manifest остаётся прежним.
+
+Локальный JSONL `Download/LISA-Diagnostics/lisa-resources-<32hex-session>.jsonl`
+создаётся новым MediaStore item. Включены идентичность процесса/сборки, BOOTTIME,
+numeric scene boundaries без координат, числовые SDK frame stats, heap/RSS/CPU,
+PSS и Graphics. SDK encoding/rendering seconds переводятся в milliseconds и
+не называются GPU time или thread CPU. Aggregate memory и её vertex/index/uniform
+подкатегории не складываются; отрицательные counters остаются invalid/unknown.
+RenderedFeatureInfo и списки feature IDs/XYZ не запрашиваются.
+
+Frame stats агрегируются раз в секунду, первый fully callback и ограниченное
+число slow frames сохраняются отдельно. `fully`, camera-idle, SDK-idle и
+returned-to-SDK различаются; они не принимают полноту бизнес-содержимого.
+Writer работает в фоне: очередь до 512 записей/2 МиБ estimated data, файл до
+64 МиБ, до 60 минут без wakelock (file limit может наступить раньше).
+Первые ручные сеансы планируются примерно на 30 минут. Потери очереди, file limit, probe/writer/frame
+overhead и интервалы сна явны. Итоговые maplib totals хранятся в footer вне
+raw очереди с резервом 256 КиБ. Убийство процесса может оставить JSONL без
+footer; такой сегмент неполон. При MediaStore failure приватный fallback явно
+помечается `export_available=false`, это не успешный доступный export.
+После первых 10 секунд и затем каждые 30 секунд writer сохраняет отдельный
+bounded aggregate checkpoint вне raw очереди. Он сохраняет статистику до
+последней полной записи при process kill, но не заменяет terminal footer.
+Header сообщает фактическую process 64-bit identity, kernel `/proc/self/stat`
+field22 start ticks и фактический `_SC_CLK_TCK`. Они связывают сегмент с PID без
+округления и позволяют обнаружить PID reuse. Process start elapsed ms остаётся
+контекстом, а не заменой kernel birth identity; недоступные значения — unknown.
+В рамках одного session
+предпочтителен один проект: scene/time correlation не устанавливает отдельное
+владение нативной памятью каждого слоя или проекта.
+
+Динамический STOP receiver существует только в приватной сборке, требует от
+отправителя `android.permission.DUMP` и точное session ID. Он завершает сборщик,
+не приложение. Удаление профилей, установка, cold start и external CPU/native
+traces принадлежат developer tooling. Unit проверки границ, numeric conversion,
+invalid counters, queue/storage failure не заменяют smoke на T40 или Full.
 
 ## Локальные SQLite phase timings — MOB-04, 2026-10-28
 
@@ -263,12 +306,19 @@ hot-add/lite reload, реальные rendered features и русскую под
 
 ## GPS diagnostic episodes
 
-Snapshot v2 separates reception loss, callback delivery and processing; bounded
-24-sample history and correlated recovery/cancel preserve the episode UUID.
-Short no-fix gaps stay local; long/repeated gaps are rate limited. Only sustained
-fresh used-in-fix statuses without callbacks allow one same-listener re-registration.
-Recorders, Network, precision leases, wake lock, filtering and segment rules remain owned
-by their existing controllers. See consuming root docs/architecture/location-pipeline.md.
+Snapshot v4 сохраняет прежние причины, пороги,24-sample history, episode UUID и
+парные recovery/cancel, добавляя время текущего rawGps измерения и пассивное
+сравнение с системным GPS cache. RawGps может происходить из существующего seed;
+это не точное время входа callback. Только при уже отправляемом recovery report
+app читает системный GPS cache не более одного раза и сохраняет10 фиксированных
+numeric/enum полей без координат, extras или текста исключений. Clock/read/
+permission failures остаются явными unknown; старые replay события не получают
+новое наблюдение задним числом. Ни классификация no-fix/callback_stalled, ни
+retry, фильтр, recording/Network/precision leases/wake lock не меняются.
+Показания usedInFix и более новый cache не устанавливают причину сбоя. Это
+улучшение диагностики, не исправленная GPS-пауза и не выполненная vendor/native
+приёмка. Контракт и границы синхронного чтения —
+[диагностика GPS](../../docs/architecture/error-reporting.md#пассивное-сравнение-с-системным-gps-cache--29-октября-2026).
 
 ## Статистика использования
 
@@ -1120,6 +1170,37 @@ Graphics LocationOrbitTest теперь ждёт завершения текущ
 MapSelectionDialog переносит длинные строки общего списка, оставляет прокрутку
 и Cancel. Полевые линейные рисуются над треками/обычными данными, но под точками,
 включая отдельные подписи. Related track-candidates 4/4 native PASS; Full обязателен.
+
+Регрессия29 октября после перехода ordinary SQLite vectors на CustomVectorSource
+разбирается отдельным этапом MOB-01/MOB-04. Приоритет должен использовать точный
+alias текущего style/controller, а взаимный порядок групп — canonical flattened
+LayerGroup с индексом0 снизу, независимо от порядка загрузки и вставки в cache.
+Перенос сохраняет cached SDK wrappers и владельца hide/Undo filters. Четыре
+standalone rebind пути восстанавливают общий порядок без полной перезагрузки.
+Related `sqlite-priority` адресно запускает новый production-SQLite native case
+в отдельном verification APK; он проверяет тела, Firefly sprite, rule icon,
+подписи, native ranges, пиксели и исходные SQL rows после full/lite/reorder,
+style/data generation и hide/Undo. Первые81 JVM и20 Python checks PASS;
+первый native запуск выявил реальную зависимость порядка от cache insertion.
+После canonical traversal исправления focused case1/1 PASS на T40/API30
+(`priority-related-t40-02`), затем весь NativeSqliteVectorRenderingTest10/10
+distinct PASS (`sqlite-related-t40-03/result.json`). Final83 JVM/10classes PASS,
+0fail/error/skip; исходный81-test batch остаётся историческим. UID logcat
+collector на T40 не поддерживает `--uid`, диагностический пробел остаётся.
+Вложенные группы и Activity recreation
+в этом новом native case не проверены. Старый4/4 PASS их не подтверждает.
+Новых замеров производительности, Full и публикации этот этап не заменяет.
+
+Обычный Lisa Release224/3.1.2.30 собран и установлен поверх прежнего приложения
+на T40 с тем же сертификатом подписи и сохранением данных. SHA256 APK
+`57a495854c9c18a5265bf42074101b9dd6d5750ad0fe5e3d6e606c5ef10984bd`;
+70580085 bytes. Три обычных variant и version matrix PASS; в установленном
+Release DEBUG/FIELD_VERIFICATION/PRIVATE_RESOURCE_PROFILING выключены,
+profileable отсутствует, postprocessing не применялся. Карта восстановлена
+на масштабе14.2, просмотрен итоговый screenshot. Это normal launch/view smoke,
+не content/pixel приёмка всего реального проекта или Full; отдельные10 native
+методов выполнены в verification APK. Точные build/install receipts —
+в [runbook](../../docs/runbooks/automated-tests.md#адресная-sqlite-priority-регрессия29-октября).
 
 ## Автоматическая диагностика после закрытия процесса
 

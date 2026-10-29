@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,15 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+28 октября2026, MOB-04: поверх текущего fork SQLite/native path общий индекс
+производного PBF cache убирает повторный scan/regex/sort/stat каталога на каждом
+новом тайле; атомарные bytes/identity и прежние budgets сохранены. Shared
+cancellable admission2 до IO не даёт каждому отменённому SDK ожиданию создавать
+blocking payload, не отбрасывая ещё нужные parent/fade tiles. Это fork-only
+обслуживание существующего cache/queue, не новый долговременный кэш, не изменение
+SQLite/NGW/Collector schema и не upstream merge. Измерение смартфона/Full не
+выполнялось; готовится обычный APK с private profiling выключенным.
 
 Final validation D101:allmaplib750PASS/132classes/0fail/error/skip59s. Actual
 dense1403/11.7z complete scene gate10.33–12.27s против13.68–15.65s6039 и
@@ -141,6 +150,20 @@ App merge, final-device Full и публикация учитываются от
 и maplib master 014247eea4a424e828c24d9e52e45fefed362f8d повторно проверены
 через API, ревизии прежние; named field-line role и TrackMapStyle/queryTrackIds
 являются частью fork. [Контракт](../architecture/track-controls.md).
+
+29 октября восстанавливается этот же fork contract для ordinary SQLite
+CustomVectorSource: whole groups получают exact current controller alias,
+canonical bottom-to-top model relative order независимо от bind/cache arrival
+и сохранение cached wrapper/filter identity при order repair. Производители
+ресурсов/NGW/Collector и правила выбора объектов не меняются. Новый isolated
+`sqlite-priority` проверяет actual sources/passes/labels/pixels/SQL и hide/Undo;
+первый native run выявил реальную ошибку порядка; после canonical traversal fix
+focused case1/1 PASS на T40/API30 (`priority-related-t40-02`), затем весь класс
+10 distinct методов PASS (`sqlite-related-t40-03/result.json`), final83 JVM
+PASS. Nested/recreation ещё не проверены; vendor UID logcat `--uid` unsupported —
+diagnostic gap. Это уточнение локального rendering consumer,
+не новая проверка official master: база upstream comparison выше датирована
+25 октября и в этом документационном шаге повторно не проверялась.
 
 ## Недельные напоминания полевому пользователю — 2026-10-25
 
@@ -2317,3 +2340,14 @@ Durable UUID защищает новый сеанс от старого диал
 добавлены по MOB-02/MOB-03. Ограничения и точные свидетельства —
 [разбор224](mobile-crash-224-2026-10-27.md). Публичная224 отозвана; приватная диагностическая сборка без
 публикации не является обычным release PASS.
+
+## Приватное исследование холодной отрисовки, 28 октября 2026
+
+MOB-04: добавлен default-OFF локальный сборщик потребителей, включаемый только
+`-PprivateResourceProfiling=true` в приватной сборке. Подробные tile wall/same-TID
+CPU/counts, SDK frame/texture/buffer stats и процессная память сохраняются с явными
+потерями/лимитами. Нативные allocations и CPU samples собираются отдельными
+ограниченными окнами. Это диагностика, без долгосрочного кеша/изменения геометрии,
+бизнес-данных или новой приёмки. Full/публикация остаются отложенными.
+Контракт/ограничения: [производительность карты](../architecture/map-performance.md#приватное-исследование-холодной-отрисовки-28-октября-2026).
+Порядок ручного сеанса: [runbook](../runbooks/manual-resource-profiling.md).

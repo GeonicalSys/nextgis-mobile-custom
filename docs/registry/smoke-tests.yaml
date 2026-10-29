@@ -1,5 +1,20 @@
 schema_version: 1
 tests:
+  AUTO-GPS-CACHE-WITNESS:
+    type: automatic
+    scope: [app, maplib]
+    command: Run focused DiagnosticsGpsFixWitnessTest, DiagnosticsGpsPlatformTest, AppDiagnosticsTest and GpsDisplayRetentionTest locally with existing GPS recovery/controller and HTTP/sync real-error preservation tests.
+    expected: Fifteen pure witness cases and API30/36 Robolectric adapters cover fixed ten-key numeric/enum output, missing/invalid/future/denied/read/clock states, older/same/newer arithmetic, scalar-only extraction, unchanged Location payload and legacy replay. Independent source/native fixture assertions distinguish measurement time from receipt age. A successful JVM run does not reproduce real vendor GNSS delivery loss; native emulator cases and physical follow-up are separate, never silently executed under a paused scope.
+  AUTO-SQLITE-LAYER-PRIORITY:
+    type: automatic
+    scope: [maplib, app]
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area sqlite-priority
+    expected: In the separate verification APK, the one exact method exercises production SQLite CustomVectorSource/current aliases and empty global feature cache; all saved/current track passes remain below whole field-line and Point/Firefly/MultiPoint/icon/label groups in canonical root model order, with ordinary line and polygon-label negatives and tools/GPS above. Full/lite/reorder/style/data generations, completed literal track rename snapshot, unchanged-source order repair, cached provider/source/promoted wrapper identity and hide/Undo filter restoration retain complete native IDs/placed labels/background pixels/full SQL originals and unchanged rows. Firefly body query includes its actual Symbol sprite. Capture bounded native order/source JSON and PNG before cleanup and retain failed attempts. Direct root children do not certify nested groups or Activity recreation; one focused method, old classic results and source units never certify the full class/Related/Full or real-project acceptance. Unsupported vendor UID logcat collection remains an explicit diagnostic gap. An explicitly selected stationary verification device is allowed; production data are not touched and no project metadata fixture is required.
+  AUTO-LOCAL-TILE-CACHE-ADMISSION:
+    type: automatic
+    scope: [maplib, maplibui, app]
+    command: .\gradlew.bat :maplib:testDebugUnitTest --tests com.nextgis.maplib.map.LocalVectorTileDiskCacheTest --tests com.nextgis.maplib.map.SqliteVectorTileAdmissionTest --tests com.nextgis.maplib.map.SqliteVectorSourceBridgeTest --tests com.nextgis.maplib.map.SqliteVectorTileProviderTest --tests com.nextgis.maplib.map.LocalVectorTileFullContentTest --tests com.nextgis.maplib.map.RenderTileWorkGateTest
+    expected: Real temporary filesystem cache fixtures assert no repeated hot-path directory inventory, shared canonical-root accounting/registry reuse, byte/file limits, loss/write/rename/delete/cancellation recovery and exact complete bytes. Concurrency units assert canceled waiters avoid IO dispatch, active noncooperative work owns permits until unwind, blocked Main does not retain completed IO permits, failures/retry/predispatch cancellation release once, and all original tile/lifecycle/geometry/label expectations stay green. These are source checks; no device speed or native acceptance claim.
   AUTO-SQLITE-NATIVE-VECTORS:
     type: automatic
     scope: [maplib, maplibui, app]
@@ -1005,3 +1020,17 @@ tests:
       - Confirm registration with a rejected packet; verify the badge survives transport failure and restart, hides after registered=false or changing hub and returns after the new hub confirms registration
       - Repeat after restart and a project switch, and reject a later packet to verify only accepted rows are acknowledged
     expected: Enabled-before-registration intent survives registration, failed packets retain unsent rows and only enabled upload with confirmed registration of the current server/UID contributes to the pending track badge
+  AUTO-PRIVATE-RESOURCE-PROFILER:
+    type: automatic
+    scope: [app, maplib]
+    command: Run addressed RenderResourceProfilerTest, MapRuntimeDiagnosticsTest, PrivateRenderResourceProfilerTest and tools/tests/test_profile_render_resources.py locally
+    expected: Default-off, same-TID CPU, all-scope aggregate accounting, explicit loss/overflow, file/queue/summary bounds, SDK units/invalid counters, process identity and exact owned stop/pull lifecycle pass without running Full or touching business data.
+  SMOKE-PRIVATE-RESOURCE-PROFILER:
+    type: device
+    scope: [app, maplib]
+    command: Follow docs/runbooks/manual-resource-profiling.md on the user-selected T40 with the exact private profileable APK
+    steps:
+      - Verify release signer/package, source/APK SHA, private flag, process bitness and exact kernel start ticks before capture
+      - Capture a bounded control with actual SDK frame/resource counters, phase aggregates/checkpoint and CPU/native samples
+      - Stop only exact owned collectors, verify app footer and pull hashes, then start a fresh process for the user trial
+    expected: Verify signer/package/source, readable app_session and periodic checkpoint, real SDK resource counters, exact stop/footer/pull hashes and actual CPU/native samples/loss/coverage. Transfer alone is not quality PASS; no normal-project mutations or Full acceptance.

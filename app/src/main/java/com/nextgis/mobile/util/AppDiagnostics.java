@@ -63,7 +63,8 @@ public final class AppDiagnostics {
     public static void reportGpsRecovery(java.util.Map<String, Object> snapshot) {
         try {
             java.util.Map<String,Object> observed = new java.util.LinkedHashMap<>(snapshot);
-            try { observed.put("platform", DiagnosticsGpsPlatform.collect(diagnosticContext)); }
+            try { observed.put("platform", DiagnosticsGpsPlatform.collect(diagnosticContext,
+                    snapshot.get("raw_fix_elapsed_realtime_ms"))); }
             catch (RuntimeException unavailable) { observed.put("platform", java.util.Map.of("status", "unavailable")); }
             Sentry.captureEvent(gpsRecoveryEvent(observed));
         } catch (RuntimeException ignored) { }
@@ -100,6 +101,7 @@ public final class AppDiagnostics {
         diagnosticContext = context.getApplicationContext();
         com.nextgis.maplib.util.MapRuntimeDiagnostics.initialize(context,
                 BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, BuildConfig.SOURCE_REVISION);
+        PrivateRenderResourceProfiler.initialize(context);
         startup = com.nextgis.maplib.util.MapRuntimeDiagnostics.beginStartup();
         startup.put("brand", BuildConfig.FLAVOR);
         startup.put("environment", BuildConfig.DEBUG ? "debug" : "production");

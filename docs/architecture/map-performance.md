@@ -23,6 +23,56 @@ related_code:
 
 # Производительность запуска карты
 
+## Удаление общих накладных расходов cache/queue — 28 октября2026
+
+По следующему прямому поручению владельца реализован узкий follow-up к
+[ручному разбору T40](../reference/mobile-resource-profile-t40-2026-10-28.md):
+убрать scan/sort при каждом put и удалять отменённые ожидания до blocking IO.
+Новый замерщик, установка и замеры не готовятся; нужен обычный APK для телефона.
+
+Производный PBF cache сохраняет прежние имена/identity и byte/entry/1024-file
+budgets. Общий canonical-root ledger с registry8roots и incremental recency
+заменяет полный проход в горячем put. Bootstrap/reconciliation при изменении
+каталога отдельно читают по одному metadata record; после этого один новый тайл
+не компилирует regex и не сортирует/перечитывает все файлы. Старые providers
+заново получают актуальный ledger при операции, safe miss/Android cache loss и
+полные атомарные записи сохраняются. Нативный current guard проверяется внутри
+записи; HTTP сохраняет прежние внешние guards, без1мс socket probe подdisklock.
+Это обслуживание текущего кэша, без новой долговременной политики/индекса на диске.
+
+До shared IO dispatch добавлен общий отменяемый допуск2. SDK cancel удаляет
+ожидание до blocking payload; активное IO держит lease до настоящего unwind,
+отдаёт его до Main, а predispatch failure освобождает один раз. Валидные
+parent/fade/adjacent tiles не отсекаются по возрасту или масштабу. Existing memory
+gate2/1 и владелец source/content/style/edited object остаются прежними;
+HTTP/line-label scheduler и общее число SDK Job этим не изменяются.
+
+Контракт `INV-LOCAL-TILE-CACHE-ADMISSION`, карточка
+`maplib-20261028-tile-cache-queue`. Адресные source/build результаты принадлежат
+новому APK receipt; прежние114мс и p95очереди8,59с не являются результатами
+после исправления. Реальная скорость/полнота кадра и2–3с проверяются отдельно;
+Full/публикация по-прежнему отложены.
+
+Техническая проверка:70 JVM tests/9classes PASS50с, включая25 cache и7 admission;
+0fail/error/skip. LisaDebug/LisaRelease/BelkaRelease PASS1мин50с, version matrix
+PASS с прежними версиями. Source fingerprint1658 runtime/build files
+`1ea9ac886867116d6e3d5c6707e83b74f6caad7644410e563441cdc37952de3d` неизменен
+до/после сборки. Обычный Lisa APK224/3.1.2.30:
+SHA256`b0f55cda77d4bc3965d00e12a316654f9a7de98c9eab060ded7e56337bb67e37`,
+70 580 085 байт, прежний signer, DEBUG/FIELD_VERIFICATION/PRIVATE_RESOURCE_PROFILING
+false, profileable element отсутствует. Никакого postprocessing/установки/профиля.
+После самостоятельной проверки владелец сообщил «Почти моментально отрисовывается
+всё». Это положительный субъективный отзыв, не численный benchmark и не проверка
+полноты всех объектов/подписей. Её владелец явно оставил на потом.
+
+Первая whole-contour проверка до правок завершилась exit0. Финальные refresh и
+retry получили INVALID из-за контрактных документов чужого desktop checkout
+(standart_profiles/AGENTS.md, geonical-docs scenario-dependencies/local-ci/
+mobile-client). Это не PASS. Семантические связи сохранены в own app registries,
+source/mobile input hashes стабильны; canonical root index write/check остаётся
+UNKNOWN/follow-up владельцу, без изменения/заморозки чужих файлов. Частный APK
+не объявляется сквозной release acceptance.
+
 ## Диагностика задержки планшета — 2026-10-28
 
 Final same-dense1403/11.7z strict video content gate (включая последнюю верхнюю
@@ -311,3 +361,67 @@ benchmark на plain release.
 Unit/build результаты не доказывают native экономию или устранение исходного
 std::bad_alloc. Текущая Related/Full приёмка на устройстве и эмуляторе остаётся
 не завершённой; публикация — отдельный gate основной задачи.
+
+## Приватное исследование холодной отрисовки, 28 октября 2026
+
+Внеплановый этап MOB-04 по прямому поручению владельца: собрать подробные локальные
+данные во время ручного прогона на T40, затем выбирать оптимизации по измерениям.
+Долговременный кеш не рассматривается и этим этапом не реализуется. Обычный
+производственный путь сохраняется: `privateResourceProfiling` по умолчанию false.
+Отдельная приватная Release-сборка включает `PRIVATE_RESOURCE_PROFILING`; только
+её копия получает profileable/shell через существующий manifest-only signing helper.
+Она сохраняет package/signing/data, не является новым публичным выпуском.
+
+`RenderResourceProfiler` независимо от старых cap16/32 считает запросы, исходы,
+объёмы BLOB/PBF/подписей и wall/CPU по этапам. CPU clock сравнивается только внутри
+одного TID, но этого недостаточно через coroutine suspension/cancellation:
+в trial28октября CPU `io_queue` признан непригодным и исключён из рейтингов;
+до повторного использования wait/suspend phases требуют CPU-unknown. Handoff
+wall не превращается в CPU. Глобальные/послойные агрегаты сохраняются
+при потере raw: явны queue/active/layer overflow и пропущенные подробности.
+Layer rows объединяют одинаковые numeric IDs; первая сессия ограничивается одним
+проектом, raw source_epoch позволяет отличать поколения. Это не присвоение
+нативной памяти конкретному слою по дельтам общей памяти процесса.
+
+Приватный app-side JSONL в Downloads/LISA-Diagnostics содержит числовые SDK frame
+stats, SDK-managed texture/buffer bytes, scenes/zoom, Java/native/RSS/PSS/Graphics,
+затраты наблюдателя и контрольные aggregate snapshots (первый через10с, затем30с).
+SDK durations seconds переводятся в ms; это не GPU time и не OS thread CPU.
+Aggregate/subcategory bytes не суммируются; отрицательные int counters invalid.
+Не включаются renderedFeatureInfo/feature-ID lists, координаты, URI и атрибуты.
+`returned_to_sdk`, `fully` и `idle` различаются и не принимают полноту карты.
+
+Экспорт ограничен64MiB/60мин на процесс, очередь512records/2MiB, footer имеет
+резерв256KiB; фактическое окончание по размеру явное. STOP требует session nonce
+и sender permission DUMP. Нет новых пользовательских permissions/GC/wakelock.
+Raw локальные данные не отправляются в GlitchTip. При process death footer может
+отсутствовать; checkpoints и raw остаются частичным свидетельством.
+
+Первый ручной trial:30мин лёгких метрик и5 окон по180с native malloc/simpleperf
+(15мин тяжёлого coverage, распределённых по сеансу). У каждого окна собственные
+PID/start_ticks, APK/source/signing identity, предел размера и quality/loss flags.
+Late attach не видит прежние native allocations; retained из разных окон не
+складывается. Данные Graphics не выводятся из heapprofd. Подтверждение переноса
+файла не равно пригодности профиля. Все профили локальны, без root/ADB permissions
+changes и без остановки чужих jobs. Scoped-storage обхода через private app files нет.
+
+Установка и короткий read-only diagnostic smoke выполняются только на выбранном
+T40, с сохранением его проектов и очередей, после проверки отсутствия редактора
+и записи трека. Это не Full и не новая style/OOM/physical2GiB приёмка. Full и
+публикация APK по предыдущему поручению остаются отложены. Установка/первый запуск,
+реальные SDK counters и native/CPU sample coverage подтверждаются отдельными
+receipts; до них состояние — подготовлено, не принято. Никакие кеши, геометрии,
+правила, схемы или бизнес-данные этим сборщиком не оптимизируются и не меняются.
+
+Инструкция: [ручной сбор ресурсов](../runbooks/manual-resource-profiling.md).
+Карточки: android-20261028-private-render-resource-profiler,
+android-20261028-resource-profiler-tools и maplib-20261028-resource-profiler.
+
+Первый ручной сеанс завершён пользователем через19мин; получены3окна по180с,
+полный23270-record app footer и independently checked counts, loss0.
+Подтверждён приоритет обслуживания текущего disk cache перед геометрией:
+пустой/непустой новый тайл требует почти одинакового CPU, scan/regex/sort/stat
+каталога выполняется перед каждым put. Native profiler заметно влияет на CPU;
+эти времена не являются ordinary-build benchmark. Полные выводы/границы и
+приоритет без нового долговременного кэша:
+[разбор T40](../reference/mobile-resource-profile-t40-2026-10-28.md).

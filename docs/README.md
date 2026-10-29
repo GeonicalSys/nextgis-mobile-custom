@@ -1,7 +1,7 @@
 ---
 title: GeonicalSystem NextGIS Mobile — документация
 type: index
-last_verified: 2026-10-27
+last_verified: 2026-10-29
 related_code:
   - settings.gradle
   - .gitmodules
@@ -14,6 +14,7 @@ related_code:
 - [Квитанция проверки треков от 25 октября](reference/track-controls-verification-2026-10-25.md).
 - [Выпуск ЛИСЫ224: исправления, приёмка и пользовательское исключение](reference/mobile-release-fixes-2026-10-26.md).
 - [Инцидент224, отзыв, диагностический APK и разбор мобильных отчётов](reference/mobile-crash-224-2026-10-27.md).
+- [Разбор8мобильных групп GlitchTip29октября: GPS,поздний native/OS report и границы диагностики](reference/glitchtip-triage-2026-10-29.md).
 
 ## Копирование и преобразования
 

@@ -204,6 +204,16 @@ public class MapFragment
 
     lateinit var mMapRef: WeakReference<MapViewOverlays>
     private var mapLibreMapView: MapLibreMapView? = null
+    private var resourceViewGeneration = 0L
+    private val resourceFrameListener = MapLibreMapView.OnDidFinishRenderingFrameWithStatsListener { fully, stats ->
+        com.nextgis.mobile.util.PrivateRenderResourceProfiler.frame(resourceViewGeneration, fully, stats)
+    }
+    private val resourceIdleListener = MapLibreMapView.OnDidBecomeIdleListener {
+        recordResourceScene(3, 0)
+    }
+    private val resourceCameraMoveListener = MapLibreMap.OnCameraMoveStartedListener { reason ->
+        recordResourceScene(1, reason)
+    }
     private var mapCornerStack: View? = null
     private var osmAttribution: TextView? = null
     @Volatile
@@ -762,6 +772,11 @@ public class MapFragment
         mapLibreMapView = mapViewMaplibre
         mapViewMaplibre.addOnDidFinishRenderingFrameListener(mapLibreFrameListener)
         mapViewMaplibre.addOnDidFailLoadingMapListener(mapLibreLoadFailureListener)
+        if (com.nextgis.mobile.BuildConfig.PRIVATE_RESOURCE_PROFILING) {
+            resourceViewGeneration = com.nextgis.mobile.util.PrivateRenderResourceProfiler.viewAttached()
+            mapViewMaplibre.addOnDidFinishRenderingFrameListener(resourceFrameListener)
+            mapViewMaplibre.addOnDidBecomeIdleListener(resourceIdleListener)
+        }
 
         mMapRef.get()!!.map!!.maplibreMapView = mapViewMaplibre
 
@@ -830,6 +845,10 @@ public class MapFragment
         setMapBearing(mapboxMap, restoredBearing.toDouble(), false)
 
         mapboxMap.addOnCameraIdleListener(this)
+        if (com.nextgis.mobile.BuildConfig.PRIVATE_RESOURCE_PROFILING) {
+            mapboxMap.addOnCameraMoveStartedListener(resourceCameraMoveListener)
+            recordResourceScene(0, 0)
+        }
 
         // ngwstyle.json missing/unreadable would make setStyle(fromJson(null)) crash; abort with a
         // logged, user-visible error instead so the rest of the app stays usable.
@@ -2451,6 +2470,14 @@ public class MapFragment
 
 
     override fun onDestroyView() {
+        if (com.nextgis.mobile.BuildConfig.PRIVATE_RESOURCE_PROFILING) {
+            recordResourceScene(4, 0)
+            try {
+                mapDrawableOrNull?.maplibreMap?.removeOnCameraMoveStartedListener(resourceCameraMoveListener)
+            } catch (_: Exception) {
+                // A retired native map must not turn optional observer cleanup into a lifecycle failure.
+            }
+        }
         renderMemoryDialog?.dismiss()
         renderMemoryDialog = null
         renderMemoryOwner?.setRenderMemoryWatchActive(false)
@@ -2488,6 +2515,10 @@ public class MapFragment
             HyperLog.v(Constants.TAG, "MapLibreMapView.onDestroy")
             mapLibreView.removeOnDidFinishRenderingFrameListener(mapLibreFrameListener)
             mapLibreView.removeOnDidFailLoadingMapListener(mapLibreLoadFailureListener)
+            if (com.nextgis.mobile.BuildConfig.PRIVATE_RESOURCE_PROFILING) {
+                mapLibreView.removeOnDidFinishRenderingFrameListener(resourceFrameListener)
+                mapLibreView.removeOnDidBecomeIdleListener(resourceIdleListener)
+            }
             mapLibreView.setOnTouchListener(null)
 
             // The SDK's delayed single-tap confirmation can outlive onDestroy().
@@ -6455,6 +6486,8 @@ public class MapFragment
 
     override fun onCameraIdle() {
 
+        if (com.nextgis.mobile.BuildConfig.PRIVATE_RESOURCE_PROFILING) recordResourceScene(2, 0)
+
         // Refresh the angular uncertainty sector for the new map scale, even without a sensor tick.
         applyDeviceHeadingToMap()
 
@@ -6470,6 +6503,19 @@ public class MapFragment
             }
         }
         lastStakeoutUiState?.let { updateStakeoutWidget(it) }
+    }
+
+    private fun recordResourceScene(boundary: Int, reason: Int) {
+        if (!com.nextgis.mobile.util.PrivateRenderResourceProfiler.isActive()) return
+        try {
+            val camera = mapDrawableOrNull?.maplibreMap?.cameraPosition
+            com.nextgis.mobile.util.PrivateRenderResourceProfiler.scene(
+                resourceViewGeneration, boundary, reason,
+                camera?.zoom ?: Double.NaN, camera?.bearing ?: Double.NaN, camera?.tilt ?: Double.NaN
+            )
+        } catch (_: Exception) {
+            // Native view retirement may race a diagnostic boundary; observation never owns it.
+        }
     }
 
     private inner class MessageStyling : BroadcastReceiver() {

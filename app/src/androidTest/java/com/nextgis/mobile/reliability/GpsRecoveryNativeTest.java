@@ -63,7 +63,9 @@ public class GpsRecoveryNativeTest {
                 assertEquals(1, reports.size());
                 assertEquals("registered", reports.get(0).get("subscription_retry"));
                 assertEquals("callback_stalled", reports.get(0).get("reason"));
-                assertEquals(3, reports.get(0).get("schema_version"));
+                assertEquals(4, reports.get(0).get("schema_version"));
+                // The technical seed measurement is independent of callback receipt time.
+                assertEquals((now - 23_591), reports.get(0).get("raw_fix_elapsed_realtime_ms"));
                 assertTrue((Long) reports.get(0).get("reason_duration_ms") >= 30_000);
                 assertTrue(reports.get(0).containsKey("diagnostic_tick_gap_ms"));
             } finally { source.removeRecordingListener(recorder); }

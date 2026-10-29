@@ -14,6 +14,42 @@ import io.sentry.protocol.User;
 import static org.junit.Assert.*;
 
 public class AppDiagnosticsTest {
+    @Test public void gpsSchemaFourCacheWitnessSurvivesReplayWithoutChangingItsPhaseOrGrouping() {
+        java.util.Map<String, Object> snapshot = new java.util.LinkedHashMap<>();
+        snapshot.put("schema_version", 4); snapshot.put("phase", "retry");
+        snapshot.put("reason", "callback_stalled"); snapshot.put("episode_id", "technical-episode");
+        snapshot.put("raw_fix_elapsed_realtime_ms", 9_000L);
+        java.util.Map<String, Object> witness = DiagnosticsGpsFixWitness.collect(9_000L,
+                () -> 10_000, () -> 9_500_000_000L);
+        snapshot.put("platform", java.util.Map.of("gps_fix_witness", witness));
+        SentryEvent event = AppDiagnostics.gpsRecoveryEvent(snapshot);
+        for (int replay = 0; replay < 2; replay++) {
+            AppDiagnostics.sanitize(event);
+            java.util.Map<?, ?> context = (java.util.Map<?, ?>) event.getContexts().get("gps_recovery");
+            assertEquals(4, context.get("schema_version"));
+            assertEquals(9_000L, context.get("raw_fix_elapsed_realtime_ms"));
+            java.util.Map<?, ?> platform = (java.util.Map<?, ?>) context.get("platform");
+            assertEquals(witness, platform.get("gps_fix_witness"));
+            assertEquals("retry", event.getTag("gps_recovery_phase"));
+            assertEquals(List.of("gps-recovery", "callback_stalled"), event.getFingerprints());
+            assertEquals(io.sentry.SentryLevel.WARNING, event.getLevel());
+        }
+        assertFalse(witness.containsKey("latitude")); assertFalse(witness.containsKey("longitude"));
+        assertFalse(witness.containsKey("extras"));
+    }
+
+    @Test public void oldGpsSnapshotsAreNotRewrittenAsNewWitnessObservations() {
+        java.util.Map<String, Object> old = java.util.Map.of("schema_version", 2,
+                "phase", "recovered", "reason", "callback_stalled", "episode_id", "old-technical-episode");
+        SentryEvent event = AppDiagnostics.gpsRecoveryEvent(old);
+        AppDiagnostics.sanitize(event);
+        java.util.Map<?, ?> context = (java.util.Map<?, ?>) event.getContexts().get("gps_recovery");
+        assertEquals(2, context.get("schema_version"));
+        assertFalse(context.containsKey("raw_fix_elapsed_realtime_ms"));
+        assertFalse(context.containsKey("platform"));
+        assertEquals(io.sentry.SentryLevel.INFO, event.getLevel());
+    }
+
     @Test public void gpsRecoveryKeepsItsPhaseCorrelationAndBoundedHistoryAcrossReplay() {
         java.util.Map<String, Object> snapshot = new java.util.LinkedHashMap<>();
         snapshot.put("phase", "recovered"); snapshot.put("reason", "no_fix");

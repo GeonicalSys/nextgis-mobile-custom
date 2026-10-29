@@ -1,13 +1,35 @@
 ---
 title: Ручные проверки на Android-устройстве
 type: runbook
-last_verified: 2026-10-23
+last_verified: 2026-10-29
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
 ---
 
 # Ручные проверки на Android-устройстве
+
+## Приоритет SQLite field и point групп над треками
+
+Адресный scripted native маршрут — Related `sqlite-priority` из
+[runbook](automated-tests.md#адресная-sqlite-priority-регрессия29-октября),
+в отдельном verification APK на явно выбранном устройстве. Он не очищает
+production package и не использует проект1403. Сохранить все попытки, включая
+первый FAIL canonical relative-order29 октября. После canonical traversal fix
+focused case1/1 PASS на T40/API30 (`priority-related-t40-02`), затем все10 distinct
+методов класса PASS (`sqlite-related-t40-03/result.json`). UID logcat collector
+`--uid` не поддержан T40 — diagnostic gap,
+который не скрывается за положительным результатом метода.
+
+Для отдельной ручной приёмки на разрешённой карте проверить обычные данные →
+saved/current треки → whole field-line body/labels → Point/MultiPoint body,
+Firefly sprite, halo/icon/labels → инструменты → GPS. Повторить cold/full/lite,
+hot-add/reorder и standalone style/data reload; проверить hide/Undo и отсутствие
+изменений geometry/SQL data. Во вложенных группах сравнить canonical model order,
+затем пересоздать Activity/восстановить сохранённый проект. Эти последние
+nested/recreation шаги новым root-child native case не покрыты и остаются
+непроверенными до отдельного фактического результата. Отсутствие ошибки или
+старый classic-route PASS не подтверждают полноту реального проекта787.
 
 ## Копирование, сдвиг и поворот
 

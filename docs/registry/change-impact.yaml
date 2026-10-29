@@ -1,5 +1,35 @@
 schema_version: 1
 triggers:
+  - id: GPS-CACHE-WITNESS
+    paths: [maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java, maplib/src/test/java/com/nextgis/maplib/location/GpsDisplayRetentionTest.java, app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java, app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java, app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java, app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitnessTest.java, app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsPlatformTest.java, app/src/test/java/com/nextgis/mobile/util/AppDiagnosticsTest.java, app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java]
+    owners: [maplib, app]
+    read: [docs/architecture/error-reporting.md, docs/architecture/location-pipeline.md, docs/reference/glitchtip-triage-2026-10-29.md]
+    invariants: [INV-GPS-CACHE-WITNESS, INV-DIAGNOSTIC-DELIVERY, INV-GPS-TRACK-FILTER]
+    must_update_docs: [docs/architecture/error-reporting.md, docs/architecture/location-pipeline.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+    verify: [AUTO-GPS-CACHE-WITNESS, AUTO-APP-DEBUG, AUTO-APP-RELEASES]
+    strict_docs: true
+  - id: SQLITE-NATIVE-LAYER-PRIORITY
+    paths: [maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java, maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java, maplib/src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java]
+    owners: [maplib, app]
+    read: [docs/architecture/track-controls.md, docs/architecture/map-rendering.md, docs/runbooks/automated-tests.md]
+    invariants: [INV-FIELD-LINE-DISPLAY-PRIORITY, INV-TRACK-LAYER-TOP, INV-LAYER-ORDER, INV-SQLITE-NATIVE-VECTORS, INV-MAPLIBRE-VIEW-LIFECYCLE]
+    must_update_docs: [docs/architecture/track-controls.md, docs/architecture/map-rendering.md, docs/reference/official-differences.md, docs/runbooks/automated-tests.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+    verify: [AUTO-MAPLIB-UNIT, AUTO-SQLITE-LAYER-PRIORITY, AUTO-APP-RELEASES]
+    strict_docs: true
+  - id: LOCAL-TILE-CACHE-AND-IO-ADMISSION
+    paths:
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileDiskCache.java
+      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
+      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+      - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileDiskCacheTest.java
+      - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorTileAdmissionTest.kt
+    owners: [maplib, maplibui, app]
+    read: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/reference/mobile-resource-profile-t40-2026-10-28.md]
+    invariants: [INV-LOCAL-TILE-CACHE-ADMISSION, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-SQLITE-NATIVE-VECTORS]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/runbooks/automated-tests.md, docs/reference/official-differences.md, docs/registry/dependencies.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+    verify: [AUTO-LOCAL-TILE-CACHE-ADMISSION, AUTO-APP-RELEASES, AUTO-MOBILE-RELATED]
+    strict_docs: true
   - id: SQLITE-BOUNDED-ORIGINAL-READS
     paths:
       - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java
@@ -1054,4 +1084,19 @@ triggers:
       - app/docs/manifest.yaml
       - docs/reference/official-differences.md
     verify: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-LOCAL-VECTOR-LAYERS]
+    strict_docs: true
+  - id: PRIVATE-RESOURCE-PROFILING
+    paths:
+      - app/build.gradle
+      - app/src/main/java/com/nextgis/mobile/util/PrivateRenderResourceProfiler.java
+      - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+      - maplib/src/main/java/com/nextgis/maplib/util/RenderResourceProfiler.java
+      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+      - tools/profile_render_resources.py
+    owners: [app, maplib]
+    read: [docs/architecture/map-performance.md, docs/architecture/error-reporting.md, docs/runbooks/manual-resource-profiling.md]
+    invariants: [INV-PRIVATE-RESOURCE-PROFILING, INV-SQLITE-NATIVE-VECTORS, INV-MAPLIBRE-VIEW-LIFECYCLE]
+    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/architecture/error-reporting.md, docs/runbooks/automated-tests.md, docs/runbooks/manual-resource-profiling.md, docs/reference/official-differences.md, app/docs/README.md, app/docs/manifest.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
+    verify: [AUTO-PRIVATE-RESOURCE-PROFILER, SMOKE-PRIVATE-RESOURCE-PROFILER, AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES]
     strict_docs: true

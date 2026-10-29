@@ -407,6 +407,12 @@ variant_resources:
     source: app/build.gradle
     purpose: Variant-specific SyncAdapter account type; must equal nextgis_accounts_auth and MainApplication runtime type
 build_inputs:
+  privateResourceProfiling:
+    owner: app
+    source: app/build.gradle
+    optional: true
+    default: false
+    purpose: Private opt-in local resource capture only, incompatible with fieldVerificationChecks; does not enable debuggable/profileable or publish by itself. The separately signed manifest-only profileable copy is local diagnostics, not a public release.
   usage.properties:
     owner: app
     source: usage.properties

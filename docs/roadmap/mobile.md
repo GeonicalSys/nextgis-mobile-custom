@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-10-28
+last_verified: 2026-10-29
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
@@ -13,7 +13,37 @@ related_code:
 
 # Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 
+29 октября, Git-доставка по прямому поручению владельца: библиотека maplib
+слита Merge Commit f61ba783 (PR62), документационный bridge — bf16ea71 (PR83).
+Приложение в PR84 закреплено exact fetched library merge, runtime-tree библиотеки
+равен проверенному13887f34. Исходные функции не меняются при закреплении;
+исторические native/device/Full пробелы не закрываются Git-слиянием. Это новое
+поручение снимает прежнее ожидание merge, но не разрешает установку/публикацию APK.
+
+
 ## MOB-04 Ограничение памяти карты на устройствах от2GiB
+
+28 октября, следующий адресный этап по прямому поручению владельца: убрать
+полный scan/sort текущего cache на каждом новом тайле и разбирать отменённую
+работу до IO dispatch. Состояние: реализация готова,70focused JVM/9classes,
+три normal variants и version matrix PASS. Собран обычный Lisa APK для владельца:
+private profiler/field verification выключены, установка и новые замеры не
+выполнялись агентом. Владелец после самостоятельной проверки сообщил
+«Почти моментально отрисовывается всё»; формальную проверку полноты отложил.
+Full/публикация/новый merge остаются отложены; долговременный кэш
+не добавляется. Карточка: maplib-20261028-tile-cache-queue.
+
+28 октября: новый адресный этап по поручению владельца — приватный opt-in сборщик
+ресурсов для ручного прогона T40 по масштабам/плотности/подписям. Приоритет —
+корневые расходы холодного пути; долговременный кеш исключён. Состояние: приватная
+сборка установлена на T40, ручной сеанс завершён пользователем через19мин,
+3×180с CPU/native и полный app export проверены. Подтверждены расходы полного
+scan/sort/stat текущего disk cache и очередь; геометрия дешевле. Overhead heap
+profiler существенен, native owners частично UNKNOWN; оптимизации ещё не выполнены.
+Результаты и ограничения: [разбор T40](../reference/mobile-resource-profile-t40-2026-10-28.md).
+Full/публикация остаются отложены. Контракт и ограничения:
+[map-performance](../architecture/map-performance.md#приватное-исследование-холодной-отрисовки-28-октября-2026),
+[manual runbook](../runbooks/manual-resource-profiling.md).
 
 Приоритет P1, прямое поручение владельца27 октября после нового ng-logs11.
 Включено в текущую задачу app82/maplib61; обычная очередь остаётся отложенной.
@@ -106,6 +136,25 @@ AVD с2GiB, настоящий длительный pan/pinch+heading workload, 
 
 ## MOB-02 Инцидент завершений после обновления 224
 
+29 октября, адресное продолжение по поручению «разобрать ошибки в глитче»:
+после первого520/516получен свежий mobile-only snapshot02:8групп,593записи/
+589SDK ID,59новых ID относительно тех же восьми групп28октября.68/88 —
+прежняя локальная политика штатных GPS ожиданий;45/64/69/90/96/117 — diagnostics.
+Поздняя030/224native/OS пара не устанавливает новый crash последней сборки,
+исходный exception или OOM. Для текущих224GPS пауз причина неизвестна:
+добавлено редкое fail-open сравнение cached framework fix и app raw без
+координат, новой подписки или изменения фильтров/thresholds/владельцев.
+877JVM tests,docs50,три normal variants, instrumentation compile и versionmatrix
+PASS; два emulator-only native GPS case не запускались, полевой cause остаётся
+UNKNOWN. Частный обычный APK517c941d…0db8b01 собран, не установлен/не опубликован.
+Source commits и guarded server comments/resolve/readback завершены:
+8resolved,599записей/595SDK ID; причины неизвестных сбоев не объявлены исправленными. Full,
+профилирование, новые native/device действия не выполнялись. Это уточнение
+свидетельств MOB-02/MOB-03, не исправление приёма GPS и не возобновление других
+этапов карты. Владельцы app/maplib, Draft84/62; карточка
+android-20261029-glitchtip-gps-evidence.
+[Решения и ограничения](../reference/glitchtip-triage-2026-10-29.md).
+
 Приоритет P1. Состояние: В Draft PR app82/maplib61; memory failure подтверждён,
 конкретный триггер регрессии и остальные abort ожидают свидетельств/проверок.
 Основание — поручение пользователя27 октября,
@@ -181,6 +230,37 @@ Related на изолированном AVD, обе release build-проверк
 # Уже начатая работа
 
 ## MOB-01 Завершение текущего пакета стилей и треков
+
+29 октября: внеплановая регрессия по сообщению владельца после обычной быстрой
+MOB-04 сборки — field lines/points потеряли приоритет над треками. Приоритет P1,
+владельцы maplib (planner/current alias/cached wrappers/canonical model order)
+и app (native consumer/маршрутизация), зависимость от текущего SQLite native
+route и прежних cache/queue оптимизаций. Обычная очередь остаётся отложенной.
+Объём: вернуть whole-group stack без изменения данных/sync/фона/батареи,
+источники alias брать у текущего style controller, относительный порядок —
+у canonical flattened LayerGroup независимо от bind/hot-add arrival.
+Миграции saved state нет. Четыре standalone rebind пути также восстанавливают
+порядок. Первые81 JVM/20 Python PASS; первый focused native FAIL выявил реальный
+reverse-source-cache relative-order defect, oracle не ослаблялся. После canonical
+traversal fix13 planner unit и focused native case1/1 PASS на T40/API30
+(`priority-related-t40-02`), затем весь класс10 distinct методов PASS на той же
+source fingerprint (`sqlite-related-t40-03/result.json`). Exact final83 JVM/
+10classes PASS, 0fail/error/skip. Обычные LisaDebug/LisaRelease/BelkaRelease PASS71с,
+version matrix PASS. Lisa224/3.1.2.30 SHA256
+`57a495854c9c18a5265bf42074101b9dd6d5750ad0fe5e3d6e606c5ef10984bd`
+установлен поверх T40 с прежней подписью и сохранением данных; profiler/verification
+выключены, profileable отсутствует. Runtime fingerprint неизменен до/после сборки;
+карта14.2 восстановлена и screenshot просмотрен. Это normal smoke, не приёмка
+полноты/пикселей реального проекта787 или Full. T40 не
+поддержал `logcat --uid`, UID collector остаётся diagnostic gap. Nested groups
+и Activity recreation в новом root-child case не приняты.
+Критерии: current aliases/provider/source/wrapper/filter identity, полный набор
+body/Firefly/icon/labels/SQL originals, все saved/current track passes, canonical
+relative order и pixels после full/lite/reorder/style/data/hide/Undo. Отдельно
+проверить nested/recreation и полноту реальной карты; Full и публикация отложены.
+Новые карточки: android/maplib-20261029-sqlite-layer-display-priority,
+android-20261029-sqlite-priority-native-regression. Library Merge Commit перед
+consumer pin/app Squash; локальный build и device result не означают merge/release.
 
 Приоритет P1. Состояние: app [#78](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/78), [#79](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/79), [#80](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/80), [maplib #60](https://github.com/GeonicalSys/android_maplib/pull/60) и [maplibui #44](https://github.com/GeonicalSys/android_maplibui/pull/44) слиты; consumer pins подтверждены. ЛИСА3.1.2.30/224 опубликована27 октября по явному пользовательскому исключению без зелёного Full планшета; versioned/latest HTTP-хэши проверены. Адресные проверки и ограничения записаны в [квитанции выпуска](../reference/mobile-release-fixes-2026-10-26.md). Владелец — app с зависимостями maplib/maplibui. Это учёт текущей работы, а не новое поручение на её исполнение.
 
