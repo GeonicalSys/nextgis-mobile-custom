@@ -2138,3 +2138,15 @@ UI39/142/19/F61 и прежние clock/wiki ограничения сохран
   литералов. Existing metadata/row/Save policy не изменяется.
 - Source review/technical fixtures и native/device/release acceptance разделены;
   historical F61 clock/wiki gate failures не скрываются перепривязкой ожиданий.
+
+
+### 2026-10-30 — выбор ресурсов ВебГИС (source prepared)
+
+- Подготовлено восстановление флажка по выбранному local resource/mode, включая
+  recycling пустого состояния; bind не меняет список выбора.
+- Uncheck очищает этот mode у всех matching записей; повторный check не добавляет
+  ещё положительный duplicate. Raster/WMS/webmap label не наследуется от vector/Collector.
+- Compact JSON restore объединяет OR flags только после обычного resolve каждой
+  записи; different accounts/localIDs и late failure сохраняют прежние границы.
+- Actual37 API28 cases PASS (22+6 new и9 protected browser); native/import/restart/refresh acceptance
+  не заявлены. Исторические89 и clock/Wiki ограничения не перепривязаны.

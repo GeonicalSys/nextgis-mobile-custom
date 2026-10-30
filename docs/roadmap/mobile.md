@@ -746,3 +746,17 @@ Scope и technical fixtures описаны в AUTO-NGW-USER-MESSAGES, новых
 prepared:89 source/model PASS, Belka source compile0/59с; native/device NOT_RUN.
 Linked Draft Core63/UI46 должны предшествовать App pointers/semantic clock review;
 App86 остаётся Draft до отдельного merge/release решения.
+
+
+### MOB-UI-01 — флажки ресурсов ВебГИС, source checkpoint30 октября
+
+По текущему поручению углубления аудита подготовлен bounded selector slice:
+ANY-by-localID/mode rendering, symmetric false callback, no-amplification true,
+восстановление type1 label при recycling и OR duplicate flags только в owned
+JSON restore после каждого прежнего resolve. Source ownership — maplibui;
+28 новых +9 protected browser models в App: actual37 PASS; Belka source compile0/BUILD47s; native acceptance отдельно NOT_RUN. Это не refresh/tree policy,
+external setter/Parcel normalization или generic import dedup; неизвестные
+свидетельства и следующий шаг едины в Root `AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH`. Карточки `android-20261030-ngw-resource-checkbox-selection` и
+`maplibui-20261030-ngw-resource-checkbox-binding` сохраняют source/model/native границы. Приоритеты других этапов,
+device/Related/Full и Wiki не возобновлены. Message89/Belka59 — исторический
+срез с другим Adapter, без rerun/пересуммирования. F61 clock/pins ещё held.

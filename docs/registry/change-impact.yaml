@@ -1334,3 +1334,35 @@ triggers:
     must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/ui-contracts.md, docs/registry/ui-contracts.json, docs/guides/project-synchronization-user-guide.md, app/docs/README.md, app/docs/manifest.yaml]
     verify: [AUTO-NGW-USER-MESSAGES, AUTO-UI-SOURCE-CONTRACTS, AUTO-APP-RELEASES]
     strict_docs: true
+
+  - id: NGW-RESOURCE-CHECKBOX-SELECTION
+    paths:
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/NgwResourceSelectionState.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/CheckState.java
+    - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
+    - maplibui/src/main/res/layout/row_ngwlayer_check.xml
+    - maplibui/src/main/res/layout/row_ngwlayer_doublecheck.xml
+    - app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionCheckboxTest.java
+    - app/src/test/java/com/nextgis/maplibui/util/NgwResourceSelectionDedupTest.java
+    owners:
+    - maplibui
+    - app
+    - maplib
+    read:
+    - docs/architecture/ui-contracts.md
+    - docs/registry/ui-contracts.json
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/runbooks/collector-project-setup.md
+    invariants:
+    - INV-NGW-RESOURCE-CHECKBOX-SELECTION
+    - INV-NGW-RESOURCE-DIALOG-LIFECYCLE
+    must_update_docs:
+    - docs/architecture/ui-contracts.md
+    - docs/registry/ui-contracts.json
+    - docs/architecture/ngw-sync-and-storage.md
+    verify:
+    - AUTO-NGW-RESOURCE-CHECKBOX-SELECTION
+    - AUTO-UI-SOURCE-CONTRACTS
+    strict_docs: true

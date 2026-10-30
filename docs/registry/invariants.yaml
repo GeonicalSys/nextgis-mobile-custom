@@ -1858,3 +1858,29 @@ invariants:
     - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java
     verify_smoke: [AUTO-NGW-USER-MESSAGES, AUTO-UI-SOURCE-CONTRACTS]
     must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/ui-contracts.md, docs/registry/ui-contracts.json, docs/guides/project-synchronization-user-guide.md, app/docs/README.md, app/docs/manifest.yaml]
+
+  INV-NGW-RESOURCE-CHECKBOX-SELECTION:
+    title: NGW checkbox state follows local resource and import mode
+    owners:
+    - maplibui
+    - app
+    - maplib
+    statement: Bind is a nonmutating ANY projection of the requested raster/vector mode over matching process-local
+      resource IDs; a physical checkbox ID is not a mode ID. Uncheck clears every matching requested flag
+      and removes only bothfalse entries; check never amplifies an existing positive mode. Recycled labels
+      follow resource mode. Owned JSON restore resolves and parses every original entry before same resolved
+      localID OR merge at first order; different accounts/localIDs and late failures remain distinct. External
+      setter/legacy Parcel/import loops are not generally normalized. Refresh policy remains AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH.
+    related_code:
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/NgwResourceSelectionState.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/CheckState.java
+    - app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionCheckboxTest.java
+    - app/src/test/java/com/nextgis/maplibui/util/NgwResourceSelectionDedupTest.java
+    must_update_docs:
+    - docs/architecture/ui-contracts.md
+    - docs/registry/ui-contracts.json
+    - docs/architecture/ngw-sync-and-storage.md
+    verify_smoke:
+    - AUTO-NGW-RESOURCE-CHECKBOX-SELECTION
+    - AUTO-UI-SOURCE-CONTRACTS

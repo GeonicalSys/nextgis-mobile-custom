@@ -1312,3 +1312,18 @@ External-database text gates now apply only to422:408 body text cannot claim ser
 
 Проверено в текущем source-срезе: Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance.
 First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods.
+
+
+### Выбор способа импорта и повторные записи compact state — source checkpoint30 октября
+
+См. `UI-NGW-RESOURCE-CHECKBOX-SELECTION` в ui-contracts.md. Raster/vector flags относятся к local resource
+ID в текущем Connections tree; remote path/account в compact JSON сопоставляется
+с заново найденным localID при restore. Каждый прежний resolve и чтение flags
+выполняется, включая повторную запись: только после этого same resolved localID
+coalesces OR flags в первой owned записи. Ошибка позднего duplicate всё ещё
+прерывает restore; different accounts/localIDs и первый порядок не смешиваются.
+Схема JSON/Parcel, save filtering, alias public setter и Activity legacy input
+не изменены. UI callback может очищать duplicate requested flags, но не обещает
+dedup произвольного внешнего списка либо единственность side effects import loops.
+Refresh/reconciliation policy остаётся `AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH`; это не подтверждение поведения
+реального сервера/перезапуска или native import. Новый source slice37 PASS; Belka source compile0/BUILD47s; native acceptance NOT_RUN.

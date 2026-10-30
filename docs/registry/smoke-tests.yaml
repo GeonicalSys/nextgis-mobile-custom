@@ -1178,3 +1178,44 @@ tests:
       only these filters after all prelaunch gates; it never bypasses a failed prerequisite.
 
     source_result: "Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance. First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods."
+
+  AUTO-NGW-RESOURCE-CHECKBOX-SELECTION:
+    type: automatic
+    scope:
+    - maplibui
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''--continue'' ''-Pkotlin.incremental=false''
+      ''-PciReliabilityChecks=true'' ''--console=plain'' '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.maplibui.dialog.ResourceSelectionCheckboxTest''
+      ''--tests'' ''com.nextgis.maplibui.util.NgwResourceSelectionDedupTest'' ''--tests'' ''com.nextgis.maplib.datasource.ngw.ResourceChildrenMessagesTest'''
+    expected: Actual same37 API28 models PASS/0fail/errors/skips:22 checkbox/label +6 owned restore +9 protected
+      browser messages,3XML6.846s,Gradle0/BUILD45s. Meaningful old-source baseline37 has13assertFAIL/24controls/0errors/skips,XML6.493s,Gradle1/BUILD57s.
+      Same c683/f46 fixture bytes/method sets unchanged. Baseline134 raw events/133unique includes duplicate
+      FAILED status; green133/133 exact reviewed SET with different order.81 protected inputs exact,all13
+      baseline/all14 green owned processes settled absent. First dry prefix-classifier false positive and
+      first raw-event133 observer assumption remain explicit diagnostic history, not retroactive gate PASS;
+      actual tests were not rerun for those observer corrections. Invalid9f25 source was held beforeC and
+      replaced by reviewed606 without oracle changes. BelkaRelease source compile exit0/BUILD47s (49.136s
+      observed),81 inputs exact,all10 owned processes settled absent. Actual100 task SET matches reviewed100
+      with different order; UIJava/AppJava+Kotlin executed, CoreJava UP-TO-DATE. Four Java JAR class counts28/535/670/45;
+      no dex/so/APK/AAB/AAR. This is source compilation, not installed-app/native/Service/DB/server/import/layout-fit
+      acceptance. Native/device/Activity lifecycle/rotation/realserver/DB/import writes/largefont/APK/refresh
+      acceptance NOT_RUN; screenshot layout fit not covered. Historical full message89/Belka59 not rerun
+      and used old Adapterb703.
+    source_result: Actual same37 API28 models PASS/0fail/errors/skips:22 checkbox/label +6 owned restore
+      +9 protected browser messages,3XML6.846s,Gradle0/BUILD45s. Meaningful old-source baseline37 has13assertFAIL/24controls/0errors/skips,XML6.493s,Gradle1/BUILD57s.
+      Same c683/f46 fixture bytes/method sets unchanged. Baseline134 raw events/133unique includes duplicate
+      FAILED status; green133/133 exact reviewed SET with different order.81 protected inputs exact,all13
+      baseline/all14 green owned processes settled absent. First dry prefix-classifier false positive and
+      first raw-event133 observer assumption remain explicit diagnostic history, not retroactive gate PASS;
+      actual tests were not rerun for those observer corrections. Invalid9f25 source was held beforeC and
+      replaced by reviewed606 without oracle changes. BelkaRelease source compile exit0/BUILD47s (49.136s
+      observed),81 inputs exact,all10 owned processes settled absent. Actual100 task SET matches reviewed100
+      with different order; UIJava/AppJava+Kotlin executed, CoreJava UP-TO-DATE. Four Java JAR class counts28/535/670/45;
+      no dex/so/APK/AAB/AAR. This is source compilation, not installed-app/native/Service/DB/server/import/layout-fit
+      acceptance. Native/device/Activity lifecycle/rotation/realserver/DB/import writes/largefont/APK/refresh
+      acceptance NOT_RUN; screenshot layout fit not covered. Historical full message89/Belka59 not rerun
+      and used old Adapterb703.
+    compile_result: BelkaRelease source compile exit0/BUILD47s (49.136s observed),81 inputs exact,all10
+      owned processes settled absent. Actual100 task SET matches reviewed100 with different order; UIJava/AppJava+Kotlin
+      executed, CoreJava UP-TO-DATE. Four Java JAR class counts28/535/670/45; no dex/so/APK/AAB/AAR. This
+      is source compilation, not installed-app/native/Service/DB/server/import/layout-fit acceptance.

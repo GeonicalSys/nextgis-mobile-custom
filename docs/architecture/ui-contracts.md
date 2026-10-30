@@ -285,3 +285,49 @@ Shared copy сообщает о возможных техработах, не д
 Технические source/model89 PASS (Core46/App43); native windows,
 large fonts, notification permission/channel, effective locale/variant merge и
 foreground-only MESSAGE_ALERT delivery требуют отдельной приёмки.
+
+
+## Выбор ресурсов ВебГИС: флажок, способ импорта и восстановление
+
+`UI-NGW-RESOURCE-CHECKBOX-SELECTION` связывает `NGWResourcesListAdapter.getResourceView/setCheckBox` с
+`CheckState` и обоими `SelectNGWResourceActivity/Dialog.createLayers`. Для строк
+raster/WMS/webmap mode1 означает raster, mode2 у vector/PostGIS — vector, у
+Collector — импорт проекта. Styled vector имеет оба режима. Physical `checkBox1`
+не является номером режима: безстилевой vector и Collector используют его с
+`checkNo=2`. Подпись `type1` задаётся при каждом relevant bind, включая возврат
+vector/Collector → raster/WMS/webmap; XML default недостаточен при recycling.
+
+Источник флажка — ANY положительный requested flag у совпавшего process-local
+`CheckState.id`, не последний элемент списка и не remote NGW ID. Bind снимает
+старый listener, один раз устанавливает полное состояние (пустой/несовпавший
+список даёт false), затем возвращает listener; сам bind не меняет список выбора.
+При false callback очищает requested mode у ВСЕХ записей того же localID и
+удаляет только ставшие bothfalse. При true существующий положительный mode
+не размножается; иначе меняется первая matching запись либо создаётся одна.
+Other mode/IDs/order/object identity остаются. Это не общая canonicalization
+внешнего setter/legacy parcel списка: положительные дубликаты могут сохраняться,
+а оба import loops по-прежнему обходят записи отдельно; generic import dedup
+этим исправлением не обещан. PostGIS login guard не изменён.
+
+`Resource.getId()` берётся из process-local `Connections.getNewId()`. Оба import
+consumer сначала делают `connections.getResourceById(check.getId())`, затем
+используют отдельный `resource.getRemoteId()` для remote task/origin. JSON save
+хранит account/server + remote path и raster/vector flags. Restore КАЖДОГО
+элемента сначала проходит прежний resolve и чтение обоих boolean; затем одинаковый
+resolved localID объединяется OR flags в первой новой owned записи с первым
+порядком. Разные localID/accounts не объединяются. Missing resource, invalid later
+flag, network/cancel failure не становятся successful restore из-за dedup.
+Falsefalse-only record не получает новую фильтрацию.
+
+Новый JSON формат и миграция не введены. Activity сохраняет поддержку legacy
+Connections/CheckState Parcelable; CheckState parcel содержит local int ID и
+два boolean. Dialog без нового JSON восстанавливает accounts/root и очищает
+checks. Ни setter, ни Parcel не нормализованы. Refresh/tree reconciliation,
+удалённые ресурсы и исчезающие flags остаются в едином Root TODO `AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH`.
+Это не UI для координат/выбранной геометрии и не разрешение редактирования слоя.
+
+Текущий checkbox срез: actual37 API28 models PASS (22+6 new и9 protected browser);
+Belka source compile0/BUILD47s; native acceptance отдельно NOT_RUN. Native Service/import writes, accounts/network, rotation и merged-flavor resource
+acceptance NOT_RUN. Исторические message89/Belka59 не перезапущены и не принимают
+новый Adapter source. Whole F61 clock row и остальные43 contracts/163 methods/
+39 non-method rows сохраняются; новые semantic pins ниже только после source review.
