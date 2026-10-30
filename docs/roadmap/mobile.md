@@ -677,3 +677,7 @@ native проверки фиксируется отдельно. Software-relate
 Git delivery, source/JVM checks, merge и device/restart verification разделены
 в карточке. Исходный docs-only entry bridge и исторические результаты выше
 сохранены; вопросы post-ACK cleanup и restart остаются в прежнем LISA ACK TODO.
+
+### Продолжение MOB-02: значения формы NGFP — 2026-10-30
+
+Сохранены11 source-backed связей от nullable SQL/NGFP/catalog/private resolver/publisher через Collector first-form selection к remote Field metadata, restored pair и Save. Default Прочие / прочие действующий; нарушение не установлено. UI-FORM-TEXT-LINE-CAP отделяет requested lines от текста и resource IDs. Интегрированный docs-only каталог39/134/17 сохраняет прежние38/128/14 и clock F61; проверки текущих docs ещё NOT_RUN, существующий clock drift не скрывается. Четыре root NGFP TODO принадлежат единой очереди; native/UI/data policy не возобновляется.

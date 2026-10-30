@@ -8,6 +8,10 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-30 — Контракты значений NGFP
+
+Углублена существующая цепочка classobj/typeobj: источник формы/схемы, raw defaults, приоритет explicit/draft/cursor и gate Save. Добавлен39-й UI контракт TextEdit line cap с actual dynamic binding; отсутствующий XML ID не выдуман. Изменений APK/библиотек и доказательства сломанного default нет. Свидетельства source-only; docs-check и native результаты фиксируются отдельно после интеграции.
+
 ## 2026-10-30 — Согласованное подтверждение recovery journal
 
 Исправлен переход failed pair ACK → следующий successful write: принятый

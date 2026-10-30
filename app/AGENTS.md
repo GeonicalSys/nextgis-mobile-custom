@@ -138,6 +138,8 @@ NGFP-формы: читать `../docs/architecture/conditional-form-rules.md`. 
 regression-тесты `CascadingFormsTest` и `ConditionalRequiredFieldsTest` запускаются
 на изолированном эмуляторе или в отдельном verification APK смартфона;
 production и обычный Debug смартфона не используются.
+Перед выводом о default/required/высоте поля прочитать source-backed classobj/typeobj chain в conditional-form-rules и UI-FORM-TEXT-LINE-CAP: actual form/hash, remote schema, restored state и cap различаются. Корневые NGFP namespace/coercion/prefetch/old-clone риски вести только в общем LISA TODO.
+
 Проверять публичный запуск формы со связанным meta, вкладки, Save/Back Save,
 pin черновика и отсутствие SQLite-записи при нарушении условий.
 FormAppearanceTest проверяет обе темы, перенос выбранного имени и нижний Save.

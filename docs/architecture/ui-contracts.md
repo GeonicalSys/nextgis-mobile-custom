@@ -1,7 +1,7 @@
 ---
 title: Контракты значений и действий мобильного интерфейса
 type: architecture
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 related_code:
   - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
   - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
@@ -172,16 +172,16 @@ py -3.13 -B docs/scripts/check_ui_contracts.py
 настройками карты/геопозиции и основной/русский каталоги подписей действий.
 XML с reviewed widget IDs также удерживаются целиком, чтобы изменение binding,
 handler или title при прежнем ID не считалось прежним контрактом.
-Текущий каталог содержит38 контрактов,128 method tripwires и14 non-method
-files. Для V4 вручную пересмотрены затронутые Settings/widget bodies и добавлены
+Текущий каталог содержит39 контрактов,134 method tripwires и17 non-method
+files. Прежние38/128/14 сохранены; NGFP добавляет6 methods и3 file tripwires. Для V4 вручную пересмотрены затронутые Settings/widget bodies и добавлены
 admission/owner/terminal/reset/result-consumer anchors. General XML добавлен как
 Preference-key evidence. В EN/RU изменён ровно один failure string: все прежние
 378/375 значения и порядок независимо сохранены. Unaffected IDs/hashes удержаны.
 
 `WF-SYNC-CLOCK-STORE` намеренно остаётся исходным F61 fingerprint: отдельный own
 maplib clock fix ещё требует Merge Commit, app pointer и semantic pin review.
-Официальная проверка текущего рабочего контура поэтому показывает один известный
-clock drift и **не является PASS**. Другие app rows проверяются по текущим bytes;
+Предыдущая официальная проверка контура38/128/14 показала один известный
+clock drift и **не являлась PASS**. Проверка новых39/134/17 inputs ещё NOT_RUN. Другие app rows проверяются по текущим bytes;
 альтернативных hashes, фильтра результата или обхода checker нет.
 Они требуют semantic review при любом изменении
 этих файлов; это осознанно более широкая проверка, чем fingerprint отдельного
@@ -235,3 +235,25 @@ desktop/PostgreSQL производителя по
 выбрать проверку, которая их различает. Если источник, единицы или ветвь ещё
 не установлены, оставить конкретный UNKNOWN и следующий шаг. Изменение body
 hash не должно автоматически утверждать правильность нового поведения.
+
+## Высота текстового поля и ссылки на ресурсы
+
+`UI-FORM-TEXT-LINE-CAP` прослеживает `type=text_edit` через factory,
+`formtemplate_edittext.xml` и normalized attributes.field до TextEdit.init.
+`max_string_count` читает int и вызывает single-line при значении<2 либо
+setMaxLines; единица — строка отображения, а не символ/NGW ID/значение поля.
+Все3 canonical `descript` имеют cap4; label —1/10/1 для линий/точек/площадей.
+Text/draft/cursor/default priority и login overrides самостоятельны. getValue и
+saveState используют текст; layout cap сам не подтверждает Save или sync.
+У dynamic field нет `android:id`; XML фиксирует класс, control map — field key.
+
+Ресурсные bindings NGFP имеют собственную grammar: combobox.attributes.ngw_id
+(regular/AutoTextEdit) и meta.ngw_connection.id. Server URL/account определяют
+namespace, а числа в cap, defaults/options, field names, local rows, srs.id и
+business GeoJSON к remap ресурсов не относятся. Скриптовые deployment bindings
+Collector metadata и динамические photo attachment URLs — отдельные контракты.
+Текущие неизвестные сохраняются в едином LISA dependency-audit-todo.yaml:
+AUDIT-TODO-NGFP-EMBEDDED-CONNECTION, AUDIT-TODO-NGFP-REFERENCE-COERCION,
+AUDIT-TODO-NGFP-LOOKUP-PREFETCH и AUDIT-TODO-NGFP-EXISTING-CLONES.
+Ни source review, ни будущий remap fix не доказывают исправление прежних
+артефактов или работоспособность nested lookup prefetch/native UI.

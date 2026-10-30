@@ -1782,6 +1782,84 @@
       ],
       "forbids": [],
       "sha256": "00736661f7455e01fd42a7571008f7d315de91ee488822e4b1601e25d89e656f"
+    },
+    {
+      "id": "WF-FORM-TEXT-CONTROL-FACTORY",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+      "marker": "public static IFormControl getControl(Context context, JSONObject element, VectorLayer layer, long feature,\n                                          GeoGeometry geometry, boolean isViewOnly, final ModifyAttributesActivity modifyAttributesActivity) throws JSONException",
+      "requires": [
+        "case JSON_TEXT_EDIT_VALUE:",
+        "control = (TextEdit) View.inflate(context, R.layout.formtemplate_edittext, null);"
+      ],
+      "forbids": [],
+      "sha256": "a14c65a41f1f082b38e61aade95c7d8bc3f62786d588146940097a230807b04f"
+    },
+    {
+      "id": "WF-FORM-TEXT-CONTROL-BINDING",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+      "marker": "protected void addToLayout(IFormControl control, JSONObject element, List<Field> fields, Bundle savedState,\n                               Cursor featureCursor, LinearLayout layout, final ModifyAttributesActivity modifyAttributesActivity) throws JSONException",
+      "requires": [
+        "appendData(mLayer, mPreferences, mTable, mRow, control, element);",
+        "control.init(element, fields, savedState, featureCursor, mSharedPreferences, mTranslations, modifyAttributesActivity);",
+        "mFields.put(fieldName, control);"
+      ],
+      "forbids": [],
+      "sha256": "f78d4fec00ce4aeeac46dd73b90373ccaeb023491346dede3d482be1ef6e1889"
+    },
+    {
+      "id": "WF-FORM-TEXT-LINE-INITIALIZATION",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java",
+      "marker": "public void init(JSONObject element,\n                     List<Field> fields,\n                     Bundle savedState,\n                     Cursor featureCursor,\n                     SharedPreferences preferences,\n                     Map<String, Map<String, String>> translations,\n                     final ModifyAttributesActivity modifyAttributesActivity) throws JSONException",
+      "requires": [
+        "mFieldName = ControlHelper.getFieldName(attributes.getString(JSON_FIELD_NAME_KEY));",
+        "if (ControlHelper.hasKey(savedState, mFieldName))",
+        "value = featureCursor.getString(column);",
+        "value = attributes.getString(JSON_TEXT_KEY);",
+        "value = preferences.getString(mFieldName, value);",
+        "setText(value);",
+        "int maxLines = attributes.getInt(JSON_MAX_STRING_COUNT_KEY);",
+        "if (maxLines < 2)",
+        "setSingleLine(true);",
+        "setMaxLines(maxLines);"
+      ],
+      "forbids": [],
+      "sha256": "9658da0d38e1dc9895c5015bdc40508c1ac33f38d9cb2987f409a01994b99cc5"
+    },
+    {
+      "id": "WF-FORM-TEXT-FIELD-IDENTITY",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java",
+      "marker": "public String getFieldName()",
+      "requires": [
+        "return mFieldName;"
+      ],
+      "forbids": [],
+      "sha256": "b92c5b04b21fdca498e51891c71fd9626c07e6be478e87521e68c2a1b66b532e"
+    },
+    {
+      "id": "WF-FORM-TEXT-VALUE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java",
+      "marker": "public Object getValue()",
+      "requires": [
+        "return getText().toString();"
+      ],
+      "forbids": [],
+      "sha256": "f2503360d7a42ad9453eec93c934bdee58a7ba6c3481c02a8148d6fd5df1b595"
+    },
+    {
+      "id": "WF-FORM-TEXT-STATE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java",
+      "marker": "public void saveState(Bundle outState)",
+      "requires": [
+        "outState.putString(ControlHelper.getSavedStateKey(mFieldName), getText().toString());"
+      ],
+      "forbids": [],
+      "sha256": "36dd293cd0d47282c919f6b9c597a958d1b62aae96923b4f5c368fababb3ba0b"
     }
   ],
   "contracts": [
@@ -3426,6 +3504,51 @@
         "21 Robolectric/JVM cases — technical source verification, native Reset/data deletion/storage/renderer not executed.",
         "Renderer drain, partial file rollback, registry/journal/draft migration и restart durability остаются owner TODO; этот контракт не сертифицирует destructive native acceptance."
       ]
+    },
+    {
+      "id": "UI-FORM-TEXT-LINE-CAP",
+      "group": "forms",
+      "title": "Высота текстового поля NGFP и сохранённое значение",
+      "surface": "Динамический type=text_edit в FormBuilderModifyAttributesActivity; class TextEdit из formtemplate_edittext.xml, поле определяется attributes.field, отдельного android:id у каждого поля нет.",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "max_string_count задаёт ветку single-line либо максимальное число отображаемых строк TextEdit. Это не лимит символов, не значение поля и не NGW resource ID.",
+      "value_origin": "Выбранный NGFP form.json → getControl(type=text_edit)/formtemplate_edittext.xml → addToLayout → TextEdit.init. attributes.field нормализуется в field identity; saved Bundle перед feature cursor, затем attributes.text и last preferences для нового объекта. ngw_login/ngid_login имеют отдельные override branches. attributes.max_string_count читается getInt независимо от значения; mFields хранит control по getFieldName.",
+      "units": "max_string_count — безразмерное число строк отображения; значение текстового поля — строка по схеме слоя. CRS и физические единицы не возникают из этого параметра.",
+      "updates": [
+        "При создании/recreation control заново читает layout и прежнее значение. maxLines<2 вызывает setSingleLine(true), иначе setMaxLines(maxLines).",
+        "getValue возвращает getText().toString(); saveState сохраняет текст по normalized field key. Установка высоты сама не выбирает строку/категорию и не подтверждает Save/sync."
+      ],
+      "actions": [
+        "Ввести или восстановить текст в существующем поле формы.",
+        "Передать значение обычным form/draft/Save путям с их самостоятельными gates."
+      ],
+      "conditions": [
+        "Один общий maplibui control используется Lisa/Belka; schema/flavor-specific deployed archive и merged APK runtime не проверялись.",
+        "Канонические3 v2.2 формы задают descript.max_string_count=4; label имеет1/10/1 для линий/точек/площадей. only_figures/input type и login overrides не объявляются одинаковыми со свободным текстом.",
+        "Динамический control выбирается классом/layout и normalized attributes.field; fake XML widget ID не вводится. Desktop remap resource ID должен сохранять этот presentation scalar и обычные literals."
+      ],
+      "saved_state": "TextEdit.saveState хранит текст, а не cap/ресурсный ID. Layout cap повторно поступает из form.json. Существующие durable draft/pin/Save semantics описаны в UI-FORM-DRAFT/UI-FORM-SAVE; исход clone/update не доказывает миграцию открытого draft.",
+      "source_ids": [
+        "WF-FORM-TEXT-CONTROL-FACTORY",
+        "WF-FORM-TEXT-CONTROL-BINDING",
+        "WF-FORM-TEXT-LINE-INITIALIZATION",
+        "WF-FORM-TEXT-FIELD-IDENTITY",
+        "WF-FORM-TEXT-VALUE",
+        "WF-FORM-TEXT-STATE"
+      ],
+      "expectations": [
+        "Oracle: исходный descript с cap4 после клонирования других NGW ресурсов сохраняет cap4 и полное значение текста; label1/10/1 не становятся resource IDs.",
+        "Oracle: разные draft/cursor/new-template значения различаются; восстановление принимает прежний текст по field key, а изменение cap не подменяет текст/default.",
+        "Контрпример: совпавшее число4 в id_map меняет max_string_count; либо высоту по подписи поля ошибочно принимают за character count, selected option или geometry."
+      ],
+      "unknowns": [
+        "Source review only; фактические строки/scroll/keyboard/input type, font scale, themes, rotation и native Save не выполнялись.",
+        "Точная форма на tenant, private overlay/multiple-form order и уже изменённые clone artifacts требуют root-owned provenance/repair review; этот UI контракт не доказывает их исправление."
+      ]
     }
   ],
   "widget_evidence": [
@@ -3762,6 +3885,25 @@
         "app/src/main/res/values-ru/strings.xml": "f2c1cf08be0aff18257ee6d1e343121ff275dcade9b3f232558853c1e753dd7d",
         "app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java": "0320e557b2fa0a5bb485cb8affb7d33467200406b1a0dc7f6f653390f6bb9fb1"
       }
+    },
+    "ngfp_text_line_review": {
+      "reviewed_at": "2026-10-30",
+      "basis": "Additive manually reviewed UI source only;39th contract. All existing38 contracts/128 methods/14 file rows/widget evidence and historical source_context preserved. No runtime or new product behavior acceptance.",
+      "methods_reviewed": [
+        "WF-FORM-TEXT-CONTROL-FACTORY",
+        "WF-FORM-TEXT-CONTROL-BINDING",
+        "WF-FORM-TEXT-LINE-INITIALIZATION",
+        "WF-FORM-TEXT-FIELD-IDENTITY",
+        "WF-FORM-TEXT-VALUE",
+        "WF-FORM-TEXT-STATE"
+      ],
+      "widget_selector": "type=text_edit factory layout class + normalized attributes.field and mFields; no per-field android:id.",
+      "variants_source_sha256": {
+        "app/build.gradle": "4ce85ceb77bf2bf6e54401ca1c1d49e8848115d47b5a58c67454e845abe91f50",
+        "maplibui/src/main/AndroidManifest.xml": "b71a3b80ae7e1b22e1b54c356bc82595cc57f71c97f5a52d6858cc40eb980bfd",
+        "maplibui/build.gradle": "8fa085918e46887053462ca725cdc81999447580075178b6da5aa59ec9b2f5bc"
+      },
+      "clock_delivery": "Whole original WF-SYNC-CLOCK-STORE F61 row unchanged. Own live library clock source mismatch remains expected NOT_PASS until separate merge/pointer/semantic pin delivery. No alternate source basis or fingerprint regeneration."
     }
   },
   "non_method_evidence": [
@@ -3904,6 +4046,33 @@
         "UI-SETTINGS-RESET-WORKSPACE"
       ],
       "sha256": "1cb80f9294eefbdf9348d15ba042195d3f9dc82c6668f908e5d8ef01c859d42b"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/ConstantsUI.java",
+      "purpose": "Reviewed actual JSON_TEXT_EDIT_VALUE=text_edit, JSON_FIELD_NAME_KEY=field, JSON_TEXT_KEY=text and JSON_MAX_STRING_COUNT_KEY=max_string_count; constants identify dynamic schema fields, not Android widget IDs.",
+      "contract_ids": [
+        "UI-FORM-TEXT-LINE-CAP"
+      ],
+      "sha256": "de1884a19c877db353f36f044e9afc7652aabddaee9fa5fa0acd84da17639d89"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/formtemplate_edittext.xml",
+      "purpose": "Reviewed actual com.nextgis.maplibui.formcontrol.TextEdit declaration with no android:id; dynamic binding is normalized attributes.field plus factory/control map.",
+      "contract_ids": [
+        "UI-FORM-TEXT-LINE-CAP"
+      ],
+      "sha256": "3c2c569328d15a27586c20208720190e5e2e0044ae41375bbd00fad7d1727cdf"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java",
+      "purpose": "Reviewed TextEdit extends AppCompatEditText and login/default constants; inherited widget class and complete init/value/state behavior are part of this presentation contract.",
+      "contract_ids": [
+        "UI-FORM-TEXT-LINE-CAP"
+      ],
+      "sha256": "60fa8cb1454b625c408b99219b811fd8d05b6ebe021c6c5c036be3f38d6d904d"
     }
   ]
 }

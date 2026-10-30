@@ -1,7 +1,7 @@
 ---
 title: Зависимые списки NGFP
 type: architecture
-last_verified: 2026-10-26
+last_verified: 2026-10-30
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java
@@ -175,3 +175,7 @@ Blank-area subcase CascadingFormsTest использует отдельную н
 окне там может оказаться комментарий. Цель раскрывается обычной прокруткой
 перед одним исходным жестом; проверки вкладки и сохранности значений прежние.
 Production формы и их обработка жестов этим изменением не затронуты.
+
+### Legacy pair без графа
+
+Каноническая classobj/typeobj форма не содержит lisa_form_dependencies или lisa_form_rules. Ее default Прочие / прочие и last=false относятся к legacy DoubleCombobox, не к правилу cascade «не выбирать первый элемент». Bundle/cursor/explicit category precedence и сохранение обеих raw names разобраны в [общем контракте формы](conditional-form-rules.md#каноническая-пара-classobjtypeobj-источник-defaults-и-save). NULL/unlisted old values требуют отдельной политики; это не основание изменять значения канонического default.

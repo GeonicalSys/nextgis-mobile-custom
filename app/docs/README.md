@@ -1284,3 +1284,7 @@ JSON/identity, manual OR, scoped recovery и interruption policy сохране�
 откатывает raw cache/файл и не устанавливает политику restart или повторной
 отправки уже успешных account passes. Проверки и ограничения:
 [android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).
+
+## Источники NGFP defaults и лимита строк
+
+MOB-02 source audit различает каноническую classobj/typeobj пару, actual first-form selection, remote required metadata и raw restored values. Действующий default Прочие / прочие не объявляется сломанным. TextEdit cap4 — число отображаемых строк из max_string_count, не лимит символов или NGW ID.39-й UI контракт использует XML class и dynamic field binding без выдуманного widget ID. Подробности: [правила формы](../../docs/architecture/conditional-form-rules.md), [UI значения](../../docs/architecture/ui-contracts.md); native acceptance и старые артефакты отдельно.

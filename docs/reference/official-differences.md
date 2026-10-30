@@ -2379,3 +2379,7 @@ CPU/counts, SDK frame/texture/buffer stats и процессная память 
 бизнес-данных или новой приёмки. Full/публикация остаются отложенными.
 Контракт/ограничения: [производительность карты](../architecture/map-performance.md#приватное-исследование-холодной-отрисовки-28-октября-2026).
 Порядок ручного сеанса: [runbook](../runbooks/manual-resource-profiling.md).
+
+## Source-backed разбор существующих NGFP — 2026-10-30
+
+Документированы действующие форматы legacy2.2 и форк-контракты required/cascade/draft, без изменения APK или объявления нового отличия upstream. Канонический default classobj/typeobj, nullable PostgreSQL и connected NGW Field.required имеют самостоятельные источники. TextEdit line cap сохранён как presentation scalar. Пины официальных producer sources и root clone source-fix acceptance принадлежат единому LISA owner report; native/tenant/deployed версия здесь не принимается.
