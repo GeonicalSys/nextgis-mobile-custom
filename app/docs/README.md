@@ -1288,3 +1288,33 @@ JSON/identity, manual OR, scoped recovery и interruption policy сохране�
 ## Источники NGFP defaults и лимита строк
 
 MOB-02 source audit различает каноническую classobj/typeobj пару, actual first-form selection, remote required metadata и raw restored values. Действующий default Прочие / прочие не объявляется сломанным. TextEdit cap4 — число отображаемых строк из max_string_count, не лимит символов или NGW ID.39-й UI контракт использует XML class и dynamic field binding без выдуманного widget ID. Подробности: [правила формы](../../docs/architecture/conditional-form-rules.md), [UI значения](../../docs/architecture/ui-contracts.md); native acceptance и старые артефакты отдельно.
+
+### Источник цели выноса
+
+Shared panel отображает distance/true→magnetic guidance от копии выбранной
+геометрии; camera, current DB row/FID и device fix — отдельные источники.
+`maplibui` supplies selection/panel input, `maplib` chooses nearest3857 facet
+and inverse result, `app` owns controller/restore/UI. Source pins уточняют
+constructor/Bundle/fallback без product change. Текущая граница полигона и
+freeze/follow/invalidate после sync не переопределяются этим описанием.
+Подробности: [вынос](../../docs/architecture/stakeout.md); native acceptance NOT_RUN.
+
+## Регрессия lookup-кеша: полный набор ключей и значения
+
+`NGWLookupTable.sync` обновляет существующий map при изменении полного
+содержимого; одинаковое число строк не доказывает равенство ключей. Сравнение
+использует ненулевое remote значение из Hashtable, поэтому новый ключ не
+разыменовывает отсутствующее локальное значение. SYNC_NONE и сохранность
+старого кеша при обработанных IOException/NGException/JSONException оставлены.
+Синтаксически valid-but-incomplete/silent partial snapshot не проверен на
+полноту. Вопрос полноты остаётся UNKNOWN в
+[центральном контракте](../../docs/architecture/ngw-sync-and-storage.md). Порядок
+неизменённого кеша, API/version/clock и прежний save(false) оставлены.
+Actual public sync защищён9 App JVM методами; baseline1→0 AssertionFAIL,
+GREEN9 PASS, LisaDebug current-source compile и BelkaRelease PASS37с.
+Это контракт own live8ca; committed App F61 ещё не содержит исправление
+и не является принятой поставкой. Нативная/NGW/дисковая приёмка не выполнялась.
+В центральном контракте отдельно разобраны публикация памяти при save(false),
+повтор записи и жизненный цикл prefetch/delete/account; эти вопросы открыты.
+
+[Источник и границы](../../docs/architecture/ngw-sync-and-storage.md); actual offline recipe находится в новой карточке android-20261030-lookup-cache-regression.

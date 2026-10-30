@@ -2383,3 +2383,23 @@ CPU/counts, SDK frame/texture/buffer stats и процессная память 
 ## Source-backed разбор существующих NGFP — 2026-10-30
 
 Документированы действующие форматы legacy2.2 и форк-контракты required/cascade/draft, без изменения APK или объявления нового отличия upstream. Канонический default classobj/typeobj, nullable PostgreSQL и connected NGW Field.required имеют самостоятельные источники. TextEdit line cap сохранён как presentation scalar. Пины официальных producer sources и root clone source-fix acceptance принадлежат единому LISA owner report; native/tenant/deployed версия здесь не принимается.
+
+## Lookup key-set и source-контракт цели — 30 октября2026
+
+Собственный maplib сравнивает equal-count lookup через nonnull remote value:
+новый ключ вызывает штатную замену содержимого кеша вместо null dereference.
+Обработанные IOException/NGException/JSONException сохраняют прежний sync кеш;
+valid-but-incomplete/silent partial snapshot остаётся UNKNOWN в существующем
+Root AUDIT-TODO-NGW-PARTIAL-SNAPSHOT.
+Кеш сохраняет объект, unchanged/reordered no-write и прежние failure/savefalse
+ветви; retry/disk гарантии не добавлены. Отдельные9 App JVM PASS и BelkaRelease
+source compile37с не подтверждают upstream delta, merged pointer или native NGW.
+Подробности: [обмен и хранение](../architecture/ngw-sync-and-storage.md),
+android-20261030-lookup-cache-regression и maplib-20261030-lookup-cache-keys.
+
+Для выноса документация/source pins различают selected snapshot, текущую DB
+строку/FID, device fix и camera; nearest facet выбирается в3857, после4326
+обычная inverse-ветка эллипсоидальна, при nonconvergence есть sphere fallback.
+Это уточнение existing реализации, без изменения default/boundary/restore policy
+или утверждения новой функции official/fork. UI39/142/19 сохраняет старые
+ожидания/F61; device/process/replacement policy остаётся в общем FID TODO.

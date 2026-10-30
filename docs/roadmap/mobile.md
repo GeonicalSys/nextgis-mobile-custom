@@ -681,3 +681,19 @@ Git delivery, source/JVM checks, merge и device/restart verification разде
 ### Продолжение MOB-02: значения формы NGFP — 2026-10-30
 
 Сохранены11 source-backed связей от nullable SQL/NGFP/catalog/private resolver/publisher через Collector first-form selection к remote Field metadata, restored pair и Save. Default Прочие / прочие действующий; нарушение не установлено. UI-FORM-TEXT-LINE-CAP отделяет requested lines от текста и resource IDs. Интегрированный docs-only каталог39/134/17 сохраняет прежние38/128/14 и clock F61; проверки текущих docs ещё NOT_RUN, существующий clock drift не скрывается. Четыре root NGFP TODO принадлежат единой очереди; native/UI/data policy не возобновляется.
+
+### Продолжение MOB-02: ключи lookup-кеша и источник цели — 2026-10-30
+
+В собственном maplib устранён NPE при равном числе пар с другим набором ключей;
+новая внутренняя App карточка android-20261030-lookup-cache-regression сохраняет
+9 actual-body JVM и точную offline recipe, библиотечная user-карточка
+maplib-20261030-lookup-cache-keys объясняет поведение. GREEN9 и BelkaRelease37с
+относятся к live8ca, не к поставке с committed App F61. Clock19/journal22/storage21
+не перезапускались; native/NGW/restart и savefalse policy не приняты.
+
+Отдельная internal карточка android-20261030-stakeout-target-contract сохраняет
+source-only цепочку selected geometry/copy/3857 nearest facet/4326 inverse и
+Bundle ownership. UI-каталог39/142/19 дополняет старые134/17 без repin F61,
+product math/lifecycle не меняется. Существующий FID TODO и новый общий
+AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE остаются открыты. Docs/guard проверки
+после интеграции ещё NOT_RUN; новая App или параллельная root-очередь не создаётся.

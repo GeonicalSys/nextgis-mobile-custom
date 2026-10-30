@@ -1100,3 +1100,20 @@ tests:
       atomic rollback. No registry/project.json/recovery/import/clock/draft key migration is inferred. Renderer retirement is
       cooperative cancellation/new-read fencing, not an active-reader drain; physical failure/restart and uncoordinated path changes
       remain explicit owner TODO boundaries.
+
+  AUTO-NGW-LOOKUP-CACHE-SYNC:
+    type: automatic
+    scope:
+    - maplib
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''-Pkotlin.incremental=false'' ''-PciReliabilityChecks=true''
+      ''--console=plain'' '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.mobile.util.NgwLookupCacheSyncTest'''
+    expected: 'Nine actual public-sync JVM methods pass using technical fill/save seams: equal-size changed
+      keys, unchanged/reordered content and map identity, changed values/count, complete empty reply, SYNC_NONE,
+      a technical partial fill followed by IOException retention and existing save(false) memory/result
+      behavior. False save is not disk/retry acceptance. Current baseline9 had one meaningful AssertionFAIL;
+      current fixed9 pass. Device/NGW/SQLite/business data/native remain NOT_RUN; old clock19/journal22/storage21
+      were not rerun and desktop1117/1192 totals are unchanged. Installed JBR21, existing offline SDK28/Q
+      inputs and the graph gate are specified in android-20261030-lookup-cache-regression. This does not
+      detect a successful syntactically valid incomplete response; AUDIT-TODO-NGW-PARTIAL-SNAPSHOT remains
+      UNKNOWN.'

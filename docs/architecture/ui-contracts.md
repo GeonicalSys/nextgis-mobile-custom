@@ -172,8 +172,11 @@ py -3.13 -B docs/scripts/check_ui_contracts.py
 настройками карты/геопозиции и основной/русский каталоги подписей действий.
 XML с reviewed widget IDs также удерживаются целиком, чтобы изменение binding,
 handler или title при прежнем ID не считалось прежним контрактом.
-Текущий каталог содержит39 контрактов,134 method tripwires и17 non-method
-files. Прежние38/128/14 сохранены; NGFP добавляет6 methods и3 file tripwires. Для V4 вручную пересмотрены затронутые Settings/widget bodies и добавлены
+После текущего source-only дополнения цели выноса каталог содержит39 контрактов,142 method
+tripwires и19 non-method files. Исторический NGFP checkpoint39/134/17 добавил6 methods
+и3 file tripwires, сохранив прежние38/128/14. Дополнение выноса добавляет8 адресных
+method guards и2 file guards; остальные IDs, старые hashes, widget evidence,
+coverage history и полный исходный F61 clock row сохранены. Для V4 вручную пересмотрены затронутые Settings/widget bodies и добавлены
 admission/owner/terminal/reset/result-consumer anchors. General XML добавлен как
 Preference-key evidence. В EN/RU изменён ровно один failure string: все прежние
 378/375 значения и порядок независимо сохранены. Unaffected IDs/hashes удержаны.
@@ -181,7 +184,13 @@ Preference-key evidence. В EN/RU изменён ровно один failure str
 `WF-SYNC-CLOCK-STORE` намеренно остаётся исходным F61 fingerprint: отдельный own
 maplib clock fix ещё требует Merge Commit, app pointer и semantic pin review.
 Предыдущая официальная проверка контура38/128/14 показала один известный
-clock drift и **не являлась PASS**. Проверка новых39/134/17 inputs ещё NOT_RUN. Другие app rows проверяются по текущим bytes;
+clock drift и **не являлась PASS**. Указанные39/134/17 относятся к сохранённому NGFP source-checkpoint. Дополнение
+39/142/19 само по себе не является validator PASS: официальный полный запуск
+должен сообщать реальные текущие результаты, включая отдельный F61 clock drift. Последний фактический запуск прежнего NGFP контура39/134/17 принят как
+структурный source-каталог, но полный validator NOT_PASS ровно на прежнем
+WF-SYNC-CLOCK-STORE;57 docs tests дали53 PASS/4 FAIL от того же clock guard.
+Для нового39/142/19 полный запуск после интеграции ещё NOT_RUN. Actual lookup9
+JVM относятся к отдельному cache producer, не к выполнению UI каталога. Другие app rows проверяются по текущим bytes;
 альтернативных hashes, фильтра результата или обхода checker нет.
 Они требуют semantic review при любом изменении
 этих файлов; это осознанно более широкая проверка, чем fingerprint отдельного

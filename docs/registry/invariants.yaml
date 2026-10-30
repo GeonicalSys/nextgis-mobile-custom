@@ -1182,61 +1182,74 @@ invariants:
       - maplibui/docs/README.md
   INV-STAKEOUT-GUIDANCE:
     title: Stakeout and free-point tools use WGS84 distance, WMM2025 magnetic azimuth and transient overlays
-    owners: [maplib, app]
-    statement: >
-      Stakeout accepts selected Point/MultiPoint, LineString/MultiLineString and
-      Polygon/MultiPolygon geometry in EPSG:4326 or EPSG:3857 without mutating the
-      feature. Lines use the nearest segment point; polygons use the nearest outer or
-      inner boundary even when the current fix is inside. User distance and bearing are
-      WGS84 geodesic results, never raw Web Mercator distance. While stakeout
-      is active, an owner-based high-frequency location lease sets minDistance to zero
-      and restores ordinary user settings after the final release. Audio is scheduled by
-      monotonic time, stops for stale fixes and never uses network fixes for
-      precision bands. GPS and Android mock fixes use distance-based bands even when the
-      receiver bridge publishes a coarse accuracy placeholder; the reported horizontal
-      accuracy remains visible in the widget and the final cue requires two consecutive
-      fresh in-tolerance fixes. Audible bands use a full-scale-limited short damped tap with
-      3x digital gain and the final state a double tap, not a sustained high tone. A location foreground service,
-      ongoing silent notification and partial wake lock keep GPS and audio active while the
-      screen is off or the UI is paused; explicit stop releases all three. Ordinary
-      guidance uses only the location service type without Bluetooth permission.
-      Synchronous and asynchronous start rejection release the owning GPS/audio resources;
-      stale session starts/stops cannot cancel a newer owner. Unowned redelivery fulfils
-      the foreground-start contract before stopping without restoring GPS/audio. The same
-      live lifecycle is available from current location to an arbitrary map point. A
-      separate arbitrary point A to point B mode does not acquire GPS/audio resources.
-      True initial bearing is converted to numeric magnetic azimuth by subtracting
-      WMM2025 declination at the start plus the persisted east-positive user
-      correction; coincident points have undefined azimuth.
-      Direction uses only the filtered device rotation-vector magnetic compass, never
-      movement bearing; without a live compass it keeps the arrow screen-correct by
-      subtracting an explicitly enabled map bearing from true bearing. Free-point
-      markers and segment are transient MapLibre layers below the user-location cursor,
-      never project features. Both static endpoints and the live target are draggable;
-      the live GPS start is not editable. The map widget does not duplicate object name or
-      coordinate source. Process death never silently restarts audible guidance or
-      restores half-selected free points.
+    owners:
+    - maplib
+    - app
+    - maplibui
+    statement: "Stakeout accepts selected Point/MultiPoint, LineString/MultiLineString and Polygon/MultiPolygon\
+      \ geometry in EPSG:4326 or EPSG:3857 without mutating the feature. The indexed private copy chooses\
+      \ the nearest planar EPSG3857 segment/boundary point; polygons include outer/inner boundaries even\
+      \ when the current fix is inside. The selected point returns to4326; reported metres/true initial\
+      \ bearing normally use the WGS84 ellipsoid inverse, with an explicit inverseSphere nonconvergence\
+      \ fallback. This is not a proof of global ellipsoidal nearest-point or all-input accuracy. While stakeout\
+      \ is active, an owner-based high-frequency location lease sets minDistance to zero and restores ordinary\
+      \ user settings after the final release. Audio is scheduled by monotonic time, stops for stale fixes\
+      \ and never uses network fixes for precision bands. GPS and Android mock fixes use distance-based\
+      \ bands even when the receiver bridge publishes a coarse accuracy placeholder; the reported horizontal\
+      \ accuracy remains visible in the widget and the final cue requires two consecutive fresh in-tolerance\
+      \ fixes. Audible bands use a full-scale-limited short damped tap with 3x digital gain and the final\
+      \ state a double tap, not a sustained high tone. A location foreground service, ongoing silent notification\
+      \ and partial wake lock keep GPS and audio active while the screen is off or the UI is paused; explicit\
+      \ stop releases all three. Ordinary guidance uses only the location service type without Bluetooth\
+      \ permission. Synchronous and asynchronous start rejection release the owning GPS/audio resources;\
+      \ stale session starts/stops cannot cancel a newer owner. Unowned redelivery fulfils the foreground-start\
+      \ contract before stopping without restoring GPS/audio. The same live lifecycle is available from\
+      \ current location to an arbitrary map point. A separate arbitrary point A to point B mode does not\
+      \ acquire GPS/audio resources. True initial bearing is converted to numeric magnetic azimuth by subtracting\
+      \ WMM2025 declination at the start plus the persisted east-positive user correction; coincident points\
+      \ have undefined azimuth. Direction uses only the filtered device rotation-vector magnetic compass,\
+      \ never movement bearing; without a live compass it keeps the arrow screen-correct by subtracting\
+      \ an explicitly enabled map bearing from true bearing. Free-point markers and segment are transient\
+      \ MapLibre layers below the user-location cursor, never project features. Both static endpoints and\
+      \ the live target are draggable; the live GPS start is not editable. The map widget does not duplicate\
+      \ object name or coordinate source. Process death never silently restarts audible guidance or restores\
+      \ half-selected free points.\n The selection input and panel/lock presentation have maplibui ownership;\
+      \ target math remains in maplib and lifecycle/UI in app. Target geometry is copied, with no layer/FID/workspace\
+      \ token; a later row/FID update is not an automatic target subscription. Bundle/process-marker restore,\
+      \ source/DB changes and boundary-versus-inside user goals remain in existing AUDIT-TODO-NGW-REPLACE-FID\
+      \ until an independent policy/witness is chosen. Layer isLocked is not DATA_SYNC exclusion."
     related_code:
-      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
-      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
-      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
-      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
-      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
-      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
-      - app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt
-      - app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java
-      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
-      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
-    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT-PERMISSIONS, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
+    - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
+    - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+    - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
+    - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
+    - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
+    - app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt
+    - app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java
+    - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
+    - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+    - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
+    - maplibui/src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java
+    - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometry.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java
+    verify_smoke:
+    - AUTO-MAPLIB-UNIT
+    - AUTO-APP-DEBUG
+    - SMOKE-STAKEOUT-PERMISSIONS
+    - SMOKE-STAKEOUT
+    - SMOKE-GPS-RECORDING
+    - SMOKE-WALK
     must_update_docs:
-      - docs/architecture/stakeout.md
-      - docs/reference/settings-and-config.md
-      - docs/reference/official-differences.md
-      - maplib/docs/README.md
-      - maplib/docs/manifest.yaml
-      - app/docs/README.md
-      - app/docs/manifest.yaml
+    - docs/architecture/stakeout.md
+    - docs/reference/settings-and-config.md
+    - docs/reference/official-differences.md
+    - maplib/docs/README.md
+    - maplib/docs/manifest.yaml
+    - app/docs/README.md
+    - app/docs/manifest.yaml
   INV-LOCAL-LOG-STARTUP:
     title: Local logging does not prepare remote backlog uploads at startup
     owners: [maplib, maplibui, app]
@@ -1738,3 +1751,34 @@ invariants:
       - tools/profile_render_resources.py
     verify_smoke: [AUTO-PRIVATE-RESOURCE-PROFILER, SMOKE-PRIVATE-RESOURCE-PROFILER]
     must_update_docs: [docs/architecture/map-performance.md, docs/architecture/error-reporting.md, docs/runbooks/manual-resource-profiling.md]
+
+  INV-NGW-LOOKUP-CACHE-CONTENT:
+    title: Lookup key/value content, not counts alone, governs cache replacement
+    owners:
+    - maplib
+    - maplibui
+    - app
+    statement: 'Within NGWLookupTable.sync, compare the initialized cache against the remote string map
+      accepted by the current parser, even when counts match. A missing local key differs from the known
+      nonnull remote Hashtable value. Keep the same cache map object; unchanged/reordered equal content
+      causes no write. SYNC_NONE returns before the read. Handled IOException, NGException or JSONException
+      preserve prior cache; the technical partial-fill regression explicitly throws IOException. A syntactically
+      valid incomplete or silent partial snapshot is not independently detected or proved complete: AUDIT-TODO-NGW-PARTIAL-SNAPSHOT
+      remains UNKNOWN. Existing clear/putAll/save and false-save in-memory/result policy are unchanged.
+      This does not establish disk durability, retry, prefetch availability, account deletion or remote
+      success; persistence policy remains AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE.'
+    related_code:
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWLookupTable.java
+    - maplib/src/main/java/com/nextgis/maplib/map/Table.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/AutoTextEdit.java
+    - app/src/test/java/com/nextgis/mobile/util/NgwLookupCacheSyncTest.java
+    verify_smoke:
+    - AUTO-NGW-LOOKUP-CACHE-SYNC
+    must_update_docs:
+    - docs/architecture/ngw-sync-and-storage.md
+    - maplib/docs/README.md
+    - maplib/docs/manifest.yaml
+    - app/docs/README.md
+    - app/docs/manifest.yaml

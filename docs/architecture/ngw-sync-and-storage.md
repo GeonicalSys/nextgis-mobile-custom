@@ -1122,3 +1122,42 @@ compensating commit, retry, cache/disk rollback или изменения resend
 ключа тем же backend может сохранить его cache. Native/restart witnesses,
 post-ACK cleanup и full clock остаются в AUDIT-TODO-SYNC-ACK-RECOVERY.
 Actual-body JVM результаты и source basis: [android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).
+
+## Содержимое lookup-кеша: замена ключей — 30 октября2026
+
+`NGWLookupTable.sync` сравнивает key/value содержимое набора, принятого
+текущим parser, а не только число пар. Это не независимое доказательство
+полноты NGW snapshot. При равном размере новый ключ раньше приводил к
+`null.equals` из старого кеша. Теперь сравнение идёт от ненулевой строки
+remote `Hashtable`: отсутствующий локальный ключ означает различие, после
+чего прежние `clear/putAll/save` обновляют тот же объект кеша. Обычная
+`SyncAdapter` граница перехватывала прежний NPE как ошибку/прерванный проход;
+это не свидетельство падения процесса или потери данных.
+
+`Combobox` и `AutoTextEdit` читают lookup по account и remote ID из уже
+найденного локального слоя. Исправление сравнения не создаёт отсутствующий
+lookup, не меняет NGFP `getLong/-1`, prefetch, shared-cache deletion или
+account-removal cast. Эти границы остаются в едином Root TODO
+`AUDIT-TODO-NGFP-LOOKUP-PREFETCH`. В sync обработанные IOException/NGException/JSONException
+сохраняют прежний кеш; технический partial-fill тест явно выбрасывает
+IOException. Успешно разобранный неполный/silent partial ответ этим не
+обнаруживается: AUDIT-TODO-NGW-PARTIAL-SNAPSHOT остаётся UNKNOWN. Равное содержимое в другом порядке не меняет порядок/identity
+старого кеша и не вызывает save; изменённые значения/число и пустой полный
+ответ сохраняют прежние ветви.
+
+Возврат `save()==false` по-прежнему не откатывает опубликованную память и не
+устанавливает новый SyncResult error: последующий одинаковый ответ может
+не вызвать повторной записи. Это сохранённая политика, а не подтверждённая
+надёжность диска или исправленная retry-семантика. Вопросы принадлежат
+`AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE`; компенсационных записей и новой
+политики повторов здесь нет.
+
+Адресные actual-body JVM:9 методов, baseline1 AssertionFAIL/8 PASS,
+затем9 PASS/0 ошибок/пропусков (2.066с XML). Использованы технические read/save
+seams без HTTP/SQLite/business data. LisaDebug source compile входит в этот
+прогон; BelkaRelease Java/Kotlin PASS37с. Это не повторный запуск прежних
+clock19/journal22/storage21, не часть desktop1117/1192 и не native acceptance.
+Own live library source8ca применяется в проверке отдельно от committed
+App gitlink F61; поставка библиотеки и последующий pointer остаются отдельны.
+Точная public offline recipe — в новой внутренней карточке
+[регрессии lookup](../../update-reports/entries/android-20261030-lookup-cache-regression.md).

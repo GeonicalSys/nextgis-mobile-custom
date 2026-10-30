@@ -2080,3 +2080,22 @@ VisibleLineLabelLayout/Controller размещают один целый бло�
   без debuggable/root; T40 manual tooling с ограниченными native/CPU окнами,
   точным владением процессами и проверяемой выгрузкой.
 - Долговременный кеш, Full и публичный APK в этот этап не входят.
+
+## 2026-10-30 — lookup key-set и контракт геометрии выноса
+
+- NGWLookupTable сравнивает key/value набор, принятый parser, и обновляет тот же кеш
+  при equal-size replacement вместо NPE. Одна expression-замена сохраняет все
+  остальные bytes/API/read/save/clock ветви; это user-исправление библиотеки.
+- Отдельная App technical regression9 дала baseline1 AssertionFAIL/8 PASS и
+  GREEN9/0/0/0 (2.066с XML), LisaDebug current-source и BelkaRelease compile37с.
+  No HTTP/DB/native/device; savefalse durability не принята. Source delivery
+  разрешена через own Draft63/86, отдельно от parent F61/merge/APK release/deploy.
+  Обработанные IOException/NGException/JSONException сохраняют старый sync кеш;
+  valid incomplete/silent partial ответ остаётся Root NGW-PARTIAL-SNAPSHOT UNKNOWN.
+- Source-only stakeout audit уточняет snapshot/CRS/nearest facet/Bundle/fallback;
+  существующий UI target record расширен8 method/2 file tripwires (39/142/19).
+  Старые134/17, остальные38 records, widget/history и F61 clock row сохранены.
+  Шесть geometry bodies прочитаны, не запущены. Карточки internal раздельны.
+- Старые clock19/journal22/storage21 и desktop1117/1192 здесь не выполнялись и
+  не увеличены. Новые docs/guards после интеграции ещё NOT_RUN; native границы
+  и common TODO остаются явными.

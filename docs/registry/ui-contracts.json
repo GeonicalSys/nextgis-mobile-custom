@@ -1860,6 +1860,119 @@
       ],
       "forbids": [],
       "sha256": "36dd293cd0d47282c919f6b9c597a958d1b62aae96923b4f5c368fababb3ba0b"
+    },
+    {
+      "id": "WF-STAKEOUT-TARGET-CONSTRUCT",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java",
+      "marker": "public StakeoutGeometryTarget(GeoGeometry source)",
+      "requires": [
+        "isSupportedType(source.getType())",
+        "source.getCRS() != CRS_WEB_MERCATOR && source.getCRS() != CRS_WGS84",
+        "GeoGeometry projected = source.copy()",
+        "projected.setCRS(source.getCRS())",
+        "projected.project(CRS_WEB_MERCATOR)",
+        "new IndexedFacetDistance(target)"
+      ],
+      "forbids": [
+        "source.project("
+      ],
+      "sha256": "171659f2717201475a98dfef2f5ee45e9e6842253fdf678e16eee08307a92c99"
+    },
+    {
+      "id": "WF-STAKEOUT-TARGET-INVERSE",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java",
+      "marker": "private static GeodesicResult inverseWgs84(\n            double latitude1, double longitude1, double latitude2, double longitude2)",
+      "requires": [
+        "for (int iteration = 0; iteration < 100; iteration++)",
+        "Math.abs(lambda - previous) <= 1e-12",
+        "if (!converged)",
+        "return inverseSphere(latitude1, longitude1, latitude2, longitude2)"
+      ],
+      "forbids": [],
+      "sha256": "15440eaf36bb41c309865817a97fa97271a804620576a0fe2f6ee85f700a6486"
+    },
+    {
+      "id": "WF-STAKEOUT-TARGET-SPHERE-FALLBACK",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java",
+      "marker": "private static GeodesicResult inverseSphere(\n            double latitude1, double longitude1, double latitude2, double longitude2)",
+      "requires": [
+        "double distance = 6371008.8 * 2.0",
+        "Math.atan2(Math.sqrt(haversine), Math.sqrt(1.0 - haversine))",
+        "new GeodesicResult(distance, normalizeBearing(bearing))"
+      ],
+      "forbids": [],
+      "sha256": "b70998f06d78ded8791121ee3233bdcff6bd24e31ab1c391467354fd351406c6"
+    },
+    {
+      "id": "WF-STAKEOUT-SELECTION-GEOMETRY",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java",
+      "marker": "public GeoGeometry getSelectedFeatureGeometry()",
+      "requires": [
+        "return mFeature == null ? null : mFeature.getGeometry()"
+      ],
+      "forbids": [],
+      "sha256": "6cfe469b5eb3100d65638f7461ee973e986192e5b64eabc9fbee3e68ade8c3c5"
+    },
+    {
+      "id": "WF-STAKEOUT-FULL-GEOMETRY",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+      "marker": "public GeoGeometry getGeometryForId(long rowId)",
+      "requires": [
+        "DatabaseContext.getMapForLayer(this)",
+        "return getLargeGeometryForId( rowId)"
+      ],
+      "forbids": [],
+      "sha256": "484af737de35e4d86d3f431dfc99d42eba649ec081604e625eed7703b36796c0"
+    },
+    {
+      "id": "WF-STAKEOUT-SELECTION-SAVE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onSaveInstanceState(outState: Bundle)",
+      "requires": [
+        "outState.putInt(KEY_MODE, if (isMapAzimuthMode(mode)) MODE_NORMAL else mode)",
+        "BUNDLE_KEY_LAYER",
+        "BUNDLE_KEY_FEATURE_ID",
+        "feature.geometry.toBlob()"
+      ],
+      "forbids": [],
+      "sha256": "0d0986b328c66cbf6b015556e2843db7ad234f568ee10da7d37e987e0357dee1"
+    },
+    {
+      "id": "WF-STAKEOUT-SELECTION-RESTORE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onViewStateRestored(\n        savedInstanceState: Bundle?\n    )",
+      "requires": [
+        "getLayerById(layerId)",
+        "GeoGeometryFactory.fromBlob(",
+        "savedInstanceState.getLong(BUNDLE_KEY_FEATURE_ID)",
+        "if (stakeoutUiAttachedInProcess)",
+        "mStakeoutController?.start(geometry)",
+        "mode = if (mSelectedLayer != null) MODE_SELECT_FOR_VIEW else MODE_NORMAL"
+      ],
+      "forbids": [],
+      "sha256": "5f7de7e07ae3ee9fbb9b4a23cc4b5f4cc7b5e6778a47bdf81acef2feedd37e84"
+    },
+    {
+      "id": "WF-STAKEOUT-TARGET-STOP",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+      "marker": "private fun stopInternal(clearListener: Boolean)",
+      "requires": [
+        "stopActiveResources()",
+        "active = false",
+        "target = null",
+        "latestLocation = null",
+        "latestResult = null"
+      ],
+      "forbids": [],
+      "sha256": "9a14c4deb9d4f9d3825628c685e54f8fe54c40e4d754a8f020dc2d344bd6ab6f"
     }
   ],
   "contracts": [
@@ -2363,33 +2476,48 @@
         "stakeout_panel",
         "stakeout_distance"
       ],
-      "meaning": "Russian «Слежение» is Stakeout to selected geometry, not camera follow. Line/polygon range is to nearest indexed target point, not automatically centroid or first vertex.",
-      "value_origin": "Selected feature identity/geometry -> controller target -> indexed nearest point -> geodesic inverse -> widget",
-      "units": "Input geometry WGS84/EPSG3857; calculation lon/lat WGS84; geodesic metres/true initial bearing degrees.",
+      "meaning": "Russian «Слежение» starts guidance to a copied selected geometry, not camera follow. The geometry/index is a snapshot; for lines/polygons the nearest planar facet point is recalculated for each eligible device fix, not automatically a centroid, first vertex or frozen nearest point.",
+      "value_origin": "Selected overlay Feature.geometry first: ordinary ID selection loads full geometry, while Feature/Bundle/draft restoration can supply its stored snapshot. Full DB fallback runs only when null -> private GeoGeometry copy with restored CRS -> EPSG3857 JTS index -> nearest target facet per device lon/lat -> target point back to4326 -> inverse distance/true bearing -> controller/widget. Camera centre is not an origin or target source.",
+      "units": "Source geometry EPSG4326 degrees or EPSG3857 projected XY; nearest facet choice uses3857. Reported range is metres from WGS84 ellipsoid inverse, with explicit spherical nonconvergence fallback; true initial bearing is clockwise degrees. Magnetic correction and camera-relative arrow are separate consumers.",
       "updates": [
-        "Feature action starts; eligible fixes recalculate."
+        "Selected feature action constructs the geometry snapshot/index once; eligible device fixes recalculate nearest point/result against that copy.",
+        "Database/FID/overlay changes are not themselves an updateTarget subscription. Freeze/follow/invalidate/notify behavior after such change remains a policy question in the existing canonical TODO."
       ],
       "actions": [
         "Enter Stakeout; stop/exit releases owned resources."
       ],
       "conditions": [
-        "Selected layer/valid feature geometry; target constructor validates supported types/CRS."
+        "Selected supported Point/MultiPoint/Line/MultiLine/Polygon/MultiPolygon; constructor checks non-null/type,4326-or3857 and nonempty indexable WKT. Complete target-coordinate/topology/domain acceptance remains unverified.",
+        "Both shared portrait/land layouts bind the same panel and metre formatter for Lisa/Belka; no runtime resource-merge proof is inferred.",
+        "Polygon stakeout currently targets outer/inner boundaries even for an inside fix; an 'arrive anywhere inside' goal would be another explicit policy, not an inferred bug fix."
       ],
-      "saved_state": "Runtime target copy/index; session/project lifecycle cannot be inferred from display name.",
+      "saved_state": "Target holds private geometry/index, no layer/FID/workspace token. MapFragment saves mode plus selected layer/FID/geometry blob; same-process Boolean marker permits reconstructing guidance from that selected blob, while process death suppresses audible restart. This does not prove workspace/FID replacement safety or migrate live target/draft/account identity.",
       "source_ids": [
         "map-stakeout-start",
         "stakeout-start",
         "stakeout-geometry-calculate",
         "map-stakeout-widget",
-        "stakeout-release"
+        "stakeout-release",
+        "WF-STAKEOUT-TARGET-CONSTRUCT",
+        "WF-STAKEOUT-TARGET-INVERSE",
+        "WF-STAKEOUT-TARGET-SPHERE-FALLBACK",
+        "WF-STAKEOUT-SELECTION-GEOMETRY",
+        "WF-STAKEOUT-FULL-GEOMETRY",
+        "WF-STAKEOUT-SELECTION-SAVE",
+        "WF-STAKEOUT-SELECTION-RESTORE",
+        "WF-STAKEOUT-TARGET-STOP"
       ],
       "expectations": [
-        "A long line can have nearest edge distinct from centroid; independent expectation must use nearest-target semantics.",
-        "Counterexample: «Слежение» does not edit geometry or toggle camera follow."
+        "Independent source oracle: original geometry/CRS does not change when a target is constructed/calculated; nearest[0] is on indexed target, not current position.",
+        "Changing current device fix may move nearest point along the same line/polygon snapshot; panning camera cannot redefine geometry/origin. Range is not WebMercator planar length, and numeric magnetic azimuth remains separate from screen rotation.",
+        "Inside polygon has positive boundary range by current contract; a hole is a boundary. No centroid/containment-zero replacement is inferred.",
+        "A/B geometry/DB/Bundle controls must distinguish copied guidance target from current row and rendering. Accepted freeze/follow/invalidate policy must precede a product change.",
+        "Counterexample: isLocked hides layer controls but is not a ProjectOperationCoordinator DATA_SYNC lease or proof that sync cannot change data."
       ],
       "unknowns": [
-        "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
-        "Constructor CRS/copy evidence is prose-linked; Activity/session restoration and every geometry type remain unverified."
+        "Runtime NOT_RUN: no GUI/device/emulator/build/native resource merge acceptance in this proposal.",
+        "Constructor/copy/CRS and fallback branches are now manually pinned in source; all6-family runtime behavior, metric error envelope and invalid/global-coordinate cases remain unverified.",
+        "Existing AUDIT-TODO-NGW-REPLACE-FID owns source/DB/Bundle/workspace target replacement and expected freeze/follow/invalidate/notify behavior. No product bug or accepted migration policy is invented."
       ]
     },
     {
@@ -3904,6 +4032,14 @@
         "maplibui/build.gradle": "8fa085918e46887053462ca725cdc81999447580075178b6da5aa59ec9b2f5bc"
       },
       "clock_delivery": "Whole original WF-SYNC-CLOCK-STORE F61 row unchanged. Own live library clock source mismatch remains expected NOT_PASS until separate merge/pointer/semantic pin delivery. No alternate source basis or fingerprint regeneration."
+    },
+    "stakeout_target_source_review": {
+      "reviewed_at": "2026-10-30",
+      "basis": "Additive source-only review from42 source hashes/14 links; no product/API change or runtime acceptance. Original source_context/workspace_move_review/ngfp_text_line_review remain exact historical objects.",
+      "new_method_guards": 8,
+      "new_file_guards": 2,
+      "old_ui_rows": "All other38 contracts, existing134 source objects/hashes,17 non-method objects/hashes,48 widget evidence and F61 clock row remain exact. Only this target row changes plus append8/2.",
+      "clock_delivery": "WF-SYNC-CLOCK-STORE is preserved whole with original F61 expected hash. No alternative fingerprint, re-pin or checker bypass."
     }
   },
   "non_method_evidence": [
@@ -4073,6 +4209,28 @@
         "UI-FORM-TEXT-LINE-CAP"
       ],
       "sha256": "60fa8cb1454b625c408b99219b811fd8d05b6ebe021c6c5c036be3f38d6d904d"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java",
+      "purpose": "Reviewed immutable class fields, supported-type gate, private-copy/CRS/index construction and complete sphere fallback constants. Constructor/method pins alone do not cover retained state or all helper branches. It retains geometry/index rather than a layer/FID/workspace subscription.",
+      "contract_ids": [
+        "UI-NAVIGATION-STAKEOUT-TARGET",
+        "UI-NAVIGATION-AZIMUTH-CURRENT",
+        "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
+      ],
+      "sha256": "b2a90dd5a97cd1437ce37810c9de66409723b68e25a2805175aa552d4c69a6a0"
+    },
+    {
+      "repository": "maplib",
+      "path": "build.gradle",
+      "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Declaration is not proof of installed JAR/APK/native acceptance.",
+      "contract_ids": [
+        "UI-NAVIGATION-STAKEOUT-TARGET",
+        "UI-NAVIGATION-AZIMUTH-CURRENT",
+        "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
+      ],
+      "sha256": "996ecb399fca207c3c8cf37764f8ac67f5e72f26ebaf1287fe9fa4573e3ad1d7"
     }
   ]
 }

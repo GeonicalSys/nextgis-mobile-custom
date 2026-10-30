@@ -193,3 +193,14 @@ ACK: после обычного отказа/отмены с retirement тож�
 ProjectLayerSelectionTest использует read-only policy snapshot этого проекта
 в отдельной verification базе. При отсутствии/неоднозначности проекта спросить
 пользователя о разрешённом замещающем проекте. Не выбирать первый доступный.
+
+Перед выводом о цели выноса различать выбранную geometry snapshot, текущий DB/FID, device fix и camera state. Читать `../docs/architecture/stakeout.md` и `UI-NAVIGATION-STAKEOUT-TARGET`: nearest facet выбирается в3857, inverse имеет явный spherical fallback, а layer isLocked не блокирует sync. Политику freeze/follow/invalidate при replacement/workspace return вести в существующем root AUDIT-TODO-NGW-REPLACE-FID; source trace не означает подтверждённый баг или разрешение native run.
+
+Lookup-кеш читает общий maplib producer; сравнение принятого parser key/value
+набора защищено NgwLookupCacheSyncTest, а не совпадением размеров. При
+обработанных IOException/NGException/JSONException sync сохраняет старый кеш;
+silent partial completeness остаётся Root AUDIT-TODO-NGW-PARTIAL-SNAPSHOT UNKNOWN. Перед анализом
+Combobox/AutoTextEdit различать существующий cache owner, отсутствующий
+prefetch и сохранённую save(false) политику. INV-NGW-LOOKUP-CACHE-CONTENT и
+Root AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE не подтверждают disk/retry/native
+приёмку. Не менять NGFP coercions и shared-cache deletion в этой регрессии.
