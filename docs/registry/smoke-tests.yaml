@@ -1117,3 +1117,40 @@ tests:
       inputs and the graph gate are specified in android-20261030-lookup-cache-regression. This does not
       detect a successful syntactically valid incomplete response; AUDIT-TODO-NGW-PARTIAL-SNAPSHOT remains
       UNKNOWN.'
+
+
+  AUTO-NGFP-LOOKUP-PREFETCH:
+    type: automatic
+    scope:
+    - maplibui
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''-Pkotlin.incremental=false'' ''-PciReliabilityChecks=true''
+      ''--console=plain'' '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.mobile.util.NgfpLookupPrefetchTest'''
+    expected: 'Twelve actual-reader SDK28 technical JSON methods: root/autocomplete, nested pages, both
+      orientations, nonbinding values, sentinel/malformed-present errors, normalized first-appearance
+      dedup, plus four direct old-public reader controls. Baseline12 had3 AssertionFAIL/9PASS; unchanged12
+      GREEN2.149s/Gradle0/49s. This is source helper coverage, not import/cache availability/deletion/device
+      acceptance. Belka0/41s is separate from failed prelaunch classifier/launch-order NOT_PASS; exact100/Java-JAR
+      postproof and exit7 fail-fast control do not turn it into gate PASS. See public owner card. Old
+      cache9/clock19/journal22/storage21 and desktop1117/1192 were not rerun.'
+
+
+  SMOKE-NGFP-LOOKUP-PREFETCH:
+    type: device
+    scope:
+    - maplibui
+    - app
+    steps:
+    - 'NOT_RUN plan only: after separate runtime authorization use an owned isolated existing NGFP/project/account
+      cohort with confirmed nested/orientation lookup resources and permissions; record exact hash/sidecars/account/remote
+      IDs/local lookup objects. No fabricated business inputs/user live files.'
+    - Exercise actual connected initial form import and Collector form-only update separately; observe
+      both orientations/nested pages, fixed/autocomplete values, required Save and account isolation.
+      Helper success is not lookup availability.
+    - Preserve existing shared lookup references and current drafts/hashes. Do not invoke account removal/destructive
+      cleanup without separate backup/owner gate authorization.
+    - Observe failed lookup load and same-form-hash retry without assuming automatic repair; inspect partial-task
+      duplicates/form publication independently. Legacy shared-GC scope is unchanged.
+    expected: Planned native route NOT_RUN. Focused12 only prove helper grammar/output and unchanged old
+      public behavior. Import/cache repair/hash publication/shared deletion/account backup/global uniqueness/durable
+      restart remain open centrally. No APK or committed E66 acceptance.

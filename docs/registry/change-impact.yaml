@@ -1233,3 +1233,37 @@ triggers:
     - AUTO-NGW-LOOKUP-CACHE-SYNC
     - AUTO-APP-RELEASES
     strict_docs: true
+
+
+  - id: NGFP-LOOKUP-PREFETCH
+    paths:
+    - maplibui/src/main/java/com/nextgis/maplibui/util/LayerUtil.java
+    - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    - app/src/test/java/com/nextgis/mobile/util/NgfpLookupPrefetchTest.java
+    owners:
+    - maplibui
+    - app
+    read:
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/architecture/conditional-form-rules.md
+    - docs/architecture/cascading-form-lists.md
+    - maplibui/docs/README.md
+    invariants:
+    - INV-NGFP-LOOKUP-PREFETCH-SCOPE
+    - INV-CONDITIONAL-REQUIRED
+    - INV-SYNC-ACCOUNT-ISOLATION
+    - INV-BACKUP-BEFORE-DESTRUCTION
+    must_update_docs:
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/architecture/conditional-form-rules.md
+    - docs/guides/form-behavior-user-guide.md
+    - maplibui/docs/README.md
+    - maplibui/docs/manifest.yaml
+    - app/docs/README.md
+    - app/docs/manifest.yaml
+    verify:
+    - AUTO-NGFP-LOOKUP-PREFETCH
+    - SMOKE-NGFP-LOOKUP-PREFETCH
+    - AUTO-APP-RELEASES
+    strict_docs: true

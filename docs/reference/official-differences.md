@@ -13,6 +13,18 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Отдельный prefetch reader NGFP — 2026-10-30
+
+Current own fork добавляет ForPrefetch для двух внутренних callers; прежний public
+reader и destructive consumers E66 целиком сохранены. Typed nested/orientation walk
+и normalized dedup не меняют defaults/metadata/delete policy. Это адресная fork-доработка
+MOB-02, не новый upstream comparison/merge/выпуск. Actual12GREEN2.149с/Gradle49с и
+Belka Java/Kotlin0/41с относятся к own-live UI. Failed classifier/prelaunch sequence
+NOT_PASS; post-readback exact100/Java JAR и exit7 repair не retroactive gate PASS.
+Старые suites не запускались. App committed UI E66/F61 и UI39/142/19 не перепривязаны;
+library Merge Commit до App pointer, отдельная runtime/device приёмка. Recipe/scope:
+android-20261030-ngfp-lookup-prefetch-regression.
+
 ## Подтверждённый process view recovery journal — 2026-10-30
 
 В текущей task-ветке форка failed ACK не должен попадать в последующую успешную

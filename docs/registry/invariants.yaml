@@ -1782,3 +1782,39 @@ invariants:
     - maplib/docs/manifest.yaml
     - app/docs/README.md
     - app/docs/manifest.yaml
+
+
+  INV-NGFP-LOOKUP-PREFETCH-SCOPE:
+    title: Prefetch traverses form bindings without widening destructive lookup readers
+    owners:
+    - maplibui
+    - app
+    - maplib
+    statement: Only GISApplication.fillMissingLookupTablesForCollectorForm and LayerFillService.UnzipForm.execute
+      use fillLookupTableIdsForPrefetch. Traverse typed combobox.attributes.ngw_id in root array, recursive
+      type=tabs pages[].elements and both declared root tabs orientation arrays. Keep Android getLong,
+      malformed-present errors and -1. Return normalized IDs once in first appearance order per call.
+      Old public fillLookupTableIds body and entire NGWVectorLayerUI deletion file/two calls remain byte-exact,
+      including duplicate/error/legacy scope. Never widen destructive readers through the new walker.
+      No global cache uniqueness, installed same-hash repair, retry/durability/snapshot completeness or
+      account backup policy is established; native import/cache/Save and malformed inactive layouts are
+      separate bounds.
+    related_code:
+    - maplibui/src/main/java/com/nextgis/maplibui/util/LayerUtil.java
+    - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    - maplibui/src/main/java/com/nextgis/maplibui/mapui/NGWVectorLayerUI.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Tabs.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/AutoTextEdit.java
+    - app/src/test/java/com/nextgis/mobile/util/NgfpLookupPrefetchTest.java
+    verify_smoke:
+    - AUTO-NGFP-LOOKUP-PREFETCH
+    - SMOKE-NGFP-LOOKUP-PREFETCH
+    must_update_docs:
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/architecture/conditional-form-rules.md
+    - maplibui/docs/README.md
+    - maplibui/docs/manifest.yaml
+    - app/docs/README.md
+    - app/docs/manifest.yaml

@@ -697,3 +697,17 @@ Bundle ownership. UI-каталог39/142/19 дополняет старые134/
 product math/lifecycle не меняется. Существующий FID TODO и новый общий
 AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE остаются открыты. Docs/guard проверки
 после интеграции ещё NOT_RUN; новая App или параллельная root-очередь не создаётся.
+
+
+### Продолжение MOB-02: prefetch без расширения удаления — 30 октября2026
+
+По тому же поручению исправлять явные source-баги подготовлена отдельная maplibui
+API для двух prefetch callers: nested/orientation bindings и per-call dedup. Старые17
+строк public reader и весь deletion file сохранены; account cast ждёт backup/owner policy.
+Новые карточки maplibui-20261030-ngfp-lookup-prefetch и android-20261030-ngfp-lookup-prefetch-regression
+разделяют user behavior и12 technical JVM. Baseline3FAIL/9PASS →12GREEN2.149с/49с,
+Belka0/41с; classifier/sequence NOT_PASS и postproof/fail-fast recovery явно сохранены,
+allgatesPASS нет. Старые9/19/22/21/desktop1117/1192 не перезапускались. UI39/142/19/F61
+и parent UI E66 сохранены; library Merge Commit до App pointer, без APK/device stage.
+Новые metadata official validators после C-интеграции NOT_RUN; shared-cache/hash
+retry/durability/account safety остаются в единой Root очереди.

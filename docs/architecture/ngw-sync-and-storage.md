@@ -1161,3 +1161,48 @@ Own live library source8ca применяется в проверке отдел
 App gitlink F61; поставка библиотеки и последующий pointer остаются отдельны.
 Точная public offline recipe — в новой внутренней карточке
 [регрессии lookup](../../update-reports/entries/android-20261030-lookup-cache-regression.md).
+
+
+## NGFP lookup prefetch: отдельный reader — 30 октября2026
+
+Только два maplibui callers — GISApplication.fillMissingLookupTablesForCollectorForm (Collector
+form-only update) и LayerFillService.UnzipForm.execute (connected initial form) —
+переведены на LayerUtil.fillLookupTableIdsForPrefetch(File). Typed walker читает
+combobox.attributes.ngw_id: root array; рекурсивные type=tabs pages[].elements;
+root object tabs[] через оба declared album_elements/portrait_elements. input_search
+не меняет resource binding. Android getLong, malformed-present error и sentinel -1
+сохранены; Long.toString и LinkedHashSet дают normalized first-seen dedup одного
+вызова. Numeric options/defaults/field names/metadata не являются новыми NGW IDs.
+
+Старые17 строк public fillLookupTableIds и весь NGWVectorLayerUI, включая два
+legacy destructive reader вызова, побайтово прежние. Новый walker нельзя применять
+к удалению shared lookup без отдельной политики. Далее кеш ищется по account+remote
+ID, Combobox/AutoTextEdit читают уже локальный lookup. Helper test не доказывает actual
+import/cache availability. UnzipForm.execute обычно пишет numbered form; старое удаление
+читает unprefixed legacy form, а its otherIds loop rereads own form. Эти границы не исправлены.
+
+AUDIT-TODO-NGFP-LOOKUP-PREFETCH остаётся открыт: same-hash installed missing-cache repair,
+form/hash publication, partial retry/межзадачные дубли, numbered/shared GC, malformed
+inactive layouts/native form lifecycle. Per-form dedup не global cache uniqueness.
+AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE и AUDIT-TODO-NGW-PARTIAL-SNAPSHOT сохранены.
+Account Table→Layer cast и целостный backup/exclusive owner gate не исправлены:
+AUDIT-TODO-NGW-ACCOUNT-REMOVAL-BACKUP. Valid form draft/Walk reservation может оставить
+слой при delete=false; это не доказывает безопасное account removal. Реальные
+user/tenant/network/SQLite/native в этом срезе не использовались.
+
+Actual SDK28: baseline12/3 named AssertionFAIL/9PASS → те же12PASS/0errors/skips,
+XML2.149с, Gradle0/49с; LisaDebug source compile включён. Belka Java/Kotlin0/41с
+отдельно подтверждён. Prelaunch classifier и последовательность NOT_PASS: Debug-only
+JAR allowlist ошибочно отметил4 Release Java JAR, PowerShell продолжил разрешённую
+компиляцию после Python exit1. Post-readback exact100 совпал с approved list; cached
+AGP9.1.0/output classes.jar подтвердили Java archives, без product/native tasks.
+Это не retroactive gate PASS. Checked-stage wrapper теперь проверяет LASTEXITCODE
+после каждого native call; exit7 control не создал would-launch marker/новый JVM.
+Все owned процессы завершились естественно; technical JSON удалены finally.
+[Public recipe и source hashes](../../update-reports/entries/android-20261030-ngfp-lookup-prefetch-regression.md).
+
+Own-live UI source отдельно от committed App UI E66/maplib F61. Merge Commit
+библиотеки до App pointer; actual обе import routes/device/Related/Full/выпуск APK
+NOT_RUN. Старые cache9/clock19/journal22/storage21 и desktop1117/1192 не перезапускались.
+Новые metadata official checks после C-интеграции NOT_RUN. UI39/142/19/F61 сохранён;
+прежний clock drift не снят, общего validation/allgatesPASS нет.

@@ -1318,3 +1318,21 @@ GREEN9 PASS, LisaDebug current-source compile и BelkaRelease PASS37с.
 повтор записи и жизненный цикл prefetch/delete/account; эти вопросы открыты.
 
 [Источник и границы](../../docs/architecture/ngw-sync-and-storage.md); actual offline recipe находится в новой карточке android-20261030-lookup-cache-regression.
+
+
+## Регрессии подготовки справочников NGFP — 30 октября2026
+
+NgfpLookupPrefetchTest исполняет actual helper на технических Q JSON без map/account/
+SQLite/network: nested pages, оба orientations, autocomplete и normalized repeats;
+четыре legacy controls сохраняют старый public reader. Baseline12:3 AssertionFAIL/9PASS;
+тот же test86e3 после A3:12PASS/0errors/skips, XML2.149с, Gradle0/49с, LisaDebug compile
+включён. BelkaRelease Java/Kotlin0/41с подтверждён отдельно. Failed classifier и
+launch-order остаются NOT_PASS; exact100/Java JAR postproof и exit7 fail-fast отдельно,
+без повторного JVM для сокрытия события.
+
+Own-live maplibui source не является acceptance App с committed UI E66/maplib F61;
+Library Merge Commit до App pointer. UI39/142/19/F61 целиком сохранён. Старые9/19/22/21
+и desktop1117/1192 не запускались. Новые metadata official docs/report checks после
+C-интеграции NOT_RUN, общего PASS нет. [Контракт и риски](../../docs/architecture/ngw-sync-and-storage.md)
+и android-20261030-ngfp-lookup-prefetch-regression отделяют helper от installed-cache
+repair, shared deletion, account backup и реальной form Save.

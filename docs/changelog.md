@@ -8,6 +8,17 @@ related_code:
 
 # История документационной системы
 
+## 2026-10-30 — Reader справочников вложенных NGFP
+
+Новая maplibui ForPrefetch API и только2 production callers учитывают nested/orientation
+layouts и per-call normalized dedup. Старый public reader/весь delete file побайтово
+прежние. Добавлены12 App actual-method regressions и отдельные UI user/App internal
+карточки. Те же oracles после3 baseline AssertionFAIL дали12GREEN/0errors/skips2.149с,
+LisaDebug source compile в unit49с; Belka0/41с отдельно от NOT_PASS classifier/sequence
+и postproof/fail-fast control. Native/import/account/DB не выполнялись, старые9/19/22/21
+и desktop totals не перезапускались. UI39/142/19/F61 прежний; новые metadata validators
+NOT_RUN. Merge/pointer/APK delivery отделены, historical receipts сохранены.
+
 ## 2026-10-30 — Контракты значений NGFP
 
 Углублена существующая цепочка classobj/typeobj: источник формы/схемы, raw defaults, приоритет explicit/draft/cursor и gate Save. Добавлен39-й UI контракт TextEdit line cap с actual dynamic binding; отсутствующий XML ID не выдуман. Изменений APK/библиотек и доказательства сломанного default нет. Свидетельства source-only; docs-check и native результаты фиксируются отдельно после интеграции.

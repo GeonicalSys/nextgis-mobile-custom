@@ -212,6 +212,11 @@ app-only списком задач.
 
 ### Прослеженные связи источников
 
+Следующая11-link таблица сохраняет source-review anchors checkpoint UI E66.
+Новые40 строк prefetch helper сдвигают последующие LayerUtil line numbers, но
+не меняют прежний resolver/control/default/required/Save. Текущий отдельный
+reader указан ниже; исторические anchors и UI fingerprints не обновляются автоматически.
+
 | Link | Producer → consumer | Source anchors |
 | --- | --- | --- |
 | `NGFP-FIELD-01` | PostgreSQL canonical columns → NGW PostGIS field namespace | `tables.py:6403-6432; postgis_layers.json:/postgis_layers/10; ngw_layers.py:736; ngw_client.py:1052-1087` |
@@ -229,3 +234,16 @@ app-only списком задач.
 Desktop paths принадлежат LISA `plugins/stand_project`; Android paths — maplib/maplibui.
 Маршрут к единому владельцу и root registry: [экосистема](lisa-ecosystem.md).
 Эти anchors обозначают source review, а не actual tenant/native acceptance.
+
+
+## Справочники layouts и неизменённые правила
+
+fillLookupTableIdsForPrefetch обходит typed combobox bindings в root array,
+рекурсивных tabs/pages/elements и обоих declared orientations. Два callers —
+GISApplication.fillMissingLookupTablesForCollectorForm и LayerFillService.UnzipForm.execute.
+Это не обход defaults/required/visible или замена FormMetadataSnapshot; нет
+обещания repair missing-cache при том же hash. Public legacy reader/delete прежние.
+Current anchors: LayerUtil.fillLookupTableIdsForPrefetch:85, collectLookupElements:105;
+production calls GISApplication:1334 и LayerFillService:1946. [Контракт и риски](ngw-sync-and-storage.md).
+Actual12 JVM проверяют helper/legacy outputs; native conditional/Spinner/Required
+Save не выполнялись заново. UI39/142/19 и clock F61 не перепривязаны.

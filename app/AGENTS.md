@@ -204,3 +204,12 @@ Combobox/AutoTextEdit различать существующий cache owner, �
 prefetch и сохранённую save(false) политику. INV-NGW-LOOKUP-CACHE-CONTENT и
 Root AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE не подтверждают disk/retry/native
 приёмку. Не менять NGFP coercions и shared-cache deletion в этой регрессии.
+
+
+NGFP lookup prefetch проверяет NgfpLookupPrefetchTest:8 actual-method prefetch и4
+прямых legacy-reader controls. Reflection выбирает старый E66 API лишь при отсутствии
+ForPrefetch; InvocationTargetException разворачивается без подавления Exception/Error.
+Не переносить helper в app, не менять oracles ради green на старом pin. Новая API и
+два production callers принадлежат одной maplibui библиотеке: Merge Commit до App
+pointer. Live-source JVM/compile не принимают APK с committed E66; UI39/142/19 и
+clock F61 не перепривязывать автоматически.

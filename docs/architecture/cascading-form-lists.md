@@ -179,3 +179,14 @@ Production формы и их обработка жестов этим изме�
 ### Legacy pair без графа
 
 Каноническая classobj/typeobj форма не содержит lisa_form_dependencies или lisa_form_rules. Ее default Прочие / прочие и last=false относятся к legacy DoubleCombobox, не к правилу cascade «не выбирать первый элемент». Bundle/cursor/explicit category precedence и сохранение обеих raw names разобраны в [общем контракте формы](conditional-form-rules.md#каноническая-пара-classobjtypeobj-источник-defaults-и-save). NULL/unlisted old values требуют отдельной политики; это не основание изменять значения канонического default.
+
+
+## Lookup prefetch не заменяет pinned cascade
+
+combobox.attributes.ngw_id и локальные строки meta.lisa_form_dependencies имеют
+разные identity. Новый ForPrefetch читает только первое в поддерживаемых
+nested/orientation layouts; numeric cascade keys/defaults не remap-ятся.
+Android getLong/-1 сохранён. CascadingFormElements/controller/pin и прежние draft
+snapshots не менялись; legacy destructive reader не расширен. [NGW sync/storage](ngw-sync-and-storage.md)
+сохраняет missing-cache/hash retry/shared-GC вопросы. Двенадцать helper JVM не
+являются повторным CascadingFormsTest/native списка или Save.
