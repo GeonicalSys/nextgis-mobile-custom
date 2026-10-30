@@ -2110,3 +2110,19 @@ VisibleLineLabelLayout/Controller размещают один целый бло�
 - Старые clock19/journal22/storage21 и desktop1117/1192 здесь не выполнялись и
   не увеличены. Новые docs/guards после интеграции ещё NOT_RUN; native границы
   и common TODO остаются явными.
+
+
+## 30 октября2026 — scoped NGW response и save(false)
+
+В Core Draft #63 явный206 больше не используется как полный snapshot: отказ до
+применения именно этого pull, при прежних раннем push/prefix cleanup и других
+response routes. Две lookup ветви отмечают false save в IO текущего результата,
+не обещая rollback/retry/disk. Новые карточки maplib-20261030-full-snapshot-http206,
+maplib-20261030-lookup-save-failure и android-20261030-sync-admission-regression.
+
+Shared19:4 meaningful assertion FAIL/15 controls →19PASS, Core1.905с/App2.298с,
+Gradle35с; standalone15 не запускался отдельно. Belka source compile0/39с,
+100 task set совпал при ином порядке;7 PID завершились. Первый dry capture остаётся
+UNKNOWN/NOT_PASS, recovery dry и actual compile раздельны. Старые9/19/22/21/12 и
+1117/1192 не rerun; native/DB/device/APK/fullCI и новые metadata gates NOT_RUN.
+UI39/142/19/F61 и прежние clock/wiki ограничения сохранены.

@@ -1123,7 +1123,7 @@ compensating commit, retry, cache/disk rollback или изменения resend
 post-ACK cleanup и full clock остаются в AUDIT-TODO-SYNC-ACK-RECOVERY.
 Actual-body JVM результаты и source basis: [android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).
 
-## Содержимое lookup-кеша: замена ключей — 30 октября2026
+## Содержимое lookup-кеша: замена ключей — исторический срез8ca/9 от30 октября2026
 
 `NGWLookupTable.sync` сравнивает key/value содержимое набора, принятого
 текущим parser, а не только число пар. Это не независимое доказательство
@@ -1206,3 +1206,69 @@ Own-live UI source отдельно от committed App UI E66/maplib F61. Merge 
 NOT_RUN. Старые cache9/clock19/journal22/storage21 и desktop1117/1192 не перезапускались.
 Новые metadata official checks после C-интеграции NOT_RUN. UI39/142/19/F61 сохранён;
 прежний clock drift не снят, общего validation/allgatesPASS нет.
+
+
+## Явный206 и ошибка сохранения lookup — текущий Draft source30 октября2026
+
+Изменения подготовлены в собственном [Core Draft PR #63](https://github.com/GeonicalSys/android_maplib/pull/63);
+установленное приложение получит их после обычного выпуска. Core source c0a4/ca59
+и тесты7d697/7ae829 принимаются отдельно от committed App library F61.
+
+Канонический Desktop producer lh_mery читает lh_mera.lh_mery. Его managed idqgs
+типа BIGINT копирует целочисленный PG PK, тогда как NGW назначает отдельный
+физический feature ID. Android читает top-level id в Feature/local FID; fields.idqgs
+не становится алиасом этого FID. Canonical mobile tracked=false, sync_type14,
+direction FROM2 и CRS3857 допускают incoming pull при UI editable=false:
+последнее не равно resource-class isRemoteReadOnly. Исходные34 inputs/13 links
+сохранены в общей source-аудитной цепочке; данные и remote deployment не проверялись.
+
+Полный streamed GET не посылает Range и не собирает диапазоны. RFC9110§15.3.7
+требует определить Content-Type/Content-Range;206 может охватывать всю запись,
+но данный route не доказывает это. JSON array и Content-Length не доказывают
+полный inventory. Поэтому только downloadFullSnapshot при явном206 добавляет
+один numIoExceptions и возвращает failed206 до error/input stream, length и
+нового snapshot. Другие2xx,404/error/transient retry и tracked/diff routes прежние.
+Ранняя prefix-очистка временных файлов до GET и прежняя отправка local changes
+остаются: отказ не предшествует всем SQL/cleanup. Outer null-file gate не допускает
+scan/backup/SQL применения именно этого полного снимка.
+
+В обычном apply отсутствие NGW physical FID в принятом полном наборе может выбрать
+локальный объект на удаление; существующие NEW/flags/invalid-geometry/backup gates,
+transaction и post-commit attachment cleanup сохранены. Этот source trace не доказывает
+actual206, потери данных или принятия SQL/full apply. Успешный неполный200, tracked,
+initial import и count/revision races остаются AUDIT-TODO-NGW-PARTIAL-SNAPSHOT.
+
+В двух существующих ветвях NGWLookupTable.sync false отsave теперь добавляет один
+numIoExceptions к текущему SyncResult. Уже опубликованная память остаётся новой
+в том же map; один save, RuntimeException/Error и equal-next no-write прежние.
+Ни компенсирующей записи, ни гарантии диска/повтора не добавлено: риск остаётся
+AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE. Готовность same-hash form/cache и shared
+lookup GC остаются AUDIT-TODO-NGFP-LOOKUP-PREFETCH; account cleanup/backup27 —
+AUDIT-TODO-NGW-ACCOUNT-REMOVAL-BACKUP. Эти отдельные вопросы не объявлены исправленными.
+
+ProjectSyncRunner требует !part.hasError перед SyncRecoveryJournal.complete и
+полного успеха проекта перед ProjectSyncState.markComplete. Новый IO error
+блокирует ACK этой пары и обновление полного clock в текущем проходе, не откатывая
+ранее подтверждённый push или успешный другой account. Это source-backed consumer
+контракт, а не исполненный тест очереди/диска/restart. Queued manual path сообщает
+project_sync_incomplete; legacy SyncResultUtil без иных flags возвращает generic
+unknown IO. Нового обещания network text/automatic retry нет.
+
+Те же19 SDK28 technical methods: baseline4 named AssertionFAIL/15controls/0technical,
+затем19PASS/0fail/error/skips — Core4 XML1.905с и App15 XML2.298с, Gradle0/35с.
+Core baseline остановился на первом assertNull; прочие206 guards исполнились только
+в GREEN. App15 включает8 старых controls, revised false-save и6 новых; standalone15
+отдельно не запускался. LisaDebug compile входит в unit graph; Belka source compile
+0/39с,100 unique task SET равен reviewed100, порядок иной;7 owned PID завершились.
+Первый compile dry observer потерял native-exit capture после Get-FileHash postprocess:
+его UNKNOWN/NOT_PASS сохранён. Root исправил только owned Q helper, повторил dry0/11с,
+после чего actual compile исполнен один раз. Это не retroactive/allgates PASS.
+
+Полная public recipe находится в Core PR #63, файл
+`update-reports/entries/maplib-20261030-full-snapshot-http206.md`.
+[App internal свидетельства](../../update-reports/entries/android-20261030-sync-admission-regression.md)
+сохраняют exact fixtures/baseline/GREEN. Старые keyset9/clock19/journal22/storage21/
+prefetch12 и desktop1117/1192 не перезапускались. UI39/142/19/F61 не перепривязан;
+новые metadata checks после этой записи ещё NOT_RUN. Прежние App clock drift и
+исключённый Root wiki frontmatter остаются: общего validation/native/device/APK
+acceptance нет. Merge Commit Core до App pointer; source Draft не равен release.

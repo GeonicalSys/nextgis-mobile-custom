@@ -36,6 +36,8 @@ public class NgwLookupCacheSyncTest {
         Map<String,String> remote=new LinkedHashMap<>();
         int reads,saves;
         boolean failAfterPartialRead,saveResult=true;
+        RuntimeException runtimeSaveFailure;
+        Error fatalSaveFailure;
         ProbeTable(Context context) {
             super(context,new File(System.getProperty("java.io.tmpdir"),"lookup-probe-no-file"));
             setName("technical lookup");setSyncType(Constants.SYNC_ALL);
@@ -49,7 +51,12 @@ public class NgwLookupCacheSyncTest {
             }
             target.putAll(remote);
         }
-        @Override public boolean save() { saves++;return saveResult; }
+        @Override public boolean save() {
+            saves++;
+            if(runtimeSaveFailure!=null)throw runtimeSaveFailure;
+            if(fatalSaveFailure!=null)throw fatalSaveFailure;
+            return saveResult;
+        }
     }
     private static Map<String,String> values(String...pairs) {
         Map<String,String> result=new LinkedHashMap<>();
@@ -114,10 +121,76 @@ public class NgwLookupCacheSyncTest {
         assertSame(cache,table.getData());assertEquals(values("one","old"),cache);
         assertEquals(1,table.reads);assertEquals(0,table.saves);assertEquals(1,result.stats.numParseExceptions);
     }
-    @Test public void falseSaveKeepsExistingInMemoryAndResultPolicyWithoutDurabilityClaim() {
+    @Test public void falseSaveRetainsMemoryAndReportsIoWithoutDurabilityClaim() {
         ProbeTable table=table(values("one","old"),values("one","new"));
+        Map<String,String> cache=table.getData();
         table.saveResult=false;SyncResult result=sync(table);
+        assertSame(cache,table.getData());
         assertEquals(values("one","new"),table.getData());assertEquals(1,table.saves);
-        assertEquals(0,result.stats.numParseExceptions);assertEquals(0,result.stats.numIoExceptions);
+        assertEquals(0,result.stats.numParseExceptions);assertEquals(1,result.stats.numIoExceptions);
+    }
+
+    @Test public void falseSaveInSizeBranchReportsIoWithoutRollbackOrSecondWrite() {
+        ProbeTable table=table(values("one","old"),values("one","new","extra","value"));
+        Map<String,String> cache=table.getData();table.saveResult=false;
+        SyncResult result=sync(table);
+        assertSame(cache,table.getData());
+        assertEquals(values("one","new","extra","value"),cache);
+        assertEquals(1,table.reads);assertEquals(1,table.saves);
+        assertEquals(0,result.stats.numParseExceptions);assertEquals(1,result.stats.numIoExceptions);
+    }
+    @Test public void falseSaveAddsIoAndPreservesExistingResultCohort() {
+        ProbeTable table=table(values("one","old"),values("one","new"));
+        Map<String,String> cache=table.getData();table.saveResult=false;
+        SyncResult result=new SyncResult();result.stats.numIoExceptions=4;
+        result.stats.numParseExceptions=2;result.stats.numAuthExceptions=3;
+        table.sync("technical.authority",Pair.create(3,0),result);
+        assertSame(cache,table.getData());assertEquals(values("one","new"),cache);
+        assertEquals(1,table.reads);assertEquals(1,table.saves);
+        assertEquals(2,result.stats.numParseExceptions);assertEquals(3,result.stats.numAuthExceptions);
+        assertEquals(5,result.stats.numIoExceptions);
+    }
+    @Test public void successfulSaveKeepsExistingErrorCohort() {
+        ProbeTable table=table(values("one","old"),values("one","new"));
+        SyncResult result=new SyncResult();result.stats.numIoExceptions=4;
+        result.stats.numParseExceptions=2;result.stats.numAuthExceptions=3;
+        table.sync("technical.authority",Pair.create(3,0),result);
+        assertEquals(values("one","new"),table.getData());
+        assertEquals(1,table.reads);assertEquals(1,table.saves);
+        assertEquals(4,result.stats.numIoExceptions);assertEquals(2,result.stats.numParseExceptions);
+        assertEquals(3,result.stats.numAuthExceptions);
+    }
+    @Test public void runtimeSaveFailurePropagatesWithoutRollbackOrExtraAttempt() {
+        ProbeTable table=table(values("one","old"),values("one","new"));
+        Map<String,String> cache=table.getData();RuntimeException expected=new IllegalStateException("technical save failure");
+        table.runtimeSaveFailure=expected;SyncResult result=new SyncResult();RuntimeException actual=null;
+        try { table.sync("technical.authority",Pair.create(3,0),result); }
+        catch(RuntimeException failure) { actual=failure; }
+        assertSame(expected,actual);assertSame(cache,table.getData());
+        assertEquals(values("one","new"),cache);assertEquals(1,table.reads);assertEquals(1,table.saves);
+        assertEquals(0,result.stats.numIoExceptions);assertEquals(0,result.stats.numParseExceptions);
+    }
+    @Test public void fatalSaveFailurePropagatesWithoutRollbackOrExtraAttempt() {
+        ProbeTable table=table(values("one","old"),values("one","new"));
+        Map<String,String> cache=table.getData();Error expected=new AssertionError("technical fatal save failure");
+        table.fatalSaveFailure=expected;SyncResult result=new SyncResult();Error actual=null;
+        try { table.sync("technical.authority",Pair.create(3,0),result); }
+        catch(Error failure) { actual=failure; }
+        assertSame(expected,actual);assertSame(cache,table.getData());
+        assertEquals(values("one","new"),cache);assertEquals(1,table.reads);assertEquals(1,table.saves);
+        assertEquals(0,result.stats.numIoExceptions);assertEquals(0,result.stats.numParseExceptions);
+    }
+    @Test public void failureAddsNoCompensatingEqualResponseOrForeignTableWrites() {
+        ProbeTable table=table(values("one","old"),values("one","new"));
+        Map<String,String> cache=table.getData();table.saveResult=false;sync(table);
+        // Existing publication/retry scope is preserved; this does not certify disk or a clean ACK.
+        table.saveResult=true;sync(table);
+        assertSame(cache,table.getData());assertEquals(values("one","new"),cache);
+        assertEquals(2,table.reads);assertEquals(1,table.saves);
+        ProbeTable other=table(values("one","foreign"),values("one","foreign"));
+        SyncResult otherResult=sync(other);
+        assertNotSame(cache,other.getData());assertEquals(values("one","foreign"),other.getData());
+        assertEquals(1,other.reads);assertEquals(0,other.saves);
+        assertEquals(0,otherResult.stats.numIoExceptions);assertEquals(0,otherResult.stats.numParseExceptions);
     }
 }

@@ -2415,3 +2415,24 @@ android-20261030-lookup-cache-regression и maplib-20261030-lookup-cache-keys.
 Это уточнение existing реализации, без изменения default/boundary/restore policy
 или утверждения новой функции official/fork. UI39/142/19 сохраняет старые
 ожидания/F61; device/process/replacement policy остаётся в общем FID TODO.
+
+
+## Текущий scoped NGW admission и save-signal —30 октября2026
+
+Собственный Draft Core #63 отклоняет206 только в полном streamed pull без Range
+и сборки диапазонов; другие2xx,404/transient/tracked routes, ранний push и prefix
+cleanup прежние. Две lookup ветви теперь добавляют IO на false save при уже новой
+памяти/одной записи/прежнем throws/equal-next no-write. Это локальная source-правка,
+не новый upstream comparison, repin или сертификат полноты NGW/disk/retry.
+
+Actual shared19/Core4+App15 GREEN, Belka source0/39с и set100/orderdifferent относятся
+к текущим c0a4/ca59 и7d697/7ae829. Первый dry observer nativeunknown/NOT_PASS и
+recovery сохранены; allgatesPASS нет. Исторические keyset9/37с, clock19/journal22/
+storage21/prefetch12 не повторялись. Core Merge Commit до App pointer, затем обычный
+выпуск; UI39/142/19/F61 и native/device/release границы сохранены.
+
+Карточки: maplib-20261030-full-snapshot-http206,
+maplib-20261030-lookup-save-failure и android-20261030-sync-admission-regression.
+Полная recipe: [Core PR63](https://github.com/GeonicalSys/android_maplib/pull/63),
+файл `update-reports/entries/maplib-20261030-full-snapshot-http206.md`.
+[Точный контракт и открытые риски](../architecture/ngw-sync-and-storage.md).

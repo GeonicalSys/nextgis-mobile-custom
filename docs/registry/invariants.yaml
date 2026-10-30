@@ -1758,15 +1758,7 @@ invariants:
     - maplib
     - maplibui
     - app
-    statement: 'Within NGWLookupTable.sync, compare the initialized cache against the remote string map
-      accepted by the current parser, even when counts match. A missing local key differs from the known
-      nonnull remote Hashtable value. Keep the same cache map object; unchanged/reordered equal content
-      causes no write. SYNC_NONE returns before the read. Handled IOException, NGException or JSONException
-      preserve prior cache; the technical partial-fill regression explicitly throws IOException. A syntactically
-      valid incomplete or silent partial snapshot is not independently detected or proved complete: AUDIT-TODO-NGW-PARTIAL-SNAPSHOT
-      remains UNKNOWN. Existing clear/putAll/save and false-save in-memory/result policy are unchanged.
-      This does not establish disk durability, retry, prefetch availability, account deletion or remote
-      success; persistence policy remains AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE.'
+    statement: "Within NGWLookupTable.sync, compare the initialized cache against the remote string map accepted by the current parser, even when counts match. A missing local key differs from the known nonnull remote Hashtable value. Keep the same cache map object; unchanged/reordered equal content causes no write. SYNC_NONE returns before the read. Handled IOException, NGException or JSONException preserve prior cache; the technical partial-fill regression explicitly throws IOException. A syntactically valid incomplete or silent partial snapshot is not independently detected or proved complete: AUDIT-TODO-NGW-PARTIAL-SNAPSHOT remains UNKNOWN. Existing clear/putAll order and map ownership remain. At both save sites, false adds one numIoExceptions to the existing result; new memory, one attempt, thrown exceptions and equal-next no-write behavior stay unchanged. This is current-pass error signalling, not rollback or retry repair. This does not establish disk durability, retry, prefetch availability, account deletion or remote success; persistence policy remains AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE."
     related_code:
     - maplib/src/main/java/com/nextgis/maplib/map/NGWLookupTable.java
     - maplib/src/main/java/com/nextgis/maplib/map/Table.java
@@ -1776,6 +1768,7 @@ invariants:
     - app/src/test/java/com/nextgis/mobile/util/NgwLookupCacheSyncTest.java
     verify_smoke:
     - AUTO-NGW-LOOKUP-CACHE-SYNC
+    - AUTO-NGW-SYNC-ADMISSION
     must_update_docs:
     - docs/architecture/ngw-sync-and-storage.md
     - maplib/docs/README.md
@@ -1818,3 +1811,26 @@ invariants:
     - maplibui/docs/manifest.yaml
     - app/docs/README.md
     - app/docs/manifest.yaml
+  INV-NGW-FULL-SNAPSHOT-ADMISSION:
+    title: Full snapshot absence requires an admitted response, not an unverified206 body
+    owners:
+    - maplib
+    - app
+    statement: 'Only NGWVectorLayer.downloadFullSnapshot rejects explicit HTTP206 immediately after its response code:
+      add one numIoExceptions and failed206 before error/input stream, length and newstage. Earlier prefix cleanup
+      beforeGET and prior outbound work stay unchanged; every other2xx/non2xx/404/transient/track route is preserved.
+      No Range assembly or full-range proof exists on this route. The outer null-file gate prevents scan/backup/SQL
+      application of that snapshot, not every earlier SQL/cleanup operation. A partial200, actual remote206, disk/restart
+      or native full-apply acceptance is not claimed.'
+    related_code:
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+    - maplib/src/test/java/com/nextgis/maplib/map/NGWVectorLayerFullSnapshotHttpStatusTest.java
+    - maplib/src/main/java/com/nextgis/maplib/util/NGWUtil.java
+    - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+    verify_smoke:
+    - AUTO-NGW-SYNC-ADMISSION
+    must_update_docs:
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/guides/project-synchronization-user-guide.md
+    - maplib/docs/README.md
+    - maplib/docs/manifest.yaml

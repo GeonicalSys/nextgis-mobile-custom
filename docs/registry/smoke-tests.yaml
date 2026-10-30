@@ -1108,15 +1108,7 @@ tests:
     - app
     command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''-Pkotlin.incremental=false'' ''-PciReliabilityChecks=true''
       ''--console=plain'' '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.mobile.util.NgwLookupCacheSyncTest'''
-    expected: 'Nine actual public-sync JVM methods pass using technical fill/save seams: equal-size changed
-      keys, unchanged/reordered content and map identity, changed values/count, complete empty reply, SYNC_NONE,
-      a technical partial fill followed by IOException retention and existing save(false) memory/result
-      behavior. False save is not disk/retry acceptance. Current baseline9 had one meaningful AssertionFAIL;
-      current fixed9 pass. Device/NGW/SQLite/business data/native remain NOT_RUN; old clock19/journal22/storage21
-      were not rerun and desktop1117/1192 totals are unchanged. Installed JBR21, existing offline SDK28/Q
-      inputs and the graph gate are specified in android-20261030-lookup-cache-regression. This does not
-      detect a successful syntactically valid incomplete response; AUDIT-TODO-NGW-PARTIAL-SNAPSHOT remains
-      UNKNOWN.'
+    expected: "Current15 actual-public-sync SDK28 methods include8 unchanged old controls, one revised false-save and6 added controls. Both false-save branches add IO while preserving new memory/map owner/one save/throws/equal-next behavior and existing stats. Actual new execution came from shared19 only: App15 baseline3 named assertion failures then15PASS/0errors/skips, XML2.298s. This standalone command remains valid but was not separately invoked. Historical key-set9 baseline1FAIL then9PASS2.066s/Belka37s remain historical, not rerun. No silent partial completeness, disk/retry, real network/SQLite/GIS/device/native acceptance. Full env and source-compile recipe are in Core PR63, update-reports/entries/maplib-20261030-full-snapshot-http206.md."
 
 
   AUTO-NGFP-LOOKUP-PREFETCH:
@@ -1154,3 +1146,17 @@ tests:
     expected: Planned native route NOT_RUN. Focused12 only prove helper grammar/output and unchanged old
       public behavior. Import/cache repair/hash publication/shared deletion/account backup/global uniqueness/durable
       restart remain open centrally. No APK or committed E66 acceptance.
+  AUTO-NGW-SYNC-ADMISSION:
+    type: automatic
+    scope:
+    - maplib
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''--continue'' ''-Pkotlin.incremental=false'' ''-PciReliabilityChecks=true''
+      ''--console=plain'' '':maplib:testDebugUnitTest'' ''--tests'' ''com.nextgis.maplib.map.NGWVectorLayerFullSnapshotHttpStatusTest''
+      '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.mobile.util.NgwLookupCacheSyncTest'''
+    expected: 'Actual same shared19: Core4+App15 PASS/0fail/error/skips; baseline4 named AssertionErrors and15 controls
+      with0technical errors. Core baseline first assertNull proved206 staging; later206 guards ran in GREEN only.
+      Core200/203/404 controls and App15 memory/stats/one-save/throws/equal-next controls remain. Exact env/versions/source
+      hashes and compile recipe live once in Core PR63 update-reports/entries/maplib-20261030-full-snapshot-http206.md.
+      Native/SQL/full-snapshot apply/tenant/disk/retry/device/APK/fullCI remain NOT_RUN. --continue collects two filtered
+      results only after all prelaunch gates; it is not permission to bypass nonzero input/observer/plan checks.'

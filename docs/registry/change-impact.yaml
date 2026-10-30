@@ -1232,6 +1232,7 @@ triggers:
     verify:
     - AUTO-NGW-LOOKUP-CACHE-SYNC
     - AUTO-APP-RELEASES
+    - AUTO-NGW-SYNC-ADMISSION
     strict_docs: true
 
 
@@ -1265,5 +1266,29 @@ triggers:
     verify:
     - AUTO-NGFP-LOOKUP-PREFETCH
     - SMOKE-NGFP-LOOKUP-PREFETCH
+    - AUTO-APP-RELEASES
+    strict_docs: true
+  - id: NGW-FULL-SNAPSHOT-ADMISSION
+    paths:
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+    - maplib/src/test/java/com/nextgis/maplib/map/NGWVectorLayerFullSnapshotHttpStatusTest.java
+    owners:
+    - maplib
+    - app
+    read:
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/guides/project-synchronization-user-guide.md
+    - maplib/docs/README.md
+    invariants:
+    - INV-NGW-FULL-SNAPSHOT-ADMISSION
+    - INV-PROJECT-SYNC-COMPLETION
+    - INV-SYNC-ACCOUNT-ISOLATION
+    must_update_docs:
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/guides/project-synchronization-user-guide.md
+    - maplib/docs/README.md
+    - maplib/docs/manifest.yaml
+    verify:
+    - AUTO-NGW-SYNC-ADMISSION
     - AUTO-APP-RELEASES
     strict_docs: true

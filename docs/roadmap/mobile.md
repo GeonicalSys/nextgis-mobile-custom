@@ -711,3 +711,21 @@ allgatesPASS нет. Старые9/19/22/21/desktop1117/1192 не перезап
 и parent UI E66 сохранены; library Merge Commit до App pointer, без APK/device stage.
 Новые metadata official validators после C-интеграции NOT_RUN; shared-cache/hash
 retry/durability/account safety остаются в единой Root очереди.
+
+
+### Продолжение MOB-02: допуск полного pull и save(false) —30 октября2026
+
+В том же поручении исправлены только два proven source omission: явный206 на
+no-Range/no-combination full downloader и отсутствие IO сигнала от двух save(false).
+Shared19 (Core4+App15) прошёл после4 named assertion RED; old9 включён исторически,
+не суммируется с15. Belka source compile0/39с, exact100 set/orderdifferent,7PIDstop.
+Первый dry capture UNKNOWN/NOT_PASS сохранён; recovery dry и единственный actual
+compile не превращают старую попытку в PASS. Новые3 карточки разделяют Core206,
+Core save-signal и App internal15; полная recipe в Core PR63.
+
+Disk/retry риск26, same-hash cache readiness/shared deletion, account backup27 и
+partial200/tracked/initial-import полнота остаются в единой Root очереди. UI39/142/19/
+F61 не меняется. Старые clock19/journal22/storage21/prefetch12 и desktop1117/1192 не
+запускались. Device/Related/Full/APK/release и новые metadata checks NOT_RUN;
+изменение установленного приложения появится после обычного выпуска. Новая
+roadmap priority или параллельная очередь не создаётся.

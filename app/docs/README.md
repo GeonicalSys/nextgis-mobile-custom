@@ -1299,7 +1299,7 @@ constructor/Bundle/fallback без product change. Текущая граница
 freeze/follow/invalidate после sync не переопределяются этим описанием.
 Подробности: [вынос](../../docs/architecture/stakeout.md); native acceptance NOT_RUN.
 
-## Регрессия lookup-кеша: полный набор ключей и значения
+## Регрессия lookup-кеша: полный набор ключей и значения — исторический срез8ca/9
 
 `NGWLookupTable.sync` обновляет существующий map при изменении полного
 содержимого; одинаковое число строк не доказывает равенство ключей. Сравнение
@@ -1336,3 +1336,25 @@ Library Merge Commit до App pointer. UI39/142/19/F61 целиком сохра
 C-интеграции NOT_RUN, общего PASS нет. [Контракт и риски](../../docs/architecture/ngw-sync-and-storage.md)
 и android-20261030-ngfp-lookup-prefetch-regression отделяют helper от installed-cache
 repair, shared deletion, account backup и реальной form Save.
+
+
+## Текущая регрессия15 в совместном19 —30 октября2026
+
+NgwLookupCacheSyncTest содержит15 actual-public-sync методов:8 прежних controls,
+один revised false-save и6 новых. Две false-save ветви добавляют IO без отката
+новой памяти, второй записи или подавления throws; старый equal-next no-write
+сохранён. Это сигнал ошибки прохода, а не disk/retry/installed-cache acceptance.
+[Центральный контракт](../../docs/architecture/ngw-sync-and-storage.md) разделяет риски.
+
+Новые результаты получены только в shared19 с Core4: baseline4 meaningful assertion
+FAIL/15 controls/0technical, затем19PASS/0errors/skips (Core1.905с/App2.298с,
+Gradle35с). Standalone15 отдельно не исполнялся. Belka source compile0/39с,
+100 задач совпадают как множество, не как порядок;7 owned процессов завершились.
+Первый compile dry capture UNKNOWN/NOT_PASS сохранён отдельно от успешного recovery
+dry и единственного actual compile. Это не общее прохождение всех gates.
+
+[Новая App internal карточка](../../update-reports/entries/android-20261030-sync-admission-regression.md)
+ссылается на стабильный Core Draft PR #63 и точный recipe path. UI39/142/19/F61,
+старые9/19/22/21/12 и desktop1117/1192 сохранены; они не являются новыми прогонами.
+Source Draft не равен merged pointer/APK/release/native. Полные metadata checks
+после этой интеграции ещё не выполнены; прежние clock/wiki ограничения сохранены.
