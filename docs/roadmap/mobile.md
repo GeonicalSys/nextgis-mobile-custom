@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
@@ -666,3 +666,14 @@ native проверки фиксируется отдельно. Software-relate
 отключил андервольтинг и явно поручил продолжить в software-only режиме.
 Это мера изоляции риска,
 а не установленная причина Windows hang или мобильного224 crash.
+
+## Продолжение MOB-02: подтверждение journal — 2026-10-30
+
+В том же существующем MOB-02 по прямому поручению владельца29 октября
+исправлять явные баги выявлен failed ACK, незаметно включавшийся в следующую
+успешную запись очереди. Карточка [android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).
+Адресная source-реализация защищает согласованный queue/legacy cohort внутри
+процесса; product priorities и native/Related/Full/публикация не возобновляются.
+Git delivery, source/JVM checks, merge и device/restart verification разделены
+в карточке. Исходный docs-only entry bridge и исторические результаты выше
+сохранены; вопросы post-ACK cleanup и restart остаются в прежнем LISA ACK TODO.

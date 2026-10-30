@@ -346,13 +346,17 @@ invariants:
       Known source limitation under AUDIT-TODO-SYNC-ACK-RECOVERY: SharedPreferences commit false can leave
       a new cached clock or queue value while disk differs; durable state needs an independent disk/restart oracle.
       The required durable-clock invariant is not proven by a same-process getter and these fault branches are NOT_RUN.
+      Journal APIs shield the accepted seven-key typed/presence cohort per exact preferences owner before writing;
+      false or thrown writes preserve the prior process view, and later ordinary writes stage all known keys
+      without clearing unknown keys. Only true advances that view. Initial raw bootstrap has unknown disk provenance;
+      no compensating write, restart rollback or resend policy follows from this source fix.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
       - maplib/src/main/java/com/nextgis/maplib/util/FeatureChanges.java
       - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java
       - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
       - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
-    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-OWNER-ACK-BOUNDARY]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-OWNER-ACK-BOUNDARY, AUTO-SYNC-JOURNAL-CONFIRMATION]
     must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/guides/project-synchronization-user-guide.md]
   INV-UI-VISIBLE-BOUNDS:
     title: Enlarged system text and display sizes retain full labels and reachable actions

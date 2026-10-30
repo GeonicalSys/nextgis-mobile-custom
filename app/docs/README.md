@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -1269,3 +1269,18 @@ background restriction, process importance и observer_on_main. Это данн�
 исходный отчёт. Пороги, retry и подавление нормального no_fix/acquisition/filter
 wait не изменены. Card android-20261027-gps-provider-evidence; первый ручной
 crash APK030f303 этого GPS addon ещё не содержит.
+
+## Подтверждение recovery journal — 2026-10-30
+
+Ошибка записи подтверждения пары project/account больше не должна незаметно
+исключать её из следующего плана внутри процесса. Journal использует один
+точный preferences owner и согласованный snapshot семи собственных ключей;
+только true от существующего disk writer публикует следующий принятый состав.
+После false/throw последующая обычная запись переносит полный принятый cohort,
+а не ошибочное удаление пары или legacy marker из raw cache. Unknown keys,
+JSON/identity, manual OR, scoped recovery и interruption policy сохранены.
+
+Начальный raw snapshot имеет неизвестную disk provenance. Защита API не
+откатывает raw cache/файл и не устанавливает политику restart или повторной
+отправки уже успешных account passes. Проверки и ограничения:
+[android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).

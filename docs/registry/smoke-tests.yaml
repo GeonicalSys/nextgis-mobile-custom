@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-SYNC-JOURNAL-CONFIRMATION:
+    type: automatic
+    scope: [app]
+    command: With installed JBR21 and existing Q offline Robolectric inputs, run gradlew.bat --offline --no-daemon -PciReliabilityChecks=true :app:testLisaDebugUnitTest --tests com.nextgis.mobile.util.SyncRecoveryJournalTest --tests com.nextgis.mobile.util.SyncJournalCommitTest --tests com.nextgis.mobile.util.SyncRecoveryJournalConfirmationTest; exact environment and task-graph gate are recorded in android-20261030-sync-journal-confirmation.
+    expected: Actual journal APIs preserve exact accepted project/account/manual and seven-key legacy cohort after cache-new false or throw; a later ordinary success cannot adopt rejected removal. Stable exact-owner isolation, reader race, malformed data, diagnostics and interrupt controls pass. Technical cache/disk maps do not certify real failed storage, restart, remote idempotency, native Android or full-project completion.
   AUTO-UI-SOURCE-CONTRACTS:
     type: automatic
     scope: [app, maplib, maplibui]

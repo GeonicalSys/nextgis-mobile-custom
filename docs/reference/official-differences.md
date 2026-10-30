@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,16 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Подтверждённый process view recovery journal — 2026-10-30
+
+В текущей task-ветке форка failed ACK не должен попадать в последующую успешную
+очередь через изменённый Android cache. Journal сохраняет один принятый typed
+cohort семи queue/legacy ключей у точного preferences owner, публикует только true
+и переносит весь cohort при следующей обычной записи. Нет нового формата,
+compensating writes, resend policy или restart rollback. Карточка android-20261030-sync-journal-confirmation,
+существующий MOB-02; это не upstream merge, выпуск или native acceptance.
+Library clock63/app F61 delivery gate остаётся отдельным.
 
 ## Исключительное владение legacy storage/Reset — 2026-10-29
 

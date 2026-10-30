@@ -1,12 +1,21 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-30 — Согласованное подтверждение recovery journal
+
+Исправлен переход failed pair ACK → следующий successful write: принятый
+project/account план внутри процесса больше не берётся из rejected cache.
+Весь typed queue/legacy cohort подтверждается вместе у точного preferences owner;
+unknown keys, прежние identities/manual/interrupt и ошибка записи сохранены.
+Физический файл, restart, post-ACK cleanup и full clock проверяются отдельно.
+Actual-body JVM/compile результаты: android-20261030-sync-journal-confirmation; устройство и выпуск NOT_RUN.
 
 ## 2026-10-29 — Владение переносом и сбросом настроек
 

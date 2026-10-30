@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 related_code:
   - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
   - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
@@ -662,8 +662,11 @@ SyncRecoveryJournal.enqueueOrThrow сохраняет исходный exception
 читается только при наличии legacy active marker. Ошибочная очередь не сбрасывается.
 
 SyncRecoveryJournal.pending_v2 атомарно сохраняет весь план project/account до
-первого прохода, без credentials/feature data. Только завершённая пара снимается;
-ошибка, отмена или process death оставляет её для идемпотентного повтора. При старте
+первого прохода, без credentials/feature data. Только подтверждённое снятие
+завершённой пары меняет принятый Journal API план; ошибка/отмена не разрешает
+незаметно включить её удаление в следующую успешную запись. После process death
+читается фактически сохранённый файл; failed-commit disk outcome остаётся отдельным
+UNKNOWN, а не обещанием rollback. При старте
 идентичности разрешаются по текущему реестру, а не по переданному пути. Удалённые
 project/account исключаются; отключённый auto account автоматически не запускается.
 Recovery явно записанной пары сохраняется при смене открытого проекта и при
@@ -1082,3 +1085,40 @@ enqueue, complete и миграция pending sync journal выполняют Sh
 enqueue и acknowledgment одной пары при сохранении другой. Оба сценария падали
 на исходном коде. Это воспроизводимая причина части ошибок, а не доказательство
 одинаковой причины всех исторических групп 64/76/77.
+
+## Process view recovery journal — 2026-10-30
+
+Подтверждённый источник дефекта: при A+B в очереди complete(A) мог вернуть
+false после изменения Android cache до B. Runner считал A незавершённой,
+но последующий успешный complete(B) читал B и сохранял пустой план. Это
+расхождение reported ACK и следующего API плана; удаление remote features
+этой цепочкой не доказано.
+
+SyncRecoveryJournal фиксирует preferences owner один раз на API-вызов. Общий
+typed/presence snapshot содержит pending_v2, active, account, workspace, manual,
+started_at и attempt. До edit/commit доступен прежний принятый snapshot; true
+публикует новый, false/Throwable оставляет прежний. После первой неуспешной
+записи view остаётся привязанным к точному owner даже при последующих true.
+До первой ошибки здоровая transient view освобождается после true. Weak identity
+не удерживает Context/preferences; JSONObject/JSONArray не являются shared state.
+
+Все последующие обычные editor writes переносят семь известных ключей вместе,
+включая отсутствие ключа и поддерживаемый raw тип. Unknown keys не очищаются.
+enqueue сохраняет manual OR и прежнюю миграцию совпавшего legacy owner; schedule
+сохраняет свою прежнюю схему удаления active и отправляет requests только после
+true. Повреждённый JSON или применимый неверный тип остаётся ошибкой с прежней
+причиной/фазой, без [] fallback и без новой миграционной политики.
+
+load использует короткий state lock и повторную проверку после raw-cache miss;
+при установленной view он не ждёт class monitor или удерживаемый commit.
+Первичная загрузка preferences сама может ждать чтения файла. Сериализация
+mutators и SyncJournalCommit owned writer/interrupt policy не меняются. Реальные
+listeners writer-потока публикуются Android на Main; новый контракт вложенных
+синхронных writers не вводится.
+
+Первый raw snapshot — as-read baseline с неизвестной disk provenance. Нет
+compensating commit, retry, cache/disk rollback или изменения resend policy.
+Физический файл после false может остаться старым либо новым; запись другого
+ключа тем же backend может сохранить его cache. Native/restart witnesses,
+post-ACK cleanup и full clock остаются в AUDIT-TODO-SYNC-ACK-RECOVERY.
+Actual-body JVM результаты и source basis: [android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).

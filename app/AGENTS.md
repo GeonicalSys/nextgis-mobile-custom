@@ -167,7 +167,12 @@ IDs, сохранность draft и реальный fill на изолиров
 До изменения async/provider/service или project storage прочитать раздел
 «Владение workspace и границы подтверждения» в том же architecture документе:
 lease не выбирает БД, pair ACK не равен full clock, а 60s expiry не ограничивает
-claimed child. Directory/mapName/UID/token имеют разные ключи и миграции;
+claimed child. При изменении recovery journal читать также его process-view contract:
+точный preferences owner и все семь известных ключей образуют один typed cohort.
+commit=false/throw не публикует новый план через Journal API; очередная обычная
+запись должна исходить из принятого cohort, сохраняя неизвестные ключи.
+Первое чтение raw cache не доказывает disk confirmation. Не заменять этот
+контракт compensating writes, [] fallback или обещанием rollback после restart. Directory/mapName/UID/token имеют разные ключи и миграции;
 открытые риски ведутся в едином LISA dependency-audit-todo, не в отдельном списке.
 Legacy storage move и Reset Settings получают исключительный PROJECT_SWITCH
 lease до вычисления default directory, изменения prefs и постановки AsyncTask.

@@ -147,7 +147,7 @@ preferences:
     type: app_private_shared_preferences
     user_configurable: false
     source: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
-    purpose: Atomically persist pending_v2 project/account pairs before the queue begins; acknowledge only after scoped children finish and resolve recovery identities through the registry across active-project changes
+    purpose: Persist pending_v2 project/account pairs before dispatch and resolve trusted owners; Journal APIs keep the accepted seven-key typed queue/legacy cohort per exact preferences owner after rejected writes. Later ordinary writes stage that cohort, preserving unknown keys. Process view does not imply raw-cache or restart rollback.
   map_show_loc:
     owner: app
     type: boolean

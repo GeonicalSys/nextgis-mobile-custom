@@ -1,7 +1,7 @@
 ---
 title: Доставка диагностических отчётов
 type: architecture
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 related_code:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
@@ -508,3 +508,12 @@ CPU/counts, SDK frame/texture/buffer stats и процессная память 
 бизнес-данных или новой приёмки. Full/публикация остаются отложенными.
 Контракт/ограничения: [производительность карты](../architecture/map-performance.md#приватное-исследование-холодной-отрисовки-28-октября-2026).
 Порядок ручного сеанса: [runbook](../runbooks/manual-resource-profiling.md).
+
+## Rejected journal publication — 2026-10-30
+
+SyncRecoveryJournal сохраняет прежние PersistenceFailure cause/phase,
+storage/interruption diagnostics и owned_thread режим. Process-view guard
+не превращает false/Exception в успех и не подавляет Error. Он не копирует
+содержимое очереди в отчёт и не добавляет поля credentials/features.
+Retained API cohort не является свидетельством физического файла после
+failed commit; disk/restart расследование остаётся отдельным.

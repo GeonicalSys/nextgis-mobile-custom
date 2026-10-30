@@ -2,7 +2,7 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -362,7 +362,9 @@ key_components:
   - path: app/src/main/java/com/nextgis/mobile/datasource/SyncService.java
     responsibility: Keep system account sync in a low-priority dataSync foreground service through finish/cancel and reject late callbacks after destruction.
   - path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
-    responsibility: Atomically persist pending_v2 project/account pairs before dispatch; acknowledge each only after its children finish and recover its registered owner across active-project changes.
+    responsibility: Persist pending_v2 before dispatch; keep a weak exact-preferences-owner process view of the seven known typed queue/legacy keys, publish only successful writes and stage the accepted cohort on later ordinary writes. Resolve registered recovery owners, preserve manual/account isolation and interruption; no raw-cache or restart rollback promise.
+  - path: app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalConfirmationTest.java
+    responsibility: Exercise actual journal APIs with stable technical preferences owners and separate cache/disk outcomes; rejected ACK/merge/migration/prune cannot leak into later accepted plans. Verify reader races, known-key cohort, diagnostics and owner isolation without GIS database, Android device or remote sync.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java
     responsibility: Native editable selection, rail bounds, tool gesture regression, three Activity recreations with a pending SDK tap, and the complete layer-category-sketch-form-SQLite creation path, including successful Save returning to the map and clearing drafts.
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/FeaturePersistenceTest.java

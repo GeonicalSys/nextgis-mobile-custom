@@ -423,12 +423,12 @@ triggers:
     verify: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, AUTO-APP-RELEASES, SMOKE-MAP-RUNTIME-DIAGNOSTICS]
     strict_docs: true
   - id: SYNC-JOURNAL-CANCELLATION
-    paths: [app/src/main/java/com/nextgis/mobile/util/SyncJournalCommit.java, app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java, app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java, app/src/androidTest/java/com/nextgis/mobile/util/SyncRecoveryJournalNativeTest.java]
+    paths: [app/src/main/java/com/nextgis/mobile/util/SyncJournalCommit.java, app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java, app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java, app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalConfirmationTest.java, app/src/androidTest/java/com/nextgis/mobile/util/SyncRecoveryJournalNativeTest.java]
     owners: [app]
     read: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/error-reporting.md]
     invariants: [INV-DIAGNOSTIC-DELIVERY, INV-PROJECT-SYNC-COMPLETION]
     must_update_docs: [app/docs/README.md, app/docs/manifest.yaml, docs/architecture/ngw-sync-and-storage.md, docs/architecture/error-reporting.md, docs/reference/official-differences.md]
-    verify: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, SMOKE-SYNC-JOURNAL-CANCELLATION]
+    verify: [AUTO-APP-DEBUG, AUTO-APP-RELEASES, SMOKE-SYNC-JOURNAL-CANCELLATION, AUTO-SYNC-JOURNAL-CONFIRMATION]
     strict_docs: true
   - id: ERROR-REPORTING
     paths: [app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java, app/src/main/java/com/nextgis/mobile/util/Diagnostics*.java, app/src/main/java/com/nextgis/mobile/util/CustomLogMessageFormat.java, app/src/main/java/com/nextgis/mobile/MainApplication.java, app/src/androidTest/java/com/nextgis/mobile/util/Diagnostics*.java, tools/verify-diagnostic-delivery.ps1]
