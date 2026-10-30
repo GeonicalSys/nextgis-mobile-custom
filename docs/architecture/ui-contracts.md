@@ -266,3 +266,22 @@ AUDIT-TODO-NGFP-EMBEDDED-CONNECTION, AUDIT-TODO-NGFP-REFERENCE-COERCION,
 AUDIT-TODO-NGFP-LOOKUP-PREFETCH и AUDIT-TODO-NGFP-EXISTING-CLONES.
 Ни source review, ни будущий remap fix не доказывают исправление прежних
 артефактов или работоспособность nested lookup prefetch/native UI.
+
+
+### Сообщения о сбоях: источник и границы
+
+| Контракт | Подтверждённый путь | Различающий oracle |
+| --- | --- | --- |
+| UI-SYNC-FAILURE-MESSAGES | exact account/thread typed causes → local result Bundle → queue/late child gates → resource-only dialog/notification | SERVER-only против mixed/auth/local/late/foreign; offline после создания presentation |
+| UI-NGW-RESOURCE-LOAD-ERRORS | structured children result → async adapter → existing fitted dialog | successful[] против500/503/403; connect failure остаётся отдельной ветвью |
+| UI-LAYER-IMPORT-ERROR-MESSAGES | typed HTTP/owned resource allowlist → LayerFill progress/Toast | server503/raw URL/SQLite/JSON против собственных human errors; JSON missing field не403 |
+| UI-FORM-LEGACY-LIST-ERRORS | existing list validation → integer resource Toast overload | три invalid cases выводят текст, valid-row контроль сохраняется |
+
+Эти programmatic surfaces не получают выдуманных XML widget IDs. Каталог содержит
+точные reviewed method/resource witnesses, old F61 clock row сохраняется целиком.
+Shared copy сообщает о возможных техработах, не доказывает обслуживание всего
+сервиса. Typed output local-only: четыре primitives плюс framework owner reference,
+не UI payload/IPC/store. Existing partial ACK/edit/journal policy отдельна от текста.
+Технические source/model89 PASS (Core46/App43); native windows,
+large fonts, notification permission/channel, effective locale/variant merge и
+foreground-only MESSAGE_ALERT delivery требуют отдельной приёмки.

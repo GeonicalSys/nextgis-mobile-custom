@@ -2436,3 +2436,23 @@ maplib-20261030-lookup-save-failure и android-20261030-sync-admission-regressio
 Полная recipe: [Core PR63](https://github.com/GeonicalSys/android_maplib/pull/63),
 файл `update-reports/entries/maplib-20261030-full-snapshot-http206.md`.
 [Точный контракт и открытые риски](../architecture/ngw-sync-and-storage.md).
+
+
+## Safe user-facing NGW error delivery — source Draft30 октября2026
+
+Fork сохраняет типизированную server cause через owned account/queue и выдаёт
+resource-only explanation вместо потерянной причины/generic fallback там, где
+cause положительно известна. Numeric IO/Parse policy сохранена у producers;
+отдельно закрыт отсутствовавший final late-child project outcome. Это не новый
+remote transaction/retry/idempotency protocol и не гарантия доставки notification.
+
+Additive Core APIs: typed local result output, structured child-load result и
+typed HTTP exception сохраняют старые checked/void/raw String callers. App владеет
+safe notification/manual Intent; UI — browser/fill/form messages. Main Lisa/Belka
+исходники общие, merged APK/device/locale/large-window результат NOT_RUN.
+Library Merge Commit63/46 до App pointer/clock semantic review, затем обычный App86
+Squash по отдельной команде. Новые local source tests не принимают committed F61/E66
+как готовый APK и не закрывают неясные200/TUS/remote-commit/disk/restart риски.
+
+Проверено в текущем source-срезе: Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance.
+First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods.

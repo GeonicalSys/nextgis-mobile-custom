@@ -6,4 +6,6 @@
     <string name="sync_failed_notification_title">Синхронизация не завершена</string>
     <string name="sync_failed_notification_message">Не удалось синхронизировать все данные. Повторите попытку.</string>
     <string name="sync_recheck_skipped_prompt">Повторно проверить ранее пропущенные объекты? Может потребоваться загрузка больших слоёв.</string>
+    <string name="sync_webgis_server_error_title">Ошибка на стороне ВебГИС</string>
+    <string name="sync_failed_projects_list">Не завершена синхронизация проектов: %1$s.</string>
 </resources>

@@ -1834,3 +1834,27 @@ invariants:
     - docs/guides/project-synchronization-user-guide.md
     - maplib/docs/README.md
     - maplib/docs/manifest.yaml
+
+
+  INV-NGW-USER-MESSAGES:
+    title: Known NGW failure causes reach only human-readable owned UI text
+    owners: [app, maplib, maplibui]
+    statement: >
+      Preserve positively classified account IO and server Parse without changing producer counters.
+      Export/read only exact local result owner and captured counts in a fresh private pass Bundle;
+      never forward that metadata/body/Throwable/URL to Intent or storage. Pure SERVER alone uses
+      shared possible-maintenance/overload copy; current offline wins at consumption. Mixed, late,
+      auth/rights/local/untrusted/malformed reports stay safe generic. Final noncancel child failure
+      of a previously clean project must not become silent success; keep per-target failure state,
+      report once after cleanup and preserve normal cancel. Child-list failed response differs from
+      successful empty list. LayerFill allows only typed known cause or owned human copy, never
+      infers403 from JSON shape. Legacy list Toast uses actual resource IDs. Text is not durable ACK.
+    related_code:
+    - maplib/src/main/java/com/nextgis/maplib/util/SyncResultUtil.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
+    - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+    - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java
+    verify_smoke: [AUTO-NGW-USER-MESSAGES, AUTO-UI-SOURCE-CONTRACTS]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/ui-contracts.md, docs/registry/ui-contracts.json, docs/guides/project-synchronization-user-guide.md, app/docs/README.md, app/docs/manifest.yaml]

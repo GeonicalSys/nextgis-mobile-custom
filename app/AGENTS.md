@@ -215,3 +215,17 @@ ForPrefetch; InvocationTargetException разворачивается без п�
 два production callers принадлежат одной maplibui библиотеке: Merge Commit до App
 pointer. Live-source JVM/compile не принимают APK с committed E66; UI39/142/19 и
 clock F61 не перепривязывать автоматически.
+
+
+## Причина ошибки до пользовательского сообщения
+
+Для сообщений NGW читать INV-NGW-USER-MESSAGES, UI-SYNC-FAILURE-MESSAGES и
+docs/architecture/ngw-sync-and-storage.md. Сохранять типизированную причину до
+закрытия account scope; не подставлять mError, Throwable, HTML/URL/status/body в UI.
+Local output Bundle содержит4 primitives и exact SyncResult Parcelable reference,
+не предназначен для Intent, хранения или IPC. Не менять counters ради текста:
+PUSH/lookup classifiers добавляют только metadata после своих прежних IO/Parse.
+Late child/project outcome отдельно от pair ACK/clock; normal cancel не ошибка.
+Проверять current connectivity при потреблении подготовленного сообщения, mixed
+и foreign/late/malformed результаты оставлять generic. Для LayerFill/browser/form
+действуют отдельные source-контракты; JSON shape не доказывает HTTP403.

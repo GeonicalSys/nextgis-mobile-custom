@@ -1358,3 +1358,19 @@ dry и единственного actual compile. Это не общее про�
 старые9/19/22/21/12 и desktop1117/1192 сохранены; они не являются новыми прогонами.
 Source Draft не равен merged pointer/APK/release/native. Полные metadata checks
 после этой интеграции ещё не выполнены; прежние clock/wiki ограничения сохранены.
+
+
+## Понятные сообщения об ошибках ВебГИС
+
+App принимает только safe resource-backed presentation: known server-only cohort
+показывает возможные техработы/перегрузку и повтор позже. current offline имеет
+приоритет. Старая raw String notification API остаётся sanitized. Manual alert
+строит новый package-scoped Intent только с двумя human strings; account output
+Bundle/owner/raw diagnostics в него не передаются. См. UI-SYNC-FAILURE-MESSAGES и
+INV-NGW-USER-MESSAGES в центральных registries.
+
+SyncFailurePresentationTest13 и ProjectSyncLateFailureTest7 проверяют реальные
+builder/Intent factory и late outcome helper без карты/SQLite/сервера. App также
+владеет library regressions FormLegacyListMessagesTest4, ResourceChildrenMessagesTest9
+и LayerFillErrorMessageTest10. Actual shared89 source/model checks PASS; эти случаи не являются native
+диалогами/всеми формами/полным sync. Belka source compile0/59с проверен отдельно.

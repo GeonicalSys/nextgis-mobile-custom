@@ -729,3 +729,20 @@ F61 не меняется. Старые clock19/journal22/storage21/prefetch12 �
 запускались. Device/Related/Full/APK/release и новые metadata checks NOT_RUN;
 изменение установленного приложения появится после обычного выпуска. Новая
 roadmap priority или параллельная очередь не создаётся.
+
+
+### MOB-02 / MOB-UI-01 — сообщения об отказах, source checkpoint30 октября
+
+По прямому поручению владельца исправляется потеря причин server failure и
+неуместные/отсутствующие сообщения sync, resource selector, layer import и legacy
+form list. Работа входит в существующие MOB-02/MOB-UI-01; приоритеты остальных
+этапов не меняются. Related/Full/device/AVD не возобновлены. Acceptance различает
+положительно известный server-only cause, offline, auth/rights/local/mixed/unknown,
+late child/cancel и private diagnostics; текст не обещает серверное обслуживание,
+доставку всех правок, disk/restart durability или release.
+
+Scope и technical fixtures описаны в AUTO-NGW-USER-MESSAGES, новых UI message
+контрактах и карточке android-20261030-user-facing-errors. Статус здесь source
+prepared:89 source/model PASS, Belka source compile0/59с; native/device NOT_RUN.
+Linked Draft Core63/UI46 должны предшествовать App pointers/semantic clock review;
+App86 остаётся Draft до отдельного merge/release решения.

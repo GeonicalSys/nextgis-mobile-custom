@@ -1292,3 +1292,45 @@ triggers:
     - AUTO-NGW-SYNC-ADMISSION
     - AUTO-APP-RELEASES
     strict_docs: true
+
+
+  - id: NGW-USER-MESSAGES
+    paths:
+    - maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWLookupTable.java
+    - maplib/src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java
+    - maplib/src/main/java/com/nextgis/maplib/util/NgwHttpResponseException.java
+    - maplib/src/main/res/values*/strings.xml
+    - maplib/src/test/java/com/nextgis/maplib/util/SyncFailureSnapshotTest.java
+    - maplib/src/test/java/com/nextgis/maplib/map/NGWHttpFailureReasonProducerTest.java
+    - maplib/src/test/java/com/nextgis/maplib/map/NGWSyncNoneServerFailureTest.java
+    - maplib/src/test/java/com/nextgis/maplib/util/NgwHttpExceptionTest.java
+    - maplib/src/test/java/com/nextgis/maplib/util/NgwHttpResponseExceptionTest.java
+    - maplib/src/test/java/com/nextgis/maplib/util/NetworkUtilTransientNgwTest.java
+    - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+    - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+    - app/src/main/res/values/sync_recovery_strings.xml
+    - app/src/main/res/values-ru/sync_recovery_strings.xml
+    - app/src/test/java/com/nextgis/mobile/util/SyncFailurePresentationTest.java
+    - app/src/test/java/com/nextgis/mobile/util/ProjectSyncLateFailureTest.java
+    - app/src/test/java/com/nextgis/maplib/datasource/ngw/ResourceChildrenMessagesTest.java
+    - app/src/test/java/com/nextgis/maplibui/util/LayerFillErrorMessageTest.java
+    - app/src/test/java/com/nextgis/maplibui/activity/FormLegacyListMessagesTest.java
+    - maplib/src/main/java/com/nextgis/maplib/util/SyncResultUtil.java
+    - maplib/src/main/java/com/nextgis/maplib/util/NgwHttpException.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/Connection.java
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java
+    - maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java
+    - maplibui/src/main/res/values*/legacy_form_error_strings.xml
+    - maplibui/src/main/res/values*/resource_list_error_strings.xml
+    - maplibui/src/main/res/values*/layer_fill_error_strings.xml
+    owners: [app, maplib, maplibui]
+    read: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/ui-contracts.md, docs/guides/project-synchronization-user-guide.md]
+    invariants: [INV-NGW-USER-MESSAGES, INV-UI-VALUE-PROVENANCE, INV-PROJECT-SYNC-COMPLETION]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/ui-contracts.md, docs/registry/ui-contracts.json, docs/guides/project-synchronization-user-guide.md, app/docs/README.md, app/docs/manifest.yaml]
+    verify: [AUTO-NGW-USER-MESSAGES, AUTO-UI-SOURCE-CONTRACTS, AUTO-APP-RELEASES]
+    strict_docs: true

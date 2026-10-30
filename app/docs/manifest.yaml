@@ -379,6 +379,16 @@ key_components:
     responsibility: Execute eight actual prefetch-reader contracts and four direct legacy-reader controls
       on technical Q JSON using SDK28 coercion and explicit API compatibility reflection; no account/map/SQLite/network
       or installed-cache/durability acceptance.
+  - path: app/src/test/java/com/nextgis/mobile/util/SyncFailurePresentationTest.java
+    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
+  - path: app/src/test/java/com/nextgis/mobile/util/ProjectSyncLateFailureTest.java
+    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
+  - path: app/src/test/java/com/nextgis/maplib/datasource/ngw/ResourceChildrenMessagesTest.java
+    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
+  - path: app/src/test/java/com/nextgis/maplibui/util/LayerFillErrorMessageTest.java
+    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
+  - path: app/src/test/java/com/nextgis/maplibui/activity/FormLegacyListMessagesTest.java
+    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
 public_contracts:
   - id: render-resource-economy-host
     symbol: MapFragment.onRenderMemoryWarningChanged and showRenderMemoryStatus

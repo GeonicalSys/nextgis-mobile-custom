@@ -1160,3 +1160,21 @@ tests:
       hashes and compile recipe live once in Core PR63 update-reports/entries/maplib-20261030-full-snapshot-http206.md.
       Native/SQL/full-snapshot apply/tenant/disk/retry/device/APK/fullCI remain NOT_RUN. --continue collects two filtered
       results only after all prelaunch gates; it is not permission to bypass nonzero input/observer/plan checks.'
+
+
+  AUTO-NGW-USER-MESSAGES:
+    type: automatic
+    scope: [maplib, maplibui, app]
+    command: "& '.\\gradlew.bat' '--offline' '--no-daemon' '--continue' '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.util.SyncFailureSnapshotTest' '--tests' 'com.nextgis.maplib.map.NGWHttpFailureReasonProducerTest' '--tests' 'com.nextgis.maplib.map.NGWSyncNoneServerFailureTest' '--tests' 'com.nextgis.maplib.util.NgwHttpExceptionTest' '--tests' 'com.nextgis.maplib.util.NgwHttpResponseExceptionTest' '--tests' 'com.nextgis.maplib.util.NetworkUtilTransientNgwTest' ':app:testLisaDebugUnitTest' '--tests' 'com.nextgis.mobile.util.SyncFailurePresentationTest' '--tests' 'com.nextgis.mobile.util.ProjectSyncLateFailureTest' '--tests' 'com.nextgis.maplib.datasource.ngw.ResourceChildrenMessagesTest' '--tests' 'com.nextgis.maplibui.util.LayerFillErrorMessageTest' '--tests' 'com.nextgis.maplibui.activity.FormLegacyListMessagesTest'"
+    expected: >
+      Actual89 PASS:80 API28 model methods plus9 plainJUnit; Core46/App43. Pure positively known server IO/lookup Parse,
+      owner/count/schema/late/mixed/auth/skipped/cancel boundaries and actual safe notification/Intent copy;
+      late project outcome helper7, metadata-only HTTP producers6, readonly config-only failure10,
+      typed HTTP exceptions10, resource-list9, LayerFill formatter10 and legacy form list4. No missing-API
+      compile/setup failure may be labelled baselineRED. Literal4 have a standalone old-source assertion baseline; new typed APIs require
+      implementation before execution, and the separate failed first85 is retained explicitly. Root actual results/versions
+      and bounded source-compile graph are recorded separately. Actual0fail/errors/skips XML10.995s/Gradle0BUILD50s; Belka source0BUILD59s.
+      Native/GUI/Service/SQLite/real server/device/permission/large-font/APK/whole-project ACK NOT_RUN. --continue collects
+      only these filters after all prelaunch gates; it never bypasses a failed prerequisite.
+
+    source_result: "Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance. First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods."

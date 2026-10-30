@@ -46,6 +46,7 @@ import com.nextgis.maplib.service.NGWSyncService;
 import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.SettingsConstants;
+import com.nextgis.maplib.util.SyncResultUtil;
 import com.nextgis.maplibui.util.NotificationHelper;
 import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.mobile.R;
@@ -176,10 +177,10 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
         getContext().sendBroadcast(finish);
     }
 
-    public void sendNotification(
+    private void sendNotificationInternal(
             Context context,
             String notificationType,
-            String message)
+            FailurePresentation presentation)
     {
         if (com.nextgis.maplib.util.SyncWorkspaceSession.current() != null) return;
         NotificationManager notificationManager =
@@ -234,15 +235,16 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
                 break;
 
             case SYNC_CHANGES:
-                String failureMessage = context.getString(
-                        new com.nextgis.maplib.util.NetworkUtil(context).isNetworkAvailable()
-                                ? R.string.sync_failed_notification_message : R.string.sync_no_internet);
+                FailurePresentation safe = failurePresentation(context,
+                        presentation != null && presentation.server
+                                ? SyncResultUtil.FAILURE_SERVER : SyncResultUtil.FAILURE_OTHER);
+                String failureMessage = safe.message(context);
                 largeIcon = NotificationHelper.getLargeIcon(
                         com.nextgis.maplibui.R.drawable.ic_action_information_light, context.getResources());
                 builder.setProgress(0, 0, false)
                         .setOnlyAlertOnce(true)
                         .setCategory(NotificationCompat.CATEGORY_ERROR)
-                        .setContentTitle(context.getString(R.string.sync_failed_notification_title))
+                        .setContentTitle(safe.title(context))
                         .setContentText(failureMessage)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(failureMessage));
                 break;
@@ -253,5 +255,52 @@ public class SyncAdapter extends com.nextgis.maplib.datasource.ngw.SyncAdapter {
         builder.setLargeIcon(largeIcon);
         if (failed) notificationManager.cancel(NOTIFICATION_ID);
         notificationManager.notify(failed ? ERROR_NOTIFICATION_ID : NOTIFICATION_ID, builder.build());
+    }
+
+    /** Raw diagnostic strings deliberately never become user-facing notification text. */
+    public void sendNotification(Context context, String type, String message) {
+        sendNotificationInternal(context, type, null);
+    }
+
+    public static final class FailurePresentation {
+        private final int titleRes, messageRes;
+        private final boolean server;
+        private FailurePresentation(int titleRes, int messageRes, boolean server) {
+            this.titleRes = titleRes; this.messageRes = messageRes; this.server = server;
+        }
+        public String title(Context context) { return context.getString(titleRes); }
+        public String message(Context context) { return context.getString(messageRes); }
+    }
+
+    public static FailurePresentation failurePresentation(Context context, int flags) {
+        if (!new com.nextgis.maplib.util.NetworkUtil(context).isNetworkAvailable())
+            return new FailurePresentation(R.string.sync_failed_notification_title,
+                    R.string.sync_no_internet, false);
+        if (flags == SyncResultUtil.FAILURE_SERVER)
+            return new FailurePresentation(R.string.sync_webgis_server_error_title,
+                    com.nextgis.maplib.R.string.error_server_temporarily_unavailable, true);
+        return new FailurePresentation(R.string.sync_failed_notification_title,
+                R.string.sync_failed_notification_message, false);
+    }
+
+    public void sendFailureNotification(Context context, FailurePresentation presentation) {
+        sendNotificationInternal(context, SYNC_CHANGES, presentation);
+    }
+
+    public static Intent buildFailureAlert(Context context, FailurePresentation presentation,
+                                            java.util.List<String> failedProjects) {
+        String names = failedProjects == null ? "" : TextUtils.join(", ", failedProjects);
+        FailurePresentation safe = failurePresentation(context,
+                presentation != null && presentation.server
+                        ? SyncResultUtil.FAILURE_SERVER : SyncResultUtil.FAILURE_OTHER);
+        boolean specific = safe.server || safe.messageRes == R.string.sync_no_internet;
+        String title = specific ? safe.title(context)
+                : context.getString(R.string.project_sync_incomplete_title);
+        String message = specific ? safe.message(context) + "\n\n"
+                + context.getString(R.string.sync_failed_projects_list, names)
+                : context.getString(R.string.project_sync_incomplete, names);
+        return new Intent(Constants.MESSAGE_ALERT_INTENT).setPackage(context.getPackageName())
+                .putExtra(Constants.MESSAGE_TITLE_EXTRA, title)
+                .putExtra(Constants.MESSAGE_EXTRA, message);
     }
 }

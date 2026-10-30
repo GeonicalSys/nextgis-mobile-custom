@@ -2126,3 +2126,15 @@ Gradle35с; standalone15 не запускался отдельно. Belka sourc
 UNKNOWN/NOT_PASS, recovery dry и actual compile раздельны. Старые9/19/22/21/12 и
 1117/1192 не rerun; native/DB/device/APK/fullCI и новые metadata gates NOT_RUN.
 UI39/142/19/F61 и прежние clock/wiki ограничения сохранены.
+
+
+### 2026-10-30 — понятные сообщения об ошибках ВебГИС (source Draft)
+
+- Причина известного server failure сохраняется через account/queue до safe
+  dialog/notification; current offline, mixed/local/unknown и cancel имеют свои gates.
+- Failed child-list request отличается от пустого списка; LayerFill не показывает
+  raw diagnostic text и не выводит права из отсутствующего JSON field.
+- Legacy form list validation использует локализованные ресурсы вместо R.string
+  литералов. Existing metadata/row/Save policy не изменяется.
+- Source review/technical fixtures и native/device/release acceptance разделены;
+  historical F61 clock/wiki gate failures не скрываются перепривязкой ожиданий.

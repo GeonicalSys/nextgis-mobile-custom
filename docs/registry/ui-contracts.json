@@ -1029,10 +1029,14 @@
         "SyncWorkspaceSession session",
         "fullProjectComplete = projectComplete && fullProject",
         "ProjectSyncState.markComplete(context, target.path, now)",
-        "!com.nextgis.maplibui.mapui.LocalChangesWorker.hasPending(map, null)"
+        "!com.nextgis.maplibui.mapui.LocalChangesWorker.hasPending(map, null)",
+        "SyncResultUtil.clearAccountFailureSnapshot(bundle)",
+        "SyncResultUtil.readAccountFailureReasons(bundle, part)",
+        "recordLateProjectFailure(result, failedProjects, target.name,",
+        "notifications.sendFailureNotification(context, failurePresentation)"
       ],
       "forbids": [],
-      "sha256": "eb5556de998a800fa9f52ce4c5f5134014acaacb8ef6ad883f3a9e2d5d495fc8"
+      "sha256": "78c721a13dd2203a035bfba0628719b86b3a764ce8582bb103199816ca5f885f"
     },
     {
       "id": "WF-SYNC-BADGE",
@@ -1973,6 +1977,285 @@
       ],
       "forbids": [],
       "sha256": "9a14c4deb9d4f9d3825628c685e54f8fe54c40e4d754a8f020dc2d344bd6ab6f"
+    },
+    {
+      "id": "WF-SYNC-ERROR-OWNER-BEGIN",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/SyncResultUtil.java",
+      "marker": "public static void beginSync(SyncResult owner)",
+      "requires": [
+        "beginSync();",
+        "TYPED_OWNER.set(owner)"
+      ],
+      "forbids": [],
+      "sha256": "15b03b703513cba838193cbf499afb50cfbfb1431a87eec1616307b5e297ae3b"
+    },
+    {
+      "id": "WF-SYNC-ERROR-SNAPSHOT",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/SyncResultUtil.java",
+      "marker": "public static FailureSnapshot snapshotFailureReasons(SyncResult result)",
+      "requires": [
+        "TYPED_OWNER.get() != result",
+        "io != offline + connect + serverIo",
+        "parse != serverParse",
+        "hasOtherHardError(result)"
+      ],
+      "forbids": [],
+      "sha256": "47591a73bc82ca0daff382cfd18ee44c2cb1ba9ed5ac35e9a6d76e7cdb59eff4"
+    },
+    {
+      "id": "WF-SYNC-ERROR-EXPORT",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/SyncResultUtil.java",
+      "marker": "public static void exportAccountFailureSnapshot(Bundle extras, SyncResult result)",
+      "requires": [
+        "clearAccountFailureSnapshot(extras)",
+        "TYPED_OWNER.get() != result",
+        "extras.putParcelable(OUT_OWNER, result)"
+      ],
+      "forbids": [],
+      "sha256": "ee674ef091b85e3a539f28d1d7d16964227eb62970f9548436202063cb6013a3"
+    },
+    {
+      "id": "WF-SYNC-ERROR-READ",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/SyncResultUtil.java",
+      "marker": "public static int readAccountFailureReasons(Bundle extras, SyncResult result)",
+      "requires": [
+        "extras.get(OUT_OWNER) != result",
+        "!(io instanceof Long)",
+        "result.stats.numParseExceptions",
+        "catch (RuntimeException malformed)"
+      ],
+      "forbids": [],
+      "sha256": "6a03538439c61f4bfcfcf061b18a07974d527245211cf6d321f6186e25ddcf6c"
+    },
+    {
+      "id": "WF-SYNC-ERROR-ACCOUNT-CAPTURE",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java",
+      "marker": "public void onPerformSync(\n            Account account,\n            Bundle bundle,\n            String authority,\n            ContentProviderClient contentProviderClient,\n            SyncResult syncResult)",
+      "requires": [
+        "SyncResultUtil.beginSync(syncResult)",
+        "SyncResultUtil.exportAccountFailureSnapshot(bundle, syncResult)",
+        "SyncResultUtil.endSync()"
+      ],
+      "forbids": [],
+      "sha256": "8eb6facb31093dab630915b185bd4e243676a05e13369376b0dda0ed279f2174"
+    },
+    {
+      "id": "WF-SYNC-ERROR-COPY",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java",
+      "marker": "public static FailurePresentation failurePresentation(Context context, int flags)",
+      "requires": [
+        "NetworkUtil(context).isNetworkAvailable()",
+        "flags == SyncResultUtil.FAILURE_SERVER",
+        "com.nextgis.maplib.R.string.error_server_temporarily_unavailable"
+      ],
+      "forbids": [],
+      "sha256": "2e01f29a51cd6abe4884c94b1624e4366d753f96a441df24cd295b7594786201"
+    },
+    {
+      "id": "WF-SYNC-ERROR-NOTIFICATION",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java",
+      "marker": "private void sendNotificationInternal(\n            Context context,\n            String notificationType,\n            FailurePresentation presentation)",
+      "requires": [
+        "SyncWorkspaceSession.current() != null",
+        "failurePresentation(context,",
+        "safe.message(context)",
+        "ERROR_NOTIFICATION_ID"
+      ],
+      "forbids": [
+        "mError"
+      ],
+      "sha256": "71d394749d2a13b85dd6a7787d06e71d716d8b233901f3f566d5f2744083531e"
+    },
+    {
+      "id": "WF-SYNC-ERROR-RAW-API",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java",
+      "marker": "public void sendNotification(Context context, String type, String message)",
+      "requires": [
+        "sendNotificationInternal(context, type, null)"
+      ],
+      "forbids": [
+        "sendNotificationInternal(context, type, message)"
+      ],
+      "sha256": "b9ff80002ebb2a46d5fed285084a1aee5e340bf2ca872d5a8d7350e8aade844c"
+    },
+    {
+      "id": "WF-SYNC-ERROR-ALERT",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java",
+      "marker": "public static Intent buildFailureAlert(Context context, FailurePresentation presentation,\n                                            java.util.List<String> failedProjects)",
+      "requires": [
+        "failurePresentation(context,",
+        "safe.messageRes == R.string.sync_no_internet",
+        "new Intent(Constants.MESSAGE_ALERT_INTENT)",
+        "context.getPackageName()"
+      ],
+      "forbids": [],
+      "sha256": "b5aa7ccf4e51a9476373cb0c32e6ff91484f941ca5c108ec8603a7631faa291f"
+    },
+    {
+      "id": "WF-SYNC-ERROR-LATE-OUTCOME",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java",
+      "marker": "static boolean recordLateProjectFailure(SyncResult result, List<String> failedProjects,\n                                           String projectName, boolean childFailed,\n                                           boolean alreadyFailed, boolean cancelled)",
+      "requires": [
+        "!childFailed || alreadyFailed || cancelled",
+        "result.stats.numIoExceptions++",
+        "failedProjects.add(projectName)"
+      ],
+      "forbids": [],
+      "sha256": "40d1ccae0715c72d5a940fe7146c250f10d3f1d8fabee272e05c19bedc4feb49"
+    },
+    {
+      "id": "WF-NGW-RESOURCE-CHILDREN-RESULT",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java",
+      "marker": "public ChildrenLoadResult loadChildrenWithResult(boolean skipSubLoad)",
+      "requires": [
+        "NetworkUtil.get(",
+        "ChildrenLoadResult",
+        "mChildrenLoaded"
+      ],
+      "forbids": [],
+      "sha256": "8c2c983fd2f87a9f2c08d9d96fba9316eb5ac7403034abf2c57c548038cacf23"
+    },
+    {
+      "id": "WF-NGW-RESOURCE-CONNECTION-RESULT",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/datasource/ngw/Connection.java",
+      "marker": "public ResourceGroup.ChildrenLoadResult loadChildrenWithResult(boolean skipSubLoad)",
+      "requires": [
+        "mRootResource.loadChildrenWithResult(skipSubLoad)"
+      ],
+      "forbids": [],
+      "sha256": "a862a6aec557493b10c387deca5036314db0087dd64a6f9540dd96193a6b0198"
+    },
+    {
+      "id": "WF-NGW-RESOURCE-ERROR-COPY",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java",
+      "marker": "static String childLoadError(Context context, ResourceGroup.ChildrenLoadResult result)",
+      "requires": [
+        "result.isSuccessful()",
+        "result.isTemporaryServerFailure()",
+        "error_server_temporarily_unavailable",
+        "error_403"
+      ],
+      "forbids": [],
+      "sha256": "ff7e4e9a53e5b8b86a7d1c6ddb6a716afa06f44b4dbc1640a06d582c30810d99"
+    },
+    {
+      "id": "WF-NGW-RESOURCE-ERROR-ASYNC",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java",
+      "marker": "protected String doInBackground(Void... voids)",
+      "requires": [
+        "connection.loadChildrenWithResult(skipSubLoad)",
+        "resourceGroup.loadChildrenWithResult(skipSubLoad)",
+        "childLoadError("
+      ],
+      "forbids": [],
+      "sha256": "2a09685f33606c7429f386d53a8c750243b473f5d9618457623be6b1a758b6ec"
+    },
+    {
+      "id": "WF-NGW-RESOURCE-ERROR-DIALOG",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java",
+      "marker": "protected void onPostExecute(String error)",
+      "requires": [
+        "adapter.mLoading = false",
+        "isActivityAvailable(activity)",
+        "error != null && error.length() > 0",
+        ".setMessage(error)"
+      ],
+      "forbids": [],
+      "sha256": "d3bb5b8a6733c9ad238c8525e71f5088102200aeacdfec7da8155c9c745d6e21"
+    },
+    {
+      "id": "WF-LAYER-IMPORT-ERROR-COPY",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java",
+      "marker": "public static String forException(Context context, Exception error, int fallbackResource)",
+      "requires": [
+        "error instanceof NgwHttpException",
+        "isTemporaryServerFailure()",
+        "owned.equals(message)",
+        "Pattern.matches(",
+        "context.getString(fallbackResource)",
+        "error instanceof NgwHttpResponseException"
+      ],
+      "forbids": [],
+      "sha256": "29fb2b80bd3f87f2fda52a4017881b5e289ad1d6d8deddccf5d6292c7b0ab17a"
+    },
+    {
+      "id": "WF-LAYER-IMPORT-NGW-ERROR",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+      "marker": "private boolean handleNgwExecuteError(Exception e, IProgressor progressor, int attempt)",
+      "requires": [
+        "LayerFillErrorMessage.forException(LayerFillService.this, e)",
+        "setError(error, progressor)",
+        "notifyError(mProgressMessage)",
+        "isPointz = true"
+      ],
+      "forbids": [],
+      "sha256": "a411edfe1d3b1df9150b1cd8e66e6cd80bff93fcc8f98b90e0b2f4735c9569c0"
+    },
+    {
+      "id": "WF-FORM-LEGACY-LIST-FILL",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+      "marker": "private void fillTable(final LinearLayout layout, final Bundle savedState, Bundle extras)",
+      "requires": [
+        "Toast.makeText(this, R.string.error_invalid_column",
+        "Toast.makeText(this, R.string.error_invalid_row"
+      ],
+      "forbids": [],
+      "sha256": "8ae67ab9a606ff0f2684bf5e96241e06cf65904fbc25f7490942baeaef68f65f"
+    },
+    {
+      "id": "WF-FORM-LEGACY-LIST-ROW",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+      "marker": "private void askForRow(final OnAskRowListener listener)",
+      "requires": [
+        "R.string.error_empty_list",
+        "Toast.makeText("
+      ],
+      "forbids": [],
+      "sha256": "12e085d37b6f2772ac49c89c8c7165566e7d76145229889e743641a3fddcd9a6"
+    },
+    {
+      "id": "WF-NGW-HTTP-TRANSIENT-CLASSIFICATION",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NetworkUtil.java",
+      "marker": "public static boolean isTransientNgwHttpError(\n            int responseCode,\n            String responseBody,\n            String responseMessage)",
+      "requires": [
+        "isTransientHttpStatus(responseCode)",
+        "responseCode != 422"
+      ],
+      "forbids": [],
+      "sha256": "41f4a026f5794b32f8ce10c85ecac1f56016a464e26e6dba929d106038118083"
+    },
+    {
+      "id": "WF-NGW-HTTP-SERVER-CLASSIFICATION",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NetworkUtil.java",
+      "marker": "public static boolean isTemporaryNgwServerFailure(\n            int responseCode,\n            String responseBody,\n            String responseMessage)",
+      "requires": [
+        "responseCode == 429",
+        "responseCode != 422",
+        "text.contains(\"externaldatabaseerror\")"
+      ],
+      "forbids": [],
+      "sha256": "d4784a43b3be669714905e50c75645865368332b7c0ede4c010eb18cab6521fa"
     }
   ],
   "contracts": [
@@ -3677,6 +3960,177 @@
         "Source review only; фактические строки/scroll/keyboard/input type, font scale, themes, rotation и native Save не выполнялись.",
         "Точная форма на tenant, private overlay/multiple-form order и уже изменённые clone artifacts требуют root-owned provenance/repair review; этот UI контракт не доказывает их исправление."
       ]
+    },
+    {
+      "id": "UI-SYNC-FAILURE-MESSAGES",
+      "group": "sync",
+      "title": "Причина сбоя синхронизации доходит до безопасного сообщения",
+      "surface": "Manual MESSAGE_ALERT dialog and notification518",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "A positively known server-only failed cohort explains a WebGIS request failure, possible maintenance/overload and retry later. Other, mixed or untrusted failures do not claim maintenance. Current missing network wins even when a server presentation was created earlier.",
+      "value_origin": "Known final PULL/PUSH IO, typed lookup Parse and readonly SYNC_NONE resource/schema/count HTTP failures (including the approved optional-count fallback boundary) -> exact account SyncResult/thread -> four primitive version/flags/IO/Parse fields plus one LOCAL framework Parcelable owner reference in a fresh account Bundle -> final account/child/cleanup fences in ProjectSyncRunner -> safe resource-only FailurePresentation -> fresh String-only MESSAGE_ALERT Intent/notification builder. MainActivity receives the existing package-scoped alert while resumed; this broadcast is not durable UI delivery.",
+      "units": "Human-readable localized text; no coordinates, CRS, server-body units or technical status dump.",
+      "updates": [
+        "Existing operation lifecycle decides when a dialog/notification/progress message is delivered. A displayed explanation is separate from remote ACK, durable save or full-project completion."
+      ],
+      "actions": [
+        "Read the cause and suggested next action; retry through the existing operation only after the reported condition changes."
+      ],
+      "conditions": [
+        "Both main Lisa/Belka source paths; foreground manual alert and error notification retain their existing lifecycle/permission gates.",
+        "Owner output is ephemeral in-process pass state. It is never forwarded into the UI Intent, preferences, remote request or persistent journal. Parcel copy with original local result falls back generic.",
+        "Late unclassified IO/Parse, auth/conflict/skipped/db/busy errors and child/import/cleanup/cancel state add OTHER; final cancellation does not become server failure.",
+        "A late noncancel child failure of an otherwise clean project gets one explicit IO/name outcome after cleanup, using per-target failure state rather than display-name/global-result identity.",
+        "External-database body text can classify only HTTP422;408 remains generic/connect-timeout, while429/all5xx remain server. Same HTTP retry classification is preserved."
+      ],
+      "saved_state": "No new persistent error journal, automatic resend, saved-state migration or server mutation is introduced. Existing local edits/recovery and cancellation ownership remain separate contracts.",
+      "source_ids": [
+        "WF-SYNC-RUN",
+        "WF-SYNC-ERROR-OWNER-BEGIN",
+        "WF-SYNC-ERROR-SNAPSHOT",
+        "WF-SYNC-ERROR-EXPORT",
+        "WF-SYNC-ERROR-READ",
+        "WF-SYNC-ERROR-ACCOUNT-CAPTURE",
+        "WF-SYNC-ERROR-COPY",
+        "WF-SYNC-ERROR-NOTIFICATION",
+        "WF-SYNC-ERROR-RAW-API",
+        "WF-SYNC-ERROR-ALERT",
+        "WF-SYNC-ERROR-LATE-OUTCOME",
+        "WF-NGW-HTTP-TRANSIENT-CLASSIFICATION",
+        "WF-NGW-HTTP-SERVER-CLASSIFICATION"
+      ],
+      "expectations": [
+        "Same counters in a different SyncResult cannot borrow SERVER; next scope/end/unknown schema/malformed primitive types are generic.",
+        "Known lookup Parse alone can preserve SERVER without adding IO; mixed local Parse or later IO/Parse cannot remain pureSERVER.",
+        "Actual resource-backed notification and manual Intent show shared Russian/English server wording; raw HTTP/password/URL String API remains suppressed.",
+        "Create SERVER while connected, disconnect before consuming notification or manual alert: show no-internet copy and the manual failed-project list.",
+        "Previously clean late child failure adds1IO exactly once; prior account/cleanup error, normal cancellation and equal display names retain their independent meanings."
+      ],
+      "unknowns": [
+        "Technical89 source/model methods passed, including actual safe notification/Intent and late-outcome helper cases. Actual queue/drain timing, Android permission/channel delivery, foreground receiver lifecycle, large-font windows and device locale/resource merge remain NOT_RUN.",
+        "TUS status loss, arbitrary HTTP200 error envelopes, remote-commit ambiguity and partial successful uploads are not reclassified or rolled back by this message bridge."
+      ]
+    },
+    {
+      "id": "UI-NGW-RESOURCE-LOAD-ERRORS",
+      "group": "layers",
+      "title": "Отказ загрузки ресурсов не выглядит пустым списком",
+      "surface": "NGW resource selector asynchronous load and fitted error dialog",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "A successful empty children response remains empty without error; a failed list request returns structured success/status/server metadata and a human error. HTTP401/403 use login/permission wording, known temporary server trouble uses shared server copy, unknown IO/JSON uses a safe retry message.",
+      "value_origin": "Connection/ResourceGroup.loadChildrenWithResult -> primitive ChildrenLoadResult -> adapter childLoadError -> AsyncTask result -> existing onPostExecute dialog after activity-available check. Old void loadChildren API still delegates and keeps caller compatibility.",
+      "units": "Human-readable localized text; no coordinates, CRS, server-body units or technical status dump.",
+      "updates": [
+        "Existing operation lifecycle decides when a dialog/notification/progress message is delivered. A displayed explanation is separate from remote ACK, durable save or full-project completion."
+      ],
+      "actions": [
+        "Read the cause and suggested next action; retry through the existing operation only after the reported condition changes."
+      ],
+      "conditions": [
+        "Programmatic adapter/dialog, so widgets list is deliberately empty; no assertion of a resource XML ID.",
+        "Connect(false), sorting/cache/subload/partial parsing and existing retry policy are preserved.",
+        "Response bodies, account URL and exception strings never become the dialog message.",
+        "External-database body text can classify only HTTP422;408 remains generic/connect-timeout, while429/all5xx remain server. Same HTTP retry classification is preserved."
+      ],
+      "saved_state": "No new persistent error journal, automatic resend, saved-state migration or server mutation is introduced. Existing local edits/recovery and cancellation ownership remain separate contracts.",
+      "source_ids": [
+        "WF-NGW-RESOURCE-CHILDREN-RESULT",
+        "WF-NGW-RESOURCE-CONNECTION-RESULT",
+        "WF-NGW-RESOURCE-ERROR-COPY",
+        "WF-NGW-RESOURCE-ERROR-ASYNC",
+        "WF-NGW-RESOURCE-ERROR-DIALOG",
+        "WF-NGW-HTTP-TRANSIENT-CLASSIFICATION",
+        "WF-NGW-HTTP-SERVER-CLASSIFICATION"
+      ],
+      "expectations": [
+        "Technical successful[] versus500/503/429 must differ; permission403 must not be maintenance.",
+        "Known server body on a nonallowed status must not widen the shared HTTP classifier; child request failure remains visibly distinct from empty success."
+      ],
+      "unknowns": [
+        "Connect/auth/capability requests before child-list load retain their separate existing classification; partial-parse cache mutation and actual selector lifecycle/device acceptance remain NOT_RUN."
+      ]
+    },
+    {
+      "id": "UI-LAYER-IMPORT-ERROR-MESSAGES",
+      "group": "layers",
+      "title": "Загрузка слоя показывает только понятный собственный текст",
+      "surface": "LayerFill progress KEY_MESSAGE and Toast error consumer",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Layer import presents only owned localized error copy. Positive typed NGW HTTP server failures use the shared server explanation. Unknown IO/SQLite/JSON/raw NGException detail stays in diagnostics and receives a human retry message; a missing JSON fields member does not prove denied access.",
+      "value_origin": "Explicit initial metadata HTTP failure -> NgwHttpResponseException (existing NGException catch/message policy); transient initial feature HTTP failure -> NgwHttpException (existing IOException catch/retry policy); both contain only status/safe server boolean. These typed origins or an owned NGException resource -> LayerFillErrorMessage.forException -> LayerFillService setError/notifyError -> progress KEY_MESSAGE/Handler Toast. POINTZ retains its original dedicated dialog/early-return branch.",
+      "units": "Human-readable localized text; no coordinates, CRS, server-body units or technical status dump.",
+      "updates": [
+        "Existing operation lifecycle decides when a dialog/notification/progress message is delivered. A displayed explanation is separate from remote ACK, durable save or full-project completion."
+      ],
+      "actions": [
+        "Read the cause and suggested next action; retry through the existing operation only after the reported condition changes."
+      ],
+      "conditions": [
+        "Owned-resource equality is a display allowlist, never inference of HTTP status from arbitrary exception text.",
+        "Only bounded numeric placeholders in the owned count-mismatch template are accepted; unsupported text falls back to fixed resource copy.",
+        "Initial HTTP origins and retry stages remain explicitly bounded by Core source review; no arbitrary body parsing or whole-service availability inference.",
+        "External-database body text can classify only HTTP422;408 remains generic/connect-timeout, while429/all5xx remain server. Same HTTP retry classification is preserved."
+      ],
+      "saved_state": "No new persistent error journal, automatic resend, saved-state migration or server mutation is introduced. Existing local edits/recovery and cancellation ownership remain separate contracts.",
+      "source_ids": [
+        "WF-LAYER-IMPORT-ERROR-COPY",
+        "WF-LAYER-IMPORT-NGW-ERROR",
+        "WF-NGW-HTTP-TRANSIENT-CLASSIFICATION",
+        "WF-NGW-HTTP-SERVER-CLASSIFICATION"
+      ],
+      "expectations": [
+        "HTTP503 technical URL/password/path and SQLite/JSON exception details must not appear in user text.",
+        "Preserve own offline/rights/CRS/geometry/coordinate messages and POINTZ behavior; malformed fields JSON stays generic rather than permission403."
+      ],
+      "unknowns": [
+        "Technical formatter cases are not real Service/Handler/Toast/progress-window acceptance. Other untyped cookie/capability/connect/TUS/HTTP200/malformed-response origins remain generic or UNKNOWN; the two explicitly typed initial metadata/feature branches are source-covered, not real-server accepted."
+      ]
+    },
+    {
+      "id": "UI-FORM-LEGACY-LIST-ERRORS",
+      "group": "forms",
+      "title": "Ошибки списков формы локализуются вместо имени строки",
+      "surface": "Legacy form table validation Toast",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Missing column, vanished selected row and empty row list show the corresponding localized human explanation rather than literal R.string text. Existing row selection, controls, callback and Save behavior are unchanged.",
+      "value_origin": "Legacy FormBuilderModifyAttributesActivity fillTable/askForRow validation branch -> integer R.string Toast overload -> owned RU/EN resource. These are dynamic form paths, not declared XML widgets.",
+      "units": "Human-readable localized text; no coordinates, CRS, server-body units or technical status dump.",
+      "updates": [
+        "Existing operation lifecycle decides when a dialog/notification/progress message is delivered. A displayed explanation is separate from remote ACK, durable save or full-project completion."
+      ],
+      "actions": [
+        "Read the cause and suggested next action; retry through the existing operation only after the reported condition changes."
+      ],
+      "conditions": [
+        "The existing Activity route is preserved; no new field validation, business defaults, schema or draft migration."
+      ],
+      "saved_state": "No new persistent error journal, automatic resend, saved-state migration or server mutation is introduced. Existing local edits/recovery and cancellation ownership remain separate contracts.",
+      "source_ids": [
+        "WF-FORM-LEGACY-LIST-FILL",
+        "WF-FORM-LEGACY-LIST-ROW"
+      ],
+      "expectations": [
+        "Each of three invalid technical list cases displays the exact owned resource, while valid-row control keeps its former behavior."
+      ],
+      "unknowns": [
+        "Reflection/Robolectric cases cover actual private method text branches only; no full Activity lifecycle, real form/database, Save or device large-font acceptance."
+      ]
     }
   ],
   "widget_evidence": [
@@ -4040,6 +4494,102 @@
       "new_file_guards": 2,
       "old_ui_rows": "All other38 contracts, existing134 source objects/hashes,17 non-method objects/hashes,48 widget evidence and F61 clock row remain exact. Only this target row changes plus append8/2.",
       "clock_delivery": "WF-SYNC-CLOCK-STORE is preserved whole with original F61 expected hash. No alternative fingerprint, re-pin or checker bypass."
+    },
+    "user_message_source_review": {
+      "reviewed_at": "2026-10-30",
+      "basis": "Manual semantic review of Root actual35 frozen own source, plus approved NetworkUtil body-only422 fix. All changed source pins correspond to explicitly reviewed cause/ownership/privacy conditions; not an automatic expectation updater. Original source context and prior review histories remain historical.",
+      "old_run_row": {
+        "id": "WF-SYNC-RUN",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java",
+        "marker": "static void run(Context context, List<Account> accounts, Bundle extras, String authority,\n                    ContentProviderClient provider, SyncResult result, Pass pass)",
+        "requires": [
+          "SyncWorkspaceSession session",
+          "fullProjectComplete = projectComplete && fullProject",
+          "ProjectSyncState.markComplete(context, target.path, now)",
+          "!com.nextgis.maplibui.mapui.LocalChangesWorker.hasPending(map, null)"
+        ],
+        "forbids": [],
+        "sha256": "eb5556de998a800fa9f52ce4c5f5134014acaacb8ef6ad883f3a9e2d5d495fc8"
+      },
+      "protected": "All old39 contract objects,141 other method rows,19 old file rows,48 widgets and the whole original F61 clock row remain exact. Only WF-SYNC-RUN is intentionally reviewed for new cause/late-outcome behavior. No alternate clock hash or checker exception.",
+      "runtime": "NOT_RUN here; technical source-JVM receipts and native/permission/window acceptance are distinct.",
+      "source_freeze_receipt": "mobile-user-messages/resume-20261030/actual-composed-source-freeze.json",
+      "verification_limits": "Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance. First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods.",
+      "first_85_source_inputs_sha256": {
+        "maplib/src/main/java/com/nextgis/maplib/util/SyncResultUtil.java": "7ecbb674fab0294a184ce130e3329ddefc5795f780cf79b8628316c35f00b28d",
+        "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java": "7f05cb1b7cdc6f0b0da5cc06e397bdc120f0f116895f4425980d78270b0561c7",
+        "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java": "d22bbafd6f78773e0a9b73de81c5fb9aee8b4a87b655f0924e9d511545ad88cb",
+        "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java": "06f21f33fc73754fe61139c9c54a5a035b88a0f13c47544aa40a34ab9ac6bd16",
+        "app/src/main/res/values/sync_recovery_strings.xml": "dd861357d7cf566fb028c3979a780f1ea3455141c8348fed12e7597628d11a1f",
+        "app/src/main/res/values-ru/sync_recovery_strings.xml": "23bd6831aaa44d1649a9f21b3397b0487eeaff6a53f6d761065fd6203690e8bb",
+        "maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java": "30fa06e0524e4afa83f7f4ab4a1e15d84e343a69077c0dac0e9db5982016553e",
+        "maplib/src/main/java/com/nextgis/maplib/map/NGWLookupTable.java": "167792626fc98df60e501364ba7cb1e3317a67f4d29929e72bf5c7a8f065facd",
+        "maplib/src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java": "b11d08de3903198626e2071b8efabba9eafe8f9ab55a713746f080f6f5b939b7",
+        "maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java": "67539f26ef48bc67eb3313e47e35b728d014ae03db43d912daf512cdae36adfe",
+        "maplib/src/main/res/values/strings.xml": "581d9791aee4752b933e43f584c54695a71d1be1f2fab8629f0f1b7e7df2ddd9",
+        "maplib/src/main/res/values-ru/strings.xml": "30096f4c56b4eae0927ba8d8094bad4b09874281169dfaa15dece057bbc16963",
+        "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java": "8bf5614d7a9dd3f8de7935b68121206d49957ac82ec076d120398a2ac5302cd1",
+        "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/Connection.java": "87039492ca47e87e7d5da52647dbfde9f4372a07647ee860cad82fd2b453e93b",
+        "maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java": "b703bf2cb2f6b5937b839c5b1c4fda9bccc5af936e056dced155400bdeaaa6ac",
+        "maplibui/src/main/res/values/resource_list_error_strings.xml": "8c80be88a63102e7b078d5bba18118aa8d00748bab28854f7e995fa55f12e45c",
+        "maplibui/src/main/res/values-ru/resource_list_error_strings.xml": "c43d9ffb71a83dc97db173e7fcd072fac25614692632dc6b49b4df852b25f6db",
+        "maplib/src/main/java/com/nextgis/maplib/util/NgwHttpException.java": "8e0c3d5a27285c8e308feb3ef5102493664eaa29ecfb3f8dcb805f1641afe34c",
+        "maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java": "2ecb1ae1029c4471d59001a810419f482d938ab294d07d36e3cb07b98c901269",
+        "maplibui/src/main/res/values/layer_fill_error_strings.xml": "29e3a3c0e142957007caaa61fbdb81410d0592c54eb4d09852de21a5fa549f39",
+        "maplibui/src/main/res/values-ru/layer_fill_error_strings.xml": "1c762bee99c90e882945345c42468bea120822fb2e314aabf2bd3307806dad49",
+        "maplib/src/test/java/com/nextgis/maplib/util/NgwHttpExceptionTest.java": "4526485720e8bc12431267be73ebaf5a8b40e401f2c63ff1cc53a9ee79acffe6",
+        "app/src/test/java/com/nextgis/maplib/datasource/ngw/ResourceChildrenMessagesTest.java": "5a97b88c481a6d128afbbff472e42afcbb6ceeccdb07b4218cfa18eb504e1ec3",
+        "app/src/test/java/com/nextgis/maplibui/util/LayerFillErrorMessageTest.java": "2d73f5d150d067a21c4dadb6768444d865d2a4bb9fa79b4d0f0dc86b746fb96c",
+        "maplib/src/main/java/com/nextgis/maplib/util/NgwHttpResponseException.java": "85cad32895bc653cefcbe6b3f86d673a87fba0c8c5e97aa2811e1f84a3863a71",
+        "maplib/src/test/java/com/nextgis/maplib/util/NgwHttpResponseExceptionTest.java": "9ee30861813aad044527fd922bcab3556e79eb8dffc69ffad8bd1507a51ff714",
+        "maplib/src/test/java/com/nextgis/maplib/util/SyncFailureSnapshotTest.java": "a32edc3fecdc5d6c8cd083f081d5342bcb1e47e63fca1050dcd8d46f82f5ba52",
+        "app/src/test/java/com/nextgis/mobile/util/SyncFailurePresentationTest.java": "a4267054cc650c91b14cd9cb6430f73fb98ceb75a5ec6615aa665d274e5ee1ec",
+        "app/src/test/java/com/nextgis/mobile/util/ProjectSyncLateFailureTest.java": "712410f4b5f69333a034b093a6a070c766f0f3fa8e35c8cd6e50ccc7618cff37",
+        "maplib/src/test/java/com/nextgis/maplib/map/NGWHttpFailureReasonProducerTest.java": "d69c82873b64150d2c695599e63c0dd343390f81fab85f6280519c9578258dbc",
+        "maplib/src/test/java/com/nextgis/maplib/map/NGWSyncNoneServerFailureTest.java": "0759f9637ffc353c75bf3b849593436559689f0a548f1dcac54b22157270c58c",
+        "maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java": "430da5992ebec1d44078cba3b46ba9d6d42b334e8b65a70d83c7d062676fb195",
+        "maplibui/src/main/res/values/legacy_form_error_strings.xml": "f82302e2a970a9996ebc2fbd8599e2640688b2acd5930d78b9e3d26416c19b97",
+        "maplibui/src/main/res/values-ru/legacy_form_error_strings.xml": "cedfe95a1c7683b39ee43745e26c88d794566cd2a940837b464a3d55d8b78da3",
+        "app/src/test/java/com/nextgis/maplibui/activity/FormLegacyListMessagesTest.java": "6eb9fd09eec07dc466305fd6bef0d0876806c59721e8439f635b9e0f9dbc183d",
+        "maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java": "14afc9d4d4451a5dba1e564c9ec6844432a24b83c57a63f98de919aeb7e3fdd1"
+      },
+      "post_85_reviewed_product_inputs_sha256": {
+        "maplib/src/main/java/com/nextgis/maplib/util/SyncResultUtil.java": "7ecbb674fab0294a184ce130e3329ddefc5795f780cf79b8628316c35f00b28d",
+        "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java": "7f05cb1b7cdc6f0b0da5cc06e397bdc120f0f116895f4425980d78270b0561c7",
+        "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java": "d22bbafd6f78773e0a9b73de81c5fb9aee8b4a87b655f0924e9d511545ad88cb",
+        "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java": "06f21f33fc73754fe61139c9c54a5a035b88a0f13c47544aa40a34ab9ac6bd16",
+        "app/src/main/res/values/sync_recovery_strings.xml": "dd861357d7cf566fb028c3979a780f1ea3455141c8348fed12e7597628d11a1f",
+        "app/src/main/res/values-ru/sync_recovery_strings.xml": "23bd6831aaa44d1649a9f21b3397b0487eeaff6a53f6d761065fd6203690e8bb",
+        "maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java": "30fa06e0524e4afa83f7f4ab4a1e15d84e343a69077c0dac0e9db5982016553e",
+        "maplib/src/main/java/com/nextgis/maplib/map/NGWLookupTable.java": "167792626fc98df60e501364ba7cb1e3317a67f4d29929e72bf5c7a8f065facd",
+        "maplib/src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java": "b11d08de3903198626e2071b8efabba9eafe8f9ab55a713746f080f6f5b939b7",
+        "maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java": "67539f26ef48bc67eb3313e47e35b728d014ae03db43d912daf512cdae36adfe",
+        "maplib/src/main/res/values/strings.xml": "581d9791aee4752b933e43f584c54695a71d1be1f2fab8629f0f1b7e7df2ddd9",
+        "maplib/src/main/res/values-ru/strings.xml": "30096f4c56b4eae0927ba8d8094bad4b09874281169dfaa15dece057bbc16963",
+        "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java": "8bf5614d7a9dd3f8de7935b68121206d49957ac82ec076d120398a2ac5302cd1",
+        "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/Connection.java": "87039492ca47e87e7d5da52647dbfde9f4372a07647ee860cad82fd2b453e93b",
+        "maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java": "b703bf2cb2f6b5937b839c5b1c4fda9bccc5af936e056dced155400bdeaaa6ac",
+        "maplibui/src/main/res/values/resource_list_error_strings.xml": "8c80be88a63102e7b078d5bba18118aa8d00748bab28854f7e995fa55f12e45c",
+        "maplibui/src/main/res/values-ru/resource_list_error_strings.xml": "c43d9ffb71a83dc97db173e7fcd072fac25614692632dc6b49b4df852b25f6db",
+        "maplib/src/main/java/com/nextgis/maplib/util/NgwHttpException.java": "8e0c3d5a27285c8e308feb3ef5102493664eaa29ecfb3f8dcb805f1641afe34c",
+        "maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java": "2ecb1ae1029c4471d59001a810419f482d938ab294d07d36e3cb07b98c901269",
+        "maplibui/src/main/res/values/layer_fill_error_strings.xml": "29e3a3c0e142957007caaa61fbdb81410d0592c54eb4d09852de21a5fa549f39",
+        "maplibui/src/main/res/values-ru/layer_fill_error_strings.xml": "1c762bee99c90e882945345c42468bea120822fb2e314aabf2bd3307806dad49",
+        "maplib/src/main/java/com/nextgis/maplib/util/NgwHttpResponseException.java": "85cad32895bc653cefcbe6b3f86d673a87fba0c8c5e97aa2811e1f84a3863a71",
+        "maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java": "430da5992ebec1d44078cba3b46ba9d6d42b334e8b65a70d83c7d062676fb195",
+        "maplibui/src/main/res/values/legacy_form_error_strings.xml": "f82302e2a970a9996ebc2fbd8599e2640688b2acd5930d78b9e3d26416c19b97",
+        "maplibui/src/main/res/values-ru/legacy_form_error_strings.xml": "cedfe95a1c7683b39ee43745e26c88d794566cd2a940837b464a3d55d8b78da3",
+        "maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java": "14afc9d4d4451a5dba1e564c9ec6844432a24b83c57a63f98de919aeb7e3fdd1"
+      },
+      "input_history_qualification": "first_85_source_inputs_sha256 retains original candidate/source basis; one producer fixture expectation is explicitly reconciled after that failed run and is not claimed byte-current. Product inputs are separately re-read after the independently reviewed NetworkUtil-only fix. No historical result is relabelled green.",
+      "technical_receipts": {
+        "unit": "resume-20261030/corrected-green/final-result-source-stop.json",
+        "unit_sha256": "388571c67300a886996c6351dbb05968667f85030074e56a98c411f0ce1549b4",
+        "compile": "resume-20261030/compile/final-result-source-stop.json",
+        "compile_sha256": "e1f809c28c97472650c5ee2bcc2a1c9de533e95c02e9617947c6444055bb44d9",
+        "source_not_native": true
+      }
     }
   },
   "non_method_evidence": [
@@ -4231,6 +4781,191 @@
         "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
       ],
       "sha256": "996ecb399fca207c3c8cf37764f8ac67f5e72f26ebaf1287fe9fa4573e3ad1d7"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/SyncResultUtil.java",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-SYNC-FAILURE-MESSAGES"
+      ],
+      "sha256": "6f20b25edad6169173d889444f64504799bd643b09eb6457da350322e6fdc34b"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-SYNC-FAILURE-MESSAGES"
+      ],
+      "sha256": "98b39814a780349e8ad65fe8c48c6566c54533c55e57b427b3f59682d961a0d8"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values/sync_recovery_strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-SYNC-FAILURE-MESSAGES"
+      ],
+      "sha256": "bc84eeffb19e0a701e764fd87b5c3fb8df42bbc21f637dac9dbf9c91e65c52ad"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values-ru/sync_recovery_strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-SYNC-FAILURE-MESSAGES"
+      ],
+      "sha256": "78916d7da63a7cdde3520e43f441403716fabbdaeb22b78006e2e32dce68926d"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/res/values/strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-SYNC-FAILURE-MESSAGES",
+        "UI-NGW-RESOURCE-LOAD-ERRORS",
+        "UI-LAYER-IMPORT-ERROR-MESSAGES"
+      ],
+      "sha256": "cf3c2f8464b64877d97a047e5de6e488d88ae60b9d8232e22ecc06a3378ac3c7"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/res/values-ru/strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-SYNC-FAILURE-MESSAGES",
+        "UI-NGW-RESOURCE-LOAD-ERRORS",
+        "UI-LAYER-IMPORT-ERROR-MESSAGES"
+      ],
+      "sha256": "6da7a04006d6359928f2355252ef0105597abf685e26711690ab451b2b46f1ef"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-NGW-RESOURCE-LOAD-ERRORS"
+      ],
+      "sha256": "fd69a73bc50aa2d9b854c27c66128f6fc700578ad4e570774dcb15ede3965f7d"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-LAYER-IMPORT-ERROR-MESSAGES"
+      ],
+      "sha256": "2ecb1ae1029c4471d59001a810419f482d938ab294d07d36e3cb07b98c901269"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-LAYER-IMPORT-ERROR-MESSAGES"
+      ],
+      "sha256": "3073ba162bd908963a083a134ef81f89ce5d17e113c5a85a2b9b94b476f05e66"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/values/legacy_form_error_strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-FORM-LEGACY-LIST-ERRORS"
+      ],
+      "sha256": "d083f05daf3fd0b8f501390ffa4d8e58e67f98de77c93b3d1c96e1e27cddc591"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/values-ru/legacy_form_error_strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-FORM-LEGACY-LIST-ERRORS"
+      ],
+      "sha256": "3a87559485244adf032ef3a5b5953e61873c252c0b734bde7c7e3b977a03800b"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/values/resource_list_error_strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-NGW-RESOURCE-LOAD-ERRORS"
+      ],
+      "sha256": "297decc36c003b26f9b91bde35c2d55fecad35288a9615610390721f23aed314"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/values-ru/resource_list_error_strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-NGW-RESOURCE-LOAD-ERRORS"
+      ],
+      "sha256": "cfe6e8a1f13060b76828c309151008d53f958d1c73c47cdd348714b57bdd94cc"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/values/layer_fill_error_strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-LAYER-IMPORT-ERROR-MESSAGES"
+      ],
+      "sha256": "29e3a3c0e142957007caaa61fbdb81410d0592c54eb4d09852de21a5fa549f39"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/values-ru/layer_fill_error_strings.xml",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "contract_ids": [
+        "UI-LAYER-IMPORT-ERROR-MESSAGES"
+      ],
+      "sha256": "1c762bee99c90e882945345c42468bea120822fb2e314aabf2bd3307806dad49"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NgwHttpException.java",
+      "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed.",
+      "contract_ids": [
+        "UI-LAYER-IMPORT-ERROR-MESSAGES"
+      ],
+      "sha256": "8e0c3d5a27285c8e308feb3ef5102493664eaa29ecfb3f8dcb805f1641afe34c"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NgwHttpResponseException.java",
+      "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed.",
+      "contract_ids": [
+        "UI-LAYER-IMPORT-ERROR-MESSAGES"
+      ],
+      "sha256": "85cad32895bc653cefcbe6b3f86d673a87fba0c8c5e97aa2811e1f84a3863a71"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+      "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed.",
+      "contract_ids": [
+        "UI-SYNC-FAILURE-MESSAGES",
+        "UI-LAYER-IMPORT-ERROR-MESSAGES"
+      ],
+      "sha256": "ae854ebd35870ed09db3daef810c80f705f1ce0ed1ba05148e333d5a3644a81d"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/NGWLookupTable.java",
+      "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed.",
+      "contract_ids": [
+        "UI-SYNC-FAILURE-MESSAGES"
+      ],
+      "sha256": "ac8764d30340a7346f66e4196070dd8c22805a119ec0b0c2a8589097ffb4c6b2"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java",
+      "purpose": "Reviewed readonly schema/count typed HTTP provenance and the optional-count fallback boundary feeding SYNC_NONE account failure classification. Whole-file source drift does not certify live server/data/device behavior.",
+      "contract_ids": [
+        "UI-SYNC-FAILURE-MESSAGES"
+      ],
+      "sha256": "99ac511c92b251adab50ac2770a7ff80feb239a78acb4bdcf5d7ed5416c332d6"
     }
   ]
 }

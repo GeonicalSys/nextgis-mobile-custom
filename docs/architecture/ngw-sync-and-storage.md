@@ -1272,3 +1272,43 @@ prefetch12 и desktop1117/1192 не перезапускались. UI39/142/19/
 новые metadata checks после этой записи ещё NOT_RUN. Прежние App clock drift и
 исключённый Root wiki frontmatter остаются: общего validation/native/device/APK
 acceptance нет. Merge Commit Core до App pointer; source Draft не равен release.
+
+
+## Причина сбоя и текст пользователю
+
+`UI-SYNC-FAILURE-MESSAGES` / `INV-NGW-USER-MESSAGES` различают source cause и
+пользовательский текст. Ранее queue подавляла account EXCEPTION, ThreadLocal flags
+очищались и итог превращался в generic incomplete-project message. Теперь exact
+account result/thread экспортирует4 primitive version/flags/IO/Parse и LOCAL
+Parcelable SyncResult reference перед endSync. Fresh pass Bundle очищается с обеих
+сторон; exact owner, типы/counts и hard/late/session/import/cleanup gates проверяются
+после дочерних работ. Эта metadata не IPC protocol и не durable ACK; в UI идёт
+новый Intent только с allowlisted resource strings.
+
+PUSH сохраняет прежний numeric log и записывает reason only после доказанного IO+1;
+typed lookup failure сохраняет Parse+1 без нового IO. SERVER-only показывает shared
+Core RU/EN copy о временной невозможности запроса, возможных техработах/перегрузке
+и повторе позже. Mixed/local/auth/unknown не становятся maintenance. Notification
+и manual alert перечитывают сеть при consume; offline получает отсутствие Интернета.
+
+Final drain может установить session failure после account outcome. Per-target
+already-failed state не выводится из совпадающих display names или global total;
+новый noncancel late failure после cleanup получает один IO/name outcome. Existing
+account/cleanup error не пересчитывается, normal cancel/interruption/generation
+change не создают этот IO. Helper test не заменяет runtime queue/drain witness.
+
+Resource selector различает successful[] и failed child load; old void APIs и
+cache/sort/subload/retry сохраняются. LayerFill formatter допускает только typed
+server cause/owned human copy; raw HTTP/URI/SQLite/JSON остаются в diagnostics.
+Missing JSON fields не доказывает403. Legacy list Toast использует resource ID,
+а не буквальное имя R.string. Точные отдельные UI IDs находятся в ui-contracts.
+
+TUS status loss, arbitrary HTTP200 envelopes, ambiguous remote commit, partial
+uploads, restart/disk durability и отсутствие permission/foreground receiver не
+закрываются этой source доработкой. Native/device/large-font/permission/Service
+приёмка NOT_RUN; callback/progress finish и человеческий текст не full-project ACK.
+
+External-database text gates now apply only to422:408 body text cannot claim server maintenance;429/all5xx keep their former server category. KnownSERVER prefix plus late unknown cause remains SERVER|OTHER and produces generic copy; one overspecified producer integer assertion is corrected explicitly, not by discarding known causes or weakening the UI expectation.
+
+Проверено в текущем source-срезе: Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance.
+First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods.

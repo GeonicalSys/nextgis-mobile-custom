@@ -22,6 +22,7 @@ import com.nextgis.maplib.util.NgwSyncIo;
 import com.nextgis.maplib.util.NgwSyncProgress;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplib.util.SyncWorkspaceSession;
+import com.nextgis.maplib.util.SyncResultUtil;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
 import com.nextgis.maplibui.util.ProjectOperationCoordinator;
@@ -127,6 +128,8 @@ public final class ProjectSyncRunner {
         boolean ownsProgress = false;
         boolean interrupted = false;
         List<String> failedProjects = new ArrayList<>();
+        int failureReasons = SyncResultUtil.FAILURE_NONE;
+        SyncAdapter.FailurePresentation failurePresentation = null;
         SyncAdapter notifications = new SyncAdapter(context, true);
         long generation = NgwSyncIo.captureGeneration();
         AppDiagnostics.operation(AppDiagnostics.Operation.SYNC, AppDiagnostics.Phase.START);
@@ -147,6 +150,9 @@ public final class ProjectSyncRunner {
                 SyncWorkspaceSession session = null;
                 boolean background = false;
                 boolean fullProjectComplete = false;
+                boolean projectFailureRecorded = false;
+                boolean lateChildFailed = false;
+                boolean lateChildCancelled = false;
                 java.util.Set<String> requiredAccounts = java.util.Collections.emptySet();
                 try {
                     MapBase active = app.getMap();
@@ -173,6 +179,7 @@ public final class ProjectSyncRunner {
                             if (Thread.currentThread().isInterrupted() || session.isCancelled()) break;
                             SyncResult part = new SyncResult();
                             Bundle bundle = new Bundle(requested);
+                            SyncResultUtil.clearAccountFailureSnapshot(bundle);
                             bundle.putBoolean(OfflineSyncIntentService.EXTRA_PROJECT_OPERATION_ALREADY_HELD, true);
                             bundle.putBoolean(com.nextgis.maplib.datasource.ngw.SyncAdapter.EXTRA_QUEUE_OWNS_LIFECYCLE, true);
                             try {
@@ -193,9 +200,21 @@ public final class ProjectSyncRunner {
                                 part.stats.numIoExceptions++;
                                 complete = false;
                             }
-                            if (!complete && !failedProjects.contains(target.name)) failedProjects.add(target.name);
+                            if (!complete) {
+                                projectFailureRecorded = true;
+                                if (!failedProjects.contains(target.name)) failedProjects.add(target.name);
+                            }
                             projectComplete &= complete;
                             if (complete) completedAccounts.add(account.name);
+                            if (!complete) {
+                                int reasons = SyncResultUtil.readAccountFailureReasons(bundle, part);
+                                if (reasons == SyncResultUtil.FAILURE_NONE || session.hasFailed()
+                                        || session.isCancelled() || interrupted
+                                        || Thread.currentThread().isInterrupted()
+                                        || app.hasCollectorImportBatchRegistered())
+                                    reasons |= SyncResultUtil.FAILURE_OTHER;
+                                failureReasons |= reasons;
+                            }
                             aggregate(result, part);
                             if (session.isCancelled() || interrupted) break;
                         }
@@ -213,6 +232,8 @@ public final class ProjectSyncRunner {
                     if (error instanceof InterruptedException) interrupted = true;
                     else {
                         result.stats.numIoExceptions++;
+                        projectFailureRecorded = true;
+                        failureReasons |= SyncResultUtil.FAILURE_OTHER;
                         if (!failedProjects.contains(target.name)) failedProjects.add(target.name);
                         HyperLog.e(Constants.TAG, "Project sync failed project=" + target.key(), error);
                         AppDiagnostics.report(AppDiagnostics.Operation.SYNC, error);
@@ -221,7 +242,12 @@ public final class ProjectSyncRunner {
                     try {
                         if (session != null) {
                             interrupted |= awaitChildren(session, lease);
-                            fullProjectComplete &= !session.hasFailed() && !session.isCancelled();
+                            lateChildFailed = session.hasFailed();
+                            lateChildCancelled = session.isCancelled();
+                            fullProjectComplete &= !lateChildFailed && !lateChildCancelled;
+                            if (lateChildFailed || lateChildCancelled || interrupted
+                                    || Thread.currentThread().isInterrupted())
+                                failureReasons |= SyncResultUtil.FAILURE_OTHER;
                             session.close();
                         }
                         if (background && map != null) map.closeSyncWorkspace();
@@ -230,10 +256,18 @@ public final class ProjectSyncRunner {
                     } catch (Exception error) {
                         fullProjectComplete = false;
                         result.stats.numIoExceptions++;
+                        projectFailureRecorded = true;
+                        failureReasons |= SyncResultUtil.FAILURE_OTHER;
                         if (!failedProjects.contains(target.name)) failedProjects.add(target.name);
                         HyperLog.e(Constants.TAG, "Project sync cleanup failed project=" + target.key(), error);
                     }
                 }
+                // A child can fail during final drain after account outcomes were collected.
+                // Report that project once, after cleanup, without turning cancellation into an error.
+                projectFailureRecorded = recordLateProjectFailure(result, failedProjects, target.name,
+                        lateChildFailed, projectFailureRecorded, lateChildCancelled || interrupted
+                                || Thread.currentThread().isInterrupted()
+                                || generation != NgwSyncIo.captureGeneration());
                 // Persist only after all child jobs and cleanup have finished successfully.
                 if (fullProjectComplete && !interrupted && !Thread.currentThread().isInterrupted()
                         && generation == NgwSyncIo.captureGeneration()) {
@@ -250,6 +284,7 @@ public final class ProjectSyncRunner {
             }
         } catch (Exception error) {
             result.stats.numIoExceptions++;
+            failureReasons |= SyncResultUtil.FAILURE_OTHER;
             HyperLog.e(Constants.TAG, com.nextgis.maplib.util.ProdLogUtil.withStack("Project sync queue failed", error));
             AppDiagnostics.report(AppDiagnostics.Operation.SYNC, error);
         } finally {
@@ -264,10 +299,13 @@ public final class ProjectSyncRunner {
                 String finish = interrupted || generation != NgwSyncIo.captureGeneration()
                         ? SyncAdapter.SYNC_CANCELED : SyncAdapter.SYNC_FINISH;
                 context.sendBroadcast(new Intent(finish).setPackage(context.getPackageName()));
-                notifications.sendNotification(context,
-                        (result.hasError() || !failedProjects.isEmpty())
-                                && !SyncAdapter.SYNC_CANCELED.equals(finish)
-                                ? SyncAdapter.SYNC_CHANGES : finish, null);
+                if ((result.hasError() || !failedProjects.isEmpty())
+                        && !SyncAdapter.SYNC_CANCELED.equals(finish)) {
+                    failurePresentation = SyncAdapter.failurePresentation(context, failureReasons);
+                    notifications.sendFailureNotification(context, failurePresentation);
+                } else {
+                    notifications.sendNotification(context, finish, null);
+                }
             } finally {
                 if (lease != null) lease.close();
                 if (interrupted) Thread.currentThread().interrupt();
@@ -276,11 +314,8 @@ public final class ProjectSyncRunner {
         if (!failedProjects.isEmpty()) {
             result.stats.numIoExceptions = Math.max(1, result.stats.numIoExceptions);
             if (requested.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false)) {
-                context.sendBroadcast(new Intent(Constants.MESSAGE_ALERT_INTENT)
-                        .setPackage(context.getPackageName())
-                        .putExtra(Constants.MESSAGE_TITLE_EXTRA, context.getString(R.string.project_sync_incomplete_title))
-                        .putExtra(Constants.MESSAGE_EXTRA, context.getString(R.string.project_sync_incomplete,
-                                android.text.TextUtils.join(", ", failedProjects))));
+                context.sendBroadcast(SyncAdapter.buildFailureAlert(
+                        context, failurePresentation, failedProjects));
             }
         }
     }
@@ -306,6 +341,16 @@ public final class ProjectSyncRunner {
             throw new IOException("Cannot deliver project callback");
         }
         task.get();
+    }
+
+    /** Late child outcome only; caller supplies failure state for this project, not its display name. */
+    static boolean recordLateProjectFailure(SyncResult result, List<String> failedProjects,
+                                           String projectName, boolean childFailed,
+                                           boolean alreadyFailed, boolean cancelled) {
+        if (!childFailed || alreadyFailed || cancelled) return alreadyFailed;
+        result.stats.numIoExceptions++;
+        if (!failedProjects.contains(projectName)) failedProjects.add(projectName);
+        return true;
     }
 
     private static void aggregate(SyncResult total, SyncResult part) {
