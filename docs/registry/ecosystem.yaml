@@ -61,7 +61,7 @@ contracts:
     transport: Read-only static source analysis in the available LISA source contour; no APK runtime import.
     statement: Before every behavioral/API/data/resource/configuration change the agent discovers dependencies autonomously across the whole available desktop/mobile contour, using existing registries and user examples only as starting points; all newly confirmed links are persisted in the same task in the single shared generated index or curated semantic owner contracts, while ambiguous candidates and dynamic references retain source evidence, UNKNOWN and next steps. Actual owner roots/revisions and source-index freshness are checked before source commits; missing or different worktrees remain UNKNOWN, not covered by another clone's index. Independent expectations are never regenerated to fit faulty production. The shared --write command automatically retains source-backed historical provisional observations in dependency-observations.json; --check validates their structure without certifying current foreign working-tree freshness. This entry links the shared procedure and does not implement scanner execution or native acceptance in the Android validator.
     owners: [app]
-    local_docs: [AGENTS.md, app/AGENTS.md, docs/architecture/lisa-ecosystem.md, docs/guides/change-checklist.md, docs/roadmap/mobile.md]
+    local_docs: [AGENTS.md, app/AGENTS.md, docs/architecture/lisa-ecosystem.md, docs/architecture/ngw-sync-and-storage.md, docs/guides/change-checklist.md, docs/roadmap/mobile.md]
     external_docs:
       - system: qgis-plugins
         path: geonical-docs/guides/scenario-dependencies.md
@@ -71,6 +71,8 @@ contracts:
         path: geonical-docs/registry/discovered-dependencies.json
       - system: qgis-plugins
         path: geonical-docs/registry/dependency-observations.json
+      - system: qgis-plugins
+        path: geonical-docs/registry/dependency-audit-todo.yaml
     verify: [AUTO-DOCS-VALIDATE]
   - id: ECO-CONDITIONAL-FORM-RULES
     from: qgis-plugins

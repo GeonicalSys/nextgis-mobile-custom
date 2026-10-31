@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -405,6 +405,47 @@ owning project со всеми account/children и пустой готовой �
 расстояние, точность, стороны света без компаса, звук и Close. Магнитных чисел и
 строки коррекции в окне выноса нет; compass guidance/пороги сохраняются.
 Обе панели используют адаптивное вписывание и независимые видимые действия.
+
+## Перенос карты и сброс настроек — MOB-02, 29 октября2026
+
+`SettingsFragment` использует существующий `ProjectOperationCoordinator.PROJECT_SWITCH`
+до любых изменений storage/reset: даже вычисление Android default directory может
+создать папку. Занятый sync/fill/schema owner или walk оставляет прежнее состояние;
+отказ не отменяет чужую операцию. Успешно взятый lease удерживается до завершения
+worker и его UI callback, включая обычный отказ, отмену и освобождение ресурсов.
+Это исключительное владение, а не ожидание после `ContentResolver.cancelSync`.
+
+Preference change listener возвращает false также при принятой задаче: выбранные path/card
+не сохраняются до результата. Worker проверяет exact captured map, запрещает новые
+renderer requests и перемещает одну карту; затем сохраняет её actual path.
+`MainApplication` проверяет поле mMap напрямую, без побочного создания карты через
+getMap. Проверка cached path/owner и rebind выполняются под одним application
+monitor. Card label берётся от фактического storage root, прежний label сохраняется
+при отсутствии соответствия. Сохранённые preference keys и публичные void-входы
+moveMap/resetSettings прежние.
+
+Reset defaults, district/base layer setup и существующее удаление слоёв отложены
+до окончания перемещения в запрошенный каталог и успешного commit actual path.
+Обычный отказ или отмена после retirement перепривязывает UI только при совпадении
+actual path, cached prefs и exact owner; Reset defaults/delete при этом не запускаются.
+RESULT_OK для request777 означает перезагрузку Activity/drawable, а не успех переноса.
+MapFragment также имеет identity-based onResume fallback, но тот же retired object
+не восстанавливается этим сравнением. Неожиданные worker Runtime/Error сохраняют
+прежнее распространение с завершением собственного lease, без mutating post callback.
+
+На прежнем коде6 actual-body Robolectric-проверок дали5 FAIL и1 штатный PASS;
+окончательные JVM-проверки и source compile фиксируются в
+[карточке](../../update-reports/entries/android-20261029-storage-move-ownership.md).
+Тестовые map/renderer/database probes не запускают GIS/SQLite engine или business
+данные. AGP unit-resource archive нужен для Robolectric; ordinary APK, устройство,
+Related/Full и реальный перенос не принимались.
+
+Retirement — nonblocking cancellation/publication fence, не renderer DB drain.
+`MapBase.moveTo` использует renameTo и может попытаться частично откатить файлы;
+успех файловой миграции, durable prefs после false/restart и перенос registry,
+очередей/черновиков отдельно не приняты. AOSP commit false следует за изменением
+cache, поэтому actual cached path и durable path нельзя отождествлять. Эта доработка
+не заменяет библиотечный clock fix и его отдельную Git-доставку.
 
 ## Проверка жизненного цикла вкладок
 
@@ -1228,3 +1269,118 @@ background restriction, process importance и observer_on_main. Это данн�
 исходный отчёт. Пороги, retry и подавление нормального no_fix/acquisition/filter
 wait не изменены. Card android-20261027-gps-provider-evidence; первый ручной
 crash APK030f303 этого GPS addon ещё не содержит.
+
+## Подтверждение recovery journal — 2026-10-30
+
+Ошибка записи подтверждения пары project/account больше не должна незаметно
+исключать её из следующего плана внутри процесса. Journal использует один
+точный preferences owner и согласованный snapshot семи собственных ключей;
+только true от существующего disk writer публикует следующий принятый состав.
+После false/throw последующая обычная запись переносит полный принятый cohort,
+а не ошибочное удаление пары или legacy marker из raw cache. Unknown keys,
+JSON/identity, manual OR, scoped recovery и interruption policy сохранены.
+
+Начальный raw snapshot имеет неизвестную disk provenance. Защита API не
+откатывает raw cache/файл и не устанавливает политику restart или повторной
+отправки уже успешных account passes. Проверки и ограничения:
+[android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).
+
+## Источники NGFP defaults и лимита строк
+
+MOB-02 source audit различает каноническую classobj/typeobj пару, actual first-form selection, remote required metadata и raw restored values. Действующий default Прочие / прочие не объявляется сломанным. TextEdit cap4 — число отображаемых строк из max_string_count, не лимит символов или NGW ID.39-й UI контракт использует XML class и dynamic field binding без выдуманного widget ID. Подробности: [правила формы](../../docs/architecture/conditional-form-rules.md), [UI значения](../../docs/architecture/ui-contracts.md); native acceptance и старые артефакты отдельно.
+
+### Источник цели выноса
+
+Shared panel отображает distance/true→magnetic guidance от копии выбранной
+геометрии; camera, current DB row/FID и device fix — отдельные источники.
+`maplibui` supplies selection/panel input, `maplib` chooses nearest3857 facet
+and inverse result, `app` owns controller/restore/UI. Source pins уточняют
+constructor/Bundle/fallback без product change. Текущая граница полигона и
+freeze/follow/invalidate после sync не переопределяются этим описанием.
+Подробности: [вынос](../../docs/architecture/stakeout.md); native acceptance NOT_RUN.
+
+## Регрессия lookup-кеша: полный набор ключей и значения — исторический срез8ca/9
+
+`NGWLookupTable.sync` обновляет существующий map при изменении полного
+содержимого; одинаковое число строк не доказывает равенство ключей. Сравнение
+использует ненулевое remote значение из Hashtable, поэтому новый ключ не
+разыменовывает отсутствующее локальное значение. SYNC_NONE и сохранность
+старого кеша при обработанных IOException/NGException/JSONException оставлены.
+Синтаксически valid-but-incomplete/silent partial snapshot не проверен на
+полноту. Вопрос полноты остаётся UNKNOWN в
+[центральном контракте](../../docs/architecture/ngw-sync-and-storage.md). Порядок
+неизменённого кеша, API/version/clock и прежний save(false) оставлены.
+Actual public sync защищён9 App JVM методами; baseline1→0 AssertionFAIL,
+GREEN9 PASS, LisaDebug current-source compile и BelkaRelease PASS37с.
+Это контракт own live8ca; committed App F61 ещё не содержит исправление
+и не является принятой поставкой. Нативная/NGW/дисковая приёмка не выполнялась.
+В центральном контракте отдельно разобраны публикация памяти при save(false),
+повтор записи и жизненный цикл prefetch/delete/account; эти вопросы открыты.
+
+[Источник и границы](../../docs/architecture/ngw-sync-and-storage.md); actual offline recipe находится в новой карточке android-20261030-lookup-cache-regression.
+
+
+## Регрессии подготовки справочников NGFP — 30 октября2026
+
+NgfpLookupPrefetchTest исполняет actual helper на технических Q JSON без map/account/
+SQLite/network: nested pages, оба orientations, autocomplete и normalized repeats;
+четыре legacy controls сохраняют старый public reader. Baseline12:3 AssertionFAIL/9PASS;
+тот же test86e3 после A3:12PASS/0errors/skips, XML2.149с, Gradle0/49с, LisaDebug compile
+включён. BelkaRelease Java/Kotlin0/41с подтверждён отдельно. Failed classifier и
+launch-order остаются NOT_PASS; exact100/Java JAR postproof и exit7 fail-fast отдельно,
+без повторного JVM для сокрытия события.
+
+Own-live maplibui source не является acceptance App с committed UI E66/maplib F61;
+Library Merge Commit до App pointer. UI39/142/19/F61 целиком сохранён. Старые9/19/22/21
+и desktop1117/1192 не запускались. Новые metadata official docs/report checks после
+C-интеграции NOT_RUN, общего PASS нет. [Контракт и риски](../../docs/architecture/ngw-sync-and-storage.md)
+и android-20261030-ngfp-lookup-prefetch-regression отделяют helper от installed-cache
+repair, shared deletion, account backup и реальной form Save.
+
+
+## Текущая регрессия15 в совместном19 —30 октября2026
+
+NgwLookupCacheSyncTest содержит15 actual-public-sync методов:8 прежних controls,
+один revised false-save и6 новых. Две false-save ветви добавляют IO без отката
+новой памяти, второй записи или подавления throws; старый equal-next no-write
+сохранён. Это сигнал ошибки прохода, а не disk/retry/installed-cache acceptance.
+[Центральный контракт](../../docs/architecture/ngw-sync-and-storage.md) разделяет риски.
+
+Новые результаты получены только в shared19 с Core4: baseline4 meaningful assertion
+FAIL/15 controls/0technical, затем19PASS/0errors/skips (Core1.905с/App2.298с,
+Gradle35с). Standalone15 отдельно не исполнялся. Belka source compile0/39с,
+100 задач совпадают как множество, не как порядок;7 owned процессов завершились.
+Первый compile dry capture UNKNOWN/NOT_PASS сохранён отдельно от успешного recovery
+dry и единственного actual compile. Это не общее прохождение всех gates.
+
+[Новая App internal карточка](../../update-reports/entries/android-20261030-sync-admission-regression.md)
+ссылается на стабильный Core Draft PR #63 и точный recipe path. UI39/142/19/F61,
+старые9/19/22/21/12 и desktop1117/1192 сохранены; они не являются новыми прогонами.
+Source Draft не равен merged pointer/APK/release/native. Полные metadata checks
+после этой интеграции ещё не выполнены; прежние clock/wiki ограничения сохранены.
+
+
+## Понятные сообщения об ошибках ВебГИС
+
+App принимает только safe resource-backed presentation: known server-only cohort
+показывает возможные техработы/перегрузку и повтор позже. current offline имеет
+приоритет. Старая raw String notification API остаётся sanitized. Manual alert
+строит новый package-scoped Intent только с двумя human strings; account output
+Bundle/owner/raw diagnostics в него не передаются. См. UI-SYNC-FAILURE-MESSAGES и
+INV-NGW-USER-MESSAGES в центральных registries.
+
+SyncFailurePresentationTest13 и ProjectSyncLateFailureTest7 проверяют реальные
+builder/Intent factory и late outcome helper без карты/SQLite/сервера. App также
+владеет library regressions FormLegacyListMessagesTest4, ResourceChildrenMessagesTest9
+и LayerFillErrorMessageTest10. Actual shared89 source/model checks PASS; эти случаи не являются native
+диалогами/всеми формами/полным sync. Belka source compile0/59с проверен отдельно.
+
+
+### Поделиться треком с карты
+
+Нижняя панель выбранного трека использует прежний GPX exporter списка с одним
+shared track ID. Скрытие трека не убирает действие; запись не останавливается,
+а GPX содержит сохранённые точки и сегменты. Панель переносит действия по
+доступной ширине. Полное имя остаётся XML-текстом; basename не является путём.
+Согласованность snapshot, конкурентные экспорты, жизнь cache/recipient и
+короткие окна остаются отдельными границами проверки.

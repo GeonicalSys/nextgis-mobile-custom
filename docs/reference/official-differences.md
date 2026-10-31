@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,46 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Отдельный prefetch reader NGFP — 2026-10-30
+
+Current own fork добавляет ForPrefetch для двух внутренних callers; прежний public
+reader и destructive consumers E66 целиком сохранены. Typed nested/orientation walk
+и normalized dedup не меняют defaults/metadata/delete policy. Это адресная fork-доработка
+MOB-02, не новый upstream comparison/merge/выпуск. Actual12GREEN2.149с/Gradle49с и
+Belka Java/Kotlin0/41с относятся к own-live UI. Failed classifier/prelaunch sequence
+NOT_PASS; post-readback exact100/Java JAR и exit7 repair не retroactive gate PASS.
+Старые suites не запускались. App committed UI E66/F61 и UI39/142/19 не перепривязаны;
+library Merge Commit до App pointer, отдельная runtime/device приёмка. Recipe/scope:
+android-20261030-ngfp-lookup-prefetch-regression.
+
+## Подтверждённый process view recovery journal — 2026-10-30
+
+В текущей task-ветке форка failed ACK не должен попадать в последующую успешную
+очередь через изменённый Android cache. Journal сохраняет один принятый typed
+cohort семи queue/legacy ключей у точного preferences owner, публикует только true
+и переносит весь cohort при следующей обычной записи. Нет нового формата,
+compensating writes, resend policy или restart rollback. Карточка android-20261030-sync-journal-confirmation,
+существующий MOB-02; это не upstream merge, выпуск или native acceptance.
+Library clock63/app F61 delivery gate остаётся отдельным.
+
+## Исключительное владение legacy storage/Reset — 2026-10-29
+
+В существующем fork project coordinator оба legacy Settings входа теперь
+получают PROJECT_SWITCH до preferences, default-directory resolution и AsyncTask.
+Chooser change listener откладывает path/card, Reset defaults/delete — до
+подтверждённого actual path. Worker и UI completion удерживают одного владельца;
+ошибка/отмена после retirement перепривязывает только согласованный actual map.
+Проверка direct mMap/cached path и rebind атомарны, без factory getMap в predicate.
+RESULT_OK request777 означает refresh Activity/drawable, а не move ACK.
+
+Адресная source-доработка MOB-02, карточка android-20261029-storage-move-ownership:
+baseline5 FAIL/1 контроль PASS; final21 JVM PASS, LisaDebug/BelkaRelease source
+compile PASS и независимый разбор CLEAR. Это отличие текущей task-ветки, без
+нового upstream merge, выпуска или device/Related/Full приёмки. Renderer read
+drain, file/WAL rollback, durable path/restart и миграции11 отдельных stores
+остаются открытыми. Library clock63 и app F61 pin имеют отдельный delivery gate;
+полный UI/docs PASS до него не заявлен.
 
 28 октября2026, MOB-04: поверх текущего fork SQLite/native path общий индекс
 производного PBF cache убирает повторный scan/regex/sort/stat каталога на каждом
@@ -2351,3 +2391,89 @@ CPU/counts, SDK frame/texture/buffer stats и процессная память 
 бизнес-данных или новой приёмки. Full/публикация остаются отложенными.
 Контракт/ограничения: [производительность карты](../architecture/map-performance.md#приватное-исследование-холодной-отрисовки-28-октября-2026).
 Порядок ручного сеанса: [runbook](../runbooks/manual-resource-profiling.md).
+
+## Source-backed разбор существующих NGFP — 2026-10-30
+
+Документированы действующие форматы legacy2.2 и форк-контракты required/cascade/draft, без изменения APK или объявления нового отличия upstream. Канонический default classobj/typeobj, nullable PostgreSQL и connected NGW Field.required имеют самостоятельные источники. TextEdit line cap сохранён как presentation scalar. Пины официальных producer sources и root clone source-fix acceptance принадлежат единому LISA owner report; native/tenant/deployed версия здесь не принимается.
+
+## Lookup key-set и source-контракт цели — 30 октября2026
+
+Собственный maplib сравнивает equal-count lookup через nonnull remote value:
+новый ключ вызывает штатную замену содержимого кеша вместо null dereference.
+Обработанные IOException/NGException/JSONException сохраняют прежний sync кеш;
+valid-but-incomplete/silent partial snapshot остаётся UNKNOWN в существующем
+Root AUDIT-TODO-NGW-PARTIAL-SNAPSHOT.
+Кеш сохраняет объект, unchanged/reordered no-write и прежние failure/savefalse
+ветви; retry/disk гарантии не добавлены. Отдельные9 App JVM PASS и BelkaRelease
+source compile37с не подтверждают upstream delta, merged pointer или native NGW.
+Подробности: [обмен и хранение](../architecture/ngw-sync-and-storage.md),
+android-20261030-lookup-cache-regression и maplib-20261030-lookup-cache-keys.
+
+Для выноса документация/source pins различают selected snapshot, текущую DB
+строку/FID, device fix и camera; nearest facet выбирается в3857, после4326
+обычная inverse-ветка эллипсоидальна, при nonconvergence есть sphere fallback.
+Это уточнение existing реализации, без изменения default/boundary/restore policy
+или утверждения новой функции official/fork. UI39/142/19 сохраняет старые
+ожидания/F61; device/process/replacement policy остаётся в общем FID TODO.
+
+
+## Текущий scoped NGW admission и save-signal —30 октября2026
+
+Собственный Draft Core #63 отклоняет206 только в полном streamed pull без Range
+и сборки диапазонов; другие2xx,404/transient/tracked routes, ранний push и prefix
+cleanup прежние. Две lookup ветви теперь добавляют IO на false save при уже новой
+памяти/одной записи/прежнем throws/equal-next no-write. Это локальная source-правка,
+не новый upstream comparison, repin или сертификат полноты NGW/disk/retry.
+
+Actual shared19/Core4+App15 GREEN, Belka source0/39с и set100/orderdifferent относятся
+к текущим c0a4/ca59 и7d697/7ae829. Первый dry observer nativeunknown/NOT_PASS и
+recovery сохранены; allgatesPASS нет. Исторические keyset9/37с, clock19/journal22/
+storage21/prefetch12 не повторялись. Core Merge Commit до App pointer, затем обычный
+выпуск; UI39/142/19/F61 и native/device/release границы сохранены.
+
+Карточки: maplib-20261030-full-snapshot-http206,
+maplib-20261030-lookup-save-failure и android-20261030-sync-admission-regression.
+Полная recipe: [Core PR63](https://github.com/GeonicalSys/android_maplib/pull/63),
+файл `update-reports/entries/maplib-20261030-full-snapshot-http206.md`.
+[Точный контракт и открытые риски](../architecture/ngw-sync-and-storage.md).
+
+
+## Safe user-facing NGW error delivery — source Draft30 октября2026
+
+Fork сохраняет типизированную server cause через owned account/queue и выдаёт
+resource-only explanation вместо потерянной причины/generic fallback там, где
+cause положительно известна. Numeric IO/Parse policy сохранена у producers;
+отдельно закрыт отсутствовавший final late-child project outcome. Это не новый
+remote transaction/retry/idempotency protocol и не гарантия доставки notification.
+
+Additive Core APIs: typed local result output, structured child-load result и
+typed HTTP exception сохраняют старые checked/void/raw String callers. App владеет
+safe notification/manual Intent; UI — browser/fill/form messages. Main Lisa/Belka
+исходники общие, merged APK/device/locale/large-window результат NOT_RUN.
+Library Merge Commit63/46 до App pointer/clock semantic review, затем обычный App86
+Squash по отдельной команде. Новые local source tests не принимают committed F61/E66
+как готовый APK и не закрывают неясные200/TUS/remote-commit/disk/restart риски.
+
+Проверено в текущем source-срезе: Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance.
+First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods.
+
+
+## Spatial cache после local/NGW import — 30 октября2026
+
+Fork сохраняет прежний RTree binary layout, но public clear сбрасывает size и
+остаётся dirty для same-path save. Load privately resets clean и отклоняет частичный
+или несовместимый header/actual Entry count/child kind без нового getAll allocation.
+Fresh VectorLayer.create допускает только verified zero/zero index/table с cache identity/
+data generation recheck; native/bulk/cancel guards прежние. Это не новый формат, не
+модификация business data/schema и не гарантия произвольной same-count ID/envelope
+целостности. См. INV-VECTOR-SPATIAL-CACHE-RECOVERY и Core usercard
+maplib-20261030-vector-spatial-cache-recovery. Core29 фактически исполнен: исходный код —15 assertion FAIL/14 control PASS, после двух исправлений —29 PASS/0 failures/errors/skips; те же пять наборов и все Core test bytes/oracles сохранены. Это23 новые проверки (12 lifecycle +11 RTree) и6 прежних контролей (legacy1, concurrency1, spatial4):16 Robolectric API28 с технической SQLite и13 plain JUnit. Финальный запуск:5 XML/5.653s, Gradle exit0/BUILD40s (наблюдалось42.537s),105 входов неизменны во время запуска,10 собственных процессов завершены и отсутствие подтверждено. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c. Это не55 PASS; App legacy25 PASS/1 path assertion не воспроизвёл обрезание подписей. Device/installed30/real GPX20wpt/NGW import/restart/native map acceptance не выполнялись.
+
+
+###30 октября2026 — GPX из нижней панели трека
+
+Обе марки используют Share выбранного track ID через прежний GPX exporter списка.
+Действия переносятся по available width; XML-valid имя сериализуется как текст,
+а path separators не выходят из отдельного export cache. Shared store/segment
+порядок/MIME/URI grants/recording остаются прежними. Source/JVM и CPU-font модели
+не означают installed/native/device/recipient acceptance или новый APK.

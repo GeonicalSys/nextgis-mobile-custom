@@ -115,6 +115,7 @@
     <string name="map_path_summary">Путь к папке для карт. Изменение может привести к тому, что папка не будет очищаться при удаление приложения</string>
     <string name="select_map_path">Выберите путь к папке для карт</string>
     <string name="moving">Перемещение…</string>
+    <string name="map_storage_move_failed">Не удалось завершить перенос карты</string>
     <string name="warning_map_moving">Внимание! Не отменяйте операцию и не останавливайте приложение в процессе перемещения данных в новое место. Может привести к потере данных!</string>
     <string name="warning_folder_should_be_empty">Папка должна быть пустой. Операция отменена.</string>
     <string name="frequentest">, так часто, как возможно</string>

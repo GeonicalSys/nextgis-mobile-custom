@@ -1,12 +1,93 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-10-30 — Reader справочников вложенных NGFP
+
+Новая maplibui ForPrefetch API и только2 production callers учитывают nested/orientation
+layouts и per-call normalized dedup. Старый public reader/весь delete file побайтово
+прежние. Добавлены12 App actual-method regressions и отдельные UI user/App internal
+карточки. Те же oracles после3 baseline AssertionFAIL дали12GREEN/0errors/skips2.149с,
+LisaDebug source compile в unit49с; Belka0/41с отдельно от NOT_PASS classifier/sequence
+и postproof/fail-fast control. Native/import/account/DB не выполнялись, старые9/19/22/21
+и desktop totals не перезапускались. UI39/142/19/F61 прежний; новые metadata validators
+NOT_RUN. Merge/pointer/APK delivery отделены, historical receipts сохранены.
+
+## 2026-10-30 — Контракты значений NGFP
+
+Углублена существующая цепочка classobj/typeobj: источник формы/схемы, raw defaults, приоритет explicit/draft/cursor и gate Save. Добавлен39-й UI контракт TextEdit line cap с actual dynamic binding; отсутствующий XML ID не выдуман. Изменений APK/библиотек и доказательства сломанного default нет. Свидетельства source-only; docs-check и native результаты фиксируются отдельно после интеграции.
+
+## 2026-10-30 — Согласованное подтверждение recovery journal
+
+Исправлен переход failed pair ACK → следующий successful write: принятый
+project/account план внутри процесса больше не берётся из rejected cache.
+Весь typed queue/legacy cohort подтверждается вместе у точного preferences owner;
+unknown keys, прежние identities/manual/interrupt и ошибка записи сохранены.
+Физический файл, restart, post-ACK cleanup и full clock проверяются отдельно.
+Actual-body JVM/compile результаты: android-20261030-sync-journal-confirmation; устройство и выпуск NOT_RUN.
+
+## 2026-10-29 — Владение переносом и сбросом настроек
+
+Исправлены оба legacy-входа storage/Reset: исключительный owner получается до
+preferences/default-directory/task effects и удерживается через worker/UI.
+Выбранные path/card не публикуются заранее. Reset defaults/delete выполняются
+только после достижения target и commit actual path; обычный отказ/отмена после
+retirement сохраняют проверенную actual-map перепривязку без этих Reset effects.
+RESULT_OK request777 — refresh Activity/drawable, не move ACK. Предикаты mMap не
+вызывают factory getMap, owner/path check и rebind атомарны под app monitor.
+
+До исправления6 actual-body JVM дали5 FAIL/1 штатный PASS; после21 PASS,
+LisaDebug/BelkaRelease Java/Kotlin compile PASS, независимый разбор CLEAR.
+Каталог UI38 содержит128 method и14 file tripwires, включая явный General Reset.
+Два существующих impact trigger и invariant уточнены, новый smoke только planned
+NOT_RUN. Исходные ID/history и F61 clock pin сохранены: полный текущий UI/docs
+gate NOTPASS из-за отдельной library63→app pointer delivery dependency.
+Реальное storage/WAL/renderer drain, registry/draft migration и disk/restart не
+принимаются моделями JVM. Related/Full, устройство, ordinary APK, merge и выпуск
+не запускались. Карточка android-20261029-storage-move-ownership, существующий MOB-02.
+
+## 2026-10-29 — Глубина зависимостей: workspace, отмена и подтверждение sync
+
+Продолжение MOB-02 по новой команде владельца после merge Android85/LISA275:
+существующий sync/storage документ прослеживает owning map через callbacks,
+provider URI, map-path broadcasts, service tickets, lease и финальный drain.
+Разделены UID, directory/mapName, live token, recovery pair, import journal и
+full clock; pair ACK записывается раньше финального cleanup/clock. 60s expiry
+относится только к unclaimed delivery, не ко всем claimed children. Разбор
+полного service lifecycle отверг ложное подозрение о первом foreground-start.
+
+Углублены прежние dependency/invariant и change-impact записи, app AGENTS и
+чеклист ведут к каноническому объяснению. Исправлен устаревший active-project-only
+oracle SMOKE-MULTI-ACCOUNT-SYNC по фактическому default sync_all_projects=true;
+это правка документации, не изменение продукта. Новая адресная smoke-матрица
+сохраняет NOT_RUN и ссылки на три pending задачи единого LISA реестра. Не
+добавлены native test code, отдельный scanner или дублирующий список задач.
+
+Карточка: android-20261029-dependency-depth-01. Product/Gradle/версии/gitlinks,
+данные, настройки и схемы не меняются; миграции нет. Android/AVD/device/NGW/DB,
+сборки, публикации и приостановленные этапы не запускались. Документационные
+проверки и точные исходные ревизии сохраняются в связанном PR и evidence;
+наличие source witnesses не является выполнением runtime.
+
+Продолжение той же карточки уточняет post-ACK cleanup failure, startup retained-pair
+recovery, новый manual plan и scheduled request dispatch. Clock требует всех
+обязательных accounts одного прохода. AOSP14/16 показывает, что commit false
+может оставить новое значение в памяти: getter/UI и disk/restart — разные oracles.
+Source-каталог проверок прочитан (21 methods/5 files), выполнено0; точные fault
+injections и native приёмка остаются NOT_RUN. Product/library bytes не исправлялись.
+
+В существующем UI-каталоге углублены три sync ID и добавлен один source-backed
+map-storage control:37 контрактов/106 reviewed methods, прежние36 IDs/80 hashes
+сохранены. Widget binding, formatter, ring lifecycle и raw badges разделены;
+`map_path` остаётся Preference key. Source/storage capabilities и миграционные
+неизвестности не подменяются подписью или native PASS. Текущий library gap
+остаётся открытым; sourcechecker и библиотека не менялись.
 
 ## 2026-10-29 — Новый разбор мобильных событий GlitchTip
 
@@ -2010,3 +2091,70 @@ VisibleLineLabelLayout/Controller размещают один целый бло�
   без debuggable/root; T40 manual tooling с ограниченными native/CPU окнами,
   точным владением процессами и проверяемой выгрузкой.
 - Долговременный кеш, Full и публичный APK в этот этап не входят.
+
+## 2026-10-30 — lookup key-set и контракт геометрии выноса
+
+- NGWLookupTable сравнивает key/value набор, принятый parser, и обновляет тот же кеш
+  при equal-size replacement вместо NPE. Одна expression-замена сохраняет все
+  остальные bytes/API/read/save/clock ветви; это user-исправление библиотеки.
+- Отдельная App technical regression9 дала baseline1 AssertionFAIL/8 PASS и
+  GREEN9/0/0/0 (2.066с XML), LisaDebug current-source и BelkaRelease compile37с.
+  No HTTP/DB/native/device; savefalse durability не принята. Source delivery
+  разрешена через own Draft63/86, отдельно от parent F61/merge/APK release/deploy.
+  Обработанные IOException/NGException/JSONException сохраняют старый sync кеш;
+  valid incomplete/silent partial ответ остаётся Root NGW-PARTIAL-SNAPSHOT UNKNOWN.
+- Source-only stakeout audit уточняет snapshot/CRS/nearest facet/Bundle/fallback;
+  существующий UI target record расширен8 method/2 file tripwires (39/142/19).
+  Старые134/17, остальные38 records, widget/history и F61 clock row сохранены.
+  Шесть geometry bodies прочитаны, не запущены. Карточки internal раздельны.
+- Старые clock19/journal22/storage21 и desktop1117/1192 здесь не выполнялись и
+  не увеличены. Новые docs/guards после интеграции ещё NOT_RUN; native границы
+  и common TODO остаются явными.
+
+
+## 30 октября2026 — scoped NGW response и save(false)
+
+В Core Draft #63 явный206 больше не используется как полный snapshot: отказ до
+применения именно этого pull, при прежних раннем push/prefix cleanup и других
+response routes. Две lookup ветви отмечают false save в IO текущего результата,
+не обещая rollback/retry/disk. Новые карточки maplib-20261030-full-snapshot-http206,
+maplib-20261030-lookup-save-failure и android-20261030-sync-admission-regression.
+
+Shared19:4 meaningful assertion FAIL/15 controls →19PASS, Core1.905с/App2.298с,
+Gradle35с; standalone15 не запускался отдельно. Belka source compile0/39с,
+100 task set совпал при ином порядке;7 PID завершились. Первый dry capture остаётся
+UNKNOWN/NOT_PASS, recovery dry и actual compile раздельны. Старые9/19/22/21/12 и
+1117/1192 не rerun; native/DB/device/APK/fullCI и новые metadata gates NOT_RUN.
+UI39/142/19/F61 и прежние clock/wiki ограничения сохранены.
+
+
+### 2026-10-30 — понятные сообщения об ошибках ВебГИС (source Draft)
+
+- Причина известного server failure сохраняется через account/queue до safe
+  dialog/notification; current offline, mixed/local/unknown и cancel имеют свои gates.
+- Failed child-list request отличается от пустого списка; LayerFill не показывает
+  raw diagnostic text и не выводит права из отсутствующего JSON field.
+- Legacy form list validation использует локализованные ресурсы вместо R.string
+  литералов. Existing metadata/row/Save policy не изменяется.
+- Source review/technical fixtures и native/device/release acceptance разделены;
+  historical F61 clock/wiki gate failures не скрываются перепривязкой ожиданий.
+
+
+### 2026-10-30 — выбор ресурсов ВебГИС (source prepared)
+
+- Подготовлено восстановление флажка по выбранному local resource/mode, включая
+  recycling пустого состояния; bind не меняет список выбора.
+- Uncheck очищает этот mode у всех matching записей; повторный check не добавляет
+  ещё положительный duplicate. Raster/WMS/webmap label не наследуется от vector/Collector.
+- Compact JSON restore объединяет OR flags только после обычного resolve каждой
+  записи; different accounts/localIDs и late failure сохраняют прежние границы.
+- Actual37 API28 cases PASS (22+6 new и9 protected browser); native/import/restart/refresh acceptance
+  не заявлены. Исторические89 и clock/Wiki ограничения не перепривязаны.
+
+
+### 2026-10-31 — полное название и способы импорта ресурса
+
+- Строка переносит способы импорта под названием, когда они не помещаются рядом; подписи и шрифт сохраняются.
+- Повторное сужение/расширение той же строки обновляет измерение, сохраняя выбор и обработчики.
+- Горизонтальная прокрутка пути достигает его конца при прежнем визуальном отступе.
+- Технические CPU text models отделены от phone/OEM/touch acceptance; APK/release здесь не публикуется.

@@ -53,7 +53,7 @@ related_code:
 | Публичный API `maplib` | consumers в `maplibui` и `app`, dependency registry |
 | MapLibre/style/order | model order, style order, cold start, hot add, reorder |
 | Collector | workspace isolation, composition diff, backup gate |
-| Sync/storage | data-loss path, retries, process death, last-sync UI |
+| Sync/storage | data-loss path, retries, process death и last-sync UI; owner scope через callback/provider/service, pair ACK против full clock, drain при отмене, независимые UID/path/mapName keys и их миграция; читать раздел «Владение workspace и границы подтверждения» в ngw-sync-and-storage |
 | Preferences/config | одинаковые key/default в XML и Java/Kotlin fallback |
 | Flavor/version | Поддерживаемый AGP API, Lisa Debug + обе production release, APK metadata через `aapt`, app/maplib coupling; не доверять имени APK |
 | Upstream | inventory, overlap decision, report, submodule pointer |

@@ -1,5 +1,10 @@
 schema_version: 1
 tests:
+  AUTO-SYNC-JOURNAL-CONFIRMATION:
+    type: automatic
+    scope: [app]
+    command: With installed JBR21 and existing Q offline Robolectric inputs, run gradlew.bat --offline --no-daemon -PciReliabilityChecks=true :app:testLisaDebugUnitTest --tests com.nextgis.mobile.util.SyncRecoveryJournalTest --tests com.nextgis.mobile.util.SyncJournalCommitTest --tests com.nextgis.mobile.util.SyncRecoveryJournalConfirmationTest; exact environment and task-graph gate are recorded in android-20261030-sync-journal-confirmation.
+    expected: Actual journal APIs preserve exact accepted project/account/manual and seven-key legacy cohort after cache-new false or throw; a later ordinary success cannot adopt rejected removal. Stable exact-owner isolation, reader race, malformed data, diagnostics and interrupt controls pass. Technical cache/disk maps do not certify real failed storage, restart, remote idempotency, native Android or full-project completion.
   AUTO-UI-SOURCE-CONTRACTS:
     type: automatic
     scope: [app, maplib, maplibui]
@@ -700,8 +705,22 @@ tests:
   SMOKE-MULTI-ACCOUNT-SYNC:
     type: device
     scope: [app, maplib, maplibui]
-    steps: [Prepare two stored projects and an active map whose Collector account is not first in Android account order, make another account used by the active map unavailable, add a detectable server change only to the inactive project, run manual sync twice rapidly, leave and return to the layer drawer while sync finishes, verify the sync icon remains active through every sequential account and the progress ring around it advances without percent text, try a project switch and choose interruption, verify the action starts after cancellation, restart and inspect enabled account schedules]
-    expected: Only one serial manual pipeline runs accounts with NGW layers in the active map, its Collector account runs first, the inactive project change is not pulled, another active-map account error has a separate result, the second full sync is refused, the spinner starts and stops from worker plus lease state even if either broadcast is missed, the progress ring fills by weighted layers and real push/download/apply work without rewinding or jumping to 100% during a large snapshot, interruption is explicit, and enabled schedules are restored without duplicate work.
+    steps: [Prepare two registered stored projects and an active map whose Collector account is not first in Android account order, verify sync_all_projects defaults true and add a detectable server change only to the inactive project, make one required account fail and run manual sync twice rapidly, verify the active Collector account is first in the manual account queue, inspect both project databases without switching the visible map while the queue drains, leave and reopen the drawer and omit one lifecycle broadcast while checking spinner recovery plus weighted progress without percent text during real push-download-apply work, repeat a new run with sync_all_projects false and then a layer-only run, recover one persisted failed target while false remains selected, inspect each project clock and retained pair, try a project switch and choose interruption, restart and inspect enabled schedules]
+    expected: With sync_all_projects true one serial pipeline visits all trusted loaded projects and keeps the active map and its draft unchanged; false limits a new full run and a layer-only request to the open project, while an exact persisted recovery target still selects its registered owner. A failed project/account retains its pair without suppressing later projects; a second full sync is refused. The active Collector account retains manual priority. Spinner state recovers from worker plus lease state even if a lifecycle broadcast is missed; its progress ring uses weighted layers and real push-download-apply work without percent text, rewind or premature100% during a large snapshot. Each project clock requires its own required accounts, children, ready-outbox and cleanup success. Interruption waits for real owner release and enabled schedules are restored without duplicates. This corrected source oracle replaces only the obsolete active-project-only expectation; native execution in the29October depth audit is NOT_RUN.
+  SMOKE-SYNC-OWNER-ACK-BOUNDARY:
+    type: device
+    scope: [app, maplib, maplibui]
+    steps:
+      - After separate runtime authorization use the normal isolated verification route and distinct projects A/B with identical local layer and group paths plus an existing draft in visible A
+      - Run a B session with a deferred child and fill delivery; tagged provider update and tagged broadcast must resolve B, while an untagged provider URI remains A-scoped even on a background-scoped thread
+      - Close the B session only after every child and service ticket ends; attempt an expired tagged URI and verify it never falls back to A
+      - Cancel while a child or outbound response is held; verify another full sync and project mutation remain blocked until actual drain, without treating60s unclaimed-ticket expiry as a claimed-child timeout
+      - Observe pair ACK and full-project clock separately and exercise process death or cleanup failure between them without deriving full success from an empty pair queue
+      - Hold after the last durable pair ACK, fail final cleanup before markComplete, and inspect exact retained pairs, old clock, failed-project alert and I/O result; restart with automatic sync off, then separately trigger normal manual retry and scheduled request dispatch
+      - Fail the actual clock write after its memory update, and separately interrupt its await; inspect return value, same-process getter, physical XML plus backup after writer completion and fresh-process reload rather than substituting a false-before-delegate proxy
+      - Complete required accounts in separate account-only runs and then in one all-account run; only the latter may certify the full project clock, and termination broadcasts or weighted ring completion must not substitute for it
+      - Before any new workspace relocation feature define independent directory/mapName/UID migration or invalidation for recovery pairs, import journals, full clock and draft owners
+    expected: Exact owning rows/files change only in B and A's draft/active identity survive; expired ownership fails closed and cancellation preserves unresolved work and journals until actual drain. Cleanup failure before markComplete leaves the old clock, but does not restore an already acknowledged pair. Startup recovery requests retained pairs only; an enabled schedule or new manual action is a separate fresh-plan route. commit false is not proof of unchanged memory or unchanged disk; isolate these oracles and report the known cached-clock gap without relabeling it full success. Existing source witnesses are SyncWorkspaceIsolationTest and ProjectSyncRunnerTest. The ACK audit read21 methods in5 focused test files and executed0; no exact post-last-ACK cleanup or failed-clock injection was present. New ACK/claimed-liveness/key-migration branches remain NOT_RUN under shared AUDIT-TODO-SYNC-ACK-RECOVERY, AUDIT-TODO-SYNC-CLAIMED-LIVENESS and AUDIT-TODO-WORKSPACE-KEY-MIGRATION. Source-only audit does not authorize native execution or assert a general liveness deadline.
   SMOKE-NGW-LARGE-PULL-CACHE:
     type: device
     scope: [app, maplib]
@@ -1049,3 +1068,224 @@ tests:
       - Capture a bounded control with actual SDK frame/resource counters, phase aggregates/checkpoint and CPU/native samples
       - Stop only exact owned collectors, verify app footer and pull hashes, then start a fresh process for the user trial
     expected: Verify signer/package/source, readable app_session and periodic checkpoint, real SDK resource counters, exact stop/footer/pull hashes and actual CPU/native samples/loss/coverage. Transfer alone is not quality PASS; no normal-project mutations or Full acceptance.
+  SMOKE-WORKSPACE-STORAGE-MUTATION:
+    type: device
+    scope:
+    - app
+    - maplib
+    - maplibui
+    steps:
+    - 'NOT_RUN plan only: after separate runtime authorization use an owned isolated copy of an existing map; record actual map
+      object/path, raw map_path, registry UID/path, retained journals/drafts and visible content before any destructive Reset.
+      Require another available app external storage or an unmatched current path for the chooser case.'
+    - Hold normal DATA_SYNC with a claimed child, then separately LAYER_FILL/SCHEMA_REBUILD and a walk draft. Invoke actual storage
+      choice and actual Reset positive button; whole preferences, selected storage summary/card, Activity result, render/map and
+      original owner must remain unchanged, with a nonblocking wait message. Do not force-expire or close live children.
+    - 'With no owner, same storage index remains a no-op. Admit another choice: no requested path is published by chooser; retire
+      the exact current map before the first rename, keep a competing sync blocked through worker and real UI refresh callbacks,
+      then compare actual path/prefs/widget and next sync admission.'
+    - Observe RESULT_OK through RELOAD_ACTIVITY_DATA and MainActivity refresh; it is not an oracle of physical move or durable
+      complete-workspace migration. Check renderer/view identity separately.
+    - 'On an owned copy confirm Reset: default resolver and prefs/default XML/reset/district/init/delete/init must wait for exclusive
+      admission and worker completion; preserve the existing OSM/tracks deletion exclusions. Cancel the confirmation separately.'
+    - Exercise target-not-reached, ordinary commit false after cache mutation, queued and started cancellation, pre-lock failure,
+      executor rejection and a late duplicate terminal. Failed/cancelled retired work may refresh only exact current owner plus
+      raw path=actual; no Reset defaults/delete/init and no early lease release.
+    - Use distinct foreign/null owner or raw path before completion and verify rejection does not call getMap to construct a replacement.
+      Inspect raw getter, durable file/restart and partial rollback independently; do not replace ordinary commit false with a
+      proxy that returns before cache mutation.
+    expected: Planned native acceptance remains NOT_RUN. Source implementation has21 focused actual-body JVM regressions, not
+      device/storage/DB/renderer coverage. Busy refusal preserves the original operation and settings; admitted work owns the
+      lease through all mutation/UI cleanup. Actual-path guarded REFRESH is separate from successful Reset and never implies physical
+      atomic rollback. No registry/project.json/recovery/import/clock/draft key migration is inferred. Renderer retirement is
+      cooperative cancellation/new-read fencing, not an active-reader drain; physical failure/restart and uncoordinated path changes
+      remain explicit owner TODO boundaries.
+
+  AUTO-NGW-LOOKUP-CACHE-SYNC:
+    type: automatic
+    scope:
+    - maplib
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''-Pkotlin.incremental=false'' ''-PciReliabilityChecks=true''
+      ''--console=plain'' '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.mobile.util.NgwLookupCacheSyncTest'''
+    expected: "Current15 actual-public-sync SDK28 methods include8 unchanged old controls, one revised false-save and6 added controls. Both false-save branches add IO while preserving new memory/map owner/one save/throws/equal-next behavior and existing stats. Actual new execution came from shared19 only: App15 baseline3 named assertion failures then15PASS/0errors/skips, XML2.298s. This standalone command remains valid but was not separately invoked. Historical key-set9 baseline1FAIL then9PASS2.066s/Belka37s remain historical, not rerun. No silent partial completeness, disk/retry, real network/SQLite/GIS/device/native acceptance. Full env and source-compile recipe are in Core PR63, update-reports/entries/maplib-20261030-full-snapshot-http206.md."
+
+
+  AUTO-NGFP-LOOKUP-PREFETCH:
+    type: automatic
+    scope:
+    - maplibui
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''-Pkotlin.incremental=false'' ''-PciReliabilityChecks=true''
+      ''--console=plain'' '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.mobile.util.NgfpLookupPrefetchTest'''
+    expected: 'Twelve actual-reader SDK28 technical JSON methods: root/autocomplete, nested pages, both
+      orientations, nonbinding values, sentinel/malformed-present errors, normalized first-appearance
+      dedup, plus four direct old-public reader controls. Baseline12 had3 AssertionFAIL/9PASS; unchanged12
+      GREEN2.149s/Gradle0/49s. This is source helper coverage, not import/cache availability/deletion/device
+      acceptance. Belka0/41s is separate from failed prelaunch classifier/launch-order NOT_PASS; exact100/Java-JAR
+      postproof and exit7 fail-fast control do not turn it into gate PASS. See public owner card. Old
+      cache9/clock19/journal22/storage21 and desktop1117/1192 were not rerun.'
+
+
+  SMOKE-NGFP-LOOKUP-PREFETCH:
+    type: device
+    scope:
+    - maplibui
+    - app
+    steps:
+    - 'NOT_RUN plan only: after separate runtime authorization use an owned isolated existing NGFP/project/account
+      cohort with confirmed nested/orientation lookup resources and permissions; record exact hash/sidecars/account/remote
+      IDs/local lookup objects. No fabricated business inputs/user live files.'
+    - Exercise actual connected initial form import and Collector form-only update separately; observe
+      both orientations/nested pages, fixed/autocomplete values, required Save and account isolation.
+      Helper success is not lookup availability.
+    - Preserve existing shared lookup references and current drafts/hashes. Do not invoke account removal/destructive
+      cleanup without separate backup/owner gate authorization.
+    - Observe failed lookup load and same-form-hash retry without assuming automatic repair; inspect partial-task
+      duplicates/form publication independently. Legacy shared-GC scope is unchanged.
+    expected: Planned native route NOT_RUN. Focused12 only prove helper grammar/output and unchanged old
+      public behavior. Import/cache repair/hash publication/shared deletion/account backup/global uniqueness/durable
+      restart remain open centrally. No APK or committed E66 acceptance.
+  AUTO-NGW-SYNC-ADMISSION:
+    type: automatic
+    scope:
+    - maplib
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''--continue'' ''-Pkotlin.incremental=false'' ''-PciReliabilityChecks=true''
+      ''--console=plain'' '':maplib:testDebugUnitTest'' ''--tests'' ''com.nextgis.maplib.map.NGWVectorLayerFullSnapshotHttpStatusTest''
+      '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.mobile.util.NgwLookupCacheSyncTest'''
+    expected: 'Actual same shared19: Core4+App15 PASS/0fail/error/skips; baseline4 named AssertionErrors and15 controls
+      with0technical errors. Core baseline first assertNull proved206 staging; later206 guards ran in GREEN only.
+      Core200/203/404 controls and App15 memory/stats/one-save/throws/equal-next controls remain. Exact env/versions/source
+      hashes and compile recipe live once in Core PR63 update-reports/entries/maplib-20261030-full-snapshot-http206.md.
+      Native/SQL/full-snapshot apply/tenant/disk/retry/device/APK/fullCI remain NOT_RUN. --continue collects two filtered
+      results only after all prelaunch gates; it is not permission to bypass nonzero input/observer/plan checks.'
+
+
+  AUTO-NGW-USER-MESSAGES:
+    type: automatic
+    scope: [maplib, maplibui, app]
+    command: "& '.\\gradlew.bat' '--offline' '--no-daemon' '--continue' '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.util.SyncFailureSnapshotTest' '--tests' 'com.nextgis.maplib.map.NGWHttpFailureReasonProducerTest' '--tests' 'com.nextgis.maplib.map.NGWSyncNoneServerFailureTest' '--tests' 'com.nextgis.maplib.util.NgwHttpExceptionTest' '--tests' 'com.nextgis.maplib.util.NgwHttpResponseExceptionTest' '--tests' 'com.nextgis.maplib.util.NetworkUtilTransientNgwTest' ':app:testLisaDebugUnitTest' '--tests' 'com.nextgis.mobile.util.SyncFailurePresentationTest' '--tests' 'com.nextgis.mobile.util.ProjectSyncLateFailureTest' '--tests' 'com.nextgis.maplib.datasource.ngw.ResourceChildrenMessagesTest' '--tests' 'com.nextgis.maplibui.util.LayerFillErrorMessageTest' '--tests' 'com.nextgis.maplibui.activity.FormLegacyListMessagesTest'"
+    expected: >
+      Actual89 PASS:80 API28 model methods plus9 plainJUnit; Core46/App43. Pure positively known server IO/lookup Parse,
+      owner/count/schema/late/mixed/auth/skipped/cancel boundaries and actual safe notification/Intent copy;
+      late project outcome helper7, metadata-only HTTP producers6, readonly config-only failure10,
+      typed HTTP exceptions10, resource-list9, LayerFill formatter10 and legacy form list4. No missing-API
+      compile/setup failure may be labelled baselineRED. Literal4 have a standalone old-source assertion baseline; new typed APIs require
+      implementation before execution, and the separate failed first85 is retained explicitly. Root actual results/versions
+      and bounded source-compile graph are recorded separately. Actual0fail/errors/skips XML10.995s/Gradle0BUILD50s; Belka source0BUILD59s.
+      Native/GUI/Service/SQLite/real server/device/permission/large-font/APK/whole-project ACK NOT_RUN. --continue collects
+      only these filters after all prelaunch gates; it never bypasses a failed prerequisite.
+
+    source_result: "Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance. First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods."
+
+  AUTO-NGW-RESOURCE-CHECKBOX-SELECTION:
+    type: automatic
+    scope:
+    - maplibui
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''--continue'' ''-Pkotlin.incremental=false''
+      ''-PciReliabilityChecks=true'' ''--console=plain'' '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.maplibui.dialog.ResourceSelectionCheckboxTest''
+      ''--tests'' ''com.nextgis.maplibui.util.NgwResourceSelectionDedupTest'' ''--tests'' ''com.nextgis.maplib.datasource.ngw.ResourceChildrenMessagesTest'''
+    expected: Actual same37 API28 models PASS/0fail/errors/skips:22 checkbox/label +6 owned restore +9 protected
+      browser messages,3XML6.846s,Gradle0/BUILD45s. Meaningful old-source baseline37 has13assertFAIL/24controls/0errors/skips,XML6.493s,Gradle1/BUILD57s.
+      Same c683/f46 fixture bytes/method sets unchanged. Baseline134 raw events/133unique includes duplicate
+      FAILED status; green133/133 exact reviewed SET with different order.81 protected inputs exact,all13
+      baseline/all14 green owned processes settled absent. First dry prefix-classifier false positive and
+      first raw-event133 observer assumption remain explicit diagnostic history, not retroactive gate PASS;
+      actual tests were not rerun for those observer corrections. Invalid9f25 source was held beforeC and
+      replaced by reviewed606 without oracle changes. BelkaRelease source compile exit0/BUILD47s (49.136s
+      observed),81 inputs exact,all10 owned processes settled absent. Actual100 task SET matches reviewed100
+      with different order; UIJava/AppJava+Kotlin executed, CoreJava UP-TO-DATE. Four Java JAR class counts28/535/670/45;
+      no dex/so/APK/AAB/AAR. This is source compilation, not installed-app/native/Service/DB/server/import/layout-fit
+      acceptance. Native/device/Activity lifecycle/rotation/realserver/DB/import writes/largefont/APK/refresh
+      acceptance NOT_RUN; screenshot layout fit not covered. Historical full message89/Belka59 not rerun
+      and used old Adapterb703.
+    source_result: Actual same37 API28 models PASS/0fail/errors/skips:22 checkbox/label +6 owned restore
+      +9 protected browser messages,3XML6.846s,Gradle0/BUILD45s. Meaningful old-source baseline37 has13assertFAIL/24controls/0errors/skips,XML6.493s,Gradle1/BUILD57s.
+      Same c683/f46 fixture bytes/method sets unchanged. Baseline134 raw events/133unique includes duplicate
+      FAILED status; green133/133 exact reviewed SET with different order.81 protected inputs exact,all13
+      baseline/all14 green owned processes settled absent. First dry prefix-classifier false positive and
+      first raw-event133 observer assumption remain explicit diagnostic history, not retroactive gate PASS;
+      actual tests were not rerun for those observer corrections. Invalid9f25 source was held beforeC and
+      replaced by reviewed606 without oracle changes. BelkaRelease source compile exit0/BUILD47s (49.136s
+      observed),81 inputs exact,all10 owned processes settled absent. Actual100 task SET matches reviewed100
+      with different order; UIJava/AppJava+Kotlin executed, CoreJava UP-TO-DATE. Four Java JAR class counts28/535/670/45;
+      no dex/so/APK/AAB/AAR. This is source compilation, not installed-app/native/Service/DB/server/import/layout-fit
+      acceptance. Native/device/Activity lifecycle/rotation/realserver/DB/import writes/largefont/APK/refresh
+      acceptance NOT_RUN; screenshot layout fit not covered. Historical full message89/Belka59 not rerun
+      and used old Adapterb703.
+    compile_result: BelkaRelease source compile exit0/BUILD47s (49.136s observed),81 inputs exact,all10
+      owned processes settled absent. Actual100 task SET matches reviewed100 with different order; UIJava/AppJava+Kotlin
+      executed, CoreJava UP-TO-DATE. Four Java JAR class counts28/535/670/45; no dex/so/APK/AAB/AAR. This
+      is source compilation, not installed-app/native/Service/DB/server/import/layout-fit acceptance.
+  AUTO-VECTOR-SPATIAL-CACHE-RECOVERY:
+    type: automatic
+    scope:
+    - maplib
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''--continue'' ''-Pkotlin.incremental=false'' ''-PciReliabilityChecks=true''
+      ''--console=plain'' '':maplib:testDebugUnitTest'' ''--tests'' ''com.nextgis.maplib.datasource.GeometryRTreeRecoveryTest''
+      ''--tests'' ''com.nextgis.maplib.map.LocalVectorBulkCacheReadinessTest'' ''--tests'' ''com.nextgis.maplib.datasource.GeometryRTreePersistenceTest''
+      ''--tests'' ''com.nextgis.maplib.datasource.GeometryRTreeConcurrencyTest'' ''--tests'' ''com.nextgis.maplib.map.SqliteVectorSpatialQueryTest'''
+    expected: New complete batches are native-ready and persist a complete index before count/properties/manual repair;
+      Partial/canceled indexes retain existing rejection guards; empty-create admission refuses a fresh unready empty
+      index over a nonempty table or an unavailable count, while independently complete nonempty snapshots remain
+      accepted. Legacy, malformed, clear/same-path-save, missing-file and fresh-load recovery controls remain independently
+      witnessed.
+    source_result: "Фактический Core29: до исправления15 assertion FAIL/14 controls, после29 PASS/0 failures/errors/skips (5 XML/5.653s; Gradle exit0/BUILD40s; observed42.537s). Те же Core tests/oracles;105 inputs unchanged during run/10 owned processes settled absent. В историческом Core29 checkpoint consumer compile ещё ожидалась; затем Root принял отдельную финальную source compile. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; не combined55 PASS и не device/native acceptance. App legacy25P1F не является crop RED."
+    runtime_scope: Core29 =16 Robolectric API28 technical SQLite (lifecycle12 +spatial4) and13 plain JUnit (recovery11
+      +legacy persistence1 +concurrency1). No actual HTTP service/import, native map, installed APK or device/process-restart
+      acceptance.
+    environment: Reuse existing JBR21/Gradle9.3.1/AGP9.1.0/API28 and Q caches/TEMP/TMP/TMPDIR/java.io.tmpdir through
+      documented offline developer setup. Gradle command has no Q helper dependency; scope source only. Unit failure
+      blocks later consumer compile.
+
+  AUTO-NGW-RESOURCE-ROW-TEXT-FIT:
+    type: automatic
+    scope:
+    - maplibui
+    - app
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''--continue'' ''-Pkotlin.incremental=false''
+      ''-PciReliabilityChecks=true'' ''--console=plain'' '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.maplibui.dialog.ResourceSelectionRowLayoutTest''
+      ''--tests'' ''com.nextgis.maplibui.view.TrackSelectionPanelTest'''
+    expected: 'Five actual-adapter API28 class-only CPU native Paint measurements: full captions/name line
+      ends, zero ellipsis, height/glyph bounds, non-overlap, recycled binding and list/Add/path; same row
+      wide640/narrow280/wide640 restores horizontal layout without reparent or selection mutation. Font/backend
+      mismatch is setup failure, not product RED.'
+    source_result: "Фактически5 caption layout methods PASS/0 failures/errors/skips, XML10.06s. Ораклы и whole fixture SHA256 cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac неизменны относительно предыдущего4PASS/1FAIL. Finalized Root receipt SHA256 68f7f6bdc072f9f25fd2af02e0584ac467a4dbb1a0c1b1e1959341b2126630ef. В этом запуске общий cohort10 НЕ PASS: 6 PASS/4 отдельные Panel assertion FAIL, Gradle exit1; 120 входов без drift, все13 owned processes settled absent, наблюдалось110.0625s. Это технические API28 CPU native Paint/text measurements, без Android device/OEM/GPU/display/GIS native/touch/rotation acceptance. Исторический cohort10 checkpoint предшествовал consumer compile. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c."
+    history: 'Первый combined55 attempt: Core29 реально исполнился (15 assertion FAIL/14 controls), App0:
+      fixture не скомпилировался из-за missing RobolectricTestRunner import. Старый Checkbox22 XML был STALE
+      и исключён; предварительные51 copied cases не являются51 выполненной проверкой. V3 добавил ровно один
+      импорт. Legacy App26 затем реально25 PASS/1 path FAIL; первые3 caption methods PASS на старом XML,
+      поэтому это НЕ crop RED. NativeV4 class-only CPU glyph/font backend с setup calibration воспроизвёл4
+      assertion FAIL на старом XML. После3 caption width attrs Native4 дал2 PASS/2 assertion FAIL: имя Collector
+      при280dp/font2RU и конец пути. Static responsive groups и перенос5dp margin→scroll padding дали4 PASS/1
+      transition FAIL в frozen5 fixture. Новая локальная инвалидация descendant measure cache проверяется
+      теми же5: fixturecc1f, все assertions/setup неизменны. Core29 PASS относится к отдельной cache-проверке,
+      combined55 PASS не заявляется. Исторические37/89 и их source pins не перезапускались.'
+    runtime_scope: Полная owned copy и CPU glyph bounds не принимают фактическое число доступных строк,
+      touch targets/scroll/OEM/font/theme/rotation/display-size/installed APK/phone performance. font1.3
+      и реальные orientation/display combinations не исполнены. Единственный narrow Root risk AUDIT-TODO-MOBILE-RESOURCE-ROW-LAYOUT;
+      broader UI audit продолжается, не all-screens PASS. F61 clock/Wiki/pointer blockers прежние.
+    fixture_sha256: cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac
+  AUTO-TRACK-SELECTED-GPX-SHARE:
+    type: automatic
+    scope:
+    - app
+    - maplibui
+    command: '& ''.\gradlew.bat'' ''--offline'' ''--no-daemon'' ''--continue'' ''-Pkotlin.incremental=false'' ''-PciReliabilityChecks=true''
+      ''--console=plain'' '':app:testLisaDebugUnitTest'' ''--tests'' ''com.nextgis.mobile.fragment.SelectedTrackShareBindingTest''
+      ''--tests'' ''com.nextgis.maplibui.util.TrackGpxNameExportTest'' ''--tests'' ''com.nextgis.maplibui.view.TrackSelectionPanelTest'''
+    expected: The frozen addressed JVM cohort must execute all distinct methods without error/skip after effective
+      CPU native-font setup is witnessed for panel tests. XML parser verifies decoded names, technical provider verifies
+      selected shared ID/order/segments, owned temporary files verify basename containment; old MIME tests stay source-unchanged
+      and are not included in this addressed command. Classify setup, product RED, corrected fixtures and actual outcomes
+      separately. This is not Android native/device/GPU/recipient or whole-window acceptance.
+    source_result: "Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance."
+    history: Baseline23=18assertFAIL5controls/0errors/skips:13missingShareID assertionsacrossBinding8/Panel5 arefeatureabsence,
+      NOTproofoldstalelaunchbugs; Exporter5XML/pathcounterexamples+5controls independentlydemonstrateactualdefects.
+      Firstgreen23=19PASS4PaneloverlapFAIL, XML11.393s,Gradle1; nofullPASS. DiagnosticV3 9ec/523f LFops/CRLFcandidate
+      rejectedBEFOREC/runtime byRootguard; retainedinvalidhistory. CorrectedRAWV4 c093/64ac exactreplay/inverse78eff,
+      Bridge73edf; onlymessage/helper changed. Diagnostic10 captured3pxbaselineoffset, one-line637a→0069 preservesIDs/callbacks/copy/widthlogic/all5oracles;
+      finalPanel5accepted. Oldmessage89/selector37/cache29/caption5 resultsremain separatehistoricalcohorts, notrerun/resummed.

@@ -13,7 +13,7 @@ repositories:
     title: GeonicalSystem Android Maplib
     path: maplib
     kind: submodule
-    expected_branch: my-maplibre
+    expected_branch: master
     origin: https://github.com/GeonicalSys/android_maplib.git
     upstream: https://github.com/nextgis/android_maplib.git
     docs_policy: required
@@ -22,7 +22,7 @@ repositories:
     title: GeonicalSystem Android Maplib UI
     path: maplibui
     kind: submodule
-    expected_branch: my-maplibre
+    expected_branch: master
     origin: https://github.com/GeonicalSys/android_maplibui.git
     upstream: https://github.com/nextgis/android_maplibui.git
     docs_policy: required
@@ -31,7 +31,7 @@ repositories:
     title: GeonicalSystem EasyPicker fork
     path: easypicker
     kind: submodule
-    expected_branch: my-maplibre
+    expected_branch: master
     origin: https://github.com/GeonicalSys/easypicker.git
     upstream: https://github.com/nextgis/easypicker.git
     docs_policy: required

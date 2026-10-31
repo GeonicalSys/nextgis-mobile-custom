@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-10-29
+last_verified: 2026-10-30
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
@@ -218,7 +218,11 @@ units/CRS/freshness, сохранённым состоянием и незави
 ## MOB-02 Самостоятельное обнаружение и сохранение зависимостей
 
 Приоритет P1. Состояние: исходный entry bridge слит29.10 в PR83; shared LISA
-PR270 также слит. Следующий отдельный этап — MOB-UI-01, без изменения продуктовой очереди.
+PR270 также слит. MOB-UI-01 принят в Android PR85 и LISA PR275; его runtime
+пилоты остаются NOT_RUN. Следующий source/docs шаг29.10 — глубокий разбор
+workspace/sync ownership, сохранённых ключей, pair ACK/full clock и cancellation
+drain в прежнем MOB-02, по новой команде владельца продолжать аудит до остановки.
+Изменения продуктовой очереди и возобновления native этапов нет.
 Основание — поручение пользователя27 октября: агент пропустил зависимый ресурс;
 пользователь не должен перечислять связи или отдельно просить сохранить найденное.
 Владелец — Android root для входных инструкций; общий source index/процедура
@@ -244,6 +248,42 @@ PR270 также слит. Следующий отдельный этап — MO
 проверяется на свежесть. Недоступные owners/другой worktree не скрываются за
 чужим индексом или словом PASS. Проверки — source-only docs/report validators;
 доставка и фактические результаты фиксируются в PR отдельно от device/release.
+
+Текущий глубокий срез: `android-20261029-dependency-depth-01` дополняет
+существующие sync/storage контракты и исправляет устаревший active-project-only
+oracle в SMOKE-MULTI-ACCOUNT-SYNC. Приёмка среза — проверяемая по source цепочка
+owner→scope→provider/service→drain→pair ACK→cleanup→full clock, разные persisted
+keys и независимые ожидания. Статус: source/docs в собственной ветке, runtime
+NOT_RUN; три открытые ветви ведутся в едином LISA dependency-audit-todo по IDs
+AUDIT-TODO-SYNC-ACK-RECOVERY, AUDIT-TODO-SYNC-CLAIMED-LIVENESS,
+AUDIT-TODO-WORKSPACE-KEY-MIGRATION. Продукт, БД, NGW, APK и библиотечные gitlinks
+не меняются; этот список не становится параллельной очередью работ.
+
+Следующее углубление той же карточки прослеживает окно после последнего pair
+ACK до cleanup/full clock, manual service против framework SyncAdapter,
+startup recovery против следующего enabled schedule и отсутствие накопления
+account-only успехов между запусками.21 методов в5 focused source test files
+только прочитаны, выполнено0; точной post-ACK fault injection нет. AOSP14/16
+подтверждает возможное расхождение failed-commit memory/disk: cached clock не
+доказывает durable completion. Независимые disk/restart и retry oracles остаются
+NOT_RUN в AUDIT-TODO-SYNC-ACK-RECOVERY; library/source fix требует отдельного
+impact и решения владельца. Это не новый roadmap item и не закрытие runtime TODO.
+
+
+Адресное исправление по дополнительному прямому поручению владельца29 октября
+«явные баги исправлять сразу»: карточка
+[android-20261029-storage-move-ownership](../../update-reports/entries/android-20261029-storage-move-ownership.md).
+В существующем MOB-02 выявлен обход operation exclusion в legacy storage move
+и Reset Settings; baseline фактически дал5 FAIL/1 штатный PASS без GIS/БД/device.
+Оба входа исправляются до изменения preferences и сохраняют владельца через
+асинхронное завершение/перепривязку. RESULT_OK здесь refresh, не move ACK.
+Это адресная source-доработка по поручению владельца; прежняя граница docs-only
+выше относится к исходному entry bridge и не отменяет новое поручение.
+Приоритет продуктовых функций и native/Related/Full/публикация не возобновляются.
+Состояние — source-реализация завершена:21 actual-body JVM PASS, LisaDebug и
+BelkaRelease Java/Kotlin compile PASS, независимый разбор CLEAR; Git/docs closure
+продолжается. Merge, поставка библиотек и device-приёмка отмечаются отдельно. Политика миграции
+11 stores, disk/restart и renderer drain остаётся в едином LISA audit TODO.
 
 # Уже начатая работа
 
@@ -626,3 +666,135 @@ native проверки фиксируется отдельно. Software-relate
 отключил андервольтинг и явно поручил продолжить в software-only режиме.
 Это мера изоляции риска,
 а не установленная причина Windows hang или мобильного224 crash.
+
+## Продолжение MOB-02: подтверждение journal — 2026-10-30
+
+В том же существующем MOB-02 по прямому поручению владельца29 октября
+исправлять явные баги выявлен failed ACK, незаметно включавшийся в следующую
+успешную запись очереди. Карточка [android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).
+Адресная source-реализация защищает согласованный queue/legacy cohort внутри
+процесса; product priorities и native/Related/Full/публикация не возобновляются.
+Git delivery, source/JVM checks, merge и device/restart verification разделены
+в карточке. Исходный docs-only entry bridge и исторические результаты выше
+сохранены; вопросы post-ACK cleanup и restart остаются в прежнем LISA ACK TODO.
+
+### Продолжение MOB-02: значения формы NGFP — 2026-10-30
+
+Сохранены11 source-backed связей от nullable SQL/NGFP/catalog/private resolver/publisher через Collector first-form selection к remote Field metadata, restored pair и Save. Default Прочие / прочие действующий; нарушение не установлено. UI-FORM-TEXT-LINE-CAP отделяет requested lines от текста и resource IDs. Интегрированный docs-only каталог39/134/17 сохраняет прежние38/128/14 и clock F61; проверки текущих docs ещё NOT_RUN, существующий clock drift не скрывается. Четыре root NGFP TODO принадлежат единой очереди; native/UI/data policy не возобновляется.
+
+### Продолжение MOB-02: ключи lookup-кеша и источник цели — 2026-10-30
+
+В собственном maplib устранён NPE при равном числе пар с другим набором ключей;
+новая внутренняя App карточка android-20261030-lookup-cache-regression сохраняет
+9 actual-body JVM и точную offline recipe, библиотечная user-карточка
+maplib-20261030-lookup-cache-keys объясняет поведение. GREEN9 и BelkaRelease37с
+относятся к live8ca, не к поставке с committed App F61. Clock19/journal22/storage21
+не перезапускались; native/NGW/restart и savefalse policy не приняты.
+
+Отдельная internal карточка android-20261030-stakeout-target-contract сохраняет
+source-only цепочку selected geometry/copy/3857 nearest facet/4326 inverse и
+Bundle ownership. UI-каталог39/142/19 дополняет старые134/17 без repin F61,
+product math/lifecycle не меняется. Существующий FID TODO и новый общий
+AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE остаются открыты. Docs/guard проверки
+после интеграции ещё NOT_RUN; новая App или параллельная root-очередь не создаётся.
+
+
+### Продолжение MOB-02: prefetch без расширения удаления — 30 октября2026
+
+По тому же поручению исправлять явные source-баги подготовлена отдельная maplibui
+API для двух prefetch callers: nested/orientation bindings и per-call dedup. Старые17
+строк public reader и весь deletion file сохранены; account cast ждёт backup/owner policy.
+Новые карточки maplibui-20261030-ngfp-lookup-prefetch и android-20261030-ngfp-lookup-prefetch-regression
+разделяют user behavior и12 technical JVM. Baseline3FAIL/9PASS →12GREEN2.149с/49с,
+Belka0/41с; classifier/sequence NOT_PASS и postproof/fail-fast recovery явно сохранены,
+allgatesPASS нет. Старые9/19/22/21/desktop1117/1192 не перезапускались. UI39/142/19/F61
+и parent UI E66 сохранены; library Merge Commit до App pointer, без APK/device stage.
+Новые metadata official validators после C-интеграции NOT_RUN; shared-cache/hash
+retry/durability/account safety остаются в единой Root очереди.
+
+
+### Продолжение MOB-02: допуск полного pull и save(false) —30 октября2026
+
+В том же поручении исправлены только два proven source omission: явный206 на
+no-Range/no-combination full downloader и отсутствие IO сигнала от двух save(false).
+Shared19 (Core4+App15) прошёл после4 named assertion RED; old9 включён исторически,
+не суммируется с15. Belka source compile0/39с, exact100 set/orderdifferent,7PIDstop.
+Первый dry capture UNKNOWN/NOT_PASS сохранён; recovery dry и единственный actual
+compile не превращают старую попытку в PASS. Новые3 карточки разделяют Core206,
+Core save-signal и App internal15; полная recipe в Core PR63.
+
+Disk/retry риск26, same-hash cache readiness/shared deletion, account backup27 и
+partial200/tracked/initial-import полнота остаются в единой Root очереди. UI39/142/19/
+F61 не меняется. Старые clock19/journal22/storage21/prefetch12 и desktop1117/1192 не
+запускались. Device/Related/Full/APK/release и новые metadata checks NOT_RUN;
+изменение установленного приложения появится после обычного выпуска. Новая
+roadmap priority или параллельная очередь не создаётся.
+
+
+### MOB-02 / MOB-UI-01 — сообщения об отказах, source checkpoint30 октября
+
+По прямому поручению владельца исправляется потеря причин server failure и
+неуместные/отсутствующие сообщения sync, resource selector, layer import и legacy
+form list. Работа входит в существующие MOB-02/MOB-UI-01; приоритеты остальных
+этапов не меняются. Related/Full/device/AVD не возобновлены. Acceptance различает
+положительно известный server-only cause, offline, auth/rights/local/mixed/unknown,
+late child/cancel и private diagnostics; текст не обещает серверное обслуживание,
+доставку всех правок, disk/restart durability или release.
+
+Scope и technical fixtures описаны в AUTO-NGW-USER-MESSAGES, новых UI message
+контрактах и карточке android-20261030-user-facing-errors. Статус здесь source
+prepared:89 source/model PASS, Belka source compile0/59с; native/device NOT_RUN.
+Linked Draft Core63/UI46 должны предшествовать App pointers/semantic clock review;
+App86 остаётся Draft до отдельного merge/release решения.
+
+
+### MOB-UI-01 — флажки ресурсов ВебГИС, source checkpoint30 октября
+
+По текущему поручению углубления аудита подготовлен bounded selector slice:
+ANY-by-localID/mode rendering, symmetric false callback, no-amplification true,
+восстановление type1 label при recycling и OR duplicate flags только в owned
+JSON restore после каждого прежнего resolve. Source ownership — maplibui;
+28 новых +9 protected browser models в App: actual37 PASS; Belka source compile0/BUILD47s; native acceptance отдельно NOT_RUN. Это не refresh/tree policy,
+external setter/Parcel normalization или generic import dedup; неизвестные
+свидетельства и следующий шаг едины в Root `AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH`. Карточки `android-20261030-ngw-resource-checkbox-selection` и
+`maplibui-20261030-ngw-resource-checkbox-binding` сохраняют source/model/native границы. Приоритеты других этапов,
+device/Related/Full и Wiki не возобновлены. Message89/Belka59 — исторический
+срез с другим Adapter, без rerun/пересуммирования. F61 clock/pins ещё held.
+
+
+## MOB-04: cache lifecycle при импорте и восстановлении — 30 октября2026
+
+Source closure связывает GPX/KML/GeoJSON и initial NGW/Collector/form imports с
+готовностью полного spatial index, properties/config reread и persisted old-file
+recovery. Cache reset/cardinality и verified-empty create исправляются отдельно
+от caption/layout и historical message89/selector37. Core29 фактически исполнен: исходный код —15 assertion FAIL/14 control PASS, после двух исправлений —29 PASS/0 failures/errors/skips; те же пять наборов и все Core test bytes/oracles сохранены. Это23 новые проверки (12 lifecycle +11 RTree) и6 прежних контролей (legacy1, concurrency1, spatial4):16 Robolectric API28 с технической SQLite и13 plain JUnit. Финальный запуск:5 XML/5.653s, Gradle exit0/BUILD40s (наблюдалось42.537s),105 входов неизменны во время запуска,10 собственных процессов завершены и отсутствие подтверждено. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c. Это не55 PASS; App legacy25 PASS/1 path assertion не воспроизвёл обрезание подписей. Device/installed30/real GPX20wpt/NGW import/restart/native map acceptance не выполнялись.
+User controls restart/style/toggle/only-manual-rebuild остаются обязательными
+независимыми device expectations; installed30 artifact/source identity UNKNOWN,
+private GPX20wpt не становится versioned input. Canonical risk
+AUDIT-TODO-VECTOR-SPATIAL-CACHE-RECOVERY сохраняется до scoped acceptance. Ни новый
+source test, ни совпадение counts не закрывает весь MOB-04/real-data/native.
+
+
+### MOB-UI-01 — полная строка ресурса, повторное измерение и конец пути
+
+Три caption width=wrap_content сохраняют полный owned RU/EN текст. NgwResourceRowLayout сначала измеряет обычную горизонтальную строку; лишь фактический glyph clipping имени переводит две статические header/mode группы друг под друга. Перед обычным и full-width измерением локально forceLayout для каждого descendant обновляет getLayout до решения о размещении; parent requestLayout/reparent нет. При расширении та же строка возвращается в горизонтальную компоновку. Шрифт, IDs, порядок controls, listeners/CheckState/local-vs-remote identity/JSON/Parcel/import/refresh прежние. Shared breadcrumb layout переносит5dp child margin в5dp padding HorizontalScrollView: API28 clamp учитывает padding, а child margin не учитывает. Визуальный отступ сохранён, конец пути достижим в технической модели.
+Фактически5 caption layout methods PASS/0 failures/errors/skips, XML10.06s. Ораклы и whole fixture SHA256 cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac неизменны относительно предыдущего4PASS/1FAIL. Finalized Root receipt SHA256 68f7f6bdc072f9f25fd2af02e0584ac467a4dbb1a0c1b1e1959341b2126630ef. В этом запуске общий cohort10 НЕ PASS: 6 PASS/4 отдельные Panel assertion FAIL, Gradle exit1; 120 входов без drift, все13 owned processes settled absent, наблюдалось110.0625s. Это технические API28 CPU native Paint/text measurements, без Android device/OEM/GPU/display/GIS native/touch/rotation acceptance. Исторический cohort10 checkpoint предшествовал consumer compile. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.
+Первый combined55 attempt: Core29 реально исполнился (15 assertion FAIL/14 controls), App0: fixture не скомпилировался из-за missing RobolectricTestRunner import. Старый Checkbox22 XML был STALE и исключён; предварительные51 copied cases не являются51 выполненной проверкой. V3 добавил ровно один импорт. Legacy App26 затем реально25 PASS/1 path FAIL; первые3 caption methods PASS на старом XML, поэтому это НЕ crop RED. NativeV4 class-only CPU glyph/font backend с setup calibration воспроизвёл4 assertion FAIL на старом XML. После3 caption width attrs Native4 дал2 PASS/2 assertion FAIL: имя Collector при280dp/font2RU и конец пути. Static responsive groups и перенос5dp margin→scroll padding дали4 PASS/1 transition FAIL в frozen5 fixture. Новая локальная инвалидация descendant measure cache проверяется теми же5: fixturecc1f, все assertions/setup неизменны. Core29 PASS относится к отдельной cache-проверке, combined55 PASS не заявляется. Исторические37/89 и их source pins не перезапускались.
+Полная owned copy и CPU glyph bounds не принимают фактическое число доступных строк, touch targets/scroll/OEM/font/theme/rotation/display-size/installed APK/phone performance. font1.3 и реальные orientation/display combinations не исполнены. Единственный narrow Root risk AUDIT-TODO-MOBILE-RESOURCE-ROW-LAYOUT; broader UI audit продолжается, не all-screens PASS. F61 clock/Wiki/pointer blockers прежние.
+Карточки `maplibui-20261030-resource-caption-layout` / `android-20261030-resource-caption-layout-regression` отделены от selector37.
+
+
+### MOB-UI-01 — поделиться выбранным треком
+
+Прямое поручение владельца добавляет Share к существующей нижней track panel
+до отложенного merge/repo_load. Используется общий exporter, исправляются два
+source-confirmed дефекта XMLname/raw filename. Работа не создаёт новую очередь
+или roadmap priority; source/model результаты записываются отдельно после факта.
+Cache/concurrency/snapshot/lifetime ведутся в Root `AUDIT-TODO-MOBILE-TRACK-GPX-EXPORT-OWNERSHIP`.
+Исторические89/37 и cache29/caption checks не перезапускаются и не пересуммируются.
+Device/Related/Full/AVD/Office/PG/Wiki не возобновляются.
+
+
+Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.
+
+Baseline23=18assertFAIL5controls/0errors/skips:13missingShareID assertionsacrossBinding8/Panel5 arefeatureabsence, NOTproofoldstalelaunchbugs; Exporter5XML/pathcounterexamples+5controls independentlydemonstrateactualdefects. Firstgreen23=19PASS4PaneloverlapFAIL, XML11.393s,Gradle1; nofullPASS. DiagnosticV3 9ec/523f LFops/CRLFcandidate rejectedBEFOREC/runtime byRootguard; retainedinvalidhistory. CorrectedRAWV4 c093/64ac exactreplay/inverse78eff, Bridge73edf; onlymessage/helper changed. Diagnostic10 captured3pxbaselineoffset, one-line637a→0069 preservesIDs/callbacks/copy/widthlogic/all5oracles; finalPanel5accepted. Oldmessage89/selector37/cache29/caption5 resultsremain separatehistoricalcohorts, notrerun/resummed.

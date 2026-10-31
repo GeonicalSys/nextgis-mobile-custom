@@ -14,13 +14,144 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.List;
 import java.io.IOException;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import com.nextgis.maplib.util.ProdLogUtil;
 
 /** Durable pending project/account pairs, never credentials or feature data. */
 public final class SyncRecoveryJournal {
     private static final String PREFS = "sync_recovery_journal";
     private static final String QUEUE = "pending_v2";
+    private static final String[] KEYS = {QUEUE, "active", "account", "workspace", "manual", "started_at", "attempt"};
+    private static final Object STATE_LOCK = new Object();
+    private static final ReferenceQueue<SharedPreferences> COLLECTED = new ReferenceQueue<>();
+    private static final Map<PreferenceOwner, OwnerState> OWNERS = new HashMap<>();
     private SyncRecoveryJournal() { }
+
+    private static final class PreferenceOwner extends WeakReference<SharedPreferences> {
+        private final int hash;
+        PreferenceOwner(SharedPreferences preferences, ReferenceQueue<SharedPreferences> queue) {
+            super(preferences, queue);
+            hash = System.identityHashCode(preferences);
+        }
+        @Override public int hashCode() { return hash; }
+        @Override public boolean equals(Object other) {
+            if (this == other) return true;
+            if (!(other instanceof PreferenceOwner)) return false;
+            SharedPreferences preferences = get();
+            return preferences != null && preferences == ((PreferenceOwner) other).get();
+        }
+    }
+
+    private static final class OwnerState {
+        Cohort view;
+        boolean unconfirmedHistory;
+    }
+
+    /** Only owned keys; raw types and absence survive without eager legacy interpretation. */
+    private static final class Cohort {
+        final Map<String, Object> values;
+        Cohort(Map<String, ?> source) {
+            Map<String, Object> copy = new HashMap<>();
+            for (String key : KEYS) if (source.containsKey(key)) copy.put(key, copyValue(source.get(key)));
+            values = Collections.unmodifiableMap(copy);
+        }
+        private static Object copyValue(Object value) {
+            if (value == null || value instanceof String || value instanceof Boolean || value instanceof Integer
+                    || value instanceof Long || value instanceof Float) return value;
+            if (value instanceof Set<?>) {
+                Set<String> copy = new HashSet<>();
+                for (Object item : (Set<?>) value) {
+                    if (item != null && !(item instanceof String)) throw new ClassCastException("Invalid journal string set");
+                    copy.add((String) item);
+                }
+                return Collections.unmodifiableSet(copy);
+            }
+            throw new ClassCastException("Unsupported journal preference value");
+        }
+        String string(String key, String fallback) {
+            Object value = values.get(key); return value == null ? fallback : (String) value;
+        }
+        boolean bool(String key, boolean fallback) {
+            Object value = values.get(key); return value == null ? fallback : (Boolean) value;
+        }
+        long number(String key, long fallback) {
+            Object value = values.get(key); return value == null ? fallback : (Long) value;
+        }
+        JSONArray queue() throws JSONException { return new JSONArray(string(QUEUE, "[]")); }
+        Cohort after(JSONArray queue, boolean removeActive, boolean removeLegacy) {
+            Map<String, Object> next = new HashMap<>(values);
+            next.put(QUEUE, queue.toString());
+            if (removeActive || removeLegacy) next.remove("active");
+            if (removeLegacy) for (String key : new String[]{"account", "workspace", "manual", "started_at", "attempt"}) next.remove(key);
+            return new Cohort(next);
+        }
+        @SuppressWarnings("unchecked") void stage(SharedPreferences.Editor editor) {
+            for (String key : KEYS) {
+                if (!values.containsKey(key)) { editor.remove(key); continue; }
+                Object value = values.get(key);
+                if (value instanceof String) editor.putString(key, (String) value);
+                else if (value instanceof Boolean) editor.putBoolean(key, (Boolean) value);
+                else if (value instanceof Integer) editor.putInt(key, (Integer) value);
+                else if (value instanceof Long) editor.putLong(key, (Long) value);
+                else if (value instanceof Float) editor.putFloat(key, (Float) value);
+                else if (value instanceof Set<?>) editor.putStringSet(key, (Set<String>) value);
+                // Editor has no operation preserving a present null; do not silently remove it.
+                else throw new ClassCastException("Unwritable journal preference value");
+            }
+        }
+    }
+
+    private static OwnerState owner(SharedPreferences preferences) {
+        synchronized (STATE_LOCK) {
+            PreferenceOwner collected;
+            while ((collected = (PreferenceOwner) COLLECTED.poll()) != null) OWNERS.remove(collected);
+            PreferenceOwner lookup = new PreferenceOwner(preferences, null);
+            OwnerState state = OWNERS.get(lookup);
+            if (state == null) {
+                state = new OwnerState();
+                OWNERS.put(new PreferenceOwner(preferences, COLLECTED), state);
+            }
+            return state;
+        }
+    }
+
+    private static Cohort read(SharedPreferences preferences) {
+        OwnerState state = owner(preferences);
+        synchronized (STATE_LOCK) { if (state.view != null) return state.view; }
+        Cohort raw;
+        try { raw = new Cohort(preferences.getAll()); }
+        catch (RuntimeException error) {
+            synchronized (STATE_LOCK) { if (state.view != null) return state.view; }
+            throw error;
+        }
+        // A writer may have installed a view while the raw cache was being read.
+        synchronized (STATE_LOCK) { return state.view == null ? raw : state.view; }
+    }
+
+    /** Existing synchronized mutators serialize writes; readers never wait for that monitor. */
+    private static boolean write(SharedPreferences preferences, Cohort before, Cohort after) throws IOException {
+        OwnerState state = owner(preferences);
+        synchronized (STATE_LOCK) { state.view = before; }
+        boolean committed = false;
+        try {
+            SharedPreferences.Editor editor = preferences.edit();
+            after.stage(editor);
+            committed = SyncJournalCommit.commit(editor::commit);
+            return committed;
+        } finally {
+            synchronized (STATE_LOCK) {
+                if (!committed) state.unconfirmedHistory = true;
+                // Never drop a sticky view after later success: old raw readers may still be in flight.
+                state.view = committed ? (state.unconfirmedHistory ? after : null) : before;
+            }
+        }
+    }
 
     static final class PersistenceFailure extends IOException {
         final java.util.Map<String, Object> diagnostics;
@@ -48,11 +179,13 @@ public final class SyncRecoveryJournal {
         int beforeCount = -1, afterCount = -1, bytes = -1;
         boolean interruptedAtEntry = Thread.currentThread().isInterrupted();
         try {
-            JSONArray queue = load(context);
+            SharedPreferences preferences = preferences(context);
+            Cohort before = read(preferences);
+            JSONArray queue = before.queue();
             beforeCount = queue.length();
             phase = "legacy_inventory";
-            boolean migrated = preferences(context).getBoolean("active", false)
-                    && migrateLegacy(context, queue, ProjectSyncRunner.inventory(context));
+            boolean migrated = before.bool("active", false)
+                    && migrateLegacy(before, queue, ProjectSyncRunner.inventory(context));
             phase = "merge_pairs";
             for (ProjectSyncRunner.Target target : targets) for (Account account : accounts) {
                 JSONObject existing = find(queue, target.key(), account.name);
@@ -65,10 +198,8 @@ public final class SyncRecoveryJournal {
             afterCount = queue.length();
             bytes = payload.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
             phase = "commit";
-            SharedPreferences.Editor editor = preferences(context).edit().putString(QUEUE, payload);
-            if (migrated) editor.remove("active").remove("account").remove("workspace").remove("manual")
-                    .remove("started_at").remove("attempt");
-            if (!SyncJournalCommit.commit(editor::commit)) throw new IOException("SharedPreferences.commit returned false");
+            if (!write(preferences, before, before.after(queue, migrated, migrated)))
+                throw new IOException("SharedPreferences.commit returned false");
         } catch (Exception error) {
             long available = -1;
             try { available = context.getFilesDir().getUsableSpace(); } catch (RuntimeException ignored) { }
@@ -97,15 +228,16 @@ public final class SyncRecoveryJournal {
     public static synchronized boolean complete(Context context, ProjectSyncRunner.Target target, String account) {
         boolean interruptedAtEntry = Thread.currentThread().isInterrupted();
         try {
-            JSONArray before = load(context), after = new JSONArray();
-            for (int i = 0; i < before.length(); i++) {
-                JSONObject entry = before.getJSONObject(i);
+            SharedPreferences preferences = preferences(context);
+            Cohort before = read(preferences);
+            JSONArray queue = before.queue(), after = new JSONArray();
+            for (int i = 0; i < queue.length(); i++) {
+                JSONObject entry = queue.getJSONObject(i);
                 if (!target.key().equals(entry.getString("target")) || !account.equals(entry.getString("account"))) {
                     after.put(entry);
                 }
             }
-            SharedPreferences.Editor editor = preferences(context).edit().putString(QUEUE, after.toString());
-            return SyncJournalCommit.commit(editor::commit);
+            return write(preferences, before, before.after(after, false, false));
         } catch (Exception error) {
             HyperLog.e(Constants.TAG, "Cannot acknowledge completed sync pair", error); return false;
         } finally { if (interruptedAtEntry) Thread.currentThread().interrupt(); }
@@ -117,8 +249,10 @@ public final class SyncRecoveryJournal {
         try {
             IGISApplication app = (IGISApplication) context.getApplicationContext();
             List<ProjectSyncRunner.Target> targets = ProjectSyncRunner.inventory(context);
-            JSONArray queue = load(context);
-            boolean migrated = migrateLegacy(context, queue, targets);
+            SharedPreferences preferences = preferences(context);
+            Cohort before = read(preferences);
+            JSONArray queue = before.queue();
+            boolean migrated = migrateLegacy(before, queue, targets);
             JSONArray retained = new JSONArray();
             for (int i = 0; i < queue.length(); i++) {
                 JSONObject entry = queue.getJSONObject(i);
@@ -136,9 +270,7 @@ public final class SyncRecoveryJournal {
                 }
                 retained.put(entry);
             }
-            SharedPreferences.Editor editor = preferences(context).edit().putString(QUEUE, retained.toString());
-            if (migrated) editor.remove("active");
-            if (!SyncJournalCommit.commit(editor::commit)) return;
+            if (!write(preferences, before, before.after(retained, migrated, false))) return;
             for (int i = 0; i < retained.length(); i++) {
                 JSONObject entry = retained.getJSONObject(i);
                 Account account = new Account(entry.getString("account"), app.getAccountsType());
@@ -156,7 +288,7 @@ public final class SyncRecoveryJournal {
     }
 
     static JSONArray load(Context context) throws JSONException {
-        return new JSONArray(preferences(context).getString(QUEUE, "[]"));
+        return read(preferences(context)).queue();
     }
 
     private static JSONObject find(JSONArray queue, String target, String account) throws JSONException {
@@ -167,17 +299,16 @@ public final class SyncRecoveryJournal {
         return null;
     }
 
-    private static boolean migrateLegacy(Context context, JSONArray queue, List<ProjectSyncRunner.Target> targets)
+    private static boolean migrateLegacy(Cohort prefs, JSONArray queue, List<ProjectSyncRunner.Target> targets)
             throws JSONException {
-        SharedPreferences prefs = preferences(context);
-        if (!prefs.getBoolean("active", false)) return false;
+        if (!prefs.bool("active", false)) return false;
         for (ProjectSyncRunner.Target target : targets) {
-            if ((target.uid + "|" + target.path).equals(prefs.getString("workspace", ""))) {
-                String account = prefs.getString("account", "");
+            if ((target.uid + "|" + target.path).equals(prefs.string("workspace", ""))) {
+                String account = prefs.string("account", "");
                 if (!account.isEmpty() && find(queue, target.key(), account) == null) {
                     queue.put(new JSONObject().put("target", target.key()).put("account", account)
-                            .put("manual", prefs.getBoolean("manual", false))
-                            .put("started_at", prefs.getLong("started_at", 0L)));
+                            .put("manual", prefs.bool("manual", false))
+                            .put("started_at", prefs.number("started_at", 0L)));
                 }
                 return true;
             }

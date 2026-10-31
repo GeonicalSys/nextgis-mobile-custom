@@ -121,6 +121,7 @@
     <string name="map_path_summary">The path to map data folder. Changing map folder may prevent data removal after application is uninstalled.</string>
     <string name="select_map_path">Select map folder path</string>
     <string name="moving">Moving…</string>
+    <string name="map_storage_move_failed">Could not complete the map move</string>
     <string name="warning_map_moving">Dangerous operation! Don\'t cancel it or kill the application during the data transfer to the new location! Your data may be broken or lost!</string>
     <string name="warning_folder_should_be_empty">The folder should be empty. Canceling operation.</string>
     <string name="frequentest">, as frequent as possible</string>

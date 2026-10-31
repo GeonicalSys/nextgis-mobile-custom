@@ -1,8 +1,12 @@
 ---
 title: Обязательность, видимость и оформление NGFP
 type: architecture
-last_verified: 2026-10-26
+last_verified: 2026-10-30
 related_code:
+  - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java
+  - maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java
+  - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java
+  - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/DoubleCombobox.java
   - maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/FormMetadataSnapshot.java
@@ -165,3 +169,81 @@ NGFP fields.display_name и alias слоя. Длинное выбранное н
 обёртки; это удерживает цель видимости всей пары. Без ID управляемая каскадом
 пара разворачивается как прежде. Field names, выбранные ключи и каскадный pin
 не зависят от оформления. Видимость применяется и в режиме просмотра.
+
+## Каноническая пара classobj/typeobj: источник, defaults и Save
+
+Канонический `field_polygons_form.ngfp` версии2.2 содержит legacy
+`double_combobox` с `field_level1=classobj`, `field_level2=typeobj`, `last=false`.
+Оба поля — STRING-категории без физических единиц. Raw names `Прочие` / `прочие`
+помечены template defaults; подпись alias, индекс Spinner, NGW resource ID и FID
+не заменяют эти значения. Новый пустой сеанс без explicit/draft/cursor values
+по обычному callback выбирает эту пару. Здесь не установлена неисправность default.
+
+`FormBuilderModifyAttributesActivity.getControl` создаёт DoubleCombobox из
+`formtemplate_doublecombobox.xml`. Сам control — AppCompatSpinner; второй Spinner
+создаётся в init программно. У каждого поля нет отдельного XML ID: parent хранит
+обе field identity, `getFieldView`/RequiredFieldUi находят нужный view, getValue и
+saveState сохраняют raw pair. Это отличается от двух независимых selectors,
+которые CascadingFormElements создаёт только при управляющем графе.
+
+Полная valid Bundle pair, включая explicit new-feature category, имеет приоритет
+перед cursor. Без complete saved pair используются cursor names; template default
+выбирает fallback position, а last=false исключает preferences fallback. Для
+parent/child списков последняя отметка default=true задаёт default position.
+Callback родительского Spinner на первом показе применяет найденный restored child, затем default
+выбранного parent. NULL/unlisted old values и замена формы требуют отдельной
+согласованной политики; это не доказанное нарушение сохранения.
+
+SQL `dynamic.field_polygons.classobj/typeobj` допускает NULL и не имеет DB default.
+Connected Collector импорт получает `Field.required` и тип из серверного
+`feature_layer.fields`; отсутствующий required читается как false. SQL nullable и
+отсутствие required в template сами не доказывают actual server flag. Collector
+visible — флаг слоя, не полевая conditional visibility. Save собирает обе строки
+из DoubleComboboxValue и проходит существующие required/scripts/owner gates до
+provider insert/update. Непустые default names являются значениями.
+
+Desktop разрешает optional private overlay перед общей NGFP, проверяет catalog
+pairs и публикует resolved bytes в form child. Check forms не проверяет все
+required/default/visible признаки и не исправляет ZIP. Collector указывает layer;
+Android выбирает первый formbuilder_form child, не canonical filename. Поэтому
+actual tenant form ID/hash/order/required, obsolete-values policy и native Spinner
+lifecycle остаются четырьмя условными неизвестными общей NGW family, а не новым
+app-only списком задач.
+
+### Прослеженные связи источников
+
+Следующая11-link таблица сохраняет source-review anchors checkpoint UI E66.
+Новые40 строк prefetch helper сдвигают последующие LayerUtil line numbers, но
+не меняют прежний resolver/control/default/required/Save. Текущий отдельный
+reader указан ниже; исторические anchors и UI fingerprints не обновляются автоматически.
+
+| Link | Producer → consumer | Source anchors |
+| --- | --- | --- |
+| `NGFP-FIELD-01` | PostgreSQL canonical columns → NGW PostGIS field namespace | `tables.py:6403-6432; postgis_layers.json:/postgis_layers/10; ngw_layers.py:736; ngw_client.py:1052-1087` |
+| `NGFP-FIELD-02` | Canonical NGFP v2.2 and field-type catalog → Resolved form input | `field_polygons_form.ngfp:meta.json fields0/1, form.json/1; field_poly_types.json:/pairs/6; plugin_parameters.py:277-287; form_paths.py:40-94` |
+| `NGFP-FIELD-03` | Check forms action → Publisher input assurance | `field_data_forms.py:36-117; field_data_catalog.py:354-392; stand_project.py:1889` |
+| `NGFP-FIELD-04` | Desktop apply forms → NGW formbuilder_form child | `stand_project.py:1432-1446; ngw_forms.py:131-148,211-245; ngw_client.py:1751-1794` |
+| `NGFP-FIELD-05` | Collector canonical item → Numeric NGW layer reference | `collector_project.json:/root_item/children/3; ngw_collector_projects.py:145-187,238-275` |
+| `NGFP-FIELD-06` | NGW layer children → Android selected form ID | `CollectorResource.java:414-457; LayerWithStyles.java:146-177; CollectorProjectCompositionSync.java:406-433` |
+| `NGFP-FIELD-07` | Collector form ID → Local sidecars and connected NGW fill | `CollectorProjectImportHelper.java:262-277; LayerFillService.java:1835-1870,1942-1989` |
+| `NGFP-FIELD-08` | NGW feature_layer.fields → Stored Android Field type and required flag | `NGWVectorLayer.java:676-704; NGWUtil.java:504-522; maplib LayerUtil.java:97-98; GeoConstants.java:115; Field.java:53-86` |
+| `NGFP-FIELD-09` | Matched form/meta and form launch → Double selector restored state | `maplibui LayerUtil.java:137-151,209-224; ModifyAttributesActivity.java:420-424; FeatureTypeDefaults.java:132-164; DoubleCombobox.java:98-145` |
+| `NGFP-FIELD-10` | Double-combobox defaults → Current values and saved pair | `DoubleCombobox.java:146-226,275-306; ControlHelper.java:137-141` |
+| `NGFP-FIELD-11` | Control values → Required gate and provider Save | `FormBuilderModifyAttributesActivity.java:775-793,839-841; ModifyAttributesActivity.java:984-1003,1011-1062,1293-1321; RequiredFieldUi.java:22-29; RequiredFieldValidation.java:13-23; ConditionalRequiredController.java:46-55` |
+
+Desktop paths принадлежат LISA `plugins/stand_project`; Android paths — maplib/maplibui.
+Маршрут к единому владельцу и root registry: [экосистема](lisa-ecosystem.md).
+Эти anchors обозначают source review, а не actual tenant/native acceptance.
+
+
+## Справочники layouts и неизменённые правила
+
+fillLookupTableIdsForPrefetch обходит typed combobox bindings в root array,
+рекурсивных tabs/pages/elements и обоих declared orientations. Два callers —
+GISApplication.fillMissingLookupTablesForCollectorForm и LayerFillService.UnzipForm.execute.
+Это не обход defaults/required/visible или замена FormMetadataSnapshot; нет
+обещания repair missing-cache при том же hash. Public legacy reader/delete прежние.
+Current anchors: LayerUtil.fillLookupTableIdsForPrefetch:85, collectLookupElements:105;
+production calls GISApplication:1334 и LayerFillService:1946. [Контракт и риски](ngw-sync-and-storage.md).
+Actual12 JVM проверяют helper/legacy outputs; native conditional/Spinner/Required
+Save не выполнялись заново. UI39/142/19 и clock F61 не перепривязаны.

@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-25
+last_verified: 2026-10-30
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -341,3 +341,13 @@ WorkManager jobs принадлежат сохранённому пути про
 recording intent и UUID в ERROR. Возврат GPS допускает resume; очистка intent
 происходит после подтверждённого Stop. Эмуляторная регрессия входит в Related
 `recording-intent` и tracks; системные настройки физического устройства не меняются.
+
+## Recovery journal и граница процесса — 2026-10-30
+
+SyncRecoveryJournal защищает принятый состав project/account очереди внутри
+процесса после rejected write. Семь известных queue/legacy ключей имеют одного
+точного preferences owner; очередной successful write не должен подтвердить
+предыдущее failed removal. Это отдельный контракт от form/geometry drafts.
+Новый процесс читает фактически сохранённые preferences: исходная raw provenance,
+false с новым disk state и crash после pair ACK требуют независимого readback.
+Process view не является restart rollback или full-project completion.

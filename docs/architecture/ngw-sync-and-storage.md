@@ -1,8 +1,11 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-17
+last_verified: 2026-10-30
 related_code:
+  - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
+  - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
+  - app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java
@@ -32,11 +35,293 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
   - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
   - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+  - app/src/main/java/com/nextgis/mobile/MainApplication.java
+  - app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
   - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
+  - app/src/main/java/com/nextgis/mobile/util/SyncJournalCommit.java
+  - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
+  - maplib/src/main/java/com/nextgis/maplib/map/MapBase.java
+  - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java
+  - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java
+  - app/src/androidTest/java/com/nextgis/mobile/util/ProjectSyncRunnerTest.java
+  - app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/util/SyncRecoveryJournalNativeTest.java
+  - maplib/src/test/java/com/nextgis/maplib/util/ProjectSyncStateTest.java
+  - app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java
+  - maplib/src/test/java/com/nextgis/maplib/reliability/SyncWorkspaceIsolationTest.java
   - app/src/main/res/xml/syncadapter.xml
 ---
 
 # NGW sync, локальное хранение и восстановление
+
+## Владение workspace и границы подтверждения
+
+Углублённый source-разбор29.10.2026 продолжает MOB-02 после UI-каталога
+MOB-UI-01. Он подтверждает цепочку по текущим app/maplib/maplibui источникам,
+но не выполняет Android, HTTP, SQLite или device-проверки. Описанные ниже
+независимые runtime ожидания этого этапа имеют статус **NOT_RUN**.
+
+### Разные ключи одной операции
+
+| Назначение | Фактическая идентичность | Владелец |
+| --- | --- | --- |
+| Collector-проект | `collector:<accountName>:<remote project ID>` | `CollectorProjectMetadata.buildProjectUid` |
+| Сохранённая цель account sync | `UID\|canonical directory\|mapName` | `ProjectSyncRunner.Target.key` и `SyncRecoveryJournal` |
+| Подтверждённый полный проход | UUID-хеш canonical directory, без UID и mapName | `ProjectSyncState.key` |
+| Незавершённый Collector import | preferences с SHA256 canonical directory | `CollectorImportJournal.preferences/workspacePath` |
+| Живой provider/service owner | случайный session token; отдельный ticket на доставку сервиса | `SyncWorkspaceSession` |
+| Запрет конкурентной операции | process-global lease; его workspaceKey читается из active preferences | `ProjectOperationCoordinator` |
+
+Имя проекта, remote resource ID, local layer/group ID, canonical directory,
+mapName, session token и lease — разные части контракта. Lease сам по себе
+не выбирает БД фонового проекта. Даже при работе с проектом B его workspaceKey
+может описывать активный проект A; реальное владение обеспечивают scoped map,
+parent chain слоя и live token. При переносе каталога, изменении mapName или
+новой схеме восстановления отдельно определить миграцию/инвалидацию recovery
+queue, import journal, full clock и черновиков. Их одинаковая судьба не следует
+из слова «проект»; обычная смена display name не доказывает смену этих ключей.
+
+Обратная граница desktop — `stand_project/ngw_collector_projects.py`,
+`_etalon_item_to_live_child`: keyname разрешается в NGW resource_id, передаются
+editable/visible/syncable/zoom. Мобильный UID добавляет account и remote project
+ID, а локальная работа — directory/mapName. Эти ключи не подменяют друг друга;
+desktop не имеет runtime-доступа к session token или телефонной БД.
+
+### От очереди к дочерним работам
+
+[`ProjectSyncRunner.run`](../../app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java)
+получает собственный DATA_SYNC lease либо использует уже удерживаемый lease
+вызывающей очереди, строит trusted inventory и сохраняет полный план
+project/account pairs **до первого прохода**. Фоновая `MapDrawable(..., false)`
+не активирует UI singleton. Scope направляет `MapBase.getInstance()` и
+`GISApplication.getMap()` к owning map; `MapBase.getActiveInstance()` остаётся
+источником видимой карты. `DatabaseContext.getMapForLayer` сначала проходит
+parent chain слоя и только затем использует scoped fallback.
+
+Scope должен переходить через каждую async границу. `SyncWorkspaceSession`
+capture/post/execute/start учитывают pending children и наследуют исходную
+cancellation generation. Rejected/discarded task освобождает pending ровно
+один раз; удаление задачи из executor без `discard` не равно её завершению.
+`ProjectSyncRunner.onMain` переносит scope на main thread через tracked post,
+а `awaitChildren` допускает только принадлежащие session fill/rebuild стадии.
+Обычный новый callback без owner propagation может разрешить совпавший layer
+path в A вместо B; совпадение ID не является oracle владения.
+
+`LayerFillService.startFillIntent` резервирует operation lease и external ticket
+до отправки foreground-service intent. `onStartCommand` проверяет live token,
+отмену и однократное claim ticket; чужой import не заимствует уже занятую
+фоновую карту. Worker исполняется в tracked scope. Drain, завершение callback,
+release ticket, release lease и закрытие background map — отдельные события,
+которые нельзя заменить одним флагом «сервис не busy».
+
+### Provider URI и уведомления
+
+[`SyncWorkspaceSession.bindUri`](../../maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java)
+проверяет parent owner и существующий token. Для неактивной карты нужен live
+token; expired token не имеет fallback на UI. `LayerContentProvider.getLayerByUri`
+разрешает tagged URI только через этот owner. **Untagged URI относится к active
+UI map даже внутри background scope**: `getActiveMap` явно использует
+`MapBase.getActiveInstance`. Исправления общего `getMap` недостаточно — каждый
+provider callsite должен явно сохранить owner.
+
+Broadcast использует другую границу: `bindNotification` добавляет owning map
+path; `MapContentProviderHelper.VectorLayerNotifyReceiver` принимает tagged
+notification только своей карты, а untagged — только active map. Path/ID в
+уведомлении и token в provider URI выполняют разные задачи.
+
+### Account ACK раньше полного clock
+
+Порядок в `ProjectSyncRunner.run`:
+
+1. Выполнить account pass и дождаться его детей.
+2. Проверить account error, session failure/cancel, готовый account outbox и
+   незавершённый Collector import. Лишь затем удалить точную пару через
+   `SyncRecoveryJournal.complete`.
+3. После accounts проверить весь обязательный набор account names, отсутствие
+   layer-only ограничения и готовых правок всего проекта.
+4. Ещё раз дождаться детей, закрыть session и background map, восстановить
+   runtime bookkeeping открытой карты.
+5. Только после успешного cleanup и при неизменной cancellation generation
+   вызвать `ProjectSyncState.markComplete` и потребовать успешный результат
+   записи; legacy account clocks обновляются лишь после этого результата.
+
+Следовательно, пустой recovery journal **не доказывает полный project ACK**:
+pair ACK записывается раньше финального cleanup/clock. Это разные commit
+boundaries. Process death или cleanup failure между ними не разрешают агенту
+переносить часы вперёд по отсутствию очереди. Быстрый `LocalChangesWorker`
+использует owner/drain/lease, но не пишет full clock. `LayersFragment` читает
+clock только active UI map; особенности неуспешной записи описаны ниже.
+
+### Окно после последнего pair ACK и реальные повторные запуски
+
+В `ProjectSyncRunner.run` вызов `SyncRecoveryJournal.complete` находится внутри
+account loop. При успешной записи последнего ACK journal уже не содержит этих
+пар, а `awaitChildren`, `session.close`, `closeSyncWorkspace` и
+`prepareProjectSyncState` ещё впереди. Исключение финального cleanup снимает
+`fullProjectComplete`, увеличивает `numIoExceptions` и добавляет проект в
+`failedProjects`; пара обратно не ставится и `markComplete` не вызывается.
+При старом исходном clock он остаётся старым. Это условный source-контрпример
+утверждению «пустая очередь означает завершённый полный обмен», а не выполненный
+crash-тест или доказанная потеря feature/outbox.
+
+| Событие | Recovery pairs | Full-project clock | Следующий запуск |
+| --- | --- | --- | --- |
+| Account pass отказал до ACK | Точная пара сохраняется | Не записывается этим проходом | Startup recovery может запросить сохранённую пару |
+| Последний ACK сохранён, затем cleanup отказал | Завершённые пары уже удалены | `markComplete` не вызывается | Startup journal не воссоздаёт отсутствующую пару |
+| Процесс погиб после durable ACK до clock | Удалённые пары не возвращаются от старого clock | На диске прежний clock, если новая запись ещё не началась | Восстанавливаются оставшиеся пары; новый обычный запуск строит новый план |
+| Cleanup завершён, запись clock вернула false | Это отдельная запись после pair ACK | Память и диск могут различаться | Нельзя решать исход по одному cached getter или одному boolean |
+
+`MainApplication` планирует `schedulePendingIfNeeded` через3s после старта.
+Этот метод разрешает только сохранённые пары через trusted inventory/accounts;
+старый clock не является сканером пропущенной финализации. Не-manual пару с
+выключенным automatic sync он не запускает. Обычное восстановление расписаний
+в `GISApplication` — другой путь, а `SyncAccountWorker` вызывает `requestSync`
+и планирует следующий tick только в соответствующей ветви. `Result.success()`
+также возвращается без отправки при удалённом account или выключенном auto sync.
+В ветви `requestSync` это результат доставки запроса, не завершение синхронизации.
+
+Ручной повтор из `LayersFragment.showSyncFailureDialog` идёт через
+`startManualSync` и `OfflineSyncIntentService` с новым планом. Service передаёт
+свой `new SyncResult()` непосредственно runner, поэтому framework не получает
+этот объект для собственного retry. Scheduled `datasource.SyncAdapter` передаёт
+настоящий framework `SyncResult`. Оба пути заново сохраняют выбранный план до
+работы. Это возможность повторного прохода, не гарантия срока при выключенном
+расписании, отсутствии сети или отсутствии нового ручного действия.
+
+Полный clock требует весь `LocalChangesWorker.projectAccounts(map)` в
+`completedAccounts` **одного запуска**, без layer-only ограничения. Успешные
+account-only ticks разных запусков не складываются в полный project completion.
+`SYNC_FINISH` означает окончание очереди: runner может отправить его и при
+ошибке cleanup/clock, используя `SYNC_CHANGES` для error notification.
+`failedProjects` дополнительно даёт ручной incomplete alert; ошибка записи clock
+попадает во внешний queue catch и сама по себе не добавляет туда имя проекта.
+
+### Неуспешный commit: память отдельно от диска
+
+Описание backend ниже относится к app pin maplib F61. Отдельный own library
+PR63 исправляет публикацию process-visible clock; до Merge Commit → app gitlink
+→ semantic UI pin review это не считается поставленным app-исправлением.
+Существующий F61 UI fingerprint здесь намеренно не переписывается.
+
+`ProjectSyncState.markComplete` вызывает обычный `SharedPreferences.Editor.commit`,
+а `lastComplete` читает тот же process-cached preferences. По
+[Android API](https://developer.android.com/reference/android/content/SharedPreferences.Editor#commit())
+true подтверждает persistent write. В AOSP
+[Android14, `SharedPreferencesImpl`](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-14.0.0_r1/core/java/android/app/SharedPreferencesImpl.java)
+`commitToMemory`477–546 изменяет map до disk write; `commit`551–573 не откатывает
+её при false. Например, отказ rename723–727 оставляет прежний файл, но новый
+`getLong`301–305 видит память. Порядок сохраняется в
+[Android16](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-16.0.0_r1/core/java/android/app/SharedPreferencesImpl.java)
+(`getLong`309, `commit`559). Это source-подтверждённый пробел между намерением
+«подтверждённый clock» и текущим cached UI; на устройстве он **NOT_RUN**.
+
+False из interrupted await имеет другую ветвь: writer уже запущен и может
+сохранить файл. Поэтому false не доказывает ни прежний диск, ни новый диск.
+`SyncJournalCommit` изолирует journal writer от interrupt вызывающего потока,
+но сам по себе не возвращает SharedPreferences memory к прежнему состоянию при
+ошибке записи. Пустой cached journal также не заменяет durable oracle.
+
+Независимая будущая проверка должна разделять return value, getter текущего
+процесса, physical XML/backup после окончания writer и fresh-process reload.
+Proxy, возвращающий false **до** настоящего commit, не моделирует этот исход.
+Не исправлять его записью `now` или удалением очереди по UI/расписанию.
+
+### Отмена и liveness
+
+`NgwSyncIo.requestCancellation` увеличивает process-wide generation и закрывает
+зарегистрированные read-only HTTP. Уже отправленная mutation намеренно не входит
+в этот набор: сначала разрешается её ответ, затем принимается решение об outbox;
+следующую mutation запрещает проверка cancellation. Это не обещание, что любой
+запрос на запись немедленно прервётся.
+
+`awaitChildren` временно снимает interrupt для drain и возвращает факт прерывания
+очереди. Та восстанавливает interrupt в финальном cleanup, перед этим закрывая
+собственный lease; при already-held пути внешний lease остаётся во владении
+вызывающего кода. Session не закрывается с pending work. 60-секундный
+`expireUndelivered` относится **только к unclaimed service deliveries**; claimed
+child/service не получает этим общего timeout. Принудительно закрывать его БД
+или отдавать lease по возрасту нельзя. Liveness такой работы остаётся отдельным
+неподтверждённым runtime свойством.
+
+Разобран и отвергнут ложный вывод: ранний token rejection в `onStartCommand`
+сам по себе не доказывает нарушение первого foreground-start. `LayerFillService.onCreate`
+уже вызывает `startForegroundWithSessionAwareNotification`. Проверять нужно весь
+lifecycle, включая повторную доставку уже существующему сервису; source-разбор
+не подтверждает каждый native исход.
+
+### Независимые ожидания и открытые ветви
+
+Существующие `SyncWorkspaceIsolationTest` и `ProjectSyncRunnerTest` содержат
+witnesses для одинаковых layer/group IDs в A/B, tagged provider update только B,
+expired token без fallback, rejected/discarded children, сохранности active map
+и draft, отмены с удерживаемым child, per-project clock и реального background
+fill. Здесь прочитаны исходники этих тестов; их наличие не является выполнением.
+
+`SMOKE-SYNC-OWNER-ACK-BOUNDARY` закрепляет адресную будущую проверку. Новые ветви
+имеют NOT_RUN, а задачи хранятся **в едином LISA реестре**
+`plugins/geonical-docs/registry/dependency-audit-todo.yaml`:
+
+- `AUDIT-TODO-SYNC-ACK-RECOVERY`: process death/cleanup failure между pair ACK
+  и full clock, реальный retry и commit-false memory/disk divergence; определить
+  политику финализации без повторного подтверждения уже ACKed данных по догадке.
+- `AUDIT-TODO-SYNC-CLAIMED-LIVENESS`: claimed child, который не возвращает
+  управление; определить наблюдение/восстановление без раннего закрытия БД.
+- `AUDIT-TODO-WORKSPACE-KEY-MIGRATION`: перенос directory/mapName и судьба всех
+  независимых persisted keys, включая legacy journals и draft owner.
+
+Непроверенные внешние async callsites, effective tenant/server/device варианты
+и native lifecycle остаются UNKNOWN. Исходный ACK source-аудит не менял product bytes,
+очереди, схемы, серверные данные, настройки или миграцию и не возобновляет
+приостановленные runtime этапы.
+
+## Storage move и Reset: lease, actual path и REFRESH — 2026-10-29
+
+`SettingsFragment` объединяет два входа, сохраняя разные эффекты. Storage chooser
+всегда получает false от listener, поэтому не пишет proposed path/card до worker.
+Reset confirmation только запускает admission. Публичный `tryBegin(PROJECT_SWITCH)`
+атомарно отказывает при занятом coordinated owner или walk draft; default
+resolver, prefs/defaults, retirement/reset и result не исполняются при отказе.
+Это исправляет подтверждённый source bypass общей защиты sync/fill, а не выбирает
+политику переноса всех saved-state stores.
+
+После admission caller/UI захватывает exact map. Worker использует её и вызывает
+`MainApplication.retireMapForStorageMove` до первого physical rename. Helper
+проверяет прямое поле владельца, не null-ит и не создаёт карту. `MapBase.moveTo`
+меняет mPath после всех rename; IOException пытается rollback и может вернуть
+старый path. Worker сохраняет actual path, не желаемый destination. Отсутствие
+достигнутого target или false commit — отдельный неуспех; false обычного
+SharedPreferences после memory update не означает unchanged cache/disk.
+
+Terminal callback удерживает lease до завершения UI effects. Direct-field
+predicate и atomic rebind проверяют exact map плюс raw cached path=actual path,
+не вызывая factory `getMap` на отказе. `RESULT_OK` для `RELOAD_ACTIVITY_DATA`
+просит MainActivity/MapFragment перепривязать drawable; он допустим после
+failed/cancelled retired move и **не подтверждает успешный перенос**. Такие
+ветви не выполняют Reset defaults/district/init/delete. Только нормальный
+Reset target/path completion запускает прежние preference removals/default XML,
+resetMap и существующий district/init/delete/init порядок с исключением OSM/tracks.
+
+Queued cancellation не трогает map; started cancellation освобождает lease
+после реального unwind worker и terminal refresh/cleanup. Late duplicate callback
+не меняет нового owner. Pre-lock failure не unlock-ит неприсвоенную orientation.
+Unexpected RuntimeException/Error до достоверного cached actual state сохраняет
+прежнее worker propagation/finally release; произвольная atomic recovery не
+выдумывается. Main-thread join/ожидание worker, новый synchronous path commit и factory не добавлены.
+
+Source-проверка:21 actual-body Robolectric/JVM cases PASS на frozen app bytes,
+LisaDebug source compilation и BelkaRelease Java/Kotlin compilation выполнены
+отдельно. Это не native move/DB/renderer/Reset acceptance. Retirement отменяет
+публикацию новых render generations и кооперативную работу, но не ждёт active
+blocking reads. Renderer drain, physical partial rollback, process restart,
+registry/project.json и независимые path-key journals/drafts остаются UNKNOWN
+в `AUDIT-TODO-WORKSPACE-MOVE-LEASE-DRAIN` и `AUDIT-TODO-WORKSPACE-KEY-MIGRATION`.
+Адресный `SMOKE-WORKSPACE-STORAGE-MUTATION` — будущий NOT_RUN, не разрешение на запуск.
+
+App UI clock anchor остаётся закреплённым на maplib F61. Отдельное исправление
+clock process-view в own library не считается поставленным до library Merge
+Commit → app gitlink → semantic UI pin review. Полная текущая UI/docs проверка
+с известным clock drift не называется PASS и не фильтруется.
 
 ## Буферизация существующего индекса — 2026-10-27
 
@@ -80,15 +365,16 @@ pull данных/форм/состава проекта нет. TrackWorker с�
 сохраняют owning map; фоновые карты не меняют mMap или active preferences.
 Потеря сети/ошибка дают retry, не успешное подтверждение очереди.
 
-`ProjectSyncState` хранит подтверждённый full-sync clock по canonical map path
+`ProjectSyncState` предназначен для подтверждённого full-sync clock по canonical map path
 в full-project-sync-state и используется [недельным напоминанием](maintenance-reminders.md) только для
 активных онлайн-проектов. Локальные карты исключены; проверка manifest updater
 имеет собственные часы и не подтверждает синхронизацию данных.
 
-`ProjectSyncRunner` пишет его после всех account
+`ProjectSyncRunner` пытается сохранить его после всех account
 проходов текущего проекта, ожидания children, проверки отсутствия готовых
-local edits и успешной очистки session. Ошибка, отмена, layer-only запуск,
-другая account и track-only обмен не обновляют project clock. Для проекта с
+local edits и успешной очистки session. Отказ до этого gate, отмена, layer-only
+запуск, другая account и track-only обмен не запускают запись project clock.
+Неуспешный commit имеет отдельный memory/disk исход, разобранный выше. Для проекта с
 несколькими account полный запуск должен охватить их все. Успех другого проекта
 может быть сохранён независимо от ошибки одного проекта общей очереди.
 
@@ -376,8 +662,11 @@ SyncRecoveryJournal.enqueueOrThrow сохраняет исходный exception
 читается только при наличии legacy active marker. Ошибочная очередь не сбрасывается.
 
 SyncRecoveryJournal.pending_v2 атомарно сохраняет весь план project/account до
-первого прохода, без credentials/feature data. Только завершённая пара снимается;
-ошибка, отмена или process death оставляет её для идемпотентного повтора. При старте
+первого прохода, без credentials/feature data. Только подтверждённое снятие
+завершённой пары меняет принятый Journal API план; ошибка/отмена не разрешает
+незаметно включить её удаление в следующую успешную запись. После process death
+читается фактически сохранённый файл; failed-commit disk outcome остаётся отдельным
+UNKNOWN, а не обещанием rollback. При старте
 идентичности разрешаются по текущему реестру, а не по переданному пути. Удалённые
 project/account исключаются; отключённый auto account автоматически не запускается.
 Recovery явно записанной пары сохраняется при смене открытого проекта и при
@@ -796,3 +1085,363 @@ enqueue, complete и миграция pending sync journal выполняют Sh
 enqueue и acknowledgment одной пары при сохранении другой. Оба сценария падали
 на исходном коде. Это воспроизводимая причина части ошибок, а не доказательство
 одинаковой причины всех исторических групп 64/76/77.
+
+## Process view recovery journal — 2026-10-30
+
+Подтверждённый источник дефекта: при A+B в очереди complete(A) мог вернуть
+false после изменения Android cache до B. Runner считал A незавершённой,
+но последующий успешный complete(B) читал B и сохранял пустой план. Это
+расхождение reported ACK и следующего API плана; удаление remote features
+этой цепочкой не доказано.
+
+SyncRecoveryJournal фиксирует preferences owner один раз на API-вызов. Общий
+typed/presence snapshot содержит pending_v2, active, account, workspace, manual,
+started_at и attempt. До edit/commit доступен прежний принятый snapshot; true
+публикует новый, false/Throwable оставляет прежний. После первой неуспешной
+записи view остаётся привязанным к точному owner даже при последующих true.
+До первой ошибки здоровая transient view освобождается после true. Weak identity
+не удерживает Context/preferences; JSONObject/JSONArray не являются shared state.
+
+Все последующие обычные editor writes переносят семь известных ключей вместе,
+включая отсутствие ключа и поддерживаемый raw тип. Unknown keys не очищаются.
+enqueue сохраняет manual OR и прежнюю миграцию совпавшего legacy owner; schedule
+сохраняет свою прежнюю схему удаления active и отправляет requests только после
+true. Повреждённый JSON или применимый неверный тип остаётся ошибкой с прежней
+причиной/фазой, без [] fallback и без новой миграционной политики.
+
+load использует короткий state lock и повторную проверку после raw-cache miss;
+при установленной view он не ждёт class monitor или удерживаемый commit.
+Первичная загрузка preferences сама может ждать чтения файла. Сериализация
+mutators и SyncJournalCommit owned writer/interrupt policy не меняются. Реальные
+listeners writer-потока публикуются Android на Main; новый контракт вложенных
+синхронных writers не вводится.
+
+Первый raw snapshot — as-read baseline с неизвестной disk provenance. Нет
+compensating commit, retry, cache/disk rollback или изменения resend policy.
+Физический файл после false может остаться старым либо новым; запись другого
+ключа тем же backend может сохранить его cache. Native/restart witnesses,
+post-ACK cleanup и full clock остаются в AUDIT-TODO-SYNC-ACK-RECOVERY.
+Actual-body JVM результаты и source basis: [android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).
+
+## Содержимое lookup-кеша: замена ключей — исторический срез8ca/9 от30 октября2026
+
+`NGWLookupTable.sync` сравнивает key/value содержимое набора, принятого
+текущим parser, а не только число пар. Это не независимое доказательство
+полноты NGW snapshot. При равном размере новый ключ раньше приводил к
+`null.equals` из старого кеша. Теперь сравнение идёт от ненулевой строки
+remote `Hashtable`: отсутствующий локальный ключ означает различие, после
+чего прежние `clear/putAll/save` обновляют тот же объект кеша. Обычная
+`SyncAdapter` граница перехватывала прежний NPE как ошибку/прерванный проход;
+это не свидетельство падения процесса или потери данных.
+
+`Combobox` и `AutoTextEdit` читают lookup по account и remote ID из уже
+найденного локального слоя. Исправление сравнения не создаёт отсутствующий
+lookup, не меняет NGFP `getLong/-1`, prefetch, shared-cache deletion или
+account-removal cast. Эти границы остаются в едином Root TODO
+`AUDIT-TODO-NGFP-LOOKUP-PREFETCH`. В sync обработанные IOException/NGException/JSONException
+сохраняют прежний кеш; технический partial-fill тест явно выбрасывает
+IOException. Успешно разобранный неполный/silent partial ответ этим не
+обнаруживается: AUDIT-TODO-NGW-PARTIAL-SNAPSHOT остаётся UNKNOWN. Равное содержимое в другом порядке не меняет порядок/identity
+старого кеша и не вызывает save; изменённые значения/число и пустой полный
+ответ сохраняют прежние ветви.
+
+Возврат `save()==false` по-прежнему не откатывает опубликованную память и не
+устанавливает новый SyncResult error: последующий одинаковый ответ может
+не вызвать повторной записи. Это сохранённая политика, а не подтверждённая
+надёжность диска или исправленная retry-семантика. Вопросы принадлежат
+`AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE`; компенсационных записей и новой
+политики повторов здесь нет.
+
+Адресные actual-body JVM:9 методов, baseline1 AssertionFAIL/8 PASS,
+затем9 PASS/0 ошибок/пропусков (2.066с XML). Использованы технические read/save
+seams без HTTP/SQLite/business data. LisaDebug source compile входит в этот
+прогон; BelkaRelease Java/Kotlin PASS37с. Это не повторный запуск прежних
+clock19/journal22/storage21, не часть desktop1117/1192 и не native acceptance.
+Own live library source8ca применяется в проверке отдельно от committed
+App gitlink F61; поставка библиотеки и последующий pointer остаются отдельны.
+Точная public offline recipe — в новой внутренней карточке
+[регрессии lookup](../../update-reports/entries/android-20261030-lookup-cache-regression.md).
+
+
+## NGFP lookup prefetch: отдельный reader — 30 октября2026
+
+Только два maplibui callers — GISApplication.fillMissingLookupTablesForCollectorForm (Collector
+form-only update) и LayerFillService.UnzipForm.execute (connected initial form) —
+переведены на LayerUtil.fillLookupTableIdsForPrefetch(File). Typed walker читает
+combobox.attributes.ngw_id: root array; рекурсивные type=tabs pages[].elements;
+root object tabs[] через оба declared album_elements/portrait_elements. input_search
+не меняет resource binding. Android getLong, malformed-present error и sentinel -1
+сохранены; Long.toString и LinkedHashSet дают normalized first-seen dedup одного
+вызова. Numeric options/defaults/field names/metadata не являются новыми NGW IDs.
+
+Старые17 строк public fillLookupTableIds и весь NGWVectorLayerUI, включая два
+legacy destructive reader вызова, побайтово прежние. Новый walker нельзя применять
+к удалению shared lookup без отдельной политики. Далее кеш ищется по account+remote
+ID, Combobox/AutoTextEdit читают уже локальный lookup. Helper test не доказывает actual
+import/cache availability. UnzipForm.execute обычно пишет numbered form; старое удаление
+читает unprefixed legacy form, а its otherIds loop rereads own form. Эти границы не исправлены.
+
+AUDIT-TODO-NGFP-LOOKUP-PREFETCH остаётся открыт: same-hash installed missing-cache repair,
+form/hash publication, partial retry/межзадачные дубли, numbered/shared GC, malformed
+inactive layouts/native form lifecycle. Per-form dedup не global cache uniqueness.
+AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE и AUDIT-TODO-NGW-PARTIAL-SNAPSHOT сохранены.
+Account Table→Layer cast и целостный backup/exclusive owner gate не исправлены:
+AUDIT-TODO-NGW-ACCOUNT-REMOVAL-BACKUP. Valid form draft/Walk reservation может оставить
+слой при delete=false; это не доказывает безопасное account removal. Реальные
+user/tenant/network/SQLite/native в этом срезе не использовались.
+
+Actual SDK28: baseline12/3 named AssertionFAIL/9PASS → те же12PASS/0errors/skips,
+XML2.149с, Gradle0/49с; LisaDebug source compile включён. Belka Java/Kotlin0/41с
+отдельно подтверждён. Prelaunch classifier и последовательность NOT_PASS: Debug-only
+JAR allowlist ошибочно отметил4 Release Java JAR, PowerShell продолжил разрешённую
+компиляцию после Python exit1. Post-readback exact100 совпал с approved list; cached
+AGP9.1.0/output classes.jar подтвердили Java archives, без product/native tasks.
+Это не retroactive gate PASS. Checked-stage wrapper теперь проверяет LASTEXITCODE
+после каждого native call; exit7 control не создал would-launch marker/новый JVM.
+Все owned процессы завершились естественно; technical JSON удалены finally.
+[Public recipe и source hashes](../../update-reports/entries/android-20261030-ngfp-lookup-prefetch-regression.md).
+
+Own-live UI source отдельно от committed App UI E66/maplib F61. Merge Commit
+библиотеки до App pointer; actual обе import routes/device/Related/Full/выпуск APK
+NOT_RUN. Старые cache9/clock19/journal22/storage21 и desktop1117/1192 не перезапускались.
+Новые metadata official checks после C-интеграции NOT_RUN. UI39/142/19/F61 сохранён;
+прежний clock drift не снят, общего validation/allgatesPASS нет.
+
+
+## Явный206 и ошибка сохранения lookup — текущий Draft source30 октября2026
+
+Изменения подготовлены в собственном [Core Draft PR #63](https://github.com/GeonicalSys/android_maplib/pull/63);
+установленное приложение получит их после обычного выпуска. Core source c0a4/ca59
+и тесты7d697/7ae829 принимаются отдельно от committed App library F61.
+
+Канонический Desktop producer lh_mery читает lh_mera.lh_mery. Его managed idqgs
+типа BIGINT копирует целочисленный PG PK, тогда как NGW назначает отдельный
+физический feature ID. Android читает top-level id в Feature/local FID; fields.idqgs
+не становится алиасом этого FID. Canonical mobile tracked=false, sync_type14,
+direction FROM2 и CRS3857 допускают incoming pull при UI editable=false:
+последнее не равно resource-class isRemoteReadOnly. Исходные34 inputs/13 links
+сохранены в общей source-аудитной цепочке; данные и remote deployment не проверялись.
+
+Полный streamed GET не посылает Range и не собирает диапазоны. RFC9110§15.3.7
+требует определить Content-Type/Content-Range;206 может охватывать всю запись,
+но данный route не доказывает это. JSON array и Content-Length не доказывают
+полный inventory. Поэтому только downloadFullSnapshot при явном206 добавляет
+один numIoExceptions и возвращает failed206 до error/input stream, length и
+нового snapshot. Другие2xx,404/error/transient retry и tracked/diff routes прежние.
+Ранняя prefix-очистка временных файлов до GET и прежняя отправка local changes
+остаются: отказ не предшествует всем SQL/cleanup. Outer null-file gate не допускает
+scan/backup/SQL применения именно этого полного снимка.
+
+В обычном apply отсутствие NGW physical FID в принятом полном наборе может выбрать
+локальный объект на удаление; существующие NEW/flags/invalid-geometry/backup gates,
+transaction и post-commit attachment cleanup сохранены. Этот source trace не доказывает
+actual206, потери данных или принятия SQL/full apply. Успешный неполный200, tracked,
+initial import и count/revision races остаются AUDIT-TODO-NGW-PARTIAL-SNAPSHOT.
+
+В двух существующих ветвях NGWLookupTable.sync false отsave теперь добавляет один
+numIoExceptions к текущему SyncResult. Уже опубликованная память остаётся новой
+в том же map; один save, RuntimeException/Error и equal-next no-write прежние.
+Ни компенсирующей записи, ни гарантии диска/повтора не добавлено: риск остаётся
+AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE. Готовность same-hash form/cache и shared
+lookup GC остаются AUDIT-TODO-NGFP-LOOKUP-PREFETCH; account cleanup/backup27 —
+AUDIT-TODO-NGW-ACCOUNT-REMOVAL-BACKUP. Эти отдельные вопросы не объявлены исправленными.
+
+ProjectSyncRunner требует !part.hasError перед SyncRecoveryJournal.complete и
+полного успеха проекта перед ProjectSyncState.markComplete. Новый IO error
+блокирует ACK этой пары и обновление полного clock в текущем проходе, не откатывая
+ранее подтверждённый push или успешный другой account. Это source-backed consumer
+контракт, а не исполненный тест очереди/диска/restart. Queued manual path сообщает
+project_sync_incomplete; legacy SyncResultUtil без иных flags возвращает generic
+unknown IO. Нового обещания network text/automatic retry нет.
+
+Те же19 SDK28 technical methods: baseline4 named AssertionFAIL/15controls/0technical,
+затем19PASS/0fail/error/skips — Core4 XML1.905с и App15 XML2.298с, Gradle0/35с.
+Core baseline остановился на первом assertNull; прочие206 guards исполнились только
+в GREEN. App15 включает8 старых controls, revised false-save и6 новых; standalone15
+отдельно не запускался. LisaDebug compile входит в unit graph; Belka source compile
+0/39с,100 unique task SET равен reviewed100, порядок иной;7 owned PID завершились.
+Первый compile dry observer потерял native-exit capture после Get-FileHash postprocess:
+его UNKNOWN/NOT_PASS сохранён. Root исправил только owned Q helper, повторил dry0/11с,
+после чего actual compile исполнен один раз. Это не retroactive/allgates PASS.
+
+Полная public recipe находится в Core PR #63, файл
+`update-reports/entries/maplib-20261030-full-snapshot-http206.md`.
+[App internal свидетельства](../../update-reports/entries/android-20261030-sync-admission-regression.md)
+сохраняют exact fixtures/baseline/GREEN. Старые keyset9/clock19/journal22/storage21/
+prefetch12 и desktop1117/1192 не перезапускались. UI39/142/19/F61 не перепривязан;
+новые metadata checks после этой записи ещё NOT_RUN. Прежние App clock drift и
+исключённый Root wiki frontmatter остаются: общего validation/native/device/APK
+acceptance нет. Merge Commit Core до App pointer; source Draft не равен release.
+
+
+## Причина сбоя и текст пользователю
+
+`UI-SYNC-FAILURE-MESSAGES` / `INV-NGW-USER-MESSAGES` различают source cause и
+пользовательский текст. Ранее queue подавляла account EXCEPTION, ThreadLocal flags
+очищались и итог превращался в generic incomplete-project message. Теперь exact
+account result/thread экспортирует4 primitive version/flags/IO/Parse и LOCAL
+Parcelable SyncResult reference перед endSync. Fresh pass Bundle очищается с обеих
+сторон; exact owner, типы/counts и hard/late/session/import/cleanup gates проверяются
+после дочерних работ. Эта metadata не IPC protocol и не durable ACK; в UI идёт
+новый Intent только с allowlisted resource strings.
+
+PUSH сохраняет прежний numeric log и записывает reason only после доказанного IO+1;
+typed lookup failure сохраняет Parse+1 без нового IO. SERVER-only показывает shared
+Core RU/EN copy о временной невозможности запроса, возможных техработах/перегрузке
+и повторе позже. Mixed/local/auth/unknown не становятся maintenance. Notification
+и manual alert перечитывают сеть при consume; offline получает отсутствие Интернета.
+
+Final drain может установить session failure после account outcome. Per-target
+already-failed state не выводится из совпадающих display names или global total;
+новый noncancel late failure после cleanup получает один IO/name outcome. Existing
+account/cleanup error не пересчитывается, normal cancel/interruption/generation
+change не создают этот IO. Helper test не заменяет runtime queue/drain witness.
+
+Resource selector различает successful[] и failed child load; old void APIs и
+cache/sort/subload/retry сохраняются. LayerFill formatter допускает только typed
+server cause/owned human copy; raw HTTP/URI/SQLite/JSON остаются в diagnostics.
+Missing JSON fields не доказывает403. Legacy list Toast использует resource ID,
+а не буквальное имя R.string. Точные отдельные UI IDs находятся в ui-contracts.
+
+TUS status loss, arbitrary HTTP200 envelopes, ambiguous remote commit, partial
+uploads, restart/disk durability и отсутствие permission/foreground receiver не
+закрываются этой source доработкой. Native/device/large-font/permission/Service
+приёмка NOT_RUN; callback/progress finish и человеческий текст не full-project ACK.
+
+External-database text gates now apply only to422:408 body text cannot claim server maintenance;429/all5xx keep their former server category. KnownSERVER prefix plus late unknown cause remains SERVER|OTHER and produces generic copy; one overspecified producer integer assertion is corrected explicitly, not by discarding known causes or weakening the UI expectation.
+
+Проверено в текущем source-срезе: Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance.
+First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods.
+
+
+### Выбор способа импорта и повторные записи compact state — source checkpoint30 октября
+
+См. `UI-NGW-RESOURCE-CHECKBOX-SELECTION` в ui-contracts.md. Raster/vector flags относятся к local resource
+ID в текущем Connections tree; remote path/account в compact JSON сопоставляется
+с заново найденным localID при restore. Каждый прежний resolve и чтение flags
+выполняется, включая повторную запись: только после этого same resolved localID
+coalesces OR flags в первой owned записи. Ошибка позднего duplicate всё ещё
+прерывает restore; different accounts/localIDs и первый порядок не смешиваются.
+Схема JSON/Parcel, save filtering, alias public setter и Activity legacy input
+не изменены. UI callback может очищать duplicate requested flags, но не обещает
+dedup произвольного внешнего списка либо единственность side effects import loops.
+Refresh/reconciliation policy остаётся `AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH`; это не подтверждение поведения
+реального сервера/перезапуска или native import. Новый source slice37 PASS; Belka source compile0/BUILD47s; native acceptance NOT_RUN.
+
+
+## Завершение и восстановление векторного spatial cache — 30 октября2026
+
+Обычный local/NGW vector импорт использует один VectorLayer lifecycle. После
+успешного create только проверенные zero SQL rows + zero live cache становятся
+готовой начальной точкой: count читается вне spatial lock, затем проверяются тот же
+cache object, data generation и нулевой size. Начатый bulk по-прежнему блокирует
+native reads. Готовность не устанавливается из finally и не выводится из одного
+совпадения ненулевых counts; failed/cancelled/nonempty/unknown-count случаи не
+получают новую гарантию commit/rollback или произвольного save после ошибки.
+
+GeometryRTree.clear удаляет nodes и size и помечает публичное изменение dirty:
+notifyDeleteAll → clear → save должен записать пустой cache в тот же путь. Load
+использует отдельный clean reset. Missing file даёт настоящий empty index; IOException,
+header/actual Entry cardinality mismatch или неверный child kind полностью сбрасывают
+прочитанный prefix. Счётчик проверяется обходом уже загруженных nodes без второго
+getAll/ID list. Валидный прежний binary layout, IDs/envelopes/search и clean same-path
+save сохраняются. Владелец VectorLayer при расхождении с SQL восстанавливает derived
+index из originals; частично загруженный subclass config при этом не сохраняется.
+
+Причина важна для нескольких входов: GPX/KML CoordinatePointLayerImporter и GeoJSON
+batch; initial NGW download через оба resource picker и Collector/form task; config
+fromJSON и properties getCount повторно читают index. Старый clear мог оставить
+header countN при уже пустом root; последующий save и новый load сохраняли равенство
+counts и пропускали repair. Native query и обычный hit-test имеют разные readiness
+gates. Смена стиля/видимости не строит spatial tree; manual rebuild создаёт новое
+дерево и extents из исходных ID/geometry BLOB, но не переписывает LOD geometry.
+
+Пользователь подтвердил: invisible local/NGW layers переживали restart, style edit
+и visibility toggle; помогал только manual rebuild. Эти исходные сведения сохранены
+как независимые условия регрессии. Повтор после нового исправления на устройстве
+не исполнен; точный installed version30/source commit и native результат для GPX20wpt
+и server import ещё не установлены. Это source-backed цепочка, не уже принятый
+post-fix результат телефона. Проверка header/cardinality
+не доказывает произвольную same-count ID/envelope целостность или disk power-failure
+durability. Private GPX names/coordinates не входят в Git и не становятся runtime
+dependency. Единый открытый риск: AUDIT-TODO-VECTOR-SPATIAL-CACHE-RECOVERY.
+
+Техническая проверка: Core29 фактически исполнен: исходный код —15 assertion FAIL/14 control PASS, после двух исправлений —29 PASS/0 failures/errors/skips; те же пять наборов и все Core test bytes/oracles сохранены. Это23 новые проверки (12 lifecycle +11 RTree) и6 прежних контролей (legacy1, concurrency1, spatial4):16 Robolectric API28 с технической SQLite и13 plain JUnit. Финальный запуск:5 XML/5.653s, Gradle exit0/BUILD40s (наблюдалось42.537s),105 входов неизменны во время запуска,10 собственных процессов завершены и отсутствие подтверждено. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c. Это не55 PASS; App legacy25 PASS/1 path assertion не воспроизвёл обрезание подписей. Device/installed30/real GPX20wpt/NGW import/restart/native map acceptance не выполнялись.
+Исторические message89 и selector37 сохранены с их прежними source pins; они не
+перезапускались и не сертифицируют новые Core cache bytes. Caption/layout — отдельный
+срез. Wiki, APK/release/deploy и paused native stages не затронуты.
+
+
+## Поставка исходников полного project clock — 2026-10-31
+
+Core PR63 принят Merge Commit `baa94f361101051b09f762d7eda1f36466436d5c`; consuming App gitlink
+`maplib` указывает ровно на `baa94f361101051b09f762d7eda1f36466436d5c`. Контрольная точка до коммита App86: PR открыт, точные gitlinks подготовлены в этой ветке; доставка App требует последующего Squash Merge. Этот абзац фиксирует pre-merge snapshot. Итоговый статус и App merge SHA находятся в PR86 и общей LISA delivery receipt.
+Это подтверждение доставки исходников с reviewed semantic UI pins, без публикации
+или установки нового APK. Отдельный итог обычных UI/docs checks:
+UI source check exit0:44 contracts/191 methods/49 files/11 groups; полный docs validator exit0;57 tests PASS за49.269s. Native/OEM/phone acceptance NOT_RUN.
+
+Этот current-delivery раздел адресно заменяет прежние текущие предупреждения
+«до Merge Commit → app gitlink → semantic UI pin review» в разделе
+«Неуспешный commit: память отдельно от диска» и абзаце перед checkpoint27 октября.
+Их исходные F61 source/narrative и датированные checkpoints сохранены как история;
+физические failed-write/restart вопросы из них этим исправлением не закрыты.
+Whole исходный `WF-SYNC-CLOCK-STORE` и `UI-SYNC-COMPLETION-CLOCK` сохранены в
+`coverage.project_sync_clock_delivery_review.history`, а не молча перепривязаны.
+
+`ProjectSyncState.lastComplete` проверяет `owner.clocks` до raw `getLong` и
+повторно после него. Для точного объекта SharedPreferences и canonical project key
+shield устанавливается до editor/put/commit observers. `markComplete` сериализует
+писателей одного prefs owner отдельным monitor; читатели API его не берут.
+Подтверждение обновляется только после `commit() == true`, по последней успешной
+invocation, а не по максимальному timestamp или порядку возврата callbacks.
+False/throwing попытка не публикует собственное новое значение через API того же
+owner; вложенная успешная попытка и позднейшая успешная меньшая положительная дата
+остаются допустимыми. Getter не переносит этот shield в другой owner/process:
+первое чтение без shield доверяет raw preferences неизвестной disk provenance.
+
+Публичные `lastComplete(Context,String):long` и
+`markComplete(Context,String,long):boolean`, файл `full-project-sync-state`,
+`UUID.nameUUIDFromBytes(canonical path UTF-8)` и long Unix-ms не изменены.
+Миграции schema/key, переноса global/account legacy timestamps и дополнительных
+компенсирующих/async записей нет. Weak identity registry не удерживает
+prefs/context/editor через values; его подтверждение ограничено текущим процессом
+и живым exact prefs owner. False может оставить cache и диск старыми либо новыми;
+успешный commit другого project key может записать прежнее failed cached value.
+Shield не является physical rollback, disk repair или гарантией fresh-process view.
+
+Sole production writer `ProjectSyncRunner` требует accounts одного полного pass,
+pair ACK, пустой ready-outbox, final child drain, успешный cleanup и окончательный
+generation/interruption gate. Только затем начинается clock commit. Partial/layer/
+track-only upload, progress finish и `SYNC_FINISH` не означают этот ACK.
+`LayersFragment.updateInfo` читает path видимого active map; фоновой scoped project
+не подменяет его. `ControlHelper` сохраняет `dd MMM`/`HH:mm`, default locale/timezone,
+без года/секунд или относительной давности. Другие реальные readers:
+`MaintenanceReminders` — canonical online project age; tracked
+`NGWVectorLayer.getFeaturesUrl` — owning map clock для `since`.
+
+Same-source checkpoint29 октября: неизменные old3 +publication16 API28 технических
+MemoryPreferences methods дали19 executed,10 assertion FAIL/9 controls до исправления
+и те же19 PASS после (errors0/skips0; BUILD40s/31s). Product raw SHA256
+`0a7b03b912aadfcbd87e26fe77cc260942c49df610635459ba5eb20b1fbc71bb`,
+publication fixture `bcd031656cb87f227ab3d538cb05262cd62b84783204f55a8ad45ca284afe12b`,
+old fixture `d7998443a137b9df92090ee010f03b36972d2ee353a53b6a139ed85c64a19c7d`.
+Exact retained evidence: `project-sync-clock/implementation-final-receipt.json`
+SHA256 `6bc5c28edadc4b003c423309519547def85aa2819ab54ed17b2d1c08a7c657e3`;
+green XML publication16 `96ee7b672302f1437e096a08e3cb3ba7c66f742c81989311524299bd3bc52fd9`,
+old3 `17af4503c26f96691c2c251c24ee9957a02e47517a2fba02ea4a3224a2c67642`.
+Baseline XML hashes, cases и полные прежние semantic rows — в новой coverage history.
+Эти retained evidence не являются runtime-зависимостью проверки.
+
+Публичное воспроизведение этой узкой source regression из Android root при прежних
+JBR21/offline API28/Q caches после graph/input gate:
+
+`& '.\gradlew.bat' '--offline' '--no-daemon' '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.util.ProjectSyncStateTest' '--tests' 'com.nextgis.maplib.util.ProjectSyncStatePublicationTest'`
+
+Новых tests/runtimes этот semantic delivery review не запускал. Исторические
+LisaDebug42s/BelkaRelease46s compiles относятся к тогдашнему source checkpoint,
+а не к позднейшему изменённому Runner. Current consumer compile/полный UI/docs итог
+принимается только по отдельным свежим Root receipts. Ни API fault model, ни новый
+source pin не исполняют реальные failed physical write/backup/restart,
+weak-owner GC, full project sync, native redraw/locale/timezone или новый APK.
+`AUDIT-TODO-SYNC-ACK-RECOVERY` сохраняет physical/fresh-process и post-ACK cleanup/
+crash/full-clock retry вопросы. Installed APK/phone acceptance остаётся UNKNOWN.

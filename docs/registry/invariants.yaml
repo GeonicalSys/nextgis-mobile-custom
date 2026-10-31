@@ -332,18 +332,31 @@ invariants:
     title: The open project clock confirms complete synchronization of that project
     owners: [app, maplib, maplibui]
     statement: >
-      Full completion is stored by canonical workspace path only after required project accounts,
-      child jobs, ready local changes and cleanup succeed. Wrong-account, track-only, layer-only,
-      failed and cancelled passes never advance it. Fast outbound uploads are independent of account
+      Full-clock persistence is attempted by canonical workspace path only after required project accounts,
+      child jobs, ready local changes and cleanup succeed in one run. Wrong-account, track-only,
+      layer-only and cancelled passes cannot certify full completion. Fast outbound uploads are independent of account
       schedules and never write full completion clocks. Separate feature and attachment Save flags
       exclude all corresponding queued edits until Save; after-commit events retain their owning map.
+      Successful project/account recovery ACK is persisted before final workspace cleanup and full-clock
+      commit; an empty recovery queue alone cannot certify full completion. Recovery target UID/path/mapName,
+      canonical-path clock and path-partitioned import journal are separate saved-state keys.
+      Their relocation or identity changes require an explicit migration/invalidation contract.
+      Post-ACK cleanup failure does not re-enqueue completed pairs; startup journal recovery reads retained pairs,
+      not old clocks. Request dispatch, next schedule and SYNC_FINISH are not full completion ACKs.
+      Known source limitation under AUDIT-TODO-SYNC-ACK-RECOVERY: SharedPreferences commit false can leave
+      a new cached clock or queue value while disk differs; durable state needs an independent disk/restart oracle.
+      The required durable-clock invariant is not proven by a same-process getter and these fault branches are NOT_RUN.
+      Journal APIs shield the accepted seven-key typed/presence cohort per exact preferences owner before writing;
+      false or thrown writes preserve the prior process view, and later ordinary writes stage all known keys
+      without clearing unknown keys. Only true advances that view. Initial raw bootstrap has unknown disk provenance;
+      no compensating write, restart rollback or resend policy follows from this source fix.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
       - maplib/src/main/java/com/nextgis/maplib/util/FeatureChanges.java
       - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java
       - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
       - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
-    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-MULTI-ACCOUNT-SYNC]
+    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-OWNER-ACK-BOUNDARY, AUTO-SYNC-JOURNAL-CONFIRMATION]
     must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/guides/project-synchronization-user-guide.md]
   INV-UI-VISIBLE-BOUNDS:
     title: Enlarged system text and display sizes retain full labels and reachable actions
@@ -397,6 +410,9 @@ invariants:
       Managed legacy pairs render as separate labelled full-width fields with touch spacing;
       this presentation change preserves source JSON, field names and pinned draft keys.
       Existing forms without the namespace retain their legacy behavior.
+      The legacy default path without lisa_form_dependencies remains separate: canonical
+      classobj/typeobj has its own marked defaults, while governed lists retain their
+      existing explicit clear/key/pin policy.
     related_code: [maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java, maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormElements.java]
     verify_smoke: [AUTO-MAPLIB-UNIT, SMOKE-CASCADING-FORM-LISTS, SMOKE-REQUIRED-FIELDS]
     must_update_docs: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
@@ -422,13 +438,20 @@ invariants:
       all fields including inactive tabs and dependent values before feature/attachment writes.
       Null, whitespace and the legacy Нет значения placeholder fail; не применимо, zero and
       false pass. Optional fields remain unchanged and drafts retain fields, geometry and photos.
+      Connected NGW Field.required, nullable SQL columns and NGFP control defaults are
+      separate contracts; a missing template flag or nullable column does not establish a
+      tenant server flag. Legacy classobj/typeobj defaults are raw STRING choices and do not
+      override valid explicit/draft/cursor state. TextEdit max_string_count controls
+      requested line presentation, never resource identity or text length.
     related_code:
       - maplib/src/main/java/com/nextgis/maplib/datasource/Field.java
       - maplib/src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java
       - maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java
       - maplibui/src/main/java/com/nextgis/maplibui/util/RequiredFieldValidation.java
+      - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/DoubleCombobox.java
+      - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java
     verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, SMOKE-REQUIRED-FIELDS]
-    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/crash-recovery.md]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/crash-recovery.md, docs/architecture/conditional-form-rules.md, docs/architecture/ui-contracts.md]
   INV-LOCAL-WRITE-COMMIT:
     title: Local features and sync records share one owning-map commit
     owners: [maplib, maplibui]
@@ -1159,61 +1182,74 @@ invariants:
       - maplibui/docs/README.md
   INV-STAKEOUT-GUIDANCE:
     title: Stakeout and free-point tools use WGS84 distance, WMM2025 magnetic azimuth and transient overlays
-    owners: [maplib, app]
-    statement: >
-      Stakeout accepts selected Point/MultiPoint, LineString/MultiLineString and
-      Polygon/MultiPolygon geometry in EPSG:4326 or EPSG:3857 without mutating the
-      feature. Lines use the nearest segment point; polygons use the nearest outer or
-      inner boundary even when the current fix is inside. User distance and bearing are
-      WGS84 geodesic results, never raw Web Mercator distance. While stakeout
-      is active, an owner-based high-frequency location lease sets minDistance to zero
-      and restores ordinary user settings after the final release. Audio is scheduled by
-      monotonic time, stops for stale fixes and never uses network fixes for
-      precision bands. GPS and Android mock fixes use distance-based bands even when the
-      receiver bridge publishes a coarse accuracy placeholder; the reported horizontal
-      accuracy remains visible in the widget and the final cue requires two consecutive
-      fresh in-tolerance fixes. Audible bands use a full-scale-limited short damped tap with
-      3x digital gain and the final state a double tap, not a sustained high tone. A location foreground service,
-      ongoing silent notification and partial wake lock keep GPS and audio active while the
-      screen is off or the UI is paused; explicit stop releases all three. Ordinary
-      guidance uses only the location service type without Bluetooth permission.
-      Synchronous and asynchronous start rejection release the owning GPS/audio resources;
-      stale session starts/stops cannot cancel a newer owner. Unowned redelivery fulfils
-      the foreground-start contract before stopping without restoring GPS/audio. The same
-      live lifecycle is available from current location to an arbitrary map point. A
-      separate arbitrary point A to point B mode does not acquire GPS/audio resources.
-      True initial bearing is converted to numeric magnetic azimuth by subtracting
-      WMM2025 declination at the start plus the persisted east-positive user
-      correction; coincident points have undefined azimuth.
-      Direction uses only the filtered device rotation-vector magnetic compass, never
-      movement bearing; without a live compass it keeps the arrow screen-correct by
-      subtracting an explicitly enabled map bearing from true bearing. Free-point
-      markers and segment are transient MapLibre layers below the user-location cursor,
-      never project features. Both static endpoints and the live target are draggable;
-      the live GPS start is not editable. The map widget does not duplicate object name or
-      coordinate source. Process death never silently restarts audible guidance or
-      restores half-selected free points.
+    owners:
+    - maplib
+    - app
+    - maplibui
+    statement: "Stakeout accepts selected Point/MultiPoint, LineString/MultiLineString and Polygon/MultiPolygon\
+      \ geometry in EPSG:4326 or EPSG:3857 without mutating the feature. The indexed private copy chooses\
+      \ the nearest planar EPSG3857 segment/boundary point; polygons include outer/inner boundaries even\
+      \ when the current fix is inside. The selected point returns to4326; reported metres/true initial\
+      \ bearing normally use the WGS84 ellipsoid inverse, with an explicit inverseSphere nonconvergence\
+      \ fallback. This is not a proof of global ellipsoidal nearest-point or all-input accuracy. While stakeout\
+      \ is active, an owner-based high-frequency location lease sets minDistance to zero and restores ordinary\
+      \ user settings after the final release. Audio is scheduled by monotonic time, stops for stale fixes\
+      \ and never uses network fixes for precision bands. GPS and Android mock fixes use distance-based\
+      \ bands even when the receiver bridge publishes a coarse accuracy placeholder; the reported horizontal\
+      \ accuracy remains visible in the widget and the final cue requires two consecutive fresh in-tolerance\
+      \ fixes. Audible bands use a full-scale-limited short damped tap with 3x digital gain and the final\
+      \ state a double tap, not a sustained high tone. A location foreground service, ongoing silent notification\
+      \ and partial wake lock keep GPS and audio active while the screen is off or the UI is paused; explicit\
+      \ stop releases all three. Ordinary guidance uses only the location service type without Bluetooth\
+      \ permission. Synchronous and asynchronous start rejection release the owning GPS/audio resources;\
+      \ stale session starts/stops cannot cancel a newer owner. Unowned redelivery fulfils the foreground-start\
+      \ contract before stopping without restoring GPS/audio. The same live lifecycle is available from\
+      \ current location to an arbitrary map point. A separate arbitrary point A to point B mode does not\
+      \ acquire GPS/audio resources. True initial bearing is converted to numeric magnetic azimuth by subtracting\
+      \ WMM2025 declination at the start plus the persisted east-positive user correction; coincident points\
+      \ have undefined azimuth. Direction uses only the filtered device rotation-vector magnetic compass,\
+      \ never movement bearing; without a live compass it keeps the arrow screen-correct by subtracting\
+      \ an explicitly enabled map bearing from true bearing. Free-point markers and segment are transient\
+      \ MapLibre layers below the user-location cursor, never project features. Both static endpoints and\
+      \ the live target are draggable; the live GPS start is not editable. The map widget does not duplicate\
+      \ object name or coordinate source. Process death never silently restarts audible guidance or restores\
+      \ half-selected free points.\n The selection input and panel/lock presentation have maplibui ownership;\
+      \ target math remains in maplib and lifecycle/UI in app. Target geometry is copied, with no layer/FID/workspace\
+      \ token; a later row/FID update is not an automatic target subscription. Bundle/process-marker restore,\
+      \ source/DB changes and boundary-versus-inside user goals remain in existing AUDIT-TODO-NGW-REPLACE-FID\
+      \ until an independent policy/witness is chosen. Layer isLocked is not DATA_SYNC exclusion."
     related_code:
-      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
-      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
-      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
-      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
-      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
-      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
-      - app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt
-      - app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java
-      - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
-      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
-    verify_smoke: [AUTO-MAPLIB-UNIT, AUTO-APP-DEBUG, SMOKE-STAKEOUT-PERMISSIONS, SMOKE-STAKEOUT, SMOKE-GPS-RECORDING, SMOKE-WALK]
+    - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
+    - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
+    - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+    - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
+    - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
+    - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
+    - app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt
+    - app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java
+    - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
+    - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+    - maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java
+    - maplibui/src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java
+    - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometry.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java
+    verify_smoke:
+    - AUTO-MAPLIB-UNIT
+    - AUTO-APP-DEBUG
+    - SMOKE-STAKEOUT-PERMISSIONS
+    - SMOKE-STAKEOUT
+    - SMOKE-GPS-RECORDING
+    - SMOKE-WALK
     must_update_docs:
-      - docs/architecture/stakeout.md
-      - docs/reference/settings-and-config.md
-      - docs/reference/official-differences.md
-      - maplib/docs/README.md
-      - maplib/docs/manifest.yaml
-      - app/docs/README.md
-      - app/docs/manifest.yaml
+    - docs/architecture/stakeout.md
+    - docs/reference/settings-and-config.md
+    - docs/reference/official-differences.md
+    - maplib/docs/README.md
+    - maplib/docs/manifest.yaml
+    - app/docs/README.md
+    - app/docs/manifest.yaml
   INV-LOCAL-LOG-STARTUP:
     title: Local logging does not prepare remote backlog uploads at startup
     owners: [maplib, maplibui, app]
@@ -1496,37 +1532,66 @@ invariants:
       - docs/architecture/ngw-sync-and-storage.md
   INV-PROJECT-OPERATION-EXCLUSION:
     title: Active project identity is stable during database background work
-    owners: [app, maplib, maplibui]
-    statement: >
-      Manual and per-account scheduled sync share a serial project queue; sync_all_projects defaults
-      to true and false limits new full runs to the open map. A layer-specific run stays in the open map.
-      The queue holds one DATA_SYNC lease throughout every project, account and async child without
-      changing active preferences, MapBase active identity or drafts. Background maps use scoped lookup,
-      opaque provider/service tokens and tracked callbacks; expired tokens cannot fall back to the UI database.
-      Only session-owned fill/rebuild stages may join a scoped queue and touch SQLite in its dependent phase.
-      Switch/create/rename/delete and unrelated imports wait for all owners, and duplicate full sync is refused.
-      Cancellation stops reads and rolls back interrupted apply while awaiting unresolved outbound writes
-      and children before releasing their database. The complete durable pair plan survives process death
-      and each successful pair is acknowledged separately. Collector journals are path-partitioned;
-      legacy migration, runtime state, schema guards and draft reservations validate the owning project.
-      An unchanged schema mismatch is circuit-broken after two attempts in 24 hours, with at least
-      ten minutes between attempts, and LayerFillService timeout must preserve the durable import journal.
+    owners:
+    - app
+    - maplib
+    - maplibui
+    statement: 'Manual and per-account scheduled sync share a serial project queue; sync_all_projects defaults to true and false
+      limits new full runs to the open map. A layer-specific run stays in the open map. The queue holds one DATA_SYNC lease throughout
+      every project, account and async child without changing active preferences, MapBase active identity or drafts. Background
+      maps use scoped lookup, opaque provider/service tokens and tracked callbacks; expired tokens cannot fall back to the UI
+      database. Untagged provider URI remains bound to the active UI map even inside a background scope; map-path-tagged broadcasts
+      have a separate receiving-owner gate. Lease workspaceKey read from active preferences is not the background database binding.
+      Only unclaimed service deliveries have a 60s expiry; claimed work retains ownership until it actually finishes and has no
+      such timeout promise. Only session-owned fill/rebuild stages may join a scoped queue and touch SQLite in its dependent phase.
+      Switch/create/rename/delete and unrelated imports wait for all owners, and duplicate full sync is refused. Cancellation
+      stops reads and rolls back interrupted apply while awaiting unresolved outbound writes and children before releasing their
+      database. The complete durable pair plan survives process death and each successful pair is acknowledged separately. Collector
+      journals are path-partitioned; legacy migration, runtime state, schema guards and draft reservations validate the owning
+      project. An unchanged schema mismatch is circuit-broken after two attempts in 24 hours, with at least ten minutes between
+      attempts, and LayerFillService timeout must preserve the durable import journal. Settings storage move and Reset Settings
+      acquire the existing exclusive PROJECT_SWITCH lease before default-destination resolution or any prefs/render/map/result effect. Busy refusal
+      preserves the held owner and all settings; chooser admission never persists a proposed path. Exact-map retirement precedes
+      physical move but does not prove active renderer read drain. The lease survives worker completion through guarded actual-path
+      map refresh, Reset callbacks and UI cleanup. RESULT_OK requests Activity rebind, not successful storage ACK. Failed target/commit
+      or cancellation after retirement may refresh only the exact owner whose raw cached path equals actual map path; they do
+      not execute Reset defaults or layer deletion. Atomic owner predicate/rebind never resolves a missing map through getMap.
+      Unexpected before-cache failures, partial rollback, restart and workspace-key migration remain separate unaccepted recovery
+      boundaries.
+
+      '
     related_code:
-      - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
-      - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
-      - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
-      - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
-      - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
-      - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
-      - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    verify_smoke: [SMOKE-COLLECTOR-SWITCH, SMOKE-PROJECT-MANAGEMENT, SMOKE-MULTI-ACCOUNT-SYNC, SMOKE-SYNC-INTERRUPT-ACTION, SMOKE-SCHEMA-REBUILD-GUARD]
+    - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+    - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+    - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+    - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
+    - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
+    - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncIo.java
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
+    - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java
+    - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+    - app/src/main/java/com/nextgis/mobile/MainApplication.java
+    - app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java
+    - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
+    - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
+    verify_smoke:
+    - SMOKE-COLLECTOR-SWITCH
+    - SMOKE-PROJECT-MANAGEMENT
+    - SMOKE-MULTI-ACCOUNT-SYNC
+    - SMOKE-SYNC-INTERRUPT-ACTION
+    - SMOKE-SCHEMA-REBUILD-GUARD
+    - SMOKE-WORKSPACE-STORAGE-MUTATION
     must_update_docs:
-      - docs/architecture/collector-projects.md
-      - docs/architecture/ngw-sync-and-storage.md
+    - docs/architecture/collector-projects.md
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/architecture/ui-contracts.md
   INV-SPATIAL-CACHE-CONSISTENCY:
     title: Vector spatial cache remains consistent across sync and main-thread notifications
     owners: [maplib]
@@ -1686,3 +1751,233 @@ invariants:
       - tools/profile_render_resources.py
     verify_smoke: [AUTO-PRIVATE-RESOURCE-PROFILER, SMOKE-PRIVATE-RESOURCE-PROFILER]
     must_update_docs: [docs/architecture/map-performance.md, docs/architecture/error-reporting.md, docs/runbooks/manual-resource-profiling.md]
+
+  INV-NGW-LOOKUP-CACHE-CONTENT:
+    title: Lookup key/value content, not counts alone, governs cache replacement
+    owners:
+    - maplib
+    - maplibui
+    - app
+    statement: "Within NGWLookupTable.sync, compare the initialized cache against the remote string map accepted by the current parser, even when counts match. A missing local key differs from the known nonnull remote Hashtable value. Keep the same cache map object; unchanged/reordered equal content causes no write. SYNC_NONE returns before the read. Handled IOException, NGException or JSONException preserve prior cache; the technical partial-fill regression explicitly throws IOException. A syntactically valid incomplete or silent partial snapshot is not independently detected or proved complete: AUDIT-TODO-NGW-PARTIAL-SNAPSHOT remains UNKNOWN. Existing clear/putAll order and map ownership remain. At both save sites, false adds one numIoExceptions to the existing result; new memory, one attempt, thrown exceptions and equal-next no-write behavior stay unchanged. This is current-pass error signalling, not rollback or retry repair. This does not establish disk durability, retry, prefetch availability, account deletion or remote success; persistence policy remains AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE."
+    related_code:
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWLookupTable.java
+    - maplib/src/main/java/com/nextgis/maplib/map/Table.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/AutoTextEdit.java
+    - app/src/test/java/com/nextgis/mobile/util/NgwLookupCacheSyncTest.java
+    verify_smoke:
+    - AUTO-NGW-LOOKUP-CACHE-SYNC
+    - AUTO-NGW-SYNC-ADMISSION
+    must_update_docs:
+    - docs/architecture/ngw-sync-and-storage.md
+    - maplib/docs/README.md
+    - maplib/docs/manifest.yaml
+    - app/docs/README.md
+    - app/docs/manifest.yaml
+
+
+  INV-NGFP-LOOKUP-PREFETCH-SCOPE:
+    title: Prefetch traverses form bindings without widening destructive lookup readers
+    owners:
+    - maplibui
+    - app
+    - maplib
+    statement: Only GISApplication.fillMissingLookupTablesForCollectorForm and LayerFillService.UnzipForm.execute
+      use fillLookupTableIdsForPrefetch. Traverse typed combobox.attributes.ngw_id in root array, recursive
+      type=tabs pages[].elements and both declared root tabs orientation arrays. Keep Android getLong,
+      malformed-present errors and -1. Return normalized IDs once in first appearance order per call.
+      Old public fillLookupTableIds body and entire NGWVectorLayerUI deletion file/two calls remain byte-exact,
+      including duplicate/error/legacy scope. Never widen destructive readers through the new walker.
+      No global cache uniqueness, installed same-hash repair, retry/durability/snapshot completeness or
+      account backup policy is established; native import/cache/Save and malformed inactive layouts are
+      separate bounds.
+    related_code:
+    - maplibui/src/main/java/com/nextgis/maplibui/util/LayerUtil.java
+    - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    - maplibui/src/main/java/com/nextgis/maplibui/mapui/NGWVectorLayerUI.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Tabs.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java
+    - maplibui/src/main/java/com/nextgis/maplibui/formcontrol/AutoTextEdit.java
+    - app/src/test/java/com/nextgis/mobile/util/NgfpLookupPrefetchTest.java
+    verify_smoke:
+    - AUTO-NGFP-LOOKUP-PREFETCH
+    - SMOKE-NGFP-LOOKUP-PREFETCH
+    must_update_docs:
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/architecture/conditional-form-rules.md
+    - maplibui/docs/README.md
+    - maplibui/docs/manifest.yaml
+    - app/docs/README.md
+    - app/docs/manifest.yaml
+  INV-NGW-FULL-SNAPSHOT-ADMISSION:
+    title: Full snapshot absence requires an admitted response, not an unverified206 body
+    owners:
+    - maplib
+    - app
+    statement: 'Only NGWVectorLayer.downloadFullSnapshot rejects explicit HTTP206 immediately after its response code:
+      add one numIoExceptions and failed206 before error/input stream, length and newstage. Earlier prefix cleanup
+      beforeGET and prior outbound work stay unchanged; every other2xx/non2xx/404/transient/track route is preserved.
+      No Range assembly or full-range proof exists on this route. The outer null-file gate prevents scan/backup/SQL
+      application of that snapshot, not every earlier SQL/cleanup operation. A partial200, actual remote206, disk/restart
+      or native full-apply acceptance is not claimed.'
+    related_code:
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+    - maplib/src/test/java/com/nextgis/maplib/map/NGWVectorLayerFullSnapshotHttpStatusTest.java
+    - maplib/src/main/java/com/nextgis/maplib/util/NGWUtil.java
+    - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+    verify_smoke:
+    - AUTO-NGW-SYNC-ADMISSION
+    must_update_docs:
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/guides/project-synchronization-user-guide.md
+    - maplib/docs/README.md
+    - maplib/docs/manifest.yaml
+
+
+  INV-NGW-USER-MESSAGES:
+    title: Known NGW failure causes reach only human-readable owned UI text
+    owners: [app, maplib, maplibui]
+    statement: >
+      Preserve positively classified account IO and server Parse without changing producer counters.
+      Export/read only exact local result owner and captured counts in a fresh private pass Bundle;
+      never forward that metadata/body/Throwable/URL to Intent or storage. Pure SERVER alone uses
+      shared possible-maintenance/overload copy; current offline wins at consumption. Mixed, late,
+      auth/rights/local/untrusted/malformed reports stay safe generic. Final noncancel child failure
+      of a previously clean project must not become silent success; keep per-target failure state,
+      report once after cleanup and preserve normal cancel. Child-list failed response differs from
+      successful empty list. LayerFill allows only typed known cause or owned human copy, never
+      infers403 from JSON shape. Legacy list Toast uses actual resource IDs. Text is not durable ACK.
+    related_code:
+    - maplib/src/main/java/com/nextgis/maplib/util/SyncResultUtil.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java
+    - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+    - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java
+    verify_smoke: [AUTO-NGW-USER-MESSAGES, AUTO-UI-SOURCE-CONTRACTS]
+    must_update_docs: [docs/architecture/ngw-sync-and-storage.md, docs/architecture/ui-contracts.md, docs/registry/ui-contracts.json, docs/guides/project-synchronization-user-guide.md, app/docs/README.md, app/docs/manifest.yaml]
+
+  INV-NGW-RESOURCE-CHECKBOX-SELECTION:
+    title: NGW checkbox state follows local resource and import mode
+    owners:
+    - maplibui
+    - app
+    - maplib
+    statement: Bind is a nonmutating ANY projection of the requested raster/vector mode over matching process-local
+      resource IDs; a physical checkbox ID is not a mode ID. Uncheck clears every matching requested flag
+      and removes only bothfalse entries; check never amplifies an existing positive mode. Recycled labels
+      follow resource mode. Owned JSON restore resolves and parses every original entry before same resolved
+      localID OR merge at first order; different accounts/localIDs and late failures remain distinct. External
+      setter/legacy Parcel/import loops are not generally normalized. Refresh policy remains AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH.
+    related_code:
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/NgwResourceSelectionState.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/CheckState.java
+    - app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionCheckboxTest.java
+    - app/src/test/java/com/nextgis/maplibui/util/NgwResourceSelectionDedupTest.java
+    must_update_docs:
+    - docs/architecture/ui-contracts.md
+    - docs/registry/ui-contracts.json
+    - docs/architecture/ngw-sync-and-storage.md
+    verify_smoke:
+    - AUTO-NGW-RESOURCE-CHECKBOX-SELECTION
+    - AUTO-UI-SOURCE-CONTRACTS
+  INV-VECTOR-SPATIAL-CACHE-RECOVERY:
+    title: Fresh and persisted vector spatial indexes have explicit complete lifecycle
+    owners:
+    - maplib
+    - maplibui
+    - app
+    statement: A successful fresh empty create may admit readiness only after actual zero SQL rows and zero live index
+      with identity/generation/size recheck. Native reads remain blocked during active bulk until the existing end
+      boundary; finally, rollback, count failure and nonempty canceled states are not new success proofs. Public clear
+      removes nodes and size and persists dirty removal; load is clean and rejects malformed/partial cardinality and
+      child kinds without publishing prefixes. Valid legacy wire bytes and clean same-path no-write are preserved.
+      Layer-owned missing/invalid derived index recovery uses original SQL IDs/geometries without saving half-loaded
+      subclass identity. Counts do not certify arbitrary ID/envelope equality, disk durability or native content readiness.
+    related_code:
+    - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java
+    - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorBulkCacheReadinessTest.java
+    - maplib/src/test/java/com/nextgis/maplib/datasource/GeometryRTreeRecoveryTest.java
+    - maplib/src/main/java/com/nextgis/maplib/util/CoordinatePointLayerImporter.java
+    - maplib/src/main/java/com/nextgis/maplib/util/GeoJSONUtil.java
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+    - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    - maplibui/src/main/java/com/nextgis/maplibui/activity/VectorLayerSettingsActivity.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/RebuildCacheService.java
+    must_update_docs:
+    - docs/architecture/map-rendering.md
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/reference/official-differences.md
+    - maplib/docs/README.md
+    verify_smoke:
+    - AUTO-VECTOR-SPATIAL-CACHE-RECOVERY
+    - AUTO-SQLITE-NATIVE-VECTORS
+    - SMOKE-NGW-LARGE-PULL-CACHE
+
+  INV-NGW-RESOURCE-ROW-TEXT-FIT:
+    title: Complete resource name/mode captions and reachable breadcrumb after repeated measurement
+    owners:
+    - maplibui
+    - app
+    statement: 'Три caption width=wrap_content сохраняют полный owned RU/EN текст. NgwResourceRowLayout
+      сначала измеряет обычную горизонтальную строку; лишь фактический glyph clipping имени переводит две
+      статические header/mode группы друг под друга. Перед обычным и full-width измерением локально forceLayout
+      для каждого descendant обновляет getLayout до решения о размещении; parent requestLayout/reparent
+      нет. При расширении та же строка возвращается в горизонтальную компоновку. Шрифт, IDs, порядок controls,
+      listeners/CheckState/local-vs-remote identity/JSON/Parcel/import/refresh прежние. Shared breadcrumb
+      layout переносит5dp child margin в5dp padding HorizontalScrollView: API28 clamp учитывает padding,
+      а child margin не учитывает. Визуальный отступ сохранён, конец пути достижим в технической модели.
+      Complete line ends/ellipsis/height/glyph bounds and non-overlap are independent expectations; cached
+      dimensions/getText are insufficient. Полная owned copy и CPU glyph bounds не принимают фактическое
+      число доступных строк, touch targets/scroll/OEM/font/theme/rotation/display-size/installed APK/phone
+      performance. font1.3 и реальные orientation/display combinations не исполнены. Единственный narrow
+      Root risk AUDIT-TODO-MOBILE-RESOURCE-ROW-LAYOUT; broader UI audit продолжается, не all-screens PASS.
+      F61 clock/Wiki/pointer blockers прежние.'
+    related_code:
+    - maplibui/src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java
+    - maplibui/src/main/res/layout/row_ngwlayer_check.xml
+    - maplibui/src/main/res/layout/row_ngwlayer_doublecheck.xml
+    - maplibui/src/main/res/layout/layout_resources.xml
+    - app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    must_update_docs:
+    - docs/architecture/ui-contracts.md
+    - docs/registry/ui-contracts.json
+    verify_smoke:
+    - AUTO-NGW-RESOURCE-ROW-TEXT-FIT
+    - AUTO-UI-SOURCE-CONTRACTS
+  INV-TRACK-SELECTED-GPX-SHARE:
+    title: Selected shared-track Share retains identity, persisted GPX and current binding
+    owners:
+    - app
+    - maplibui
+    statement: Map panel shares exactly the captured shared TrackInfo.id via existing LayerUtil GPX exporter. Exact
+      current Activity/view/selection/normal-mode guards reject stale launch. List multiselect, recorder state, shared
+      DB/sent IDs, point order/segments, FileProvider roots/MIME/read grants stay owned by existing producers. XML-valid
+      metadata round-trips exactly; path separators do not escape export cache. Unscaled action columns adapt by available/48dp;
+      header/outer short-window fitting/native recipient acceptance are separate.
+    related_code:
+    - maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java
+    - maplibui/src/main/res/values/ids.xml
+    - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    - maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java
+    - app/src/test/java/com/nextgis/mobile/fragment/SelectedTrackShareBindingTest.java
+    - app/src/test/java/com/nextgis/maplibui/util/TrackGpxNameExportTest.java
+    - app/src/test/java/com/nextgis/maplibui/view/TrackSelectionPanelTest.java
+    verify_smoke:
+    - AUTO-TRACK-SELECTED-GPX-SHARE
+    - AUTO-UI-SOURCE-CONTRACTS
+    must_update_docs:
+    - docs/architecture/track-controls.md
+    - docs/architecture/shared-tracks.md
+    - docs/architecture/ui-contracts.md
+    - docs/architecture/ui-accessibility.md
+    - app/docs/README.md
+    - app/docs/manifest.yaml
+    - maplibui/docs/README.md
+    - maplibui/docs/manifest.yaml

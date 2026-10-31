@@ -6,4 +6,6 @@
     <string name="sync_failed_notification_title">Synchronization incomplete</string>
     <string name="sync_failed_notification_message">Some data could not be synchronized. Please try again.</string>
     <string name="sync_recheck_skipped_prompt">Check previously skipped objects again? Large layers may need to be downloaded again.</string>
+    <string name="sync_webgis_server_error_title">WebGIS server error</string>
+    <string name="sync_failed_projects_list">Synchronization did not finish for: %1$s.</string>
 </resources>

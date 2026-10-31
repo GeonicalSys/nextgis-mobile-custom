@@ -124,3 +124,15 @@ Related tracks/map обязателен после правки. Full и Check-P
 публикацией после закрытия библиотечных зависимостей. Real RF/GPS в поле остаётся
 отдельной проверкой. При полном диске RAM-точки не переживут смерть процесса до
 успешного durable checkpoint; прежнее ограничение не скрывается.
+
+
+### Экспорт выбранного трека
+
+TrackView получает shared FIELD_ID из cursor, а map panel — отдельный TrackInfo.id.
+Оба маршрута передают IDs в LayerUtil: task получает собственную копию списка,
+читает persisted shared tracks/trackpoints в POINT_ORDER и сохраняет segments.
+Untagged URI всё ещё разрешает TrackLayer через active map presentation; сам
+TrackLayer обращается к installation-wide SharedTrackStore. Успех запуска не
+доказывает availability active map на всём worker, единый metadata/points snapshot,
+recorder-tail drain, packet ACK или полноту истории NGW. Canonical risk:
+`AUDIT-TODO-MOBILE-TRACK-GPX-EXPORT-OWNERSHIP`. Общая БД, sent/session IDs, Recorder Stop и project switch guard не меняются.

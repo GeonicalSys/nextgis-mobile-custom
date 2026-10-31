@@ -138,6 +138,8 @@ NGFP-формы: читать `../docs/architecture/conditional-form-rules.md`. 
 regression-тесты `CascadingFormsTest` и `ConditionalRequiredFieldsTest` запускаются
 на изолированном эмуляторе или в отдельном verification APK смартфона;
 production и обычный Debug смартфона не используются.
+Перед выводом о default/required/высоте поля прочитать source-backed classobj/typeobj chain в conditional-form-rules и UI-FORM-TEXT-LINE-CAP: actual form/hash, remote schema, restored state и cap различаются. Корневые NGFP namespace/coercion/prefetch/old-clone риски вести только в общем LISA TODO.
+
 Проверять публичный запуск формы со связанным meta, вкладки, Save/Back Save,
 pin черновика и отсутствие SQLite-записи при нарушении условий.
 FormAppearanceTest проверяет обе темы, перенос выбранного имени и нижний Save.
@@ -164,6 +166,26 @@ untagged UI URI всегда относится к активной карте, 
 Полный pending project/account план сохраняется до первого прохода; Collector
 journals разделены по canonical map path. Проверять cancellation, equal layer/group
 IDs, сохранность draft и реальный fill на изолированном эмуляторе.
+До изменения async/provider/service или project storage прочитать раздел
+«Владение workspace и границы подтверждения» в том же architecture документе:
+lease не выбирает БД, pair ACK не равен full clock, а 60s expiry не ограничивает
+claimed child. При изменении recovery journal читать также его process-view contract:
+точный preferences owner и все семь известных ключей образуют один typed cohort.
+commit=false/throw не публикует новый план через Journal API; очередная обычная
+запись должна исходить из принятого cohort, сохраняя неизвестные ключи.
+Первое чтение raw cache не доказывает disk confirmation. Не заменять этот
+контракт compensating writes, [] fallback или обещанием rollback после restart. Directory/mapName/UID/token имеют разные ключи и миграции;
+открытые риски ведутся в едином LISA dependency-audit-todo, не в отдельном списке.
+Legacy storage move и Reset Settings получают исключительный PROJECT_SWITCH
+lease до вычисления default directory, изменения prefs и постановки AsyncTask.
+Lease сохраняется через worker и UI completion; cancelSync не заменяет владение.
+Chooser listener возвращает false: proposed path/card не публикуются заранее.
+Проверять точный mMap без factory getMap; retirement — запрет новых запросов,
+не ожидание всех renderer reads. Rebind проверяет exact owner и cached actual
+path под тем же monitor, что resetMap. RESULT_OK здесь refresh Activity, не move
+ACK: после обычного отказа/отмены с retirement тоже нужен безопасный rebind, но
+без Reset defaults/delete. Runtime до подтверждённого cache не превращать в
+выдуманный rollback; disk/restart и миграции остаются отдельной границей.
 Подписи разделённых double_combobox брать из meta.fields keyname/display_name,
 затем layer alias; field key используется только при отсутствии обоих.
 
@@ -171,3 +193,51 @@ IDs, сохранность draft и реальный fill на изолиров
 ProjectLayerSelectionTest использует read-only policy snapshot этого проекта
 в отдельной verification базе. При отсутствии/неоднозначности проекта спросить
 пользователя о разрешённом замещающем проекте. Не выбирать первый доступный.
+
+Перед выводом о цели выноса различать выбранную geometry snapshot, текущий DB/FID, device fix и camera state. Читать `../docs/architecture/stakeout.md` и `UI-NAVIGATION-STAKEOUT-TARGET`: nearest facet выбирается в3857, inverse имеет явный spherical fallback, а layer isLocked не блокирует sync. Политику freeze/follow/invalidate при replacement/workspace return вести в существующем root AUDIT-TODO-NGW-REPLACE-FID; source trace не означает подтверждённый баг или разрешение native run.
+
+Lookup-кеш читает общий maplib producer; key/value comparison, а не размер,
+защищён NgwLookupCacheSyncTest. Обработанные IOException/NGException/JSONException
+сохраняют старый кеш; silent partial остаётся AUDIT-TODO-NGW-PARTIAL-SNAPSHOT.
+Текущие15 методов (8 прежних controls, revised false-save и6 новых) исполнены
+в shared19 с Core4; standalone15 отдельно не запускался. save(false) в двух
+ветвях добавляет IO к текущему результату, но новый map content уже опубликован,
+один save/throws/equal-next no-write прежние. AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE
+не закрыт как disk/retry acceptance. Не менять NGFP coercions/shared-cache deletion,
+parent pins или UI guards ради этой регрессии. Generic queued project incomplete
+отличается от legacy SyncResultUtil IO-message; не обещать сетевой текст/новый retry.
+
+
+NGFP lookup prefetch проверяет NgfpLookupPrefetchTest:8 actual-method prefetch и4
+прямых legacy-reader controls. Reflection выбирает старый E66 API лишь при отсутствии
+ForPrefetch; InvocationTargetException разворачивается без подавления Exception/Error.
+Не переносить helper в app, не менять oracles ради green на старом pin. Новая API и
+два production callers принадлежат одной maplibui библиотеке: Merge Commit до App
+pointer. Live-source JVM/compile не принимают APK с committed E66; UI39/142/19 и
+clock F61 не перепривязывать автоматически.
+
+
+## Причина ошибки до пользовательского сообщения
+
+Для сообщений NGW читать INV-NGW-USER-MESSAGES, UI-SYNC-FAILURE-MESSAGES и
+docs/architecture/ngw-sync-and-storage.md. Сохранять типизированную причину до
+закрытия account scope; не подставлять mError, Throwable, HTML/URL/status/body в UI.
+Local output Bundle содержит4 primitives и exact SyncResult Parcelable reference,
+не предназначен для Intent, хранения или IPC. Не менять counters ради текста:
+PUSH/lookup classifiers добавляют только metadata после своих прежних IO/Parse.
+Late child/project outcome отдельно от pair ACK/clock; normal cancel не ошибка.
+Проверять current connectivity при потреблении подготовленного сообщения, mixed
+и foreign/late/malformed результаты оставлять generic. Для LayerFill/browser/form
+действуют отдельные source-контракты; JSON shape не доказывает HTTP403.
+
+
+Общие документы действия «Поделиться» находятся в корне Android-репозитория:
+`docs/architecture/track-controls.md` и `docs/architecture/shared-tracks.md`.
+Из каталогов `app/` и `maplibui/` к ним ведёт `../docs/architecture/`.
+Использовать LayerUtil.shareTrackAsGPX, захватив ровно выбранный shared track ID;
+не подменять его feature FID, map-layer ID, Hub UID или recording session.
+Сохранять текущие Activity/view/selection/mode launch guards, multiselect списка,
+GPX metadata/segment order, FileProvider roots/MIME/read grants и отсутствие Stop.
+CPU-font JVM не заменяет whole-window/device/touch/recipient acceptance.
+Неразрешённые cache/snapshot/concurrency/lifetime вопросы — в единой Root очереди;
+не создавать второй exporter или локальный параллельный список рисков.
