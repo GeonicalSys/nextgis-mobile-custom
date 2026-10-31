@@ -1884,3 +1884,100 @@ invariants:
     verify_smoke:
     - AUTO-NGW-RESOURCE-CHECKBOX-SELECTION
     - AUTO-UI-SOURCE-CONTRACTS
+  INV-VECTOR-SPATIAL-CACHE-RECOVERY:
+    title: Fresh and persisted vector spatial indexes have explicit complete lifecycle
+    owners:
+    - maplib
+    - maplibui
+    - app
+    statement: A successful fresh empty create may admit readiness only after actual zero SQL rows and zero live index
+      with identity/generation/size recheck. Native reads remain blocked during active bulk until the existing end
+      boundary; finally, rollback, count failure and nonempty canceled states are not new success proofs. Public clear
+      removes nodes and size and persists dirty removal; load is clean and rejects malformed/partial cardinality and
+      child kinds without publishing prefixes. Valid legacy wire bytes and clean same-path no-write are preserved.
+      Layer-owned missing/invalid derived index recovery uses original SQL IDs/geometries without saving half-loaded
+      subclass identity. Counts do not certify arbitrary ID/envelope equality, disk durability or native content readiness.
+    related_code:
+    - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
+    - maplib/src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java
+    - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorBulkCacheReadinessTest.java
+    - maplib/src/test/java/com/nextgis/maplib/datasource/GeometryRTreeRecoveryTest.java
+    - maplib/src/main/java/com/nextgis/maplib/util/CoordinatePointLayerImporter.java
+    - maplib/src/main/java/com/nextgis/maplib/util/GeoJSONUtil.java
+    - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
+    - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java
+    - maplibui/src/main/java/com/nextgis/maplibui/activity/VectorLayerSettingsActivity.java
+    - maplibui/src/main/java/com/nextgis/maplibui/service/RebuildCacheService.java
+    must_update_docs:
+    - docs/architecture/map-rendering.md
+    - docs/architecture/ngw-sync-and-storage.md
+    - docs/reference/official-differences.md
+    - maplib/docs/README.md
+    verify_smoke:
+    - AUTO-VECTOR-SPATIAL-CACHE-RECOVERY
+    - AUTO-SQLITE-NATIVE-VECTORS
+    - SMOKE-NGW-LARGE-PULL-CACHE
+
+  INV-NGW-RESOURCE-ROW-TEXT-FIT:
+    title: Complete resource name/mode captions and reachable breadcrumb after repeated measurement
+    owners:
+    - maplibui
+    - app
+    statement: 'Три caption width=wrap_content сохраняют полный owned RU/EN текст. NgwResourceRowLayout
+      сначала измеряет обычную горизонтальную строку; лишь фактический glyph clipping имени переводит две
+      статические header/mode группы друг под друга. Перед обычным и full-width измерением локально forceLayout
+      для каждого descendant обновляет getLayout до решения о размещении; parent requestLayout/reparent
+      нет. При расширении та же строка возвращается в горизонтальную компоновку. Шрифт, IDs, порядок controls,
+      listeners/CheckState/local-vs-remote identity/JSON/Parcel/import/refresh прежние. Shared breadcrumb
+      layout переносит5dp child margin в5dp padding HorizontalScrollView: API28 clamp учитывает padding,
+      а child margin не учитывает. Визуальный отступ сохранён, конец пути достижим в технической модели.
+      Complete line ends/ellipsis/height/glyph bounds and non-overlap are independent expectations; cached
+      dimensions/getText are insufficient. Полная owned copy и CPU glyph bounds не принимают фактическое
+      число доступных строк, touch targets/scroll/OEM/font/theme/rotation/display-size/installed APK/phone
+      performance. font1.3 и реальные orientation/display combinations не исполнены. Единственный narrow
+      Root risk AUDIT-TODO-MOBILE-RESOURCE-ROW-LAYOUT; broader UI audit продолжается, не all-screens PASS.
+      F61 clock/Wiki/pointer blockers прежние.'
+    related_code:
+    - maplibui/src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java
+    - maplibui/src/main/res/layout/row_ngwlayer_check.xml
+    - maplibui/src/main/res/layout/row_ngwlayer_doublecheck.xml
+    - maplibui/src/main/res/layout/layout_resources.xml
+    - app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java
+    - maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java
+    must_update_docs:
+    - docs/architecture/ui-contracts.md
+    - docs/registry/ui-contracts.json
+    verify_smoke:
+    - AUTO-NGW-RESOURCE-ROW-TEXT-FIT
+    - AUTO-UI-SOURCE-CONTRACTS
+  INV-TRACK-SELECTED-GPX-SHARE:
+    title: Selected shared-track Share retains identity, persisted GPX and current binding
+    owners:
+    - app
+    - maplibui
+    statement: Map panel shares exactly the captured shared TrackInfo.id via existing LayerUtil GPX exporter. Exact
+      current Activity/view/selection/normal-mode guards reject stale launch. List multiselect, recorder state, shared
+      DB/sent IDs, point order/segments, FileProvider roots/MIME/read grants stay owned by existing producers. XML-valid
+      metadata round-trips exactly; path separators do not escape export cache. Unscaled action columns adapt by available/48dp;
+      header/outer short-window fitting/native recipient acceptance are separate.
+    related_code:
+    - maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java
+    - maplibui/src/main/res/values/ids.xml
+    - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    - maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java
+    - app/src/test/java/com/nextgis/mobile/fragment/SelectedTrackShareBindingTest.java
+    - app/src/test/java/com/nextgis/maplibui/util/TrackGpxNameExportTest.java
+    - app/src/test/java/com/nextgis/maplibui/view/TrackSelectionPanelTest.java
+    verify_smoke:
+    - AUTO-TRACK-SELECTED-GPX-SHARE
+    - AUTO-UI-SOURCE-CONTRACTS
+    must_update_docs:
+    - docs/architecture/track-controls.md
+    - docs/architecture/shared-tracks.md
+    - docs/architecture/ui-contracts.md
+    - docs/architecture/ui-accessibility.md
+    - app/docs/README.md
+    - app/docs/manifest.yaml
+    - maplibui/docs/README.md
+    - maplibui/docs/manifest.yaml

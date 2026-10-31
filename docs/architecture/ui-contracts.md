@@ -90,18 +90,30 @@ Lisa/Belka, но APK merge и native redraw здесь **NOT_RUN**.
 
 | Widget → binding | Producer и преобразование | Граница значения |
 | --- | --- | --- |
-| `info` → `updateInfo` → `setText` | Active map path → `ProjectSyncState.lastComplete` → `ControlHelper.getSyncTime`: `dd MMM` и `HH:mm`, default locale/timezone | Unix ms в storage; на экране нет года/секунд или относительной давности. Закреплённый app maplib F61 допускает новое cached значение после commit=false; это не durable oracle |
+| `info` → `updateInfo` → `setText` | Active map path → `ProjectSyncState.lastComplete` → `ControlHelper.getSyncTime`: `dd MMM` и `HH:mm`, default locale/timezone | Unix ms; нет года/секунд или относительной давности. Exact-owner/canonical-key process shield возвращает подтверждённое API-visible время, публикуя попытку после commit=true. Physical disk/restart остаётся отдельным oracle |
 | `sync_progress_ring` → `refreshSyncProgressRing` | `NgwSyncProgress.snapshot`: scale1000, pull10 + push до30, monotone display с5% reserve до finish | Взвешенная работа очереди, без percent text. `finishSessionLocked` завершает progress и при ошибке; inactive UI скрывает/сбрасывает кольцо |
 | `sync` → `isSyncActive`/receiver | `NGWSyncService.isSyncStarted OR ProjectOperationCoordinator.isDataSyncActive`; lifecycle broadcast и повторная проверка состояния | Busy/activity и окончание очереди отдельно от полного project ACK; SYNC_FINISH не доказывает успешную запись clock |
 | `sync_pending_badge` / `layer_pending_badge` → async query / row binding | `collectPendingLayers`: raw `VectorLayer.isChanges` либо разрешённый track pending; group IDs распространяются вверх, row проверяет `mPendingChanges.contains(layer.getId())` | Булева локальная очередь, не число ошибок и не тот же ready-outbox gate полного clock. Результат принимает только прежний map/generation |
 
-При cleanup failure до `markComplete` запись clock не начинается. Failed commit
-после успешного gate имеет другую ветвь: cached getter и disk/restart могут
-различаться. Текущий `WF-SYNC-CLOCK-STORE` остаётся закреплён на прежнем maplib;
-планируемое исправление библиотеки этим каталогом не объявляется выполненным.
-Первичные AOSP ссылки, реальные retry callers и независимые disk/backup/restart
-oracles находятся в [sync/storage](ngw-sync-and-storage.md). Единая задача —
-`AUDIT-TODO-SYNC-ACK-RECOVERY`; точные failure branches **NOT_RUN**.
+При cleanup failure до `markComplete` запись clock не начинается. После full-project
+account/ACK/outbox, final-child-drain и cleanup gates выполняется финальная проверка
+generation/interruption. Только затем sole writer вызывает `markComplete`; progress
+finish и `SYNC_FINISH` не заменяют этот ACK. Getter читает видимый active map, а не
+scoped background project.
+
+Текущая библиотека защищает API-visible время в этом процессе для точного
+SharedPreferences owner и canonical key: shield устанавливается до editor callbacks,
+getter проверяет его до и после raw read; false/exception не публикуют новую попытку.
+Последняя успешная invocation выигрывает даже при меньшем положительном timestamp.
+Файл `full-project-sync-state`, canonical-path UTF-8 UUID и long-формат прежние;
+миграции legacy global/account clock нет. Это не откат cache/physical XML: другой
+owner или fresh process может прочитать failed cached value, попавшее на диск.
+Whole исходные F61 source row/UI contract сохранены в новом coverage history;
+датированные прежние drift/check results ниже не переписаны. API28 fault-model19
+с теми же source/test hashes дал10 assertion FAIL до исправления и19 PASS после;
+это исторический source checkpoint, не реальный failed-write/restart. Первичные AOSP
+и disk/backup/restart oracles находятся в [sync/storage](ngw-sync-and-storage.md);
+`AUDIT-TODO-SYNC-ACK-RECOVERY` остаётся открытой для этих исходов.
 
 ### Путь к картам и сброс настроек
 
@@ -331,3 +343,30 @@ Belka source compile0/BUILD47s; native acceptance отдельно NOT_RUN. Nati
 acceptance NOT_RUN. Исторические message89/Belka59 не перезапущены и не принимают
 новый Adapter source. Whole F61 clock row и остальные43 contracts/163 methods/
 39 non-method rows сохраняются; новые semantic pins ниже только после source review.
+
+
+### Полные подпись, имя и путь resource selector — layout checkpoint после37
+
+`UI-NGW-RESOURCE-CHECKBOX-SELECTION` получает additive caption_layout/source evidence. Три caption width=wrap_content сохраняют полный owned RU/EN текст. NgwResourceRowLayout сначала измеряет обычную горизонтальную строку; лишь фактический glyph clipping имени переводит две статические header/mode группы друг под друга. Перед обычным и full-width измерением локально forceLayout для каждого descendant обновляет getLayout до решения о размещении; parent requestLayout/reparent нет. При расширении та же строка возвращается в горизонтальную компоновку. Шрифт, IDs, порядок controls, listeners/CheckState/local-vs-remote identity/JSON/Parcel/import/refresh прежние. Shared breadcrumb layout переносит5dp child margin в5dp padding HorizontalScrollView: API28 clamp учитывает padding, а child margin не учитывает. Визуальный отступ сохранён, конец пути достижим в технической модели.
+AOSP API28 primary references объясняют LinearLayout uniform-width remeasure и View dimension-only
+measure cache/deferred onMeasure; forceLayout действует локально без parent request. Ссылки и exact
+reviewed attributes/hashes в каталоге; это reference, не установленный OS/build телефона.
+Существующие177 methods/44non-method/F61 и whole source37 widget/XML history сохранены.
+Новые method/file witnesses — manual семантический review, не автоматическая перепривязка.
+Checker fingerprints/IDs ловят source drift; полную copy/bounds проверяет independent behavioral oracle.
+Фактически5 caption layout methods PASS/0 failures/errors/skips, XML10.06s. Ораклы и whole fixture SHA256 cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac неизменны относительно предыдущего4PASS/1FAIL. Finalized Root receipt SHA256 68f7f6bdc072f9f25fd2af02e0584ac467a4dbb1a0c1b1e1959341b2126630ef. В этом запуске общий cohort10 НЕ PASS: 6 PASS/4 отдельные Panel assertion FAIL, Gradle exit1; 120 входов без drift, все13 owned processes settled absent, наблюдалось110.0625s. Это технические API28 CPU native Paint/text measurements, без Android device/OEM/GPU/display/GIS native/touch/rotation acceptance. Исторический cohort10 checkpoint предшествовал consumer compile. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.
+Первый combined55 attempt: Core29 реально исполнился (15 assertion FAIL/14 controls), App0: fixture не скомпилировался из-за missing RobolectricTestRunner import. Старый Checkbox22 XML был STALE и исключён; предварительные51 copied cases не являются51 выполненной проверкой. V3 добавил ровно один импорт. Legacy App26 затем реально25 PASS/1 path FAIL; первые3 caption methods PASS на старом XML, поэтому это НЕ crop RED. NativeV4 class-only CPU glyph/font backend с setup calibration воспроизвёл4 assertion FAIL на старом XML. После3 caption width attrs Native4 дал2 PASS/2 assertion FAIL: имя Collector при280dp/font2RU и конец пути. Static responsive groups и перенос5dp margin→scroll padding дали4 PASS/1 transition FAIL в frozen5 fixture. Новая локальная инвалидация descendant measure cache проверяется теми же5: fixturecc1f, все assertions/setup неизменны. Core29 PASS относится к отдельной cache-проверке, combined55 PASS не заявляется. Исторические37/89 и их source pins не перезапускались.
+Полная owned copy и CPU glyph bounds не принимают фактическое число доступных строк, touch targets/scroll/OEM/font/theme/rotation/display-size/installed APK/phone performance. font1.3 и реальные orientation/display combinations не исполнены. Единственный narrow Root risk AUDIT-TODO-MOBILE-RESOURCE-ROW-LAYOUT; broader UI audit продолжается, не all-screens PASS. F61 clock/Wiki/pointer blockers прежние.
+
+
+### Поделиться выбранным треком
+
+UI-TRACK-SELECTION-PANEL включает Share в обеих марках. Настоящая связь:
+queryTrackIds → TrackInfo.id → refreshSelectedTrack bind → singleton IDs copy →
+ExportGPXTask → shared provider → GPX FileProvider grant. Это не selected feature
+FID, map-layer ID, recorder session, upload ACK или NGW export. Контракт включает
+stale view/Activity/selection/mode guard, decoded XML-valid name и contained
+basename; независимые method tripwires дополняют прежний неизменный bind witness.
+
+
+Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.

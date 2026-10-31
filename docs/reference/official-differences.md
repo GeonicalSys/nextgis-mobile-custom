@@ -2456,3 +2456,24 @@ Squash по отдельной команде. Новые local source tests н�
 
 Проверено в текущем source-срезе: Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance.
 First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods.
+
+
+## Spatial cache после local/NGW import — 30 октября2026
+
+Fork сохраняет прежний RTree binary layout, но public clear сбрасывает size и
+остаётся dirty для same-path save. Load privately resets clean и отклоняет частичный
+или несовместимый header/actual Entry count/child kind без нового getAll allocation.
+Fresh VectorLayer.create допускает только verified zero/zero index/table с cache identity/
+data generation recheck; native/bulk/cancel guards прежние. Это не новый формат, не
+модификация business data/schema и не гарантия произвольной same-count ID/envelope
+целостности. См. INV-VECTOR-SPATIAL-CACHE-RECOVERY и Core usercard
+maplib-20261030-vector-spatial-cache-recovery. Core29 фактически исполнен: исходный код —15 assertion FAIL/14 control PASS, после двух исправлений —29 PASS/0 failures/errors/skips; те же пять наборов и все Core test bytes/oracles сохранены. Это23 новые проверки (12 lifecycle +11 RTree) и6 прежних контролей (legacy1, concurrency1, spatial4):16 Robolectric API28 с технической SQLite и13 plain JUnit. Финальный запуск:5 XML/5.653s, Gradle exit0/BUILD40s (наблюдалось42.537s),105 входов неизменны во время запуска,10 собственных процессов завершены и отсутствие подтверждено. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c. Это не55 PASS; App legacy25 PASS/1 path assertion не воспроизвёл обрезание подписей. Device/installed30/real GPX20wpt/NGW import/restart/native map acceptance не выполнялись.
+
+
+###30 октября2026 — GPX из нижней панели трека
+
+Обе марки используют Share выбранного track ID через прежний GPX exporter списка.
+Действия переносятся по available width; XML-valid имя сериализуется как текст,
+а path separators не выходят из отдельного export cache. Shared store/segment
+порядок/MIME/URI grants/recording остаются прежними. Source/JVM и CPU-font модели
+не означают installed/native/device/recipient acceptance или новый APK.

@@ -1374,3 +1374,13 @@ builder/Intent factory и late outcome helper без карты/SQLite/серв�
 владеет library regressions FormLegacyListMessagesTest4, ResourceChildrenMessagesTest9
 и LayerFillErrorMessageTest10. Actual shared89 source/model checks PASS; эти случаи не являются native
 диалогами/всеми формами/полным sync. Belka source compile0/59с проверен отдельно.
+
+
+### Поделиться треком с карты
+
+Нижняя панель выбранного трека использует прежний GPX exporter списка с одним
+shared track ID. Скрытие трека не убирает действие; запись не останавливается,
+а GPX содержит сохранённые точки и сегменты. Панель переносит действия по
+доступной ширине. Полное имя остаётся XML-текстом; basename не является путём.
+Согласованность snapshot, конкурентные экспорты, жизнь cache/recipient и
+короткие окна остаются отдельными границами проверки.

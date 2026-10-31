@@ -1327,3 +1327,121 @@ coalesces OR flags в первой owned записи. Ошибка поздне
 dedup произвольного внешнего списка либо единственность side effects import loops.
 Refresh/reconciliation policy остаётся `AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH`; это не подтверждение поведения
 реального сервера/перезапуска или native import. Новый source slice37 PASS; Belka source compile0/BUILD47s; native acceptance NOT_RUN.
+
+
+## Завершение и восстановление векторного spatial cache — 30 октября2026
+
+Обычный local/NGW vector импорт использует один VectorLayer lifecycle. После
+успешного create только проверенные zero SQL rows + zero live cache становятся
+готовой начальной точкой: count читается вне spatial lock, затем проверяются тот же
+cache object, data generation и нулевой size. Начатый bulk по-прежнему блокирует
+native reads. Готовность не устанавливается из finally и не выводится из одного
+совпадения ненулевых counts; failed/cancelled/nonempty/unknown-count случаи не
+получают новую гарантию commit/rollback или произвольного save после ошибки.
+
+GeometryRTree.clear удаляет nodes и size и помечает публичное изменение dirty:
+notifyDeleteAll → clear → save должен записать пустой cache в тот же путь. Load
+использует отдельный clean reset. Missing file даёт настоящий empty index; IOException,
+header/actual Entry cardinality mismatch или неверный child kind полностью сбрасывают
+прочитанный prefix. Счётчик проверяется обходом уже загруженных nodes без второго
+getAll/ID list. Валидный прежний binary layout, IDs/envelopes/search и clean same-path
+save сохраняются. Владелец VectorLayer при расхождении с SQL восстанавливает derived
+index из originals; частично загруженный subclass config при этом не сохраняется.
+
+Причина важна для нескольких входов: GPX/KML CoordinatePointLayerImporter и GeoJSON
+batch; initial NGW download через оба resource picker и Collector/form task; config
+fromJSON и properties getCount повторно читают index. Старый clear мог оставить
+header countN при уже пустом root; последующий save и новый load сохраняли равенство
+counts и пропускали repair. Native query и обычный hit-test имеют разные readiness
+gates. Смена стиля/видимости не строит spatial tree; manual rebuild создаёт новое
+дерево и extents из исходных ID/geometry BLOB, но не переписывает LOD geometry.
+
+Пользователь подтвердил: invisible local/NGW layers переживали restart, style edit
+и visibility toggle; помогал только manual rebuild. Эти исходные сведения сохранены
+как независимые условия регрессии. Повтор после нового исправления на устройстве
+не исполнен; точный installed version30/source commit и native результат для GPX20wpt
+и server import ещё не установлены. Это source-backed цепочка, не уже принятый
+post-fix результат телефона. Проверка header/cardinality
+не доказывает произвольную same-count ID/envelope целостность или disk power-failure
+durability. Private GPX names/coordinates не входят в Git и не становятся runtime
+dependency. Единый открытый риск: AUDIT-TODO-VECTOR-SPATIAL-CACHE-RECOVERY.
+
+Техническая проверка: Core29 фактически исполнен: исходный код —15 assertion FAIL/14 control PASS, после двух исправлений —29 PASS/0 failures/errors/skips; те же пять наборов и все Core test bytes/oracles сохранены. Это23 новые проверки (12 lifecycle +11 RTree) и6 прежних контролей (legacy1, concurrency1, spatial4):16 Robolectric API28 с технической SQLite и13 plain JUnit. Финальный запуск:5 XML/5.653s, Gradle exit0/BUILD40s (наблюдалось42.537s),105 входов неизменны во время запуска,10 собственных процессов завершены и отсутствие подтверждено. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c. Это не55 PASS; App legacy25 PASS/1 path assertion не воспроизвёл обрезание подписей. Device/installed30/real GPX20wpt/NGW import/restart/native map acceptance не выполнялись.
+Исторические message89 и selector37 сохранены с их прежними source pins; они не
+перезапускались и не сертифицируют новые Core cache bytes. Caption/layout — отдельный
+срез. Wiki, APK/release/deploy и paused native stages не затронуты.
+
+
+## Поставка исходников полного project clock — 2026-10-31
+
+Core PR63 принят Merge Commit `baa94f361101051b09f762d7eda1f36466436d5c`; consuming App gitlink
+`maplib` указывает ровно на `baa94f361101051b09f762d7eda1f36466436d5c`. Контрольная точка до коммита App86: PR открыт, точные gitlinks подготовлены в этой ветке; доставка App требует последующего Squash Merge. Этот абзац фиксирует pre-merge snapshot. Итоговый статус и App merge SHA находятся в PR86 и общей LISA delivery receipt.
+Это подтверждение доставки исходников с reviewed semantic UI pins, без публикации
+или установки нового APK. Отдельный итог обычных UI/docs checks:
+UI source check exit0:44 contracts/191 methods/49 files/11 groups; полный docs validator exit0;57 tests PASS за49.269s. Native/OEM/phone acceptance NOT_RUN.
+
+Этот current-delivery раздел адресно заменяет прежние текущие предупреждения
+«до Merge Commit → app gitlink → semantic UI pin review» в разделе
+«Неуспешный commit: память отдельно от диска» и абзаце перед checkpoint27 октября.
+Их исходные F61 source/narrative и датированные checkpoints сохранены как история;
+физические failed-write/restart вопросы из них этим исправлением не закрыты.
+Whole исходный `WF-SYNC-CLOCK-STORE` и `UI-SYNC-COMPLETION-CLOCK` сохранены в
+`coverage.project_sync_clock_delivery_review.history`, а не молча перепривязаны.
+
+`ProjectSyncState.lastComplete` проверяет `owner.clocks` до raw `getLong` и
+повторно после него. Для точного объекта SharedPreferences и canonical project key
+shield устанавливается до editor/put/commit observers. `markComplete` сериализует
+писателей одного prefs owner отдельным monitor; читатели API его не берут.
+Подтверждение обновляется только после `commit() == true`, по последней успешной
+invocation, а не по максимальному timestamp или порядку возврата callbacks.
+False/throwing попытка не публикует собственное новое значение через API того же
+owner; вложенная успешная попытка и позднейшая успешная меньшая положительная дата
+остаются допустимыми. Getter не переносит этот shield в другой owner/process:
+первое чтение без shield доверяет raw preferences неизвестной disk provenance.
+
+Публичные `lastComplete(Context,String):long` и
+`markComplete(Context,String,long):boolean`, файл `full-project-sync-state`,
+`UUID.nameUUIDFromBytes(canonical path UTF-8)` и long Unix-ms не изменены.
+Миграции schema/key, переноса global/account legacy timestamps и дополнительных
+компенсирующих/async записей нет. Weak identity registry не удерживает
+prefs/context/editor через values; его подтверждение ограничено текущим процессом
+и живым exact prefs owner. False может оставить cache и диск старыми либо новыми;
+успешный commit другого project key может записать прежнее failed cached value.
+Shield не является physical rollback, disk repair или гарантией fresh-process view.
+
+Sole production writer `ProjectSyncRunner` требует accounts одного полного pass,
+pair ACK, пустой ready-outbox, final child drain, успешный cleanup и окончательный
+generation/interruption gate. Только затем начинается clock commit. Partial/layer/
+track-only upload, progress finish и `SYNC_FINISH` не означают этот ACK.
+`LayersFragment.updateInfo` читает path видимого active map; фоновой scoped project
+не подменяет его. `ControlHelper` сохраняет `dd MMM`/`HH:mm`, default locale/timezone,
+без года/секунд или относительной давности. Другие реальные readers:
+`MaintenanceReminders` — canonical online project age; tracked
+`NGWVectorLayer.getFeaturesUrl` — owning map clock для `since`.
+
+Same-source checkpoint29 октября: неизменные old3 +publication16 API28 технических
+MemoryPreferences methods дали19 executed,10 assertion FAIL/9 controls до исправления
+и те же19 PASS после (errors0/skips0; BUILD40s/31s). Product raw SHA256
+`0a7b03b912aadfcbd87e26fe77cc260942c49df610635459ba5eb20b1fbc71bb`,
+publication fixture `bcd031656cb87f227ab3d538cb05262cd62b84783204f55a8ad45ca284afe12b`,
+old fixture `d7998443a137b9df92090ee010f03b36972d2ee353a53b6a139ed85c64a19c7d`.
+Exact retained evidence: `project-sync-clock/implementation-final-receipt.json`
+SHA256 `6bc5c28edadc4b003c423309519547def85aa2819ab54ed17b2d1c08a7c657e3`;
+green XML publication16 `96ee7b672302f1437e096a08e3cb3ba7c66f742c81989311524299bd3bc52fd9`,
+old3 `17af4503c26f96691c2c251c24ee9957a02e47517a2fba02ea4a3224a2c67642`.
+Baseline XML hashes, cases и полные прежние semantic rows — в новой coverage history.
+Эти retained evidence не являются runtime-зависимостью проверки.
+
+Публичное воспроизведение этой узкой source regression из Android root при прежних
+JBR21/offline API28/Q caches после graph/input gate:
+
+`& '.\gradlew.bat' '--offline' '--no-daemon' '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.util.ProjectSyncStateTest' '--tests' 'com.nextgis.maplib.util.ProjectSyncStatePublicationTest'`
+
+Новых tests/runtimes этот semantic delivery review не запускал. Исторические
+LisaDebug42s/BelkaRelease46s compiles относятся к тогдашнему source checkpoint,
+а не к позднейшему изменённому Runner. Current consumer compile/полный UI/docs итог
+принимается только по отдельным свежим Root receipts. Ни API fault model, ни новый
+source pin не исполняют реальные failed physical write/backup/restart,
+weak-owner GC, full project sync, native redraw/locale/timezone или новый APK.
+`AUDIT-TODO-SYNC-ACK-RECOVERY` сохраняет physical/fresh-process и post-ACK cleanup/
+crash/full-clock retry вопросы. Installed APK/phone acceptance остаётся UNKNOWN.

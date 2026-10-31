@@ -1014,11 +1014,16 @@
       "marker": "public static long lastComplete(Context context, String path)",
       "requires": [
         "if (path == null) return 0L",
-        "getLong(key(path), 0L)",
+        "String project = key(path);",
+        "OwnerState owner = owner(preferences);",
+        "ClockState clock = owner.clocks.get(project);",
+        "if (clock != null) return clock.confirmed;",
+        "long value = preferences.getLong(project, 0L);",
+        "return clock == null ? value : clock.confirmed;",
         "catch (IOException error) { return 0L; }"
       ],
       "forbids": [],
-      "sha256": "235f38df1bf9c9bb57be86f5070cd5d0f37d421aca6da3c2f9daeaa6b872cbfb"
+      "sha256": "ca983f34cfc606c0d5258255982c31cec721439980ca135d9591517a1ff9d25b"
     },
     {
       "id": "WF-SYNC-RUN",
@@ -2474,6 +2479,241 @@
         "putParcelableArrayList(KEY_STATES"
       ],
       "sha256": "7a4dc25d6dce8583311454e2a088060d97632d815b16e81280d297b5f3447795"
+    },
+    {
+      "id": "WF-NGW-ROW-REFLOW-MEASURE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+      "marker": "protected void onMeasure(int widthSpec, int heightSpec)",
+      "requires": [
+        "forceMeasureTree(header)",
+        "forceMeasureTree(modes)",
+        "stacked = false",
+        "super.onMeasure(widthSpec, heightSpec)",
+        "!clipsText(name)",
+        "stacked = true",
+        "measureFullWidth(header, innerWidth, heightSpec)"
+      ],
+      "forbids": [
+        "requestLayout(",
+        "removeView(",
+        "setTextSize(",
+        "setEllipsize("
+      ],
+      "sha256": "f368d489d1d65037efed9bda39526433bfd09118d4baa88802a84826fa48eb17"
+    },
+    {
+      "id": "WF-NGW-ROW-REFLOW-FRESH-TREE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+      "marker": "private static void forceMeasureTree(View view)",
+      "requires": [
+        "view.forceLayout()",
+        "view instanceof ViewGroup",
+        "forceMeasureTree(group.getChildAt(i))"
+      ],
+      "forbids": [
+        "requestLayout(",
+        "removeView(",
+        "setTextSize(",
+        "setEllipsize("
+      ],
+      "sha256": "e7c532a95081fb5d837a632630afbbec41c0e0bed429d81aa1bf44a61a152575"
+    },
+    {
+      "id": "WF-NGW-ROW-REFLOW-CLIPPING",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+      "marker": "private static boolean clipsText(TextView text)",
+      "requires": [
+        "text.getLayout()",
+        "layout.getLineEnd(last)",
+        "layout.getEllipsisCount(line)",
+        "layout.getLineRight(line) > width + 1f"
+      ],
+      "forbids": [
+        "requestLayout(",
+        "removeView(",
+        "setTextSize(",
+        "setEllipsize("
+      ],
+      "sha256": "a6d3fa9ebecf38a572c3f46d8bb7d7b55fbfd0fc095dc39e4771e2fe06131997"
+    },
+    {
+      "id": "WF-NGW-ROW-REFLOW-FULL-WIDTH",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+      "marker": "private void measureFullWidth(View child, int width, int heightSpec)",
+      "requires": [
+        "forceMeasureTree(child)",
+        "child.measure",
+        "MeasureSpec.EXACTLY",
+        "getChildMeasureSpec"
+      ],
+      "forbids": [
+        "requestLayout(",
+        "removeView(",
+        "setTextSize(",
+        "setEllipsize("
+      ],
+      "sha256": "3070634eaeffed91d13f0d47dc936aca94cbee1a28f5082ce2d9668709a44154"
+    },
+    {
+      "id": "WF-NGW-ROW-REFLOW-PLACE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+      "marker": "protected void onLayout(boolean changed, int left, int top, int right, int bottom)",
+      "requires": [
+        "if (!stacked)",
+        "super.onLayout(changed, left, top, right, bottom)",
+        "placeFullWidth(header, y)",
+        "placeFullWidth(modes, y)"
+      ],
+      "forbids": [
+        "requestLayout(",
+        "removeView(",
+        "setTextSize(",
+        "setEllipsize("
+      ],
+      "sha256": "6cfaa07c34108b527a3de14f0443a9bfd2665982b5644d925fee3d17c87f6599"
+    },
+    {
+      "id": "WF-TRACK-MAP-SHARE-BINDING",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "private fun refreshSelectedTrack()",
+      "requires": [
+        "TrackActions.find(host, selectedTrackId)",
+        "val id = info.id.toLong()",
+        "TrackSelectionPanel.SHARE",
+        "owner === activity && view != null",
+        "selectedTrackId == id && mode == MODE_NORMAL",
+        "LayerUtil.shareTrackAsGPX(owner, \"NextGIS Mobile\", arrayOf(id.toString()))"
+      ],
+      "forbids": [
+        "TrackerService.stopRecording"
+      ],
+      "sha256": "7139bdd370557cf8fc343a5174e2e57a53c40270ed49bca7b1616c95651c8018"
+    },
+    {
+      "id": "WF-TRACK-PANEL-CONSTRUCTION",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java",
+      "marker": "public TrackSelectionPanel(Context context, AttributeSet attrs)",
+      "requires": [
+        "actionRows = new LinearLayout[5]",
+        "R.id.track_panel_share, R.drawable.ic_action_social_share_dark, R.string.menu_share, SHARE",
+        "actionButtons = new View[actions.getChildCount()]",
+        "actionRows[i].setBaselineAligned(false)"
+      ],
+      "forbids": [
+        "setBaselineAligned(true)"
+      ],
+      "sha256": "c5637fccf6fda91e2ef3dd1e31f5f140422df93570f3a22c033d6490e826cdb1"
+    },
+    {
+      "id": "WF-TRACK-PANEL-WRAP",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java",
+      "marker": "protected void onMeasure(int widthSpec, int heightSpec)",
+      "requires": [
+        "available / dp(48)",
+        "Math.max(1, Math.min(actionButtons.length",
+        "target.indexOfChild(button) != index",
+        "target.addView(button, index)",
+        "super.onMeasure(widthSpec, heightSpec)"
+      ],
+      "forbids": [],
+      "sha256": "506ab7afd9896462eaaa6c8b1643a52a89f975e9f39dc8ea465090ae9bee18eb"
+    },
+    {
+      "id": "WF-TRACK-GPX-WORKER",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java",
+      "marker": "protected Object doInBackground(Void... params)",
+      "requires": [
+        "for (String trackId : mTracksId)",
+        "temp = separateTrackFile(parent, track.getString(0));",
+        "TrackLayer.POINT_ORDER",
+        "addExported(app, temp)"
+      ],
+      "forbids": [],
+      "sha256": "cbf961946a09ac1d96b9945be62d988f8d68185782ed6a2a117984c5cb91949b"
+    },
+    {
+      "id": "WF-TRACK-GPX-XML-NAME",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java",
+      "marker": "private void appendTrack(File temp, String name, StringBuilder sb, Formatter f, Cursor trackpoints) throws IOException",
+      "requires": [
+        "TextUtils.htmlEncode(name).replace(\"\\r\", \"&#13;\")",
+        "FIELD_SEGMENT",
+        "previousSegment"
+      ],
+      "forbids": [
+        "sb.append(name);"
+      ],
+      "sha256": "d13a88785f752aac1676b4c2bdd78a205e93dcdacf402aaf298cd8a36ba8711e"
+    },
+    {
+      "id": "WF-TRACK-GPX-SEPARATE-NAME",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java",
+      "marker": "private static File separateTrackFile(File parent, String name) throws IOException",
+      "requires": [
+        "String.valueOf(name).replace('/', '_').replace('\\\\', '_')",
+        "parent.getCanonicalFile().equals(file.getCanonicalFile().getParentFile())"
+      ],
+      "forbids": [],
+      "sha256": "ebb2c99b0a066ec4275418dbc93ce4bf0b193648a7f8527e496755f4547b5b0c"
+    },
+    {
+      "id": "WF-TRACK-SHARE-ID-COPY",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/LayerUtil.java",
+      "marker": "public static void shareTrackAsGPX(NGActivity activity, String creator, String[] tracksId)",
+      "requires": [
+        "new ArrayList<String>(Arrays.asList(tracksId))",
+        "executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)"
+      ],
+      "forbids": [],
+      "sha256": "1d580015d398854804a0f848e271219d0224c48535e6c4b6329acea21344d5ea"
+    },
+    {
+      "id": "WF-TRACK-GPX-PUBLISH",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java",
+      "marker": "protected void onPostExecute(Object object)",
+      "requires": [
+        "GpxSharePublisher.SHARE_INTENT_TYPE",
+        "Intent.ACTION_SEND_MULTIPLE",
+        "Intent.FLAG_GRANT_READ_URI_PERMISSION",
+        "mActivity.startActivity(shareIntent)"
+      ],
+      "forbids": [],
+      "sha256": "c1bac7915304c4dd73c9dbe3d8eb0b79887a8ee6a9fc8ed08eeed79d7bcbafe0"
+    },
+    {
+      "id": "WF-SYNC-CLOCK-PUBLISH",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/ProjectSyncState.java",
+      "marker": "public static boolean markComplete(Context context, String path, long time)",
+      "requires": [
+        "if (path == null || time <= 0) return false;",
+        "synchronized (owner.writer)",
+        "long previous = preferences.getLong(project, 0L);",
+        "owner.clocks.put(project, clock);",
+        "invocation = ++clock.nextInvocation;",
+        "boolean committed = preferences.edit().putLong(project, time).commit();",
+        "if (committed)",
+        "if (invocation > clock.confirmedInvocation)",
+        "clock.confirmed = time;",
+        "clock.confirmedInvocation = invocation;",
+        "return committed;",
+        "catch (IOException error) { return false; }"
+      ],
+      "forbids": [],
+      "sha256": "32ee6083853cf02e1bbdfeabdc9a653697b76e9ff37b4b631056f7e548fe1bb7"
     }
   ],
   "contracts": [
@@ -3783,38 +4023,43 @@
       "widgets": [
         "info"
       ],
-      "meaning": "Показано сохранённое в process-cached ProjectSyncState время текущего workspace, предназначенное для последнего полного обмена. Текущая библиотека допускает новое in-memory значение после commit=false; подпись сама не доказывает durable запись.",
-      "value_origin": "MapBase.getActiveInstance path → ProjectSyncState.lastComplete canonical-path key; ProjectSyncRunner.markComplete после full-project gates.",
+      "meaning": "Показано время полного обмена видимого workspace из ProjectSyncState. Для точного SharedPreferences owner и canonical project key текущий процесс сохраняет подтверждённое значение; новая попытка публикуется через API только после commit=true. Эта process-view защита не доказывает состояние physical XML/backup или fresh-process reload.",
+      "value_origin": "Visible MapBase.getActiveInstance path → ProjectSyncState.lastComplete canonical-path UUID key → confirmed owner.clocks; при первом чтении без shield — raw getLong с повторной проверкой shield. Sole production writer ProjectSyncRunner.markComplete находится после full-project, pair-ACK, final-child-drain, cleanup и final generation/interruption gates.",
       "units": "Хранимое время — Unix milliseconds; ControlHelper форматирует dd MMM и HH:mm с Locale.getDefault и default timezone, без года/секунд и без относительной давности.",
       "updates": [
-        "updateInfo читает clock active map даже внутри scoped callback другого проекта.",
-        "Нулевой/отсутствующий clock или IOException canonical path даёт никогда не выполнено; disk failure не обязательно возвращает cached значение к прежнему."
+        "updateInfo читает clock active map, даже внутри scoped callback другого проекта; timestamp>0 форматируется, иначе project_sync_never_completed.",
+        "lastComplete проверяет confirmed shield до и после raw getLong; shield устанавливается до edit/put/commit observers. False/RuntimeException не публикуют новое время через API того же owner.",
+        "Успешные вложенные вызовы выбираются по последней успешной invocation, а не по максимальному timestamp или порядку возврата callbacks. Более поздний успешный меньший положительный timestamp допускается."
       ],
       "actions": [
         "Посмотреть состояние",
         "Запустить полноценную sync отдельно"
       ],
       "conditions": [
-        "Partial uploads и другой проект не должны обновлять этот displayed clock.",
-        "markComplete вызывается только после завершения project pass и cleanup conditions."
+        "Layer-only/partial pass, track-only upload, отдельные account ticks разных запусков, progress finish и SYNC_FINISH не означают полный project ACK.",
+        "Один pass должен завершить все required project accounts с pair ACK и пустым ready-outbox; final child drain/cleanup, cancellation, interruption и generation проверяются до markComplete.",
+        "Инициализация без shield доверяет raw preferences; другой preferences owner или новый процесс не наследует прежнее process подтверждение. Все production записи этого namespace проходят через ProjectSyncState."
       ],
-      "saved_state": "Clock сохраняется по canonical path; отсутствие записи не мигрируется из общего legacy timestamp. Известный source gap AUDIT-TODO-SYNC-ACK-RECOVERY: AOSP commitToMemory предшествует disk result; false не откатывает cached map. Disk/restart oracles остаются отдельными.",
+      "saved_state": "Файл full-project-sync-state, UUID.nameUUIDFromBytes(canonical path UTF-8) и long Unix-ms не изменены; schema/key migration и перенос legacy global/account timestamps отсутствуют. Shield слабого exact-owner identity живёт в процессе до GC владельца. False может оставить cache и диск старыми либо новыми, в том числе при последующем commit другого project key; компенсирующие/async/лишние записи не добавлены. Физический failed-write/restart остаётся AUDIT-TODO-SYNC-ACK-RECOVERY.",
       "source_ids": [
         "WF-SYNC-CLOCK",
         "WF-SYNC-CLOCK-STORE",
         "WF-SYNC-RUN",
         "WF-SYNC-WIDGET-BINDING",
         "WF-SYNC-CLOCK-FORMAT",
-        "WF-SYNC-RECEIVER"
+        "WF-SYNC-RECEIVER",
+        "WF-SYNC-CLOCK-PUBLISH"
       ],
       "expectations": [
-        "Oracle: фоновой sync проектаB не меняет подпись открытогоA; первая записьA появляется после успешного fullA, не после track-only upload.",
-        "Контрпример: использовать global last_sync timestamp или now при tap и показывать ложную свежесть данных.",
-        "Oracle: при реальном failed write разделить markComplete return, cached lastComplete, physical XML/backup после writer и fresh-process reload; false-before-delegate proxy недостаточен."
+        "Oracle: фоновая sync B не меняет info открытого A; только полный A после account/child/cleanup/final gates начинает markComplete. Это source contract; full-scenario native run здесь не выполнен.",
+        "API fault-model oracle: held/false/throwing commit с уже изменённым raw cache, edit/put observers и miss/get/recheck race сохраняют прежнее подтверждение для exact owner; последующая успешная попытка восстанавливает публикацию.",
+        "API identity/order oracle: canonical aliases делят shield, equal-but-distinct prefs owners изолированы, другой owner не блокируется writer monitor; последняя successful invocation выигрывает, меньший time не отбрасывается.",
+        "Persistence oracle: имя namespace, canonical UUID и long прежние. Отдельный model-тест явно допускает, что commit другого key сохраняет failed cached value на модельном диске при прежнем API-visible подтверждении. Native physical XML/backup и fresh process проверяются отдельно."
       ],
       "unknowns": [
-        "Native redraw, фактическое применение locale/timezone и реальный failed-write/restart NOT_RUN. Current maplib remains f61ba7839cf9e44b08eefa98d72d83966d1c3c3d; будущий library fix не заявлен и старый WF-SYNC-CLOCK-STORE fingerprint сохранён.",
-        "Source не подтверждает точность серверных данных; cached clock также читает reminder age и tracked reload since, чьи эффекты требуют независимой проверки."
+        "Реальный failed physical write, backup/rename, restart/fresh-process reload, weak-owner GC и native redraw/locale/timezone не выполнены этой regression. Process shield не обещает cross-process rollback или durable исправление файла.",
+        "Exact current Core merge commit и App gitlink должны быть проверены до применения этого semantic pin. Исходный whole F61 source row и UI contract сохранены в coverage.project_sync_clock_delivery_review.history; старые docs failures остаются историческими.",
+        "Clock не подтверждает серверную полноту/актуальность. Reminder age читает canonical online project clock, tracked NGW since — owning map clock; эти реальные consumers с новым owner shield source-reviewed, их native бизнес-исходы не выполнены."
       ]
     },
     {
@@ -3885,23 +4130,120 @@
         "Цвет",
         "Переименовать",
         "Удалить",
-        "Закрыть панель"
+        "Закрыть панель",
+        "Поделиться сохранённым GPX выбранного shared track ID"
       ],
       "conditions": [
         "TrackInfo уже выбран вызывающим UI; CLOSE не является удалением трека."
       ],
       "saved_state": "Панель показывает модель и callback; persistence выполняется отдельными TrackActions/provider.",
       "source_ids": [
-        "WF-TRACK-PANEL"
+        "WF-TRACK-PANEL",
+        "WF-TRACK-MAP-SHARE-BINDING",
+        "WF-TRACK-PANEL-CONSTRUCTION",
+        "WF-TRACK-PANEL-WRAP",
+        "WF-TRACK-GPX-WORKER",
+        "WF-TRACK-GPX-XML-NAME",
+        "WF-TRACK-GPX-SEPARATE-NAME",
+        "WF-TRACK-SHARE-ID-COPY",
+        "WF-TRACK-GPX-PUBLISH"
       ],
       "expectations": [
         "Oracle: для скрытого трека написано Показать, для видимого Скрыть; закрытие панели оставляет сам трек.",
-        "Контрпример: текст описывает старое состояние вместо следующей команды либо Close удаляет track."
+        "Контрпример: текст описывает старое состояние вместо следующей команды либо Close удаляет track.",
+        "Share передаёт только bound shared TrackInfo.id существующему exporter; stale Activity/view/selection/tool mode не запускает worker.",
+        "Обычный и hidden/current track сохраняют выбор; Share не останавливает recorder и не обещает durable-tail drain.",
+        "XML parser восстанавливает XML-valid Unicode, ampersand/angle/quote/entity-looking text и CR/LF/tab; basename остаётся в export directory.",
+        "Одни и те же action Views/callbacks меняют число колонок по floor(available/48dp) и сохраняют порядок.",
+        "Wrapped actionrow text baseline alignment is disabled; measuredrowheightcontainsallactions, noRename/Visibility3pxintersectionwithnextrow."
       ],
       "unknowns": [
         "Callback wiring всех действий, реальное выделение линии и large-font hit targets проверяются отдельно; core GPS scope не затронут.",
-        "XML binding detector не покрывает programmatic track controls; это ограничение XML-проверки, не неизвестный смысл проверенных команд. Native appearance/hit targets NOT_RUN."
-      ]
+        "XML binding detector не покрывает programmatic track controls; это ограничение XML-проверки, не неизвестный смысл проверенных команд. Native appearance/hit targets NOT_RUN.",
+        "64/112dp action-only bounds не принимают title/Close header или outer vertical scale короткого окна; NativeCPUpaint не является device/OEM/touch/GPU/recipient acceptance.",
+        "Canonical AUDIT-TODO-MOBILE-TRACK-GPX-EXPORT-OWNERSHIP сохраняет existing asynchronous snapshot/cache/name collision/provider/Activity lifetime unknowns."
+      ],
+      "track_share_scope_result": "Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.",
+      "visual_resource_semantics": {
+        "reviewed_at": "2026-10-31",
+        "resource_id": "R.drawable.ic_action_social_share_dark",
+        "consumer": "TrackSelectionPanel constructor → button(track_panel_share) → top compound drawable → setCompoundDrawableTintList(ColorStateList.valueOf(foreground))",
+        "assets": [
+          {
+            "repository": "maplibui",
+            "module_path": "src/main/res/drawable-hdpi/ic_action_social_share_dark.png",
+            "workspace_path": "android_projects/android_gisapp/maplibui/src/main/res/drawable-hdpi/ic_action_social_share_dark.png",
+            "raw_sha256": "72ddbebbe683e37852db0a6e2d9fc6951b8e7df7effac03bda51defbc2b44350",
+            "density": "drawable-hdpi",
+            "pixel_size": [
+              48,
+              48
+            ],
+            "max_alpha": 205
+          },
+          {
+            "repository": "maplibui",
+            "module_path": "src/main/res/drawable-mdpi/ic_action_social_share_dark.png",
+            "workspace_path": "android_projects/android_gisapp/maplibui/src/main/res/drawable-mdpi/ic_action_social_share_dark.png",
+            "raw_sha256": "57d57ab2f7080de5e1b7f9439a8eee6bb173ec9e060910b8289fdb8c5bcab362",
+            "density": "drawable-mdpi",
+            "pixel_size": [
+              32,
+              32
+            ],
+            "max_alpha": 205
+          },
+          {
+            "repository": "maplibui",
+            "module_path": "src/main/res/drawable-xhdpi/ic_action_social_share_dark.png",
+            "workspace_path": "android_projects/android_gisapp/maplibui/src/main/res/drawable-xhdpi/ic_action_social_share_dark.png",
+            "raw_sha256": "b97ebf0b05ee6397da39a83fc0a9be9eb02f38785cf2b8a33398e293f579bd43",
+            "density": "drawable-xhdpi",
+            "pixel_size": [
+              64,
+              64
+            ],
+            "max_alpha": 205
+          },
+          {
+            "repository": "maplibui",
+            "module_path": "src/main/res/drawable-xxhdpi/ic_action_social_share_dark.png",
+            "workspace_path": "android_projects/android_gisapp/maplibui/src/main/res/drawable-xxhdpi/ic_action_social_share_dark.png",
+            "raw_sha256": "aab47be5080dfffbc5b9be037176035ffe7d573684e75f47b80ea2fb39573dee",
+            "density": "drawable-xxhdpi",
+            "pixel_size": [
+              96,
+              96
+            ],
+            "max_alpha": 205
+          }
+        ],
+        "alpha_semantics": {
+          "used_share_max_alpha": 205,
+          "used_share_fraction": 0.803921568627451,
+          "existing_chosen_rename_light_max_alpha": 204,
+          "existing_problematic_rename_dark_max_alpha": 123,
+          "unused_share_light_max_alpha": 153,
+          "conclusion": "Do not infer opacity/color from dark/light basename. Used Share is approximately80%alpha across all four densities, comparable to corrected Rename; it does not repeat the approximately48% rename-dark issue. Switching to unused share-light would reduce alpha."
+        },
+        "foreground_tint": {
+          "Light": "#181818 opaque",
+          "Dark": "#ffffff opaque",
+          "source": "Theme.NextGIS.AppCompat.Light.Base/Dark.Base android:textColorPrimary → TrackSelectionPanel.foreground; tint replaces source RGB and retains source pixel alpha"
+        },
+        "conditional_pixel_contrast": {
+          "scope": "Static alpha-compositing math on inherited stock API28 Material backgrounds, not a rendered/device measurement",
+          "Light_background": "#fafafa",
+          "Dark_background": "#303030",
+          "strongest_used_share_pixels_ratio_Light": 9.2856,
+          "strongest_used_share_pixels_ratio_Dark": 9.1175,
+          "qualification": "Antialias edge pixels legitimately approach contrast1; peak/body comparison does not certify every pixel, accessibility or effective OEM/theme overlays. Source style parents/explicit foreground and existing cached API28 framework color metadata were read without runtime."
+        },
+        "protected": "No asset/code/state/listener/ID/font/test-oracle changes. Existing selected-track identity/Share exporter and report ownership unchanged.",
+        "unknown": "Actual OEM/API/theme/window/background/rendering/scale/visual/touch acceptance remains unverified under existing UI/Track risks. No new defect, TODO, contract family, visual stage or merge blocker from this bounded source finding.",
+        "enforcement": "Raw PNG hashes/maxalpha and source binding were manually reviewed. This additive metadata is not a new binary-image checker/parser feature; source index/raw resource hashes preserve file identity.",
+        "evidence_receipt_sha256": "0a6050574401583e964918bf94e84b52c9663c3d09b10d68c0b1240c2353c9b8"
+      }
     },
     {
       "id": "UI-TRACK-RENAME",
@@ -4399,7 +4741,12 @@
         "WF-NGW-SELECTION-ACTIVITY-RESTORE",
         "WF-NGW-SELECTION-DIALOG-RESTORE",
         "WF-NGW-SELECTION-ACTIVITY-SAVE",
-        "WF-NGW-SELECTION-DIALOG-SAVE"
+        "WF-NGW-SELECTION-DIALOG-SAVE",
+        "WF-NGW-ROW-REFLOW-MEASURE",
+        "WF-NGW-ROW-REFLOW-FRESH-TREE",
+        "WF-NGW-ROW-REFLOW-CLIPPING",
+        "WF-NGW-ROW-REFLOW-FULL-WIDTH",
+        "WF-NGW-ROW-REFLOW-PLACE"
       ],
       "expectations": [
         "Checked matching mode followed by an unrelated row remains checked regardless of list order; empty/missing selection resets a recycled checked widget without firing old listener.",
@@ -4411,7 +4758,60 @@
         "Actual37 technical API28 models PASS, native/Activity lifecycle/rotation/account/auth/server/DB/import writes/large-font/merged-resource acceptance NOT_RUN. The reported cropped-caption screenshot is a separate active layout investigation, not fixed by these label-value tests.",
         "External setter/legacy Parcel/import loop multiplicity is intentionally not normalized. Refresh/tree reconciliation and disappearing-resource/selection policy remain AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH in the single Root TODO queue.",
         "Historical message89/Belka59 used old Adapter source and are not rerun or claimed as current checkbox acceptance. F61 clock row/pointer blockers remain separate."
-      ]
+      ],
+      "caption_layout": {
+        "status": "ACTUAL_FIVE_CPU_TEXT_MODELS_PASS_DEVICE_NOT_RUN",
+        "meaning": "Три caption width=wrap_content сохраняют полный owned RU/EN текст. NgwResourceRowLayout сначала измеряет обычную горизонтальную строку; лишь фактический glyph clipping имени переводит две статические header/mode группы друг под друга. Перед обычным и full-width измерением локально forceLayout для каждого descendant обновляет getLayout до решения о размещении; parent requestLayout/reparent нет. При расширении та же строка возвращается в горизонтальную компоновку. Шрифт, IDs, порядок controls, listeners/CheckState/local-vs-remote identity/JSON/Parcel/import/refresh прежние. Shared breadcrumb layout переносит5dp child margin в5dp padding HorizontalScrollView: API28 clamp учитывает padding, а child margin не учитывает. Визуальный отступ сохранён, конец пути достижим в технической модели.",
+        "expected_attributes": [
+          {
+            "repository": "maplibui",
+            "path": "src/main/res/layout/row_ngwlayer_check.xml",
+            "id": "type1",
+            "attribute": "android:layout_width",
+            "baseline_value": "match_parent",
+            "required_value": "wrap_content"
+          },
+          {
+            "repository": "maplibui",
+            "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+            "id": "type1",
+            "attribute": "android:layout_width",
+            "baseline_value": "match_parent",
+            "required_value": "wrap_content"
+          },
+          {
+            "repository": "maplibui",
+            "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+            "id": "type2",
+            "attribute": "android:layout_width",
+            "baseline_value": "match_parent",
+            "required_value": "wrap_content"
+          }
+        ],
+        "static_groups": [
+          "ngw_resource_header",
+          "ngw_resource_modes"
+        ],
+        "path_inset": "HorizontalScrollView padding5dp replaces path margin5dp; same visual inset, reachable maximum scroll",
+        "measurement_oracle": "Actual adapter/XML in generic NextGIS-themed AppCompat host; configured and effective fontScale plus actual ShadowNativePaint/nonconstant glyph calibration. Complete line ends/ellipsis/linebottom/glyph bounds and separation; actual same-row wide/narrow/wide. CPU software text metrics, not phone/device/GPU/native GIS.",
+        "source_reference": {
+          "api": 28,
+          "android_tag": "android-9.0.0_r61",
+          "commit_sha": "ad31dbbdcd76091d7d2d1fc6c863ee17c3bfe87d",
+          "commit_url": "https://github.com/aosp-mirror/platform_frameworks_base/commit/ad31dbbdcd76091d7d2d1fc6c863ee17c3bfe87d",
+          "file_blob_sha": "40f9652c4c9baf862474eba48730b5be1056e371",
+          "file_url": "https://github.com/aosp-mirror/platform_frameworks_base/blob/ad31dbbdcd76091d7d2d1fc6c863ee17c3bfe87d/core/java/android/widget/LinearLayout.java",
+          "raw_url": "https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/ad31dbbdcd76091d7d2d1fc6c863ee17c3bfe87d/core/java/android/widget/LinearLayout.java",
+          "forceUniformWidth_line": 1051,
+          "reference_scope": "Primary AOSP Android9 API28 tag/40SHA resolved with read-only GitHub connector; pinned raw source also read with web browser tool. Reference explains mechanism, not proof of phone OS/build or exact cached Robolectric jar source."
+        },
+        "enforcement": "Manual semantic review of source4+class-cache patch; source method/full-file/XML witnesses and independent five immutable behavioral models. Metadata attributes are not a new parser feature.",
+        "protected": "Full RU/EN copy, font, IDs/modes/order/listeners, process-local identity vs remote ID, CheckState/JSON/Parcel/import/refresh unchanged; physical checkbox1 mode2 for Collector/unstyled vector.",
+        "limits": "Полная owned copy и CPU glyph bounds не принимают фактическое число доступных строк, touch targets/scroll/OEM/font/theme/rotation/display-size/installed APK/phone performance. font1.3 и реальные orientation/display combinations не исполнены. Единственный narrow Root risk AUDIT-TODO-MOBILE-RESOURCE-ROW-LAYOUT; broader UI audit продолжается, не all-screens PASS. F61 clock/Wiki/pointer blockers прежние.",
+        "remaining_canonical_risk": "AUDIT-TODO-MOBILE-RESOURCE-ROW-LAYOUT",
+        "result": "Фактически5 caption layout methods PASS/0 failures/errors/skips, XML10.06s. Ораклы и whole fixture SHA256 cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac неизменны относительно предыдущего4PASS/1FAIL. Finalized Root receipt SHA256 68f7f6bdc072f9f25fd2af02e0584ac467a4dbb1a0c1b1e1959341b2126630ef. В этом запуске общий cohort10 НЕ PASS: 6 PASS/4 отдельные Panel assertion FAIL, Gradle exit1; 120 входов без drift, все13 owned processes settled absent, наблюдалось110.0625s. Это технические API28 CPU native Paint/text measurements, без Android device/OEM/GPU/display/GIS native/touch/rotation acceptance. Исторический cohort10 checkpoint предшествовал consumer compile. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.",
+        "history": "Первый combined55 attempt: Core29 реально исполнился (15 assertion FAIL/14 controls), App0: fixture не скомпилировался из-за missing RobolectricTestRunner import. Старый Checkbox22 XML был STALE и исключён; предварительные51 copied cases не являются51 выполненной проверкой. V3 добавил ровно один импорт. Legacy App26 затем реально25 PASS/1 path FAIL; первые3 caption methods PASS на старом XML, поэтому это НЕ crop RED. NativeV4 class-only CPU glyph/font backend с setup calibration воспроизвёл4 assertion FAIL на старом XML. После3 caption width attrs Native4 дал2 PASS/2 assertion FAIL: имя Collector при280dp/font2RU и конец пути. Static responsive groups и перенос5dp margin→scroll padding дали4 PASS/1 transition FAIL в frozen5 fixture. Новая локальная инвалидация descendant measure cache проверяется теми же5: fixturecc1f, все assertions/setup неизменны. Core29 PASS относится к отдельной cache-проверке, combined55 PASS не заявляется. Исторические37/89 и их source pins не перезапускались."
+      }
     }
   ],
   "widget_evidence": [
@@ -4707,55 +5107,97 @@
       "repository": "maplibui",
       "path": "src/main/res/layout/row_ngwlayer_check.xml",
       "id": "checkBox1",
-      "sha256": "6aa925f5bc052593a94ac0984c063606f03b613d46eb5804168fca4f3937f264"
+      "sha256": "0bb270e5a6fd135f6c6b71f48367f83209e8725284d4d45cb1255330af74f995"
     },
     {
       "repository": "maplibui",
       "path": "src/main/res/layout/row_ngwlayer_check.xml",
       "id": "type1",
-      "sha256": "6aa925f5bc052593a94ac0984c063606f03b613d46eb5804168fca4f3937f264"
+      "sha256": "0bb270e5a6fd135f6c6b71f48367f83209e8725284d4d45cb1255330af74f995"
     },
     {
       "repository": "maplibui",
       "path": "src/main/res/layout/row_ngwlayer_check.xml",
       "id": "check_raster",
-      "sha256": "6aa925f5bc052593a94ac0984c063606f03b613d46eb5804168fca4f3937f264"
+      "sha256": "0bb270e5a6fd135f6c6b71f48367f83209e8725284d4d45cb1255330af74f995"
     },
     {
       "repository": "maplibui",
       "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
       "id": "checkBox1",
-      "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+      "sha256": "b7d041fd6350df0e5e1771d1d255553891cf873e90ee33bb046756dd0adb3c05"
     },
     {
       "repository": "maplibui",
       "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
       "id": "checkBox2",
-      "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+      "sha256": "b7d041fd6350df0e5e1771d1d255553891cf873e90ee33bb046756dd0adb3c05"
     },
     {
       "repository": "maplibui",
       "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
       "id": "type1",
-      "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+      "sha256": "b7d041fd6350df0e5e1771d1d255553891cf873e90ee33bb046756dd0adb3c05"
     },
     {
       "repository": "maplibui",
       "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
       "id": "type2",
-      "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+      "sha256": "b7d041fd6350df0e5e1771d1d255553891cf873e90ee33bb046756dd0adb3c05"
     },
     {
       "repository": "maplibui",
       "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
       "id": "check_raster",
-      "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+      "sha256": "b7d041fd6350df0e5e1771d1d255553891cf873e90ee33bb046756dd0adb3c05"
     },
     {
       "repository": "maplibui",
       "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
       "id": "check_vector",
-      "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+      "sha256": "b7d041fd6350df0e5e1771d1d255553891cf873e90ee33bb046756dd0adb3c05"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_ngwlayer_check.xml",
+      "id": "ngw_resource_header",
+      "sha256": "0bb270e5a6fd135f6c6b71f48367f83209e8725284d4d45cb1255330af74f995"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_ngwlayer_check.xml",
+      "id": "ngw_resource_modes",
+      "sha256": "0bb270e5a6fd135f6c6b71f48367f83209e8725284d4d45cb1255330af74f995"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_ngwlayer_check.xml",
+      "id": "tvName",
+      "sha256": "0bb270e5a6fd135f6c6b71f48367f83209e8725284d4d45cb1255330af74f995"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+      "id": "ngw_resource_header",
+      "sha256": "b7d041fd6350df0e5e1771d1d255553891cf873e90ee33bb046756dd0adb3c05"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+      "id": "ngw_resource_modes",
+      "sha256": "b7d041fd6350df0e5e1771d1d255553891cf873e90ee33bb046756dd0adb3c05"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+      "id": "tvName",
+      "sha256": "b7d041fd6350df0e5e1771d1d255553891cf873e90ee33bb046756dd0adb3c05"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/layout_resources.xml",
+      "id": "path",
+      "sha256": "bb66722eedead9af3cddbf85a994e2819eda5078fe22db2a69584da46f688f64"
     }
   ],
   "coverage": {
@@ -4946,6 +5388,380 @@
         "compile_sha256": "8b374d926ef7152cc754ce774afeddfff4e9f3f1aec594745be6854cd33f9d17"
       },
       "compile_result": "BelkaRelease source compile exit0/BUILD47s (49.136s observed),81 inputs exact,all10 owned processes settled absent. Actual100 task SET matches reviewed100 with different order; UIJava/AppJava+Kotlin executed, CoreJava UP-TO-DATE. Four Java JAR class counts28/535/670/45; no dex/so/APK/AAB/AAR. This is source compilation, not installed-app/native/Service/DB/server/import/layout-fit acceptance."
+    },
+    "resource_caption_layout_review": {
+      "reviewed_at": "2026-10-31",
+      "basis": "Source4 + bounded descendant measurement-cache fix manually reviewed, all five immutable actual CPU text methods PASS; historical failures retained.",
+      "previous_selector37_xml_widget_witnesses": [
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_check.xml",
+          "id": "checkBox1",
+          "sha256": "6aa925f5bc052593a94ac0984c063606f03b613d46eb5804168fca4f3937f264"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_check.xml",
+          "id": "type1",
+          "sha256": "6aa925f5bc052593a94ac0984c063606f03b613d46eb5804168fca4f3937f264"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_check.xml",
+          "id": "check_raster",
+          "sha256": "6aa925f5bc052593a94ac0984c063606f03b613d46eb5804168fca4f3937f264"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "id": "checkBox1",
+          "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "id": "checkBox2",
+          "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "id": "type1",
+          "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "id": "type2",
+          "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "id": "check_raster",
+          "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "id": "check_vector",
+          "sha256": "365d77d9ba802f3e2c400fea54330de257cff21772d510fc1d59b32893bfd869"
+        }
+      ],
+      "previous_selector37_xml_raw_sha256": {
+        "maplibui/src/main/res/layout/row_ngwlayer_check.xml": "f3b5376161f37373e13b98dae03528c20616e73c67fd59ecdb51ae983bb54349",
+        "maplibui/src/main/res/layout/row_ngwlayer_doublecheck.xml": "5083adb1981e389feb5176264d842c0f937ee131bccf0d8f2f32925c6ebb8cc7"
+      },
+      "reviewed_product_raw_sha256": {
+        "maplibui/src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java": "dd22c49cfbded6aab6b63de5ca41f12ff2b54ac7018e0f38396e5733ecd291af",
+        "maplibui/src/main/res/layout/row_ngwlayer_check.xml": "00791d0f0ee9e6a2aa9163853f372022876ff67d3f6a97e33832de11b11e5289",
+        "maplibui/src/main/res/layout/row_ngwlayer_doublecheck.xml": "258650cd7b5827cd38bc8ed45de229548450e101b768353b61b101d5b2bc60b1",
+        "maplibui/src/main/res/layout/layout_resources.xml": "6900072dea06e7bbee537295d8e9626c2b49141dadb8260367421c571d24f12d"
+      },
+      "reviewed_new_attributes": [
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_check.xml",
+          "id": "type1",
+          "attribute": "android:layout_width",
+          "baseline_value": "match_parent",
+          "required_value": "wrap_content"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "id": "type1",
+          "attribute": "android:layout_width",
+          "baseline_value": "match_parent",
+          "required_value": "wrap_content"
+        },
+        {
+          "repository": "maplibui",
+          "path": "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "id": "type2",
+          "attribute": "android:layout_width",
+          "baseline_value": "match_parent",
+          "required_value": "wrap_content"
+        }
+      ],
+      "all177_old_method_rows_exact": true,
+      "all44_old_non_method_rows_exact": true,
+      "whole_F61_clock_row_exact": true,
+      "source_fixture_sha256": "cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac",
+      "remaining_canonical_risk": "AUDIT-TODO-MOBILE-RESOURCE-ROW-LAYOUT",
+      "result": "Фактически5 caption layout methods PASS/0 failures/errors/skips, XML10.06s. Ораклы и whole fixture SHA256 cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac неизменны относительно предыдущего4PASS/1FAIL. Finalized Root receipt SHA256 68f7f6bdc072f9f25fd2af02e0584ac467a4dbb1a0c1b1e1959341b2126630ef. В этом запуске общий cohort10 НЕ PASS: 6 PASS/4 отдельные Panel assertion FAIL, Gradle exit1; 120 входов без drift, все13 owned processes settled absent, наблюдалось110.0625s. Это технические API28 CPU native Paint/text measurements, без Android device/OEM/GPU/display/GIS native/touch/rotation acceptance. Исторический cohort10 checkpoint предшествовал consumer compile. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.",
+      "history": "Первый combined55 attempt: Core29 реально исполнился (15 assertion FAIL/14 controls), App0: fixture не скомпилировался из-за missing RobolectricTestRunner import. Старый Checkbox22 XML был STALE и исключён; предварительные51 copied cases не являются51 выполненной проверкой. V3 добавил ровно один импорт. Legacy App26 затем реально25 PASS/1 path FAIL; первые3 caption methods PASS на старом XML, поэтому это НЕ crop RED. NativeV4 class-only CPU glyph/font backend с setup calibration воспроизвёл4 assertion FAIL на старом XML. После3 caption width attrs Native4 дал2 PASS/2 assertion FAIL: имя Collector при280dp/font2RU и конец пути. Static responsive groups и перенос5dp margin→scroll padding дали4 PASS/1 transition FAIL в frozen5 fixture. Новая локальная инвалидация descendant measure cache проверяется теми же5: fixturecc1f, все assertions/setup неизменны. Core29 PASS относится к отдельной cache-проверке, combined55 PASS не заявляется. Исторические37/89 и их source pins не перезапускались.",
+      "actual_receipt_sha256": "68f7f6bdc072f9f25fd2af02e0584ac467a4dbb1a0c1b1e1959341b2126630ef",
+      "actual_caption_XML_sha256": "a8f7dc783639a824cf4656cf92e4207c40b22b2f0c2e773811b0737f7a1b45b5",
+      "runtime_scope": "Five CPU text methods only; global catalogue runtime/not_reviewed values unchanged."
+    },
+    "track_share_delivery_review": {
+      "reviewed_at": "2026-10-31",
+      "source_result": "Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.",
+      "history": "Baseline23=18assertFAIL5controls/0errors/skips:13missingShareID assertionsacrossBinding8/Panel5 arefeatureabsence, NOTproofoldstalelaunchbugs; Exporter5XML/pathcounterexamples+5controls independentlydemonstrateactualdefects. Firstgreen23=19PASS4PaneloverlapFAIL, XML11.393s,Gradle1; nofullPASS. DiagnosticV3 9ec/523f LFops/CRLFcandidate rejectedBEFOREC/runtime byRootguard; retainedinvalidhistory. CorrectedRAWV4 c093/64ac exactreplay/inverse78eff, Bridge73edf; onlymessage/helper changed. Diagnostic10 captured3pxbaselineoffset, one-line637a→0069 preservesIDs/callbacks/copy/widthlogic/all5oracles; finalPanel5accepted. Oldmessage89/selector37/cache29/caption5 resultsremain separatehistoricalcohorts, notrerun/resummed.",
+      "source_sha256": {
+        "maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java": "0069d2c66946d575428655f1a621a69fcdc9653571ba45f67875683b19fe8c06",
+        "maplibui/src/main/res/values/ids.xml": "56192a61e759f9602ef52cef72f38d4adb5bf58384dbdfac59492dabbc50e428",
+        "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt": "366e9421d789f26a5bc91f3209fb339e2a027892497e6c7819ba0c8a49ce8d20",
+        "maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java": "e9ab9fac5a9b66165619c96f9a506536bd90547b967c5b55c8f0052ec7e2b655"
+      },
+      "fixtures": [
+        {
+          "name": "SelectedTrackShareBindingTest.proposal.java",
+          "sha256": "4e5b9a7243c00fc54871de95e66d809a2b2339903a16f324e2dc2e6e40337794",
+          "methods": 8
+        },
+        {
+          "name": "TrackGpxNameExportTest.v2.proposal.java",
+          "sha256": "bd12f954372a9c0d012f2651cab913ad7f4db9cda4253173acd30f6334bf6b7a",
+          "methods": 10
+        },
+        {
+          "name": "TrackSelectionPanelTest.v4-raw-layout-diagnostics.proposal.java",
+          "sha256": "64ac03ed3f1ae56cd295c454b449b05cb0d85d34868fb759430c4927cd3a1b7c",
+          "methods": 5,
+          "qualification": "Onlydiagnostichelper/message differs from78eff; all5@Testbodies/predicates/setup exact. FinalRootCfixturematches64ac."
+        }
+      ],
+      "consumer_source_compile": "Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.",
+      "qualification": "23 distinct accepted methods across earlier18 and final5; not one final23 rerun/native/whole-window/recipient acceptance. Old source_context/F61/history unchanged."
+    },
+    "project_sync_clock_delivery_review": {
+      "reviewed_at": "2026-10-31",
+      "state": "SOURCE_CONTRACT_ACTIVE_MERGED_CORE_EXACT_APP_GITLINK_UI191_DOCS57_PASS; App86 precommitcandidate, noAPK",
+      "delivery_activation": {
+        "required_before_apply": [
+          "Core PR63 actual Merge Commit and reachable merged commit containing exact reviewed ProjectSyncState bytes",
+          "App gitlink maplib equals that actual merged Core commit; do not pin PR head or guessed SHA",
+          "Fresh effective App source roots and targeted getter/publisher/private-file semantic fingerprints equal this reviewed proposal",
+          "Run normal full UI/docs checks after activation; historical failures must not be relabeled"
+        ],
+        "actual_core_merge_commit": "baa94f361101051b09f762d7eda1f36466436d5c",
+        "actual_app_maplib_gitlink": "baa94f361101051b09f762d7eda1f36466436d5c",
+        "actual_ui_source_check": {
+          "exit": 0,
+          "contracts": 44,
+          "methods": 191,
+          "non_method_files": 49,
+          "groups": 11,
+          "log_sha256": "978d8fb42a5ed0d423c195ab198586e6e16596d88ee75087c39e29d878df1364"
+        },
+        "actual_docs_checks": {
+          "validator_exit": 0,
+          "tests": 57,
+          "failures": 0,
+          "errors": 0,
+          "seconds": 49.269,
+          "log_sha256": "d9d6a36b8139b8fc8b9dbe903d6487139388b9588e0103c050d4c4d77e0b5964",
+          "physical_acceptance": "NOT_RUN"
+        },
+        "actual_ui_library_merge_commit": "be0ed0c4933573b99752b4e447f088951b88120b",
+        "App86_state_at_snapshot": "OPEN_CANDIDATE",
+        "source_EOL_provenance": [
+          {
+            "path": "C:\\dev\\lisa\\android_projects\\android_gisapp\\maplib\\src\\main\\java\\com\\nextgis\\maplib\\util\\ProjectSyncState.java",
+            "reviewed_raw_mixed_EOL_sha256": "0a7b03b912aadfcbd87e26fe77cc260942c49df610635459ba5eb20b1fbc71bb",
+            "reviewed_fullfile_normalized_fingerprint": "791c2be296841d982ff1415b0dfbe14d9e2a2c767fc509466fd0bae0e839f019",
+            "actual_merged_blob_sha256": "791c2be296841d982ff1415b0dfbe14d9e2a2c767fc509466fd0bae0e839f019",
+            "current_CRLF_sha256": "758041686fac2d3255f2f7247b7bca1c23649e31aa508f7fa9b6bfae45275d82",
+            "canonical_content_exact": true,
+            "reason": "Verified Git autocrlf checkout: review raw5700 mixed EOL, mergedLF5699/currentCRLF5829; expected private-file791c and methods remain unchanged. No automatic fingerprint update."
+          }
+        ]
+      },
+      "history": {
+        "entire_original_F61_source_row": {
+          "id": "WF-SYNC-CLOCK-STORE",
+          "repository": "maplib",
+          "path": "src/main/java/com/nextgis/maplib/util/ProjectSyncState.java",
+          "marker": "public static long lastComplete(Context context, String path)",
+          "requires": [
+            "if (path == null) return 0L",
+            "getLong(key(path), 0L)",
+            "catch (IOException error) { return 0L; }"
+          ],
+          "forbids": [],
+          "sha256": "235f38df1bf9c9bb57be86f5070cd5d0f37d421aca6da3c2f9daeaa6b872cbfb"
+        },
+        "entire_original_UI_SYNC_COMPLETION_CLOCK_contract": {
+          "id": "UI-SYNC-COMPLETION-CLOCK",
+          "group": "sync",
+          "title": "Время полного обмена относится к видимому проекту",
+          "surface": "Подпись под синхронизацией",
+          "variants": [
+            "lisa",
+            "belka"
+          ],
+          "widgets": [
+            "info"
+          ],
+          "meaning": "Показано сохранённое в process-cached ProjectSyncState время текущего workspace, предназначенное для последнего полного обмена. Текущая библиотека допускает новое in-memory значение после commit=false; подпись сама не доказывает durable запись.",
+          "value_origin": "MapBase.getActiveInstance path → ProjectSyncState.lastComplete canonical-path key; ProjectSyncRunner.markComplete после full-project gates.",
+          "units": "Хранимое время — Unix milliseconds; ControlHelper форматирует dd MMM и HH:mm с Locale.getDefault и default timezone, без года/секунд и без относительной давности.",
+          "updates": [
+            "updateInfo читает clock active map даже внутри scoped callback другого проекта.",
+            "Нулевой/отсутствующий clock или IOException canonical path даёт никогда не выполнено; disk failure не обязательно возвращает cached значение к прежнему."
+          ],
+          "actions": [
+            "Посмотреть состояние",
+            "Запустить полноценную sync отдельно"
+          ],
+          "conditions": [
+            "Partial uploads и другой проект не должны обновлять этот displayed clock.",
+            "markComplete вызывается только после завершения project pass и cleanup conditions."
+          ],
+          "saved_state": "Clock сохраняется по canonical path; отсутствие записи не мигрируется из общего legacy timestamp. Известный source gap AUDIT-TODO-SYNC-ACK-RECOVERY: AOSP commitToMemory предшествует disk result; false не откатывает cached map. Disk/restart oracles остаются отдельными.",
+          "source_ids": [
+            "WF-SYNC-CLOCK",
+            "WF-SYNC-CLOCK-STORE",
+            "WF-SYNC-RUN",
+            "WF-SYNC-WIDGET-BINDING",
+            "WF-SYNC-CLOCK-FORMAT",
+            "WF-SYNC-RECEIVER"
+          ],
+          "expectations": [
+            "Oracle: фоновой sync проектаB не меняет подпись открытогоA; первая записьA появляется после успешного fullA, не после track-only upload.",
+            "Контрпример: использовать global last_sync timestamp или now при tap и показывать ложную свежесть данных.",
+            "Oracle: при реальном failed write разделить markComplete return, cached lastComplete, physical XML/backup после writer и fresh-process reload; false-before-delegate proxy недостаточен."
+          ],
+          "unknowns": [
+            "Native redraw, фактическое применение locale/timezone и реальный failed-write/restart NOT_RUN. Current maplib remains f61ba7839cf9e44b08eefa98d72d83966d1c3c3d; будущий library fix не заявлен и старый WF-SYNC-CLOCK-STORE fingerprint сохранён.",
+            "Source не подтверждает точность серверных данных; cached clock также читает reminder age и tracked reload since, чьи эффекты требуют независимой проверки."
+          ]
+        },
+        "original_source_context": {
+          "reviewed_at": "2026-10-29",
+          "root_base": "0a23486beedc309f7514cb19f1503e33fd572c50",
+          "app_base": "69edfe78e1ac41c8c1418ea44cbb86f3e0e6657e",
+          "maplib": "f61ba7839cf9e44b08eefa98d72d83966d1c3c3d",
+          "maplibui": "e66b9859ffc86114aaa7afac0e57942f5ce89925",
+          "basis": "Merged product source; task changes documentation and source-only checks, not product code."
+        },
+        "preservation": "Every other existing coverage object/source row/contract/file row stays whole-equal. Dated F61/57docs53P4F history remains immutable."
+      },
+      "reviewed_current_source": {
+        "path": "C:/dev/lisa/android_projects/android_gisapp/maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java",
+        "raw_sha256": "0a7b03b912aadfcbd87e26fe77cc260942c49df610635459ba5eb20b1fbc71bb",
+        "bytes": 5700
+      },
+      "reviewed_regression_fixtures": [
+        {
+          "path": "C:/dev/lisa/android_projects/android_gisapp/maplib/src/test/java/com/nextgis/maplib/util/ProjectSyncStatePublicationTest.java",
+          "raw_sha256": "bcd031656cb87f227ab3d538cb05262cd62b84783204f55a8ad45ca284afe12b",
+          "bytes": 24300
+        },
+        {
+          "path": "C:/dev/lisa/android_projects/android_gisapp/maplib/src/test/java/com/nextgis/maplib/util/ProjectSyncStateTest.java",
+          "raw_sha256": "d7998443a137b9df92090ee010f03b36972d2ee353a53b6a139ed85c64a19c7d",
+          "bytes": 2349
+        }
+      ],
+      "same_source_regression_checkpoint": {
+        "basis": "Retained 2026-10-29 immutable source-JVM API28 technical MemoryPreferences fault model; fixture/product raw hashes still exact on 2026-10-31. No new runtime launched.",
+        "baseline": "19 executed: 10 assertion FAIL +9 PASS controls; errors0/skips0, BUILD40s. Original3 unchanged PASS.",
+        "green": "Same19 PASS/errors0/skips0, BUILD31s. New16 publication +old3.",
+        "xml": [
+          {
+            "path": "Q:/Codex/Scratch/lisa-ecosystem-depth-audit-20261029/evidence/project-sync-clock/baseline-TEST-ProjectSyncStateTest.xml",
+            "raw_sha256": "042e1c05c21e7ae625feb72129659207efeb43c315cd32b7dc4890c4110de446",
+            "class": "com.nextgis.maplib.util.ProjectSyncStateTest",
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "xml_seconds": "0.206",
+            "methods": [
+              "oldGlobalSuccessDoesNotMasqueradeAsVerifiedProjectCompletion",
+              "canonicalAliasesReadThePersistedOwningProjectClock",
+              "projectsWithTheSameAccountAndLayerNamesHaveIndependentClocks"
+            ]
+          },
+          {
+            "path": "Q:/Codex/Scratch/lisa-ecosystem-depth-audit-20261029/evidence/project-sync-clock/baseline-TEST-ProjectSyncStatePublicationTest.xml",
+            "raw_sha256": "d6a8aa6ca510dcb3dde4c3846c415ad14e38c9792a39a3c9c90ac88cb254ba47",
+            "class": "com.nextgis.maplib.util.ProjectSyncStatePublicationTest",
+            "tests": 16,
+            "failures": 10,
+            "errors": 0,
+            "skipped": 0,
+            "xml_seconds": "3.335",
+            "methods": [
+              "baselineReadFailureDoesNotPublishOrWrite",
+              "equalButDistinctPreferenceOwnersAreIsolated",
+              "persistentNamespaceCanonicalUuidAndLongValueAreUnchanged",
+              "failedNestedCompletionDoesNotHideOuterSuccess",
+              "separateProjectsDoNotPublishRejectedCacheOnAnotherCommit",
+              "heldWriterDoesNotBlockAnotherPreferenceOwner",
+              "pendingOtherProjectDoesNotBlockInitialRead",
+              "failedCommitKeepsPriorClockDuringAndAfterDiskWait",
+              "firstWriteShieldsEditPutAndCommitObservers",
+              "nestedSuccessfulCompletionWinsOverOuterSuccess",
+              "laterPositiveLowerTimeIsNotDiscarded",
+              "readerMissRechecksAfterFailedCacheAndLaterRecovery",
+              "nestedSuccessSurvivesOuterFailure",
+              "canonicalAliasesUseSameConfirmation",
+              "invalidCompletionsDoNotCreateEditors",
+              "commitExceptionKeepsConfirmedViewAndLaterSuccessRecovers"
+            ]
+          },
+          {
+            "path": "Q:/Codex/Scratch/lisa-ecosystem-depth-audit-20261029/evidence/project-sync-clock/fixed-TEST-ProjectSyncStateTest.xml",
+            "raw_sha256": "17af4503c26f96691c2c251c24ee9957a02e47517a2fba02ea4a3224a2c67642",
+            "class": "com.nextgis.maplib.util.ProjectSyncStateTest",
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "xml_seconds": "0.147",
+            "methods": [
+              "oldGlobalSuccessDoesNotMasqueradeAsVerifiedProjectCompletion",
+              "canonicalAliasesReadThePersistedOwningProjectClock",
+              "projectsWithTheSameAccountAndLayerNamesHaveIndependentClocks"
+            ]
+          },
+          {
+            "path": "Q:/Codex/Scratch/lisa-ecosystem-depth-audit-20261029/evidence/project-sync-clock/fixed-TEST-ProjectSyncStatePublicationTest.xml",
+            "raw_sha256": "96ee7b672302f1437e096a08e3cb3ba7c66f742c81989311524299bd3bc52fd9",
+            "class": "com.nextgis.maplib.util.ProjectSyncStatePublicationTest",
+            "tests": 16,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "xml_seconds": "2.089",
+            "methods": [
+              "baselineReadFailureDoesNotPublishOrWrite",
+              "equalButDistinctPreferenceOwnersAreIsolated",
+              "persistentNamespaceCanonicalUuidAndLongValueAreUnchanged",
+              "failedNestedCompletionDoesNotHideOuterSuccess",
+              "separateProjectsDoNotPublishRejectedCacheOnAnotherCommit",
+              "heldWriterDoesNotBlockAnotherPreferenceOwner",
+              "pendingOtherProjectDoesNotBlockInitialRead",
+              "failedCommitKeepsPriorClockDuringAndAfterDiskWait",
+              "firstWriteShieldsEditPutAndCommitObservers",
+              "nestedSuccessfulCompletionWinsOverOuterSuccess",
+              "laterPositiveLowerTimeIsNotDiscarded",
+              "readerMissRechecksAfterFailedCacheAndLaterRecovery",
+              "nestedSuccessSurvivesOuterFailure",
+              "canonicalAliasesUseSameConfirmation",
+              "invalidCompletionsDoNotCreateEditors",
+              "commitExceptionKeepsConfirmedViewAndLaterSuccessRecovers"
+            ]
+          }
+        ],
+        "historical_source_compiles": "Original checkpoint LisaDebug Java/Kotlin42s +BelkaRelease46s PASS; BelkaDebug disabled NOT_EXECUTED. Later App/Runner code changes mean these are historical, not current whole-consumer compile acceptance.",
+        "not_acceptance": [
+          "No native/device/AVD/full sync/background UI redraw",
+          "No actual Android physical failed-write/backup/restart oracle",
+          "No APK/bundle artifact",
+          "MemoryPreferences model disk differs from real framework filesystem; it explicitly demonstrates no physical rollback guarantee"
+        ]
+      },
+      "reverse_consumers": [
+        "LayersFragment.updateInfo: visible active MapBase path; ControlHelper dd MMM/HH:mm default locale/timezone",
+        "MaintenanceReminders: canonical online-project path → unknown/overdue age; not active background callback path",
+        "NGWVectorLayer.getFeaturesUrl: DatabaseContext.getMapForLayer(this) owning map → tracked since; untracked URL unchanged"
+      ],
+      "canonical_followup": "AUDIT-TODO-SYNC-ACK-RECOVERY remains open for physical disk/fresh-process/full-scenario oracles."
     }
   },
   "non_method_evidence": [
@@ -4958,7 +5774,7 @@
         "UI-MAP-ZOOM",
         "UI-MAP-CAMERA-ROTATION-STATE"
       ],
-      "sha256": "0100397e30441b1dcef6e8c6113845b701ce98ab17bd3e4c305fb4b915b7d06f"
+      "sha256": "d9903d307f2029a2d4e165f87578174952c8a37462f556eff27c5a3fbf681824"
     },
     {
       "repository": "maplib",
@@ -5367,6 +6183,51 @@
         "UI-NGW-RESOURCE-CHECKBOX-SELECTION"
       ],
       "sha256": "f46e5bec0469a6ae3b239b0ef76ef74ac338bed8cfd979f8b172cd69e5e5cd7f"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java",
+      "purpose": "Five unchanged calibrated CPU-native-text actual-adapter/layout models; source pin, no device/native GIS acceptance.",
+      "contract_ids": [
+        "UI-NGW-RESOURCE-CHECKBOX-SELECTION"
+      ],
+      "sha256": "cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+      "purpose": "Whole reviewed responsive row class, including constructors and small placement/height helpers; supplement method pins and protect static hierarchy/local measurement-only ownership.",
+      "contract_ids": [
+        "UI-NGW-RESOURCE-CHECKBOX-SELECTION"
+      ],
+      "sha256": "dd22c49cfbded6aab6b63de5ca41f12ff2b54ac7018e0f38396e5733ecd291af"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/values/ids.xml",
+      "purpose": "Declared track_panel_share resource ID is consumed by actual programmatic TrackSelectionPanel constructor and independent panel/binding tests; this is a resource declaration, not XML widget allocation.",
+      "contract_ids": [
+        "UI-TRACK-SELECTION-PANEL"
+      ],
+      "sha256": "fe5c9afc3d31e1df9125d2862a4039da077342492ee103de8003f1043113ca03"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java",
+      "purpose": "Additive SHARE=6 preserves existing public actions1..5; actual programmatic Share uses owned ID/localized text/icon. Width capacity and reparent identity/order are separately method-reviewed.",
+      "contract_ids": [
+        "UI-TRACK-SELECTION-PANEL"
+      ],
+      "sha256": "1460508de545ad874e442ea3fa0584b7dd4daf6e822c425e004e02e82e8f1d5d"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/ProjectSyncState.java",
+      "purpose": "Reviewed process-only clock confirmation internals: weak exact SharedPreferences identity, collected-owner removal, per-owner writer monitor separate from reader state lock, canonical UTF-8 UUID key and unchanged full-project-sync-state/long namespace. No physical disk rollback or fresh-process guarantee.",
+      "contract_ids": [
+        "UI-SYNC-COMPLETION-CLOCK"
+      ],
+      "sha256": "791c2be296841d982ff1415b0dfbe14d9e2a2c767fc509466fd0bae0e839f019"
     }
   ]
 }

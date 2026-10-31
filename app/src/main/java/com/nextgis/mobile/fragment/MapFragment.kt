@@ -345,6 +345,13 @@ public class MapFragment
                 TrackSelectionPanel.RENAME -> TrackActions.rename(host, id, refresh)
                 TrackSelectionPanel.VISIBILITY -> TrackActions.visibility(host, id, !info.visible, refresh)
                 TrackSelectionPanel.DELETE -> TrackActions.delete(host, arrayOf(id.toString()), refresh)
+                TrackSelectionPanel.SHARE -> {
+                    val owner = mActivity
+                    if (owner != null && owner === activity && view != null
+                        && selectedTrackId == id && mode == MODE_NORMAL) {
+                        LayerUtil.shareTrackAsGPX(owner, "NextGIS Mobile", arrayOf(id.toString()))
+                    }
+                }
                 TrackSelectionPanel.CLOSE -> clearSelectedTrack()
             }
         }

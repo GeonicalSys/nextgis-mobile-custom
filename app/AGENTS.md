@@ -229,3 +229,15 @@ Late child/project outcome отдельно от pair ACK/clock; normal cancel �
 Проверять current connectivity при потреблении подготовленного сообщения, mixed
 и foreign/late/malformed результаты оставлять generic. Для LayerFill/browser/form
 действуют отдельные source-контракты; JSON shape не доказывает HTTP403.
+
+
+Общие документы действия «Поделиться» находятся в корне Android-репозитория:
+`docs/architecture/track-controls.md` и `docs/architecture/shared-tracks.md`.
+Из каталогов `app/` и `maplibui/` к ним ведёт `../docs/architecture/`.
+Использовать LayerUtil.shareTrackAsGPX, захватив ровно выбранный shared track ID;
+не подменять его feature FID, map-layer ID, Hub UID или recording session.
+Сохранять текущие Activity/view/selection/mode launch guards, multiselect списка,
+GPX metadata/segment order, FileProvider roots/MIME/read grants и отсутствие Stop.
+CPU-font JVM не заменяет whole-window/device/touch/recipient acceptance.
+Неразрешённые cache/snapshot/concurrency/lifetime вопросы — в единой Root очереди;
+не создавать второй exporter или локальный параллельный список рисков.
