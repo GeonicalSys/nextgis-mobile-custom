@@ -1,19 +1,28 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-11-01
+last_verified: 2026-11-02
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
   - docs/guides/change-checklist.md
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
-  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
 ---
 
 # Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 
 ## MOB-REL-01 Подготовка выпуска 3.1.2.31/225
+
+Уточнение владельца2ноября2026: перед выпуском удалить obsolete loopback vector
+server/ветку renderer; прежние `mobile_render_mode: local_vector_tiles` конфиги
+кварталов/выделов принимает новый direct SQLite source. Общие cache/полная
+геометрия/подписи сохраняются. Добавлен разбор переноса подложек из прежнего Debug:
+жалоба на отсутствие прогресса и10мин без видимого результата, затем Cancel.
+Причина задержки пока UNKNOWN; подтвердить source defects и подготовить исправление.
+Смартфон отключён, новые live/ADB/emulator проверки отложены до новой команды.
+Сейчас source/compile/docs/Draft PR, device acceptance — отдельный следующий этап.
 
 Приоритет P1, прямое поручение владельца1 ноября2026: повысить версию и
 подготовить приложение к публикации с подключённым смартфоном. Владелец

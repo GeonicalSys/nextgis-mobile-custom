@@ -1,7 +1,7 @@
 ---
 title: Collector projects, composition sync и backups
 type: architecture
-last_verified: 2026-10-25
+last_verified: 2026-11-02
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java
@@ -487,3 +487,9 @@ SyncWorkspaceSession передаёт owning map всем callbacks, provider UR
 [синхронизация проектов](../guides/project-synchronization-user-guide.md).
 
 Подписи редактируемых линейных объектов Collector используют общий [visible-line-labels](visible-line-labels.md) runtime: один прямой блок на видимую часть ID. Серверные raster-style подписи остаются запечёнными; resource identity/editability/sync не меняются.
+
+Перенос растров из прежнего Debug остаётся явным действием в хранилище
+подложек и не импортирует иной мобильный клиент/проект.2ноября исправлены
+phase/elapsed UI и queued cancellation принимающей стороны; owner lease,
+project identity, source retention и wire grants прежние. См.
+[этапы и незавершённую приёмку](shared-underlays.md#наблюдаемость-переноса-debug-2ноября2026).

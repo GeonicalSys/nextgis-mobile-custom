@@ -54,17 +54,35 @@ triggers:
     strict_docs: true
   - id: LOCAL-TILE-CACHE-AND-IO-ADMISSION
     paths:
-      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileDiskCache.java
-      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
-      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
-      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
-      - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileDiskCacheTest.java
-      - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorTileAdmissionTest.kt
-    owners: [maplib, maplibui, app]
-    read: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/reference/mobile-resource-profile-t40-2026-10-28.md]
-    invariants: [INV-LOCAL-TILE-CACHE-ADMISSION, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-SQLITE-NATIVE-VECTORS]
-    must_update_docs: [docs/architecture/map-performance.md, docs/architecture/map-rendering.md, docs/runbooks/automated-tests.md, docs/reference/official-differences.md, docs/registry/dependencies.yaml, maplib/docs/README.md, maplib/docs/manifest.yaml]
-    verify: [AUTO-LOCAL-TILE-CACHE-ADMISSION, AUTO-APP-RELEASES, AUTO-MOBILE-RELATED]
+    - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileDiskCache.java
+    - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
+    - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+    - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileDiskCacheTest.java
+    - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorTileAdmissionTest.kt
+    owners:
+    - maplib
+    - maplibui
+    - app
+    read:
+    - docs/architecture/map-performance.md
+    - docs/architecture/map-rendering.md
+    - docs/reference/mobile-resource-profile-t40-2026-10-28.md
+    invariants:
+    - INV-LOCAL-TILE-CACHE-ADMISSION
+    - INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS
+    - INV-SQLITE-NATIVE-VECTORS
+    must_update_docs:
+    - docs/architecture/map-performance.md
+    - docs/architecture/map-rendering.md
+    - docs/runbooks/automated-tests.md
+    - docs/reference/official-differences.md
+    - docs/registry/dependencies.yaml
+    - maplib/docs/README.md
+    - maplib/docs/manifest.yaml
+    verify:
+    - AUTO-LOCAL-TILE-CACHE-ADMISSION
+    - AUTO-APP-RELEASES
+    - AUTO-MOBILE-RELATED
     strict_docs: true
   - id: SQLITE-BOUNDED-ORIGINAL-READS
     paths:
@@ -170,12 +188,27 @@ triggers:
     verify: [SMOKE-NATIVE-HEAP-DIAGNOSTIC]
     strict_docs: true
   - id: LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT
-    paths: [maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java, app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java]
-    owners: [maplibui, app]
-    read: [docs/architecture/map-rendering.md, docs/architecture/ngw-sync-and-storage.md]
-    invariants: [INV-LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT]
-    must_update_docs: [docs/architecture/map-rendering.md, docs/reference/official-differences.md, maplibui/docs/README.md, maplibui/docs/manifest.yaml]
-    verify: [AUTO-LOCAL-VECTOR-TILE-OFFLINE, AUTO-MAPLIBUI-UNIT, AUTO-MOBILE-RELATED, AUTO-APP-RELEASES]
+    paths:
+    - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
+    owners:
+    - maplibui
+    - app
+    read:
+    - docs/architecture/map-rendering.md
+    - docs/architecture/ngw-sync-and-storage.md
+    invariants:
+    - INV-LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT
+    must_update_docs:
+    - docs/architecture/map-rendering.md
+    - docs/reference/official-differences.md
+    - maplibui/docs/README.md
+    - maplibui/docs/manifest.yaml
+    verify:
+    - AUTO-LOCAL-VECTOR-TILE-OFFLINE
+    - AUTO-MAPLIBUI-UNIT
+    - AUTO-MOBILE-RELATED
+    - AUTO-APP-RELEASES
     strict_docs: true
   - id: MIXED-MAP-CANDIDATES-AND-FIELD-LINES
     paths: [app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java, app/src/main/res/values/map_candidate_strings.xml, app/src/main/res/values-ru/map_candidate_strings.xml, maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java, maplib/src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java]
@@ -218,12 +251,44 @@ triggers:
     verify: [AUTO-MOBILE-RELATED, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
     strict_docs: true
   - id: POLYGON-STYLE-CONTROLS
-    paths: [maplibui/src/main/java/com/nextgis/maplibui/display/RuleFeatureRendererUI.java, app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java, maplib/src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java, maplib/src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java, maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java, maplib/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java, maplibui/src/main/java/com/nextgis/maplibui/util/PolygonStyleControls.java, maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java, maplibui/src/main/res/layout/style_polygon_options.xml, app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleTileFallbackTest.java]
-    owners: [maplib, maplibui, app]
-    read: [docs/architecture/polygon-style-controls.md, docs/architecture/classic-style-verification.md, docs/architecture/ui-accessibility.md]
-    invariants: [INV-POLYGON-STYLE-CONTROLS, INV-CLASSIC-RULE-LABELS, INV-LAYER-ORDER, INV-UI-VISIBLE-BOUNDS]
-    must_update_docs: [docs/architecture/polygon-style-controls.md, docs/reference/official-differences.md, docs/registry/dependencies.yaml, maplib/docs/manifest.yaml, maplibui/docs/manifest.yaml, app/docs/manifest.yaml]
-    verify: [AUTO-POLYGON-STYLE-CONTROLS, AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-ASSEMBLE]
+    paths:
+    - maplibui/src/main/java/com/nextgis/maplibui/display/RuleFeatureRendererUI.java
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java
+    - maplib/src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java
+    - maplib/src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java
+    - maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java
+    - maplib/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java
+    - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/PolygonStyleControls.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java
+    - maplibui/src/main/res/layout/style_polygon_options.xml
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
+    owners:
+    - maplib
+    - maplibui
+    - app
+    read:
+    - docs/architecture/polygon-style-controls.md
+    - docs/architecture/classic-style-verification.md
+    - docs/architecture/ui-accessibility.md
+    invariants:
+    - INV-POLYGON-STYLE-CONTROLS
+    - INV-CLASSIC-RULE-LABELS
+    - INV-LAYER-ORDER
+    - INV-UI-VISIBLE-BOUNDS
+    must_update_docs:
+    - docs/architecture/polygon-style-controls.md
+    - docs/reference/official-differences.md
+    - docs/registry/dependencies.yaml
+    - maplib/docs/manifest.yaml
+    - maplibui/docs/manifest.yaml
+    - app/docs/manifest.yaml
+    verify:
+    - AUTO-POLYGON-STYLE-CONTROLS
+    - AUTO-MAPLIB-UNIT
+    - AUTO-MAPLIBUI-ASSEMBLE
     strict_docs: true
   - id: POINT-FIREFLY
     paths: [maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java, maplib/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/FireflyLayerFactory.java, maplib/src/test/java/com/nextgis/maplib/display/FireflyMarkerTest.java, maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java, maplibui/src/main/res/values/firefly_strings.xml, maplibui/src/main/res/values-ru/firefly_strings.xml, app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java]
@@ -266,12 +331,32 @@ triggers:
     verify: [AUTO-APP-RELEASES, AUTO-MOBILE-USAGE]
     strict_docs: true
   - id: LOCAL-VECTOR-TILE-LABELS
-    paths: [maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileLabelAnchor.java, maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileEncoder.java, maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileLabelsTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java]
-    owners: [maplib, app]
-    read: [docs/architecture/map-rendering.md, docs/runbooks/automated-tests.md]
-    invariants: [INV-LOCAL-VECTOR-TILE-LABELS, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-LAYER-ORDER]
-    must_update_docs: [docs/architecture/map-rendering.md, maplib/docs/README.md, maplib/docs/manifest.yaml, app/docs/manifest.yaml, docs/reference/official-differences.md]
-    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES, AUTO-MOBILE-RELATED, SMOKE-POLYGON-LABEL-ANCHOR]
+    paths:
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
+    - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+    - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileEncoder.java
+    - maplib/src/test/java/com/nextgis/maplib/map/SqliteVectorTileProviderTest.java
+    owners:
+    - maplib
+    - app
+    read:
+    - docs/architecture/map-rendering.md
+    - docs/runbooks/automated-tests.md
+    invariants:
+    - INV-LOCAL-VECTOR-TILE-LABELS
+    - INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS
+    - INV-LAYER-ORDER
+    must_update_docs:
+    - docs/architecture/map-rendering.md
+    - maplib/docs/README.md
+    - maplib/docs/manifest.yaml
+    - app/docs/manifest.yaml
+    - docs/reference/official-differences.md
+    verify:
+    - AUTO-MAPLIB-UNIT
+    - AUTO-APP-RELEASES
+    - AUTO-MOBILE-RELATED
+    - SMOKE-POLYGON-LABEL-ANCHOR
     strict_docs: true
   - id: SHARED-TRACKS-AND-CLASSIC-STYLES
     paths: [maplib/src/main/java/com/nextgis/maplib/map/SharedTrackStore.java, maplibui/src/main/java/com/nextgis/maplibui/util/SharedTrackProjects.java, maplib/src/main/java/com/nextgis/maplib/display/LabelAttributes.java, maplib/src/main/java/com/nextgis/maplib/display/FieldStyleRule.java, maplib/src/main/java/com/nextgis/maplib/display/Style.java, maplib/src/main/java/com/nextgis/maplib/map/RuleLabelLayouts.java, maplib/src/main/java/com/nextgis/maplib/map/RuleGeometryLayouts.java, maplib/src/main/java/com/nextgis/maplib/display/MplStyleMapper.java, maplib/src/main/java/com/nextgis/maplib/display/MarkerIconRegistry.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/LineLayerFactory.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/MplLayerBuildContext.java, maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/PointLayerFactory.java, maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonLayerFactory.java, app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java, app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java]
@@ -641,41 +726,59 @@ triggers:
     strict_docs: true
   - id: MAPLIBRE-RENDERING
     paths:
-      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
-      - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
-      - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
-      - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
-      - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
-      - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java
-      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
-      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
-      - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileRequestPolicy.java
-      - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileProviderTest.java
-      - maplib/src/test/java/com/nextgis/maplib/map/LocalVectorTileRequestPolicyTest.java
-      - maplib/src/test/java/com/nextgis/maplib/map/LayerIdentifyPolicyTest.java
-      - maplib/src/test/java/com/nextgis/maplib/map/UserLocationGeometryTest.java
-      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-      - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
-      - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
-      - app/src/test/java/com/nextgis/mobile/location/HeadingConeAccuracyTest.kt
-      - app/src/test/java/com/nextgis/mobile/location/DeviceHeadingProviderTest.kt
-      - app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
-      - maplib/src/main/res/drawable/ic_user_location_dot.xml
-      - maplib/src/main/res/drawable/ic_user_location_orbit.xml
-    owners: [maplib, app]
+    - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+    - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java
+    - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
+    - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java
+    - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
+    - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java
+    - maplib/src/test/java/com/nextgis/maplib/map/LayerIdentifyPolicyTest.java
+    - maplib/src/test/java/com/nextgis/maplib/map/UserLocationGeometryTest.java
+    - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+    - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
+    - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
+    - app/src/test/java/com/nextgis/mobile/location/HeadingConeAccuracyTest.kt
+    - app/src/test/java/com/nextgis/mobile/location/DeviceHeadingProviderTest.kt
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
+    - maplib/src/main/res/drawable/ic_user_location_dot.xml
+    - maplib/src/main/res/drawable/ic_user_location_orbit.xml
+    owners:
+    - maplib
+    - app
     read:
-      - docs/architecture/map-rendering.md
-      - docs/architecture/location-pipeline.md
-      - maplib/docs/README.md
-    invariants: [INV-LAYER-ORDER, INV-HOT-ADD-CONSISTENCY, INV-SPATIAL-CACHE-CONSISTENCY, INV-HIDDEN-VECTOR-TILE-IDENTIFY, INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS, INV-NO-TRACK-FLAGS, INV-LOCATION-CURSOR-TOP, INV-MAP-CAMERA-CONTROLS, INV-UNDERLAY-DISPLAY, INV-MAPLIBRE-VIEW-LIFECYCLE]
+    - docs/architecture/map-rendering.md
+    - docs/architecture/location-pipeline.md
+    - maplib/docs/README.md
+    invariants:
+    - INV-LAYER-ORDER
+    - INV-HOT-ADD-CONSISTENCY
+    - INV-SPATIAL-CACHE-CONSISTENCY
+    - INV-HIDDEN-VECTOR-TILE-IDENTIFY
+    - INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS
+    - INV-NO-TRACK-FLAGS
+    - INV-LOCATION-CURSOR-TOP
+    - INV-MAP-CAMERA-CONTROLS
+    - INV-UNDERLAY-DISPLAY
+    - INV-MAPLIBRE-VIEW-LIFECYCLE
     must_update_docs:
-      - docs/architecture/map-rendering.md
-      - docs/architecture/location-pipeline.md
-      - docs/reference/settings-and-config.md
-      - maplib/docs/manifest.yaml
-      - app/docs/README.md
-      - app/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-APP-RELEASES, SMOKE-MAP-COLD-START, SMOKE-POLYGON-LABEL-ANCHOR, SMOKE-MAP-SURFACE-LIFECYCLE, SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY, SMOKE-LOCAL-VECTOR-TILE-STRESS, SMOKE-LOCATION-CURSOR-TOP, SMOKE-HOT-RASTER, SMOKE-MAP-CAMERA-CONTROLS, SMOKE-UNDERLAY-DISPLAY]
+    - docs/architecture/map-rendering.md
+    - docs/architecture/location-pipeline.md
+    - docs/reference/settings-and-config.md
+    - maplib/docs/manifest.yaml
+    - app/docs/README.md
+    - app/docs/manifest.yaml
+    verify:
+    - AUTO-MAPLIB-UNIT
+    - AUTO-APP-RELEASES
+    - SMOKE-MAP-COLD-START
+    - SMOKE-POLYGON-LABEL-ANCHOR
+    - SMOKE-MAP-SURFACE-LIFECYCLE
+    - SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY
+    - SMOKE-LOCAL-VECTOR-TILE-STRESS
+    - SMOKE-LOCATION-CURSOR-TOP
+    - SMOKE-HOT-RASTER
+    - SMOKE-MAP-CAMERA-CONTROLS
+    - SMOKE-UNDERLAY-DISPLAY
     strict_docs: false
   - id: SPATIAL-CACHE-CONSISTENCY
     paths:
@@ -1020,31 +1123,47 @@ triggers:
     strict_docs: true
   - id: LEGACY-UNDERLAY-MIGRATION
     paths:
-      - app/src/main/java/com/nextgis/mobile/activity/LegacyUnderlayExportActivity.java
-      - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
-      - app/src/main/java/com/nextgis/mobile/MainApplication.java
-      - app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java
-      - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java
-      - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java
-      - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java
-      - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
-      - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
-    owners: [app, maplib, maplibui]
+    - app/src/main/java/com/nextgis/mobile/activity/LegacyUnderlayExportActivity.java
+    - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
+    - app/src/main/java/com/nextgis/mobile/MainApplication.java
+    - app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java
+    - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java
+    - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java
+    - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java
+    - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java
+    - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java
+    - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayProgressText.java
+    - app/src/main/res/layout/activity_underlay_catalog.xml
+    - app/src/main/res/values/underlays.xml
+    - app/src/main/res/values-ru/underlays.xml
+    - app/src/test/java/com/nextgis/mobile/util/LegacyUnderlayTransferSessionTest.java
+    - app/src/androidTest/java/com/nextgis/mobile/util/LegacyUnderlayProgressNativeTest.java
+    owners:
+    - app
+    - maplib
+    - maplibui
     read:
-      - docs/architecture/collector-projects.md
-      - docs/architecture/map-rendering.md
-      - docs/reference/flavors-and-versioning.md
-    invariants: [INV-LEGACY-UNDERLAY-MIGRATION, INV-LAYER-ORDER, INV-COLLECTOR-ISOLATION]
+    - docs/architecture/collector-projects.md
+    - docs/architecture/map-rendering.md
+    - docs/reference/flavors-and-versioning.md
+    invariants:
+    - INV-LEGACY-UNDERLAY-MIGRATION
+    - INV-LAYER-ORDER
+    - INV-COLLECTOR-ISOLATION
     must_update_docs:
-      - docs/architecture/collector-projects.md
-      - docs/architecture/map-rendering.md
-      - docs/architecture/shared-underlays.md
-      - docs/reference/flavors-and-versioning.md
-      - docs/reference/official-differences.md
-      - app/docs/manifest.yaml
-      - maplib/docs/manifest.yaml
-      - maplibui/docs/manifest.yaml
-    verify: [AUTO-MAPLIB-UNIT, AUTO-MAPLIBUI-UNIT, AUTO-APP-RELEASES, SMOKE-DEBUG-UNDERLAY-MIGRATION]
+    - docs/architecture/collector-projects.md
+    - docs/architecture/map-rendering.md
+    - docs/architecture/shared-underlays.md
+    - docs/reference/flavors-and-versioning.md
+    - docs/reference/official-differences.md
+    - app/docs/manifest.yaml
+    - maplib/docs/manifest.yaml
+    - maplibui/docs/manifest.yaml
+    verify:
+    - AUTO-MAPLIB-UNIT
+    - AUTO-MAPLIBUI-UNIT
+    - AUTO-APP-RELEASES
+    - SMOKE-DEBUG-UNDERLAY-MIGRATION
     strict_docs: true
   - id: ACCOUNT-SYNC-SCHEDULING
     paths:

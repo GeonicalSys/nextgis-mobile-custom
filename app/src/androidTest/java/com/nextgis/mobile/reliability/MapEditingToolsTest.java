@@ -530,8 +530,11 @@ public class MapEditingToolsTest {
         long sourceDeadline=android.os.SystemClock.uptimeMillis()+30000;
         while(!sourceReady.get() && android.os.SystemClock.uptimeMillis()<sourceDeadline){
             scenario.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
-                sourceReady.set(map.getMaplibreMap().getStyle().getSource(layers.get(0).getPath().toString())
-                        instanceof org.maplibre.android.style.sources.GeoJsonSource);});
+                int layerId=layers.get(0).getId();
+                com.nextgis.maplib.map.SqliteVectorTileProvider provider=map.getSqliteVectorProvider(layerId);
+                sourceReady.set(provider!=null && provider.isCurrent()
+                        && map.getMaplibreMap().getStyle().getSource(map.getVectorRenderSourceId(layerId))
+                        instanceof org.maplibre.android.style.sources.CustomVectorSource);});
             if(!sourceReady.get())Thread.sleep(40);
         }
         assertTrue("A hot-added layer must acquire its current-style source",sourceReady.get());
@@ -1159,8 +1162,13 @@ public class MapEditingToolsTest {
         // Wait for hot-add, then exercise the real MapView touch dispatch rather than invoking a geometry helper.
         long until=android.os.SystemClock.uptimeMillis()+20000; AtomicBoolean ready=new AtomicBoolean();
         while(!ready.get() && android.os.SystemClock.uptimeMillis()<until) {
-            scenario.onActivity(activity -> ready.set(((MapDrawable)app.getMap()).getMaplibreMap().getStyle()
-                    .getSource(layers.get(0).getPath().toString()) != null));
+            scenario.onActivity(activity -> {
+                MapDrawable map=(MapDrawable)app.getMap(); int layerId=layers.get(0).getId();
+                com.nextgis.maplib.map.SqliteVectorTileProvider provider=map.getSqliteVectorProvider(layerId);
+                ready.set(provider!=null && provider.isCurrent()
+                        && map.getMaplibreMap().getStyle().getSource(map.getVectorRenderSourceId(layerId))
+                        instanceof org.maplibre.android.style.sources.CustomVectorSource);
+            });
             if(!ready.get())Thread.sleep(50);
         }
         assertTrue(ready.get());

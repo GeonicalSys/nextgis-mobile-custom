@@ -58,12 +58,16 @@ public final class LegacyUnderlayImporter {
         void onProgress(Progress progress);
     }
 
+    public enum Phase { OPENING, RECEIVING, FINALIZING, ATTACHING, STALLED }
+
     public static final class Progress {
         public final int sourceIndex;
         public final int sourceCount;
         public final long bytesRead;
         public final long tilesRead;
         public final boolean retrying;
+        public final Phase phase;
+        public final long elapsedMillis;
 
         private Progress(
                 int sourceIndex,
@@ -71,11 +75,18 @@ public final class LegacyUnderlayImporter {
                 long bytesRead,
                 long tilesRead,
                 boolean retrying) {
+            this(sourceIndex, sourceCount, bytesRead, tilesRead, retrying, Phase.OPENING, 0L);
+        }
+
+        Progress(int sourceIndex, int sourceCount, long bytesRead, long tilesRead,
+                 boolean retrying, Phase phase, long elapsedMillis) {
             this.sourceIndex = sourceIndex;
             this.sourceCount = sourceCount;
             this.bytesRead = bytesRead;
             this.tilesRead = tilesRead;
             this.retrying = retrying;
+            this.phase = phase;
+            this.elapsedMillis = Math.max(0L, elapsedMillis);
         }
     }
 
@@ -323,6 +334,7 @@ public final class LegacyUnderlayImporter {
                 com.nextgis.maplib.util.SharedUnderlayCatalog.Asset previous = catalog.find(null, sourceKey);
                 if (previous != null) {
                     try {
+                        transfer.setPhase(Phase.ATTACHING);
                         boolean added = com.nextgis.maplibui.util.SharedUnderlayProjects.attach(context, previous.id);
                         FileUtil.deleteRecursive(storage);
                         return added ? ImportOutcome.IMPORTED : ImportOutcome.SKIPPED;
@@ -422,6 +434,7 @@ public final class LegacyUnderlayImporter {
                     FileUtil.deleteRecursive(storage);
                     return ImportOutcome.SKIPPED;
                 }
+                transfer.setPhase(Phase.ATTACHING);
                 com.nextgis.maplib.util.SharedUnderlayStore.attach(layer, asset);
                 map.insertLayer(Math.min(insertAt, map.getLayerCount()), layer);
                 inserted = true;
@@ -552,6 +565,8 @@ public final class LegacyUnderlayImporter {
         private final int sourceCount;
         private final boolean retrying;
         private final long startedAt = System.currentTimeMillis();
+        private final long startedElapsed = android.os.SystemClock.elapsedRealtime();
+        private volatile Phase phase = Phase.OPENING;
         private final AtomicLong lastProgressAt = new AtomicLong(startedAt);
         private final AtomicLong bytesRead = new AtomicLong();
         private final AtomicLong tilesRead = new AtomicLong();
@@ -616,6 +631,12 @@ public final class LegacyUnderlayImporter {
             if (!control.attach(cancellationSignal, descriptor)) {
                 throw new TransferCanceledException(null);
             }
+            // Older providers may return after cancellation of a blocked Binder open.
+            // A descriptor from an already timed-out attempt must not start a late import.
+            if (timedOut.get()) {
+                TransferControl.closeQuietly(descriptor);
+                throw new TransferStalledException(null);
+            }
             return new FilterInputStream(new FileInputStream(descriptor.getFileDescriptor())) {
                 @Override
                 public int read() throws IOException {
@@ -652,8 +673,9 @@ public final class LegacyUnderlayImporter {
 
         void streamComplete() {
             if (streamComplete.compareAndSet(false, true)) {
-                watchdog.shutdownNow();
-                reportProgress(true);
+                // Keep progress and the operation lease alive during checkpoint/hash/publish.
+                // Local finalization is not subject to the remote stream inactivity timeout.
+                setPhase(Phase.FINALIZING);
                 HyperLog.i(Constants.TAG, "Legacy underlay transfer stream complete source="
                         + sourceIndex + "/" + sourceCount
                         + " bytes=" + bytesRead.get()
@@ -678,6 +700,7 @@ public final class LegacyUnderlayImporter {
             long now = System.currentTimeMillis();
             bytesRead.addAndGet(count);
             lastProgressAt.set(now);
+            if (phase == Phase.OPENING) setPhase(Phase.RECEIVING);
             if (lease != null && now - lastHeartbeatAt >= PROGRESS_REPORT_INTERVAL_MS) {
                 lastHeartbeatAt = now;
                 lease.heartbeat();
@@ -686,19 +709,16 @@ public final class LegacyUnderlayImporter {
         }
 
         private void reportProgress(boolean force) {
+            if (closed.get()) return;
             long now = System.currentTimeMillis();
             long currentBytes = bytesRead.get();
             if (!force && now - lastListenerAt < PROGRESS_REPORT_INTERVAL_MS) {
                 return;
             }
             lastListenerAt = now;
-            notifyProgress(
-                    listener,
-                    sourceIndex,
-                    sourceCount,
-                    currentBytes,
-                    tilesRead.get(),
-                    retrying);
+            if (listener != null) listener.onProgress(new Progress(sourceIndex, sourceCount,
+                    currentBytes, tilesRead.get(), retrying, phase,
+                    android.os.SystemClock.elapsedRealtime() - startedElapsed));
             if (force || currentBytes - lastLoggedBytes >= LOG_REPORT_INTERVAL_BYTES) {
                 lastLoggedBytes = currentBytes;
                 HyperLog.i(Constants.TAG, "Legacy underlay transfer progress source="
@@ -709,10 +729,13 @@ public final class LegacyUnderlayImporter {
         }
 
         private void checkForStall() {
-            if (closed.get() || streamComplete.get() || control.isCanceled()) {
+            if (closed.get() || control.isCanceled()) {
                 return;
             }
             long now = System.currentTimeMillis();
+            if (lease != null) lease.heartbeat();
+            reportProgress(false);
+            if (streamComplete.get() || phase == Phase.ATTACHING) return;
             if (!TRANSFER_POLICY.isStalled(now, lastProgressAt.get())
                     || !timedOut.compareAndSet(false, true)) {
                 return;
@@ -722,8 +745,18 @@ public final class LegacyUnderlayImporter {
                     + " bytes=" + bytesRead.get()
                     + " tiles=" + tilesRead.get()
                     + " inactiveMs=" + (now - lastProgressAt.get()));
+            setPhase(Phase.STALLED);
             cancellationSignal.cancel();
             TransferControl.closeQuietly(descriptor);
+        }
+
+        private void setPhase(Phase next) {
+            phase = next;
+            HyperLog.i(Constants.TAG, "Legacy underlay transfer phase=" + next.name()
+                    + " source=" + sourceIndex + "/" + sourceCount
+                    + " bytes=" + bytesRead.get() + " tiles=" + tilesRead.get()
+                    + " elapsedMs=" + Math.max(0L, android.os.SystemClock.elapsedRealtime() - startedElapsed));
+            reportProgress(true);
         }
 
         @Override

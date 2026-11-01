@@ -1,6 +1,22 @@
 {
   "schema_version": 1,
-  "isolated_methods": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest", "com.nextgis.mobile.rendering.RenderMemorySafetyTest", "com.nextgis.mobile.rendering.VisibleLineLabelsTest", "com.nextgis.mobile.rendering.TrackStopConfirmationTest", "com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocationOrbitTest"],
+  "isolated_methods": [
+    "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest",
+    "com.nextgis.mobile.rendering.RenderMemorySafetyTest",
+    "com.nextgis.mobile.rendering.VisibleLineLabelsTest",
+    "com.nextgis.mobile.rendering.TrackStopConfirmationTest",
+    "com.nextgis.mobile.rendering.TrackControlsTest",
+    "com.nextgis.mobile.rendering.PolygonStyleEditorTest",
+    "com.nextgis.mobile.rendering.PolygonStyleRenderingTest",
+    "com.nextgis.mobile.reliability.MapEditingToolsTest",
+    "com.nextgis.mobile.util.ProjectSyncRunnerTest",
+    "com.nextgis.mobile.reliability.SharedTracksTest",
+    "com.nextgis.mobile.rendering.VectorStyleRenderingTest",
+    "com.nextgis.mobile.rendering.LocationOrbitTest",
+    "com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest",
+    "com.nextgis.mobile.rendering.DirectVectorTilesTest",
+    "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"
+  ],
   "phone": [
     "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest",
     "com.nextgis.mobile.rendering.RenderMemorySafetyTest",
@@ -17,7 +33,8 @@
     "com.nextgis.mobile.reliability.FormAppearanceTest",
     "com.nextgis.mobile.reliability.FormSaveRecoveryTest",
     "com.nextgis.mobile.rendering.FireflyStyleEditorTest",
-    "com.nextgis.mobile.rendering.FireflyTileFallbackTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.PolygonStyleTileFallbackTest",
+    "com.nextgis.mobile.rendering.PolygonStyleEditorTest",
+    "com.nextgis.mobile.rendering.PolygonStyleRenderingTest",
     "com.nextgis.mobile.reliability.GnssDeviceListTest",
     "com.nextgis.mobile.reliability.LargeTextLayoutTest",
     "com.nextgis.mobile.reliability.LayerPendingChangesTest",
@@ -32,7 +49,9 @@
     "com.nextgis.mobile.reliability.StandardFeatureTypesTest",
     "com.nextgis.mobile.reliability.SyncNotificationsTest",
     "com.nextgis.mobile.util.DiagnosticsNoiseTest",
-    "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest"
+    "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest",
+    "com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest",
+    "com.nextgis.mobile.rendering.DirectVectorTilesTest"
   ],
   "emulator": [
     "com.nextgis.mobile.util.AppUpdateNativeTest",
@@ -55,9 +74,11 @@
     "com.nextgis.mobile.util.ProjectSyncRunnerTest",
     "com.nextgis.mobile.reliability.SharedTracksTest",
     "com.nextgis.mobile.rendering.VectorStyleRenderingTest",
-    "com.nextgis.mobile.rendering.LocalVectorTileLabelTest"
+    "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"
   ],
-  "diagnostics": ["com.nextgis.mobile.util.DiagnosticsDeliveryTest"],
+  "diagnostics": [
+    "com.nextgis.mobile.util.DiagnosticsDeliveryTest"
+  ],
   "related_phone_areas": {
     "sqlite-marker": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteMultiPointRulesRetainBothPartsAndTheCustomMarker"],
     "sqlite-render": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest"],
@@ -81,11 +102,17 @@
     "track-controls": ["com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest#trackActionsFitRussianPanelsAcrossThemesFontsAndNarrowViewports"],
     "style-editors": ["com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest"],
     "style-categories": ["com.nextgis.mobile.rendering.PolygonStyleEditorTest#actualCategoryEntryUsesInheritedPreviewAndCancelCannotMutateTheRule"],
-    "polygon-styles": ["com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.PolygonStyleTileFallbackTest"],
-    "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.FireflyTileFallbackTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.PolygonStyleTileFallbackTest"],
-    "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"]
+    "polygon-styles": ["com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.DirectVectorTilesTest"],
+    "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.DirectVectorTilesTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest"],
+    "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"],
+    "memory-dialog": ["com.nextgis.mobile.rendering.RenderMemorySafetyTest"],
+    "direct-vector-tiles": ["com.nextgis.mobile.rendering.DirectVectorTilesTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.TrackControlsTest#crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections"],
+    "underlay-migration": ["com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest"]
   },
   "areas": {
+    "orbit-structure": ["com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector"],
+    "editing-source": ["com.nextgis.mobile.reliability.MapEditingToolsTest#layerChoiceOffersCategoryBeforeSketchAndHandsDefaultsToRealForm", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce"],
+    "memory-dialog": ["com.nextgis.mobile.rendering.RenderMemorySafetyTest"],
     "sqlite-marker": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteMultiPointRulesRetainBothPartsAndTheCustomMarker"],
     "sqlite-render": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest"],
     "sqlite-priority": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks"],
@@ -95,7 +122,7 @@
     "crash-startup": ["com.nextgis.mobile.reliability.MapEditingToolsTest#emptyEditHandlesNeverEnterTheNativeRenderer", "com.nextgis.mobile.reliability.MapEditingToolsTest#rulerAcceptsFingerDriftAndKeepsPanCancelAndLongPressSeparate", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest"],
     "real-windows": ["com.nextgis.mobile.reliability.LargeTextLayoutTest#realMapCloseAndDialogActionsStayReachable", "com.nextgis.mobile.reliability.LargeTextLayoutTest#realSettingsAndSecondaryScreensRetainCompleteLabels"],
     "track-delivery": ["com.nextgis.mobile.reliability.TrackUploadTest"],
-    "offline-tiles": ["com.nextgis.mobile.rendering.LocalVectorTileLabelTest#localTilesAndLiveStyleFallbackRenderWhileAllExternalNetworksAreOffline"],
+    "offline-tiles": ["com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"],
     "azimuth-text": ["com.nextgis.mobile.reliability.LargeTextLayoutTest#azimuthTextAndCloseStayWithinSmallPortraitAndLandscapePanels"],
     "persistence-catalog": ["com.nextgis.mobile.reliability.FeaturePersistenceTest", "com.nextgis.mobile.reliability.StandardFeatureTypesTest"],
     "track-map-actions": ["com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete"],
@@ -117,7 +144,7 @@
     "track-controls": ["com.nextgis.mobile.rendering.TrackControlsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest#trackActionsFitRussianPanelsAcrossThemesFontsAndNarrowViewports", "com.nextgis.mobile.reliability.SharedTracksTest#historicalDeletionKeepsRecordingAndActiveDeletionRetriesBeforeClearingItsIntent"],
     "style-editors": ["com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest"],
     "style-categories": ["com.nextgis.mobile.rendering.PolygonStyleEditorTest#actualCategoryEntryUsesInheritedPreviewAndCancelCannotMutateTheRule"],
-    "polygon-styles": ["com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.PolygonStyleTileFallbackTest"],
+    "polygon-styles": ["com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.DirectVectorTilesTest"],
     "feature-editing": ["com.nextgis.mobile.reliability.MapEditingToolsTest#copyReadOnlyFeatureChoosesCompatibleLayerAndCategoryAndSavesMatchingFields", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce", "com.nextgis.mobile.reliability.MapEditingToolsTest#anotherLayerCanBeSelectedAndReadOnlyLayerHasNoEditingActions", "com.nextgis.mobile.reliability.LargeTextLayoutTest#copyAndTransformActionsRemainReachableAtLargeFontAndDisplayScales"],
     "updater": ["com.nextgis.mobile.util.AppUpdateNativeTest"],
     "cursor": ["com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector", "com.nextgis.mobile.reliability.LargeTextLayoutTest#realLocationSettingsShowCompleteBackgroundGpsSwitch"],
@@ -131,9 +158,11 @@
     "sync": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.reliability.LocalChangesUploadTest", "com.nextgis.mobile.reliability.LayerPendingChangesTest", "com.nextgis.mobile.reliability.ProjectSyncDisplayNativeTest", "com.nextgis.mobile.util.ProjectSyncRunnerTest", "com.nextgis.mobile.reliability.SyncNotificationsTest"],
     "location": ["com.nextgis.mobile.reliability.BackgroundGpsNativeTest", "com.nextgis.mobile.reliability.BackgroundLocationWarningTest", "com.nextgis.mobile.reliability.StakeoutForegroundServiceTest", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest", "com.nextgis.mobile.rendering.LocationOrbitTest", "com.nextgis.mobile.reliability.GpsRecoveryNativeTest"],
     "tracks": ["com.nextgis.mobile.reliability.TrackPersistenceTest", "com.nextgis.mobile.reliability.TrackerStopRecoveryTest", "com.nextgis.mobile.reliability.TrackRecordingModesTest", "com.nextgis.mobile.reliability.TrackPowerWarningTest", "com.nextgis.mobile.reliability.TrackUploadTest", "com.nextgis.mobile.reliability.WalkCheckpointTest", "com.nextgis.mobile.reliability.SharedTracksTest"],
-    "map": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.LocalVectorTileLabelTest"],
+    "map": ["com.nextgis.mobile.reliability.MapEditingToolsTest", "com.nextgis.mobile.reliability.LargeTextLayoutTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.SharedTracksTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.DirectVectorTilesTest", "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"],
     "scripts": ["com.nextgis.mobile.reliability.ProjectScriptsTest"],
     "diagnostics": ["com.nextgis.mobile.util.SyncRecoveryJournalNativeTest", "com.nextgis.mobile.util.DiagnosticsNoiseTest", "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest", "com.nextgis.mobile.reliability.GpsRecoveryNativeTest"],
-    "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.FireflyTileFallbackTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.PolygonStyleTileFallbackTest"]
+    "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.DirectVectorTilesTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"],
+    "direct-vector-tiles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.DirectVectorTilesTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.TrackControlsTest#crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections", "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"],
+    "underlay-migration": ["com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest"]
   }
 }

@@ -1,7 +1,7 @@
 ---
 title: Штриховки, контуры полигонов и живой образец
 type: architecture
-last_verified: 2026-10-24
+last_verified: 2026-11-02
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java
   - maplib/src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java
@@ -12,12 +12,10 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/MplFeatureStyleProps.java
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
-  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
   - maplib/src/main/java/com/nextgis/maplib/map/mpl/MplLayerStyleVars.java
   - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonLayerFactory.java
   - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java
   - maplib/src/test/java/com/nextgis/maplib/display/PolygonStyleOptionsTest.java
-  - maplib/src/test/java/com/nextgis/maplib/map/PolygonStyleTileSupportTest.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/PolygonStyleControls.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java
@@ -25,7 +23,7 @@ related_code:
   - tools/mobile-test-plan.json
   - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java
-  - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleTileFallbackTest.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
 ---
 
 # Штриховки, контуры полигонов и живой образец
@@ -112,3 +110,9 @@ Native runner после каждого rendering case сохраняет bounde
 При входе из списка категорий RuleFeatureRendererUI открывает независимую копию эффективного стиля, включая наследованные параметры «Прочие». Cancel не меняет исходный rule JSON; Save заменяет только выбранную категорию и закрепляет показанный effective snapshot. Native case actualCategoryEntryUsesInheritedPreviewAndCancelCannotMutateTheRule проходит именно этот вход реальными touches.
 
 Адресная область style-categories проверяет настоящую строку категории, наследованные настройки, Cancel/Save и отдельную кнопку удаления. NativeStyleTouch перед targeted инъекцией ждёт фокус окна, полную видимость и стабильные физические координаты; UID guard Android сохраняется.
+
+После удаления HTTP renderer2ноября обычный advanced polygon остаётся на
+прямом SQLite source. DirectVectorTilesTest проверяет live style generation и
+неизменность полных SQL rows; прежний HTTP→classic fixture удалён. Pattern alpha0
+имеет прежний native FAIL18886red на A56 и software emulator; причина UNKNOWN,
+ожидание не ослаблено. Новый JSON collector нужен для следующего диагноза.

@@ -1,7 +1,7 @@
 ---
 title: Подготовка NGW Collector-проекта
 type: runbook
-last_verified: 2026-09-16
+last_verified: 2026-11-02
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
   - maplib/src/main/java/com/nextgis/maplib/map/LayerOriginMetadata.java
@@ -43,11 +43,9 @@ related_code:
   серверном нуле.
 - Общий `is_editable` в mobile config управляет обычными/вручную
   импортированными слоями и не заменяет галочку элемента Collector.
-- Для тяжёлого read-only polygon/multipolygon или простого точечного слоя можно
-  явно задать `mobile_render_mode = local_vector_tiles`. Точка должна
-  использовать простой renderer, `MarkerStyleCircle` (`type = 2`) без custom icon и подпись
-  из одного поля либо фиксированного текста. Приложение сохраняет значение в
-  `layer_origin.render_mode`; неподдерживаемый случай откатывается к classic rendering.
+- Старое `mobile_render_mode = local_vector_tiles` сохраняется как metadata,
+  но не выбирает renderer. Обычные Simple/Field Rule векторы всех шести
+  геометрий используют прямые SQLite тайлы независимо от флага.
 - FormBuilder-форма связывается со слоем через `form_id`. При rebuild/fill связь должна
   сохраняться.
 
@@ -77,8 +75,8 @@ Project workspace хранит `collector_project` с `project_uid`, account, re
 - ручной слой остаётся вне project-managed состава;
 - изменение состава добавляет/переупорядочивает управляемые слои;
 - перед destructive rebuild/removal создаётся backup, а при ошибке backup операция отменяется;
-- `local_vector_tiles` polygon либо простая read-only точка отображается и
-  имеет classic fallback при ошибке provider или неподдерживаемом стиле.
+- Старые конфиги кварталов/выделов/точек отображаются через прямой SQLite
+  source с прежними стилем, полями, geometry/FID и editing/sync правами.
 
 Подробные контракты: [Collector architecture](../architecture/collector-projects.md). Открытые
 задачи: [Collector roadmap](../roadmap/collector.md).

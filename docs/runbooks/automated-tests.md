@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-10-29
+last_verified: 2026-11-02
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -16,6 +16,26 @@ related_code:
 ---
 
 # Автоматические проверки
+
+## Адресные проверки выпуска3.1.2.31
+
+`Related -Area editing-source -AllowEmulator` проверяет два сценария
+MapEditingToolsTest с ожиданием current SQLite provider и его actual
+CustomVectorSource по native generation ID. Все form/gesture/Undo expectations
+сохранены; область не разрешена на физическом телефоне.
+
+`Related -Area memory-dialog` выбирает RenderMemorySafetyTest без повторения
+всего stress workload. На A56 допустим только отдельный opt-in verification
+package (`-PhoneSerial ... -PhoneOnly`); software emulator требует отдельного
+разрешения и `-AllowEmulator`. Layout failure сохраняет точный theme/font/
+viewport, widget и line bounds. Проверяется видимый текст Layout.getLineMax,
+а не конечные wrap-boundary пробелы getLineWidth; каждый символ должен иметь
+layout line, ellipsis запрещён, scroll/buttons gates сохранены.
+
+`Related -Area orbit-structure -AllowEmulator` сохраняет внешний SDK слой и
+проверяет cursor stack после настоящего model hot-add, а не требует полной
+перестройки от sensor tick. Эти области не сокращают Full и не являются
+допуском к публикации.
 
 ## Адресная SQLite priority регрессия29 октября
 
@@ -872,3 +892,23 @@ CPU/counts, SDK frame/texture/buffer stats и процессная память 
 бизнес-данных или новой приёмки. Full/публикация остаются отложенными.
 Контракт/ограничения: [производительность карты](../architecture/map-performance.md#приватное-исследование-холодной-отрисовки-28-октября-2026).
 Порядок ручного сеанса: [runbook](../runbooks/manual-resource-profiling.md).
+
+## Подготовленные Related области —2ноября2026
+
+`Related -Area direct-vector-tiles` выбирает direct old-config/schema/rights,
+живые Firefly/polygon edits, classic matrix, polygon pixels и mixed chooser.
+Offline seam/label/pixel case выполняется только на эмуляторе; phone selectors
+используют отдельный verification package без радио/settings изменений.
+`Related -Area underlay-migration` выбирает exact-control/queued-cancel и RU
+progress/Cancel layout. Это UI/session coverage, не реальный перенос Debug.
+
+Перед cleanup collector сохраняет PNG из фиксированных QA folders и единственный
+allowlisted `firefly-qa/classic-binding.json` (валидный JSON object, <=64KiB).
+Остальной JSON не извлекается; PNG<=4MiB, общий budget16MiB и fixed package
+сохраняются. `underlay-qa` содержит только технические скриншоты прогресса.
+
+Пользователь отключил телефон и отложил живые проверки. После source changes
+выполнена только компиляция main и unit/native test sources и static docs/source
+checks; JVM/Related/Full не запускались заново. SM-X115 исключён владельцем,
+GitHub Actions запрещены, software emulator ждёт новой команды. Исторические
+FAIL и b165 APK не относятся к current-source acceptance.

@@ -31,6 +31,7 @@ import com.nextgis.maplib.display.RuleFeatureRenderer;
 import com.nextgis.maplib.display.SimplePolygonStyle;
 import com.nextgis.maplib.map.MPLFeaturesUtils;
 import com.nextgis.maplib.map.MapDrawable;
+import com.nextgis.maplib.map.VectorLayer;
 import com.nextgis.maplib.map.MplFeatureStyleProps;
 import com.nextgis.maplib.map.MLP.MLGeometryEditClass;
 import com.nextgis.maplib.map.NativeVectorTileEncoder;
@@ -1232,7 +1233,7 @@ public class NativeSqliteVectorRenderingTest {
         return style;
     }
 
-    private static void reload(VectorStyleRenderingTest.Fixture f, VectorLayerUI layer) throws Exception {
+    static void reload(VectorStyleRenderingTest.Fixture f, VectorLayer layer) throws Exception {
         f.screen.onActivity(activity -> {
             MapDrawable map = (MapDrawable) f.app.getMap();
             map.reloadVectorLayerDataToMaplibre(layer);
@@ -1242,13 +1243,13 @@ public class NativeSqliteVectorRenderingTest {
                 ((MapDrawable) f.app.getMap()).isSqliteVectorLayer(layer.getId())));
     }
 
-    private static SqliteVectorTileProvider provider(VectorStyleRenderingTest.Fixture f, VectorLayerUI layer) {
+    static SqliteVectorTileProvider provider(VectorStyleRenderingTest.Fixture f, VectorLayer layer) {
         AtomicReference<SqliteVectorTileProvider> result = new AtomicReference<>();
         f.screen.onActivity(activity -> result.set(((MapDrawable) f.app.getMap()).getSqliteVectorProvider(layer.getId())));
         return result.get();
     }
 
-    private static void assertStreaming(VectorStyleRenderingTest.Fixture f, VectorLayerUI layer) {
+    static void assertStreaming(VectorStyleRenderingTest.Fixture f, VectorLayer layer) {
         f.screen.onActivity(activity -> {
             MapDrawable map = (MapDrawable) f.app.getMap();
             String nativeId = map.getVectorRenderSourceId(layer.getId());
@@ -1963,7 +1964,7 @@ public class NativeSqliteVectorRenderingTest {
         return contents(layer, ROWS);
     }
 
-    private static byte[] contents(VectorLayerUI layer, int expectedRows) throws Exception {
+    static byte[] contents(VectorLayer layer, int expectedRows) throws Exception {
         MessageDigest hash = MessageDigest.getInstance("SHA-256");
         try (Cursor rows = layer.query(null, null, null, "_id", null)) {
             assertNotNull(rows); assertEquals(expectedRows, rows.getCount());

@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-11-01
+last_verified: 2026-11-02
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -142,3 +142,9 @@ application/provider/account identities перечислены в [build matrix]
 Ни Lisa, ни Belka, ни обычный companion Debug не очищаются/переустанавливаются
 phone suites. Изменение версии после Full делает receipt неактуальным;
 перед публикацией требуются новый Full и Check-Publication.
+
+Подготовка2ноября: progress/cancel исправлены только в принимающем клиенте
+LegacyUnderlayImporter/UnderlayCatalogActivity. Exporter/provider/IPC schema
+не меняются, поэтому production3.1.2.31/225 и Debug3.1.2.23/218 сохраняются.
+Это не новый APK и не native acceptance старого Debug transfer. Финальные
+version checks выполняются после разрешённых merge и live проверки.

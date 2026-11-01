@@ -1,7 +1,7 @@
 ---
 title: Проверки обычных векторных стилей и подписей
 type: architecture
-last_verified: 2026-10-25
+last_verified: 2026-11-02
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/display/FieldStyleRule.java
   - maplib/src/main/java/com/nextgis/maplib/display/LabelAttributes.java
@@ -35,31 +35,45 @@ related_code:
 изображений. Редактор имеет отдельную матрицу 72 локальных профилей с реальными
 touches, Save и Cancel. Оба класса включены в Related styles; явный PhoneOnly
 разрешён только в отдельном verification APK. Эмулятор остаётся частью Full.
-Переход уже загруженного точечного VectorSource к classic fallback проверяется
-отдельным `FireflyTileFallbackTest` и не расширяет возможности tile renderer.
+Живое редактирование Светлячка и сложного полигона проверяется
+`DirectVectorTilesTest`: provider меняет поколение, оставаясь прямым SQLite.
 
 ## Общая матрица
 
 Матрица использует собственные synthetic VectorLayerUI в verification APK.
-До проверок обязательно assert !LocalVectorTileRenderMode.isRequested и
-!shouldUseLocalVectorTiles; native source обязан быть GeoJsonSource. Настроенные
-через Web GIS local-vector-tiles слои не выбираются по названию/меню и не входят
-в эту матрицу. Их renderer, список возможностей и fallback не расширяются.
+Матрица явно вызывает classic factory и проверяет GeoJsonSource без current
+SQLite provider. Это отдельный converter/preview path; обычная карта использует
+direct SQLite. Старое mobile_render_mode не выбирает ни один из этих путей.
 
 Путь проверки: SQL attributes/geometries -> сохранённый renderer JSON ->
 FieldStyleRule -> feature properties -> production MPLFeaturesUtils -> native
 MapLibre -> snapshot pixels. Шрифты и marker/pattern images берутся из bundled
 assets; реальные NGW accounts/данные/сервер не требуются.
 
-Pixel assertions требуют working host OpenGL. Headless `swiftshader_indirect`
-воспроизводит отсутствие подписей даже при правильных feature props, camera,
-native visibility и zoom limits; дополнительный sleep это не исправляет.
-CI запускает emulator `-gpu host` под Xvfb с Mesa llvmpipe; renderer information
-сохраняется в `graphics-host.txt`. Все 16 rendering cases остаются обязательными,
-включая реальные pixels на zoom 12/19 и отсутствие за category max на 21.
+Исторические GPU runs не являются разрешением запускать host GPU сейчас:
+после host hangs разрешён только отдельно согласованный software-only emulator,
+а GitHub Actions запрещены владельцем ради лимитов. На SwiftShader наблюдались
+pixel/label FAIL при правильных feature props, camera, visibility и zoom limits.
+Это незакрытые native результаты, не доказанная общая причина и не основание
+менять ожидаемые pixels. Все16 rendering cases остаются обязательными, включая
+zoom12/19 и отсутствие за category max на21; actual graphics identity сохраняется
+штатным runner.
 Fixture отключает только стартовый geo-dialog в disposable preferences,
 восстанавливает его после закрытия и меняет camera/underlay visibility через
 модель карты, чтобы delayed redraw не отменял подготовку.
+
+По поручению владельца2ноября старый HTTP renderer удалён вместе со своими
+fixtures. DirectVectorTilesTest использует точные опубликованные конфиги
+kvartal/vydel/vertexfeature_recent с provenance, проверяет сохранность schema/
+rows/rights и прямой CustomVectorSource; offline case сохраняет независимые
+single-anchor и glyph/fill/outline pixel expectations. Новая матрица NOT_RUN.
+
+Explicit classic bind обязан оставаться GeoJsonSource после native idle без
+current SQLite provider. Fixture сохраняет до удаления собственных слоёв
+bounded classic-binding.json и PNG в существующий firefly-qa collector:
+actual/logical source, provider state, zoom/bearing, ограниченные paint
+properties и native pattern opacity. Координаты/геометрии не выгружаются в JSON;
+это свидетельства технической fixture, не бизнес-данные или runtime fix.
 
 | Область | Покрытие |
 |---|---|

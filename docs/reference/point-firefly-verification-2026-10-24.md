@@ -8,7 +8,7 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java
-  - app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyTileFallbackTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
   - tools/mobile-test-plan.json
 ---
 
@@ -90,3 +90,7 @@ Task-owned disposable каталог пуст; удалять временные
 отдельные task copies. Доставленные ранее release APK и общие caches сохранены.
 Verification процесс после тестов остановлен; fixtures удаляются finally каждого
 сценария. Эта задача не меняла старые pending-cleanup записи других задач.
+
+Текущие source links обновлены2ноября после удаления HTTP renderer.
+Исторические результаты выше относятся к указанному тогда source и не
+принимают новый DirectVectorTilesTest; новая live матрица NOT_RUN.

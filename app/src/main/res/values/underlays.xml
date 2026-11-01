@@ -15,4 +15,12 @@
     <string name="underlay_delete_confirm">Delete “%1$s” and remove it from every project listed below? This cannot be undone.\n\n%2$s</string>
     <string name="underlay_operation_failed">Could not complete the operation. Your underlay data has been preserved. Please try again.</string>
     <string name="underlay_file_required">Choose an NGRc or raster MBTiles file, or a ZIP containing MBTiles.</string>
+    <string name="legacy_underlay_phase_opening">Preparing transfer</string>
+    <string name="legacy_underlay_phase_receiving">Receiving underlay</string>
+    <string name="legacy_underlay_phase_finalizing">Checking and saving</string>
+    <string name="legacy_underlay_phase_attaching">Adding to project</string>
+    <string name="legacy_underlay_phase_stalled">Source is not responding</string>
+    <string name="legacy_underlay_phase_progress">%1$s · %2$d s\n%3$s</string>
+    <string name="legacy_underlay_counts_bytes">%1$d/%2$d · %3$s</string>
+    <string name="legacy_underlay_counts_tiles">%1$d/%2$d · %3$s · %4$d tiles</string>
 </resources>

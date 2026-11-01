@@ -1,10 +1,20 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-11-01
+last_verified: 2026-11-02
 ---
 
 # app — Android-приложение Lisa/Belka
+
+## Предупреждения при подготовке3.1.2.31
+
+`ScrollableAlertDialogs` сохраняет полные заголовок и действия прежде
+прокручиваемого сообщения. Общий алгоритм выделен из MaintenanceReminders;
+MapFragment использует его для сообщения об экономии памяти, где native
+проверка воспроизвела кнопку за границей тесного окна. Частота напоминаний об
+обновлении/полной синхронизации и обработчики действий не меняются. Контракты:
+`UI-RENDER-MEMORY-WARNING` и `UI-MAINTENANCE-REMINDERS` в общем UI registry.
+Текущие результаты и ограничения — [подготовка выпуска](../../docs/reference/mobile-release-3.1.2.31-2026-11-01.md).
 
 Знания о показателях и действиях карты начинаются с
 [`../../docs/architecture/ui-contracts.md`](../../docs/architecture/ui-contracts.md)
@@ -366,16 +376,12 @@ https://geonical-system.ru/contact/ во всех локализациях.
 
 ## Одна подпись квартала в локальных тайлах
 
-`LocalVectorTileLabelTest` проверяет синтетический NGW-backed SQLite слой через
-настоящий loopback MVT и native MapLibre. На границах тайлов и после смены зума /
-повторного применения стиля видна одна Point-подпись с ID исходного квартала;
-pixels подтверждают подпись, заливку и контур. Используются один VectorSource и
-три прежних style layers, без нового объектного слоя. Snapshot ожидает native
-idle и новый полностью отрисованный кадр после смены камеры/размещения.
-Пиксельная проверка также дожидается заполненного кадра в ограниченном времени:
-асинхронная перестройка карты может вернуть пустой snapshot между состояниями.
-Этот отдельный тест входит
-в Related `map`; классическая style matrix по-прежнему исключает vector tiles.
+`DirectVectorTilesOfflineTest` проверяет технический NGW-backed SQLite слой
+через прямой CustomVectorSource и native MapLibre. На границах тайлов и после
+смены зума должна оставаться одна Point-подпись с исходным ID, glyph/fill/outline
+pixels и общий source без дополнительного объектного слоя. Отдельно проверяются
+live style edits без HTTP/classic перехода. Радио меняется только на owned
+emulator с восстановлением; current-source acceptance пока NOT_RUN.
 
 ## Общая история треков и проверки обычных стилей
 
@@ -711,9 +717,9 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   workspace закреплена в `UI-MOBILE-PROJECT-LOAD`; она отличается от выбора
   уже сохранённого проекта в `UI-PROJECT-CHOOSER`.
 - в настройках карты «Не отключать экран» включён по умолчанию;
-- тяжёлые opt-in `local_vector_tiles` обслуживаются ограниченным loopback-
-  сервером: максимум две одновременные сборки и очередь 16, с отменой старого
-  поколения карты и retry вместо неограниченного роста потоков/heap;
+- обычные векторы обслуживаются прямым SQLite CustomVectorSource с bounded
+  admission/cache/epoch guards; old render metadata не выбирает backend,
+  локальный HTTP server удалён;
 - новый скетч начинается сразу после выбора слоя: точка или первый узел линии/
   полигона ставится в экранную проекцию центра камеры, следующие узлы добавляются
   тапами; midpoint-вставка работает для линий, полигонов и линейки, дополнения
@@ -801,9 +807,8 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   отдельное сообщение «Обнаружено самопересечение», а не ложное «Недостаточно точек»;
 - идентификация объекта: список совпадений и верхняя панель используют
   `feature_label_field`; форма атрибутов в нижней панели доступна только если
-  слой допускает редактирование (`isEditingAllowed`); слой с режимом
-  `local_vector_tiles` отдаёт локальные атрибуты даже при выключенной отрисовке,
-  не включая её, тогда как выключенный классический слой пропускается;
+  слой допускает редактирование (`isEditingAllowed`); map identify включает
+  только видимые слои независимо от old render metadata;
 - выбор и переключение проектов по списку только из имён: строка выбирает
   radio, «Открыть» открывает карту, «Отмена» оставляет текущий проект; раздел
   «Настройки → Проект» с Web GIS-реквизитами, созданием пустого local workspace,
@@ -1033,9 +1038,8 @@ handled HTTP/permission report не считать uncaught crash.
 - Полевые точки выбираются, но появились только после restart: проверить
   completion post-fill reload и `MapLibre post-load verification`; pending-флаг
   очищается только из `MapFragment.setMapLayersLoaded()`.
-- Выключенный `local_vector_tiles` не идентифицируется: проверить
-  `LayerIdentifyPolicy` и сохранённый render mode; identify не должен менять
-  видимость слоя.
+- Выключенный слой не идентифицируется: это visible-only LayerIdentifyPolicy,
+  старый render flag больше не является исключением.
 - Самопересекающийся мультиполигон не перешёл к форме: проверить
   `MultiPolygon geometry repair failed`; при отказе пользователь должен остаться
   в редактировании геометрии без частично созданного объекта. Сообщение
@@ -1392,3 +1396,11 @@ shared track ID. Скрытие трека не убирает действие;
 доступной ширине. Полное имя остаётся XML-текстом; basename не является путём.
 Согласованность snapshot, конкурентные экспорты, жизнь cache/recipient и
 короткие окна остаются отдельными границами проверки.
+
+2ноября: obsolete HTTP vector fixtures заменены DirectVectorTilesTest с точными
+source-конфигами и provenance, исходными SQL row hashes, live style/epoch и
+offline glyph/fill/outline expectations. LegacyUnderlayImporter и экран каталога
+показывают phase/elapsed до attach, сохраняют fixed Cancel и exact-control
+guards; queued cancel освобождает lease. Session/UI регрессии скомпилированы,
+но не исполнялись после пользовательской остановки. Реальная задержка миграции
+UNKNOWN. Старый Debug exporter/provider/version и схема IPC не менялись.

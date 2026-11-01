@@ -1,7 +1,7 @@
 ---
 title: Экосистема ЛИСА — desktop, плагины и Android
 type: architecture
-last_verified: 2026-10-28
+last_verified: 2026-11-02
 related_code:
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -319,3 +319,26 @@ version, artifact hash и signing certificate. Совместимость с с�
 изолированным QuickJS и native API, `maplibui` — формой, `app` — lifecycle guard.
 [Project scripts](project-scripts.md) и `ECO-PROJECT-SCRIPTS` фиксируют границу.
 GIS/расчётные функции расширяются постепенно в APK, без arbitrary SQL/сети в JS.
+
+## Прямые векторные тайлы и Debug raster transfer —2ноября2026
+
+Проверены reverse producer links: stand_project/ngw_standard/Общий для всех/
+mobile_configs/{kvartal,vydel,vertexfeature_recent}.json → NGW mobile config →
+NGWVectorLayer.applyMobileConfigPreservingAuthoritativeSchema → renderer/direct
+SQLite → selection/editor originals. Producer configs не менялись. Старый
+mobile_render_mode сохраняется, но не выбирает backend/hidden identify;
+authoritative schema/geometry/FID и отдельные editable/sync permissions прежние.
+Точные clean-source bytes/hashes закреплены в technical AndroidTest assets,
+без полевых бизнес-строк. Server/PostgreSQL/schema updates для этого не нужны.
+
+Debug raster ContentProvider/URI migration — другой сценарий: он сохраняется
+после удаления векторного HTTP server. Client-side phase/elapsed/cancel не
+меняют desktop raster format, Debug exporter/trust/schema или original folders.
+
+Read-only общий discovery после удаления выявляет4 invalid path/evidence refs
+в каноническом LISA scenario-contracts.yaml для resource/scenario
+audit_depth_ngw_vector_identity_ack на удалённый LocalVectorTileProvider.
+Требуется owner review новой SqliteVectorTileProvider + source/identity closure
+и refresh/check общего index. Последний preflight: root чужой
+codex/function-etalon-roundtrip, clean,4ahead main, own upstream0/0/fetchOK.
+Он не редактировался; Android Draft delivery не объявляет весь контур green.

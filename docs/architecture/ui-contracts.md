@@ -1,7 +1,7 @@
 ---
 title: Контракты значений и действий мобильного интерфейса
 type: architecture
-last_verified: 2026-11-01
+last_verified: 2026-11-02
 related_code:
   - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
   - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
@@ -525,3 +525,34 @@ registry готовит workspace и operation lease; `CollectorProjectImportHel
 просмотренную связь и ловят source drift; это не literal-mirror тест текста
 и не приёмка native окон. Effective Lisa/Belka locale merge, крупный шрифт,
 rotation, устройство, аккаунты и реальные серверные результаты здесь NOT_RUN.
+
+## Два независимых вида предупреждений — 2 ноября2026
+
+`UI-MAINTENANCE-REMINDERS` фиксирует существующую частоту: строго больше7 суток
+от доступности неустановленного обновления либо complete clock активного
+онлайн-проекта. При неизвестном complete clock отсчёт идёт от первого наблюдения
+этого проекта. Проверка обновлений имеет отдельный clock. Local-only карта не
+получает sync reminder. Foreground callback повторно сверяет project identity;
+показ подавляется на24 часа только внутри UUID текущего процесса. После нового
+процесса возможен повтор в тот же календарный день. Это существующая политика,
+не изменение её на глобальный «раз в день».
+
+`UI-RENDER-MEMORY-WARNING` относится к текущему ресурсному режиму карты.
+Его automatic claim один на процесс, включая Activity recreation и смену карты;
+ручной пункт меню независим. Continue закрывает сообщение; Reload вызывает
+прежнюю переоценку resource/cache policy владельца карты. Данные и точность
+геометрии не уменьшаются. ScrollableAlertDialogs резервирует полные действия
+прежде прокручиваемого текста: прежний maintenance layout выделен в общий helper,
+добавлен перенос neutral action. Прежние методы MapFragment, ruler/zoom properties
+и все unrelated registry nodes проверены на точное сохранение при source review.
+Глобальный runtime status registry остаётся NOT_RUN: отдельная component matrix
+не сертифицирует весь UI и hardware.
+
+Source review2ноября добавляет UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS:
+phase/monotonic elapsed/received counters → current control → localized status
+ScrollView, fixed Cancel, lease/queued-cancel и late descriptor. Полный transfer
+не отождествляется с окончанием bytes. UI-MAP-IDENTIFY-VISIBLE-VECTORS закрепляет
+visible-only policy трёх tap/long-press callers независимо от old render flag.
+WF-PROJECT-ACTIVATE повторно просмотрен: удалены только четыре строки старого
+server clear; save/path/preferences/closeMapObj и native retirement сохраняются.
+Новые source guards не являются выполнением native UI или реального переноса.

@@ -2,13 +2,23 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-11-01
+last_verified: 2026-11-02
 entrypoints:
   - app/src/main/java/com/nextgis/mobile/MainApplication.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - app/src/main/AndroidManifest.xml
 key_components:
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesOfflineTest.java
+    responsibility: Prepared emulator-only radio restoration, direct same-source polygon/anchor glyph/fill/outline pixels and offline live Firefly/polygon style edits; compilation is separate from execution.
+  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
+    responsibility: Compile-only native coverage of old published configs, direct source epochs/styles, full original SQL rows and offline one-anchor glyph/fill/outline pixels; not device acceptance.
+  - path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayProgressText.java
+    responsibility: Format current transfer phase, monotonic per-attempt seconds and received counters without implying completed migration.
+  - path: app/src/test/java/com/nextgis/mobile/util/LegacyUnderlayTransferSessionTest.java
+    responsibility: Prepared fault injection for late timed-out descriptor closure and continued finalization progress until terminal session close; not executed.
+  - path: app/src/androidTest/java/com/nextgis/mobile/util/LegacyUnderlayProgressNativeTest.java
+    responsibility: Prepared isolated queued cancel, exact-control UI and Russian full-text/fixed-Cancel theme/font/narrow-orientation geometry checks; not real Debug throughput.
   - path: app/src/main/java/com/nextgis/mobile/util/PrivateRenderResourceProfiler.java
     responsibility: Default-OFF private local MediaStore JSONL observer with bounded queue/file/deadline, process and SDK numeric resource/frame statistics, monotonic scene boundaries, explicit observer/loss costs and priority final maplib aggregate footer; never changes rendering, cache, business data or Sentry.
   - path: app/src/test/java/com/nextgis/mobile/util/PrivateRenderResourceProfilerTest.java
@@ -23,10 +33,12 @@ key_components:
     responsibility: Verify delayed promotion after reported Activity stop, permission changes and API28/unknown states, actual scoped handled delivery and diagnostic-priority sanitize/replay without running Android FGS or claiming native acceptance.
   - path: app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java
     responsibility: Claim one automatic foreground resource-economy notice per application process across maps, layers and Activity recreation; manual status remains independent and no setting or layer visibility is persisted.
+  - path: app/src/main/java/com/nextgis/mobile/util/ScrollableAlertDialogs.java
+    responsibility: Reserve complete title/action panels before measuring a bounded scrollable message; reuse the former maintenance-dialog algorithm for memory status, wrap positive/negative/neutral actions, and preserve existing handlers and text sizes.
   - path: app/src/test/java/com/nextgis/mobile/util/RenderMemoryNoticeTest.java
     responsibility: Assert the process-session claim is atomic, is not reset by another caller and starts clear only for an independent new session.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
-    responsibility: Independently verify all129 technical SQLite polygon IDs and65-coordinate Java inputs, complete native ID set and whole-row hashes, then exercise once-session notice across recreation and another layer plus eight bounded Russian component dialog profiles. This is no real memory-pressure, Full real-window or2GiB acceptance.
+    responsibility: Independently verify all129 technical SQLite polygon IDs and65-coordinate Java inputs, complete native ID set and whole-row hashes, then exercise once-session notice across recreation and another layer plus eight bounded Russian component dialog profiles; measure visible line extents excluding trailing whitespace and retain exact profile/widget/bounds on failure. This is no real memory-pressure, Full real-window or2GiB acceptance.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
     responsibility: Add optional permission/provider/background policy and at most one passive system GPS last-known measurement-time read to already emitted recovery reports; retain fixed numeric/enum witness only, fail open without coordinates/extras/accounts/business storage or source seeding and without changing acquisition/retry.
   - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
@@ -73,10 +85,6 @@ key_components:
     responsibility: Verify native polygon styles, live preview, lifecycle and Russian large-interface editor behavior.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java
     responsibility: Verify native polygon styles, live preview, lifecycle and Russian large-interface editor behavior.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleTileFallbackTest.java
-    responsibility: Verify native polygon styles, live preview, lifecycle and Russian large-interface editor behavior.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyTileFallbackTest.java
-    responsibility: Start from a configured native point VectorSource and prove style editing rebuilds it as a visible classic Firefly through the existing fallback without restarting the app.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java
     responsibility: Verify the actual Russian point editor, explicit preset, Save and Cancel with real touches across 72 local theme, font, display and orientation configurations in the isolated verification APK.
   - path: app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
@@ -126,9 +134,7 @@ key_components:
   - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java
     responsibility: Verify real layers.db legacy migration beside new tracks, exact row values, checkpoint/pending Stop recovery, common history/map visibility, project deletion and retained recording switch guard.
   - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
-    responsibility: Verify classic SQL/rule JSON/GeoJSON/native paint and labels through real MapLibre OpenGL on an isolated verification phone or software-only emulator; prepare model camera/visibility and suppress the disposable startup geo-dialog; reject configured local-vector-tiles sources. Host-GPU emulator mode is forbidden.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
-    responsibility: Verify one interior label across MVT seams and zoom/style reapply through the real local tile provider, with glyph/fill/outline pixels and no added source or style layer.
+    responsibility: Verify classic SQL/rule JSON/GeoJSON/native paint and labels through real MapLibre OpenGL on an isolated verification phone or software-only emulator; prepare model camera/visibility and suppress the disposable startup geo-dialog; reject configured local-vector-tiles sources, assert the explicit classic binding survives native idle, and retain bounded source/paint JSON plus PNG before fixture cleanup. Host-GPU emulator mode is forbidden.
   - path: tools/run_mobile_tests.py
     responsibility: Route complete static phone and emulator acceptance, retain failures, finalize owned AVD before PASS, verify source receipts and require a permitted project or an explicitly chosen validated metadata-only policy fixture with provenance.
   - path: tools/mobile_native_log.py

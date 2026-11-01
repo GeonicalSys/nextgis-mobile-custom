@@ -1,16 +1,13 @@
 ---
 title: Производительность запуска карты
 type: architecture
-last_verified: 2026-10-28
+last_verified: 2026-11-02
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
   - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java
   - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java
-  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
-  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
-  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileRequestPolicy.java
   - maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java
   - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java
   - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryPolicy.java
@@ -19,6 +16,7 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/display/PatternTilePeriod.java
   - app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
 ---
 
 # Производительность запуска карты
@@ -245,33 +243,27 @@ FAIL и не используется вместо qualified повторног�
   эта защита памяти не вводит дополнительного упрощения или отбора ID;
 - render cache с безопасным fallback на построение из БД;
 - lite reload для уже подготовленных source-данных;
-- opt-in `local_vector_tiles` для read-only polygon/multipolygon и простых
-  точечных слоёв;
-- loopback `LocalVectorTileServer` с максимум двумя worker и16 ожидающими
-  socket, последовательной сборкой тайлов одного слоя и отменой старого
-  поколения карты; fair gate сохраняет два builder при нормальных ресурсах
-  и один только при малом измеренном свободном остатке системной/Java памяти;
-- полный derived PBF кэш только read-only источников:32MiB на low-RAM,
-  128MiB на остальных, максимум1024 файлов и4MiB на запись; ключ включает
-  процесс, поколение карты, canonical layer, content version, стиль и тайл;
-- local MVT coarse prefetch выключен, source volatile; переполнение, прежний
-  Java headroom guard64MiB и текущая нехватка памяти дают явный retryable503.
-  Неполный тайл не выдаётся как200 и не записывается в кэш;
-- компактные native свойства отдельно от rich Java снимка; только непустые
-  polygon labels получают отдельные points с нужными label properties;
+- direct SQLite CustomVectorSource для всех поддерживаемых Simple/Field Rule
+  векторов; old local_vector_tiles metadata не выбирает backend;
+- shared cancellable two-permit admission до IO dispatch, per-layer lock и
+  actual-free-memory gate; нет HTTP workers/socket queue/503 route;
+- прежний bounded derived PBF disk cache, полные IDs/геометрии и source/content/
+  style generation fences:32/128MiB,1024 файлов,4MiB на запись.
+  LocalVectorTileDiskCache остаётся текущим компонентом;
+- compact native свойства отдельно от rich classic снимка; текущий direct
+  polygon label anchor остаётся внутри PBF того же source;
 - точный повторяемый ARGB мотив штриховки вместо полной512×512 текстуры,
   если он восстанавливает каждый пиксель исходной решётки;
-- fallback на классический `GeoJsonSource` для неподдерживаемого слоя либо
-  недоступности provider на этапе выбора/регистрации source. Ответ503 уже
-  работающего tile source сам по себе не переключает слой на classic.
 
-Прежний HTTP точечный fast path намеренно узкий: только `GTPoint`, простой renderer,
-`SimpleMarkerStyle.MarkerStyleCircle` (`type = 2`), без custom icon, rule-style и label
-template. Подпись поддерживает одно поле (`field`, включая `_id`) либо
-фиксированный `text`. Редактируемый слой и любой неподдерживаемый вариант стиля
-остаются на classic path этого старого выбора. Новый direct SQLite выбор идёт
-первым и поддерживает editable/multipart/Field Rule/standard icon/labels;
-ограничения старого HTTP encoder не являются его capability contract.
+- явный classic converter для неизвестных renderer extensions и preview/overlay.
+  Поддерживаемые обычные стили, включая сложные полигоны и Светлячок, остаются
+  на direct SQLite после live style reload.
+
+Старый HTTP точечный fast path удалён. Capability нового direct SQLite
+renderer определяется Simple/Field Rule и известными style-классами для всех
+шести геометрий, независимо от old config flag. Unknown renderer extensions
+могут использовать явный classic converter; HTTP routing отсутствует.
+
 
 ## Экономия ресурсов и сообщение пользователю
 
@@ -425,3 +417,14 @@ android-20261028-resource-profiler-tools и maplib-20261028-resource-profiler.
 эти времена не являются ordinary-build benchmark. Полные выводы/границы и
 приоритет без нового долговременного кэша:
 [разбор T40](../reference/mobile-resource-profile-t40-2026-10-28.md).
+
+## Доступность сообщения памяти — 2 ноября2026
+
+Адресный native прогон подтвердил сохранность всех129 технических polygon IDs,
+но нашёл кнопку вне тесного диалога. MapFragment теперь использует общий
+bounded message layout из напоминаний: фиксированные действия измеряются
+полностью прежде scroll viewport. Resource policy, cache budget, queue и
+геометрии не меняются. Component oracle измеряет видимый текст Layout.getLineMax,
+проверяет layout каждого символа, ellipsis, обе кнопки и прокрутку. A56 matrix
+после исправления PASS; это отдельно от actual OOM,2GiB/full-map и Full real-window
+acceptance. Полный статус — в [release evidence](../reference/mobile-release-3.1.2.31-2026-11-01.md).

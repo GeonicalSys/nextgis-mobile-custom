@@ -70,9 +70,14 @@ tests:
     expected: This38-input manual diagnostic route changes only the map view and writes its receipt. Completed input is not camera/render acceptance, a qualified heap attribution or Full QA; empty/incomplete stacks remain unusable even if observedRSSis lower.
   AUTO-LOCAL-VECTOR-TILE-OFFLINE:
     type: automatic
-    scope: [maplibui, app]
+    scope:
+    - maplibui
+    - app
     command: tools\verify-mobile-tests.ps1 -Scope Related -Area offline-tiles
-    expected: With Wi-Fi and mobile data disabled only on the owned emulator, SQLite loopback MVT actually renders and a live marker edit reaches classic Firefly; Android NetworkUtil remains offline and the fixture restores both radios. The method remains mandatory in Full.
+    expected: With Wi-Fi and mobile data disabled only on the owned emulator, direct SQLite CustomVectorSource preserves
+      one interior polygon label plus glyph/fill/outline pixels and live Firefly/advanced polygon edits. All original
+      rows remain unchanged, Android NetworkUtil stays offline and the fixture restores radios. No local HTTP server
+      or forced SDK connected state. Current-source execution remains NOT_RUN.
   AUTO-MAINTENANCE-REMINDERS:
     type: automatic
     scope: [app]
@@ -80,9 +85,16 @@ tests:
     expected: Durable clocks distinguish full success, local projects, unknown-history grace, pending releases and validated ready APK without installation; 288 local Russian dialog configurations preserve full text and visible actions, and Full includes the stationary new class on the selected verification phone.
   AUTO-POLYGON-STYLE-CONTROLS:
     type: automatic
-    scope: [maplib, maplibui, app]
+    scope:
+    - maplib
+    - maplibui
+    - app
     command: tools\verify-mobile-tests.ps1 -Scope Related -Area styles
-    expected: Periodic procedural textures, independent fill/pattern/contour alpha, dashed and secondary contours, saved categories, Polygon/MultiPolygon holes, fractional zoom, visibility/picking, image cleanup and live MVT fallback pass actual native checks. The real editor keeps the native preview visible and Save/Cancel reachable across 72 Russian window-local profiles. The polygon-styles area is a scoped development subset; Full remains required before publication.
+    expected: Periodic procedural textures, independent fill/pattern/contour alpha, dashed and secondary contours,
+      saved categories, Polygon/MultiPolygon holes, fractional zoom, visibility/picking, image cleanup and live direct
+      SQLite style reload pass actual native checks. The real editor keeps the native preview visible and Save/Cancel
+      reachable across 72 Russian window-local profiles. The polygon-styles area is a scoped development subset; Full
+      remains required before publication.
   AUTO-POINT-FIREFLY:
     type: automatic
     scope: [maplib, maplibui, app]
@@ -403,12 +415,16 @@ tests:
     expected: Map renders once with the saved visibility and order and without a crash.
   SMOKE-POLYGON-LABEL-ANCHOR:
     type: device
-    scope: [app, maplib]
+    scope:
+    - app
+    - maplib
     steps:
-      - Open a map with labeled concave Polygon, holed Polygon and disjoint MultiPolygon features
-      - Inspect each label after cold start, zoom changes and a style reload
-      - For local_vector_tiles, pan across tile seams and verify one label, one VectorSource and the existing fill/outline/symbol style layers
-    expected: Each label anchor lies in the polygon fill or one MultiPolygon part, never in a hole or the gap between parts.
+    - Open a map with labeled concave Polygon, holed Polygon and disjoint MultiPolygon features
+    - Inspect each label after cold start, zoom changes and a style reload
+    - With old local_vector_tiles config metadata, pan across tile seams and verify one label, one direct CustomVectorSource
+      and the existing fill/outline/symbol style layers
+    expected: Each label anchor lies in the polygon fill or one MultiPolygon part, never in a hole or the gap between
+      parts.
   SMOKE-MAP-OPENGL-COMPATIBILITY:
     type: device
     scope: [app, maplibui, maplib]
@@ -510,27 +526,46 @@ tests:
     expected: Project workspaces, SQLite data, forms and unpacked NGRc tiles remain in place without manual reimport.
   SMOKE-DEBUG-UNDERLAY-MIGRATION:
     type: device
-    scope: [app, maplib, maplibui]
+    scope:
+    - app
+    - maplib
+    - maplibui
     steps:
-      - Prepare a signed 3.0.3.2 or 3.0.3.3 Debug installation with no project registry and at least two large unpacked local underlays in different TMS/OSM schemes
-      - Record the source underlay names, visibility, relative order, tile count and total source size
-      - Update Debug in place with the same debug signing certificate, wait more than 3 seconds, and verify its legacy default map still opens with original extracted folders rather than a recursive project copy or shared-catalog conversion
-      - Install the signed Geonical release, manually import and select the intended current Web GIS or local project
-      - Open Underlay storage, start Import from the old app and approve the request in Debug
-      - On Honor 400 / Android 16 transfer a large underlay; verify the status keeps updating bytes or tiles and a second tap reports that this same transfer is active rather than referring ambiguously to synchronization
-      - Stall the producer pipe long enough to cross the inactivity deadline; verify one automatic retry, a bounded failure after the second stall, partial-stage cleanup and an enabled sync button
-      - Start again, press Cancel transfer; then start again and press toolbar Back and system Back: declining the exit prompt leaves the transfer running, confirming it cancels I/O, releases UNDERLAY_MIGRATION and lets a later sync start
-      - Complete all underlays, cold-open the Geonical project, run project composition/data sync and verify the progress ring works and Debug still retains its original workspace
-    expected: >
-      Only local raster underlays enter the selected Geonical project; project/account/vector/track
-      data do not cross. Extracted tiles stream directly into one raster MBTiles file per underlay
-      without a second extracted tree or per-tile fsync, TMS/OSM rows render in the same locations,
-      names/visibility/relative order are preserved above OSM, an interrupted partial database is
-      ignored and removed, a retry creates no duplicate completed layer, visible progress distinguishes
-      a long transfer from a stalled pipe, cancellation/confirmed Back never leaves a project-operation
-      lease, declining the exit prompt keeps the transfer running, sync retains the imported underlays
-      and its progress ring remains usable, and the complete Debug source remains available for rollback
-      because the updated Debug did not convert its workspace before export.
+    - Prepare a signed 3.0.3.2 or 3.0.3.3 Debug installation with no project registry and at least two large unpacked
+      local underlays in different TMS/OSM schemes
+    - Record the source underlay names, visibility, relative order, tile count and total source size
+    - Update Debug in place with the same debug signing certificate, wait more than 3 seconds, and verify its legacy
+      default map still opens with original extracted folders rather than a recursive project copy or shared-catalog
+      conversion
+    - Install the signed Geonical release, manually import and select the intended current Web GIS or local project
+    - Open Underlay storage, start Import from the old app and approve the request in Debug
+    - On Honor 400 / Android 16 transfer a large underlay; verify the status keeps updating bytes or tiles and a second
+      tap reports that this same transfer is active rather than referring ambiguously to synchronization
+    - Stall the producer pipe long enough to cross the inactivity deadline; verify one automatic retry, a bounded
+      failure after the second stall, partial-stage cleanup and an enabled sync button
+    - Start again, press Cancel transfer; then start again and press toolbar Back and system Back: declining the exit
+        prompt leaves the transfer running, confirming it cancels I/O, releases UNDERLAY_MIGRATION and lets a later
+        sync start
+    - Complete all underlays, cold-open the Geonical project, run project composition/data sync and verify the progress
+      ring works and Debug still retains its original workspace
+    - Before bytes arrive, verify visible Opening, elapsed pulses and a reachable Cancel; then record per-phase bytes/tiles
+      and elapsed during a real large transfer
+    - After the final stream record, verify Finalizing remains visible through SQLite checkpoint, validation, hash
+      and publication, followed by Attaching; do not equate received bytes with complete migration
+    - Cancel a queued transfer before its worker starts and verify screen/lease recovery; ensure stale callbacks cannot
+      overwrite a subsequent transfer
+    - Check full Russian phase/counter text and fixed Cancel in light/dark, portrait/landscape, font1.0/1.3/2.0 with
+      effective320/280dp widths; retain screenshots and phase timings
+    expected: "Only local raster underlays enter the selected Geonical project; project/account/vector/track data\
+      \ do not cross. Extracted tiles stream directly into one raster MBTiles file per underlay without a second extracted\
+      \ tree or per-tile fsync, TMS/OSM rows render in the same locations, names/visibility/relative order are preserved\
+      \ above OSM, an interrupted partial database is ignored and removed, a retry creates no duplicate completed\
+      \ layer, visible progress distinguishes a long transfer from a stalled pipe, cancellation/confirmed Back never\
+      \ leaves a project-operation lease, declining the exit prompt keeps the transfer running, sync retains the imported\
+      \ underlays and its progress ring remains usable, and the complete Debug source remains available for rollback\
+      \ because the updated Debug did not convert its workspace before export.\n Phase/time evidence must distinguish\
+      \ stalled remote open/read from local finalization/attach. Post-change real Debug migration and its reported\
+      \ ten-minute delay are NOT_RUN; prepared session/UI regressions alone do not certify throughput or cause."
   SMOKE-HOT-RASTER:
     type: device
     scope: [app, maplib, maplibui]
@@ -1027,22 +1062,31 @@ tests:
       user-facing message and leave no incomplete layer.
   SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY:
     type: device
-    scope: [app, maplib]
-    steps: [Prepare overlapping classic and local_vector_tiles vector layers with known attributes, turn both layers off in the layer list, tap and long-press a known feature position, inspect the identify result and return to the layer list]
-    expected: The hidden local_vector_tiles feature appears in identification with its attributes while its display remains off; the hidden classic feature is not queried or listed.
+    scope:
+    - app
+    - maplib
+    steps:
+    - Prepare overlapping visible vectors with and without old local_vector_tiles metadata
+    - Turn both layers off in the layer list
+    - Tap and long-press a known technical feature position
+    - Enable one layer, repeat both selections and inspect its original attributes
+    expected: Neither hidden layer is queried/listed; the visible layer is identifiable through full original SQLite
+      attributes. Legacy rendering metadata never bypasses visibility or changes stored rows/rights.
   SMOKE-LOCAL-VECTOR-TILE-STRESS:
     type: device
-    scope: [app, maplib]
+    scope:
+    - app
+    - maplib
     steps:
-      - Open a project with a visible local_vector_tiles polygon layer containing multi-megabyte geometry payloads
-      - Repeatedly pan and zoom across tile boundaries, rotate the device, background/restore the map and trigger several style reloads for at least ten minutes
-      - Run a synchronization while continuing to move the map and inspect heap plus HyperLog
-    expected: >
-      The app stays responsive and alive without OutOfMemoryError. Worker names never exceed
-      LocalVectorTileWorker-1 and LocalVectorTileWorker-2; queued work is bounded, obsolete map
-      generations close their sockets, and temporary queue/heap pressure is reported as throttled
-      retryable requests. The layer resumes drawing after pressure falls and identify still works.
-
+    - Open a project with direct SQLite vector layers, including old local_vector_tiles metadata and multi-megabyte
+      original geometry payloads
+    - Repeatedly pan and zoom across tile boundaries, rotate the device, background/restore the map and trigger several
+      style reloads for at least ten minutes
+    - Run a synchronization while continuing to move the map and inspect heap plus HyperLog
+    expected: The app stays responsive and alive with complete visible IDs, labels and styles after pan/zoom/recreate.
+      Shared native admission is bounded, obsolete provider generations reject late delivery and resource pressure
+      never produces partial successful PBF. No loopback socket/server is opened. Native resource/performance acceptance
+      remains separate from compile/JVM.
   SMOKE-TRACK-DELIVERY:
     type: device
     scope: [app, maplib, maplibui]
@@ -1289,3 +1333,11 @@ tests:
       rejectedBEFOREC/runtime byRootguard; retainedinvalidhistory. CorrectedRAWV4 c093/64ac exactreplay/inverse78eff,
       Bridge73edf; onlymessage/helper changed. Diagnostic10 captured3pxbaselineoffset, one-line637a→0069 preservesIDs/callbacks/copy/widthlogic/all5oracles;
       finalPanel5accepted. Oldmessage89/selector37/cache29/caption5 resultsremain separatehistoricalcohorts, notrerun/resummed.
+  AUTO-DEBUG-UNDERLAY-PROGRESS:
+    type: automatic
+    scope:
+    - app
+    command: tools\verify-mobile-tests.ps1 -Scope Related -Area underlay-migration
+    expected: Current-control progress, queued cancel/lease release and complete Russian status/fixed Cancel in both
+      themes/fonts/orientations/narrow widths. Sources are compiled only; real Debug latency and transfer require
+      independent phase/throughput evidence.

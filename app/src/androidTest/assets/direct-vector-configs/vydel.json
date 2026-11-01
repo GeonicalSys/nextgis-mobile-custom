@@ -1,0 +1,777 @@
+{
+  "name": "Выдела",
+  "type": 4,
+  "max_level": 25,
+  "min_level": 13,
+  "visible": false,
+  "mobile_render_mode": "local_vector_tiles",
+  "geometry_type": 6,
+  "is_editable": false,
+  "collector_editable": false,
+  "feature_label_field": "vyd",
+  "fields": [
+    {
+      "type": 4,
+      "name": "id_",
+      "alias": "id_"
+    },
+    {
+      "type": 4,
+      "name": "district",
+      "alias": "участок"
+    },
+    {
+      "type": 4,
+      "name": "region",
+      "alias": "Субъект"
+    },
+    {
+      "type": 4,
+      "name": "stakeholders",
+      "alias": "Арендатор"
+    },
+    {
+      "type": 0,
+      "name": "dog",
+      "alias": "Договор"
+    },
+    {
+      "type": 4,
+      "name": "rforestry",
+      "alias": "Рн. лесничество"
+    },
+    {
+      "type": 4,
+      "name": "forestry",
+      "alias": "Уч. лесничество"
+    },
+    {
+      "type": 4,
+      "name": "terrain",
+      "alias": "Урочище"
+    },
+    {
+      "type": 0,
+      "name": "kvartal",
+      "alias": "Квартал"
+    },
+    {
+      "type": 0,
+      "name": "vyd",
+      "alias": "Выдел"
+    },
+    {
+      "type": 0,
+      "name": "pod_vyd",
+      "alias": "Подвыдел"
+    },
+    {
+      "type": 2,
+      "name": "area",
+      "alias": "Площадь"
+    },
+    {
+      "type": 4,
+      "name": "hozmera",
+      "alias": "Назначение"
+    },
+    {
+      "type": 0,
+      "name": "vyborka",
+      "alias": "Выборка,%"
+    },
+    {
+      "type": 4,
+      "name": "hozmera2",
+      "alias": "Назначение 2"
+    },
+    {
+      "type": 4,
+      "name": "hozmera3",
+      "alias": "Назначение 3"
+    },
+    {
+      "type": 4,
+      "name": "yar1",
+      "alias": "1 яр"
+    },
+    {
+      "type": 4,
+      "name": "sostav",
+      "alias": "Состав 1 яр"
+    },
+    {
+      "type": 4,
+      "name": "yar2",
+      "alias": "яр 2"
+    },
+    {
+      "type": 4,
+      "name": "sostav_2",
+      "alias": "Состав 2 яр"
+    },
+    {
+      "type": 4,
+      "name": "yar3",
+      "alias": "яр 3"
+    },
+    {
+      "type": 4,
+      "name": "sostav_3",
+      "alias": "Состав 3 яр"
+    },
+    {
+      "type": 0,
+      "name": "vall",
+      "alias": "Запас общий, выдел"
+    },
+    {
+      "type": 0,
+      "name": "v_cut",
+      "alias": "Выруб. запас"
+    },
+    {
+      "type": 0,
+      "name": "v",
+      "alias": "Запаса на га"
+    },
+    {
+      "type": 0,
+      "name": "v_1",
+      "alias": "Запас_1 яр"
+    },
+    {
+      "type": 0,
+      "name": "v_2",
+      "alias": "Запас_2_яр"
+    },
+    {
+      "type": 0,
+      "name": "v_3",
+      "alias": "Запас_3_яр"
+    },
+    {
+      "type": 4,
+      "name": "sp_main",
+      "alias": "Преобл. порода"
+    },
+    {
+      "type": 0,
+      "name": "bon",
+      "alias": "Бонитет"
+    },
+    {
+      "type": 4,
+      "name": "bon_index",
+      "alias": "Индекс бонитета"
+    },
+    {
+      "type": 2,
+      "name": "g1",
+      "alias": "Полнота 1 яр"
+    },
+    {
+      "type": 2,
+      "name": "g2",
+      "alias": "Полнота 2 яр"
+    },
+    {
+      "type": 4,
+      "name": "type_les",
+      "alias": "Тип леса"
+    },
+    {
+      "type": 4,
+      "name": "type_les_full",
+      "alias": "Тип леса полн."
+    },
+    {
+      "type": 4,
+      "name": "grtypeles",
+      "alias": "Группа типов леса"
+    },
+    {
+      "type": 4,
+      "name": "grtypeles_full",
+      "alias": "Гр. типов леса полн"
+    },
+    {
+      "type": 4,
+      "name": "tlu",
+      "alias": "ТЛУ"
+    },
+    {
+      "type": 4,
+      "name": "type_vyrub",
+      "alias": "Тип вырубки"
+    },
+    {
+      "type": 4,
+      "name": "type_vyrub_f",
+      "alias": "Тип вырубки полн."
+    },
+    {
+      "type": 4,
+      "name": "sost_podr",
+      "alias": "Состав подроста"
+    },
+    {
+      "type": 0,
+      "name": "h_podr",
+      "alias": "Высота подроста"
+    },
+    {
+      "type": 2,
+      "name": "n_podr",
+      "alias": "Количество подроста"
+    },
+    {
+      "type": 0,
+      "name": "a_podr",
+      "alias": "Возраст_подроста"
+    },
+    {
+      "type": 0,
+      "name": "k1",
+      "alias": "коэф 1"
+    },
+    {
+      "type": 4,
+      "name": "sp1",
+      "alias": "Пор 1"
+    },
+    {
+      "type": 0,
+      "name": "a1",
+      "alias": "Возр_преобл._ породы"
+    },
+    {
+      "type": 0,
+      "name": "h1",
+      "alias": "Выс 1"
+    },
+    {
+      "type": 0,
+      "name": "d1",
+      "alias": "Диам 1"
+    },
+    {
+      "type": 0,
+      "name": "tov1",
+      "alias": "Тов 1"
+    },
+    {
+      "type": 0,
+      "name": "m1",
+      "alias": "Запас 1"
+    },
+    {
+      "type": 0,
+      "name": "k2",
+      "alias": "Коэф 2"
+    },
+    {
+      "type": 4,
+      "name": "sp2",
+      "alias": "Пор 2"
+    },
+    {
+      "type": 0,
+      "name": "a2",
+      "alias": "Возр 2"
+    },
+    {
+      "type": 0,
+      "name": "h2",
+      "alias": "Выс 2"
+    },
+    {
+      "type": 0,
+      "name": "d2",
+      "alias": "Диам 2"
+    },
+    {
+      "type": 0,
+      "name": "tov2",
+      "alias": "Тов 2"
+    },
+    {
+      "type": 0,
+      "name": "m2",
+      "alias": "Запас 2"
+    },
+    {
+      "type": 0,
+      "name": "k3",
+      "alias": "Коэф 3"
+    },
+    {
+      "type": 4,
+      "name": "sp3",
+      "alias": "Пор 3"
+    },
+    {
+      "type": 0,
+      "name": "a3",
+      "alias": "Возр 3"
+    },
+    {
+      "type": 0,
+      "name": "h3",
+      "alias": "Выс 3"
+    },
+    {
+      "type": 0,
+      "name": "d3",
+      "alias": "Диам 3"
+    },
+    {
+      "type": 0,
+      "name": "tov3",
+      "alias": "Тов 3"
+    },
+    {
+      "type": 0,
+      "name": "m3",
+      "alias": "Запас 3"
+    },
+    {
+      "type": 0,
+      "name": "k4",
+      "alias": "Коэф 4"
+    },
+    {
+      "type": 4,
+      "name": "sp4",
+      "alias": "Пор 4"
+    },
+    {
+      "type": 0,
+      "name": "a4",
+      "alias": "Возр 4"
+    },
+    {
+      "type": 0,
+      "name": "h4",
+      "alias": "Выс 4"
+    },
+    {
+      "type": 0,
+      "name": "d4",
+      "alias": "Диам 4"
+    },
+    {
+      "type": 0,
+      "name": "tov4",
+      "alias": "Тов 4"
+    },
+    {
+      "type": 0,
+      "name": "m4",
+      "alias": "Запас 4"
+    },
+    {
+      "type": 0,
+      "name": "k5",
+      "alias": "Коэф 5"
+    },
+    {
+      "type": 4,
+      "name": "sp5",
+      "alias": "Пор 5"
+    },
+    {
+      "type": 0,
+      "name": "a5",
+      "alias": "Возр 5"
+    },
+    {
+      "type": 0,
+      "name": "h5",
+      "alias": "Выс 5"
+    },
+    {
+      "type": 0,
+      "name": "d5",
+      "alias": "Диам 5"
+    },
+    {
+      "type": 0,
+      "name": "tov5",
+      "alias": "Тов 5"
+    },
+    {
+      "type": 0,
+      "name": "m5",
+      "alias": "Запас 5"
+    },
+    {
+      "type": 0,
+      "name": "k6",
+      "alias": "Коэф 6"
+    },
+    {
+      "type": 4,
+      "name": "sp6",
+      "alias": "Пор 6"
+    },
+    {
+      "type": 0,
+      "name": "a6",
+      "alias": "Возр 6"
+    },
+    {
+      "type": 0,
+      "name": "h6",
+      "alias": "Выс 6"
+    },
+    {
+      "type": 0,
+      "name": "d6",
+      "alias": "Диам 6"
+    },
+    {
+      "type": 0,
+      "name": "tov6",
+      "alias": "Тов 6"
+    },
+    {
+      "type": 0,
+      "name": "m6",
+      "alias": "Запас 6"
+    },
+    {
+      "type": 0,
+      "name": "k7",
+      "alias": "Коэф 7"
+    },
+    {
+      "type": 4,
+      "name": "sp7",
+      "alias": "Пор 7"
+    },
+    {
+      "type": 0,
+      "name": "a7",
+      "alias": "Возр 7"
+    },
+    {
+      "type": 0,
+      "name": "h7",
+      "alias": "Выс 7"
+    },
+    {
+      "type": 0,
+      "name": "d7",
+      "alias": "Диам 7"
+    },
+    {
+      "type": 0,
+      "name": "tov7",
+      "alias": "Тов 7"
+    },
+    {
+      "type": 0,
+      "name": "m7",
+      "alias": "Запас 7"
+    },
+    {
+      "type": 0,
+      "name": "k8",
+      "alias": "Коэф 8"
+    },
+    {
+      "type": 4,
+      "name": "sp8",
+      "alias": "Пор 8"
+    },
+    {
+      "type": 0,
+      "name": "a8",
+      "alias": "Возр 8"
+    },
+    {
+      "type": 0,
+      "name": "h8",
+      "alias": "Выс 8"
+    },
+    {
+      "type": 0,
+      "name": "d8",
+      "alias": "Диам 8"
+    },
+    {
+      "type": 0,
+      "name": "tov8",
+      "alias": "Тов 8"
+    },
+    {
+      "type": 0,
+      "name": "m8",
+      "alias": "Запас 8"
+    },
+    {
+      "type": 0,
+      "name": "k9",
+      "alias": "Коэф 9"
+    },
+    {
+      "type": 4,
+      "name": "sp9",
+      "alias": "Пор 9"
+    },
+    {
+      "type": 0,
+      "name": "a9",
+      "alias": "Возр 9"
+    },
+    {
+      "type": 0,
+      "name": "h9",
+      "alias": "Выс 9"
+    },
+    {
+      "type": 0,
+      "name": "d9",
+      "alias": "Диам 9"
+    },
+    {
+      "type": 0,
+      "name": "tov9",
+      "alias": "Тов 9"
+    },
+    {
+      "type": 0,
+      "name": "m9",
+      "alias": "Запас 9"
+    },
+    {
+      "type": 0,
+      "name": "ageclass",
+      "alias": "Кл возраста"
+    },
+    {
+      "type": 0,
+      "name": "cut_age",
+      "alias": "Кл_возр_рубки"
+    },
+    {
+      "type": 0,
+      "name": "age_group",
+      "alias": "Группа_возр"
+    },
+    {
+      "type": 4,
+      "name": "podlesok",
+      "alias": "Подлесок"
+    },
+    {
+      "type": 4,
+      "name": "ozu",
+      "alias": "ОЗУ"
+    },
+    {
+      "type": 4,
+      "name": "oopt",
+      "alias": "ООПТ"
+    },
+    {
+      "type": 4,
+      "name": "kat_zemel",
+      "alias": "Кат земель"
+    },
+    {
+      "type": 0,
+      "name": "lk_year",
+      "alias": "Год_лк"
+    },
+    {
+      "type": 4,
+      "name": "pochva",
+      "alias": "Подг_почвы"
+    },
+    {
+      "type": 4,
+      "name": "sposob",
+      "alias": "Способ_лк"
+    },
+    {
+      "type": 0,
+      "name": "posmest",
+      "alias": "Кол посад. мест"
+    },
+    {
+      "type": 4,
+      "name": "done_hozm",
+      "alias": "Выполн_хозмера"
+    },
+    {
+      "type": 0,
+      "name": "year_hozm",
+      "alias": "Год_хозмеры"
+    },
+    {
+      "type": 0,
+      "name": "year_cut",
+      "alias": "Год_рубки"
+    },
+    {
+      "type": 4,
+      "name": "origin",
+      "alias": "Происхождение"
+    },
+    {
+      "type": 4,
+      "name": "protect",
+      "alias": "Категория защитности"
+    },
+    {
+      "type": 4,
+      "name": "hozsek",
+      "alias": "Хозсекция"
+    },
+    {
+      "type": 4,
+      "name": "sost_lk",
+      "alias": "Состояние_лк"
+    },
+    {
+      "type": 4,
+      "name": "neud_lk",
+      "alias": "Причины_неуд_лк"
+    },
+    {
+      "type": 4,
+      "name": "inform",
+      "alias": "Доп. информация"
+    },
+    {
+      "type": 0,
+      "name": "xlam",
+      "alias": "Захламленность"
+    },
+    {
+      "type": 0,
+      "name": "suhos",
+      "alias": "Сухостой"
+    },
+    {
+      "type": 4,
+      "name": "grass",
+      "alias": "Травяной покров"
+    },
+    {
+      "type": 4,
+      "name": "swamp",
+      "alias": "Болото"
+    },
+    {
+      "type": 4,
+      "name": "swampgrass",
+      "alias": "Раст-ть на болоте"
+    },
+    {
+      "type": 4,
+      "name": "swamptree",
+      "alias": "Деревья на болоте"
+    },
+    {
+      "type": 0,
+      "name": "swamptreep",
+      "alias": "Покрытие древ. раст. на болоте"
+    },
+    {
+      "type": 0,
+      "name": "torf",
+      "alias": "Торф"
+    },
+    {
+      "type": 0,
+      "name": "fireclass",
+      "alias": "Кл_пож_оп"
+    },
+    {
+      "type": 0,
+      "name": "pinm",
+      "alias": "Сосна"
+    },
+    {
+      "type": 0,
+      "name": "picm",
+      "alias": "Ель"
+    },
+    {
+      "type": 0,
+      "name": "betm",
+      "alias": "Береза"
+    },
+    {
+      "type": 0,
+      "name": "popm",
+      "alias": "Осина"
+    },
+    {
+      "type": 0,
+      "name": "alnm",
+      "alias": "Ольха"
+    },
+    {
+      "type": 0,
+      "name": "salm",
+      "alias": "Ива"
+    },
+    {
+      "type": 0,
+      "name": "hv_other_m",
+      "alias": "Запас прочих хвойных"
+    },
+    {
+      "type": 0,
+      "name": "listv_other_m",
+      "alias": "Запас прочих листв"
+    },
+    {
+      "type": 2,
+      "name": "meanxlist",
+      "alias": "Ср_об_хлыста"
+    },
+    {
+      "type": 4,
+      "name": "externalid",
+      "alias": "Учетный номер ФГИС"
+    },
+    {
+      "type": 4,
+      "name": "cut_cat",
+      "alias": "Категория рубок"
+    },
+    {
+      "type": 0,
+      "name": "check_podvydel",
+      "alias": "Наличие подвыделов"
+    }
+  ],
+  "renderer_properties": {
+    "name": "SimpleFeatureRenderer",
+    "style": {
+      "width": 3,
+      "color": -1,
+      "out_color": -16777216,
+      "alpha": 0,
+      "out_alpha": 14,
+      "scale_size_with_zoom": true,
+      "fill": true,
+      "name": "SimplePolygonStyle",
+      "text_size": 1,
+      "text_color": -7697782,
+      "text_scale_with_zoom": true
+    }
+  },
+  "ngw_version_major": 5,
+  "ngw_version_minor": 5,
+  "sync_type": 1,
+  "server_where": "",
+  "tracked": false,
+  "crs": 3857,
+  "sync_direction": 2
+}

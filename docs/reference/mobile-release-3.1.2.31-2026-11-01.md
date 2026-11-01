@@ -9,6 +9,20 @@ related_code:
   - tools/verify-mobile-tests.ps1
 ---
 
+## Актуальное состояние2ноября
+
+Source preparation сохранена в Draft app89 и library66/48. Новые loopback
+removal, Debug phase/cancel и warning layout fixes скомпилированы; main3variants,
+unit/native test sources и static docs/report/routing PASS. Это не выполненные
+регрессии. По поручению владельца все новые tests/live отложены; старые FAIL,
+реальный Debug transfer и root canonical4refs остаются открытыми.
+Baseline b165 signed APK held, публикации не было.
+Точное продолжение и storage disposition: [handoff](../handoffs/2026-11-01-mobile-release-31231.md).
+
+Ниже — исторические свидетельства исходного b165 запуска; они не являются
+приёмкой current-source follow-up.
+
+
 # Подготовка 3.1.2.31/225
 
 Текущий статус: версии и Git-доставка закрыты, подписанные кандидаты собраны;
@@ -100,6 +114,7 @@ GitHub Actions не запускались.
 | Локальная доставка диагностики | Все9 phases PASS, включая expected fatal, offline replay и503 retry |
 | A56 SQLite | Все11 адресных сценариев PASS |
 | Software SQLite Related | 8 PASS/3 FAIL из11; source generation, priority pixels, MultiPoint custom marker; причины расследуются |
+| Editing source Related | Оба прежних source-readiness FAIL прошли после проверки actual current provider/CustomVectorSource; остальные assertions сохранены |
 | A56 cold render stress | PASS:90.313s,60pan/21pinch/2recreate,3545frames;0missing/invalid/unexpected IDs |
 | Software cold render stress | FAIL:1911 missing IDs в большом слое;0missing в малом; actual SwiftShader,1264frames, причина ещё не установлена |
 | Publisher | 32 unit tests PASS; dry-run NOT_RUN до допуска публикации |
@@ -132,7 +147,7 @@ workload, не доказательство ресурсоёмкости все�
 console и завершён его процесс. Четыре отслеживаемых новых qcow2-файла на Q
 отсутствуют при readback; свободное место выросло примерно на1.9GiB.
 Рабочий телефонный package остаётся3.1.2.30/224; release кандидат не установлен.
-Сейчас на неизменном source fingerprint выполняется адресный software
+На том историческом source fingerprint был выполнен адресный software
 `Related -Area sqlite-render -SkipBuild`, использующий уже имеющийся расширенный
 PBF/provider diagnostic collector. Это самостоятельный разбор различия с A56,
 не повтор Full и не исправление ранее полученного FAIL.
@@ -169,4 +184,4 @@ tool policy до запуска PowerShell, без созданных probe file
 отказа. Старые emulator qcow2 других запусков не удалялись по возрасту или имени.
 Full receipts, observed-failures и scope/stop readback хранятся в owned evidence
 на Q; пути и состояние перечислены в handoff. До закрытия расследования state
-storage manifest остаётся active, результаты не объявляются completed ради pruning.
+storage manifest теперь held до новой live команды; выпуск не объявлен completed ради pruning.

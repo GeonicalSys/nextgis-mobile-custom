@@ -37,3 +37,24 @@ class StyleEvidenceTest(unittest.TestCase):
         result,calls=self.collect({'whole-word.png':PNG,'../outside.png':PNG},folder='line-label-qa')
         self.assertEqual(['line-label-qa/whole-word.png'],[image['path'] for image in result])
         self.assertFalse(any('outside' in args[-1] for args in calls))
+
+    def test_retains_only_the_allowlisted_json_object_with_existing_pngs(self):
+        result,calls=self.collect({'classic-binding.json':b'{"source":"CustomVectorSource"}',
+                                  'native.png':PNG,'private.json':b'{"other":1}',
+                                  '../classic-binding.json':b'{"other":1}'},folder='firefly-qa')
+        self.assertEqual(['firefly-qa/classic-binding.json','firefly-qa/native.png'],
+                         [item['path'] for item in result])
+        self.assertFalse(any('private.json' in args[-1] or '../' in args[-1] for args in calls))
+
+    def test_json_is_rejected_outside_its_folder_or_with_invalid_content(self):
+        result,_=self.collect({'classic-binding.json':b'{"source":"wrong folder"}'})
+        self.assertEqual([],result)
+        for data in (b'not JSON',b'["not an object"]',b'{"bad":\xff}'):
+            result,_=self.collect({'classic-binding.json':data},folder='firefly-qa')
+            self.assertEqual([],result)
+
+    def test_json_size_is_bounded_before_reading(self):
+        result,calls=self.collect({'classic-binding.json':b'{"source":"x"}'},
+                                  {'classic-binding.json':65537},folder='firefly-qa')
+        self.assertEqual([],result)
+        self.assertFalse(any(args[0]=='cat' for args in calls))

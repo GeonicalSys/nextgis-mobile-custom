@@ -1,7 +1,7 @@
 ---
 title: Настройки и конфигурационные ключи
 type: reference
-last_verified: 2026-10-28
+last_verified: 2026-11-02
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -247,12 +247,11 @@ Restart fallback на API30+ также пробует ограниченный 
   карты и `TrackerService` в одном основном процессе, чтобы Start/Stop не
   расходились из-за межпроцессного кэша SharedPreferences.
 
-`mobile_render_mode: "local_vector_tiles"` применяется только как явный opt-in:
-для read-only polygon/multipolygon либо простого `Point` с круговым маркером
-`MarkerStyleCircle` (`type = 2`) и
-подписью из одного поля/фиксированного текста. Неподдерживаемый точечный стиль,
-rule renderer, custom icon, template или editable слой автоматически остаётся
-на classic rendering.
+`mobile_render_mode: "local_vector_tiles"` и `layer_origin.render_mode`
+сохраняются для чтения старого JSON, но не выбирают renderer или identify.
+Обычные Simple/Field Rule векторы рисуются прямыми SQLite тайлами. Схема, поля,
+geometry/FID, editable/sync policy и JSON-происхождение не переписываются;
+выключенные слои исключаются из tap/long-press независимо от old render flag.
 
 `feature_label_field` — верхнеуровневое поле `config.json`, которое задаёт
 отображаемое имя объекта в верхней панели, таблице атрибутов и списке выбора,

@@ -5,7 +5,7 @@ last_verified: 2026-10-24
 related_code:
   - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java
-  - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleTileFallbackTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
   - tools/mobile-test-plan.json
   - tools/mobile_style_evidence.py
 ---
@@ -158,3 +158,7 @@ push оценивается отдельно. Full, merge и публикаци�
 log/result и сведения graphics host сохранены компактно; собственная распаковка
 артефакта удалена с проверкой хешей сохранённых файлов и отсутствия исходного
 каталога (28 994 909 bytes). Квитанция — evidence/ci-download-cleanup.json.
+
+Текущие source links обновлены2ноября после удаления HTTP renderer.
+Исторические результаты выше относятся к указанному тогда source и не
+принимают новый DirectVectorTilesTest; новая live матрица NOT_RUN.

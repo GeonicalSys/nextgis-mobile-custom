@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-10-29
+last_verified: 2026-11-02
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -193,13 +193,12 @@ renderer для непустого запроса не установлена. S
 [NGW/storage](ngw-sync-and-storage.md).
 [Свидетельства и проверки MOB-02](../reference/mobile-crash-224-2026-10-27.md).
 
-SDK MapLibre разрешает HTTP transport даже без внешней сети: локальные SQLite
-тайлы поступают через HTTP loopback LocalVectorTileServer. Глобальный SDK
-Offline иначе откладывает и эти запросы. Это override только SDK transport;
-NetworkUtil и WorkManager сохраняют фактическое состояние Android сети.
-Внешние URL карты без сети могут получить transport error и backoff SDK.
-Native offline regression выключает оба радио только owned AVD, проверяет
-отрисовку MVT и живой переход к classic Firefly и восстанавливает радио.
+Обычные векторы читаются напрямую из SQLite через CustomVectorSource; HTTP
+сервер и принудительный MapLibre.setConnected(true) удалены. Сохранённые
+mobile_render_mode/local origin читаются как старые metadata и не выбирают
+renderer или identify. SDK, NetworkUtil и WorkManager видят фактическую сеть.
+DirectVectorTilesTest готовит offline-проверку подписей и пикселей на owned AVD
+с восстановлением радио. После удаления сервера её выполнение ещё NOT_RUN.
 
 Перед уничтожением MapView host отправляет ACTION_CANCEL прямо в SDK после
 снятия edit touch listener. Это завершает ожидающие single-tap/long-press
@@ -228,7 +227,7 @@ Point/MultiPoint группы вместе с их подписями наход
 
 ## Штриховки и расширенный контур
 
-[Контракт нового пакета](polygon-style-controls.md): необязательные параметры сохраняют прежний вид старых полигонов. Узоры получают отдельные цвет/alpha и бесшовную решётку; расширенный контур рисуется штатными children. Настроенный MVT-слой с новыми параметрами переходит к classic fallback. Native образец в редакторе использует те же фабрики, без сети и рабочей карты.
+[Контракт нового пакета](polygon-style-controls.md): необязательные параметры сохраняют прежний вид старых полигонов. Узоры получают отдельные цвет/alpha и бесшовную решётку; расширенный контур рисуется штатными children прямого SQLite source. Native образец в редакторе использует те же фабрики, без сети и рабочей карты.
 
 `PatternTilePeriod` сохраняет исходную512×512ARGB решётку и уменьшает bitmap
 только до точного прямоугольного повторяемого мотива, проверенного по каждому
@@ -292,11 +291,10 @@ map-bearing стрелку, расстояние, точность и звук. 
 Touch queries marker/vertex/azimuth проходят через MapRuntimeDiagnostics:
 перед синхронным SDK вызовом записывается trace, независимый watcher фиксирует
 ожидание, finally завершает trace при результате или исключении. Native вызов
-сохраняет поток и прежнее поведение. LocalVectorTileServer диагностирует
-queue wait, layer-lock wait, запрос IDs, чтение/обрезку features и MVT encoding;
-503 указывает точную причину и request id. Два workers, очередь16 и прежний
-heap headroom64MiB дополняются фактическим system/Java admission и fair gate;
-подробности ниже. [Контракт диагностики](error-reporting.md).
+сохраняет поток и прежнее поведение. Прямой SQLite путь имеет отдельные bounded
+phase/counter scopes для admission, layer lock, SQL, clipping и PBF. Старые
+HTTP diagnostic records остаются читаемыми для отложенных отчётов прежних APK;
+новый сервер или socket очередь не создаются. [Контракт диагностики](error-reporting.md).
 
 Панели и инструменты карты адаптируются к font/display scale по [контракту UI](ui-accessibility.md). Компас/GNSS HUD освобождают место на низком экране; азимут располагается под toolbar/компасом слева от инструментов, значения статуса переносятся. View transforms вписывают панели и доставляют touch к отображаемым действиям; MapView сохраняет свою геометрию.
 
@@ -429,44 +427,20 @@ ContentProvider и mutable cache `TrackLayer` ([контракт](shared-tracks.
     ещё не прочитаны, и запись частичного `config.json` недопустима.
     Все публичные чтения/изменения `GeometryRTree` сериализованы; `tighten()` не
     скрывает `ConcurrentModificationException` после обнуления envelope.
-14. `local_vector_tiles` сохраняет тот же style-order contract. Помимо
-    polygon/multipolygon, локальный `VectorSource` допускается для read-only
-    `GTPoint` только с простым круговым маркером и подписью из одного поля либо
-    фиксированного текста. Rule-style, custom icon, label template, editable и
-    прочие геометрии остаются на classic `GeoJsonSource` fallback. Loopback-
-    сервер ограничен двумя worker и очередью16; тайлы одного слоя строятся
-    последовательно. Fair two-permit gate сохраняет два builder при нормальных
-    ресурсах, а при малом измеренном свободном system/Java остатке один builder
-    занимает оба permits. Устаревшая очередь закрывается при смене поколения,
-    старые активные запросы проверяют отмену. Coarse prefetch local MVT выключен,
-    source volatile. Полные derived PBF read-only источников кэшируются приватно
-    в пределах32/128MiB,1024 файлов и4MiB на запись; ключ process/map/content/style
-    исключает старый source. Это не межпроцессный reuse и не native swap file.
-    Нехватка памяти/перегрузка даёт явный retryable503, без новых потоков,
-    изменения rendering mode или неполного200/кэша. Текущий успешный тайл содержит
-    все подходящие объекты с прежними MVT clipping/encoding, без ID thinning.
-    Сам ответ503 не доказывает восстановление SDK тайла после освобождения RAM;
-    этот переход — отдельный native gate.
-    Подпись квартала вычисляется по исходному Polygon/MultiPolygon до clipping:
-    одна внутренняя точка на наибольшей пригодной части с учётом отверстий.
-    Полигональные фрагменты остаются без `signature`; единственная служебная
-    Point запись `_label_anchor=true` с исходным ID и текстом входит в тот же
-    MVT `features` только у owner tile (без buffer, границы east/south включаются
-    ровно один раз). Прежние FillLayer/LineLayer фильтруют Polygon, SymbolLayer
-    фильтрует label anchor. Дополнительных объектных слоёв, sources или native
-    style layers нет; коллекция внутренних точек всего слоя не загружается.
-    После округления в сетку MVT точка повторно проверяется на строгое попадание
-    внутрь исходного полигона. На зуме без представимой внутренней точки подпись
-    пропускается; вне текущего экрана позиция не переносится. Расчёт выполняется
-    из актуальной прочитанной геометрии, без stale anchor cache.
-    Соседние тайлы вычисляют общий край идентичным выражением: накопление
-    floating-point ошибки через `min + tileSize` не создаёт перекрытий owner
-    bounds. Повторяющиеся IDs пространственного индекса дедуплицируются до
-    чтения/обрезки/генерации подписей.
-    После bbox-запроса генератор не отбрасывает полигон по legacy пересечению
-    его колец с envelope: тайл может целиком лежать внутри квартала. Отсечение
-    обрабатывает такие тайлы наряду с пересечением границ; native regression
-    проверяет сохранность заливки и подписи при увеличении с зума 12 до 13.
+14. Обычные Simple/Field Rule векторы всех шести геометрий используют прямой
+    SQLite CustomVectorSource. Старый local_vector_tiles хранится как metadata,
+    но не выбирает renderer; HTTP server/provider/encoder и URL factories удалены.
+    Shared admission допускает два native IO builder, при измеренном дефиците
+    fair gate сериализует полные builds. Cache остаётся derived PBF с прежними
+    byte/file/entry/current guards. Отмена/смена поколения отвергает late result;
+    partial successful PBF, ID thinning и simplification запрещены.
+    Подписи полигонов остаются inline Point anchors одного source-layer features
+    с исходным FID, owner tile, полной исходной геометрией и учётом отверстий.
+    Fill/Line фильтруют Polygon, Symbol — anchor; отдельного объектного source нет.
+    Незнакомые custom renderer extensions имеют только явный classic converter.
+    DirectVectorTilesTest сохраняет old-config/schema/rights/full-row, live edit,
+    offline single-label и glyph/fill/outline assertions; пока compile-only.
+
 15. Completion пакетного fill означает не «full reload был поставлен в очередь»,
     а «новый MapLibre style применён и каждый видимый vector layer имеет source
     и хотя бы основной либо symbol style layer». До этой проверки application
@@ -590,11 +564,10 @@ ContentProvider и mutable cache `TrackLayer` ([контракт](shared-tracks.
     координат внутри них. Последующий untracked sync пропускает отдельную
     отсутствующую или невалидную геометрию, сохраняет её remote ID от ошибочного
     локального удаления и продолжает единый SQLite-apply остальных объектов.
-24. Выключенный слой с сохранённым render mode `local_vector_tiles` продолжает
-    участвовать в tap/long-press identify через локальную SQLite/R-tree копию,
-    не включая MapLibre source и не меняя visibility. Выключенный классический
-    vector layer по-прежнему пропускается. Решение централизовано в
-    `LayerIdentifyPolicy` и одинаково для всех активных веток identify.
+24. Tap/long-press identify включает только видимые векторные слои.
+    `LayerIdentifyPolicy` больше не делает исключение для старого
+    `local_vector_tiles`: render metadata не является правом выбора скрытого
+    объекта. Данные, поля, editing/sync policy и локальные оригиналы сохраняются.
 25. MapLibre Android `13.7.1` разрешается только через явный артефакт
     `org.maplibre.gl:android-sdk-opengl` одновременно в `app`, `maplibui` и
     `maplib`. Generic `org.maplibre.gl:android-sdk` этой major-версии использует
@@ -693,7 +666,13 @@ ContentProvider и mutable cache `TrackLayer` ([контракт](shared-tracks.
     блокировать последующий sync. Pre-registry Debug сохраняет исходную карту и
     папки тайлов до явного экспорта: фоновая shared-catalog migration там не
     запускается. Пользователь запускает этот перенос из «Хранилище подложек»,
-    а не с экрана проекта.
+    а не с экрана проекта. Теперь отдельные этапы OPENING/RECEIVING/FINALIZING/
+    ATTACHING/STALLED и elapsed текущей попытки показываются в прокручиваемом
+    статусе с фиксированной Cancel. После stream complete watchdog продолжает
+    heartbeat/progress до close, не применяя remote inactivity к local finalize.
+    Поздний PFD после timeout закрывается; queued cancel освобождает lease,
+    stale/canceled callbacks не меняют новый экран. Причина жалобы о10мин ожидания
+    пока UNKNOWN; session/UI регрессии скомпилированы, реальный перенос NOT_RUN.
 
 IDs: `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`, `INV-NO-TRACK-FLAGS`,
 `INV-NGRC-PRESERVE`, `INV-LOCATION-CURSOR-TOP`, `INV-DEFAULT-OSM-BOTTOM`,
@@ -991,3 +970,23 @@ TrackSelectionPanel переиспользует те же views/listeners пр�
 MapControlRail и ResponsiveMapLayout определяют оставшееся пространство; внешний
 FittedPanelLayout может уменьшить весь stack. Панельные CPU-font bounds не принимают
 это whole-window преобразование, GPU, actual touch/OEM или установленный APK.
+
+## Native validation выпуска3.1.2.31 — 2 ноября2026
+
+Ordinary SQLite source имеет actual generation ID, отдельный от сохранённого
+layer path. Два MapEditingToolsTest теперь ждут current provider и stock
+CustomVectorSource по getVectorRenderSourceId; исходные form/category/gesture/
+Undo assertions сохранены и оба сценария прошли. Tap tolerance, gesture routing,
+геометрия, камера и renderer этим не меняются.
+
+Cursor stack восстанавливают structural operations. LocationOrbitTest добавляет
+настоящий technical VectorLayerUI через public map API, сохраняя внешний SDK
+BackgroundLayer; current source и полный stack проверяются до cleanup. Не
+требуется O(layer count) перестройка при каждом heading sample. Последующая
+проверка пикселя курсора на software emulator остаётся FAIL, хотя stack прошёл.
+Это не доказанная причина в GPU/SDK и не исправление native pixel результата.
+
+Единственная product правка follow-up относится к сообщению памяти:
+ScrollableAlertDialogs резервирует полные действия прежде scroll viewport.
+Resource policy, geometries, caches, source binding и tap/edit handlers прежние.
+Результаты и ограничения: [release evidence](../reference/mobile-release-3.1.2.31-2026-11-01.md).
