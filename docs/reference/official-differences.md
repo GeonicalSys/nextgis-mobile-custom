@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-10-30
+last_verified: 2026-11-01
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,21 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Вложения: terminal404 и публикация кеша — 2026-11-01
+
+Адресно проверен официальный `nextgis/easypicker` на
+[9d783d368b408b59f6ac5931291c948595925739](https://github.com/nextgis/easypicker/blob/9d783d368b408b59f6ac5931291c948595925739/easypicker/src/main/java/com/keenfin/easypicker/DownloadPhotoIntentService.java):
+именованный service возвращает404 без terminal callback из handler и пишет
+поток прямо под конечным именем. Fork fix завершает404 с исходным статусом
+и публикует собственный staging после200/close через atomic move без copy
+fallback. Старый final и соседние файлы сохраняются при failure.
+
+Сравнение ограничено этим source file; это не whole official App/runtime
+comparison. Семь owning-library JVM-регрессий дают7 RED→7 GREEN; они не
+проверяют устройство/GUI/сервер. Исправление пока принадлежит library delivery,
+а App adoption требует её merge и отдельного gitlink update. Legacy corrupt
+cache и полная integrity/silent-truncated200 проверка не добавлены.
 
 ## Отдельный prefetch reader NGFP — 2026-10-30
 

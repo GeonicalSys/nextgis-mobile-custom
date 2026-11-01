@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-10-30
+last_verified: 2026-11-01
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
@@ -214,6 +214,31 @@ units/CRS/freshness, сохранённым состоянием и незави
 ловят потерю/переназначение reviewed methods и source fragments. Пробелы и
 неисполненная runtime матрица явные; missing contract агент исследует и сохраняет
 в этой же задаче. Исторический source review не равен полной приёмке интерфейса.
+
+
+Срез source/docs01.11 в прежнем MOB-UI-01 разделяет стандартный и NGFP
+контролы даты: UI-FORM-DATE-STANDARD-VALUE/UI-FORM-DATE-NGFP-VALUE.
+Подтверждены отдельные selector namespaces, millisecond/state/default/null
+и ContentValues boundaries; UTC-midnight DATE, фиксированный TIME baseline,
+actual zone/locale, private формы и native Cancel не объявлены проверенными.
+В owning каталоге добавлены2контракта/22method guards/5file witnesses;
+старые44контракта/191guards/64XMLwidgets/49file witnesses сохранены.
+Root LISA Draft278 содержит сквозную карту; app delivery остаётся отдельной
+собственной docs-веткой/Draft, не merge/APK. Product fixes/ranking/native
+не выполняются; приоритеты и очередь MOB не меняются. Свидетельства source-only
+и результаты actual validators/delivery фиксируются в карточке и PR отдельно.
+
+
+Продолжение source/docs01.11 в прежнем MOB-UI-01: UI-FORM-CHECKBOX-NGFP-VALUE
+разделяет NGFP Checkbox, Boolean state/cache, Integer0/1 getter и обычный
+FTInteger TextEdit/String. Значения NULL/empty, absent control и выбранный
+present-checkbox copy-retention gate различаются. Добавлены1контракт,11новых
+method guards и4file witnesses;11старых guards переиспользуются. Старые
+Date46/213/64/54 записи сохранены; projected47/224/64/58 подтверждаются
+actual catalog/validator receipts после применения. Source7records/4routes
+и98passive metadata checks не являются native tests или currenttenant proof.
+Это та же own app Draft87 и LISA Draft278, без изменения очереди/приоритетов.
+Product fixes/ranking/native NOT_RUN; merge/APK отдельно от source доставки.
 
 ## MOB-02 Самостоятельное обнаружение и сохранение зависимостей
 
@@ -798,3 +823,57 @@ Device/Related/Full/AVD/Office/PG/Wiki не возобновляются.
 Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.
 
 Baseline23=18assertFAIL5controls/0errors/skips:13missingShareID assertionsacrossBinding8/Panel5 arefeatureabsence, NOTproofoldstalelaunchbugs; Exporter5XML/pathcounterexamples+5controls independentlydemonstrateactualdefects. Firstgreen23=19PASS4PaneloverlapFAIL, XML11.393s,Gradle1; nofullPASS. DiagnosticV3 9ec/523f LFops/CRLFcandidate rejectedBEFOREC/runtime byRootguard; retainedinvalidhistory. CorrectedRAWV4 c093/64ac exactreplay/inverse78eff, Bridge73edf; onlymessage/helper changed. Diagnostic10 captured3pxbaselineoffset, one-line637a→0069 preservesIDs/callbacks/copy/widthlogic/all5oracles; finalPanel5accepted. Oldmessage89/selector37/cache29/caption5 resultsremain separatehistoricalcohorts, notrerun/resummed.
+
+
+## MOB-SYNC-01 Подтверждённые source fixes: вложения и class metadata
+
+Текущий порядок задан явным поручением владельца01.11: завершить начатые audit
+blocks и исправить подтверждённые ошибки прежде новых audit frontiers. Это
+адресная доработка, не автоматическое возобновление paused native stages.
+
+Состояние: implementation/source regression подготовлены в отдельных library
+branches; commits/связанные Draft PR и merge фиксируются по фактической доставке.
+App87 пока сохраняет прежние library gitlinks, поэтому не объявляется исправленным.
+
+- Attachment failure state: sole404 завершает matching work marker; request-owned
+  staging публикуется после завершённого200/close через atomic move без copy
+  fallback. Failure сохраняет прежний final и соседние файлы. Одинаковый final
+  fixture: old source7 assertion FAIL/0ERROR/0skip → fixed7PASS/0/0/0, XML2.703s.
+- Class-only schema metadata: известная смена vector/PostGIS class не должна
+  теряться при совпадающих geometry/SQLite fields. Отдельный owning maplib
+  пакет: 14GREEN (11новых+3прежних); runtime/currenttenant не доказывается.
+- MOB-UI-01 сохраняет source meaning: добавлен attachment UI contract, а прежний
+  typed HTTP fetch guard уточнён до двух неизменных overload с сохранением всей
+  старой whole-file evidence в history. Existing expectations/checker не менялись.
+
+Доставка: library Merge Commit → fetch удалённых merge commits → App gitlink
+update → compile/адресные проверки по фактическим pointers → отдельно разрешённая
+device/native acceptance. Незамерженный локальный pin не заменяет этот порядок.
+Library PR/commit references и App adoption обновляются по завершённым шагам;
+наличие Draft/компиляции live checkout не означает APK, merge или выпуск.
+
+Границы: без NGW/customer API, реальных фото/данных, Office, DB, GUI/AVD/device
+проверок. Legacy positive-size partial может по-прежнему пройти heuristic
+PhotoPicker; автоматическая миграция/удаление cache не добавлена. Silent-truncated
+200 integrity, checksum/Content-Length и concurrent preview/same-final ownership
+остаются отдельными неизвестностями. Влияние на фон/батарею не измерялось; новых
+scheduler/lease/cancel policy или task counters не вводится. Следующие source
+frontiers не начинаются до закрытия этого started fixes checkpoint.
+
+## MOB-UI-01 — Ясные названия мобильных проектов, 2026-11-01
+
+По прямому уточнению владельца работа ведётся в нашем мобильном приложении,
+отдельное приложение Collector не используется. EN/RU подписи списка и сообщений
+называют ресурс мобильным проектом; server API `collector_project`, client IDs,
+keys, placeholders и логика остаются прежними. Новый узкий
+`UI-MOBILE-PROJECT-LOAD` фиксирует уже существующий маршрут «Загрузить проект»:
+account/catalog `lisa` → выбранный remote ID → NGW GET → own workspace/fill,
+отдельно от chooser сохранённых рабочих областей.
+
+Владелец — Android root для App copy/каталога; maplibui владеет общими сообщениями.
+Это текущий MOB-UI-01 и явное уточнение UI, без новой очереди/приоритета и без
+изменения data/sync/map/background/battery поведения. Приёмка: правильные
+семантические bindings, прежние keys/placeholder cohorts, XML/resource и docs
+проверки; сборка ресурса не доказывает читаемость окна. Device/font/rotation,
+NGW/customer, native/GUI и выпуск NOT_RUN; фактические проверки и Git-доставка
+отмечаются в карточке `android-20261101-mobile-project-labels` и own Draft87.

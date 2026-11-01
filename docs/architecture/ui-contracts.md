@@ -1,7 +1,7 @@
 ---
 title: Контракты значений и действий мобильного интерфейса
 type: architecture
-last_verified: 2026-10-30
+last_verified: 2026-11-01
 related_code:
   - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
   - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
@@ -17,6 +17,13 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/LayerEditingPolicy.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ControlHelper.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalog.java
+  - app/src/main/res/values/strings.xml
+  - app/src/main/res/values-ru/strings.xml
+  - maplibui/src/main/res/values/strings.xml
+  - maplibui/src/main/res/values-ru/strings.xml
 ---
 
 # Что означает мобильный интерфейс
@@ -370,3 +377,144 @@ basename; независимые method tripwires дополняют прежн�
 
 
 Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.
+
+## Значение даты и времени в форме — исходники 2026-11-01
+
+Контракты `UI-FORM-DATE-STANDARD-VALUE` и `UI-FORM-DATE-NGFP-VALUE` в
+[каталоге](../registry/ui-contracts.json) разделяют две реализации. Стандартная
+форма выбирает `control.DateTime` по типу Field; NGFP `type=date_time` использует
+отдельный `formcontrol.DateTime` и `date_type`:0 — DATE,1 — TIME,2 — DATETIME.
+Это не номера schema-type и не внутренние selector constants. У корней обоих
+layout нет отдельного `android:id`: привязка идёт через class/layout и field name.
+
+Оба getter/state передают nullable Long миллисекунд эпохи, а локализованный
+текст — отдельное представление. DATE callback не обнуляет скрытое время,
+TIME callback использует date ints экземпляра; UTC-midnight DATE и фиксированный
+TIME baseline здесь не подтверждены. Saved key имеет приоритет; чтение cursor
+не содержит собственного isNull, а официальный Cursor API оставляет NULL и
+нецелые getLong outcomes реализации. Фактический installed результат неизвестен.
+
+У NGFP new-value `text` разбирается fixed pattern, затем `last` может заменить
+timestamp. Shared Calendar и mValue seed различаются: первый click может сбросить
+calendar carrier до принятого callback, если seed/default отличаются. Это
+условное source-наблюдение с неизвестной политикой; не текущий bug или доказанный
+Cancel result. Explicit-null Bundle/getter, absent control, copied-empty retention
+и итоговый ContentValues не равны очистке поля. Дальнейшие required/cascade,
+script, draft, owning-map/provider и Save gates сохраняют существующие контракты.
+
+Это ограниченная source-карта для общих Lisa/Belka исходников. Private NGFP,
+tenant schema/значения, zone/locale/clock, диалоги/native/rotation/remote roundtrip
+не проверялись; source fingerprints требуют semantic review при изменении и
+не заменяют device acceptance. Прежние контракты и coverage остаются целиком.
+
+
+## Флажок NGFP и обычное integer-поле
+
+`UI-FORM-CHECKBOX-NGFP-VALUE` связывает NGFP `type=checkbox` с
+`formcontrol.Checkbox` через `formtemplate_checkbox`. У XML root нет
+`android:id`: источник — фактический factory/class/layout, а не выдуманный ID.
+Обычная форма для `FTInteger` создаёт `control.TextEdit`, который возвращает
+String; NGW resource-selection и `finish_beep` имеют другие назначения.
+
+| Граница | Подтверждённое значение |
+| --- | --- |
+| NGFP widget | checked-state Boolean; `getValue` выдаёт Integer1 либо0 |
+| Bundle / optional last cache | Boolean под prefixed field key / normalized field key |
+| Cursor | при наличии столбца `getInt()!=0`; SQL NULL/nonintegral/out-of-int result/exception implementation-defined по официальному API |
+| Новый control | `init_value` через `JSONObject.getBoolean`, затем optional last; missing/invalid property может бросить исключение |
+| Raw copy | NULL/empty может отображаться unchecked; отдельный equal-typed-baseline gate сохраняет исходную пустоту |
+| Capture / Save | runtime Integer в ContentValues, затем прежние validation/owner/persistence gates; это ещё не local/server ACK |
+
+Приоритет init: saved key → existing cursor → только новый control default/last.
+Missing column при существующем cursor даёт локальный false, но не доказывает
+такой исход для SQL NULL и не включает fallback в new default. Getter не
+предоставляет explicit-null state. В выбранном пути с присутствующим checkbox сохранение copied NULL/empty зависит
+от точного baseline equality; оно не отслеживает всю историю переключений.
+
+Boolean в UI/Bundle не добавляет Android BOOLEAN schema support: общий mobile
+flag остаётся integer0/1. Actual Field.type, NGFP type, required/hidden rules,
+permission и Save eligibility — отдельные границы. Existing Date/Save/draft/
+unbound contracts сохранены. После успешного base Save optional last-value
+cache использует apply; его outcome не заменяет feature/NGW acknowledgement.
+
+Срез source-backed:7records/4routes/4value namespaces;3official Android API
+contracts отделены от installed implementation. Actual private forms/schema,
+Cursor/AppCompat/OS, device lifecycle, data/provider/upload и fleet adoption
+остаются UNKNOWN; widget/native execution и product fixes здесь не выполнялись.
+
+
+## Вложения: ожидание и конечный кеш
+
+`UI-ATTACHMENT-DOWNLOAD-STATE` закрепляет `progressImageDownload` и
+`ib_download` реального `PhotoPicker`. Spinner читает local URL-list; кнопка
+зависит от него и положительного размера конечного cache file. Preview может
+показать картинку, не подтверждая получение полного файла. Metadata/URI, bytes,
+static service marker и local picker state — разные границы.
+
+Обычный `END` удаляет matching URL и обновляет adapter; full404 сохраняет
+своё сообщение об отсутствии изображения. Online metadata не входит в
+offline-only `PhotoPicker` saved-state selection. Полные условия и source
+bindings сохранены в каталоге, включая whole-file witness внешнего
+`updateStatus`, чей заголовок совпадает с отдельным внутренним методом.
+
+Исправленный library producer завершает404 и публикует request-owned staging
+после завершённого200/закрытия output через atomic move. Неподдерживаемый move
+отклоняет попытку без copy fallback. Старый final и соседние entries сохраняются
+при failure. См. [контракт библиотеки](../../easypicker/docs/README.md).
+App со старым gitlink55aad ещё не получает это исправление: library merge и
+последующий pointer update — отдельная delivery/adoption граница.
+
+JVM-регрессии с техническим HTTP double не проверяют реальные фото, устройство,
+GUI, сервер или разрешения. Старые повреждённые positive-size files,
+silent-truncated200 integrity и concurrent preview/same-final policy остаются
+UNKNOWN; checksum/Content-Length guarantee не добавлена.
+
+Уже существующий positive-size partial из старой версии всё ещё может
+удовлетворять текущей проверке размера `PhotoPicker`; автоматическая миграция
+или удаление таких файлов не добавлены.
+
+### Guard опциональной HTTP metadata
+
+Для прежнего `UI-SYNC-FAILURE-MESSAGES` whole-file guard
+`NGWLayerSchemaCompat` сохранён целиком в history каталога. Active scope теперь
+закрепляет оба полных overload `fetchResourceMetaJson` с прежними неизменными
+method bytes и теми же typed HTTP/null/classifier требованиями. Причина —
+отдельное исправление class-only schema predicate в том же файле; оно не меняет
+эти overload. Ожидания сообщений и остальные source guards не менялись;
+checker не получил dual-hash или исключение. Это позволяет проверять один
+UI contract на прежнем App gitlink и на исправленной библиотеке, не объявляя
+доставку новой class repair в App до merge/pointer update.
+
+## Загрузка мобильного проекта из WebGIS
+
+`UI-MOBILE-PROJECT-LOAD` описывает действие **«Загрузить проект»** в меню
+добавления слоя нашего приложения. `LayersFragment` передаёт его в
+`MainActivity.loadCollectorProject`, затем в `LoadLisaCollectorProject`.
+Это внутренний импорт в ЛИСА/БЕЛКА, а не запуск отдельного приложения Collector.
+Названия `collector_project`, `CollectorResource` и resource IDs остаются
+именами серверного протокола и исходников; пользовательские подписи говорят
+«мобильный проект».
+
+После проверки прерывания синхронизации выбирается подключение WebGIS. При
+отсутствии аккаунта предлагается собственный `NGWLoginActivity`; единственный
+аккаунт используется сразу, несколько требуют выбора. Этот маршрут ищет
+серверный каталог с keyname `lisa`, а не произвольный каталог заказчика.
+Список строится из прочитанных дочерних ресурсов с ограниченным обходом групп;
+он не подтверждает полноту всего WebGIS. Пользователь выбирает строку, затем
+нажимает **«Загрузить»**. До выбора кнопка выключена, выбор строки сам импорт
+не начинает. Обрабатывается выбранный `LisaCatalog.Ref.remoteId`, а не поиск
+по отображаемому имени. Это другой сценарий, чем `UI-PROJECT-CHOOSER` для уже
+сохранённых рабочих областей; прежний контракт chooser/switch сохранён.
+
+Выбранный ресурс читается через NGW API и `CollectorResource`. Неполный snapshot
+или отсутствие поддерживаемых элементов останавливает импорт. Затем owning
+registry готовит workspace и operation lease; `CollectorProjectImportHelper`
+добавляет задачи собственного `LayerFillService`. Передача batch и вызов
+`workspace.save()` не являются подтверждением полного скачивания проекта,
+доставки scripts или успешной синхронизации. Права, данные, URI, форматы,
+повтор/отмена и классы ресурсов этой правкой подписей не меняются.
+
+Ключи переводов и placeholders сохранены. Method/XML/file guards закрепляют
+просмотренную связь и ловят source drift; это не literal-mirror тест текста
+и не приёмка native окон. Effective Lisa/Belka locale merge, крупный шрифт,
+rotation, устройство, аккаунты и реальные серверные результаты здесь NOT_RUN.

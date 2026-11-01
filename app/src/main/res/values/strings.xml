@@ -247,12 +247,12 @@
     <string name="layer_backups_cleared">Layer backups cleared</string>
     <string name="layer_backups_share_error">Could not prepare layer backups for sharing</string>
     <string name="layer_backups_clear_error">Could not clear layer backups</string>
-    <string name="collector_projects">Collector projects</string>
+    <string name="collector_projects">Mobile projects</string>
     <string name="collector_project_switch">Switch project</string>
     <string name="collector_project_open">Open</string>
-    <string name="collector_projects_empty">No imported Collector projects</string>
+    <string name="collector_projects_empty">No imported mobile projects</string>
     <string name="collector_project_workspace_list_item">%1$s\naccount: %2$s | id: %3$d | district: %4$s</string>
-    <string name="collector_project_already_active">This Collector project is already active</string>
+    <string name="collector_project_already_active">This mobile project is already active</string>
     <string name="collector_project_switch_busy">Wait for synchronization or data loading to finish before switching projects</string>
     <string name="collector_project_switch_edit_mode">Save or cancel editing before switching projects</string>
     <string name="geometry_edit_cancel_title">Cancel feature creation?</string>
@@ -269,8 +269,8 @@
     <string name="collector_project_no_district">none</string>
     <string name="collector_project_no_composition_check">never</string>
     <string name="collector_project_no_error">none</string>
-    <string name="collector_project_not_found">Collector project was not found</string>
-    <string name="collector_project_visibility_updated">Collector project visibility updated</string>
+    <string name="collector_project_not_found">Mobile project was not found</string>
+    <string name="collector_project_visibility_updated">Mobile project visibility updated</string>
     <string name="collector_project_list_item">%1$s\n%2$s | account: %3$s | id: %4$d | district: %5$s</string>
     <string name="collector_project_detail_status">Status: %1$s</string>
     <string name="collector_project_detail_active">Active: %1$b</string>
