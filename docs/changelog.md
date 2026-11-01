@@ -8,6 +8,15 @@ related_code:
 
 # История документационной системы
 
+## 2026-11-01 — Первый полный локальный прогон 3.1.2.31
+
+Сохранены фактические результаты на clean app `b165046d`:256 native PASS,
+17 FAIL, UI matrices36+6 PASS и A56 cold stress PASS. Release evidence
+разделяет наблюдаемые FAIL, подтверждённые устаревшие source waiters и ещё
+неустановленные причины. Handoff сохраняет полный scope и работающий
+адресный diagnostic run, ограничения публикации, process/cleanup receipts
+и foreign owner/shared-index follow-up. Green release acceptance не заявляется.
+
 ## 2026-11-01 — Подготовка production 3.1.2.31/225
 
 Согласованы production app/maplib версии и независимые ожидаемые значения

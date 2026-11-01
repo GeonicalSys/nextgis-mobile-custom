@@ -35,6 +35,13 @@ Full не отменяет physical phone/tablet/SM-X115 render-stress gate.
 [подготовка выпуска](../reference/mobile-release-3.1.2.31-2026-11-01.md).
 Карточки: android-20261101-release-31231, maplib-20261101-release-31231.
 
+Первый release checkpoint: library65 и app88 слиты, version matrix обеих
+release и Debug PASS, подписанные кандидаты сохранены. Локальный Full на
+`b165046d`:256 native PASS/17FAIL, chooser36 и real-window6 PASS; A56 cold
+stress PASS. Публикации/установки рабочего release нет. SM-X115 исключён
+владельцем, не засчитывается как PASS. Продолжение — адресный разбор FAIL,
+без ослабления frozen expectations; [контрольная точка](../handoffs/2026-11-01-mobile-release-31231.md).
+
 29 октября, Git-доставка по прямому поручению владельца: библиотека maplib
 слита Merge Commit f61ba783 (PR62), документационный bridge — bf16ea71 (PR83).
 Приложение в PR84 закреплено exact fetched library merge, runtime-tree библиотеки
