@@ -1,12 +1,27 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-10-30
+last_verified: 2026-11-01
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+
+## 2026-11-01 — Источники даты и времени в формах
+
+MOB-UI-01: отдельные UI-FORM-DATE-STANDARD-VALUE и UI-FORM-DATE-NGFP-VALUE
+связывают реальные factory/control/layout/state/value handlers с nullable
+millisecond carriers и записью ContentValues. Разные enum namespaces,
+строка отображения, explicit null, cursor read и default/last carriers
+не объединены.22 новых method guards и5file witnesses добавлены к прежним
+полным44/191/64/49 наборам без обновления старых fingerprints/expectations.
+Два условных carrier observations остаются policy UNKNOWN, не багами.
+Actual zone/locale/private NGFP/SQL rows/device/Cancel/remote outcome неизвестны.
+Продукт, библиотеки и версии не меняются; runtime NOT_RUN, merge/APK отдельно.
+Адресные source/docs проверки и Git delivery подтверждаются actual receipts/PR,
+а не датой этой записи.
 
 ## 2026-10-30 — Reader справочников вложенных NGFP
 

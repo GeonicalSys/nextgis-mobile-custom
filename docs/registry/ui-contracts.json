@@ -2714,6 +2714,310 @@
       ],
       "forbids": [],
       "sha256": "32ee6083853cf02e1bbdfeabdc9a653697b76e9ff37b4b631056f7e548fe1bb7"
+    },
+    {
+      "id": "WF-DATE-STD-INIT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+      "marker": "public void init(\n            Field field,\n            Bundle savedState,\n            Cursor featureCursor)",
+      "requires": [
+        "ControlHelper.hasKey(savedState, mFieldName)",
+        "featureCursor.getLong(column)",
+        "setOnClickListener(getDateUpdateWatcher(mPickerType))",
+        "mFieldName = field.getName()"
+      ],
+      "forbids": [],
+      "sha256": "d99013e69e329652f8ff3e94561f505794f980bb410038ebee9d29b9632b0694"
+    },
+    {
+      "id": "WF-DATE-STD-VALUE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+      "marker": "public Object getValue()",
+      "requires": [
+        "return mValue"
+      ],
+      "forbids": [],
+      "sha256": "14445c502c1008da8b8479926a161173a9df8b2f54d76540b210ecb694e1a7d5"
+    },
+    {
+      "id": "WF-DATE-STD-STATE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+      "marker": "public void saveState(Bundle outState)",
+      "requires": [
+        "ControlHelper.getSavedStateKey(mFieldName)",
+        "outState.putLong",
+        "datePickerDialog.dismiss()"
+      ],
+      "forbids": [],
+      "sha256": "00ae61d4525d48d9ead93e0fdbebaf83511bbe900f7e937d1168349a8b8129a7"
+    },
+    {
+      "id": "WF-DATE-STD-OPEN",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+      "marker": "protected View.OnClickListener getDateUpdateWatcher(final int pickerType)",
+      "requires": [
+        "mCalendar.setTimeInMillis(mValue)",
+        "datePickerDialog.show()",
+        "new TimePickerDialog"
+      ],
+      "forbids": [],
+      "sha256": "24b0969fa01eaea95bb4c9914bda16ebe4b1f5595d70a1aa1c41f01092c6c58a"
+    },
+    {
+      "id": "WF-DATE-STD-DATE-CALLBACK",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+      "marker": "public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)",
+      "requires": [
+        "myYear = year",
+        "myMonth = month",
+        "myDay = dayOfMonth",
+        "dateSelectorType == TYPE_DATE_TIME",
+        "newCalendar.set(Calendar.DAY_OF_MONTH, myDay)"
+      ],
+      "forbids": [],
+      "sha256": "d6fb55219b178cfad746c993b64338fefe571bcac18aec3d11ae19d635acdbee"
+    },
+    {
+      "id": "WF-DATE-STD-TIME-CALLBACK",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+      "marker": "public void onTimeSet(TimePicker view, int hourOfDay, int minute)",
+      "requires": [
+        "newCalendar.set(Calendar.YEAR, myYear)",
+        "newCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)",
+        "newCalendar.set(Calendar.MINUTE, minute)",
+        "newCalendar.set(Calendar.SECOND, 0)",
+        "mValue = newCalendar.getTimeInMillis()"
+      ],
+      "forbids": [],
+      "sha256": "a2cad822b9ffe8ee42de513cb74a2ab6e5d8b019f5470dca557c07ac1f5e91f4"
+    },
+    {
+      "id": "WF-DATE-NGFP-INIT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+      "marker": "public void init(\n            JSONObject element,\n            List<Field> fields,\n            Bundle savedState,\n            Cursor featureCursor,\n            SharedPreferences preferences,\n            Map<String, Map<String, String>> translations,\n            final ModifyAttributesActivity modifyAttributesActivity)\n            throws JSONException",
+      "requires": [
+        "ControlHelper.hasKey(savedState, mFieldName)",
+        "featureCursor.getLong(column)",
+        "setOnClickListener(getDateUpdateWatcher(mPickerType))",
+        "ControlHelper.getFieldName(attributes.getString(JSON_FIELD_NAME_KEY))",
+        "mPickerType = attributes.getInt(JSON_DATE_TYPE_KEY)",
+        "timestamp = parseDateTime(defaultValue, mPickerType)",
+        "preferences.getLong(mFieldName, timestamp)",
+        "mCalendar.setTimeInMillis(timestamp)"
+      ],
+      "forbids": [],
+      "sha256": "8d564e5bfc0904159f3139012c8c9e09ab664f7ce26ad430d639aa4396257d9d"
+    },
+    {
+      "id": "WF-DATE-NGFP-VALUE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+      "marker": "public Object getValue()",
+      "requires": [
+        "return mExplicitNull ? null : mCalendar.getTimeInMillis()"
+      ],
+      "forbids": [],
+      "sha256": "9c4ad5d1b97b36f7b8fd7ec28f04cb2b467a9f9831e4d52808f301031bdfe997"
+    },
+    {
+      "id": "WF-DATE-NGFP-STATE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+      "marker": "public void saveState(Bundle outState)",
+      "requires": [
+        "ControlHelper.getSavedStateKey(mFieldName)",
+        "outState.putLong",
+        "datePickerDialog.dismiss()"
+      ],
+      "forbids": [],
+      "sha256": "cb8864d3b118804f30f5b7e91efef339eb626b791968108ed9dadc875b6e535e"
+    },
+    {
+      "id": "WF-DATE-NGFP-OPEN",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+      "marker": "protected View.OnClickListener getDateUpdateWatcher(final int pickerType)",
+      "requires": [
+        "mCalendar.setTimeInMillis(mValue)",
+        "datePickerDialog.show()",
+        "new TimePickerDialog"
+      ],
+      "forbids": [],
+      "sha256": "ed0dafa73fd7cffc7dad7cac1959bdd4e65e8eba2099697e36f12945186d0c10"
+    },
+    {
+      "id": "WF-DATE-NGFP-DATE-CALLBACK",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+      "marker": "public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)",
+      "requires": [
+        "myYear = year",
+        "myMonth = month",
+        "myDay = dayOfMonth",
+        "dateSelectorType == TYPE_DATE_TIME",
+        "newCalendar.set(Calendar.DAY_OF_MONTH, myDay)"
+      ],
+      "forbids": [],
+      "sha256": "6ebc8bf521c638db52eafeb73a37d6acc2cd4f551aa0a72679cc7d17e9f161eb"
+    },
+    {
+      "id": "WF-DATE-NGFP-TIME-CALLBACK",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+      "marker": "public void onTimeSet(TimePicker view, int hourOfDay, int minute)",
+      "requires": [
+        "newCalendar.set(Calendar.YEAR, myYear)",
+        "newCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)",
+        "newCalendar.set(Calendar.MINUTE, minute)",
+        "newCalendar.set(Calendar.SECOND, 0)",
+        "mValue = newCalendar.getTimeInMillis()"
+      ],
+      "forbids": [],
+      "sha256": "d0331887ab720ac8877f21d84894429cce8818a102d9f2d35aa1a19b073b3736"
+    },
+    {
+      "id": "WF-DATE-STD-SET-VALUE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+      "marker": "public void setValue(Object val)",
+      "requires": [
+        "val instanceof Long",
+        "val instanceof Date",
+        "val instanceof Calendar",
+        "mDateFormat.parse(stringVal)",
+        "mValue = 0L"
+      ],
+      "forbids": [],
+      "sha256": "46c1b457506e78ed3930cd84b949ef290da0dc3a16da22685ef6bf9c9f4c382b"
+    },
+    {
+      "id": "WF-DATE-NGFP-PARSE-DEFAULT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+      "marker": "protected long parseDateTime(\n            String value,\n            int type)",
+      "requires": [
+        "new SimpleDateFormat(\"dd/MM/yyyy\", Locale.getDefault())",
+        "new SimpleDateFormat(\"HH:mm\", Locale.getDefault())",
+        "new SimpleDateFormat(\"dd/MM/yyyy HH:mm\", Locale.getDefault())",
+        "long result = 0",
+        "catch (ParseException e)"
+      ],
+      "forbids": [],
+      "sha256": "c8276c075d0126e8f52be6dce9b7074cad430f6c0a614ba2388eb14502001a28"
+    },
+    {
+      "id": "WF-DATE-NGFP-LAST-VALUE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+      "marker": "public void saveLastValue(SharedPreferences preferences)",
+      "requires": [
+        "getValue() == null",
+        "preferences.edit().remove(mFieldName).commit()",
+        "preferences.edit().putLong(mFieldName, (Long) getValue()).commit()"
+      ],
+      "forbids": [],
+      "sha256": "4a7d24cbb6ea094d0b357664dd3b30955164f0a19f3fe71fc71abedd83a87c8e"
+    },
+    {
+      "id": "WF-DATE-STD-BINDING",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+      "marker": "protected void fillControls(LinearLayout layout, Bundle savedState)",
+      "requires": [
+        "case GeoConstants.FTDate:",
+        "case GeoConstants.FTTime:",
+        "case GeoConstants.FTDateTime:",
+        "R.layout.template_datetime",
+        "dateTime.setPickerType(mLayer.getFieldByName(field.getName()).getType())",
+        "control.init(field, savedState, featureCursor)"
+      ],
+      "forbids": [],
+      "sha256": "0a83a158f04df50b183502bc713ff9c4b17b4437eb9da98b35c8fd32a792ea7e"
+    },
+    {
+      "id": "WF-DATE-NGFP-FACTORY",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+      "marker": "public static IFormControl getControl(Context context, JSONObject element, VectorLayer layer, long feature,\n                                          GeoGeometry geometry, boolean isViewOnly, final ModifyAttributesActivity modifyAttributesActivity) throws JSONException",
+      "requires": [
+        "case JSON_DATE_TIME_VALUE:",
+        "control = (DateTime) View.inflate(context, R.layout.formtemplate_datetime, null)"
+      ],
+      "forbids": [],
+      "sha256": "a14c65a41f1f082b38e61aade95c7d8bc3f62786d588146940097a230807b04f"
+    },
+    {
+      "id": "WF-DATE-FIELD-NORMALIZATION",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/LayerUtil.java",
+      "marker": "public static String normalizeFieldName(String fieldName)",
+      "requires": [
+        "Character.isDigit(result.charAt(0))",
+        "result = \"_\" + result",
+        "return \"_fixed_id\""
+      ],
+      "forbids": [],
+      "sha256": "9fc1a7dbf308051d6da1549a097a449f073e9b90e1c4d95a693679f0cad28381"
+    },
+    {
+      "id": "WF-DATE-CAPTURE-VALUES",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+      "marker": "protected ContentValues captureScriptValues()",
+      "requires": [
+        "FeatureCopyDefaults.values(mCopiedValues, mLayer.getFields())",
+        "for (Field field : mLayer.getFields()) putFieldValue(values, field)"
+      ],
+      "forbids": [],
+      "sha256": "58dd47568bd258a078c6a3560bd1a4ce6ea96a94eac22c8ef6f8d912ba92ff92"
+    },
+    {
+      "id": "WF-DATE-COPY-VALUES",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+      "marker": "public static ContentValues values(String encoded, List<Field> fields)",
+      "requires": [
+        "if (encoded == null) return result",
+        "raw.isNull(name)",
+        "case FTLong: case FTDate: case FTTime: case FTDateTime:",
+        "result.put(name, raw.getLong(name))"
+      ],
+      "forbids": [],
+      "sha256": "574b1050439af5aa18b1eed4acb11385c407fd5b29db88dcc37b88445601357d"
+    },
+    {
+      "id": "WF-DATE-COPY-EMPTY",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+      "marker": "public static boolean retainEmpty(ContentValues values, String copied, String baseline, String name, Object current)",
+      "requires": [
+        "if (copied == null || baseline == null) return false",
+        "value != JSONObject.NULL",
+        "Objects.equals(now,before)",
+        "values.putNull(name)"
+      ],
+      "forbids": [],
+      "sha256": "d95c245a6706a13967a2b1475657a033e29765cde0dc04f5a81a190c1b1e87a0"
+    },
+    {
+      "id": "WF-DATE-SCRIPT-SNAPSHOT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/ProjectScriptFormController.java",
+      "marker": "private JSONObject snapshot(String alias, ContentValues values, long id) throws Exception",
+      "requires": [
+        "!values.containsKey(name)",
+        "ProjectScriptHost.readValue(stored, i, field)",
+        "field.getType() == GeoConstants.FTDate",
+        "Instant.ofEpochMilli(((Number)value).longValue()).atOffset(ZoneOffset.UTC).toLocalDate().toString()"
+      ],
+      "forbids": [],
+      "sha256": "1af7eefa40a000f9814ac4d0d6c5c88508b82216fd9051a47b4b9897494f5a10"
     }
   ],
   "contracts": [
@@ -4812,6 +5116,116 @@
         "result": "Фактически5 caption layout methods PASS/0 failures/errors/skips, XML10.06s. Ораклы и whole fixture SHA256 cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac неизменны относительно предыдущего4PASS/1FAIL. Finalized Root receipt SHA256 68f7f6bdc072f9f25fd2af02e0584ac467a4dbb1a0c1b1e1959341b2126630ef. В этом запуске общий cohort10 НЕ PASS: 6 PASS/4 отдельные Panel assertion FAIL, Gradle exit1; 120 входов без drift, все13 owned processes settled absent, наблюдалось110.0625s. Это технические API28 CPU native Paint/text measurements, без Android device/OEM/GPU/display/GIS native/touch/rotation acceptance. Исторический cohort10 checkpoint предшествовал consumer compile. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.",
         "history": "Первый combined55 attempt: Core29 реально исполнился (15 assertion FAIL/14 controls), App0: fixture не скомпилировался из-за missing RobolectricTestRunner import. Старый Checkbox22 XML был STALE и исключён; предварительные51 copied cases не являются51 выполненной проверкой. V3 добавил ровно один импорт. Legacy App26 затем реально25 PASS/1 path FAIL; первые3 caption methods PASS на старом XML, поэтому это НЕ crop RED. NativeV4 class-only CPU glyph/font backend с setup calibration воспроизвёл4 assertion FAIL на старом XML. После3 caption width attrs Native4 дал2 PASS/2 assertion FAIL: имя Collector при280dp/font2RU и конец пути. Static responsive groups и перенос5dp margin→scroll padding дали4 PASS/1 transition FAIL в frozen5 fixture. Новая локальная инвалидация descendant measure cache проверяется теми же5: fixturecc1f, все assertions/setup неизменны. Core29 PASS относится к отдельной cache-проверке, combined55 PASS не заявляется. Исторические37/89 и их source pins не перезапускались."
       }
+    },
+    {
+      "id": "UI-FORM-DATE-STANDARD-VALUE",
+      "group": "forms",
+      "title": "Дата и время в стандартной форме",
+      "surface": "Стандартная форма атрибутов: template_datetime, корневой control.DateTime без отдельного android:id",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Локализованный текст даты/времени показывает числовой carrier; getValue возвращает nullable Long, а не текст и не гарантированный день UTC.",
+      "value_origin": "Field FTDate/FTTime/FTDateTime → ModifyAttributesActivity.fillControls/template_datetime → setPickerType/init → DatePicker/TimePicker callbacks → mValue/getValue → putFieldValue/ContentValues. Schema type, локальная политика редактирования и разрешение NGW — разные границы.",
+      "units": "Long — миллисекунды эпохи. DatePicker month0–11 совместим с Calendar.MONTH; time callback передаёт hour/minute. Calendar.getInstance вызывается без явной зоны; фактическая зона/FORMAT locale и разрешение locale tz extension остаются неизвестны. Явной нормализации DATE в UTC-midnight или TIME в seconds-only здесь нет.",
+      "updates": [
+        "Saved-state key nextgis_control_<field> имеет приоритет, включая explicit null; иначе существующая колонка читается getLong, без собственного isNull. При отсутствии state/колонки остаётся инициализированное текущее значение.",
+        "Click подготавливает listener-local Calendar. DATE callback меняет Y/M/D свежего Calendar, не обнуляя скрытое время; TIME callback использует сохранённые/нулевые date ints, H/M и SECOND=0, не обнуляя milliseconds.",
+        "getText использует DateFormat factory; getValue возвращает mValue. setValue(Long/Date/Calendar/String) — отдельный программный API; ошибка разбора String присваивает0L, неподдержанный/null объект не меняет carrier."
+      ],
+      "actions": [
+        "Открыть picker и выбрать дату либо время; это не свободный ввод отображаемой строки.",
+        "Передать числовой getter в существующий Save gate; не считать выбор подтверждением локальной записи или отправки."
+      ],
+      "conditions": [
+        "View-only и остальные owner/required/cascade/script/provider gates остаются существующим UI-FORM-SAVE/REQUIRED контрактом.",
+        "Cursor.getLong(NULL/nonintegral) имеет implementation-defined результат/исключение по официальному API; blank/null/zero на устройстве здесь не подтверждены.",
+        "Точный native результат прямого TIME callback с неинициализированными date ints и политика такого представления неизвестны."
+      ],
+      "saved_state": "saveState сохраняет Long либо явный null по nextgis_control_<field> и dismiss held DatePicker. Absent control, null getter, explicit-null ContentValues и copy-preserved empty — разные состояния: base putFieldValue сам не добавляет putNull для null getter; copied defaults могут сохранить отдельное значение.",
+      "source_ids": [
+        "WF-DATE-STD-INIT",
+        "WF-DATE-STD-VALUE",
+        "WF-DATE-STD-STATE",
+        "WF-DATE-STD-OPEN",
+        "WF-DATE-STD-DATE-CALLBACK",
+        "WF-DATE-STD-TIME-CALLBACK",
+        "WF-DATE-STD-SET-VALUE",
+        "WF-DATE-STD-BINDING",
+        "WF-DATE-CAPTURE-VALUES",
+        "WF-DATE-COPY-VALUES",
+        "WF-DATE-COPY-EMPTY",
+        "WF-DATE-SCRIPT-SNAPSHOT",
+        "WF-FORM-SAVE",
+        "WF-FORM-DRAFT",
+        "WF-FORM-ABSENT-FIELD"
+      ],
+      "expectations": [
+        "Oracle: проверять отдельно bound field type, числовой getValue, отображаемый текст, Bundle key/value и итоговый ContentValues; изменение source fingerprint требует semantic review, не автоматической замены ожидания.",
+        "Контрпример: объявить DATE значением UTC-midnight, TIME секундами либо очистку поля только по пустому отображению/nullable getter без доказанного producer и downstream state."
+      ],
+      "unknowns": [
+        "Фактические tenant schema/значения, default zone/locale/clock и installed Cursor/formatter/API не наблюдались.",
+        "Native picker/cancel/rotation/durable-draft/Save и remote roundtrip не исполнялись; source guards не являются device acceptance."
+      ]
+    },
+    {
+      "id": "UI-FORM-DATE-NGFP-VALUE",
+      "group": "forms",
+      "title": "Дата и время NGFP: режим, default и сохранённое значение",
+      "surface": "NGFP type=date_time → formtemplate_datetime, корневой formcontrol.DateTime без отдельного android:id",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "NGFP date control имеет отдельную реализацию: picker mode, отображаемый текст, mValue seed, shared Calendar и actual schema type нельзя подменять друг другом.",
+      "value_origin": "attributes.field → ControlHelper/core normalization/name-presence check; attributes.date_type0=DATE,1=TIME,2=DATETIME, missing/other→DATETIME. Это независимо от Field.type. Stock selector constants имеют другую нумерацию:0=DATE_TIME,1=DATE,2=TIME.",
+      "units": "getValue/state — explicit null либо Long epoch milliseconds из mCalendar. Display — DateFormat default-style/FORMAT-locale text. Новые default strings разбираются fixed dd/MM/yyyy,HH:mm,dd/MM/yyyy HH:mm с default Locale; hint display pattern не является этим config grammar.",
+      "updates": [
+        "Приоритет init: saved key включая explicit null → existing cursor column getLong → только для new feature непустой attributes.text, затем last preference может заменить timestamp. Missing seed использует текущее время. ParseException default возвращает0L; strict/full-input/UTC setter здесь нет.",
+        "Saved-state/существующая колонка обновляют mValue, но new default/last ветви устанавливают shared mCalendar отдельно. OnClick сбрасывает shared Calendar из mValue до accepted callback. При различающихся seed/default и false mExplicitNull последующие getter/state могут увидеть сброс; это условное source-наблюдение, не текущий bug/Cancel result.",
+        "Accepted DATE/TIME callbacks устанавливают carrier и сбрасывают mExplicitNull; скрытые Calendar components не нормализуются в гарантированный DATE-day/fixed TIME baseline."
+      ],
+      "actions": [
+        "Открыть native picker по выбранному date_type и принять date либо date+time/time callback.",
+        "После успешного base Save last-value API удаляет preference при null либо commit Long; это отдельный optional cache, не запись business row."
+      ],
+      "conditions": [
+        "ControlHelper.isEnabled проверяет наличие имени в schema, не его date type и не NGW/PG право. View-only может отключить control отдельно.",
+        "SQL NULL/nonintegral cursor и malformed state/default/locale outcomes не приравниваются к explicit saved-state null.",
+        "При actual FTDate snapshot применяет UTC-day conversion к числу; mode/date-looking text сами не доказывают FTDate или совпадение business day."
+      ],
+      "saved_state": "saveState сохраняет mCalendar milliseconds либо explicit-null key, затем dismiss held DatePicker. last preference и mValue dialog seed не равны Bundle/state carrier. Null getter сам по себе не означает putNull: ContentValues/copy baseline и существующий snapshot fallback сохраняют свои условия.",
+      "source_ids": [
+        "WF-DATE-NGFP-INIT",
+        "WF-DATE-NGFP-VALUE",
+        "WF-DATE-NGFP-STATE",
+        "WF-DATE-NGFP-OPEN",
+        "WF-DATE-NGFP-DATE-CALLBACK",
+        "WF-DATE-NGFP-TIME-CALLBACK",
+        "WF-DATE-NGFP-PARSE-DEFAULT",
+        "WF-DATE-NGFP-LAST-VALUE",
+        "WF-DATE-NGFP-FACTORY",
+        "WF-DATE-FIELD-NORMALIZATION",
+        "WF-DATE-CAPTURE-VALUES",
+        "WF-DATE-COPY-VALUES",
+        "WF-DATE-COPY-EMPTY",
+        "WF-DATE-SCRIPT-SNAPSHOT",
+        "WF-FORM-SAVE",
+        "WF-FORM-DRAFT",
+        "WF-FORM-ABSENT-FIELD"
+      ],
+      "expectations": [
+        "Oracle: при известном mode/schema/default/last/state отдельно сопоставлять text, mValue seed, shared Calendar/getter, accepted callbacks и output ContentValues; сохранять различие explicit-null/absent/copied value.",
+        "Контрпример: объявить NGFP date_type schema-type ID, принять текст за payload, скрыть conditional seed-reset под blanket Cancel guarantee либо переписать source fingerprint без semantic review."
+      ],
+      "unknowns": [
+        "Actual private NGFP/date bindings/schema/preferences/clock/zone/locale/runtime не читались.",
+        "Политика default/last при первом открытии и при Cancel, нормализация DATE/TIME, поле-clear и все native lifecycle/remote результаты UNKNOWN."
+      ]
     }
   ],
   "widget_evidence": [
@@ -5762,6 +6176,70 @@
         "NGWVectorLayer.getFeaturesUrl: DatabaseContext.getMapForLayer(this) owning map → tracked since; untracked URL unchanged"
       ],
       "canonical_followup": "AUDIT-TODO-SYNC-ACK-RECOVERY remains open for physical disk/fresh-process/full-scenario oracles."
+    },
+    "date_widget_source_review_20261101": {
+      "reviewed_at": "2026-11-01",
+      "state": "bounded_source_review",
+      "runtime": "not_run",
+      "source_context": {
+        ".": "40d5292025a7911a0a2e840620be138d75f7cfe2",
+        "android_projects/android_gisapp": "57fb5dbabbc17afa136ec8ada1bbf927a600499a",
+        "android_projects/android_gisapp/maplib": "baa94f361101051b09f762d7eda1f36466436d5c",
+        "android_projects/android_gisapp/maplibui": "be0ed0c4933573b99752b4e447f088951b88120b"
+      },
+      "basis": "Two existing shared maplibui date implementations/resources; no product source change, native widget execution or current tenant schema claim.",
+      "source_packet_sha256": "209d2138667c4395cc7cdb86fd8039492e1bc9828b138c3c48b1ee587d2f3977",
+      "independent_source_peer_sha256": "acb7550eda62f825afece0f7ed5b40eaac16b677323744a719131dd56330488b",
+      "source_observations": {
+        "records": 8,
+        "routes": 5,
+        "selector_rows": 3,
+        "conditional_sequences": 2,
+        "unknowns": 9
+      },
+      "proof_scope": "Independent SOURCE peer supports the bounded source facts; its129 passive pin/bounds checks are separate. New catalogue lexical checks only detect source drift, not native behavior.",
+      "new_contract_ids": [
+        "UI-FORM-DATE-STANDARD-VALUE",
+        "UI-FORM-DATE-NGFP-VALUE"
+      ],
+      "no_android_id": "Both date layout roots lack android:id; contracts widgets[] is intentional. Their actual class/layout binding is guarded in non_method_evidence.",
+      "existing_guard_reused": "The existing ConstantsUI non-method row and every old source fingerprint/contract are retained whole. Field/date keys were manually traced; no old expectation update.",
+      "same_pin_supplemental_witness": "Source peer separately reobserved ControlHelper:97 nextgis_control_ under unchanged FACTORY pin.",
+      "official_api_documents": [
+        {
+          "id": "WAPI-CURSOR",
+          "url": "https://developer.android.com/reference/android/database/Cursor#getLong(int)",
+          "sections": "getLong; fetched page lines2235-2243",
+          "paraphrase": "The Cursor interface leaves null, nonintegral and out-of-range getLong results or exceptions to its implementation. Therefore this widget source alone cannot promise that SQL NULL becomes either null or zero.",
+          "limit": "No installed Cursor/SQLite/libcore implementation, actual row or native acceptance pinned."
+        },
+        {
+          "id": "WAPI-DATEPICKER",
+          "url": "https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener#onDateSet(android.widget.DatePicker,%20int,%20int,%20int)",
+          "sections": "onDateSet; fetched page lines1921-1935",
+          "paraphrase": "The callback supplies year, a zero-based month compatible with Calendar.MONTH, and day-of-month.",
+          "limit": "A public callback contract, not observed dialog behavior on a device."
+        },
+        {
+          "id": "WAPI-TIMEPICKER",
+          "url": "https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener#onTimeSet(android.widget.TimePicker,%20int,%20int)",
+          "sections": "onTimeSet; fetched page lines1911-1934",
+          "paraphrase": "The callback reports the chosen hour and minute when time selection is completed.",
+          "limit": "No native callback/cancel/lifecycle delivery or OEM implementation verified."
+        },
+        {
+          "id": "WAPI-FORMAT",
+          "url": "https://developer.android.com/reference/java/text/DateFormat",
+          "sections": "getDateInstance()/getDateTimeInstance()/getTimeInstance(); fetched method sections2443-2447,2500-2504 plus official search result for getTimeInstance()",
+          "paraphrase": "The zero-argument display factories use the default FORMAT locale and default style. The selected widget source sets no explicit UTC timezone on its formatter.",
+          "limit": "The API read does not pin a device locale, associated formatter timezone or concrete formatter implementation. Date7 separately supplies the earlier parser leniency/prefix and Calendar initialization contracts."
+        }
+      ],
+      "limits": [
+        "Actual private forms/schema/cursor/preferences/zone/clock/device and remote roundtrip remain UNKNOWN.",
+        "NGFP seed/calendar and TIME date-component sequences remain conditional, not current bugs, native Cancel acceptance or fixed behavior.",
+        "Date7/held-form Save/required/cascade/draft/script/owner/provider/permissions constraints and all original catalogue coverage remain unchanged."
+      ]
     }
   },
   "non_method_evidence": [
@@ -6228,6 +6706,56 @@
         "UI-SYNC-COMPLETION-CLOCK"
       ],
       "sha256": "791c2be296841d982ff1415b0dfbe14d9e2a2c767fc509466fd0bae0e839f019"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+      "purpose": "Static picker selector constants/current mValue initializer and anonymous callback ownership for generic date UI; methods are separately guarded.",
+      "contract_ids": [
+        "UI-FORM-DATE-STANDARD-VALUE",
+        "UI-FORM-DATE-NGFP-VALUE"
+      ],
+      "sha256": "a145b3e35fd0c0eb820109a5dc01d8cc38e155e6a65c9e4fd1d722dd3384fcc6"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+      "purpose": "Independent Calendar/mValue/null initializers, selector fields and anonymous callback ownership; source carrier observations remain conditional.",
+      "contract_ids": [
+        "UI-FORM-DATE-STANDARD-VALUE",
+        "UI-FORM-DATE-NGFP-VALUE"
+      ],
+      "sha256": "88f2f02eabee6636dc3c4de3f8132d51e0e414ae5a3fa09fa693e7fef6a0860c"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/template_datetime.xml",
+      "purpose": "Actual template_datetime root class/style binding has no android:id; do not invent a widget declaration.",
+      "contract_ids": [
+        "UI-FORM-DATE-STANDARD-VALUE",
+        "UI-FORM-DATE-NGFP-VALUE"
+      ],
+      "sha256": "48ab223bfd883d5cfcd6e2e6809699a64444aeb1c6413134fa85a241f0669cb1"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/formtemplate_datetime.xml",
+      "purpose": "Actual formtemplate_datetime root class/style binding has no android:id; NGFP field binding is dynamic.",
+      "contract_ids": [
+        "UI-FORM-DATE-STANDARD-VALUE",
+        "UI-FORM-DATE-NGFP-VALUE"
+      ],
+      "sha256": "ebf770bbde51a8dd8c24f50497a23e5980ae3ad8c884744082c809fd0a92eae5"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/ControlHelper.java",
+      "purpose": "ControlHelper nextgis_control_ saved-state prefix and field-name/name-presence/last helpers; not an NGW permission gate.",
+      "contract_ids": [
+        "UI-FORM-DATE-STANDARD-VALUE",
+        "UI-FORM-DATE-NGFP-VALUE"
+      ],
+      "sha256": "33e2305b850390f4594c82e654e490aad0687986517b4eb499b89b9775bf0968"
     }
   ]
 }

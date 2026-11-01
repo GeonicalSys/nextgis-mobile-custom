@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-10-30
+last_verified: 2026-11-01
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
@@ -214,6 +214,19 @@ units/CRS/freshness, сохранённым состоянием и незави
 ловят потерю/переназначение reviewed methods и source fragments. Пробелы и
 неисполненная runtime матрица явные; missing contract агент исследует и сохраняет
 в этой же задаче. Исторический source review не равен полной приёмке интерфейса.
+
+
+Срез source/docs01.11 в прежнем MOB-UI-01 разделяет стандартный и NGFP
+контролы даты: UI-FORM-DATE-STANDARD-VALUE/UI-FORM-DATE-NGFP-VALUE.
+Подтверждены отдельные selector namespaces, millisecond/state/default/null
+и ContentValues boundaries; UTC-midnight DATE, фиксированный TIME baseline,
+actual zone/locale, private формы и native Cancel не объявлены проверенными.
+В owning каталоге добавлены2контракта/22method guards/5file witnesses;
+старые44контракта/191guards/64XMLwidgets/49file witnesses сохранены.
+Root LISA Draft278 содержит сквозную карту; app delivery остаётся отдельной
+собственной docs-веткой/Draft, не merge/APK. Product fixes/ranking/native
+не выполняются; приоритеты и очередь MOB не меняются. Свидетельства source-only
+и результаты actual validators/delivery фиксируются в карточке и PR отдельно.
 
 ## MOB-02 Самостоятельное обнаружение и сохранение зависимостей
 

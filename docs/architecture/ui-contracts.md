@@ -1,7 +1,7 @@
 ---
 title: Контракты значений и действий мобильного интерфейса
 type: architecture
-last_verified: 2026-10-30
+last_verified: 2026-11-01
 related_code:
   - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
   - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
@@ -370,3 +370,32 @@ basename; независимые method tripwires дополняют прежн�
 
 
 Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.
+
+## Значение даты и времени в форме — исходники 2026-11-01
+
+Контракты `UI-FORM-DATE-STANDARD-VALUE` и `UI-FORM-DATE-NGFP-VALUE` в
+[каталоге](../registry/ui-contracts.json) разделяют две реализации. Стандартная
+форма выбирает `control.DateTime` по типу Field; NGFP `type=date_time` использует
+отдельный `formcontrol.DateTime` и `date_type`:0 — DATE,1 — TIME,2 — DATETIME.
+Это не номера schema-type и не внутренние selector constants. У корней обоих
+layout нет отдельного `android:id`: привязка идёт через class/layout и field name.
+
+Оба getter/state передают nullable Long миллисекунд эпохи, а локализованный
+текст — отдельное представление. DATE callback не обнуляет скрытое время,
+TIME callback использует date ints экземпляра; UTC-midnight DATE и фиксированный
+TIME baseline здесь не подтверждены. Saved key имеет приоритет; чтение cursor
+не содержит собственного isNull, а официальный Cursor API оставляет NULL и
+нецелые getLong outcomes реализации. Фактический installed результат неизвестен.
+
+У NGFP new-value `text` разбирается fixed pattern, затем `last` может заменить
+timestamp. Shared Calendar и mValue seed различаются: первый click может сбросить
+calendar carrier до принятого callback, если seed/default отличаются. Это
+условное source-наблюдение с неизвестной политикой; не текущий bug или доказанный
+Cancel result. Explicit-null Bundle/getter, absent control, copied-empty retention
+и итоговый ContentValues не равны очистке поля. Дальнейшие required/cascade,
+script, draft, owning-map/provider и Save gates сохраняют существующие контракты.
+
+Это ограниченная source-карта для общих Lisa/Belka исходников. Private NGFP,
+tenant schema/значения, zone/locale/clock, диалоги/native/rotation/remote roundtrip
+не проверялись; source fingerprints требуют semantic review при изменении и
+не заменяют device acceptance. Прежние контракты и coverage остаются целиком.
