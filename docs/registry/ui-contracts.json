@@ -3321,6 +3321,131 @@
       ],
       "forbids": [],
       "sha256": "f35143264911a15084f9226b0357389bc3f75a6b4aee5e4dd1397dccbfef6814"
+    },
+    {
+      "id": "WF-MOBILE-PROJECT-LOAD-MENU",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+      "marker": "public boolean onMenuItemClick(MenuItem menuItem)",
+      "requires": [
+        "case R.id.menu_load_collector_project:",
+        "((MainActivity) getActivity()).loadCollectorProject();"
+      ],
+      "forbids": [],
+      "sha256": "dffb80a0da57268223afb51d879906aa57dedbb2a879beac4c5e89bf037b095e"
+    },
+    {
+      "id": "WF-MOBILE-PROJECT-LOAD-ENTRY",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+      "marker": "fun loadCollectorProject()",
+      "requires": [
+        "ProjectSyncInterruption.confirmAndRun(this)",
+        "LoadLisaCollectorProject.start(this)"
+      ],
+      "forbids": [],
+      "sha256": "dfc27ab6ca5337c9f12c85df5b6f9091e651e50adb5824c860e502730f56ec6f"
+    },
+    {
+      "id": "WF-MOBILE-PROJECT-LOAD-ACCOUNT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java",
+      "marker": "public static void start(NGActivity activity)",
+      "requires": [
+        "SelectNGWResourceDialog.fillConnections(activity, accountManager)",
+        "new Intent(activity, NGWLoginActivity.class)",
+        "loadFromConnection(activity, (Connection) connections.getChild(0))"
+      ],
+      "forbids": [],
+      "sha256": "ae1605b9d2025f54e1408ed49027b808d3ec143cd8838aab93cca35c089632ec"
+    },
+    {
+      "id": "WF-MOBILE-PROJECT-LOAD-LIST",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java",
+      "marker": "private static void loadFromConnection(NGActivity activity, Connection connection)",
+      "requires": [
+        "connection.connect(false)",
+        "LisaCatalogLookup.findCatalog(connection)",
+        "LisaCatalogLookup.listCollectorProjects(connection, catalog.remoteId)",
+        "if (activity.isFinishing())",
+        "showProjectList(activity, connection, projects)"
+      ],
+      "forbids": [],
+      "sha256": "bc6daabb594bc1ebb28684c49777e2cd09833487ab45a2977b5e50996d007cac"
+    },
+    {
+      "id": "WF-MOBILE-PROJECT-LOAD-SELECT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java",
+      "marker": "private static void showProjectList(\n            NGActivity activity,\n            Connection connection,\n            List<LisaCatalog.Ref> projects)",
+      "requires": [
+        "final int[] selected = {-1}",
+        "selected[0] = index",
+        "load.setEnabled(false)",
+        "importProject(activity, connection, projects.get(selected[0]))",
+        ".setNegativeButton(R.string.cancel, null)"
+      ],
+      "forbids": [],
+      "sha256": "7e6d76966553ef20daab250bdf4f16e4cdd32ca6e3121da0a714abf06fb0d5a1"
+    },
+    {
+      "id": "WF-MOBILE-PROJECT-LOAD-FETCH",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java",
+      "marker": "private static void importProject(\n            NGActivity activity,\n            Connection connection,\n            LisaCatalog.Ref project)",
+      "requires": [
+        "LisaCatalogLookup.loadCollector(",
+        "connection, project.remoteId",
+        "startImport(activity, collector)"
+      ],
+      "forbids": [],
+      "sha256": "7051096e28f3de6d951353fc6b7dcc036f030042f5c7e660d7902036c1cc4918"
+    },
+    {
+      "id": "WF-MOBILE-PROJECT-LOAD-ADMISSION",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java",
+      "marker": "private static void startImport(Activity activity, CollectorResource collector)",
+      "requires": [
+        "ProjectSyncInterruption.confirmAndRun(",
+        "!collector.isSnapshotComplete()",
+        "CollectorProjectRegistry.prepareCollectorProjectWorkspaceForImport(",
+        "prepareResult.getOperationLease()",
+        "CollectorProjectImportHelper.appendImportTasks(",
+        "LayerFillService.startFillBatch(activity, batch, importLease)",
+        "workspace.save()",
+        "importLease.close()"
+      ],
+      "forbids": [],
+      "sha256": "e9e8c8564880603ed9da49283f23a759076846bee72b2f4cc6b8fb3cf7be6a5f"
+    },
+    {
+      "id": "WF-MOBILE-PROJECT-LOAD-HTTP",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java",
+      "marker": "public static CollectorResource loadCollector(Connection connection, long remoteId)",
+      "requires": [
+        "NetworkUtil.get(",
+        "NGWUtil.getResourceUrl(connection.getURL(), remoteId)",
+        "new CollectorResource(data, connection)"
+      ],
+      "forbids": [],
+      "sha256": "61b43a64ea0e441f95bb854afac750fd110e7484df575051136f3c983af07941"
+    },
+    {
+      "id": "WF-MOBILE-PROJECT-LOAD-DISCOVERY",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java",
+      "marker": "public static List<LisaCatalog.Ref> listCollectorProjects(\n            Connection connection,\n            long catalogId)",
+      "requires": [
+        "seen.size() < MAX_GROUPS",
+        "loadChildren(connection, parent)",
+        "LisaCatalog.collectChildren(children, collectors, nested)",
+        "LisaCatalog.sortByDisplayName(collectors)"
+      ],
+      "forbids": [],
+      "sha256": "b5f98dc8e8de3c8de4d98ef8c5876bd28a15e408a0a3f5eac51ef8da7aa05aa9"
     }
   ],
   "contracts": [
@@ -5649,6 +5774,60 @@
         "Legacy positive-size corrupt cache, silent-truncated200 integrity и concurrent preview/same-final ownership остаются отдельными UNKNOWN; исправление не является checksum/Content-Length verification.",
         "Source guards start/progress/sendBroadcast и UI bindings неизменны на old/new library. Changed transfer methods проверяются owning-library regression; этот App catalogue не подменяет pending library merge/adoption."
       ]
+    },
+    {
+      "id": "UI-MOBILE-PROJECT-LOAD",
+      "group": "project",
+      "title": "Загрузка мобильного проекта из WebGIS",
+      "surface": "Меню добавления слоя → Загрузить проект",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "menu_load_collector_project"
+      ],
+      "meaning": "Действие читает выбранный серверный мобильный проект и начинает его внутренний импорт в наше приложение; оно не запускает отдельное приложение Collector.",
+      "value_origin": "LayersFragment → MainActivity.loadCollectorProject → LoadLisaCollectorProject; выбранные Connection и LisaCatalog.Ref.remoteId → NGW GET → CollectorResource → owning workspace/import batch.",
+      "units": "Нет физических единиц. Account, remote resource ID, project UID и локальный workspace имеют разные роли.",
+      "updates": [
+        "Без аккаунта предлагается собственный NGWLoginActivity; один аккаунт используется сразу, несколько выбираются пользователем.",
+        "Каталог keyname lisa и список прочитанных проектов разрешаются по выбранному Connection. Выбор строки только меняет radio state; импорт начинается по кнопке Загрузить."
+      ],
+      "actions": [
+        "Загрузить проект",
+        "Выбрать аккаунт и строку проекта",
+        "Отмена"
+      ],
+      "conditions": [
+        "Существующий ProjectSyncInterruption gate действует на входе и перед импортом.",
+        "Load выключен до выбора индекса; используется именно projects.get(selected[0]), а не поиск по имени.",
+        "Это dedicated Lisa-catalog route, а не UI-PROJECT-CHOOSER для сохранённых рабочих областей и не arbitrary customer-root selector.",
+        "Неполный snapshot или отсутствие поддерживаемых items останавливает импорт. Registry workspace/lease admission и batch failure сохраняют прежние ограничения.",
+        "Серверный collector_project и классы исходников сохраняют имена протокола. User-facing названия говорят мобильный проект."
+      ],
+      "saved_state": "Registry готовит owning workspace под operation lease. Принятие batch и workspace.save не являются полным download/sync ACK. Эта copy-правка не меняет project/remote IDs, форматы, очереди, разрешения или сохранённые данные.",
+      "source_ids": [
+        "WF-MOBILE-PROJECT-LOAD-MENU",
+        "WF-MOBILE-PROJECT-LOAD-ENTRY",
+        "WF-MOBILE-PROJECT-LOAD-ACCOUNT",
+        "WF-MOBILE-PROJECT-LOAD-LIST",
+        "WF-MOBILE-PROJECT-LOAD-SELECT",
+        "WF-MOBILE-PROJECT-LOAD-FETCH",
+        "WF-MOBILE-PROJECT-LOAD-ADMISSION",
+        "WF-MOBILE-PROJECT-LOAD-HTTP",
+        "WF-MOBILE-PROJECT-LOAD-DISCOVERY"
+      ],
+      "expectations": [
+        "Oracle: две строки с одинаковым displayName, но разными remoteId загружают именно выбранный Ref только после нажатия Загрузить; Cancel не запускает importProject.",
+        "Oracle: при отсутствии аккаунта предлагается диалог входа; его положительная кнопка открывает собственный NGWLoginActivity, а отмена не начинает импорт. Выбранный проект читается через NGW API и обрабатывается нашим workspace/fill, без запуска отдельного Collector APK.",
+        "Контрпример: row tap сразу импортирует, displayName подменяет remoteId или успешная постановка batch объявляется полным завершением проекта."
+      ],
+      "unknowns": [
+        "Native dialog/window/font/rotation/effective flavor-locale resource merge и установленное приложение здесь не исполнялись.",
+        "Ограниченный обход и пропущенные failed child reads не доказывают полный список WebGIS; remote/custom catalog accessibility и фактический network outcome требуют отдельной приёмки.",
+        "Подписи не доказывают завершение импорта, scripts adoption, server authorization или scope ownership."
+      ]
     }
   ],
   "widget_evidence": [
@@ -6047,6 +6226,12 @@
       "path": "easypicker/easypicker/src/main/res/layout/photo_item.xml",
       "id": "ib_download",
       "sha256": "3b43a3438911f2ecf9c56e7585927f5a0f9ac1b53680ecf1aef6f0443eefa096"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/add_layer.xml",
+      "id": "menu_load_collector_project",
+      "sha256": "3addc15f7eceb8174d67126ae0a8a73b3c56f44617615464a14ba5be758db763"
     }
   ],
   "coverage": {
@@ -6787,6 +6972,51 @@
       "before_after_method_equality": true,
       "peer_witness_sha256": "5371f94ba090892cd94c81a4205c617dc160cddab577ec14a1dfc81adcfa0b9c",
       "limits": "No checker relaxation, dual hash or expected UI-message behavior change. Historical source_inputs remain unchanged. New class repair stays library delivery pending merge/App pointer update."
+    },
+    "mobile_project_labels_review_20261101": {
+      "reviewed_at": "2026-11-01",
+      "basis": "User-directed visible terminology correction in our mobile; existing internal load route manually traced. No client/server API or execution behavior change.",
+      "app_metadata_base": "852457d685cab388891bbdcef41beb00cde7663a",
+      "new_contract_id": "UI-MOBILE-PROJECT-LOAD",
+      "protocol_names": "collector_project, CollectorResource, resource keys/classes and API/package identifiers remain unchanged.",
+      "original_app_resource_evidence": [
+        {
+          "repository": "root",
+          "path": "app/src/main/res/values/strings.xml",
+          "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. Map path labels/summary are presentation, not authority for multi-project move semantics. Reviewed one added map_storage_move_failed string; all prior values/order preserved; Reset confirmation and move failure/refresh semantics.",
+          "contract_ids": [
+            "UI-NAVIGATION-STAKEOUT-TARGET",
+            "UI-SETTINGS-MAP-STORAGE-MOVE",
+            "UI-SETTINGS-RESET-WORKSPACE"
+          ],
+          "sha256": "5664a44ba6e93a254e769aa4172280de18a4509fdc459cb8e0d976007f615603"
+        },
+        {
+          "repository": "root",
+          "path": "app/src/main/res/values-ru/strings.xml",
+          "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. RU «Путь к картам» label remains plural while actual producer moves one map. Reviewed one added map_storage_move_failed string; all prior values/order preserved; Reset confirmation and move failure/refresh semantics.",
+          "contract_ids": [
+            "UI-NAVIGATION-STAKEOUT-TARGET",
+            "UI-SETTINGS-MAP-STORAGE-MOVE",
+            "UI-SETTINGS-RESET-WORKSPACE"
+          ],
+          "sha256": "11db8bb6fe29841f9692b614ea53e57d4979c473cf3348585ad0c3c772138913"
+        }
+      ],
+      "intentional_guard_review": {
+        "resource_keys": [
+          "collector_projects",
+          "collector_projects_empty",
+          "collector_project_already_active",
+          "collector_project_not_found",
+          "collector_project_visibility_updated"
+        ],
+        "values_changed_each_locale": 5,
+        "maplibui_values_changed_each_locale": 8,
+        "preservation": "All old contracts/methods/widgets/coverage values remain exact; only two reviewed App file evidence rows change with originals retained here. New method/file guards are manually reviewed source bindings, not generated behavior expectations."
+      },
+      "runtime": "not_run",
+      "limits": "No actual app launch, device/font/rotation/flavor acceptance, NGW/customer API, data migration or release. Imported server project is handled inside our mobile, not an external Collector APK."
     }
   },
   "non_method_evidence": [
@@ -6848,24 +7078,28 @@
     {
       "repository": "root",
       "path": "app/src/main/res/values/strings.xml",
-      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. Map path labels/summary are presentation, not authority for multi-project move semantics. Reviewed one added map_storage_move_failed string; all prior values/order preserved; Reset confirmation and move failure/refresh semantics.",
+      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. Map path labels/summary are presentation, not authority for multi-project move semantics. Reviewed one added map_storage_move_failed string; all prior values/order preserved; Reset confirmation and move failure/refresh semantics. Reviewed five mobile-project labels/messages only; keys/order/placeholders and every unrelated value are unchanged. The dedicated load route is internal to our mobile; protocol identifiers are retained.",
       "contract_ids": [
         "UI-NAVIGATION-STAKEOUT-TARGET",
         "UI-SETTINGS-MAP-STORAGE-MOVE",
-        "UI-SETTINGS-RESET-WORKSPACE"
+        "UI-SETTINGS-RESET-WORKSPACE",
+        "UI-MOBILE-PROJECT-LOAD",
+        "UI-PROJECT-SWITCH"
       ],
-      "sha256": "5664a44ba6e93a254e769aa4172280de18a4509fdc459cb8e0d976007f615603"
+      "sha256": "488f8c8d7fc6525695a979e1e37a0631145cc7ab0aef1147f1b205286c09b6c7"
     },
     {
       "repository": "root",
       "path": "app/src/main/res/values-ru/strings.xml",
-      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. RU «Путь к картам» label remains plural while actual producer moves one map. Reviewed one added map_storage_move_failed string; all prior values/order preserved; Reset confirmation and move failure/refresh semantics.",
+      "purpose": "Reviewed stakeout_action translation used by selected-feature menus; file drift requires review, not a claim that every translation was audited. RU «Путь к картам» label remains plural while actual producer moves one map. Reviewed one added map_storage_move_failed string; all prior values/order preserved; Reset confirmation and move failure/refresh semantics. Reviewed five mobile-project labels/messages only; keys/order/placeholders and every unrelated value are unchanged. The dedicated load route is internal to our mobile; protocol identifiers are retained.",
       "contract_ids": [
         "UI-NAVIGATION-STAKEOUT-TARGET",
         "UI-SETTINGS-MAP-STORAGE-MOVE",
-        "UI-SETTINGS-RESET-WORKSPACE"
+        "UI-SETTINGS-RESET-WORKSPACE",
+        "UI-MOBILE-PROJECT-LOAD",
+        "UI-PROJECT-SWITCH"
       ],
-      "sha256": "11db8bb6fe29841f9692b614ea53e57d4979c473cf3348585ad0c3c772138913"
+      "sha256": "b1f89645caa524e232db0cbdb58e54cae7cfdcd90b7cca41a7ff5ef1a9f3f0b7"
     },
     {
       "repository": "root",
@@ -7339,6 +7573,33 @@
         "UI-ATTACHMENT-DOWNLOAD-STATE"
       ],
       "sha256": "0b76bd2c9bc32707c677d024db8a8bcb2170b4e4d0303be0a65d7b2da46749bc"
+    },
+    {
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/LisaCatalog.java",
+      "purpose": "Reviewed lisa catalog key and Ref remoteId/displayName/class projection; no proof of global discovery completeness or server ownership.",
+      "contract_ids": [
+        "UI-MOBILE-PROJECT-LOAD"
+      ],
+      "sha256": "590ab49ea71ffeb6fb9cb6197afd7dd83f1cd161a901c4cb74f8f22ab61256b1"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/values/strings.xml",
+      "purpose": "Reviewed existing Load project/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited.",
+      "contract_ids": [
+        "UI-MOBILE-PROJECT-LOAD"
+      ],
+      "sha256": "049e720fa043dce5a01625f37713034b604d9b1b8256852b4bd4fd81fc8a37ce"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/values-ru/strings.xml",
+      "purpose": "Reviewed existing Загрузить проект/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited.",
+      "contract_ids": [
+        "UI-MOBILE-PROJECT-LOAD"
+      ],
+      "sha256": "38e1b31476818ba6a7b5ca195dbb4cab4d909139ca6c0fe4095200ed8d025444"
     }
   ]
 }

@@ -859,3 +859,21 @@ PhotoPicker; автоматическая миграция/удаление cach
 остаются отдельными неизвестностями. Влияние на фон/батарею не измерялось; новых
 scheduler/lease/cancel policy или task counters не вводится. Следующие source
 frontiers не начинаются до закрытия этого started fixes checkpoint.
+
+## MOB-UI-01 — Ясные названия мобильных проектов, 2026-11-01
+
+По прямому уточнению владельца работа ведётся в нашем мобильном приложении,
+отдельное приложение Collector не используется. EN/RU подписи списка и сообщений
+называют ресурс мобильным проектом; server API `collector_project`, client IDs,
+keys, placeholders и логика остаются прежними. Новый узкий
+`UI-MOBILE-PROJECT-LOAD` фиксирует уже существующий маршрут «Загрузить проект»:
+account/catalog `lisa` → выбранный remote ID → NGW GET → own workspace/fill,
+отдельно от chooser сохранённых рабочих областей.
+
+Владелец — Android root для App copy/каталога; maplibui владеет общими сообщениями.
+Это текущий MOB-UI-01 и явное уточнение UI, без новой очереди/приоритета и без
+изменения data/sync/map/background/battery поведения. Приёмка: правильные
+семантические bindings, прежние keys/placeholder cohorts, XML/resource и docs
+проверки; сборка ресурса не доказывает читаемость окна. Device/font/rotation,
+NGW/customer, native/GUI и выпуск NOT_RUN; фактические проверки и Git-доставка
+отмечаются в карточке `android-20261101-mobile-project-labels` и own Draft87.

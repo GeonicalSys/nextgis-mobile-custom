@@ -17,6 +17,13 @@ related_code:
   - maplib/src/main/java/com/nextgis/maplib/map/LayerEditingPolicy.java
   - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/ControlHelper.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalog.java
+  - app/src/main/res/values/strings.xml
+  - app/src/main/res/values-ru/strings.xml
+  - maplibui/src/main/res/values/strings.xml
+  - maplibui/src/main/res/values-ru/strings.xml
 ---
 
 # Что означает мобильный интерфейс
@@ -477,3 +484,37 @@ method bytes и теми же typed HTTP/null/classifier требованиям�
 checker не получил dual-hash или исключение. Это позволяет проверять один
 UI contract на прежнем App gitlink и на исправленной библиотеке, не объявляя
 доставку новой class repair в App до merge/pointer update.
+
+## Загрузка мобильного проекта из WebGIS
+
+`UI-MOBILE-PROJECT-LOAD` описывает действие **«Загрузить проект»** в меню
+добавления слоя нашего приложения. `LayersFragment` передаёт его в
+`MainActivity.loadCollectorProject`, затем в `LoadLisaCollectorProject`.
+Это внутренний импорт в ЛИСА/БЕЛКА, а не запуск отдельного приложения Collector.
+Названия `collector_project`, `CollectorResource` и resource IDs остаются
+именами серверного протокола и исходников; пользовательские подписи говорят
+«мобильный проект».
+
+После проверки прерывания синхронизации выбирается подключение WebGIS. При
+отсутствии аккаунта предлагается собственный `NGWLoginActivity`; единственный
+аккаунт используется сразу, несколько требуют выбора. Этот маршрут ищет
+серверный каталог с keyname `lisa`, а не произвольный каталог заказчика.
+Список строится из прочитанных дочерних ресурсов с ограниченным обходом групп;
+он не подтверждает полноту всего WebGIS. Пользователь выбирает строку, затем
+нажимает **«Загрузить»**. До выбора кнопка выключена, выбор строки сам импорт
+не начинает. Обрабатывается выбранный `LisaCatalog.Ref.remoteId`, а не поиск
+по отображаемому имени. Это другой сценарий, чем `UI-PROJECT-CHOOSER` для уже
+сохранённых рабочих областей; прежний контракт chooser/switch сохранён.
+
+Выбранный ресурс читается через NGW API и `CollectorResource`. Неполный snapshot
+или отсутствие поддерживаемых элементов останавливает импорт. Затем owning
+registry готовит workspace и operation lease; `CollectorProjectImportHelper`
+добавляет задачи собственного `LayerFillService`. Передача batch и вызов
+`workspace.save()` не являются подтверждением полного скачивания проекта,
+доставки scripts или успешной синхронизации. Права, данные, URI, форматы,
+повтор/отмена и классы ресурсов этой правкой подписей не меняются.
+
+Ключи переводов и placeholders сохранены. Method/XML/file guards закрепляют
+просмотренную связь и ловят source drift; это не literal-mirror тест текста
+и не приёмка native окон. Effective Lisa/Belka locale merge, крупный шрифт,
+rotation, устройство, аккаунты и реальные серверные результаты здесь NOT_RUN.

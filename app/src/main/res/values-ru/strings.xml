@@ -242,8 +242,8 @@
     <string name="layer_backups_cleared">Резервные копии очищены</string>
     <string name="layer_backups_share_error">Не удалось подготовить резервные копии к отправке</string>
     <string name="layer_backups_clear_error">Не удалось очистить резервные копии</string>
-    <string name="collector_projects">Проекты Collector</string>
-    <string name="collector_projects_empty">Нет импортированных проектов Collector</string>
+    <string name="collector_projects">Мобильные проекты</string>
+    <string name="collector_projects_empty">Нет импортированных мобильных проектов</string>
     <string name="collector_project_visible">видим</string>
     <string name="collector_project_hidden">скрыт</string>
     <string name="collector_project_show_only">Показать только этот</string>
@@ -253,8 +253,8 @@
     <string name="collector_project_no_district">нет</string>
     <string name="collector_project_no_composition_check">никогда</string>
     <string name="collector_project_no_error">нет</string>
-    <string name="collector_project_not_found">Проект Collector не найден</string>
-    <string name="collector_project_visibility_updated">Видимость проекта Collector обновлена</string>
+    <string name="collector_project_not_found">Мобильный проект не найден</string>
+    <string name="collector_project_visibility_updated">Видимость мобильного проекта обновлена</string>
     <string name="collector_project_list_item">%1$s\n%2$s | аккаунт: %3$s | id: %4$d | district: %5$s</string>
     <string name="collector_project_detail_status">Статус: %1$s</string>
     <string name="collector_project_detail_active">Активный: %1$b</string>
@@ -297,7 +297,7 @@
     <string name="collector_project_switch">Сменить проект</string>
     <string name="collector_project_open">Открыть</string>
     <string name="collector_project_workspace_list_item">%1$s\nаккаунт: %2$s | id: %3$d | district: %4$s</string>
-    <string name="collector_project_already_active">Этот проект Collector уже активен</string>
+    <string name="collector_project_already_active">Этот мобильный проект уже активен</string>
     <string name="collector_project_switch_busy">Дождитесь окончания синхронизации или загрузки данных перед сменой проекта</string>
     <string name="collector_project_switch_edit_mode">Сохраните или отмените редактирование перед сменой проекта</string>
     <string name="geometry_edit_cancel_title">Отменить создание объекта?</string>

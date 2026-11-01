@@ -8,6 +8,18 @@ related_code:
 
 # История документационной системы
 
+## 2026-11-01 — Мобильные проекты в нашем приложении
+
+App EN/RU подписи списка и сообщений уточнены до «мобильный проект» без изменения
+resource keys, placeholders, client logic и NGW `collector_project` API.
+`UI-MOBILE-PROJECT-LOAD` отделяет существующий внутренний маршрут загрузки из
+WebGIS от chooser сохранённых workspaces и от отдельного приложения Collector.
+Старые UI contracts, source-context history и unrelated guards сохранены;
+изменённые file witnesses пересмотрены по точному набору переводов.
+Это source/resource correction в прежнем MOB-UI-01, не приёмка устройства,
+полного импорта или выпуска APK. Actual validators/build/delivery фиксируются
+отдельно от source-контракта.
+
 ## 2026-11-01 — Состояние вложения и отдельная доставка mobile fixes
 
 Добавлен `UI-ATTACHMENT-DOWNLOAD-STATE`: реальные `progressImageDownload`/
