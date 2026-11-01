@@ -28,6 +28,13 @@ related_code:
 
 # Что означает мобильный интерфейс
 
+При подготовке3.1.2.31/225 повторно просмотрены два Gradle file witnesses:
+app меняет только production versionCode/versionName, maplib — только release
+diagnostic version. Brand/sourceSets, application/provider/account IDs,
+JTS1.20.0 и цепочки выбора цели/карты прежние. Обновлены только соответствующие
+file hashes после сравнения diff; UI method/resource expectations не менялись.
+Это проверка смысла version-only diff, не новый native результат.
+
 Для каждого значения и действия нужно знать его смысл, источник, единицы,
 условия появления и обновления, а также судьбу сохранённой работы. Видимая
 подпись сама по себе этого не доказывает: время полного обмена отличается
