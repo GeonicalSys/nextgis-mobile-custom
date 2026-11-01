@@ -1,7 +1,7 @@
 ---
 title: Flavors и версионирование форка
 type: reference
-last_verified: 2026-10-24
+last_verified: 2026-11-01
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -67,7 +67,7 @@ production APK не может обновить пакет Debug и не пол�
 
 ## Версия
 
-- Подготовленный выпуск: Lisa/Belka Release `3.1.2.30` / `versionCode 224`,
+- Подготавливаемый выпуск: Lisa/Belka Release `3.1.2.31` / `versionCode 225`,
   Lisa Debug использует `3.1.2.23` / `versionCode 218`; maplib сообщает соответствующее
   variant-specific значение.
 - `versionName = <upstream-base>.<fork-patch>`.

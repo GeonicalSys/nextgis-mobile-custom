@@ -7113,11 +7113,11 @@
     {
       "repository": "root",
       "path": "app/build.gradle",
-      "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI.",
+      "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged.",
       "contract_ids": [
         "UI-SETTINGS-MAP-STORAGE-MOVE"
       ],
-      "sha256": "f5657eebe67e5e741b1d5b35b9a052037a375d65dfc774d3e751a1611a8acab3"
+      "sha256": "e8fc159c55b02741b0a78bd92426a9da71b5e1b9d8ef50e639f0192991900ccf"
     },
     {
       "repository": "root",
@@ -7205,13 +7205,13 @@
     {
       "repository": "maplib",
       "path": "build.gradle",
-      "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Declaration is not proof of installed JAR/APK/native acceptance.",
+      "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance.",
       "contract_ids": [
         "UI-NAVIGATION-STAKEOUT-TARGET",
         "UI-NAVIGATION-AZIMUTH-CURRENT",
         "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
       ],
-      "sha256": "996ecb399fca207c3c8cf37764f8ac67f5e72f26ebaf1287fe9fa4573e3ad1d7"
+      "sha256": "2bfa96ae382e4a0c78eaef903a0887acead5f0a502460333baa1968273a7653e"
     },
     {
       "repository": "maplib",

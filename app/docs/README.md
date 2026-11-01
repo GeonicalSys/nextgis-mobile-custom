@@ -270,7 +270,9 @@ Related styles включает два новых native pixel/lifecycle слу�
 Отдельный FireflyTileFallbackTest проверяет переход уже загруженного точечного
 VectorSource к GeoJsonSource при выборе сложного стиля через штатный reload.
 
-Production подготовлен к 3.1.2.30/224, Lisa Debug сохраняет 3.1.2.23/218.
+Production подготавливается к 3.1.2.31/225, Lisa Debug сохраняет 3.1.2.23/218.
+Состав, проверки и незакрытые условия публикации:
+[подготовка 3.1.2.31](../../docs/reference/mobile-release-3.1.2.31-2026-11-01.md).
 По запросу 2026-10-23 собирается только подписанный Lisa Release; Belka APK
 и публикация отложены. Проверки и состав — в consuming release runbook.
 

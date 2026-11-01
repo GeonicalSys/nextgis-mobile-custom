@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-10-26
+last_verified: 2026-11-01
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -21,7 +21,13 @@ Android/docs Actions manual-only: не запускать cloud workflow авт�
 ради green check. Local Full дополнительно требует6 real-window profiles;
 Check-Publication проверяет `real_window_matrix` вместе с остальными gates.
 
-Текущая разрешённая стадия26 октября — публикация только ЛИСЫ после устранения
+Текущее поручение1 ноября — повысить production до3.1.2.31/225 и подготовить
+к публикации. Подключён Samsung A56; владелец отдельно разрешил локальный
+программный эмулятор и запретил запуск GitHub Actions. Реальная публикация
+не запрошена. Состав, ограничения и результаты:
+[подготовка выпуска](../reference/mobile-release-3.1.2.31-2026-11-01.md).
+
+Предыдущая разрешённая стадия26 октября — публикация только ЛИСЫ после устранения
 блокеров, слияния library PR60/44 и app PR78 и свежего Full смартфона, затем
 планшета. Новый каталог254 включает offline MVT regression; прежний Full253
 не заменяет приёмку изменённого кода. Локальные APK до исправлений не публикуются.
@@ -39,9 +45,9 @@ token для отправки ошибок APK не нужны. Не печат�
 
 ## Версия
 
-Подготавливаемый выпуск `3.1.2.30`: production `versionCode 224`, Lisa Debug —
+Подготавливаемый выпуск `3.1.2.31`: production `versionCode 225`, Lisa Debug —
 `3.1.2.23` / `versionCode 218`; диагностический release
-`maplib.VERSION_NAME 3.1.2.30`, debug — `3.1.2.23`.
+`maplib.VERSION_NAME 3.1.2.31`, debug — `3.1.2.23`.
 
 1. Определить, меняется production release или только Lisa Debug. Нельзя
    подменять debug-only задачу глобальным bump.

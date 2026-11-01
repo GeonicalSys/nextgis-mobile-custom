@@ -13,6 +13,12 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+Подготовка3.1.2.31/225 меняет только production app/maplib version metadata
+и собирает уже слитые ниже отличия. Повторная проверка Gradle diff подтвердила
+прежние sourceSets, identities и зависимости. Новая функция или отличие от
+upstream этим version-only шагом не добавляются; статус device/Full и выпуска
+ведётся в [карточке подготовки](mobile-release-3.1.2.31-2026-11-01.md).
+
 ## Вложения: terminal404 и публикация кеша — 2026-11-01
 
 Адресно проверен официальный `nextgis/easypicker` на

@@ -13,6 +13,28 @@ related_code:
 
 # Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 
+## MOB-REL-01 Подготовка выпуска 3.1.2.31/225
+
+Приоритет P1, прямое поручение владельца1 ноября2026: повысить версию и
+подготовить приложение к публикации с подключённым смартфоном. Владелец
+отдельно разрешил программный эмулятор локально; GitHub Actions запрещены.
+Это подготовка выпуска поверх уже слитых MOB-02/04, MOB-UI-01 и MOB-SYNC-01,
+без изменения очереди продуктовых доработок.
+
+Владельцы: maplib (release diagnostic version) → app (production metadata,
+независимая APK matrix, release notes и проверки) → upload_mobile (dry-run
+после приёмки). Data/schema/sync API/фоновая политика и батарея bump-ом не
+меняются; пользовательское состояние должно сохраняться при обычном обновлении.
+
+Приёмка: закрытая матрица исходников и merged pins, обе release flavors и
+Lisa Debug с согласованной maplib version, ожидаемая release подпись,
+локальные Full и Check-Publication, затем publisher tests/dry-run.
+Full не отменяет physical phone/tablet/SM-X115 render-stress gate.
+Реальная публикация и установка поверх рабочего приложения не запрошены.
+Состояние и доказательства:
+[подготовка выпуска](../reference/mobile-release-3.1.2.31-2026-11-01.md).
+Карточки: android-20261101-release-31231, maplib-20261101-release-31231.
+
 29 октября, Git-доставка по прямому поручению владельца: библиотека maplib
 слита Merge Commit f61ba783 (PR62), документационный bridge — bf16ea71 (PR83).
 Приложение в PR84 закреплено exact fetched library merge, runtime-tree библиотеки
