@@ -434,3 +434,46 @@ cache использует apply; его outcome не заменяет feature/N
 contracts отделены от installed implementation. Actual private forms/schema,
 Cursor/AppCompat/OS, device lifecycle, data/provider/upload и fleet adoption
 остаются UNKNOWN; widget/native execution и product fixes здесь не выполнялись.
+
+
+## Вложения: ожидание и конечный кеш
+
+`UI-ATTACHMENT-DOWNLOAD-STATE` закрепляет `progressImageDownload` и
+`ib_download` реального `PhotoPicker`. Spinner читает local URL-list; кнопка
+зависит от него и положительного размера конечного cache file. Preview может
+показать картинку, не подтверждая получение полного файла. Metadata/URI, bytes,
+static service marker и local picker state — разные границы.
+
+Обычный `END` удаляет matching URL и обновляет adapter; full404 сохраняет
+своё сообщение об отсутствии изображения. Online metadata не входит в
+offline-only `PhotoPicker` saved-state selection. Полные условия и source
+bindings сохранены в каталоге, включая whole-file witness внешнего
+`updateStatus`, чей заголовок совпадает с отдельным внутренним методом.
+
+Исправленный library producer завершает404 и публикует request-owned staging
+после завершённого200/закрытия output через atomic move. Неподдерживаемый move
+отклоняет попытку без copy fallback. Старый final и соседние entries сохраняются
+при failure. См. [контракт библиотеки](../../easypicker/docs/README.md).
+App со старым gitlink55aad ещё не получает это исправление: library merge и
+последующий pointer update — отдельная delivery/adoption граница.
+
+JVM-регрессии с техническим HTTP double не проверяют реальные фото, устройство,
+GUI, сервер или разрешения. Старые повреждённые positive-size files,
+silent-truncated200 integrity и concurrent preview/same-final policy остаются
+UNKNOWN; checksum/Content-Length guarantee не добавлена.
+
+Уже существующий positive-size partial из старой версии всё ещё может
+удовлетворять текущей проверке размера `PhotoPicker`; автоматическая миграция
+или удаление таких файлов не добавлены.
+
+### Guard опциональной HTTP metadata
+
+Для прежнего `UI-SYNC-FAILURE-MESSAGES` whole-file guard
+`NGWLayerSchemaCompat` сохранён целиком в history каталога. Active scope теперь
+закрепляет оба полных overload `fetchResourceMetaJson` с прежними неизменными
+method bytes и теми же typed HTTP/null/classifier требованиями. Причина —
+отдельное исправление class-only schema predicate в том же файле; оно не меняет
+эти overload. Ожидания сообщений и остальные source guards не менялись;
+checker не получил dual-hash или исключение. Это позволяет проверять один
+UI contract на прежнем App gitlink и на исправленной библиотеке, не объявляя
+доставку новой class repair в App до merge/pointer update.

@@ -8,6 +8,26 @@ related_code:
 
 # История документационной системы
 
+## 2026-11-01 — Состояние вложения и отдельная доставка mobile fixes
+
+Добавлен `UI-ATTACHMENT-DOWNLOAD-STATE`: реальные `progressImageDownload`/
+`ib_download`, URL markers, END/404, preview и положительный размер cache
+отделены от metadata/URI, целостности bytes и полного sync ACK. Сохранены все
+прежние47 UI contracts; новые method/XML/file guards относятся к неизменным
+consumer interfaces и совместимы с App gitlink55aad.
+
+Прежний whole-file witness `NGWLayerSchemaCompat` для typed HTTP metadata
+перенесён целиком в явную history; active guards закрепляют два неизменных
+`fetchResourceMetaJson` overload. Исторические source inputs, требования UI
+и checker сохранены. Class predicate repair и attachment staging/404 fix
+доставляются отдельными библиотеками; App87 со старыми gitlinks ещё не
+содержит эти исправления. Порядок записан в `MOB-SYNC-01`.
+
+Адресные JVM-проверки: attachment7 RED→GREEN и class metadata14 GREEN
+(11 новых +3 прежних). Это технические source-path проверки без устройства,
+NGW/customer API, реальных фото/БД и native/GUI acceptance. Legacy corrupt
+cache, silent-truncated200 integrity и concurrent preview policy не закрыты.
+
 
 
 ## 2026-11-01 — Checkbox и обычное целочисленное поле

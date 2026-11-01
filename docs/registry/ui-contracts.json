@@ -3162,6 +3162,165 @@
       ],
       "forbids": [],
       "sha256": "d23c0fe88f81c25a3a011a954c803574abeb024d0cec8ec38ac5127b3ab09f05"
+    },
+    {
+      "id": "WF-ATTACHMENT-FULL-START",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoPicker.java",
+      "marker": "void startDownloadImageFromWeb(int position, String login, String pass, String userAgent)",
+      "requires": [
+        "if (!attachInfo.onlineAttach)",
+        "urlIsInProgress.add(attachInfo.url)",
+        "DownloadPhotoIntentService.startActionDownload(",
+        "attachInfo.storePath",
+        "attachInfo.getFilenameForUse()"
+      ],
+      "forbids": [],
+      "sha256": "ead2ee5917b65fa10e85833874cd105a56b5ea564fc1548ecc0f65dcafbd6559"
+    },
+    {
+      "id": "WF-ATTACHMENT-BIND-STATE",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoPicker.java",
+      "marker": "public void onBindViewHolder(final PhotoViewHolder holder, final int position)",
+      "requires": [
+        "fileInCache.exists() && fileInCache.length() > 0",
+        "previewFile.exists() && previewFile.length() > 0",
+        "holder.mPhotoDownload.setVisibility(inProgress? GONE : VISIBLE)",
+        "holder.progressBar.setVisibility(inProgress? VISIBLE : GONE)"
+      ],
+      "forbids": [],
+      "sha256": "2438b951e1c7be7a176fa2d4ac8875579bac17e2ee7d8fd4ea6dad42f5047dd6"
+    },
+    {
+      "id": "WF-ATTACHMENT-NOTIFY",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoPicker.java",
+      "marker": "public void updateNotifyItemByURL(String urlId)",
+      "requires": [
+        "Integer elementPosition = getElementIdByUrl(urlId)",
+        "getAdapter().notifyItemChanged(elementPosition)"
+      ],
+      "forbids": [],
+      "sha256": "c83aa274be71cec417dd3e9ffd1383b4090660ef133eff1082655ac57bf6cf8b"
+    },
+    {
+      "id": "WF-ATTACHMENT-URL-MATCH",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoPicker.java",
+      "marker": "public Integer getElementIdByUrl(String url)",
+      "requires": [
+        "info.onlineAttach && info.url != null && info.url.equals(url)",
+        "return i"
+      ],
+      "forbids": [],
+      "sha256": "086986ca44e17cff145a52d454a565e6e8aa275555cfa2a99c1b1f40b0eebd94"
+    },
+    {
+      "id": "WF-ATTACHMENT-DRAFT-SELECTION",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoPicker.java",
+      "marker": "public ArrayList<AttachInfo> getImagesPathOrUriAttach()",
+      "requires": [
+        "attachInfo != null && !attachInfo.onlineAttach",
+        "images.add(attachInfo)"
+      ],
+      "forbids": [],
+      "sha256": "6065b44baa3a377d10134635ca6ae8c8573da28be068cca57b123691c1b8eaae"
+    },
+    {
+      "id": "WF-ATTACHMENT-HOLDER-BINDING",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoViewHolder.java",
+      "marker": "public PhotoViewHolder(View itemView)",
+      "requires": [
+        "R.id.progressImageDownload",
+        "R.id.ib_download",
+        "mPhotoDownload.setOnClickListener(this)"
+      ],
+      "forbids": [],
+      "sha256": "4bb27eb2995e4ebad7d39f40b7eff049c661cf62180fbe013c39ecc7f06b6125"
+    },
+    {
+      "id": "WF-ATTACHMENT-HOLDER-ACTION",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoViewHolder.java",
+      "marker": "public void onClick(View view)",
+      "requires": [
+        "mViewHolderClick.onItemClick(view, getAdapterPosition())"
+      ],
+      "forbids": [],
+      "sha256": "760a9a83f1db83d41b909eaebe9dc794d851ab5942d115f6c61997383cee2f1e"
+    },
+    {
+      "id": "WF-ATTACHMENT-SERVICE-INTENT",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/DownloadPhotoIntentService.java",
+      "marker": "public static void startActionDownload(final Context context, String url, String filepath, String filename,\n                                           String login, String password, String userAgent)",
+      "requires": [
+        "intent.putExtra(EXTRA_PREVIEW, false)",
+        "putProgressListItem(url)",
+        "context.startService(intent)"
+      ],
+      "forbids": [],
+      "sha256": "b6596178dc049b5edee4977a47d9e23ecca33f1d9910a3dd12a0e255819ebc7e"
+    },
+    {
+      "id": "WF-ATTACHMENT-SERVICE-PROGRESS",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/DownloadPhotoIntentService.java",
+      "marker": "static public ArrayList<String> getProgressList()",
+      "requires": [
+        "synchronized (objectProgressSync)",
+        "result.add(item)",
+        "return result"
+      ],
+      "forbids": [],
+      "sha256": "ee4e288e8bc8f34a408d74017cb30b9677cefe77505da86a234318769454d5d1"
+    },
+    {
+      "id": "WF-ATTACHMENT-SERVICE-TERMINAL",
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/DownloadPhotoIntentService.java",
+      "marker": "public void sendBroadcast(Context context, String url, boolean start,\n                              int httpCode)",
+      "requires": [
+        "if (previewOperation)",
+        "msg.putExtra(EXTRA_HTTP_CODE, httpCode)",
+        "msg.putExtra(EXTRA_PREVIEW, previewOperation)",
+        "deleteProgressListItem(url)",
+        "context.sendBroadcast(msg)"
+      ],
+      "forbids": [],
+      "sha256": "fa63ba2163f617e9c00b1bc76f99067ccb7fc68a39d47cdd5f45928d208b271b"
+    },
+    {
+      "id": "WF-SYNC-OPTIONAL-META-FETCH",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java",
+      "marker": "public static JSONObject fetchResourceMetaJson(\n            String resourceUrl,\n            String login,\n            String password)",
+      "requires": [
+        "return fetchResourceMetaJson(resourceUrl, login, password, null);"
+      ],
+      "forbids": [],
+      "sha256": "4260118bcd551312d690a7433104c86a0884b74cac5f087984167c887cbf9b55"
+    },
+    {
+      "id": "WF-SYNC-RESULT-META-FETCH",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java",
+      "marker": "public static JSONObject fetchResourceMetaJson(\n            String resourceUrl,\n            String login,\n            String password,\n            SyncResult syncResult)",
+      "requires": [
+        "response = NetworkUtil.get(resourceUrl, login, password, false);",
+        "catch (IOException e) { return null; }",
+        "if (!response.isOk())",
+        "NetworkUtil.isTransientNgwHttpError(response.getResponseCode(), response.getResponseBody(), response.getResponseMessage())",
+        "NetworkUtil.isTemporaryNgwServerFailure(response.getResponseCode(), response.getResponseBody(), response.getResponseMessage())",
+        "SyncResultUtil.markServerTemporarilyUnavailable(syncResult);",
+        "return new JSONObject(response.getResponseBody());",
+        "catch (JSONException e) { return null; }"
+      ],
+      "forbids": [],
+      "sha256": "f35143264911a15084f9226b0357389bc3f75a6b4aee5e4dd1397dccbfef6814"
     }
   ],
   "contracts": [
@@ -5009,7 +5168,9 @@
         "WF-SYNC-ERROR-ALERT",
         "WF-SYNC-ERROR-LATE-OUTCOME",
         "WF-NGW-HTTP-TRANSIENT-CLASSIFICATION",
-        "WF-NGW-HTTP-SERVER-CLASSIFICATION"
+        "WF-NGW-HTTP-SERVER-CLASSIFICATION",
+      "WF-SYNC-OPTIONAL-META-FETCH",
+      "WF-SYNC-RESULT-META-FETCH"
       ],
       "expectations": [
         "Same counters in a different SyncResult cannot borrow SERVER; next scope/end/unknown schema/malformed primitive types are generic.",
@@ -5433,6 +5594,61 @@
         "Actual private NGFP/schema/defaults/rules, stored rows/preferences/Bundle data, installed Cursor/AppCompat/OS и fleet adoption не наблюдались.",
         "Native touch/Cancel/rotation/durable draft, malformed-input outcomes, provider coercion, local write/NGW upload и current tenant permissions UNKNOWN."
       ]
+    },
+    {
+      "id": "UI-ATTACHMENT-DOWNLOAD-STATE",
+      "group": "forms",
+      "title": "Загрузка вложения: ожидание, локальный кеш и повтор",
+      "surface": "PhotoPicker online AttachInfo → PhotoAdapter/PhotoViewHolder; progressImageDownload и ib_download в photo_item.xml. Обычная загрузка и preview — отдельные запросы.",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "progressImageDownload",
+        "ib_download"
+      ],
+      "meaning": "Индикатор означает членство URL в локальном списке ожидания picker. Кнопка повторной загрузки зависит от этого списка и положительного размера конечного cache file; это не server authorization, sync ACK или доказательство целостности bytes.",
+      "value_origin": "AttachInfo.url/storePath/getFilenameForUse задают запрос и cache path. Full action добавляет URL в picker list и static service list перед startService; preview использует отдельный URL с size, сохраняя urlId исходного вложения. Service terminal broadcast несёт urlId/type/httpcode/preview; owning consumer updateStatus удаляет совпавший URL и уведомляет adapter.",
+      "units": "Длина cache file — bytes, проверка >0. HTTP status — исходный код либо -1 для исключения. START/END и Boolean preview — события и режим запроса; они не project/account completion, row/FID/resource ID или счётчик активных workers.",
+      "updates": [
+        "Bind: положительный final скрывает ib_download; без него кнопка скрыта при inProgress и видна иначе. progressImageDownload видим только при local inProgress. Положительный preview может дать изображение, но не скрывает full-download кнопку как конечный файл.",
+        "Full END404 вызывает существующее уведомление об отсутствии изображения; END удаляет matching URL из local list. Service END также удаляет matching static marker. Наличие metadata/URI не подтверждает наличие/актуальность bytes.",
+        "PhotoPicker содержит два одноимённых updateStatus; внешний consumer и ib_download ветвь защищены whole-file evidence, а не неоднозначным методом marker. Каждый другой guard остаётся method-specific."
+      ],
+      "actions": [
+        "PhotoViewHolder передаёт настоящий view и adapter position. Ветвь ib_download выбирает online AttachInfo и вызывает full start; offline entry не становится сетевой загрузкой.",
+        "Повтор после terminal failure должен снова быть доступен без прежнего work marker. Это не изменение роли/ACL и не разрешение повторять произвольную мутацию NGW."
+      ],
+      "conditions": [
+        "Applicable при реальном использовании shared PhotoPicker/online AttachInfo; actual private form/project/fleet не наблюдались.",
+        "Имеющийся App gitlink55aad сам по себе не включает исправление producer: старый service может оставить marker после404 и positive-size partial. Исправленный producer находится в отдельной library delivery; App adoption требует library merge и последующего pointer update.",
+        "Library fix пишет request-owned .part и публикует конечное имя только после завершённого200/закрытия output через atomic move; unsupported move — failed attempt без copy fallback. Этот pending producer contract не объявляет old App исправленным.",
+        "Required/draft/Save/owner/provider и NGW permissions остаются отдельными gates. У service нет нового lease/task-counter/cancel API; concurrent same-URL/shared preview-state policy не расширяется."
+      ],
+      "saved_state": "Generic AttachInfo Parcel содержит metadata/paths/URL, но PhotoPicker saved-state selection сохраняет только non-null offline entries. Online list/cache/terminal readiness этим Bundle не доказываются; actual online reconstruction принадлежит form attributes producer.",
+      "source_ids": [
+        "WF-ATTACHMENT-FULL-START",
+        "WF-ATTACHMENT-BIND-STATE",
+        "WF-ATTACHMENT-NOTIFY",
+        "WF-ATTACHMENT-URL-MATCH",
+        "WF-ATTACHMENT-DRAFT-SELECTION",
+        "WF-ATTACHMENT-HOLDER-BINDING",
+        "WF-ATTACHMENT-HOLDER-ACTION",
+        "WF-ATTACHMENT-SERVICE-INTENT",
+        "WF-ATTACHMENT-SERVICE-PROGRESS",
+        "WF-ATTACHMENT-SERVICE-TERMINAL"
+      ],
+      "expectations": [
+        "Различать static service list, picker local list, final bytes, preview bytes, URI и metadata. END404 сохраняет404, снимает matching work state и не выдаёт200/READY.",
+        "Незавершённая передача не должна занимать конечное имя. Ошибка передачи/close/publication сохраняет старый валидный final и соседние entries; request stage убирается отдельно.",
+        "Реальный adapter после failure без final показывает download и скрывает spinner. JVM HTTP-boundary regression не заменяет device/GUI/recipient acceptance."
+      ],
+      "unknowns": [
+        "Текущий tenant/server/fleet, реальные media/EXIF/bytes, FileProvider recipient acceptance и native UI lifecycle не проверялись.",
+        "Legacy positive-size corrupt cache, silent-truncated200 integrity и concurrent preview/same-final ownership остаются отдельными UNKNOWN; исправление не является checksum/Content-Length verification.",
+        "Source guards start/progress/sendBroadcast и UI bindings неизменны на old/new library. Changed transfer methods проверяются owning-library regression; этот App catalogue не подменяет pending library merge/adoption."
+      ]
     }
   ],
   "widget_evidence": [
@@ -5819,6 +6035,18 @@
       "path": "src/main/res/layout/layout_resources.xml",
       "id": "path",
       "sha256": "bb66722eedead9af3cddbf85a994e2819eda5078fe22db2a69584da46f688f64"
+    },
+    {
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/res/layout/photo_item.xml",
+      "id": "progressImageDownload",
+      "sha256": "3b43a3438911f2ecf9c56e7585927f5a0f9ac1b53680ecf1aef6f0443eefa096"
+    },
+    {
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/res/layout/photo_item.xml",
+      "id": "ib_download",
+      "sha256": "3b43a3438911f2ecf9c56e7585927f5a0f9ac1b53680ecf1aef6f0443eefa096"
     }
   ],
   "coverage": {
@@ -6525,6 +6753,40 @@
         "SQL NULL→false and schema BOOLEAN support are not inferred from a checked-state Boolean or Integer getter.",
         "Date209d/acb and Save86c4/0aff/required/draft/unbound contracts remain whole."
       ]
+    },
+    "attachment_download_state_20261101": {
+      "source_basis": "Source-reviewed UI consumer unchanged at library55aad and attachment-fix working source; App adoption pending merge/pointer, not runtime acceptance.",
+      "owner": "easypicker library implementation; App owns UI catalogue",
+      "limits": "No new component or server/DB authorization. Existing47 UI contracts and all old guards remain whole. Related class-metadata whole-file guard refinement is a separate explicitly reviewed operation."
+    },
+    "ngw_metadata_fetch_guard_scope_review_20261101": {
+      "reason": "Original whole-file witness served optional metadata typed-HTTP fetch only. A separately reviewed class-only schema predicate change does not change either fetch overload. Replace active whole-file scope by exact unchanged overload guards; retain original row intact here.",
+      "original_non_method_index": 38,
+      "original_non_method_evidence": {
+        "repository": "maplib",
+        "path": "src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java",
+        "purpose": "Reviewed readonly schema/count typed HTTP provenance and the optional-count fallback boundary feeding SYNC_NONE account failure classification. Whole-file source drift does not certify live server/data/device behavior.",
+        "contract_ids": [
+          "UI-SYNC-FAILURE-MESSAGES"
+        ],
+        "sha256": "99ac511c92b251adab50ac2770a7ff80feb239a78acb4bdcf5d7ed5416c332d6"
+      },
+      "current_source_methods": [
+        {
+          "id": "WF-SYNC-OPTIONAL-META-FETCH",
+          "marker": "public static JSONObject fetchResourceMetaJson(\n            String resourceUrl,\n            String login,\n            String password)",
+          "sha256": "4260118bcd551312d690a7433104c86a0884b74cac5f087984167c887cbf9b55"
+        },
+        {
+          "id": "WF-SYNC-RESULT-META-FETCH",
+          "marker": "public static JSONObject fetchResourceMetaJson(\n            String resourceUrl,\n            String login,\n            String password,\n            SyncResult syncResult)",
+          "sha256": "f35143264911a15084f9226b0357389bc3f75a6b4aee5e4dd1397dccbfef6814"
+        }
+      ],
+      "original_source_commit": "baa94f361101051b09f762d7eda1f36466436d5c",
+      "before_after_method_equality": true,
+      "peer_witness_sha256": "5371f94ba090892cd94c81a4205c617dc160cddab577ec14a1dfc81adcfa0b9c",
+      "limits": "No checker relaxation, dual hash or expected UI-message behavior change. Historical source_inputs remain unchanged. New class repair stays library delivery pending merge/App pointer update."
     }
   },
   "non_method_evidence": [
@@ -6894,15 +7156,6 @@
       "sha256": "ac8764d30340a7346f66e4196070dd8c22805a119ec0b0c2a8589097ffb4c6b2"
     },
     {
-      "repository": "maplib",
-      "path": "src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java",
-      "purpose": "Reviewed readonly schema/count typed HTTP provenance and the optional-count fallback boundary feeding SYNC_NONE account failure classification. Whole-file source drift does not certify live server/data/device behavior.",
-      "contract_ids": [
-        "UI-SYNC-FAILURE-MESSAGES"
-      ],
-      "sha256": "99ac511c92b251adab50ac2770a7ff80feb239a78acb4bdcf5d7ed5416c332d6"
-    },
-    {
       "repository": "maplibui",
       "path": "src/main/java/com/nextgis/maplibui/util/CheckState.java",
       "purpose": "Reviewed local int/two-boolean state and unchanged Parcelable shape; does not assert durable/local-ID identity across unrelated process trees.",
@@ -7077,6 +7330,15 @@
         "UI-FORM-CHECKBOX-NGFP-VALUE"
       ],
       "sha256": "d2fe76def68dd28c65c42aefe5426b5b753698a7c7cb84604583fa22e58619d5"
+    },
+    {
+      "repository": "root",
+      "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoPicker.java",
+      "purpose": "Actual outer updateStatus, ib_download dispatch and offline-only saved-state selection; duplicate updateStatus headers require whole-file guard.",
+      "contract_ids": [
+        "UI-ATTACHMENT-DOWNLOAD-STATE"
+      ],
+      "sha256": "0b76bd2c9bc32707c677d024db8a8bcb2170b4e4d0303be0a65d7b2da46749bc"
     }
   ]
 }

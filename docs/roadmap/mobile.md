@@ -823,3 +823,39 @@ Device/Related/Full/AVD/Office/PG/Wiki не возобновляются.
 Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\Codex\Scratch\lisa-ecosystem-depth-audit-20261029\evidence\resume-20261031-source-checkpoint\belka-resume-compile\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.
 
 Baseline23=18assertFAIL5controls/0errors/skips:13missingShareID assertionsacrossBinding8/Panel5 arefeatureabsence, NOTproofoldstalelaunchbugs; Exporter5XML/pathcounterexamples+5controls independentlydemonstrateactualdefects. Firstgreen23=19PASS4PaneloverlapFAIL, XML11.393s,Gradle1; nofullPASS. DiagnosticV3 9ec/523f LFops/CRLFcandidate rejectedBEFOREC/runtime byRootguard; retainedinvalidhistory. CorrectedRAWV4 c093/64ac exactreplay/inverse78eff, Bridge73edf; onlymessage/helper changed. Diagnostic10 captured3pxbaselineoffset, one-line637a→0069 preservesIDs/callbacks/copy/widthlogic/all5oracles; finalPanel5accepted. Oldmessage89/selector37/cache29/caption5 resultsremain separatehistoricalcohorts, notrerun/resummed.
+
+
+## MOB-SYNC-01 Подтверждённые source fixes: вложения и class metadata
+
+Текущий порядок задан явным поручением владельца01.11: завершить начатые audit
+blocks и исправить подтверждённые ошибки прежде новых audit frontiers. Это
+адресная доработка, не автоматическое возобновление paused native stages.
+
+Состояние: implementation/source regression подготовлены в отдельных library
+branches; commits/связанные Draft PR и merge фиксируются по фактической доставке.
+App87 пока сохраняет прежние library gitlinks, поэтому не объявляется исправленным.
+
+- Attachment failure state: sole404 завершает matching work marker; request-owned
+  staging публикуется после завершённого200/close через atomic move без copy
+  fallback. Failure сохраняет прежний final и соседние файлы. Одинаковый final
+  fixture: old source7 assertion FAIL/0ERROR/0skip → fixed7PASS/0/0/0, XML2.703s.
+- Class-only schema metadata: известная смена vector/PostGIS class не должна
+  теряться при совпадающих geometry/SQLite fields. Отдельный owning maplib
+  пакет: 14GREEN (11новых+3прежних); runtime/currenttenant не доказывается.
+- MOB-UI-01 сохраняет source meaning: добавлен attachment UI contract, а прежний
+  typed HTTP fetch guard уточнён до двух неизменных overload с сохранением всей
+  старой whole-file evidence в history. Existing expectations/checker не менялись.
+
+Доставка: library Merge Commit → fetch удалённых merge commits → App gitlink
+update → compile/адресные проверки по фактическим pointers → отдельно разрешённая
+device/native acceptance. Незамерженный локальный pin не заменяет этот порядок.
+Library PR/commit references и App adoption обновляются по завершённым шагам;
+наличие Draft/компиляции live checkout не означает APK, merge или выпуск.
+
+Границы: без NGW/customer API, реальных фото/данных, Office, DB, GUI/AVD/device
+проверок. Legacy positive-size partial может по-прежнему пройти heuristic
+PhotoPicker; автоматическая миграция/удаление cache не добавлена. Silent-truncated
+200 integrity, checksum/Content-Length и concurrent preview/same-final ownership
+остаются отдельными неизвестностями. Влияние на фон/батарею не измерялось; новых
+scheduler/lease/cancel policy или task counters не вводится. Следующие source
+frontiers не начинаются до закрытия этого started fixes checkpoint.
