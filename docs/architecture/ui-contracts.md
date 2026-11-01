@@ -399,3 +399,38 @@ script, draft, owning-map/provider и Save gates сохраняют сущест
 tenant schema/значения, zone/locale/clock, диалоги/native/rotation/remote roundtrip
 не проверялись; source fingerprints требуют semantic review при изменении и
 не заменяют device acceptance. Прежние контракты и coverage остаются целиком.
+
+
+## Флажок NGFP и обычное integer-поле
+
+`UI-FORM-CHECKBOX-NGFP-VALUE` связывает NGFP `type=checkbox` с
+`formcontrol.Checkbox` через `formtemplate_checkbox`. У XML root нет
+`android:id`: источник — фактический factory/class/layout, а не выдуманный ID.
+Обычная форма для `FTInteger` создаёт `control.TextEdit`, который возвращает
+String; NGW resource-selection и `finish_beep` имеют другие назначения.
+
+| Граница | Подтверждённое значение |
+| --- | --- |
+| NGFP widget | checked-state Boolean; `getValue` выдаёт Integer1 либо0 |
+| Bundle / optional last cache | Boolean под prefixed field key / normalized field key |
+| Cursor | при наличии столбца `getInt()!=0`; SQL NULL/nonintegral/out-of-int result/exception implementation-defined по официальному API |
+| Новый control | `init_value` через `JSONObject.getBoolean`, затем optional last; missing/invalid property может бросить исключение |
+| Raw copy | NULL/empty может отображаться unchecked; отдельный equal-typed-baseline gate сохраняет исходную пустоту |
+| Capture / Save | runtime Integer в ContentValues, затем прежние validation/owner/persistence gates; это ещё не local/server ACK |
+
+Приоритет init: saved key → existing cursor → только новый control default/last.
+Missing column при существующем cursor даёт локальный false, но не доказывает
+такой исход для SQL NULL и не включает fallback в new default. Getter не
+предоставляет explicit-null state. В выбранном пути с присутствующим checkbox сохранение copied NULL/empty зависит
+от точного baseline equality; оно не отслеживает всю историю переключений.
+
+Boolean в UI/Bundle не добавляет Android BOOLEAN schema support: общий mobile
+flag остаётся integer0/1. Actual Field.type, NGFP type, required/hidden rules,
+permission и Save eligibility — отдельные границы. Existing Date/Save/draft/
+unbound contracts сохранены. После успешного base Save optional last-value
+cache использует apply; его outcome не заменяет feature/NGW acknowledgement.
+
+Срез source-backed:7records/4routes/4value namespaces;3official Android API
+contracts отделены от installed implementation. Actual private forms/schema,
+Cursor/AppCompat/OS, device lifecycle, data/provider/upload и fleet adoption
+остаются UNKNOWN; widget/native execution и product fixes здесь не выполнялись.

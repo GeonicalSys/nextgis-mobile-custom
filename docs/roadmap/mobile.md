@@ -228,6 +228,18 @@ Root LISA Draft278 содержит сквозную карту; app delivery о
 не выполняются; приоритеты и очередь MOB не меняются. Свидетельства source-only
 и результаты actual validators/delivery фиксируются в карточке и PR отдельно.
 
+
+Продолжение source/docs01.11 в прежнем MOB-UI-01: UI-FORM-CHECKBOX-NGFP-VALUE
+разделяет NGFP Checkbox, Boolean state/cache, Integer0/1 getter и обычный
+FTInteger TextEdit/String. Значения NULL/empty, absent control и выбранный
+present-checkbox copy-retention gate различаются. Добавлены1контракт,11новых
+method guards и4file witnesses;11старых guards переиспользуются. Старые
+Date46/213/64/54 записи сохранены; projected47/224/64/58 подтверждаются
+actual catalog/validator receipts после применения. Source7records/4routes
+и98passive metadata checks не являются native tests или currenttenant proof.
+Это та же own app Draft87 и LISA Draft278, без изменения очереди/приоритетов.
+Product fixes/ranking/native NOT_RUN; merge/APK отдельно от source доставки.
+
 ## MOB-02 Самостоятельное обнаружение и сохранение зависимостей
 
 Приоритет P1. Состояние: исходный entry bridge слит29.10 в PR83; shared LISA

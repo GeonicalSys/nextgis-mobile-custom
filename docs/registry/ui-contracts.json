@@ -3018,6 +3018,150 @@
       ],
       "forbids": [],
       "sha256": "1af7eefa40a000f9814ac4d0d6c5c88508b82216fd9051a47b4b9897494f5a10"
+    },
+    {
+      "id": "WF-CHECKBOX-NGFP-INIT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/Checkbox.java",
+      "marker": "public void init(JSONObject element,\n                     List<Field> fields,\n                     Bundle savedState,\n                     Cursor featureCursor,\n                     SharedPreferences preferences,\n                     Map<String, Map<String, String>> translations,\n                     final ModifyAttributesActivity modifyAttributesActivity) throws JSONException",
+      "requires": [
+        "ControlHelper.getFieldName(attributes.getString(JSON_FIELD_NAME_KEY))",
+        "ControlHelper.hasKey(savedState, mFieldName)",
+        "savedState.getBoolean(ControlHelper.getSavedStateKey(mFieldName))",
+        "featureCursor.getInt(column) != 0",
+        "attributes.getBoolean(JSON_INIT_VALUE_KEY)",
+        "preferences.getBoolean(mFieldName, value)",
+        "if (value == null)",
+        "setChecked(value)",
+        "ControlHelper.translate(attributes.getString(JSON_TEXT_KEY), translations)",
+        "setEnabled(ControlHelper.isEnabled(fields, mFieldName))"
+      ],
+      "forbids": [],
+      "sha256": "cb5d26dafea592f8b764e2b1977dc8964ee61c6aaaad94934785018f3841abfb"
+    },
+    {
+      "id": "WF-CHECKBOX-NGFP-VALUE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/Checkbox.java",
+      "marker": "public Object getValue()",
+      "requires": [
+        "return isChecked() ? 1 : 0"
+      ],
+      "forbids": [],
+      "sha256": "ff5bdf6eb492a43a7b5793d0e5ffa7c6248c970793cf23922f12da23cd1c8bdd"
+    },
+    {
+      "id": "WF-CHECKBOX-NGFP-STATE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/Checkbox.java",
+      "marker": "public void saveState(Bundle outState)",
+      "requires": [
+        "outState.putBoolean(ControlHelper.getSavedStateKey(mFieldName), isChecked())"
+      ],
+      "forbids": [],
+      "sha256": "7a133de03af9907ac6ee6377b904db7ac48c1ce61158a33f1641c4f92a116725"
+    },
+    {
+      "id": "WF-CHECKBOX-NGFP-LAST",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/Checkbox.java",
+      "marker": "public void saveLastValue(SharedPreferences preferences)",
+      "requires": [
+        "preferences.edit().putBoolean(mFieldName, isChecked()).apply()"
+      ],
+      "forbids": [],
+      "sha256": "631f4f25dfe9400c52679d8780a2a48195ced87df1f388709b47d1024fb0ef74"
+    },
+    {
+      "id": "WF-CHECKBOX-NGFP-SHOW-LAST",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/Checkbox.java",
+      "marker": "public boolean isShowLast()",
+      "requires": [
+        "return mIsShowLast"
+      ],
+      "forbids": [],
+      "sha256": "658f676b3bcab20cf599cb6c63251236c2cbc13475b999baa50b607b5e76ca4e"
+    },
+    {
+      "id": "WF-CHECKBOX-GENERIC-TEXT-INIT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/TextEdit.java",
+      "marker": "public void init(Field field,\n                     Bundle savedState,\n                     Cursor featureCursor)",
+      "requires": [
+        "mFieldName = field.getName()",
+        "savedState.getString(ControlHelper.getSavedStateKey(mFieldName))",
+        "featureCursor.getString(column)",
+        "case GeoConstants.FTInteger:",
+        "setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED )"
+      ],
+      "forbids": [],
+      "sha256": "ad0194a4781e5282ec9e24623890935c3db70883d071e219dcd512f8963482a3"
+    },
+    {
+      "id": "WF-CHECKBOX-GENERIC-TEXT-VALUE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/TextEdit.java",
+      "marker": "public Object getValue()",
+      "requires": [
+        "return getText().toString()"
+      ],
+      "forbids": [],
+      "sha256": "67d3b0a54afd1d20a2a66f0c2fa7176b2bd8a674461ca5058f64cf33a2576219"
+    },
+    {
+      "id": "WF-CHECKBOX-COPY-ADAPT",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+      "marker": "private static void adapt(Object object, Bundle state, JSONObject raw, int depth) throws JSONException",
+      "requires": [
+        "raw.has(field)",
+        "value == JSONObject.NULL",
+        "new java.math.BigDecimal(value.toString())",
+        "case \"checkbox\": state.putBoolean(key, number.doubleValue() != 0)"
+      ],
+      "forbids": [],
+      "sha256": "f0fc5f956e6226c0a8fb90b3bf77a872d12b4e7c8bacc08aded3886d7fb2191d"
+    },
+    {
+      "id": "WF-CHECKBOX-COPY-BASELINE",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+      "marker": "public static String baseline(Map<String,Object> controls)",
+      "requires": [
+        "value == null || value instanceof String || value instanceof Number || value instanceof Boolean",
+        "value.getClass().getName()+\":\"+value"
+      ],
+      "forbids": [],
+      "sha256": "dd7df4b32fc5516f6e60f1cc50d244853245592c1f57a919cc671774ebc1acbc"
+    },
+    {
+      "id": "WF-CHECKBOX-LAST-DISPATCH",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+      "marker": "protected void saveLastValue(Field field)",
+      "requires": [
+        "mFields.get(field.getName())",
+        "control.isShowLast()",
+        "control.saveLastValue(mSharedPreferences)"
+      ],
+      "forbids": [],
+      "sha256": "360ca45ee403bfd2bdfaf6cadbcdd0bc8c940b209a0ebedaafd3f2922de5c285"
+    },
+    {
+      "id": "WF-CHECKBOX-LAST-WRAPPER",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+      "marker": "protected boolean saveFeature()",
+      "requires": [
+        "boolean success = super.saveFeature()",
+        "if (success)",
+        "for (Field field : mLayer.getFields()) saveLastValue(field)",
+        "catch (RuntimeException error)",
+        "return success"
+      ],
+      "forbids": [],
+      "sha256": "d23c0fe88f81c25a3a011a954c803574abeb024d0cec8ec38ac5127b3ab09f05"
     }
   ],
   "contracts": [
@@ -5226,6 +5370,69 @@
         "Actual private NGFP/date bindings/schema/preferences/clock/zone/locale/runtime не читались.",
         "Политика default/last при первом открытии и при Cancel, нормализация DATE/TIME, поле-clear и все native lifecycle/remote результаты UNKNOWN."
       ]
+    },
+    {
+      "id": "UI-FORM-CHECKBOX-NGFP-VALUE",
+      "group": "forms",
+      "title": "Флажок NGFP: состояние Boolean и значение integer 0/1",
+      "surface": "Выбранный NGFP type=checkbox → formtemplate_checkbox → formcontrol.Checkbox; XML root без отдельного android:id. Обычный FTInteger использует другой control.TextEdit.",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Состояние флажка — Boolean; getValue возвращает Integer1/0. Это не nullable checkbox output, не schema BOOLEAN, не NGW resource-selection checkbox и не finish_beep.",
+      "value_origin": "attributes.field нормализуется через ControlHelper/core; mFields регистрирует control под этим именем. attributes.text — переводимая подпись, init_value — отдельный Boolean default. Наличие поля включает control; captured view-only отключает его отдельно. Фактический Field.type и server authorization этим не доказываются.",
+      "units": "Безразмерный флаг: isChecked true→Integer1, false→Integer0. Bundle nextgis_control_<field> и optional last preference <field> хранят Boolean. Cursor branch читает int и сравнивает с0, поэтому любой успешно прочитанный ненулевой int отображается как checked. Generic FTInteger TextEdit на этом UI boundary возвращает String, несмотря на numeric input flags.",
+      "updates": [
+        "Приоритет init: saved key/Bundle.getBoolean → существующий cursor/getInt()!=0 → только при отсутствии key и cursor новый attributes.getBoolean(init_value), затем optional last preference. Missing column при существующем cursor оставляет локальный false и не переходит к default/last.",
+        "Cursor NULL/nonintegral/out-of-int result/exception implementation-defined по официальному Cursor API: собственного isNull здесь нет. Невалидный/отсутствующий init_value может вызвать JSONException; финальный value==null→false не ловит эту ошибку.",
+        "Копирование отдельно адаптирует raw NULL/empty к unchecked Boolean, сохраняя raw copy. В выбранном пути с присутствующим checkbox сохранить raw NULL/empty после его getter позволяет copy-retention gate: нужны copied data+baseline и точное совпадение текущего typed value с baseline; это сравнение значений, не история edits."
+      ],
+      "actions": [
+        "Изменить checked-state; getter участвует в обычном capture и Save, но само изменение не подтверждает запись или upload.",
+        "При успешном base Save optional isShowLast пишет Boolean preference через apply; RuntimeException optional cache логируется отдельно и не отменяет уже возвращённый base success."
+      ],
+      "conditions": [
+        "Applicable только при реальном выборе данного NGFP элемента/Activity; оба бренда используют shared library contract, не доказанный current fleet UI.",
+        "Actual Field roster определяет наличие control/value в capture. После copy-retention gate runtime Integer кладётся в ContentValues как Integer; present FTInteger snapshot остаётся числом. Отсутствующий control, SQL NULL, raw copied NULL/empty и unchecked0 различаются.",
+        "UI-FORM-SAVE/REQUIRED/DRAFT/UNBOUND-PRESERVATION остаются прежними: required/visible/cascade/script/owner/provider gates не обходятся. Getter0 не означает отдельное правило «обязан быть включён» и не является Save ACK.",
+        "BOOLEAN schema support не добавляется. Общие mobile flags сохраняют прежний integer0/1 contract; browser Boolean support к Android не переносится."
+      ],
+      "saved_state": "saveState записывает Boolean под nextgis_control_<normalized-field>; base saveControlState включает control в Bundle/draft capture. isShowLast/cache и copied raw values/baseline имеют отдельное назначение. getValue не возвращает explicit null; видимое unchecked не доказывает ни стирание SQL NULL, ни его сохранение вне доказанного copy-retention gate.",
+      "source_ids": [
+        "WF-CHECKBOX-NGFP-INIT",
+        "WF-CHECKBOX-NGFP-VALUE",
+        "WF-CHECKBOX-NGFP-STATE",
+        "WF-CHECKBOX-NGFP-LAST",
+        "WF-CHECKBOX-NGFP-SHOW-LAST",
+        "WF-CHECKBOX-GENERIC-TEXT-INIT",
+        "WF-CHECKBOX-GENERIC-TEXT-VALUE",
+        "WF-CHECKBOX-COPY-ADAPT",
+        "WF-CHECKBOX-COPY-BASELINE",
+        "WF-CHECKBOX-LAST-DISPATCH",
+        "WF-CHECKBOX-LAST-WRAPPER",
+        "WF-FORM-TEXT-CONTROL-FACTORY",
+        "WF-FORM-TEXT-CONTROL-BINDING",
+        "WF-DATE-STD-BINDING",
+        "WF-DATE-FIELD-NORMALIZATION",
+        "WF-DATE-CAPTURE-VALUES",
+        "WF-DATE-COPY-VALUES",
+        "WF-DATE-COPY-EMPTY",
+        "WF-DATE-SCRIPT-SNAPSHOT",
+        "WF-FORM-ABSENT-FIELD",
+        "WF-FORM-DRAFT",
+        "WF-FORM-SAVE"
+      ],
+      "expectations": [
+        "Oracle: различать actual Field.type и NGFP type=checkbox; отдельно сопоставлять checked Boolean, Bundle/prefs Boolean, Integer getter, copied raw/baseline и ContentValues. Generic FTInteger должен оставаться фактическим TextEdit/String route.",
+        "Oracle для absence: missing cursor column, SQL NULL, missing/invalid new init_value, absent control и copied NULL/empty проверяются как разные producer branches; не подставлять один blanket false/null outcome.",
+        "Сохранять каждый прежний contract/source fingerprint и copy/Save/required/draft invariants. Source drift требует semantic review и reverse consumers, не автоматического обновления sha."
+      ],
+      "unknowns": [
+        "Actual private NGFP/schema/defaults/rules, stored rows/preferences/Bundle data, installed Cursor/AppCompat/OS и fleet adoption не наблюдались.",
+        "Native touch/Cancel/rotation/durable draft, malformed-input outcomes, provider coercion, local write/NGW upload и current tenant permissions UNKNOWN."
+      ]
     }
   ],
   "widget_evidence": [
@@ -6240,6 +6447,84 @@
         "NGFP seed/calendar and TIME date-component sequences remain conditional, not current bugs, native Cancel acceptance or fixed behavior.",
         "Date7/held-form Save/required/cascade/draft/script/owner/provider/permissions constraints and all original catalogue coverage remain unchanged."
       ]
+    },
+    "checkbox_widget_source_review_20261101": {
+      "reviewed_at": "2026-11-01",
+      "state": "bounded_source_review",
+      "runtime": "not_run",
+      "source_context": {
+        ".": "0f882114de6e4ed32c2fa3caeaee50f2d5996e66",
+        "android_projects/android_gisapp": "57fb5dbabbc17afa136ec8ada1bbf927a600499a",
+        "android_projects/android_gisapp/maplib": "baa94f361101051b09f762d7eda1f36466436d5c",
+        "android_projects/android_gisapp/maplibui": "be0ed0c4933573b99752b4e447f088951b88120b"
+      },
+      "basis": "Selected existing NGFP Checkbox and conditional generic FTInteger TextEdit contrast. Root-owned Date metadata transition is separate; code pins remain original observed source, not repinned to a metadata commit.",
+      "source_packet_sha256": "9721eed61a097b615807761ec919110b8548c3c620f0e2d0cfcb02d17b7f3d5b",
+      "independent_source_peer_sha256": "004558ae0926a955ad7415ab90274b4dacec00146f2cc6a188dcdf623b9d85a4",
+      "source_observations": {
+        "records": 7,
+        "routes": 4,
+        "value_namespaces": 4,
+        "unknowns": 8,
+        "conditional_observations": 0,
+        "confirmed_bugs": 0
+      },
+      "proof_scope": "Independent SOURCE peer supports bounded7/4/4 facts and separately reobserved3official API contracts; its98 passive metadata checks differ from author23+42bounds. New method/file guards are lexical drift detection, not tests/native acceptance.",
+      "new_contract_ids": [
+        "UI-FORM-CHECKBOX-NGFP-VALUE"
+      ],
+      "no_android_id": "Both selected XML roots have no android:id. widgets[] is intentional; actual class/layout and method/non-method evidence establish binding.",
+      "existing_guards_reused": "All old46contracts/213sources/64widgets/54nonmethod entries remain untouched; shared factory/binding/capture/copy/snapshot/Save guards and existing ConstantsUI/ControlHelper global file evidence are reused without expectation edits.",
+      "official_api_documents": {
+        "schema": 1,
+        "kind": "PUBLIC_ANDROID_API_DOCUMENTED_CONTRACT_NOT_INSTALLED_IMPLEMENTATION",
+        "accessed_utc": "2026-11-01T08:31:42Z",
+        "observation_method": "Official Android reference pages opened and exact method sections read; no customer API or code/runtime invocation.",
+        "verbatim_words_per_page": 0,
+        "pages": [
+          {
+            "id": "CBA-CURSOR-INT",
+            "url": "https://developer.android.com/reference/android/database/Cursor#getInt(int)",
+            "method": "android.database.Cursor.getInt(int)",
+            "documented_contract": "Returns an int; for SQL NULL, non-integral storage type or an out-of-int-range value, both result and exception behavior are implementation-defined.",
+            "bounded_page_lines": [
+              2219,
+              2234
+            ],
+            "consequence": "Checkbox.init calls getInt without its own isNull check; the public interface does not establish SQL NULL becomes unchecked.",
+            "limits": "No pinned concrete Cursor/framework/libcore implementation, installed device or actual data acceptance."
+          },
+          {
+            "id": "CBA-BUNDLE-BOOL",
+            "url": "https://developer.android.com/reference/android/os/BaseBundle#getBoolean(java.lang.String)",
+            "method": "android.os.BaseBundle.getBoolean(String)",
+            "documented_contract": "Reads a Boolean mapping; when a mapping of that requested type is unavailable, the no-default overload supplies false.",
+            "bounded_page_lines": [
+              2026,
+              2039
+            ],
+            "consequence": "ControlHelper.hasKey selects the Bundle branch by key presence; this is not a separate nullable checkbox state.",
+            "limits": "Documentation only, not proof of any actual wrong-type Bundle, OS implementation or widget lifecycle."
+          },
+          {
+            "id": "CBA-JSON-BOOL",
+            "url": "https://developer.android.com/reference/org/json/JSONObject#getBoolean(java.lang.String)",
+            "method": "org.json.JSONObject.getBoolean(String)",
+            "documented_contract": "Reads an existing Boolean or a value coercible to Boolean, and throws JSONException if the property is absent or not coercible.",
+            "bounded_page_lines": [
+              2143,
+              2159
+            ],
+            "consequence": "The new-control branch asks getBoolean(init_value); false fallback at the later value==null check is not a catch for missing/invalid init_value.",
+            "limits": "No private NGFP or specific invalid input inspected/executed; documentation is not a pinned implementation or customer-form acceptance."
+          }
+        ]
+      },
+      "limits": [
+        "Actual private forms/schema/runtime/provider/server outcomes and native lifecycle remain UNKNOWN.",
+        "SQL NULL→false and schema BOOLEAN support are not inferred from a checked-state Boolean or Integer getter.",
+        "Date209d/acb and Save86c4/0aff/required/draft/unbound contracts remain whole."
+      ]
     }
   },
   "non_method_evidence": [
@@ -6756,6 +7041,42 @@
         "UI-FORM-DATE-NGFP-VALUE"
       ],
       "sha256": "33e2305b850390f4594c82e654e490aad0687986517b4eb499b89b9775bf0968"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/formcontrol/Checkbox.java",
+      "purpose": "Actual NGFP Checkbox class/state fields and Integer getter/Boolean state identity; reviewed methods independently guarded.",
+      "contract_ids": [
+        "UI-FORM-CHECKBOX-NGFP-VALUE"
+      ],
+      "sha256": "c898e98f28a9b81ef71a16cf140778eb504b2c9c3d53e26fb67f16f6948af553"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/formtemplate_checkbox.xml",
+      "purpose": "Actual NGFP root class/layout has no android:id; no fabricated widget ID.",
+      "contract_ids": [
+        "UI-FORM-CHECKBOX-NGFP-VALUE"
+      ],
+      "sha256": "ecbc196b255761b84379da3dbb46c152217cb764ea973b4c088acd3280279cce"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/control/TextEdit.java",
+      "purpose": "Conditional generic FTInteger contrast: actual control.TextEdit class and String getter/state, not a feature checkbox.",
+      "contract_ids": [
+        "UI-FORM-CHECKBOX-NGFP-VALUE"
+      ],
+      "sha256": "0cd7a7e6b23ea3fb07309fab5d302aed1cd9147f4b283a91176184cffa82a1ec"
+    },
+    {
+      "repository": "maplibui",
+      "path": "src/main/res/layout/template_textedit.xml",
+      "purpose": "Actual generic template_textedit root class has no android:id; generic integer factory stays separate.",
+      "contract_ids": [
+        "UI-FORM-CHECKBOX-NGFP-VALUE"
+      ],
+      "sha256": "d2fe76def68dd28c65c42aefe5426b5b753698a7c7cb84604583fa22e58619d5"
     }
   ]
 }

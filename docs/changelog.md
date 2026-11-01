@@ -9,6 +9,20 @@ related_code:
 # История документационной системы
 
 
+
+## 2026-11-01 — Checkbox и обычное целочисленное поле
+
+MOB-UI-01 продолжает source-карту формы отдельным
+UI-FORM-CHECKBOX-NGFP-VALUE: actual NGFP factory/layout, init_value,
+Boolean Bundle/prefs и Integer0/1 getter отделены от generic FTInteger
+TextEdit/String. NULL и absent control не приравнены к unchecked;
+copy-retention описан в границах выбранного присутствующего Checkbox.
+Один новый контракт/11method/4file guards добавлены с переиспользованием
+11старых guards; прежние Date entries и source expectations целы.
+Actual schema/domain/cursor/native/currentvalues и remote outcome UNKNOWN.
+Баги не классифицированы, product fixes и ranking отложены; source/docs
+checks и Git delivery фиксируются по actual receipts/PR. APK/merge NOT_RUN.
+
 ## 2026-11-01 — Источники даты и времени в формах
 
 MOB-UI-01: отдельные UI-FORM-DATE-STANDARD-VALUE и UI-FORM-DATE-NGFP-VALUE
