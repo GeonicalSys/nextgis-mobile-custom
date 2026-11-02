@@ -13,6 +13,18 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Git tooling: переносы строк — 2026-11-02
+
+MOB-DEV-01 добавляет общий для шести Geonical repositories блок `.gitattributes`:
+обычный текст LF, Windows bat/cmd/ps1 — CRLF при checkout/export, ресурсы binary.
+App `gradlew.bat` нормализуется отдельным commit (CRLF blob → LF blob), при
+checkout остаётся CRLF. Содержимое команд и Android runtime не меняются.
+Upstream QuickJS в maplib сохраняет явное `-text -whitespace`; source tripwires
+уже нормализуют EOL и не переписываются. После Merge Commit maplib67,
+maplibui49 и easypicker6 app90 закрепляет fetched merged pins `7152e3cd`,
+`69cccf20`, `d4405ab4`; trees библиотек равны проверенным task tips.
+Официальные ветки/upstream не меняются, APK не публикуется.
+
 Подготовка3.1.2.31/225 меняет только production app/maplib version metadata
 и собирает уже слитые ниже отличия. Повторная проверка Gradle diff подтвердила
 прежние sourceSets, identities и зависимости. Новая функция или отличие от
