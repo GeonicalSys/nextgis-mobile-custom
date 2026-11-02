@@ -13,6 +13,18 @@ related_code:
 
 # Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 
+## MOB-DEV-01 Стабильные переносы строк в Git и экспорте
+
+Прямое поручение владельца02.11: согласовать `.gitattributes` во всех наших
+репозиториях и вынести нормализацию в отдельный commit. Технический приоритет
+P1, очередь продуктовых задач не меняется. Общий default LF, Windows-скрипты
+CRLF при checkout; бинарные ресурсы и upstream QuickJS остаются побайтными.
+Зависимости: согласованные task PR в lisa, maplib/maplibui/easypicker и
+upload_mobile. Приёмка: одинаковый общий блок, только EOL diff `gradlew.bat`
+в отдельном app commit, отсутствие изменений ресурсов/логики и source docs
+checks. Data/sync/map/background/battery не меняются; APK не публикуется.
+Статус: source task branch; merge и device acceptance отдельно.
+
 ## MOB-REL-01 Подготовка выпуска 3.1.2.31/225
 
 Доставка02.11 по новой команде владельца: библиотеки maplib66/maplibui48 слиты
