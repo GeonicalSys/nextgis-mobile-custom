@@ -23,7 +23,11 @@ CRLF при checkout; бинарные ресурсы и upstream QuickJS ост
 upload_mobile. Приёмка: одинаковый общий блок, только EOL diff `gradlew.bat`
 в отдельном app commit, отсутствие изменений ресурсов/логики и source docs
 checks. Data/sync/map/background/battery не меняются; APK не публикуется.
-Статус: source task branch; merge и device acceptance отдельно.
+Доставка02.11 по новой команде владельца: maplib67, maplibui49 и easypicker6
+слиты Merge Commit `7152e3cd`, `69cccf20`, `d4405ab4`. App90 закрепляет эти
+fetched merged pins; source trees библиотек равны проверенным task tips.
+Статус: библиотеки слиты, app подготовлен к Squash Merge; device acceptance
+и прежние native стадии остаются отдельно/paused. APK не публикуется.
 
 ## MOB-REL-01 Подготовка выпуска 3.1.2.31/225
 

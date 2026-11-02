@@ -18,6 +18,8 @@ covers:
 MOB-DEV-01: общий блок согласован с lisa и библиотеками. Тексты LF,
 Windows-скрипты CRLF при checkout/export, ресурсы binary. gradlew.bat хранится
 с LF в Git отдельным normalization commit; команды и результат запуска не
-меняются. Pins библиотек указывают на связанные task commits для review;
-перед будущим app merge нужны Merge Commit библиотек и fetched merged pins.
+меняются. После Merge Commit библиотек maplib67/maplibui49/easypicker6 pins
+указывают на fetched merged commits `7152e3cd`/`69cccf20`/`d4405ab4`.
+Trees библиотек побайтно равны проверенным task tips; дополнительных
+изменений исходников или ресурсов при переходе на merged pins нет.
 Карта, данные, sync, фон и батарея не меняются. APK не публикуется.
