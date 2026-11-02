@@ -15,6 +15,13 @@ related_code:
 
 ## MOB-REL-01 Подготовка выпуска 3.1.2.31/225
 
+Доставка02.11 по новой команде владельца: библиотеки maplib66/maplibui48 слиты
+Merge Commit `21b285a9` / `73a9c42e`, app89 закрепляет эти fetched merged pins
+для Squash Merge. Source trees библиотек равны прежним проверенным tips.
+Mobile не публикуется. Это закрывает Git-зависимости, сохраняя native FAIL,
+NOT_RUN Related/Full/final APK matrix и отдельную будущую приёмку MOB-REL-01.
+Версии production3.1.2.31/225 и Debug3.1.2.23/218 прежние.
+
 Уточнение владельца2ноября2026: перед выпуском удалить obsolete loopback vector
 server/ветку renderer; прежние `mobile_render_mode: local_vector_tiles` конфиги
 кварталов/выделов принимает новый direct SQLite source. Общие cache/полная

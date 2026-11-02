@@ -34,7 +34,9 @@ Observer diagnostics сохраняет три реальные observer/report 
 queue case удалён вместе с самим сервером. Исторические HTTP report readers
 оставлены для cached reports прежних APK, а не для запуска renderer.
 
-Draft app pin закрепляет опубликованные803decb/389f3f65 из maplib66/maplibui48;
-это provisional source для review, не merged final-release dependencies.
+По новой команде владельца02.11 maplib66/maplibui48 слиты Merge Commit,
+app89 закрепляет fetched merged pins `21b285a9` / `73a9c42e`. Их source trees
+равны прежним проверенным803decb/389f3f65. Mobile не публикуется.
 Test sources compilation PASS; execution NOT_RUN по поручению владельца.
-Related/Full не подменяются компиляцией; ни merge библиотек, ни выпуск не сделаны.
+Related/Full не подменяются компиляцией; Git merge не закрывает native FAIL
+и не является выпуском APK. Исторические receipts и независимые oracles сохранены.
