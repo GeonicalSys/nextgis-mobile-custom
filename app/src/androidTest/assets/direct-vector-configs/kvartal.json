@@ -1,0 +1,101 @@
+{
+  "name": "Квартала",
+  "type": 4,
+  "max_level": 25,
+  "min_level": 11,
+  "visible": false,
+  "mobile_render_mode": "local_vector_tiles",
+  "geometry_type": 6,
+  "is_editable": false,
+  "collector_editable": false,
+  "feature_label_field": "kvartal",
+  "fields": [
+    {
+      "type": 4,
+      "name": "id_",
+      "alias": "id_"
+    },
+    {
+      "type": 4,
+      "name": "district",
+      "alias": "участок"
+    },
+    {
+      "type": 4,
+      "name": "region",
+      "alias": "Субъект"
+    },
+    {
+      "type": 4,
+      "name": "rayon",
+      "alias": "Район"
+    },
+    {
+      "type": 4,
+      "name": "rforestry",
+      "alias": "Рн. лесничество"
+    },
+    {
+      "type": 4,
+      "name": "forestry",
+      "alias": "уч. лесничество"
+    },
+    {
+      "type": 4,
+      "name": "terrain",
+      "alias": "Урочище"
+    },
+    {
+      "type": 0,
+      "name": "kvartal",
+      "alias": "квартал"
+    },
+    {
+      "type": 4,
+      "name": "stakeholders",
+      "alias": "Арендатор"
+    },
+    {
+      "type": 0,
+      "name": "dog",
+      "alias": "Дог. аренды"
+    },
+    {
+      "type": 4,
+      "name": "dogfull",
+      "alias": "Полный номер договора"
+    },
+    {
+      "type": 4,
+      "name": "externalid",
+      "alias": "Учетный номер ФГИС"
+    }
+  ],
+  "renderer_properties": {
+    "name": "SimpleFeatureRenderer",
+    "style": {
+      "width": 5,
+      "color": -1,
+      "out_color": -16777216,
+      "alpha": 0,
+      "out_alpha": 128,
+      "scale_size_with_zoom": true,
+      "fill": true,
+      "name": "SimplePolygonStyle",
+      "text_size": 3,
+      "text_color": -16777216,
+      "value": "kvartal",
+      "text_scale_with_zoom": true,
+      "text_allow_overlap": true,
+      "text_font": "Open Sans Bold",
+      "label_min_zoom": 11
+    }
+  },
+  "ngw_version_major": 5,
+  "ngw_version_minor": 5,
+  "sync_type": 1,
+  "server_where": "",
+  "tracked": false,
+  "crs": 3857,
+  "sync_direction": 2
+}

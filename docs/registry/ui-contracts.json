@@ -787,7 +787,7 @@
         "gisApplication.closeMapObj()"
       ],
       "forbids": [],
-      "sha256": "3bff589ba38c66b210b42b7596807503a8c859098fe44cd3bd1f339845cf88ab"
+      "sha256": "ea0b0c97c74f6cbaa281a5c7000b3f8cb63084031a59256ab5f4b55c9a63450e"
     },
     {
       "id": "WF-LAYER-ROW",
@@ -3446,6 +3446,311 @@
       ],
       "forbids": [],
       "sha256": "b5f98dc8e8de3c8de4d98ef8c5876bd28a15e408a0a3f5eac51ef8da7aa05aa9"
+    },
+    {
+      "id": "memory-warning-show",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "fun showRenderMemoryStatus()",
+      "requires": [
+        "owner.renderMemoryGuard.hasResourceNotice()",
+        "ScrollableAlertDialogs.prepare",
+        "R.string.render_memory_continue",
+        "R.string.render_memory_retry",
+        "owner.retryMemoryLimitedLayers()"
+      ],
+      "forbids": [],
+      "sha256": "a0d70c6bb1b10fa13fab3c28c282248ae4f4fbfdaa5236997ea1eb68790f8fc6"
+    },
+    {
+      "id": "memory-warning-auto",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onRenderMemoryWarningChanged()",
+      "requires": [
+        "isResumed",
+        "isVisible",
+        "RenderMemoryNotice.claim()",
+        "showRenderMemoryStatus()"
+      ],
+      "forbids": [],
+      "sha256": "d60376e8b8214ff447edfd94336c7aea1c4867e79d3416c2a58fbf0f7dd38d3b"
+    },
+    {
+      "id": "memory-warning-menu",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+      "marker": "override fun onOptionsItemSelected(item: MenuItem): Boolean",
+      "requires": [
+        "R.id.menu_render_memory",
+        "mapFragment?.showRenderMemoryStatus()"
+      ],
+      "forbids": [],
+      "sha256": "cde7b032024f19e8ebaac2e7c641838a30e43f3a3fb66897fcac701200afd0cd"
+    },
+    {
+      "id": "warning-dialog-layout",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/ScrollableAlertDialogs.java",
+      "marker": "public static AlertDialog prepare(AlertDialog dialog)",
+      "requires": [
+        "dialog.create()",
+        "AlertDialog.BUTTON_NEUTRAL",
+        "new MessagePanels",
+        "content.addView(panels, outer)"
+      ],
+      "forbids": [],
+      "sha256": "1ac52d822ee85a6b6623d97d0acdd77de0b31d0c72ba4cd0dafb92cc1b8dcd86"
+    },
+    {
+      "id": "warning-dialog-measure",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/ScrollableAlertDialogs.java",
+      "marker": "protected void onMeasure(int widthSpec, int heightSpec)",
+      "requires": [
+        "fixed += heightWithMargins(child)",
+        "androidx.appcompat.R.id.contentPanel",
+        "MeasureSpec.AT_MOST",
+        "resolveSize(total, heightSpec)"
+      ],
+      "forbids": [],
+      "sha256": "858dd2be1228c66399bc0540b75e02ee1cf06e40457f65a43b717ec7b4dd2237"
+    },
+    {
+      "id": "maintenance-warning-age",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java",
+      "marker": "static Reminder read(Context context, String onlineProjectPath, long readyVersion, long now)",
+      "requires": [
+        "ProjectSyncState.lastComplete(context, canonical)",
+        "syncUnknown ? firstProject : complete",
+        "overdue(now, prefs.getLong(\"available_since\", 0))"
+      ],
+      "forbids": [],
+      "sha256": "66e23625ed395b2c55fc55ecdc84cc612abe57a2f78dc45512fcc6b32b73122b"
+    },
+    {
+      "id": "maintenance-warning-week",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java",
+      "marker": "static boolean overdue(long now, long since)",
+      "requires": [
+        "now - since > WEEK_MS"
+      ],
+      "forbids": [],
+      "sha256": "1bf96472e6775dd50886abb62bbfdc5c586ac3f75b2d45587c54c5924d241b1e"
+    },
+    {
+      "id": "maintenance-warning-session",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java",
+      "marker": "static boolean alreadyShown(Context context, String session)",
+      "requires": [
+        "session.equals(prefs.getString(\"shown_session\", null))",
+        "!reviewDue(System.currentTimeMillis(), prefs.getLong(\"shown_at\", 0))"
+      ],
+      "forbids": [],
+      "sha256": "113ca17857a0c4a695c3a32c19064e4631a489f7d8c55b3037ff7b7a21cc7188"
+    },
+    {
+      "id": "maintenance-warning-day",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java",
+      "marker": "static boolean reviewDue(long now, long reviewed)",
+      "requires": [
+        "now - reviewed >= TimeUnit.DAYS.toMillis(1)"
+      ],
+      "forbids": [],
+      "sha256": "f8af0b8425851e31873ed8c8c035d60294d4c58c88e71b3a73160543de7b8eed"
+    },
+    {
+      "id": "maintenance-warning-foreground",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java",
+      "marker": "private static void checkForUpdate(Activity activity, boolean interactive,\n                                      StartupUpdateCheckScheduler.Completion completion)",
+      "requires": [
+        "!interactive && activity.hasWindowFocus()",
+        "java.util.Objects.equals(onlineProjectPath, currentPath)",
+        "StartupUpdateCheckScheduler.PROCESS_SESSION",
+        "MaintenanceReminders.markShown(activity, StartupUpdateCheckScheduler.PROCESS_SESSION)"
+      ],
+      "forbids": [],
+      "sha256": "71f0af58988f163c24881a090a5e4bc9752f3c4ff6c161d344e1cc4399b39024"
+    },
+    {
+      "id": "underlay-transfer-start",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt",
+      "marker": "private fun importLegacySources(sources: ArrayList<Uri>)",
+      "requires": [
+        "UNDERLAY_MIGRATION",
+        "transferActive = true",
+        "setTransferBusy(true)",
+        "startState.compareAndSet(0, 1)",
+        "updateTransferProgress(transferProgress, control)",
+        "lease.close()"
+      ],
+      "forbids": [],
+      "sha256": "77235759ab55b1bd8f9474fc1056836a3ebc76f0b47f1a3c06a8951d90044fe8"
+    },
+    {
+      "id": "underlay-transfer-layout",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt",
+      "marker": "private fun setTransferBusy(busy: Boolean)",
+      "requires": [
+        "transferScroll.visibility",
+        "transferCancel.visibility",
+        "list.visibility",
+        "legacy_underlay_phase_opening"
+      ],
+      "forbids": [],
+      "sha256": "77720c16acec01572b94517ec6d0f418580bae194452f4883069ff389c8db7e6"
+    },
+    {
+      "id": "underlay-transfer-progress",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt",
+      "marker": "private fun updateTransferProgress(value: LegacyUnderlayImporter.Progress,\n                                       owner: LegacyUnderlayImporter.TransferControl)",
+      "requires": [
+        "transferControl !== owner",
+        "owner.isCanceled",
+        "LegacyUnderlayProgressText.format",
+        "lastTransferPhase != value.phase"
+      ],
+      "forbids": [],
+      "sha256": "6507d2535334926452cc438c541451623ead6e2252e49110a8d2b039780df09c"
+    },
+    {
+      "id": "underlay-transfer-cancel",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt",
+      "marker": "private fun cancelActiveTransfer()",
+      "requires": [
+        "transferControl?.cancel()",
+        "transferWorkerThread?.interrupt()",
+        "state.compareAndSet(0, 2)",
+        "transferLease?.close()",
+        "transferActive = false"
+      ],
+      "forbids": [],
+      "sha256": "912dd8827db7535500a24005450f9b43d4fabf8f97199bb6ea3bd323a3e1746f"
+    },
+    {
+      "id": "underlay-transfer-stream-finished",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java",
+      "marker": "void streamComplete()",
+      "requires": [
+        "streamComplete.compareAndSet(false, true)",
+        "setPhase(Phase.FINALIZING)"
+      ],
+      "forbids": [
+        "watchdog.shutdown"
+      ],
+      "sha256": "911939a7b4f3bc6e9417d5692496212b68fe74d3221d6398adab2abb161f848c"
+    },
+    {
+      "id": "underlay-transfer-pulse",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java",
+      "marker": "private void checkForStall()",
+      "requires": [
+        "lease.heartbeat()",
+        "reportProgress(false)",
+        "streamComplete.get() || phase == Phase.ATTACHING",
+        "setPhase(Phase.STALLED)"
+      ],
+      "forbids": [],
+      "sha256": "30e0c9a798281e04ef70d3b5f6688d81d8fc4300f46dfb0db300fc19abf6b322"
+    },
+    {
+      "id": "underlay-transfer-descriptor",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java",
+      "marker": "InputStream open(Context context, Uri source) throws IOException",
+      "requires": [
+        "openFileDescriptor",
+        "if (timedOut.get())",
+        "TransferControl.closeQuietly(descriptor)",
+        "throw new TransferStalledException(null)"
+      ],
+      "forbids": [],
+      "sha256": "efb0eceab4fec17eeb0d366498d5e5c30f401aadf1d300ad461f09a8b58040fe"
+    },
+    {
+      "id": "underlay-transfer-close",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java",
+      "marker": "public void close()",
+      "requires": [
+        "closed.compareAndSet(false, true)",
+        "watchdog.shutdownNow()",
+        "TransferControl.closeQuietly(descriptor)",
+        "control.detach(descriptor)"
+      ],
+      "forbids": [],
+      "sha256": "24230d62bc4dc19d259d8af09be7d9ad188c21ea15a7b60c199341d5d64b39dd"
+    },
+    {
+      "id": "underlay-transfer-text",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayProgressText.java",
+      "marker": "public static String format(Context context, LegacyUnderlayImporter.Progress progress)",
+      "requires": [
+        "switch (progress.phase)",
+        "progress.elapsedMillis / 1000L",
+        "legacy_underlay_counts_tiles"
+      ],
+      "forbids": [],
+      "sha256": "eecc64e0905f90c9df8a73f8d0bf7e4d882b0e5f34d158239a3e483268416838"
+    },
+    {
+      "id": "visible-vector-identify",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java",
+      "marker": "public static boolean shouldInclude(VectorLayer layer)",
+      "requires": [
+        "layer != null && layer.isVisible()"
+      ],
+      "forbids": [
+        "LocalVectorTile",
+        "getLayerOriginMetadata"
+      ],
+      "sha256": "1e91e39462d9457a70d95a3c68c0434275067d1dc1e7137f6c44c181863bb565"
+    },
+    {
+      "id": "visible-vector-long-press",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "fun onLongPressFromMaplibre(clickeEnelope: GeoEnvelope, clickPoint : PointF): Boolean",
+      "requires": [
+        "LayerIdentifyPolicy.shouldInclude(vectorLayer)"
+      ],
+      "forbids": [],
+      "sha256": "d85c2248d9f2042ad16927340d1ae98837e3bf75055c982f60981cb090d97c5c"
+    },
+    {
+      "id": "visible-vector-canvas-tap",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "override fun onSingleTapUp(event: MotionEvent)",
+      "requires": [
+        "LayerIdentifyPolicy.shouldInclude(vectorLayer)"
+      ],
+      "forbids": [],
+      "sha256": "099bf377228e2053133ce05fff638ef4b42ed002a3cbd2cdcf44fbe5c9104b6c"
+    },
+    {
+      "id": "visible-vector-native-tap",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+      "marker": "fun onSingleTapUpFromMaplibre(screenx: Float, screeny :Float)",
+      "requires": [
+        "LayerIdentifyPolicy.shouldInclude(vectorLayer)"
+      ],
+      "forbids": [],
+      "sha256": "e3e70242df452ca8db7e3ed15dd8361d5d4b9fc0ce056428ce1502754e0a08ad"
     }
   ],
   "contracts": [
@@ -5294,8 +5599,8 @@
         "WF-SYNC-ERROR-LATE-OUTCOME",
         "WF-NGW-HTTP-TRANSIENT-CLASSIFICATION",
         "WF-NGW-HTTP-SERVER-CLASSIFICATION",
-      "WF-SYNC-OPTIONAL-META-FETCH",
-      "WF-SYNC-RESULT-META-FETCH"
+        "WF-SYNC-OPTIONAL-META-FETCH",
+        "WF-SYNC-RESULT-META-FETCH"
       ],
       "expectations": [
         "Same counters in a different SyncResult cannot borrow SERVER; next scope/end/unknown schema/malformed primitive types are generic.",
@@ -5828,6 +6133,190 @@
         "Ограниченный обход и пропущенные failed child reads не доказывают полный список WebGIS; remote/custom catalog accessibility и фактический network outcome требуют отдельной приёмки.",
         "Подписи не доказывают завершение импорта, scripts adoption, server authorization или scope ownership."
       ]
+    },
+    {
+      "id": "UI-RENDER-MEMORY-WARNING",
+      "group": "map",
+      "title": "Предупреждение об экономии памяти карты",
+      "surface": "Foreground map warning and Map memory menu",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Advisory render-resource economy status; slower tile/cache work does not authorize geometry thinning or data removal.",
+      "value_origin": "RenderMemoryGuard -> MapFragment foreground/process claim or MainActivity menu -> showRenderMemoryStatus -> bounded message with fixed actions.",
+      "units": "Resource state and optional layer names; not a measured free-memory quantity or render acknowledgment.",
+      "updates": [
+        "Automatic display is claimed once per application process across maps and Activity recreation.",
+        "Manual menu display is independent of the automatic process claim."
+      ],
+      "actions": [
+        "Continue dismisses the dialog.",
+        "Reload calls the owning MapDrawable.retryMemoryLimitedLayers; its existing resource-policy re-evaluation remains unchanged."
+      ],
+      "conditions": [
+        "Host must remain usable; automatic display additionally requires a resumed/visible map and resource notice.",
+        "The current guard restrictions() returns an empty map; the optional name list does not prove a particular layer lost geometry.",
+        "Programmatic dialog: no XML widgets. Complete title/actions reserve their measured height before the message scroll viewport."
+      ],
+      "saved_state": "No new preference or persistent mode. RenderMemoryNotice owns an atomic static process-session claim.",
+      "source_ids": [
+        "memory-warning-show",
+        "memory-warning-auto",
+        "memory-warning-menu",
+        "warning-dialog-layout",
+        "warning-dialog-measure"
+      ],
+      "expectations": [
+        "Oracle: all129 technical polygon IDs and whole SQL row hashes remain complete through economy/recreation; one automatic notice, with manual access remaining available.",
+        "Oracle: each character has a layout line, no ellipsis, visible glyph extents fit, both complete actions remain inside the dialog and the message can scroll in narrow Russian portrait/landscape themes/font profiles.",
+        "Counterexample: clipping a button, thinning geometry, or treating this notice as an overdue-update timer."
+      ],
+      "unknowns": [
+        "Extracted-helper native acceptance is pending. Earlier Full failed button bounds after correcting trailing-whitespace measurement.",
+        "Component profiles do not establish Full real-window, physical SM-X115, actual OOM/low-memory or all-map performance acceptance."
+      ]
+    },
+    {
+      "id": "UI-MAINTENANCE-REMINDERS",
+      "group": "sync",
+      "title": "Напоминания об обновлении и полной синхронизации",
+      "surface": "Automatic foreground startup companion dialog",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [],
+      "meaning": "Separate advisory ages for known uninstalled update, successful update check and complete sync of the current online project.",
+      "value_origin": "Validated manifest/ready APK and canonical ProjectSyncState -> MaintenanceReminders.read -> AppUpdateManager foreground/current-project guard -> warning or ready-install dialog.",
+      "units": "Wall-clock elapsed milliseconds; strict >7 days overdue, >=24 hours before another review within the same process UUID.",
+      "updates": [
+        "Update age starts when this installation first learns of a newer validated release; another newer release does not postpone it.",
+        "Full sync uses the current canonical online-project path; unknown sync age starts at first project observation. Local-only maps receive no sync reminder.",
+        "Successful update check has a separate clock; local ready-APK validation does not prove internet success."
+      ],
+      "actions": [
+        "Acknowledge the advisory; a ready APK uses the existing manual Install/Later offer.",
+        "The reminder does not perform full sync or silently install an APK."
+      ],
+      "conditions": [
+        "Only noninteractive focused usable Activity, same captured/current project, and a needed reminder.",
+        "Same UUID process session suppresses another display until24h after shown_at; a new process UUID permits another display the same calendar day.",
+        "Programmatic dialogs: widgets intentionally empty."
+      ],
+      "saved_state": "Availability/observed/check/shown times remain SharedPreferences. Full-project sync has its own canonical path clock; partial/error sync does not replace it. Layout extraction changes none of these keys or clocks.",
+      "source_ids": [
+        "maintenance-warning-age",
+        "maintenance-warning-week",
+        "maintenance-warning-session",
+        "maintenance-warning-day",
+        "maintenance-warning-foreground",
+        "warning-dialog-layout",
+        "warning-dialog-measure"
+      ],
+      "expectations": [
+        "Oracle: exactly seven days does not warn, more than seven days does; update/check/project clocks advance only from their own events.",
+        "Same process within24h suppresses another advisory; new process can warn again the same day. Local-only/different project cannot reuse the previous project warning.",
+        "Complete warning and Install/Later/OK actions remain available with bounded scrolling and unchanged handlers."
+      ],
+      "unknowns": [
+        "Process-scoped suppression is weaker than a global once-per-day policy; this release does not change that policy.",
+        "Stored sync clock does not certify physical durability or live NGW completion; existing clock-delivery risks remain separate.",
+        "Earlier Full passed MaintenanceRemindersNativeTest; extracted-helper regression is pending."
+      ]
+    },
+    {
+      "id": "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS",
+      "group": "offline",
+      "title": "Перенос подложек из прежнего Debug",
+      "surface": "Хранилище подложек: этап, время и отмена",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "underlay_transfer_status",
+        "underlay_transfer_scroll",
+        "underlay_transfer_cancel"
+      ],
+      "meaning": "Phase/time describe the current source attempt; bytes/tiles received do not mean the whole migration is finished.",
+      "value_origin": "Pinned Debug URI -> TransferSession phase/bytes/tiles/monotonic elapsed -> current uncanceled control -> localized LegacyUnderlayProgressText -> bounded status ScrollView; Cancel has its own fixed row.",
+      "units": "Received bytes, received tile count, source ordinal/count and floor(monotonic elapsed milliseconds/1000) seconds for this attempt.",
+      "updates": [
+        "Opening is visible before the worker/first byte. Receiving starts on read; final record enters Finalizing; validated published asset enters Attaching.",
+        "Watchdog pulses progress/lease through local finalization; a remote inactivity deadline applies only before stream completion/attach. One existing retry remains.",
+        "Only the same active uncanceled control can update text; phase changes scroll to the start."
+      ],
+      "actions": [
+        "Cancel closes/interrupts owned IO; queued cancel immediately restores UI/releases its lease.",
+        "Back requires the existing exit confirmation while a transfer is active."
+      ],
+      "conditions": [
+        "Selected project and UNDERLAY_MIGRATION ownership remain stable until actual IO exits.",
+        "List/another import are hidden while transferring; Cancel remains outside scrollable content."
+      ],
+      "saved_state": "In-process progress is not a durable completion ACK; validated catalog/provenance and atomic asset publication retain the existing restart/deduplication contract. Source Debug originals and IPC trust/schema stay unchanged.",
+      "source_ids": [
+        "underlay-transfer-start",
+        "underlay-transfer-layout",
+        "underlay-transfer-progress",
+        "underlay-transfer-cancel",
+        "underlay-transfer-stream-finished",
+        "underlay-transfer-pulse",
+        "underlay-transfer-descriptor",
+        "underlay-transfer-close",
+        "underlay-transfer-text"
+      ],
+      "expectations": [
+        "Oracle: slow open shows Opening and elapsed pulses; completed stream with local work shows Finalizing even when bytes no longer change.",
+        "Cancel before worker start releases the exact owned lease; late/canceled control cannot replace the current status.",
+        "Complete Russian status can scroll at280/320dp and font1/1.3/2 in both orientations/themes; Cancel remains fully visible and actionable."
+      ],
+      "unknowns": [
+        "Reported ten-minute delay cause and real old-Debug throughput remain UNKNOWN; new session/native tests are compile-only.",
+        "Uncooperative old Binder provider may outlive cancellation; late PFD is rejected, but this change does not promise a killable cross-package Binder call.",
+        "Real whole-window/OEM/nonlinear-font/touch and large-transfer/attach performance require tomorrow’s authorized live run."
+      ]
+    },
+    {
+      "id": "UI-MAP-IDENTIFY-VISIBLE-VECTORS",
+      "group": "identify",
+      "title": "Выбор только видимых векторных объектов",
+      "surface": "Map tap and long-press",
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "widgets": [
+        "mapViewMaplibre"
+      ],
+      "meaning": "Map identify candidates require visible=true; a legacy rendering flag does not expose hidden objects.",
+      "value_origin": "Layer visibility -> LayerIdentifyPolicy.shouldInclude -> three MapFragment tap/long-press branches -> original SQLite/RTree candidate/query and existing chooser.",
+      "units": "Layer visibility boolean and original feature identities; screen pixels convert through each existing tap envelope, unchanged.",
+      "updates": [
+        "Switching a layer off excludes it from both selection gestures.",
+        "Old mobile_render_mode/local_vector_tiles metadata remains serialized but never bypasses visibility."
+      ],
+      "actions": [
+        "Enable a layer before selecting its objects on the map; existing attribute navigation and write-right gates are unchanged."
+      ],
+      "conditions": [
+        "The same policy is used for native tap, long-press and legacy Canvas tap."
+      ],
+      "saved_state": "No saved rows, geometry, schema, FID, editing permissions or sync settings are migrated by this policy change.",
+      "source_ids": [
+        "visible-vector-identify",
+        "visible-vector-long-press",
+        "visible-vector-canvas-tap",
+        "visible-vector-native-tap"
+      ],
+      "expectations": [
+        "Oracle: two overlapping hidden vectors, one carrying old render metadata, produce neither candidate; enabling one produces its original attributes."
+      ],
+      "unknowns": [
+        "Native post-removal selection/source matrix is NOT_RUN; source and compiled policy fixtures are not device acceptance."
+      ]
     }
   ],
   "widget_evidence": [
@@ -6232,6 +6721,30 @@
       "path": "app/src/main/res/menu/add_layer.xml",
       "id": "menu_load_collector_project",
       "sha256": "3addc15f7eceb8174d67126ae0a8a73b3c56f44617615464a14ba5be758db763"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_underlay_catalog.xml",
+      "id": "underlay_transfer_status",
+      "sha256": "637ff3f72ded5f6d47c943ce2ebd8fbc034a1c6fc633da318498fff620869f6c"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_underlay_catalog.xml",
+      "id": "underlay_transfer_scroll",
+      "sha256": "637ff3f72ded5f6d47c943ce2ebd8fbc034a1c6fc633da318498fff620869f6c"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_underlay_catalog.xml",
+      "id": "underlay_transfer_cancel",
+      "sha256": "637ff3f72ded5f6d47c943ce2ebd8fbc034a1c6fc633da318498fff620869f6c"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/layout_map_content.xml",
+      "id": "mapViewMaplibre",
+      "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
     }
   ],
   "coverage": {
@@ -7017,19 +7530,31 @@
       },
       "runtime": "not_run",
       "limits": "No actual app launch, device/font/rotation/flavor acceptance, NGW/customer API, data migration or release. Imported server project is handled inside our mobile, not an external Collector APK."
+    },
+    "release_warning_layout_review_20261102": {
+      "scope": "Two bounded warning chains. Global runtime/status and all unrelated nodes unchanged.",
+      "runtime": "Extracted-helper acceptance pending; prior Full/failure receipts separate.",
+      "source_index": "Foreign LISA customer_customizations audit entry missing; independent owner follow-up, foreign root untouched."
+    },
+    "release_underlay_and_renderer_review_20261102": {
+      "scope": "Manual method/XML/consumer review for direct SQLite removal, visible-only identify and Debug underlay progress/cancel.",
+      "runtime": "not_run; phone disconnected by owner, no new JVM/native execution today.",
+      "project_activation_review": "Exact method diff removes only the four old server-clear comment/call lines; save/path/preferences/closeMapObj and current direct source retirement remain.",
+      "root_dependency_followup": "Four canonical LISA scenario/resource references to the removed LocalVectorTileProvider need foreign-owner delivery before end-to-end closure."
     }
   },
   "non_method_evidence": [
     {
       "repository": "root",
       "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
-      "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport.",
+      "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport. Reviewed2026-11-02: only memory-dialog builder gains bounded scrolling; prior guarded methods/ruler/zoom remain exact.",
       "contract_ids": [
         "UI-MAP-SCALE-RULER",
         "UI-MAP-ZOOM",
-        "UI-MAP-CAMERA-ROTATION-STATE"
+        "UI-MAP-CAMERA-ROTATION-STATE",
+        "UI-RENDER-MEMORY-WARNING"
       ],
-      "sha256": "d9903d307f2029a2d4e165f87578174952c8a37462f556eff27c5a3fbf681824"
+      "sha256": "0b75167d3525050ecb363cdd46db32efbb058ff8e5ed543a8e13fe4217824a6e"
     },
     {
       "repository": "maplib",
@@ -7600,6 +8125,133 @@
         "UI-MOBILE-PROJECT-LOAD"
       ],
       "sha256": "38e1b31476818ba6a7b5ca195dbb4cab4d909139ca6c0fe4095200ed8d025444"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/ScrollableAlertDialogs.java",
+      "purpose": "Full fixed actions measured before bounded message scrolling; neutral action also wraps.",
+      "contract_ids": [
+        "UI-RENDER-MEMORY-WARNING",
+        "UI-MAINTENANCE-REMINDERS"
+      ],
+      "sha256": "1c346e0dbd2d3b9790c1f4f5620846979c059a4d95844efcc8a6ab7a89084ff7"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java",
+      "purpose": "Atomic static process claim, distinct from overdue update/sync clocks.",
+      "contract_ids": [
+        "UI-RENDER-MEMORY-WARNING"
+      ],
+      "sha256": "90a07376656bbfa6b64ba3c126584d1fac8c3dd14a93ac8ece914ff02cd475a4"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java",
+      "purpose": "Seven-day thresholds, same-process24h suppression and unchanged keys; sizing delegates to extracted helper.",
+      "contract_ids": [
+        "UI-MAINTENANCE-REMINDERS"
+      ],
+      "sha256": "49bb0eb6b61206d2ecb9c92a1343898f3b92e6cb55f726b0c45c05a0361cde9f"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java",
+      "purpose": "New process recreates UUID PROCESS_SESSION; foreground retry schedule remains unchanged.",
+      "contract_ids": [
+        "UI-MAINTENANCE-REMINDERS"
+      ],
+      "sha256": "6bc9e41f0f5e839f9bd58282e3c39cd6b5043427208924327f547693545bd88b"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values/render_memory.xml",
+      "purpose": "Existing default/Russian wording and actions reviewed; strings unchanged.",
+      "contract_ids": [
+        "UI-RENDER-MEMORY-WARNING"
+      ],
+      "sha256": "394bfbbc4daa1a6cdf1415aaf60bce751f29e804b50dd302a1c17f4389e32f63"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values-ru/render_memory.xml",
+      "purpose": "Existing default/Russian wording and actions reviewed; strings unchanged.",
+      "contract_ids": [
+        "UI-RENDER-MEMORY-WARNING"
+      ],
+      "sha256": "558ebb8653a735547fd463437595b0a03d461dbe7e01097b0ab4548eee2f8a5f"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values/maintenance_strings.xml",
+      "purpose": "Existing default/Russian wording and actions reviewed; strings unchanged.",
+      "contract_ids": [
+        "UI-MAINTENANCE-REMINDERS"
+      ],
+      "sha256": "9b8056554b63b6f6b837d9fb531e9b60a66cd0c67784a6191a2b9eeb7c670604"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values-ru/maintenance_strings.xml",
+      "purpose": "Existing default/Russian wording and actions reviewed; strings unchanged.",
+      "contract_ids": [
+        "UI-MAINTENANCE-REMINDERS"
+      ],
+      "sha256": "e07f0b518a0e0d826cee792b030f5a9f74767265b8aa6e575873de6732f5c82e"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt",
+      "purpose": "Reviewed transfer phase/lifetime/current-control and fixed-Cancel text bindings; no exporter/provider/wire/schema/signing changes. Runtime remains NOT_RUN.",
+      "contract_ids": [
+        "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS"
+      ],
+      "sha256": "35f370ae1c65933ba84056d13585740eb5a70594803280065c4e513bfb88d328"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java",
+      "purpose": "Reviewed transfer phase/lifetime/current-control and fixed-Cancel text bindings; no exporter/provider/wire/schema/signing changes. Runtime remains NOT_RUN.",
+      "contract_ids": [
+        "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS"
+      ],
+      "sha256": "c1ecadffa68983d9c1d6a46df8109b18de1e32478032153c4e43405ef9fd6617"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayProgressText.java",
+      "purpose": "Reviewed transfer phase/lifetime/current-control and fixed-Cancel text bindings; no exporter/provider/wire/schema/signing changes. Runtime remains NOT_RUN.",
+      "contract_ids": [
+        "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS"
+      ],
+      "sha256": "b4719f7a8a23cf579e73a3625bdc5c0ab0fc2a1e12b2fbbf8817153b7c3df4c9"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_underlay_catalog.xml",
+      "purpose": "Reviewed transfer phase/lifetime/current-control and fixed-Cancel text bindings; no exporter/provider/wire/schema/signing changes. Runtime remains NOT_RUN.",
+      "contract_ids": [
+        "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS"
+      ],
+      "sha256": "637ff3f72ded5f6d47c943ce2ebd8fbc034a1c6fc633da318498fff620869f6c"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values/underlays.xml",
+      "purpose": "Reviewed transfer phase/lifetime/current-control and fixed-Cancel text bindings; no exporter/provider/wire/schema/signing changes. Runtime remains NOT_RUN.",
+      "contract_ids": [
+        "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS"
+      ],
+      "sha256": "5969682c5fb18ce816de0fd1a8ee38bf21fa3265f1b3f331cad906da992277e5"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values-ru/underlays.xml",
+      "purpose": "Reviewed transfer phase/lifetime/current-control and fixed-Cancel text bindings; no exporter/provider/wire/schema/signing changes. Runtime remains NOT_RUN.",
+      "contract_ids": [
+        "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS"
+      ],
+      "sha256": "961e9ed5e8a69fd2ba04e54927ab3b89cbc2eb9ecff68eaa04a9357b09976c0b"
     }
   ]
 }

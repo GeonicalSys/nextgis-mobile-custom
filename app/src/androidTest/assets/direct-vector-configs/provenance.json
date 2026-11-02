@@ -1,0 +1,29 @@
+{
+  "purpose": "Canonical source configuration inputs, not business rows/geometries or expected-output snapshots. Old render flag must not choose the removed HTTP mechanism.",
+  "inputs": [
+    {
+      "file": "kvartal.json",
+      "repository": "LISA",
+      "source": "plugins/stand_project/ngw_standard/Общий для всех/mobile_configs/kvartal.json",
+      "observed_commit": "1d1fd00f7f4bbf31e1258b84cb918256bcdc1fa3",
+      "sha256": "d5bcc6d09f0b73887d938fa071c1b5d1be0a23a419402b9e1c6a77399216fc6b",
+      "working_file_clean_against_commit": true
+    },
+    {
+      "file": "vydel.json",
+      "repository": "LISA",
+      "source": "plugins/stand_project/ngw_standard/Общий для всех/mobile_configs/vydel.json",
+      "observed_commit": "1d1fd00f7f4bbf31e1258b84cb918256bcdc1fa3",
+      "sha256": "dfe796858e43058a5aa4c6f0aa55dd0e3f738c9f90ebd8c53502c6c3850c7f4a",
+      "working_file_clean_against_commit": true
+    },
+    {
+      "file": "vertexfeature_recent.json",
+      "repository": "LISA",
+      "source": "plugins/stand_project/ngw_standard/Общий для всех/mobile_configs/vertexfeature_recent.json",
+      "observed_commit": "1d1fd00f7f4bbf31e1258b84cb918256bcdc1fa3",
+      "sha256": "d33b3bfb9b02640014babb5f8cc403989f4bb93d03be4ec986078ae8745d95c3",
+      "working_file_clean_against_commit": true
+    }
+  ]
+}

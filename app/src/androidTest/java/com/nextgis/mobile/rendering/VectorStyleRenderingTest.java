@@ -66,7 +66,8 @@ public class VectorStyleRenderingTest {
         final boolean intro=prefs.getBoolean(AppSettingsConstants.KEY_PREF_INTRO,false), hadIntro=prefs.contains(AppSettingsConstants.KEY_PREF_INTRO);
         final boolean geoDialog=prefs.getBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG,true),hadGeoDialog=prefs.contains(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
         ActivityScenario<MainActivity> screen;
-        final List<VectorLayerUI> layers=new ArrayList<>();
+        final List<VectorLayer> layers=new ArrayList<>();
+        VectorLayerUI lastClassicLayer;
         Fixture() throws Exception {
             VerificationEnvironment.requireIsolated(app);
             assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO,true)
@@ -100,8 +101,6 @@ public class VectorStyleRenderingTest {
                 layer.setName("Synthetic classic style");map.addLayer(layer);layers.add(layer);
                 layer.create(geometry,Arrays.asList(new Field(GeoConstants.FTString,"kind","Category"),new Field(GeoConstants.FTString,"name","Name")));
                 layer.setIsEditable(true);layer.setVisible(true);
-                assertFalse("Configured vector tiles are outside this matrix",LocalVectorTileRenderMode.isRequested(layer));
-                assertFalse(LocalVectorTileRenderMode.shouldUseLocalVectorTiles(layer));
                 result.set(layer);
             }catch(Exception error){throw new AssertionError(error);}});
             return result.get();
@@ -114,6 +113,7 @@ public class VectorStyleRenderingTest {
             assertTrue(layer.insertAddChanges(values)!=Constants.NOT_FOUND);
         }
         List<org.maplibre.geojson.Feature> bind(VectorLayerUI layer,com.nextgis.maplib.display.Style fallback,FieldStyleRule rules) throws Exception {
+            lastClassicLayer=layer;
             // Exercise the persisted style format, including optional presence and explicit defaults.
             AtomicReference<com.nextgis.maplib.display.Style> parsed=new AtomicReference<>();
             SimpleFeatureRenderer.fromJSON(new org.json.JSONObject().put("style",fallback.toJSON()),parsed);
@@ -156,7 +156,50 @@ public class VectorStyleRenderingTest {
                 });}catch(AssertionError error){throw new AssertionError("Current style did not reach its source: "+sourceState.get(),error);}
             }
             // Source uploads and glyph layouts are asynchronous; a wall-clock delay cannot fence them.
-            renderedFrame();Thread.sleep(400);return features;
+            try { renderedFrame(); }
+            catch(AssertionError failure) { throw new AssertionError("Classic bind did not settle: "+bindingState(),failure); }
+            screen.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
+                assertFalse("Explicit classic binding must remain current",map.isSqliteVectorLayer(layer.getId()));
+                assertTrue(map.getMaplibreMap().getStyle().getSource(layer.getPath().toString()) instanceof GeoJsonSource);});
+            Thread.sleep(400);return features;
+        }
+        String bindingState() {
+            AtomicReference<String> result=new AtomicReference<>("unavailable");
+            screen.onActivity(activity->{try {
+                MapDrawable map=(MapDrawable)app.getMap();org.maplibre.android.maps.Style style=map.getMaplibreMap().getStyle();
+                org.json.JSONObject scene=new org.json.JSONObject().put("zoom",map.getMaplibreMap().getCameraPosition().zoom)
+                        .put("bearing",map.getMaplibreMap().getCameraPosition().bearing);
+                org.json.JSONArray rows=new org.json.JSONArray();
+                for(VectorLayer layer:layers) {
+                    String logical=layer.getPath().toString(),actual=map.getVectorRenderSourceId(layer.getId());
+                    org.maplibre.android.style.sources.Source source=style.getSource(actual);
+                    org.json.JSONObject row=new org.json.JSONObject().put("layer_id",layer.getId()).put("logical_source",logical)
+                            .put("actual_source",actual).put("source_class",source==null?"absent":source.getClass().getSimpleName())
+                            .put("sqlite_provider",map.isSqliteVectorLayer(layer.getId()));
+                    org.json.JSONArray props=new org.json.JSONArray();
+                    if(source instanceof GeoJsonSource) {
+                        List<org.maplibre.geojson.Feature> features=((GeoJsonSource)source).querySourceFeatures(null);
+                        row.put("source_feature_count",features.size());
+                        for(int i=0;i<Math.min(4,features.size());i++) {
+                            org.json.JSONObject values=new org.json.JSONObject();
+                            for(Map.Entry<String,com.google.gson.JsonElement> property:features.get(i).properties().entrySet())
+                                if(property.getKey().equals("featureid") || property.getKey().contains("opacity") || property.getKey().contains("pattern"))
+                                    values.put(property.getKey(),property.getValue().toString());
+                            props.put(values);
+                        }
+                    }
+                    row.put("paint_properties",props);
+                    org.maplibre.android.style.layers.Layer pattern=style.getLayer("nglayer-layer-"+layer.getId()+"_pattern");
+                    if(pattern instanceof org.maplibre.android.style.layers.FillLayer) {
+                        org.maplibre.android.style.layers.FillLayer fill=(org.maplibre.android.style.layers.FillLayer)pattern;
+                        row.put("pattern_source",fill.getSourceId()).put("pattern_opacity",String.valueOf(fill.getFillOpacity()))
+                                .put("pattern_image",String.valueOf(fill.getFillPattern()));
+                    }
+                    rows.put(row);
+                }
+                result.set(scene.put("layers",rows).toString());
+            }catch(Exception failure){result.set("{\"diagnostic_error\":\""+failure.getClass().getSimpleName()+"\"}");}});
+            return result.get();
         }
         void renderedFrame() throws Exception {
             // A fully rendered frame may still belong to the previous camera or
@@ -212,7 +255,16 @@ public class VectorStyleRenderingTest {
             return count.get();
         }
         @Override public void close(){
-            screen.onActivity(activity->{for(VectorLayerUI layer:layers)assertTrue(layer.delete(false));app.getMap().save();});
+            if(lastClassicLayer!=null)try {
+                File folder=new File(app.getFilesDir(),"firefly-qa");
+                if(folder.isDirectory() || folder.mkdirs()) {
+                    java.nio.file.Files.write(new File(folder,"classic-binding.json").toPath(),bindingState().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                    saveFireflySnapshot(this,snapshot(),"classic-binding");
+                }
+            }catch(Exception | AssertionError diagnosticFailure){
+                android.util.Log.w("ClassicStyleEvidence","Final fixture evidence unavailable: "+diagnosticFailure.getClass().getSimpleName());
+            }
+            screen.onActivity(activity->{for(VectorLayer layer:layers)assertTrue(layer.delete(false));app.getMap().save();});
             screen.close();SharedPreferences.Editor restore=prefs.edit();
             if(hadIntro)restore.putBoolean(AppSettingsConstants.KEY_PREF_INTRO,intro);else restore.remove(AppSettingsConstants.KEY_PREF_INTRO);
             if(hadGeoDialog)restore.putBoolean(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG,geoDialog);else restore.remove(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);

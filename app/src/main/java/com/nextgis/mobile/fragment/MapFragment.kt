@@ -306,12 +306,12 @@ public class MapFragment
             }
         }
         renderMemoryDialog?.dismiss()
-        renderMemoryDialog = AlertDialog.Builder(host)
+        renderMemoryDialog = com.nextgis.mobile.util.ScrollableAlertDialogs.prepare(AlertDialog.Builder(host)
             .setTitle(R.string.render_memory_title)
             .setMessage(message)
             .setPositiveButton(R.string.render_memory_continue, null)
             .setNeutralButton(R.string.render_memory_retry) { _, _ -> owner.retryMemoryLimitedLayers() }
-            .create().also { dialog ->
+            .create()).also { dialog ->
                 dialog.setOnDismissListener { if (renderMemoryDialog === dialog) renderMemoryDialog = null }
                 dialog.show()
             }

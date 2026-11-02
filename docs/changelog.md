@@ -1,12 +1,21 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-11-01
+last_verified: 2026-11-02
 related_code:
   - docs
 ---
 
 # История документационной системы
+
+## 2026-11-01 — Первый полный локальный прогон 3.1.2.31
+
+Сохранены фактические результаты на clean app `b165046d`:256 native PASS,
+17 FAIL, UI matrices36+6 PASS и A56 cold stress PASS. Release evidence
+разделяет наблюдаемые FAIL, подтверждённые устаревшие source waiters и ещё
+неустановленные причины. Handoff сохраняет полный scope и работающий
+адресный diagnostic run, ограничения публикации, process/cleanup receipts
+и foreign owner/shared-index follow-up. Green release acceptance не заявляется.
 
 ## 2026-11-01 — Подготовка production 3.1.2.31/225
 
@@ -2228,3 +2237,13 @@ UI39/142/19/F61 и прежние clock/wiki ограничения сохран
 - Повторное сужение/расширение той же строки обновляет измерение, сохраняя выбор и обработчики.
 - Горизонтальная прокрутка пути достигает его конца при прежнем визуальном отступе.
 - Технические CPU text models отделены от phone/OEM/touch acceptance; APK/release здесь не публикуется.
+
+## 2026-11-02 — MOB-REL-01 source preparation
+
+- Удалён HTTP tile renderer, старые render flags стали инертными metadata;
+  visible-only identify, direct old-config/style/offline regressions подготовлены.
+- Перенос Debug показывает phase/elapsed, сохраняет progress/lease в finalize,
+  закрывает late PFD и освобождает queued cancel; fixed Cancel и current-control UI.
+- Подготовлены compile-only regressions, source/UI/manifest/invariant/impact docs
+  обновлены; clock policy и authoritative data не менялись. Native/real migration
+  NOT_RUN, прежние FAIL и foreign LISA registry dependency остаются открытыми.

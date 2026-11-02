@@ -1,7 +1,7 @@
 ---
 title: Каталог кастомизаций форка
 type: reference
-last_verified: 2026-10-08
+last_verified: 2026-11-02
 related_code:
   - app
   - maplib
@@ -36,7 +36,7 @@ SyncWorkspaceSession в maplib и scoped fill/rebuild/journals в maplibui.
 | Walk-by-geometry | [map-rendering.md](../architecture/map-rendering.md) | `MapFragment`, `MapDrawable`, `EditLayerOverlay`, `WalkEditService` |
 | Вынос координат и звуковое наведение | [stakeout.md](../architecture/stakeout.md) | `StakeoutGeometryTarget`, `GpsEventSource`, `StakeoutController`, `MapFragment` |
 | MapLibre rendering, hot reload и порядок слоёв | [map-rendering.md](../architecture/map-rendering.md) | `MapDrawable`, `MPLFeaturesUtils`, `VectorLayerRenderCache` |
-| Производительность карты и локальные vector tiles | [map-performance.md](../architecture/map-performance.md) | `VectorLayer`, `LocalVectorTileProvider`, `LocalVectorTileServer` |
+| Производительность карты и прямые SQLite vector tiles | [map-performance.md](../architecture/map-performance.md) | `VectorLayer`, `SqliteVectorTileProvider`, `SqliteVectorSourceBridge` |
 | NGW sync, account scheduling, layer fill и staged schema rebuild | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md), [collector-projects.md](../architecture/collector-projects.md) | `SyncAdapter`, `SyncAccountWorker`, `LayerFillService`, `GISApplication` |
 | Variant-specific Android account/provider identity | [flavors-and-versioning.md](flavors-and-versioning.md), [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md) | `app/build.gradle`, `MainApplication`, authenticator/sync adapter XML |
 | NGW resource UI и batch import | [collector-project-setup.md](../runbooks/collector-project-setup.md) | `SelectNGWResourceActivity`, `NGWResourcesListAdapter`, `LayerFillProgressDialogFragment` |

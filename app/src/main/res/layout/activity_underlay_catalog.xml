@@ -10,11 +10,19 @@
 
     <ProgressBar
         android:id="@+id/underlay_catalog_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:indeterminate="true"
         android:layout_gravity="center_horizontal"
         android:visibility="gone" />
 
+    <ScrollView
+        android:id="@+id/underlay_transfer_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
     <TextView
         android:id="@+id/underlay_transfer_status"
         android:layout_width="match_parent"
@@ -24,6 +32,7 @@
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
         android:visibility="gone" />
+    </ScrollView>
 
     <Button
         android:id="@+id/underlay_transfer_cancel"

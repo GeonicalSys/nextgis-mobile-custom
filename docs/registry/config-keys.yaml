@@ -567,10 +567,9 @@ layer_json:
   mobile_render_mode:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java
-    purpose: >
-      Select classic rendering or opt-in local_vector_tiles for read-only
-      polygon/multipolygon and simple circle Point layers; unsupported geometry,
-      editability or point style falls back to classic rendering.
+    purpose: Legacy presentation metadata preserved on JSON read/write. local_vector_tiles no longer chooses a renderer
+      or changes hidden identify; supported ordinary vectors use direct SQLite CustomVectorSource independently of
+      this value. No config or SQL migration is required.
   render_mode:
     owner: maplib
     source: maplib/src/main/java/com/nextgis/maplib/util/LayerConfigUtil.java

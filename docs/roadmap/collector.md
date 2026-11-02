@@ -1,10 +1,10 @@
 ---
 title: Roadmap Collector-проектов
 type: roadmap
-last_verified: 2026-07-19
+last_verified: 2026-11-02
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java
-  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
 ---

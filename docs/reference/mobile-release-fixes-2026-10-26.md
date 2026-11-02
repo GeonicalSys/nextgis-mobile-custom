@@ -8,7 +8,7 @@ related_code:
   - app/src/androidTest/java/com/nextgis/mobile/util/MaintenanceRemindersNativeTest.java
   - app/src/androidTest/java/com/nextgis/mobile/util/VerificationIo.java
   - app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java
-  - app/src/androidTest/java/com/nextgis/mobile/rendering/LocalVectorTileLabelTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
   - app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/TrackStopConfirmationTest.java
@@ -265,3 +265,7 @@ finalize завершают target и test invoker namespaces; reset=False ос�
 Native каталог53 classes/254 methods сохранён. Это Related, полный выпускной
 Full на обоих физических устройствах на этой стадии ещё не был принят.
 Последующее решение о выпуске и ограничения записаны в начале квитанции.
+
+Текущие source links обновлены2ноября после удаления HTTP renderer.
+Исторические результаты выше относятся к указанному тогда source и не
+принимают новый DirectVectorTilesTest; новая live матрица NOT_RUN.

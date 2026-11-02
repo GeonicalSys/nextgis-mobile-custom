@@ -5,23 +5,18 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import com.nextgis.maplib.map.LocalVectorTileServer;
 import com.nextgis.maplib.util.MapRuntimeDiagnostics;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.io.File;
-import java.net.Socket;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
-/** Real observer thread and loopback backpressure; isolated Debug emulator only. */
+/** Real observer thread and historical report provenance; isolated verification emulator only. */
 @RunWith(AndroidJUnit4.class)
 public class MapRuntimeDiagnosticsNativeTest {
     @org.junit.Before public void requireVerificationWorkspace() {
@@ -138,30 +133,4 @@ public class MapRuntimeDiagnosticsNativeTest {
         }
     }
 
-    @Test public void anActuallyFullQueueReturnsTheReasonAndCorrelationId() throws Exception {
-        guard();
-        LocalVectorTileServer server = LocalVectorTileServer.getInstance();
-        assertTrue(server.ensureStarted());
-        int port = new URI(server.getTileUrl(0).replace("{z}", "0").replace("{x}", "0").replace("{y}", "0")).getPort();
-        List<Socket> sockets = new ArrayList<>();
-        try {
-            // Two workers block on headers; sixteen more requests fill the bounded queue.
-            for (int i = 0; i < 19; i++) sockets.add(new Socket("127.0.0.1", port));
-            Socket rejected = sockets.get(18);
-            rejected.setSoTimeout(4000);
-            java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(
-                    rejected.getInputStream(), StandardCharsets.US_ASCII));
-            assertTrue(reader.readLine().contains("503"));
-            String reason = null, id = null, line;
-            while ((line = reader.readLine()) != null && !line.isEmpty()) {
-                if (line.startsWith(MapRuntimeDiagnostics.REASON_HEADER + ":")) reason = line.substring(line.indexOf(':') + 1).trim();
-                if (line.startsWith(MapRuntimeDiagnostics.REQUEST_HEADER + ":")) id = line.substring(line.indexOf(':') + 1).trim();
-            }
-            assertEquals("queue_full", reason);
-            assertNotNull(id); assertTrue(id.matches("[0-9]+"));
-        } finally {
-            for (Socket socket : sockets) socket.close();
-            server.clearLayers();
-        }
-    }
 }

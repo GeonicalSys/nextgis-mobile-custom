@@ -1,7 +1,7 @@
 ---
 title: Точечный стиль «Светлячок»
 type: architecture
-last_verified: 2026-10-25
+last_verified: 2026-11-02
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java
   - maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java
@@ -12,7 +12,7 @@ related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
   - app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java
-  - app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyTileFallbackTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
 ---
 
 # Точечный стиль «Светлячок»
@@ -95,3 +95,8 @@ PR #78 Squash с pins на удалённые merge commits библиотек. 
 
 [Фактическая квитанция 24 октября](../reference/point-firefly-verification-2026-10-24.md):
 точные commits, зависимости, runtime, исходы и ограничения.
+
+После удаления HTTP renderer2ноября живое изменение обычной точки на
+Светлячок остаётся прямым SQLite source; новый provider epoch проверяется в
+DirectVectorTilesTest без старого server→classic перехода. Classic converter
+сохранён для preview/overlay и отдельной style matrix. Новая live проверка NOT_RUN.

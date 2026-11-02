@@ -1,19 +1,35 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-11-01
+last_verified: 2026-11-02
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
   - docs/guides/change-checklist.md
   - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java
-  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
   - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java
 ---
 
 # Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 
 ## MOB-REL-01 Подготовка выпуска 3.1.2.31/225
+
+Доставка02.11 по новой команде владельца: библиотеки maplib66/maplibui48 слиты
+Merge Commit `21b285a9` / `73a9c42e`, app89 закрепляет эти fetched merged pins
+для Squash Merge. Source trees библиотек равны прежним проверенным tips.
+Mobile не публикуется. Это закрывает Git-зависимости, сохраняя native FAIL,
+NOT_RUN Related/Full/final APK matrix и отдельную будущую приёмку MOB-REL-01.
+Версии production3.1.2.31/225 и Debug3.1.2.23/218 прежние.
+
+Уточнение владельца2ноября2026: перед выпуском удалить obsolete loopback vector
+server/ветку renderer; прежние `mobile_render_mode: local_vector_tiles` конфиги
+кварталов/выделов принимает новый direct SQLite source. Общие cache/полная
+геометрия/подписи сохраняются. Добавлен разбор переноса подложек из прежнего Debug:
+жалоба на отсутствие прогресса и10мин без видимого результата, затем Cancel.
+Причина задержки пока UNKNOWN; подтвердить source defects и подготовить исправление.
+Смартфон отключён, новые live/ADB/emulator проверки отложены до новой команды.
+Сейчас source/compile/docs/Draft PR, device acceptance — отдельный следующий этап.
 
 Приоритет P1, прямое поручение владельца1 ноября2026: повысить версию и
 подготовить приложение к публикации с подключённым смартфоном. Владелец
@@ -34,6 +50,13 @@ Full не отменяет physical phone/tablet/SM-X115 render-stress gate.
 Состояние и доказательства:
 [подготовка выпуска](../reference/mobile-release-3.1.2.31-2026-11-01.md).
 Карточки: android-20261101-release-31231, maplib-20261101-release-31231.
+
+Первый release checkpoint: library65 и app88 слиты, version matrix обеих
+release и Debug PASS, подписанные кандидаты сохранены. Локальный Full на
+`b165046d`:256 native PASS/17FAIL, chooser36 и real-window6 PASS; A56 cold
+stress PASS. Публикации/установки рабочего release нет. SM-X115 исключён
+владельцем, не засчитывается как PASS. Продолжение — адресный разбор FAIL,
+без ослабления frozen expectations; [контрольная точка](../handoffs/2026-11-01-mobile-release-31231.md).
 
 29 октября, Git-доставка по прямому поручению владельца: библиотека maplib
 слита Merge Commit f61ba783 (PR62), документационный bridge — bf16ea71 (PR83).

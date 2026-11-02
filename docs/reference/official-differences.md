@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-11-01
+last_verified: 2026-11-02
 related_code:
   - app/build.gradle
   - app/src/main
@@ -18,6 +18,16 @@ related_code:
 прежние sourceSets, identities и зависимости. Новая функция или отличие от
 upstream этим version-only шагом не добавляются; статус device/Full и выпуска
 ведётся в [карточке подготовки](mobile-release-3.1.2.31-2026-11-01.md).
+
+Последующий native validation исправляет отдельно ожидания verification suite:
+current SQLite source ID вместо прежнего GeoJSON path и structural stack refresh
+вместо перестройки карты на sensor tick. Измерение warning text исключает только
+конечные wrap-boundary пробелы Android Layout, сохраняя полный текст и действия.
+Затем воспроизведён выход кнопки сообщения памяти за тесное окно. Follow-up
+использует существующий bounded message layout напоминаний и для этого диалога:
+полные действия остаются в окне, длинное сообщение прокручивается. Частота
+update/sync reminders, данные и renderer не меняются. A56 component matrix
+прошла; зелёный Full и опубликованный выпуск пока не заявлены, pixel FAIL открыты.
 
 ## Вложения: terminal404 и публикация кеша — 2026-11-01
 
@@ -186,9 +196,9 @@ Full11 PASS и три неуспешных runs Full14 учитываются о
 
 ## Offline local MVT и целые слова API30 — 2026-10-26
 
-GISApplication явно разрешает SDK transport для HTTP loopback без внешней
-сети. Guards приложения продолжают использовать Android NetworkUtil и
-WorkManager. WrappingLabel подбирает размер слова по измеренным advances,
+После удаления HTTP renderer GISApplication следует фактической SDK сети;
+сохранённые NetworkUtil/WorkManager guards обслуживают прежние операции.
+WrappingLabel подбирает размер слова по измеренным advances,
 чтобы Android11 hinting не разрывал слово после пропорционального расчёта.
 Сверены official heads через GitHub API: app
 `6113485be698606240b9bc7f0740a18ecc084aaa`, maplibui
@@ -431,7 +441,7 @@ VectorSource и прежние FillLayer/LineLayer/SymbolLayer; отдельно
 boundary-only проверки: заливка и подпись сохраняются при увеличении масштаба.
 GitHub API 2026-10-15: official
 maplib HEAD `fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4`, файл
-`LocalVectorTileProvider.java` в official отсутствует (404); это renderer форка.
+Прямой `SqliteVectorTileProvider` — renderer форка; прежний HTTP provider удалён2ноября.
 
 ## Восстановление старой истории после перехода на общие треки — 2026-10-15
 
@@ -1496,55 +1506,23 @@ legacy whole-layer механизм. Новый bounded complete-PBF кэш loca
 от него. Native handoff проходит через компактный payload, поэтому старый
 styled URI не может обойти проекцию.
 
-#### Локальные vector tiles (`local_vector_tiles`)
+#### Прямые SQLite vector tiles и старые render flags
 
-Для очень больших read-only полигональных слоёв и простых точечных слоёв серверная конфигурация может
-задать `mobile_render_mode: "local_vector_tiles"` (сохраняется в
-`layer_origin.render_mode`). Тогда вместо одного `GeoJsonSource` на весь слой
-используется MapLibre `VectorSource` с URL локального тайл-сервера.
+Обычные Simple/Field Rule векторы всех шести геометрий используют RTree → full
+original SQLite reads → NativeVectorTileEncoder → CustomVectorSource13.7.1.
+Сохранённый mobile_render_mode/local_vector_tiles не влияет на этот выбор.
+Старые HTTP server/provider/encoder, request policy и URL factories удалены;
+MapLibre.setConnected(true) больше не нужен. Shared cache/admission, полные
+оригиналы редактора, ID/geometry/labels, epochs и style order сохраняются.
+Незнакомые custom renderer extensions имеют явный classic converter без сервера.
 
-**Цепочка вызовов.**
-
-1. `LocalVectorTileRenderMode.shouldUseLocalVectorTiles()` — слой `NGWVectorLayer`
-   с запрошенным render mode и включённым `LOCAL_VECTOR_TILES_ENABLED`.
-2. `LocalVectorTileServer` поднимает loopback HTTP на `127.0.0.1` (случайный порт)
-   и регистрирует слой: `http://127.0.0.1:<port>/tiles/<layerId>/<z>/<x>/<y>.pbf`.
-3. По запросу тайла `LocalVectorTileProvider.buildTile()`:
-   - вычисляет Web Mercator bounds тайла;
-   - через RTree (`layer.query(envelope)`) выбирает кандидатов;
-   - клипает геометрию к границе тайла;
-   - кодирует MVT (`LocalVectorTileEncoder`).
-4. `MPLFeaturesUtils.createLocalVectorTileSourceForLayer()` подключает source к
-   MapLibre style: `FillLayer`/контур для полигонов либо `CircleLayer` и
-   опциональный `SymbolLayer` подписи для простых точек.
-
-Loopback server держит максимум два worker и 16 ожидающих запросов вместо
-неограниченного cached pool. Сборки одного слоя сериализованы, очередь прошлого
-поколения карты закрывается при reload. Fair two-permit gate сохраняет два builder
-при нормальных ресурсах и один при малом измеренном свободном system/Java остатке.
-Переполнение, остаток менее64MiB до heap growth limit или системный дефицит дают
-retryable503. Это ограничивает известный fan-out тяжёлых SQLite разборов,
-но не гарантирует отсутствие всех native OOM. Coarse prefetch выключен;
-private derived cache хранит только полный PBF:32/128MiB,1024 файлов,
-4MiB на запись, process/map/content/style ключ. Неполных200/cache записей нет.
-
-**Условия и fallback.** Поддерживаются `Polygon` / `MultiPolygon`, а также
-read-only `Point` с простым renderer и обычным круговым маркером без custom
-icon. Подпись точки может быть фиксированным текстом или значением одного поля
-(`_id` также поддерживается). `MultiPoint`, rule-style, label template,
-editable-слои и линейные геометрии остаются на classic path. Если
-сервер не запустился, геометрия неподдерживаема или регистрация provider не удалась —
-`MapDrawable` логирует fallback и строит слой через обычный `GeoJsonSource` +
-прежний путь подготовки данных. Ответ503 уже работающего tile source не
-переключает rendering mode: автоматическое восстановление тайла после
-возвращения RAM остаётся native gate, без обещания немедленного полного кадра.
-
-Выключение отображения такого слоя не отключает локальную идентификацию: tap и
-long-press могут показать объект и его атрибуты из SQLite, не включая слой на
-карте. Для выключенных классических векторных слоёв прежнее исключение из
-identify сохраняется. В официальном приложении на момент сверки 21 августа
-2026 года identify безусловно пропускает любой слой с `visible=false`, а
-`local_vector_tiles` и проектного registry там нет.
+Скрытые векторы больше не участвуют в map identify по старому render flag:
+LayerIdentifyPolicy включает только visible. Это изменение documented policy,
+а не миграция SQLite, прав редактирования или sync. Точные опубликованные
+kvartal/vydel/vertexfeature_recent config inputs закреплены с hash/provenance
+в DirectVectorTilesTest; живые style/offline/pixel проверки ещё NOT_RUN.
+Официальный upstream не содержит нашего прямого SQLite native backend;
+актуальные upstream heads и дата read-only сверки фиксируются при доставке PR.
 
 #### Пакетная загрузка и hot-add
 
@@ -2498,3 +2476,23 @@ maplib-20261030-vector-spatial-cache-recovery. Core29 фактически ис�
 а path separators не выходят из отдельного export cache. Shared store/segment
 порядок/MIME/URI grants/recording остаются прежними. Source/JVM и CPU-font модели
 не означают installed/native/device/recipient acceptance или новый APK.
+
+## Подготовка2ноября: прямые тайлы и перенос Debug
+
+Read-only GitHub API сверка master2ноября: app
+`6113485be698606240b9bc7f0740a18ecc084aaa`, maplib
+`9f4e1884134783610136baaac1a317f71d93c618`, maplibui
+`749c008ee8fe5cfc93452f9a27c832e7104cf145`. Это сравнение source,
+без upstream merge. Наши direct SQLite/custom styles/editor/epoch контракты
+сохраняются при удалении старого HTTP renderer и SDK connected override.
+
+Клиент переноса подложек показывает phase/elapsed/bytes/tiles до завершения
+локальной проверки и подключения. Cancel фиксирован вне scroll, queued cancel
+освобождает lease, late/canceled updates игнорируются. Exporter/provider/URI
+schema и Debug версия3.1.2.23 не меняются: нового companion APK не требуется
+для этих client-only правок. Синхронная подготовка карты в старом Debug до
+возврата URI остаётся отдельным местом наблюдения при реальном повторе.
+Причина жалобы о10мин ожидания UNKNOWN, live перенос NOT_RUN.
+Скомпилированы LisaDebug/LisaRelease/BelkaRelease и unit/native test sources;
+новые JVM/native execution, Full, version matrix на финальных merged pins и
+publisher gate ещё обязательны. Ни одна сборка не опубликована.

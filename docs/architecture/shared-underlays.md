@@ -1,7 +1,7 @@
 ---
 title: Общее хранилище подложек и обновление Debug перед переносом
 type: architecture
-last_verified: 2026-10-13
+last_verified: 2026-11-02
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java
   - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java
@@ -264,3 +264,23 @@ Maplibui остаётся на `4052cde3`, easypicker — на `f91abdf`; нез
 библиотечных зависимостей для исправлений нет. GPS/обход и marker-icons-64
 включены из прежних app #26/#27/#28. Повышение версии и публикация APK
 отложены по отдельному решению пользователя; publisher не меняется.
+
+## Наблюдаемость переноса Debug —2ноября2026
+
+LegacyUnderlayImporter публикует OPENING, RECEIVING, FINALIZING, ATTACHING и
+STALLED с elapsed текущей попытки. Bytes/tiles — полученный объём, не процент
+завершённого переноса. После complete record watchdog продолжает heartbeat/
+progress через checkpoint, sync, inspect/hash/publish до close; remote90s
+inactivity не применяется к local finalize/attach. Один retry сохранён.
+Late PFD уже timed-out попытки закрывается до чтения. Current uncanceled
+TransferControl владеет UI; отмена queued worker восстанавливает экран и
+освобождает его lease, running IO удерживает ownership до выхода.
+
+UnderlayCatalogActivity сразу показывает Opening, скрывает список/повторный
+импорт, прокручивает только статус и оставляет Cancel отдельной строкой.
+Подготовлены LegacyUnderlayTransferSessionTest и LegacyUnderlayProgressNativeTest
+с поздним PFD, finalization pulses, queued cancel/stale callback и RU themes/
+font1/1.3/2/280–320dp portrait/landscape. Они только скомпилированы.
+Реальный старый Debug, source→URI preparation, крупная подложка, все стадии и
+жалоба о10мин ожидания требуют завтрашнего live evidence; причина не установлена.
+Exporter/provider/wire/trust и исходные Debug файлы не менялись.

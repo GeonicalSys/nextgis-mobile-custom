@@ -256,12 +256,20 @@ public class RenderMemorySafetyTest {
                         }
                         TextView message = decor.findViewById(android.R.id.message); assertNotNull(message);
                         assertTrue(message.getText().toString().contains(activity.getString(com.nextgis.mobile.R.string.render_memory_message)));
-                        assertTrue(decor.getHeight() <= height); assertTextFits(decor);
+                        assertTrue(decor.getHeight() <= height);
+                        try { assertTextFits(decor); }
+                        catch (AssertionError failure) {
+                            throw new AssertionError("Memory warning layout: dark="+dark+", font="+font
+                                    +", viewport_dp="+screen[0]+"x"+screen[1]+", density="+density, failure);
+                        }
                         for (int which : new int[]{AlertDialog.BUTTON_POSITIVE, AlertDialog.BUTTON_NEUTRAL}) {
                             View button = dialog.getButton(which); assertNotNull(button); assertTrue(button.isShown());
                             Rect bounds = new Rect(0, 0, button.getWidth(), button.getHeight());
                             ((ViewGroup) decor).offsetDescendantRectToMyCoords(button, bounds);
-                            assertTrue("Complete button remains inside the dialog", bounds.left >= 0 && bounds.top >= 0
+                            assertTrue("Complete button remains inside the dialog: dark="+dark+", font="+font
+                                    +", viewport_dp="+screen[0]+"x"+screen[1]+", which="+which
+                                    +", bounds="+bounds+", decor="+decor.getWidth()+"x"+decor.getHeight(),
+                                    bounds.left >= 0 && bounds.top >= 0
                                     && bounds.right <= decor.getWidth() && bounds.bottom <= decor.getHeight());
                         }
                         androidx.core.widget.NestedScrollView scroll = decor.findViewById(androidx.appcompat.R.id.scrollView);
@@ -284,9 +292,17 @@ public class RenderMemorySafetyTest {
             TextView text = (TextView) view;
             if (text.getText().length() > 0) {
                 assertNotNull(text.getLayout());
+                assertEquals("Every warning/action character has a layout line", text.getText().length(),
+                        text.getLayout().getLineEnd(text.getLayout().getLineCount()-1));
                 for (int line = 0; line < text.getLayout().getLineCount(); line++) {
                     assertEquals("No ellipsis in resource warning", 0, text.getLayout().getEllipsisCount(line));
-                    assertTrue("Complete warning/action line fits", text.getLayout().getLineWidth(line)
+                    // Layout.getLineWidth includes wrap-boundary whitespace. getLineMax
+                    // measures the visible text, retaining leading margins and all glyphs.
+                    assertTrue("Complete warning/action line fits: widget="+text.getClass().getSimpleName()
+                                    +", id="+text.getId()+", line="+line+", visible_width="+text.getLayout().getLineMax(line)
+                                    +", width_with_whitespace="+text.getLayout().getLineWidth(line)
+                                    +", available="+(text.getWidth()-text.getPaddingLeft()-text.getPaddingRight())
+                                    +", text="+text.getText(), text.getLayout().getLineMax(line)
                             <= text.getWidth() - text.getPaddingLeft() - text.getPaddingRight() + 2);
                 }
             }

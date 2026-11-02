@@ -38,6 +38,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.Assert.*;
 
 /**
@@ -213,6 +214,11 @@ public class LocationOrbitTest {
                 assertEquals("map", symbol.getIconRotationAlignment().getValue());
                 style.addLayer(new BackgroundLayer("orbit-test-hot-layer"));
                 map.updateLocation(FIX, true, 140f, 12f, 35f, 30f);
+            });
+            assertStructuralHotAddRestoresStack(screen, app);
+            screen.onActivity(activity -> {
+                Style style = ((MapDrawable) app.getMap()).getMaplibreMap().getStyle();
+                assertNotNull("Structural refresh retains the SDK hot-added layer", style.getLayer("orbit-test-hot-layer"));
                 assertStack(style);
                 style.removeLayer("orbit-test-hot-layer");
                 ensurePointUnderCursor(style);
@@ -307,6 +313,43 @@ public class LocationOrbitTest {
         assertEquals("user-location-heading-halo", layers.get(n - 3).getId());
         assertEquals("user-location-heading-outline", layers.get(n - 2).getId());
         assertEquals("user-location-layer", layers.get(n - 1).getId());
+    }
+
+    private static void assertStructuralHotAddRestoresStack(ActivityScenario<MainActivity> screen,
+            GISApplication app) throws Exception {
+        AtomicReference<com.nextgis.maplibui.mapui.VectorLayerUI> added = new AtomicReference<>();
+        try {
+            screen.onActivity(activity -> {
+                MapDrawable map = (MapDrawable) app.getMap();
+                com.nextgis.maplibui.mapui.VectorLayerUI layer = new com.nextgis.maplibui.mapui.VectorLayerUI(app,
+                        new java.io.File(map.getPath(), "orbit_structural_" + java.util.UUID.randomUUID().toString().replace("-", "")));
+                try {
+                    layer.setName("Synthetic orbit structural add");
+                    layer.create(GeoConstants.GTPoint, Collections.emptyList()); added.set(layer);
+                    layer.setRenderer(new com.nextgis.maplib.display.SimpleFeatureRenderer(layer,
+                            new com.nextgis.maplib.display.SimpleMarkerStyle()));
+                    layer.setVisible(true); assertTrue(layer.save());
+                    map.addLayer(layer); map.addLayerByID(layer.getId());
+                } catch (Exception failure) { throw new AssertionError(failure); }
+            });
+            // Normal structural operations own stack repair. Heading samples must not
+            // enumerate/reorder every map layer after an arbitrary direct SDK mutation.
+            awaitScene(screen, app, "current source after structural hot-add", () -> {
+                MapDrawable map = (MapDrawable) app.getMap(); int id = added.get().getId();
+                com.nextgis.maplib.map.SqliteVectorTileProvider provider = map.getSqliteVectorProvider(id);
+                return provider != null && provider.isCurrent()
+                        && map.getMaplibreMap().getStyle().getSource(map.getVectorRenderSourceId(id))
+                        instanceof org.maplibre.android.style.sources.CustomVectorSource;
+            });
+            screen.onActivity(activity -> {
+                Style style = ((MapDrawable) app.getMap()).getMaplibreMap().getStyle();
+                assertNotNull(style.getLayer("orbit-test-hot-layer")); assertStack(style);
+            });
+        } finally {
+            if (added.get() != null) screen.onActivity(activity -> {
+                assertTrue(added.get().delete(false)); assertTrue(((MapDrawable) app.getMap()).save());
+            });
+        }
     }
 
     private static void ensurePointUnderCursor(Style style) {

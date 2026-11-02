@@ -1,7 +1,7 @@
 ---
 title: Напоминания о синхронизации и обновлении
 type: architecture
-last_verified: 2026-10-26
+last_verified: 2026-11-02
 related_code:
   - app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
   - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
@@ -77,9 +77,23 @@ Full смартфона и планшета выполняется после ф
 результаты принадлежат [квитанции](../reference/mobile-full-2026-10-25.md).
 
 Для новых длинных сообщений app сохраняет штатный NestedScrollView и полный
-системный шрифт. Private ReminderPanels измеряет целиком title/button panels
+системный шрифт. ScrollableAlertDialogs.MessagePanels измеряет целиком title/button panels
 до выделения остатка сообщению: минимальная высота stacked ButtonBar не
 должна обрезать второе действие. Предупреждение стоит первым, версия и release notes — ниже в прокрутке.
 Native проверяет обе кнопки внутри окна и сохраняет PNG при 280 dp / 200%.
 Остальные диалоги и короткое обычное предложение готового APK сохраняют
 существующий shared builder.
+
+## Повтор и общий layout — 2 ноября2026
+
+`UI-MAINTENANCE-REMINDERS` закрепляет отдельные clocks и фактическое ограничение
+повтора: больше7 суток для overdue;24 часа после показа только внутри UUID
+текущего процесса. Новый процесс может показать предупреждение в тот же день.
+Выпуск3.1.2.31 эту частоту не меняет.
+
+Bounded layout выделен из этого класса в ScrollableAlertDialogs и повторно
+используется сообщением памяти карты; добавлен перенос neutral action. Точное
+сохранение прежнего алгоритма и всего clock code проверено сравнением с base.
+На A56 текущие RenderMemorySafetyTest и оба MaintenanceRemindersNativeTest PASS;
+это адресная приёмка, не Full всей hardware matrix. См.
+[release evidence](../reference/mobile-release-3.1.2.31-2026-11-01.md).

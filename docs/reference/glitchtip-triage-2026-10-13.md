@@ -8,7 +8,7 @@ related_code:
   - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
   - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
-  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileServer.java
+  - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
   - maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
   - maplibui/src/main/java/com/nextgis/maplibui/activity/NGPreferenceActivity.java
   - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
@@ -82,3 +82,7 @@ Squash → отдельно согласованный выпуск. Повто�
 ориентациях. Все текущие fixtures используют явный synthetic DSN через
 DiagnosticsTestRunner. [Политика диагностики](../architecture/error-reporting.md),
 [прошлый разбор startup/503](../history/mobile-diagnostics-verification-2026-10-10.md).
+
+Текущие source links обновлены2ноября после удаления HTTP renderer.
+Исторические результаты выше относятся к указанному тогда source и не
+принимают новый DirectVectorTilesTest; новая live матрица NOT_RUN.

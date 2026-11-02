@@ -1,0 +1,107 @@
+{
+  "name": "Углы лесосек",
+  "type": 4,
+  "max_level": 25,
+  "min_level": 14,
+  "visible": false,
+  "mobile_render_mode": "local_vector_tiles",
+  "geometry_type": 1,
+  "is_editable": false,
+  "collector_editable": false,
+  "feature_label_field": "num_line",
+  "fields": [
+    {
+      "type": 4,
+      "name": "idvertex",
+      "alias": "idvertex"
+    },
+    {
+      "type": 4,
+      "name": "id_",
+      "alias": "id_"
+    },
+    {
+      "type": 4,
+      "name": "idpart",
+      "alias": "idpart"
+    },
+    {
+      "type": 0,
+      "name": "ordernum",
+      "alias": "N п\\п"
+    },
+    {
+      "type": 4,
+      "name": "type_",
+      "alias": "Тип объекта"
+    },
+    {
+      "type": 4,
+      "name": "part",
+      "alias": "Часть"
+    },
+    {
+      "type": 4,
+      "name": "num_point",
+      "alias": "Номер"
+    },
+    {
+      "type": 4,
+      "name": "num_line",
+      "alias": "Линия"
+    },
+    {
+      "type": 2,
+      "name": "azimut",
+      "alias": "Азимут"
+    },
+    {
+      "type": 2,
+      "name": "length",
+      "alias": "Длина"
+    },
+    {
+      "type": 2,
+      "name": "x",
+      "alias": "x"
+    },
+    {
+      "type": 2,
+      "name": "y",
+      "alias": "y"
+    },
+    {
+      "type": 4,
+      "name": "district",
+      "alias": "district"
+    }
+  ],
+  "renderer_properties": {
+    "name": "SimpleFeatureRenderer",
+    "style": {
+      "width": 1,
+      "color": -1,
+      "out_color": -16777216,
+      "alpha": 255,
+      "out_alpha": 255,
+      "scale_size_with_zoom": true,
+      "name": "SimpleMarkerStyle",
+      "type": 2,
+      "size": 6,
+      "text_size": 1,
+      "text_alignment": 0,
+      "text_color": -16777216,
+      "value": "num_point",
+      "text_scale_with_zoom": true,
+      "symbol_spacing": 5,
+      "text_padding": 1
+    }
+  },
+  "ngw_version_major": 5,
+  "ngw_version_minor": 5,
+  "sync_type": 14,
+  "server_where": "",
+  "tracked": false,
+  "crs": 3857,
+  "sync_direction": 2
+}
