@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-track-delivery",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-TRACK-DELIVERY"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "command": "Run the track delivery section in docs/runbooks/device-smoke-tests.md on an isolated device",
+        "steps": [
+          "Open track settings before UID registration and verify upload is enabled and the control is available",
+          "Record and stop before UID registration; verify retained points have no track badge, then register without changing settings and verify automatic delivery",
+          "Disable upload and verify pending tracks do not contribute to badges or send points; re-enable and verify retained points are delivered",
+          "Confirm registration with a rejected packet; verify the badge survives transport failure and restart, hides after registered=false or changing hub and returns after the new hub confirms registration",
+          "Repeat after restart and a project switch, and reject a later packet to verify only accepted rows are acknowledged"
+        ],
+        "expected": "Enabled-before-registration intent survives registration, failed packets retain unsent rows and only enabled upload with confirmed registration of the current server/UID contributes to the pending track badge"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-track-delivery"
+    ]
+  }
+}

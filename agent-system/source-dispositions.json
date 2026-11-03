@@ -55,6 +55,21 @@
         "agent-system/knowledge/modules"
       ],
       "reason": "Pinned original Draft blobs, contiguous source spans and complete ordered values for the two App topology registries."
+    },
+    {
+      "path": "agent-system/provenance/keyed-docs-registries.json",
+      "sha256": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/invariants.yaml",
+        "docs/registry/upstream-overlaps.yaml",
+        "docs/registry/smoke-tests.yaml",
+        "agent-system/knowledge/invariants",
+        "agent-system/knowledge/upstream-overlaps",
+        "agent-system/knowledge/smoke-tests"
+      ],
+      "reason": "Pinned original Draft blobs and full ordered value and source-span evidence for three keyed App registries."
     }
   ]
 }

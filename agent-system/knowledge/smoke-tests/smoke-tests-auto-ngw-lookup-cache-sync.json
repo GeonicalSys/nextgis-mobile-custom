@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-ngw-lookup-cache-sync",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-NGW-LOOKUP-CACHE-SYNC"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "maplib",
+          "app"
+        ],
+        "command": "& '.\\gradlew.bat' '--offline' '--no-daemon' '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':app:testLisaDebugUnitTest' '--tests' 'com.nextgis.mobile.util.NgwLookupCacheSyncTest'",
+        "expected": "Current15 actual-public-sync SDK28 methods include8 unchanged old controls, one revised false-save and6 added controls. Both false-save branches add IO while preserving new memory/map owner/one save/throws/equal-next behavior and existing stats. Actual new execution came from shared19 only: App15 baseline3 named assertion failures then15PASS/0errors/skips, XML2.298s. This standalone command remains valid but was not separately invoked. Historical key-set9 baseline1FAIL then9PASS2.066s/Belka37s remain historical, not rerun. No silent partial completeness, disk/retry, real network/SQLite/GIS/device/native acceptance. Full env and source-compile recipe are in Core PR63, update-reports/entries/maplib-20261030-full-snapshot-http206.md."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-ngw-lookup-cache-sync"
+    ]
+  }
+}

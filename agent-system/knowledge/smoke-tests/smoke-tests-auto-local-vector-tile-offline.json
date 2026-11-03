@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-local-vector-tile-offline",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-LOCAL-VECTOR-TILE-OFFLINE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "maplibui",
+          "app"
+        ],
+        "command": "tools\\verify-mobile-tests.ps1 -Scope Related -Area offline-tiles",
+        "expected": "With Wi-Fi and mobile data disabled only on the owned emulator, direct SQLite CustomVectorSource preserves one interior polygon label plus glyph/fill/outline pixels and live Firefly/advanced polygon edits. All original rows remain unchanged, Android NetworkUtil stays offline and the fixture restores radios. No local HTTP server or forced SDK connected state. Current-source execution remains NOT_RUN."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-local-vector-tile-offline"
+    ]
+  }
+}

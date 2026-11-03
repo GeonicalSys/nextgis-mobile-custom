@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-map-camera-controls",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-MAP-CAMERA-CONTROLS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": "app",
+        "steps": [
+          "On phone and tablet cold-start portrait and landscape, then rotate an open map; verify track and walk controls exist and every right-edge tool is individually clickable as columns reflow",
+          "Expand and collapse the creation menu, repeat with enlarged display size and a bottom panel; verify tools and walk Finish remain unobstructed",
+          "Start a polygon walk, rotate and background/resume, verify preview, finish and save; repeat with an existing durable session after updating without clearing data",
+          "Cold-open a project and verify two-finger rotation does nothing until the toolbar rotation button is pressed",
+          "Enable rotation, place two fingers simultaneously and twist immediately without a hold; repeat while pinching and with sequential finger placement",
+          "Enable rotation, rotate to several bearings, recreate the activity and verify the enabled state and bearing are restored",
+          "Disable rotation and verify the camera returns north-up and rotation gestures stop working",
+          "At zooms below and above 12 press location with a current fix, then repeat with location unavailable and a project layer having a finite extent",
+          "Repeat the no-location case in an empty project and while stakeout lacks a device compass"
+        ],
+        "expected": "Rotation is explicit, immediate for simultaneous two-finger contact, compatible with concurrent pinch zoom and persistent; tilt remains disabled, location resets north and never zooms out while enforcing zoom 12, missing location centers on the first valid layer at zoom 12 regardless of extent size, an empty project reports no location, and the stakeout arrow fallback stays screen-correct at non-zero map bearings while the numeric magnetic azimuth remains unchanged. Pinch, zoom buttons, restore and fit-bounds cannot go below 7.5.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-map-camera-controls"
+    ]
+  }
+}

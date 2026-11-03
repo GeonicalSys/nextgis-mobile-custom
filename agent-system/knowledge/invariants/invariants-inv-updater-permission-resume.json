@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-updater-permission-resume",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-UPDATER-PERMISSION-RESUME"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Self-hosted update resumes after Android install permission",
+        "owners": [
+          "app"
+        ],
+        "statement": "When Android special access blocks installation, persist only the validated pending manifest, re-check permission and artifact contracts on activity resume, reuse the validated cached APK and continue without a second manual update check.",
+        "related_code": [
+          "app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java"
+        ],
+        "verify_smoke": [
+          "SMOKE-SELF-UPDATE"
+        ],
+        "must_update_docs": [
+          "docs/runbooks/release-apk.md",
+          "app/docs/README.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-updater-permission-resume"
+    ]
+  }
+}

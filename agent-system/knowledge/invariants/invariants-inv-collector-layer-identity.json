@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-collector-layer-identity",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-COLLECTOR-LAYER-IDENTITY"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Collector layer identity is stable and duplicate-safe",
+        "owners": [
+          "maplib",
+          "maplibui"
+        ],
+        "statement": "A project-managed layer keeps account, remote id and project-origin metadata as one identity. Loading or rebuilding a spatial cache must not persist a partially initialized layer config. A managed-layer 404 is resolved by composition sync, never by silently converting the layer to an unmanaged local vector. Before additions, composition sync indexes physical layers by account plus remote id: one matching layer with only missing origin may be repaired in place, while duplicate, manual, wrong-kind or mismatched-account identities block composition apply and must not create another copy. Before account sync, duplicate managed identities with no pending feature/attachment changes are backup-gated and collapsed by one durable map commit; ambiguous edited copies remain untouched and block sync.\n",
+        "related_code": [
+          "maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/NgwLayerIdentityBackup.java",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java"
+        ],
+        "verify_smoke": [
+          "AUTO-MAPLIB-UNIT",
+          "SMOKE-COLLECTOR-IDENTITY"
+        ],
+        "must_update_docs": [
+          "docs/architecture/collector-projects.md",
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "docs/registry/config-keys.yaml"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-collector-layer-identity"
+    ]
+  }
+}

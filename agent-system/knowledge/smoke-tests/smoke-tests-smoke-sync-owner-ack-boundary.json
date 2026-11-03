@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-sync-owner-ack-boundary",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-SYNC-OWNER-ACK-BOUNDARY"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "After separate runtime authorization use the normal isolated verification route and distinct projects A/B with identical local layer and group paths plus an existing draft in visible A",
+          "Run a B session with a deferred child and fill delivery; tagged provider update and tagged broadcast must resolve B, while an untagged provider URI remains A-scoped even on a background-scoped thread",
+          "Close the B session only after every child and service ticket ends; attempt an expired tagged URI and verify it never falls back to A",
+          "Cancel while a child or outbound response is held; verify another full sync and project mutation remain blocked until actual drain, without treating60s unclaimed-ticket expiry as a claimed-child timeout",
+          "Observe pair ACK and full-project clock separately and exercise process death or cleanup failure between them without deriving full success from an empty pair queue",
+          "Hold after the last durable pair ACK, fail final cleanup before markComplete, and inspect exact retained pairs, old clock, failed-project alert and I/O result; restart with automatic sync off, then separately trigger normal manual retry and scheduled request dispatch",
+          "Fail the actual clock write after its memory update, and separately interrupt its await; inspect return value, same-process getter, physical XML plus backup after writer completion and fresh-process reload rather than substituting a false-before-delegate proxy",
+          "Complete required accounts in separate account-only runs and then in one all-account run; only the latter may certify the full project clock, and termination broadcasts or weighted ring completion must not substitute for it",
+          "Before any new workspace relocation feature define independent directory/mapName/UID migration or invalidation for recovery pairs, import journals, full clock and draft owners"
+        ],
+        "expected": "Exact owning rows/files change only in B and A's draft/active identity survive; expired ownership fails closed and cancellation preserves unresolved work and journals until actual drain. Cleanup failure before markComplete leaves the old clock, but does not restore an already acknowledged pair. Startup recovery requests retained pairs only; an enabled schedule or new manual action is a separate fresh-plan route. commit false is not proof of unchanged memory or unchanged disk; isolate these oracles and report the known cached-clock gap without relabeling it full success. Existing source witnesses are SyncWorkspaceIsolationTest and ProjectSyncRunnerTest. The ACK audit read21 methods in5 focused test files and executed0; no exact post-last-ACK cleanup or failed-clock injection was present. New ACK/claimed-liveness/key-migration branches remain NOT_RUN under shared AUDIT-TODO-SYNC-ACK-RECOVERY, AUDIT-TODO-SYNC-CLAIMED-LIVENESS and AUDIT-TODO-WORKSPACE-KEY-MIGRATION. Source-only audit does not authorize native execution or assert a general liveness deadline."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-sync-owner-ack-boundary"
+    ]
+  }
+}

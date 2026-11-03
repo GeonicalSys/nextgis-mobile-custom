@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-multi-account-sync",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-MULTI-ACCOUNT-SYNC"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Prepare two registered stored projects and an active map whose Collector account is not first in Android account order",
+          "verify sync_all_projects defaults true and add a detectable server change only to the inactive project",
+          "make one required account fail and run manual sync twice rapidly",
+          "verify the active Collector account is first in the manual account queue",
+          "inspect both project databases without switching the visible map while the queue drains",
+          "leave and reopen the drawer and omit one lifecycle broadcast while checking spinner recovery plus weighted progress without percent text during real push-download-apply work",
+          "repeat a new run with sync_all_projects false and then a layer-only run",
+          "recover one persisted failed target while false remains selected",
+          "inspect each project clock and retained pair",
+          "try a project switch and choose interruption",
+          "restart and inspect enabled schedules"
+        ],
+        "expected": "With sync_all_projects true one serial pipeline visits all trusted loaded projects and keeps the active map and its draft unchanged; false limits a new full run and a layer-only request to the open project, while an exact persisted recovery target still selects its registered owner. A failed project/account retains its pair without suppressing later projects; a second full sync is refused. The active Collector account retains manual priority. Spinner state recovers from worker plus lease state even if a lifecycle broadcast is missed; its progress ring uses weighted layers and real push-download-apply work without percent text, rewind or premature100% during a large snapshot. Each project clock requires its own required accounts, children, ready-outbox and cleanup success. Interruption waits for real owner release and enabled schedules are restored without duplicates. This corrected source oracle replaces only the obsolete active-project-only expectation; native execution in the29October depth audit is NOT_RUN."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-multi-account-sync"
+    ]
+  }
+}
