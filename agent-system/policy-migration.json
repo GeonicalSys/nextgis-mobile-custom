@@ -1,0 +1,2601 @@
+{
+  "format": "lisa.agent-system.policy-migration.v1",
+  "owner": "android_projects/android_gisapp",
+  "review": "Individually authored source boundaries and dispositions. Complete original text/metadata/conditions retained; semantic duplicates and product/task acceptance require their own evidence. No date, heading, status or size classifier; no client cutover.",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "b958d839ec2f6da77ff9959feae5efd312aac9a4",
+      "sha256_utf8_lf": "dce3800f871279f3c01b1e1ec6e51b697bb0c62f3b96d325ff4249c4b0a1ad1f",
+      "layout": [
+        {
+          "lines": [
+            1,
+            1
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            2,
+            2
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            7,
+            7
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            8,
+            8
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            9,
+            9
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            23,
+            23
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            30,
+            30
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            31,
+            31
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            32,
+            32
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            39,
+            39
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            48,
+            48
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            49,
+            49
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            50,
+            50
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            60,
+            60
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            73,
+            73
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            97,
+            97
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            114,
+            114
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            122,
+            122
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            129,
+            129
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            130,
+            130
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            131,
+            131
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            132,
+            132
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            133,
+            133
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            141,
+            141
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            150,
+            150
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            156,
+            156
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            176,
+            176
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            177,
+            177
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            178,
+            178
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            184,
+            184
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            185,
+            185
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            186,
+            186
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            211,
+            211
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            212,
+            212
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            213,
+            213
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            250,
+            250
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            253,
+            253
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            254,
+            254
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            255,
+            255
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            256,
+            256
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            257,
+            257
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            281,
+            281
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            283,
+            283
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            284,
+            284
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            285,
+            285
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            290,
+            290
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            327,
+            327
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            353,
+            353
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            356,
+            356
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            357,
+            357
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            358,
+            358
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            366,
+            366
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            369,
+            369
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            370,
+            370
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            371,
+            371
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            378,
+            378
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            379,
+            379
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            380,
+            380
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            396,
+            396
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            406,
+            406
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            414,
+            414
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            415,
+            415
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            416,
+            416
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            429,
+            429
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            438,
+            438
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            439,
+            439
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            440,
+            440
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            441,
+            441
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            457,
+            457
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            458,
+            458
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            459,
+            459
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            460,
+            460
+          ],
+          "reason": "blank_separator"
+        }
+      ],
+      "units": [
+        {
+          "id": "lisa:mobile:contract:workspace.identity-and-language",
+          "spans": [
+            [
+              66,
+              295
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete four-repository identity and Russian communication/source-name conventions.",
+          "record_sha256": "a40ce0dd37c6c7cc7656637a82c5ecf8d02b8c839f47830735830631a2e6e70b"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.local-checks-and-cloud-boundary",
+          "spans": [
+            [
+              1273,
+              1726
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Dated standing local-check policy, separate cloud request, complete real-window requirement and unchanged branch protection; no new execution authority.",
+          "record_sha256": "6a500e6921bcf5e9c987f381b628c7c1017a204e466510d3644f119b0e8a1660"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.roadmap-admission",
+          "spans": [
+            [
+              1766,
+              2181
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "All ordinary, unplanned and foreign-author changes require a reasoned roadmap identity before merge; report identity remains separate.",
+          "record_sha256": "667928ca91bc84cfc2ee547bfd3655ce25d81a82d40e6ed314f158139ad3b163"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.roadmap-lifecycle-and-review",
+          "spans": [
+            [
+              2182,
+              2784
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete PR impact, product-owner prioritization, independent merge/device/release states and explicit absence of an implemented automatic gate.",
+          "record_sha256": "4fdee8a2eb00f865dc82e4c51ea586b2b362ace7941fe44e92d3c3017549204b"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.glitchtip-intake",
+          "spans": [
+            [
+              2807,
+              3499
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Conditional mobile-report entry, existing client/config, safe Git versus raw Q evidence, individual dispositions and release limits.",
+          "record_sha256": "7afe3e4a911c27c8c362adbb0ebac89ade2f1e16e65e893aa628fb006352fc86"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.required-entry",
+          "spans": [
+            [
+              3500,
+              4151
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete pre-change reading and shared preflight with all six prerequisite groups.",
+          "record_sha256": "daac88c3336049d7f5fe7c2083230ba7ef68ef1e78477b907a69eaf5748692fc"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.source-discovery-and-basis",
+          "spans": [
+            [
+              4152,
+              5932
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Full eligible contour, forward/reverse closure, new consumers, owned-live versus foreign committed inputs, provisional history and unchanged oracles.",
+          "record_sha256": "3c7e34c31ff5198eec84fe33129bc98c1622ef3d2974a16191656a71e0013f3c"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.ecosystem-owners-and-discovery",
+          "spans": [
+            [
+              5933,
+              6980
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Shared scanner/index ownership, unavailable/foreign-source UNKNOWN and paused execution boundaries with all named desktop/mobile owners.",
+          "record_sha256": "5dca06892da17e05e87f6ed85e476005ab286bb0a79116f82f6739ca2fc1c94f"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.explicit-runtime-boundary",
+          "spans": [
+            [
+              6981,
+              7463
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "No hidden desktop-file runtime dependency; NGW or supported portable imports with producer/consumer documentation in the same change.",
+          "record_sha256": "20a2daf5feb9e7492eb87756823e2d7d89adeb6ff48237183483d012981ceed0"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.readonly-entry",
+          "spans": [
+            [
+              7464,
+              7890
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Bounded read-only entry and separate fork/upstream comparison destinations.",
+          "record_sha256": "a532735c0a2cc46035fda5297a9253464fb7fc04a6fc080ee88971c0105449ea"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.ui-source-trace",
+          "spans": [
+            [
+              7967,
+              8523
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Effective variant, handler/state/producer chain and independently discovered missing contracts; labels or icons never prove meaning.",
+          "record_sha256": "fa6d084552218bfac22dc02f5290b25b910396ea71fe2cbd68c0223166c7475e"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.ui-identity-and-oracles",
+          "spans": [
+            [
+              8524,
+              9147
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete device/camera/viewport/geometry/coordinate distinctions, CRS/units/freshness, discriminating expectations and separate source/screenshot/runtime evidence.",
+          "record_sha256": "2cb8c09aa9cc9aa28e523aed6b32ed330a4559dbf00f4b703371785f1f209c52"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.ui-fingerprint-review",
+          "spans": [
+            [
+              9148,
+              9510
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Source drift requires semantic and reverse-consumer review; source checks are not whole UI or native acceptance.",
+          "record_sha256": "02afb9e090caffb2f49dee07669b86dfa72ea480cee3cd8abfdf5f5b01a4f2e7"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.repository-topology",
+          "spans": [
+            [
+              9511,
+              9736
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Root/submodule topology, conventional versus actual branch and origin/upstream identities.",
+          "record_sha256": "e3366790e83ba123f90ccc26e4b87a24d6870579cbee62c064473ceb4c9dc8bb"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.routine-git-delivery",
+          "spans": [
+            [
+              9736,
+              10055
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "User change request authorizes scoped matching branches/commits/push/Drafts; read-only requests do not.",
+          "record_sha256": "fde64f0f49975d10038ec79e7b753655eafde539464ccfba39919e09f5fb9bad"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.restricted-git-and-merge-strategy",
+          "spans": [
+            [
+              10055,
+              10365
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete restricted operations and distinct application Squash/library Merge Commit strategies.",
+          "record_sha256": "f50a11054b4686fdc28c7e59df7a3bb53667c7313592bd6adf8fffd87fbc7321"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.cross-owner-delivery",
+          "spans": [
+            [
+              10365,
+              10500
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Linked Drafts and explicit library, merged pointer and publisher order before any authorized merge.",
+          "record_sha256": "be7367b671ab5909aee87d0f79789ab327941959ec55ae1599898676768fd4ae"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.preserve-owned-and-user-work",
+          "spans": [
+            [
+              10500,
+              10610
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Dirty-state ownership never permits mixing or discarding unrelated user edits.",
+          "record_sha256": "6fa3fb83d722099316771f199272c7d9ed9c87afed7f83b671d95c5916f4b6eb"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.upstream-overlap-process",
+          "spans": [
+            [
+              10610,
+              10805
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Conditional inventory, workflow-controlled backup tags, exact integration order and source-backed overlap decisions.",
+          "record_sha256": "32065b74599d4828f56a932193e05ecf4e0db4d364ceddac7a1a269620b0e5ea"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.report-owner-and-boundary",
+          "spans": [
+            [
+              10839,
+              11204
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete customer/internal report trigger, owner-local prefix, same-PR card and central ID-based reporting boundary.",
+          "record_sha256": "00044d50b9fbfce56e526f5ffa8ab60312f20bf55ceb292f097c545602f10d1b"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.integration-release-closure",
+          "spans": [
+            [
+              11265,
+              13011
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "One complete conditional closure process: all open/published predecessors, transitive inclusion, content proof, fetched merged library pins, blocked release and post-merge recheck.",
+          "record_sha256": "39022adfa1466b7d469b04cce6edd3d3dd3df53cae13e75e8593faf608ba6025"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.flavors",
+          "spans": [
+            [
+              13039,
+              13104
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Preserve both named flavors and application identities.",
+          "record_sha256": "3504803dc61b4d886c992fb42f64b6b28ed050fce94abdaa24110662f2af7e7e"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.version-coupling",
+          "spans": [
+            [
+              13104,
+              13228
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Fork version format and exact app/maplib invariant coupling.",
+          "record_sha256": "9ffb458af53dfabd0575a6fa641bbb7ba47000fe0899a444ae5ab696722d6b8d"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.version-dsl",
+          "spans": [
+            [
+              13228,
+              13563
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Production/debug owners, supported AGP API and explicit prohibited app and library DSL.",
+          "record_sha256": "21150db4dfd40332dbb1ccd539bebdf1fdb7c3bed275433ec76c456f0668a57d"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.version-matrix",
+          "spans": [
+            [
+              13563,
+              14114
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Any version change requires three actual APK variants, aapt and maplib metadata plus intentionally maintained independent expectations; basename is not proof.",
+          "record_sha256": "0ef77d5faa51ea511d17cf3a27d51e3b8bbd39c1bf39e6930041216c84da6151"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.track-flags",
+          "spans": [
+            [
+              14114,
+              14191
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Restore start/end track flag layers only after explicit product decision.",
+          "record_sha256": "dab4728bfec1973ff66d127ebe5e60070ed595dafd64294e130bde99492c00b2"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.layer-order",
+          "spans": [
+            [
+              14191,
+              14322
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Internal zero means bottom; imported layers must preserve the user stack.",
+          "record_sha256": "58740c4ead7c26897c125a7589087f72c24aecc03b412bf2433554a91f84b17e"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.default-osm",
+          "spans": [
+            [
+              14322,
+              14532
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Exactly one direct-child bottom OSM in every workspace, outside composition-sync deletion ownership.",
+          "record_sha256": "3f067caadaf4049c9cab7fa08a2e9b70f01efa506fe426c23195c6fb58d5c19e"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.updater-permission-continuation",
+          "spans": [
+            [
+              14532,
+              14730
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Verified cached installation continues after special permission without requiring a second manual update check.",
+          "record_sha256": "dfd574949511bfb85f5eb601acdbd041e79c3ef513c2d8353ce1d88ec61d086a"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.hot-add-consistency",
+          "spans": [
+            [
+              14730,
+              14818
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Native style and layer list converge after raster hot-add without restart.",
+          "record_sha256": "bff94ffc269db399f40e54265dfa8b8b03fb015dbe9ffe66ec24d9b801550852"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.collector-resource-selection",
+          "spans": [
+            [
+              14818,
+              14889
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Preserve compatible Collector resource type in NGW selection.",
+          "record_sha256": "e657e0a03cd1d11e6c83a99656bc1bc600631274072d5c0af2ef331fe79b3186"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.collector-type-boundary",
+          "spans": [
+            [
+              14889,
+              15321
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete vector/PostGIS and existing authenticated raster-style behavior; no speculative extension of server types.",
+          "record_sha256": "e1a76156e6f0d931cb898e42b700f4684b326475759d6b5916624bd33a4102df"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.backup-before-destruction",
+          "spans": [
+            [
+              15321,
+              15429
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Required backup must succeed before destructive layer recreation or deletion.",
+          "record_sha256": "5862eba0aef9206e1e51ac8995911e2c98593794f2204f783642d94bba8a5304"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.invariant-entry",
+          "spans": [
+            [
+              15430,
+              15527
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete source-backed invariant registry destination.",
+          "record_sha256": "6346997a272458de29de2eeecc02b201eef9a9f48da69489f9e68ccc65b66159"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.related-check-routing",
+          "spans": [
+            [
+              15593,
+              15866
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Related-area routing and isolation after changes; Full is not automatically repeated after every edit.",
+          "record_sha256": "56864d88470a0bc165800ba37cff70f3a8660d2c8fb11d3b4f15266128d46926"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.full-before-publication",
+          "spans": [
+            [
+              15866,
+              16186
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete final-source/dependency-closure Full route and distinct phone/emulator/UI stages.",
+          "record_sha256": "ee0b482b7d32e7d583e31c9304cac3ee7068cfc63618169f7e7ea006d8ad859b"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.publication-receipt-freshness",
+          "spans": [
+            [
+              16186,
+              16453
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Check-Publication precedes dry-run; absent, stale, failed or incomplete Full cannot be replaced by Related/CI.",
+          "record_sha256": "72e5e52adb98d549c0a8e70cf539f2ce1edb344180e5bbbaa4c09f7f76c82bc1"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.verification-isolation",
+          "spans": [
+            [
+              16453,
+              16935
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Exact opt-in identity, owned storage, preserved working apps, emulator-only restored system settings and unlocked-phone requirement.",
+          "record_sha256": "dfdc12d881d2aca25f563625fab0ec3f8d35f2516410830d197d1991afcd16e6"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.test-catalog-admission",
+          "spans": [
+            [
+              16935,
+              17158
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "New tests must enter complete phone/emulator routing without losing data isolation or area ownership.",
+          "record_sha256": "7ef34066274f02bf8acd1f8c5b32fcd3cff8a28257b10cb51be2c1db4f167830"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.automated-tests-entry",
+          "spans": [
+            [
+              17159,
+              17237
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Preserve the full command/report/limitation runbook destination.",
+          "record_sha256": "eb593e00f30062044f8e71e47f0d737b07b5dace215bf74fe3ce33101c28f780"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.enlarged-ui-scenario",
+          "spans": [
+            [
+              17288,
+              17558
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Full changed scenario must work with both system font and display enlargement, including real field-user needs.",
+          "record_sha256": "ea323e84efb970cc7d84a019f47b244459dd3bc78b1565c6fda24bdaaa622353"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.enlarged-ui-matrix",
+          "spans": [
+            [
+              17559,
+              17839
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Both themes/orientations, all named font/display widths and Android14 nonlinear sp scaling travel together.",
+          "record_sha256": "3f4e8afb2c3c476fbdfa8a8de8b0ab98a95b4a37216937cb5eac134f785e2fec"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.changed-screen-coverage",
+          "spans": [
+            [
+              17839,
+              17993
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Map-panel tests cannot certify an independently changed settings/menu/list/form/dialog screen.",
+          "record_sha256": "2770de0c4b83f995621891f329d184ad306f59c438225a40b98c182e6fbeb3f4"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.compact-ui-touch",
+          "spans": [
+            [
+              17993,
+              18234
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Default layout stays compact; transparent collapsed areas preserve the entire map touch stream and visible actions.",
+          "record_sha256": "839d1bac26880fa854f30bdf04eed2c39007cb829097267353c21ed432fdc8d7"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.complete-user-text",
+          "spans": [
+            [
+              18234,
+              18538
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Required instructions/actions/errors/values remain fully visible across long Russian and real error/GPS/negative-value states.",
+          "record_sha256": "ccb0febc6a86186ee0ddc86038cc9496e49c00a5de070996568377873012c872"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.adaptive-ui-order",
+          "spans": [
+            [
+              18538,
+              18989
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Wrap then simplify then measured local fitting; preserve system fontScale/sp and non-scrolling frequently used map controls.",
+          "record_sha256": "e48784113404bd20ff7424d538908ef343e26586203443df64331021a964f852"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.keyboard-insets-and-actions",
+          "spans": [
+            [
+              18989,
+              19465
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete closed-keyboard contract, ordinary keyboard behavior, insets, reachable terminal actions and measured touch bounds.",
+          "record_sha256": "008ca3f6349061bb2c2860805cea5ae18a0cd867c687ad8e7d51a5278a8cfd89"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.ui-geometry-acceptance",
+          "spans": [
+            [
+              19465,
+              20047
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Overlay and background are tested separately; actual Layout lines, ellipsis, bounds/overlaps and emulator appearance are required.",
+          "record_sha256": "1618b168383ccabaeadb9c48c183da4d64ae87d06f43b57c912af26ea70803b4"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.ui-verification-disclosure",
+          "spans": [
+            [
+              20047,
+              20204
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Exact verified matrix and explicit omitted states; successful compilation never proves readability.",
+          "record_sha256": "d8996299b3ca9e5c8a5ec5a1e9f7ecea37864b534bb2ef88f5df3fcd8c19e2ae"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.implementation-minimum-check",
+          "spans": [
+            [
+              20205,
+              20494
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Read affected source/pack, minimize edits and actually verify touched Gradle DSL before handoff when it changes.",
+          "record_sha256": "8a00cf6f105744ff461e4d0da585137836c17868123ce66f12e83fbb8d597b54"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.local-readme-maintenance",
+          "spans": [
+            [
+              20494,
+              20620
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Update local explanation when its workflow, limitation, diagnostic or behavior contract changes.",
+          "record_sha256": "5285f6b917faee01ef9f78e1fa0fa9cfb67d37cc415f9c9be786017d5a4d74af"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.local-manifest-maintenance",
+          "spans": [
+            [
+              20620,
+              20771
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Update exact local navigation on entry/module/API/setting/storage/smoke changes.",
+          "record_sha256": "01f338b3da0a8545cfad42928a9e59ff303e2de2f20bca6349742879b2d0f68d"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.central-contract-maintenance",
+          "spans": [
+            [
+              20771,
+              20920
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Cross-module dependency/invariant/config/release/upstream changes require central docs/registries.",
+          "record_sha256": "8f6eb764c0ffe2d7138010efa7877de331c591f01e5e3ef3b66a5edc4e47e794"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.central-docs-history",
+          "spans": [
+            [
+              20920,
+              21041
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Central doc updates retain changelog and last_verified maintenance.",
+          "record_sha256": "a954e7b8e9c5a39da5d8b41b557d2fd8658206bf816da54094a64bd19a18ca39"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.official-difference-review",
+          "spans": [
+            [
+              21041,
+              21321
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Actual behavior/pointer changes require fresh upstream comparison; accepted/removed capabilities leave the current difference view.",
+          "record_sha256": "0ff35ce19e94468aa5548b8b2db1408c70ea0e2320383d1bdad6042737b15203"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.cross-platform-documentation",
+          "spans": [
+            [
+              21321,
+              21544
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Cross-platform changes update exact owners and never substitute deployment mirrors for sources.",
+          "record_sha256": "047e4ba1f4bf4aa7ee7867245647b0882a9e45e6a205eeb659b7745ff81765e8"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.documentation-check-command",
+          "spans": [
+            [
+              21544,
+              21673
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete local docs-check invocation including -RunTests; storing the command does not execute it.",
+          "record_sha256": "c63ff1606de4030c3ffffa18f08465bf9d5d41564e7aad6a7364b7fe1b620d45"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.documentation-handoff",
+          "spans": [
+            [
+              21674,
+              21807
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Final delivery names changed documentation or explains why documented behavior is unaffected.",
+          "record_sha256": "52479cea86e291edba03c7a1024b498ae6731afb7762151c66c15a3fa9281923"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.minimum-build-routing",
+          "spans": [
+            [
+              21840,
+              22337
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Preserve every row and exact Gradle/version-matrix command in the complete conditional build table.",
+          "record_sha256": "8c294b217071d5d8305ec0144af91b302acf6cf2022148926ee5023de70ef576"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.manual-smoke-entry",
+          "spans": [
+            [
+              22338,
+              22437
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Manual device smoke is selected from the owning source registry and remains separate from technical source proof.",
+          "record_sha256": "fd280b4b398834ca7373bc24e39709363eeae6dbc61f9b0bb320a81cf9085984"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.secret-free-documentation",
+          "spans": [
+            [
+              22468,
+              22687
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Preserve all prohibited credential/config categories and safe key/source/check descriptions.",
+          "record_sha256": "df854103315852097a2ca4d6b6f888cbeb2d63e94bdf11d71419b03eb78b78bf"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.documentation-ownership",
+          "spans": [
+            [
+              22687,
+              22840
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "One explained contract, exact registry identity and local navigation retain separate owners without copied truth.",
+          "record_sha256": "7372cfe0071f0cc121bf28d7074ec151ae548cdca90f263d60ff2ae7ff6fd182"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.conditional-form-rules",
+          "spans": [
+            [
+              22867,
+              24021
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete v1/v2 required/visible, typed current values, immutable pin/draft, bind-failure Save gate, alias/listener and Tabs/touch conditions.",
+          "record_sha256": "fb8f616452439a2a8c0531ca8ce11beff82a24c51551e9b3756bac1ce757999e"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.cascading-form-lists",
+          "spans": [
+            [
+              24022,
+              24668
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Offline graph, key versus label, both branches, SQL NULL, pinned historical values, local-ID namespace and legacy expansion all remain attached.",
+          "record_sha256": "4e9898e9c865939918f2cafd409402d3b8b32b7cd567edbf90419192875b04e9"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.project-script-boundary",
+          "spans": [
+            [
+              24669,
+              25248
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Native base APIs and tables stay in APK; source-only versioned/granted pinned packages, no planned API claims, retained old draft packages and cross-owner order.",
+          "record_sha256": "acea83b1326758f6261bed7bbc3c65e8071fc1448d7d9ee7791db2f3e843ba98"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.project-sync",
+          "spans": [
+            [
+              25282,
+              26051
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete default scope, exact workspace ownership, async/provider/service propagation, global lease, pending plan, canonical journal and isolated verification.",
+          "record_sha256": "1df761a24fb61311bedd2466addbe5706300208db7205333fd761005c43df69f",
+          "shared_sources": [
+            "AGENTS.md",
+            "app/AGENTS.md"
+          ]
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.split-list-label-source",
+          "spans": [
+            [
+              26051,
+              26201
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete metadata name then layer-alias then field-key fallback for split legacy lists.",
+          "record_sha256": "ef4c20066a015500c096dc955edb7460cdcf0ffe39a8c94f06b9424cb3a36d3c",
+          "shared_sources": [
+            "AGENTS.md",
+            "app/AGENTS.md"
+          ]
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.permitted-test-project",
+          "spans": [
+            [
+              26202,
+              26811
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Exact permitted project, metadata-only verification snapshot, no accounts/features/secrets and explicit missing/ambiguous-project question behavior.",
+          "record_sha256": "bd2781f83eea72cf99a7e82fadfb39c8e07aac1c369d1b10aa1c032d03d33d72"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.independent-change-card",
+          "spans": [
+            [
+              26858,
+              27132
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "New independent identity, exact covers and separate reasoned exemption; old IDs cannot conceal new behavior.",
+          "record_sha256": "957701fff65c74815c060b5dfb7bdfbc2419392091278a9fcefb67da9a2ebe26"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.report-hook-admission",
+          "spans": [
+            [
+              27132,
+              27748
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete before-commit/push check, per-clone automatic hook/PyYAML setup and preservation of other configuration.",
+          "record_sha256": "9b8faadd736b2fcd0765699bc21c11239c9b97f1dca167a0ab84e3ab694397a0"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.report-hook-enforcement",
+          "spans": [
+            [
+              27748,
+              27974
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Normal push remains blocked on admission failures; no no-verify, policy weakening or fake exemptions, with semantic review separate.",
+          "record_sha256": "f54fe362769b4e788c5c912f8f0b2050e2ab18d5fa3fd21aa059db921cfdc86e"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.requested-report-persistence",
+          "spans": [
+            [
+              28013,
+              28468
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete requested-report/draft/audit Git delivery, central/owner locations and direct file/PR references.",
+          "record_sha256": "7490e39665f7719ab5207e1a6f11521d961dd66f9615f68deba2f5072002cb6f"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.report-acceptance",
+          "spans": [
+            [
+              28468,
+              28656
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Draft persistence does not close IDs; separately instructed reported/letters flow and source/secrecy constraints include attachments.",
+          "record_sha256": "d5b6fdb9d0b9cc3aef05d17f1d61caa12440a4f53c35c756fd4f55ade9357c9f"
+        },
+        {
+          "id": "lisa:mobile:evidence:workspace.incident-hang-evidence",
+          "spans": [
+            [
+              335,
+              476
+            ]
+          ],
+          "classification": "historical_receipt",
+          "review": "Historical observed host hangs and reboot timing; not a proven GPU cause or current acceptance.",
+          "record_sha256": "91fce0484dadd95e6fce810961b2a5e5341964f1771eefab5110b53b9b7d0a2f"
+        },
+        {
+          "id": "lisa:mobile:task:workspace.incident-software-order",
+          "spans": [
+            [
+              476,
+              545
+            ]
+          ],
+          "classification": "historical_order",
+          "review": "Historical bounded software-only continuation request; no standing authorization to restart native stages.",
+          "record_sha256": "251be1e9b0f0ef4a0bccad85abe9878bf6a6761a0a501b352179a6b76a2fa5df"
+        },
+        {
+          "id": "lisa:mobile:evidence:workspace.incident-software-failure",
+          "spans": [
+            [
+              545,
+              663
+            ]
+          ],
+          "classification": "historical_receipt",
+          "review": "Observed software-startup failure and explicit insufficiency of software graphics as proof of host safety.",
+          "record_sha256": "875ea012b0b49931f53bf507018b609cd845a68c6969226f44f2e792643d71ef"
+        },
+        {
+          "id": "lisa:mobile:task:workspace.incident-retry-order",
+          "spans": [
+            [
+              663,
+              843
+            ]
+          ],
+          "classification": "historical_order",
+          "review": "Historical user report and retry permission tied to that former continuation, not this knowledge task.",
+          "record_sha256": "3fc2d3dbfbd31dd66fa8f21275a53b6c08a86cc56bc76f41ae03b8d86c62d30a"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.emulator-admission",
+          "spans": [
+            [
+              843,
+              1134
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete continuing host-GPU prohibition, pre-ADB admission, separately permitted software-only flag and actual SurfaceFlinger identity check for owned or borrowed AVD.",
+          "record_sha256": "3dab048a2894e5e175de2f1aa8f39b351295848bae5e893f0bc7ddb64ea63c63"
+        },
+        {
+          "id": "lisa:mobile:evidence:workspace.incident-first-software-boot",
+          "spans": [
+            [
+              1134,
+              1272
+            ]
+          ],
+          "classification": "historical_receipt",
+          "review": "Historical first-boot SwiftShader observation explicitly not Full native PASS, with its original reference.",
+          "record_sha256": "fe5eac2d78697e856f7203bb5895093f3c45ed05b31c61fe69186ceafc8c2fef"
+        }
+      ]
+    },
+    {
+      "path": "app/AGENTS.md",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "1284e79f1f50a1b346f609029ae73a0abf05197b",
+      "sha256_utf8_lf": "4f03890052712d825b6e8bf323f129237923f56b986a60922414de39db807fb4",
+      "layout": [
+        {
+          "lines": [
+            1,
+            1
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            2,
+            2
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            12,
+            12
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            27,
+            27
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            31,
+            31
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            46,
+            46
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            57,
+            57
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            66,
+            66
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            71,
+            71
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            78,
+            78
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            79,
+            79
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            80,
+            80
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            94,
+            94
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            95,
+            95
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            96,
+            96
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            104,
+            104
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            105,
+            105
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            106,
+            106
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            125,
+            125
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            130,
+            130
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            134,
+            134
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            135,
+            135
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            136,
+            136
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            142,
+            142
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            148,
+            148
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            150,
+            150
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            156,
+            156
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            157,
+            157
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            158,
+            158
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            191,
+            191
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            196,
+            196
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            198,
+            198
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            209,
+            209
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            210,
+            210
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            218,
+            218
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            219,
+            219
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            220,
+            220
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            221,
+            221
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            232,
+            232
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            233,
+            233
+          ],
+          "reason": "blank_separator"
+        }
+      ],
+      "units": [
+        {
+          "id": "lisa:mobile:instruction:application.ui-source-trace",
+          "spans": [
+            [
+              35,
+              711
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete effective UI provenance, identity/CRS/action semantics, independent oracle and source-versus-native evidence boundary.",
+          "record_sha256": "0c2325f51f04d8dfb981411794ade04661d4b226f5b4513925b6a50b53339b89"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.required-entry",
+          "spans": [
+            [
+              712,
+              1693
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete local pack, central impact/invariant and conditional release/shared-source discovery inputs.",
+          "record_sha256": "3a57f592a5f0b21906f197458f0b13db0398732b21dd7155cb6a1b341b3d8e65"
+        },
+        {
+          "id": "lisa:mobile:contract:application.module-ownership",
+          "spans": [
+            [
+              1694,
+              1872
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Application lifecycle/host/flavor/preferences/release ownership never absorbs library GIS/storage.",
+          "record_sha256": "b03de49f7e1c1e21b70130892c9ae68653984b3a5877f92386f491126f6b98b1"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.local-verification-isolation",
+          "spans": [
+            [
+              1873,
+              2943
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Full local-versus-cloud and Related/Full/freshness requirements, exact opt-in identities, real-window matrix and preserved working phone settings/data.",
+          "record_sha256": "72d2718bf6825163da80bbe99a2533a91cf57bf6e0f073fb99c28d73637dccd8"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.enlarged-ui-scenario",
+          "spans": [
+            [
+              2944,
+              3721
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Both themes/orientations/enlargement widths, actual local fitting, keyboard/action reachability and real geometric native expectations.",
+          "record_sha256": "ac384982648691a27026553111713f451ec5be9a565a642e4a3e9d261a4d3539"
+        },
+        {
+          "id": "lisa:mobile:contract:application.compact-map-and-overlays",
+          "spans": [
+            [
+              3722,
+              4296
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Compact footer, transparent touch stream, telemetry placement and separate overlay-versus-map action acceptance.",
+          "record_sha256": "a9785b6f9495b1ca9d8c49421bcebef52c2d48cbe47eb1a2496a15f300a523e9"
+        },
+        {
+          "id": "lisa:mobile:contract:application.base-layer-normalization",
+          "spans": [
+            [
+              4297,
+              4585
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Every map keeps direct-child bottom OSM and top internal tracks without resetting existing OSM visibility.",
+          "record_sha256": "c693d9728feb1c649c0cdf2613bc36919904136bce2b1f497a3400d103914831"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.changed-path-consumers-and-updater",
+          "spans": [
+            [
+              4586,
+              5049
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Map host reverse consumers, both flavors and complete updater metadata/certificate/pending permission continuation remain conditional.",
+          "record_sha256": "1dcdca00773391cb828d3d590bf4c18a672a96daeefb3f31f67634a00751276b"
+        },
+        {
+          "id": "lisa:mobile:contract:application.diagnostic-ownership",
+          "spans": [
+            [
+              5077,
+              6045
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Initialization order, fatal/offline/503 transport retention, SDK re-review, no business/stream reads, bounded provided context and enum/secret/test isolation constraints.",
+          "record_sha256": "2f92d2a496e550c2914b29a6e9c55fce236db99b8c9490622a2de2083434d61d"
+        },
+        {
+          "id": "lisa:mobile:contract:application.stakeout-foreground-owner",
+          "spans": [
+            [
+              6065,
+              6610
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Location-only asynchronous rejection, exact process session, stale ownership, foreground redelivery and isolated grant/deny test boundary.",
+          "record_sha256": "cc8effd2c169f875907c2f6c0a56bd7ab510e701a649bce3371314f41165e7b4"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.version-variant-verification",
+          "spans": [
+            [
+              6640,
+              7553
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete AGP production/debug/library rules and real aapt matrix with dry-run publication boundary and independent version expectations.",
+          "record_sha256": "2b79dd85071965cbd167812531008a1b7795da54e9d28c533abefc7277ff1f24"
+        },
+        {
+          "id": "lisa:mobile:contract:application.explicit-runtime-boundary",
+          "spans": [
+            [
+              7554,
+              7814
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "No desktop workspace reads; only named server or supported portable-artifact boundaries.",
+          "record_sha256": "fbf6c4779490df248877be7362587c691d146516b6d34d6d7861ee8ed0af5a61"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.documentation-maintenance",
+          "spans": [
+            [
+              7815,
+              8025
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Local explanation/navigation and central cross-module documentation follow the exact changed contract.",
+          "record_sha256": "7cd06407c03c7c50bc186770cb67b0702ddf637ebe80ff9a44fcef7b12b3cddb"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.form-native-isolation",
+          "spans": [
+            [
+              8046,
+              8331
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Conditional-form prerequisites and exact isolated emulator/verification versus working-phone boundaries.",
+          "record_sha256": "55e4b926c2b424cf12a622760559d3afca2c0e40d928f0f5982a981875a94532"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.form-source-and-risk-ownership",
+          "spans": [
+            [
+              8331,
+              8630
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Actual class/type/form/hash/remote/restored/cap sources stay distinct; root unknowns retain one owning queue.",
+          "record_sha256": "fc35956cdc1c7f84a68344da8ac5164bcb692af2aabf8514b09b221733bd6f84"
+        },
+        {
+          "id": "lisa:mobile:contract:application.conditional-save-and-visibility",
+          "spans": [
+            [
+              8631,
+              9004
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Public form/meta/Save/pin/no-write tests and hidden-value retention with visible required semantics remain complete.",
+          "record_sha256": "697548fbe0475993986f7f26bd2fbd673959c9191dfc65cb48dc63c81fa6ca6a"
+        },
+        {
+          "id": "lisa:mobile:contract:application.isolated-script-startup",
+          "spans": [
+            [
+              9005,
+              9242
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Early isolated UID/build/example ownership and exact retained/disabled Sentry hooks; no flavor/version/account changes.",
+          "record_sha256": "255d88a2b932a07190d1fd81bf97d4da275b43e5d8a93bdccd8249dd556ec52b"
+        },
+        {
+          "id": "lisa:mobile:contract:application.project-script-api",
+          "spans": [
+            [
+              9243,
+              9631
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Native versioned granted/budgeted API first, no arbitrary external SQL/reflection/network/GIS, retained pinned packages and cross-owner schema/API documentation.",
+          "record_sha256": "082f6662a10893d06bd6361a122992deeb788df406741b218547046ac12942de"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.project-sync",
+          "spans": [
+            [
+              9665,
+              10434
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete default scope, exact workspace ownership, async/provider/service propagation, global lease, pending plan, canonical journal and isolated verification.",
+          "record_sha256": "1df761a24fb61311bedd2466addbe5706300208db7205333fd761005c43df69f",
+          "shared_sources": [
+            "AGENTS.md",
+            "app/AGENTS.md"
+          ]
+        },
+        {
+          "id": "lisa:mobile:contract:application.confirmation-and-journal-boundaries",
+          "spans": [
+            [
+              10434,
+              11281
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Lease versus database/ACK/clock/expiry, exact seven-key accepted cohort, unknown raw-cache durability, no compensation/fallback/rollback fiction and one root risk queue.",
+          "record_sha256": "2fd9c62c977dbd922ed31b11fa989c08c1deb0f8d3a0b296269b8d7fbe85af72"
+        },
+        {
+          "id": "lisa:mobile:contract:application.storage-move-ownership",
+          "spans": [
+            [
+              11281,
+              12062
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Exclusive pre-side-effect PROJECT_SWITCH, worker/UI-held lease, deferred chooser, exact mMap/path rebind, retirement-versus-drain and failure/cancel/disk boundaries.",
+          "record_sha256": "7e1bf989e11a460571199ae4fdbc25511ffb5341ee9341ab54c19e9d4b4ef2ba"
+        },
+        {
+          "id": "lisa:mobile:contract:workspace.split-list-label-source",
+          "spans": [
+            [
+              12062,
+              12212
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete metadata name then layer-alias then field-key fallback for split legacy lists.",
+          "record_sha256": "ef4c20066a015500c096dc955edb7460cdcf0ffe39a8c94f06b9424cb3a36d3c",
+          "shared_sources": [
+            "AGENTS.md",
+            "app/AGENTS.md"
+          ]
+        },
+        {
+          "id": "lisa:mobile:instruction:application.permitted-test-project",
+          "spans": [
+            [
+              12213,
+              12512
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Exact metadata-only test project and explicit absent/ambiguous replacement question; no arbitrary fallback.",
+          "record_sha256": "ab9a0cae62b4dc39fca9cb4bbfea87484db305f3c301210b99b2682a15c97c8e"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.stakeout-source-and-risk",
+          "spans": [
+            [
+              12513,
+              13000
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Geometry snapshot, DB/FID, device and camera sources, nearest/inverse/lock facts and root replacement-policy UNKNOWN remain distinct.",
+          "record_sha256": "78907c1d3b16ad1ffb6902bff069d08b5078a0e07ffb1b3a418b3cef3004596f"
+        },
+        {
+          "id": "lisa:mobile:contract:application.lookup-content-and-partial",
+          "spans": [
+            [
+              13001,
+              13239
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Compare complete keys/values and preserve cache on handled exceptions; valid-but-partial completeness remains explicit UNKNOWN.",
+          "record_sha256": "910590498dcab4fac313f9f9be2f9938d2ca84882dd8a6ef9e26d068b823e703"
+        },
+        {
+          "id": "lisa:mobile:contract:application.prefetch-compatibility",
+          "spans": [
+            [
+              13814,
+              14069
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Exact prefetch/legacy control roster and reflection gate preserve original Exception/Error behavior without an execution claim.",
+          "record_sha256": "907e0fd022a98dcae403c8a775a44fb299a27a4129bd0d0eac544cc82ab069d7"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.prefetch-owner-and-pin",
+          "spans": [
+            [
+              14069,
+              14360
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "One owning library API/callers, no helper/oracle workaround, merged-before-pointer and unchanged historical corpus/clock identities.",
+          "record_sha256": "807a87702876e4be8d46c769b5edf71dec25e35760625039429be96e4e4a5aed"
+        },
+        {
+          "id": "lisa:mobile:contract:application.sync-failure-message-boundary",
+          "spans": [
+            [
+              14412,
+              15205
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Typed cause before account close, safe resource UI, exact process-local Bundle/reference identity, counters, late outcome and unknown malformed/JSON/HTTP conditions.",
+          "record_sha256": "ec4beb0e97ba7a2941385b5fd7a409b17985393e00bba23737001cfb58f14306"
+        },
+        {
+          "id": "lisa:mobile:contract:application.selected-track-share",
+          "spans": [
+            [
+              15207,
+              15982
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Exact shared-track identity, existing exporter, launch/selection/mode and file/metadata grants, no Stop and explicit whole-window/device/cache/recipient UNKNOWN ownership.",
+          "record_sha256": "ecf4f861a2807d61aaf5883be0147e24e423e9e10895f09bf9e2dedec4ebaf2c"
+        },
+        {
+          "id": "lisa:mobile:evidence:application.lookup-shared19-receipt",
+          "spans": [
+            [
+              13239,
+              13373
+            ]
+          ],
+          "classification": "historical_receipt",
+          "review": "Historical actual shared19 execution and explicit standalone15 NOT_RUN; no current disk/device/release inference.",
+          "record_sha256": "6fbb9d81e97afa8e283e8973256824b1a2556461484ac13d1fcf841d9a0aad1d"
+        },
+        {
+          "id": "lisa:mobile:contract:application.lookup-false-save",
+          "spans": [
+            [
+              13373,
+              13520
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete false-save additive IO/new-memory/one-save/throws/equal-next behavior remains a contract separate from test counts.",
+          "record_sha256": "592ec7425cf2188fa2c1d536965127b632fcad2eaf858bccaef4181019da6fb1"
+        },
+        {
+          "id": "lisa:mobile:instruction:application.lookup-unverified-durability-and-guards",
+          "spans": [
+            [
+              13520,
+              13812
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Disk/retry stays unaccepted; preserve coercion/deletion/pins/UI and legacy versus generic error semantics without promising new network retry.",
+          "record_sha256": "67fc048b76be9896f6e43d30d906a4826602e297dd60352b15adaf36793fe2a6"
+        }
+      ]
+    },
+    {
+      "path": ".cursor/rules/android-development-contracts.mdc",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "d86bd8e44171d4187052886aa8f8bc86c795dfa2",
+      "sha256_utf8_lf": "0115bed29d297c0eae52a889caffd0cb32c66fe479cd0089af4677561854d259",
+      "layout": [
+        {
+          "lines": [
+            5,
+            5
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            6,
+            6
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            7,
+            7
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            11,
+            11
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            17,
+            17
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            21,
+            21
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            27,
+            27
+          ],
+          "reason": "blank_separator"
+        }
+      ],
+      "units": [
+        {
+          "id": "lisa:mobile:metadata:cursor-android-development-contracts.loading-metadata",
+          "spans": [
+            [
+              0,
+              90
+            ]
+          ],
+          "classification": "source_metadata",
+          "review": "Preserve the complete Cursor description and alwaysApply field with original YAML lexical metadata.",
+          "record_sha256": "b3c2d02cd645ad7ba77a371dd45579f0b1f69d28d1cd29d6d9ed91859cdc2c95"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-android-development-contracts.required-entry",
+          "spans": [
+            [
+              116,
+              293
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete root/nested/local-pack/checklist/impact/invariant pre-change entry.",
+          "record_sha256": "357fee160c30f08b1ce86610b7ccbb2800bbe760d8c271f9f29570e8876252ac"
+        },
+        {
+          "id": "lisa:mobile:contract:cursor-android-development-contracts.explicit-runtime-boundary",
+          "spans": [
+            [
+              294,
+              634
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete cross-platform prerequisites and server/portable import boundary without desktop-file runtime reads.",
+          "record_sha256": "2507a0d965a1fd5b409189380dbc7fd64c247edb5d6c45fd8c7eb31282279403"
+        },
+        {
+          "id": "lisa:mobile:contract:cursor-android-development-contracts.critical-areas",
+          "spans": [
+            [
+              635,
+              856
+            ]
+          ],
+          "classification": "standing_contract",
+          "review": "Complete named source hotspots retained as review routing, not a new defect or execution command.",
+          "record_sha256": "ed1dc46ba168f5f010fa9ab29562090140a1fb06041a9edcbd93d8d9f6f9f711"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-android-development-contracts.version-matrix",
+          "spans": [
+            [
+              857,
+              1217
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete AGP production/debug/library API constraints plus actual metadata matrix before a version-change handoff.",
+          "record_sha256": "117958c75aeb04a09e6d35b078c37988b70f43cf3f685bbc1ce9b74357413d2b"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-android-development-contracts.invariant-and-smoke-entry",
+          "spans": [
+            [
+              1218,
+              1402
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "All named flavor/order/hot-add/Collector/backup/flag constraints and owning smoke destination remain attached.",
+          "record_sha256": "66be6b817fab4b5d17d8e2953fa0aa996f1247acbd45b05fa67c719beeb79c29"
+        }
+      ]
+    },
+    {
+      "path": ".cursor/rules/docs-maintenance.mdc",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "6e46d61d0880465e67428f49f23fd4f693f7a2bd",
+      "sha256_utf8_lf": "e2562acdaa3d061b6afd5120277f2ef28c14f4e240b2e39e7ccaec1babc068cc",
+      "layout": [
+        {
+          "lines": [
+            5,
+            5
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            6,
+            6
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            7,
+            7
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            10,
+            10
+          ],
+          "reason": "blank_separator"
+        }
+      ],
+      "units": [
+        {
+          "id": "lisa:mobile:metadata:cursor-docs-maintenance.loading-metadata",
+          "spans": [
+            [
+              0,
+              93
+            ]
+          ],
+          "classification": "source_metadata",
+          "review": "Preserve the complete Cursor description and alwaysApply field with original YAML lexical metadata.",
+          "record_sha256": "9f0baa6c84e3324cf968761e20dff82da234596c66728fbee96182fa0c99ce03"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-docs-maintenance.impact-completion",
+          "spans": [
+            [
+              130,
+              235
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Only the applicable impact obligations determine documentation completion.",
+          "record_sha256": "4dbf4d850c3727688ee2612e045943ff166ce8124c0e8200c152b0cd8ceb9816"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-docs-maintenance.owning-and-central-docs",
+          "spans": [
+            [
+              236,
+              449
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Complete local behavior versus cross-module/API/config/storage/release/upstream/invariant documentation ownership.",
+          "record_sha256": "abee7e357ebbb3a4eda279b5b15916cfdad14f30975f381203399918b0cf8459"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-docs-maintenance.internal-refactor-exclusion",
+          "spans": [
+            [
+              449,
+              568
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Behavior-and-contract-neutral refactors may omit docs with explicit final disclosure; not a blanket code exclusion.",
+          "record_sha256": "6a5382ff5a3b71c1336f4af88a816fbab746c5595f363d515a9793750e1de9ce"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-docs-maintenance.central-docs-history",
+          "spans": [
+            [
+              568,
+              653
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Central documentation changes require both date and changelog maintenance.",
+          "record_sha256": "52b05f62a6ac104e5306d555721359036f4755fff5b1723db9f68c271887ddcf"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-docs-maintenance.cross-platform-docs",
+          "spans": [
+            [
+              653,
+              879
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Exact Android/ecosystem and actual scoped publisher/consumer documentation, preserving the in-scope qualifier.",
+          "record_sha256": "1ffa4b20df5475e7d93b7eeff7f3f4b5b5fe9983661277f456ee63858e7da5e2"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-docs-maintenance.validate-documentation",
+          "spans": [
+            [
+              879,
+              962
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Preserve the exact pure source documentation-validation invocation.",
+          "record_sha256": "208485db4054c21861dd457f1875e8e3755d8f492eba3664127df97da52a72b4"
+        }
+      ]
+    },
+    {
+      "path": ".cursor/rules/git-workflow.mdc",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "7b4e5b4d876d6175c5bad3aae59afffd0adec834",
+      "sha256_utf8_lf": "7a1077006b6df5fced3ddbc6f8eba786d4b36f5d1b15d04658bcfbd29fb6e2b3",
+      "layout": [
+        {
+          "lines": [
+            5,
+            5
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            6,
+            6
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            7,
+            7
+          ],
+          "reason": "blank_separator"
+        }
+      ],
+      "units": [
+        {
+          "id": "lisa:mobile:metadata:cursor-git-workflow.loading-metadata",
+          "spans": [
+            [
+              0,
+              77
+            ]
+          ],
+          "classification": "source_metadata",
+          "review": "Preserve the complete Cursor description and alwaysApply field with original YAML lexical metadata.",
+          "record_sha256": "4b1ae7ddcaef932c5ace6661d8e4cdf5f7ab4f6a77177c6f7aefd04efcb1d2c3"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-git-workflow.explicit-commit-push-source",
+          "spans": [
+            [
+              94,
+              146
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Preserve this narrower original wording with its unresolved interpretation question; current explicit user routine-delivery authorization remains external.",
+          "record_sha256": "8732e6be67edf2b179c61db20652d8b7542b041f679994b218d66590479ebcbe"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-git-workflow.no-config-change-source",
+          "spans": [
+            [
+              146,
+              170
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Preserve the original unconditional config wording and its explicit hook-installer conflict for later client reconciliation.",
+          "record_sha256": "b7ae4cccc91631c7d321d3f2cf5579541add53a9826530f5a198db0cb8d743eb"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-git-workflow.destructive-git-limit",
+          "spans": [
+            [
+              170,
+              241
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "No destructive reset/checkout/clean without a scoped explicit request.",
+          "record_sha256": "444359f3994ffe6a1cbe4907a42aac5036e45adffdae3fe1261dbda24e62df56"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-git-workflow.owner-status",
+          "spans": [
+            [
+              241,
+              313
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Root and all three named library owners need separate status checks.",
+          "record_sha256": "ff2b63032c722fa7a6aa59c48193d4a7e28c961ad791f5e4716d0d0a4d891acf"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-git-workflow.preserve-user-work",
+          "spans": [
+            [
+              313,
+              365
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Unrelated user changes remain preserved.",
+          "record_sha256": "98a1525e6c2fab9434bf04fa738df20247b08a9024b24b4201aa42bdabb19539"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-git-workflow.verified-submodule-pointer",
+          "spans": [
+            [
+              365,
+              471
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Parent gitlink changes need a verified dependency pointer and related central documentation; an unmerged library pin is not accepted delivery.",
+          "record_sha256": "4cd1ef0a1ac2d5013e612edae9536717e73abc19aed403df3a65659eb5650a26"
+        }
+      ]
+    },
+    {
+      "path": ".cursor/rules/upstream-sync.mdc",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "5b269cb81a6a8cd6c7b5a060fe35f6d62c0bb7dd",
+      "sha256_utf8_lf": "85d6a87a08841dcdc54ad2fe1e2363c1b1e5d5c0c9630e8189d31baf86c43fa8",
+      "layout": [
+        {
+          "lines": [
+            5,
+            5
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            6,
+            6
+          ],
+          "reason": "heading"
+        },
+        {
+          "lines": [
+            7,
+            7
+          ],
+          "reason": "blank_separator"
+        },
+        {
+          "lines": [
+            10,
+            10
+          ],
+          "reason": "blank_separator"
+        }
+      ],
+      "units": [
+        {
+          "id": "lisa:mobile:metadata:cursor-upstream-sync.loading-metadata",
+          "spans": [
+            [
+              0,
+              89
+            ]
+          ],
+          "classification": "source_metadata",
+          "review": "Preserve the complete Cursor description and alwaysApply field with original YAML lexical metadata.",
+          "record_sha256": "8e476e8a0dc968ddbc2e72d19d094a5b1a79d890a1a417e6f505488130adf473"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-upstream-sync.required-entry",
+          "spans": [
+            [
+              107,
+              234
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Conditional merge/rebase/upstream-analysis prerequisites remain exact; no such operation is executed.",
+          "record_sha256": "a2d6fb7166b44d851c967f544a85bc8e08f48e9f93fcb0a62291ec803321fb0f"
+        },
+        {
+          "id": "lisa:mobile:instruction:cursor-upstream-sync.controlled-upstream-integration",
+          "spans": [
+            [
+              235,
+              506
+            ]
+          ],
+          "classification": "permanent_rule",
+          "review": "Full owner inspection, workflow-authorized backup tags, overlap decisions, cycle docs and exact integration order remain attached.",
+          "record_sha256": "7eb256a5626a903e180c3bcd220dd6863f624dfb2617731d7f78f13e2d8b5edd"
+        }
+      ]
+    }
+  ]
+}

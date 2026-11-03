@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-11-01
+last_verified: 2026-11-03
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -14,6 +14,7 @@ related_code:
   - .github/workflows/docs-validate.yml
   - docs/scripts/check_change_impact.py
   - docs/tests/test_change_impact_ci.py
+  - tools/docs-check.ps1
 ---
 
 # Матрица сборки и версий
@@ -47,6 +48,16 @@ branch, включая первый push новой ветки. Push в default 
 новая ветка, default/tag/manual события и имена с пробелами/кириллицей.
 Отдельно проверяются pagination API, точный head repository и отказ API.
 Эти проверки не требуют сборки APK, телефона или эмулятора.
+
+Локальный `tools/docs-check.ps1 -RunTests` получает JSON путей из того же
+`check_change_impact.py --local-paths --base origin/my-maplibre`, без GitHub API
+и токена. От общего предка учитываются подготовленные, закоммиченные,
+неподготовленные, новые и удалённые файлы с сохранением Unicode/пробелов.
+Внутренняя работа в сабмодуле и его незакреплённый child HEAD не являются
+изменением parent pin. Подготовленный или закоммиченный gitlink по-прежнему
+запускает обязательный review official differences; отсутствующая база остаётся
+ошибкой. Это источник scope для проверки документации, не признание pin
+доставленным, не приёмка библиотеки и не разрешение merge или публикации.
 
 ## Android reliability
 

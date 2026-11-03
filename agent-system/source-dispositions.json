@@ -1,0 +1,35 @@
+{
+  "format": "lisa.agent-system.source-dispositions.v1",
+  "entries": [
+    {
+      "path": "agent-system/policy-migration.json",
+      "sha256": "99c4fd1d3a6557a94afd257034ff5581ee072f001cf0af1f638da9c12e528110",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "."
+      ],
+      "reason": "Individually authored complete six-source character/object/value replay; native values are editable truth, this exact map retains inverse provenance without execution or deletion authority."
+    },
+    {
+      "path": "agent-system/migration/instruction-review.json",
+      "sha256": "6370b1331820e5ed15e4b050486055cae0a3fab40776746ef153b2906c491aca",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "."
+      ],
+      "reason": "Individual exact-source witnesses for two instruction wording differences and distinct legacy task subjects, plus two complete same-fact reviews; all questions and original conditions remain visible."
+    },
+    {
+      "path": "agent-system/README.md",
+      "sha256": "174f4858331e7c087fe6cde76bd7259547c82e2e977a4387f31f6331477f2735",
+      "sha256_scope": "utf8_lf",
+      "category": "working_bridge",
+      "applies_to": [
+        "."
+      ],
+      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work."
+    }
+  ]
+}

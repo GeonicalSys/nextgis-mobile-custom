@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-11-02
+last_verified: 2026-11-03
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
@@ -12,6 +12,26 @@ related_code:
 ---
 
 # Дорожная карта мобильного приложения ЛИСА и БЕЛКА
+
+## MOB-DEV-02 Типизированная система знаний агентов
+
+Прямое поручение владельца02–03.11: перестроить ВСЮ систему знаний шести
+репозиториев, сохранив читаемые owner-local Git records как редактируемый
+источник и производную SQLite вне Git. Техническая работа не меняет очередь
+продуктовых задач, данные, sync, карту, фон, батарею, APK или library pointers.
+Связанный общий план: `C:/dev/lisa/agent-system/migration-plan.md`.
+
+Цель ACTIVE/не завершена. Реализован перенос шести полных instruction sources
+в132 логических значения/134 проекции плюс три явных вопроса миграции.
+Проверка исходных символов/условий, независимых ожидаемых context IDs/полей и
+полной выдачи отделена от merge, device/runtime, release и реального client
+cutover. Прежние AGENTS/Cursor/hooks действуют до отдельной доказанной замены.
+Зависимости: согласованные owner PR, общий LISA compiler/registry, последующий
+перенос остальных типов знаний и owners; library Merge Commit до fetched app pin.
+Приёмка ВСЕЙ цели: полный migration map/lifecycle, фактические Codex/ChatGPT/
+Cursor/custom clients, authoring/loading/limits/agreement и индивидуальная
+очистка. Новый source checkpoint или Draft не закрывает цель. Native/AVD/device,
+cloud, merge и публикация этим пунктом не запускаются.
 
 ## MOB-DEV-01 Стабильные переносы строк в Git и экспорте
 

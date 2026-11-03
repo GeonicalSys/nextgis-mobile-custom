@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:workspace.ecosystem-owners-and-discovery",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-workspace",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "standing_contract",
+      "value": "Обязательный маршрут discovery, включая доступность внешнего source root,\nотдельный worktree и границы общего индекса, описан в\n[`docs/architecture/lisa-ecosystem.md`](docs/architecture/lisa-ecosystem.md#обнаружение-зависимостей-до-правки).\nShared LISA index/procedure единственные; Android-копию scanner/index не создавать.\nОтсутствие внешних исходников или свежего индекса — UNKNOWN, не отсутствие связи.\nНе менять занятый/чужой checkout: сохранить required follow-up и порядок доставки,\nпродолжить независимую разрешённую работу. Source-анализ не разрешает native/AVD,\nNGW/DB writes, публикацию или изменение продукта. Для каждой такой задачи читать\n[`docs/architecture/lisa-ecosystem.md`](docs/architecture/lisa-ecosystem.md) и\n[`docs/registry/ecosystem.yaml`](docs/registry/ecosystem.yaml). Связанные\nпроекты экосистемы:\n\n- `C:\\dev\\lisa\\standart_profiles` — launcher, QGIS runtime, брендовые профили и доставка;\n- `C:\\dev\\lisa\\plugins` — канонические\n  исходники QGIS-плагинов и `geonical-docs`;\n- этот workspace — Android-клиент ЛИСА/БЕЛКА.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "standing_contract"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Shared scanner/index ownership, unavailable/foreign-source UNKNOWN and paused execution boundaries with all named desktop/mobile owners."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# GeonicalSystem NextGIS Mobile fork — инструкции для ИИ-агентов",
+        "## Обязательный вход"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:contract:workspace.ecosystem-owners-and-discovery"
+    ]
+  }
+}

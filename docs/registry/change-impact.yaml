@@ -588,7 +588,7 @@ triggers:
     verify: [AUTO-MAPLIBUI-UNIT, AUTO-RELIABILITY-NATIVE, SMOKE-NGID-AND-RESOURCE-ICONS]
     strict_docs: true
   - id: DOCUMENTATION-CI
-    paths: [.github/workflows/docs-validate.yml, docs/scripts/check_change_impact.py, docs/tests/test_change_impact_ci.py]
+    paths: [.github/workflows/docs-validate.yml, tools/docs-check.ps1, docs/scripts/check_change_impact.py, docs/tests/test_change_impact_ci.py]
     owners: [app]
     read: [docs/reference/build-matrix.md]
     invariants: []

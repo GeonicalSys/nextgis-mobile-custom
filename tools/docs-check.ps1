@@ -40,13 +40,9 @@ foreach ($candidate in $candidates) {
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         $policyTask = Get-Content -LiteralPath 'tools/update-report-policy.json' -Raw | ConvertFrom-Json
         $baseTask = 'origin/' + $policyTask.base_branch
-        $changedTask = @(& git diff --name-only ($baseTask + '...HEAD'))
-        if ($LASTEXITCODE -ne 0) { throw 'Local impact comparison needs the fetched target branch' }
-        $changedTask += @(& git diff --name-only HEAD)
-        if ($LASTEXITCODE -ne 0) { throw 'Cannot read local changes for documentation impact' }
-        $changedTask += @(& git ls-files --others --exclude-standard)
-        if ($LASTEXITCODE -ne 0) { throw 'Cannot read new files for documentation impact' }
-        $impactPathsTask = @($changedTask | Where-Object { $_ } | Sort-Object -Unique)
+        $changedJsonTask = & $candidate.Exe @($candidate.Prefix) -B 'docs/scripts/check_change_impact.py' --local-paths --base $baseTask
+        if ($LASTEXITCODE -ne 0) { throw 'Cannot read complete local task paths for documentation impact' }
+        $impactPathsTask = ConvertFrom-Json -InputObject ($changedJsonTask -join [Environment]::NewLine)
         if ($impactPathsTask.Count -gt 0) {
             $localValidatorTask += '--enforce-diff'
             foreach ($pathTask in $impactPathsTask) {

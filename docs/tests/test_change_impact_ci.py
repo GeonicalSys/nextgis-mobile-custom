@@ -4,6 +4,7 @@ import importlib.util
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -200,6 +201,116 @@ class ChangeImpactHistoryTest(unittest.TestCase):
         ranges, _ = self.ranges([pull(77, "f" * 40)])
         with self.assertRaises(subprocess.CalledProcessError):
             impact.changed_files(self.root, ranges[0])
+
+    def submodule(self):
+        temporary = tempfile.TemporaryDirectory(prefix="docs-impact-child-")
+        self.addCleanup(temporary.cleanup)
+        source = Path(temporary.name)
+        def child_git(*args):
+            return impact.git(source, *args).strip()
+        child_git("init", "-q")
+        child_git("config", "user.name", "Documentation test")
+        child_git("config", "user.email", "docs-test@example.invalid")
+        child_git("config", "commit.gpgsign", "false")
+        (source / "source.py").write_text("original\n", encoding="utf-8")
+        child_git("add", ".")
+        child_git("commit", "-qm", "child base")
+        self.git("-c", "protocol.file.allow=always", "submodule", "add",
+                 str(source), "easypicker")
+        self.base = self.commit("parent pin")
+        self.git("update-ref", "refs/remotes/origin/my-maplibre", self.base)
+        return self.root / "easypicker"
+
+    def advance_child(self, child):
+        (child / "source.py").write_text("next\n", encoding="utf-8")
+        impact.git(child, "add", ".")
+        impact.git(child, "-c", "commit.gpgsign=false", "-c", "user.name=Test",
+                   "-c", "user.email=test@example.invalid", "commit", "-qm", "next")
+
+    def test_local_dirty_or_advanced_child_is_not_a_parent_pin(self):
+        child = self.submodule()
+        (child / "source.py").write_text("uncommitted child\n", encoding="utf-8")
+        self.assertEqual(impact.local_changed_files(self.root, "origin/my-maplibre"), [])
+        self.advance_child(child)
+        paths = impact.local_changed_files(self.root, "origin/my-maplibre")
+        self.assertEqual(paths, [])
+        self.assertEqual(self.errors(paths), [])
+
+    def test_local_staged_pin_still_requires_official_review(self):
+        child = self.submodule()
+        self.advance_child(child)
+        self.git("add", "easypicker")
+        paths = impact.local_changed_files(self.root, "origin/my-maplibre")
+        self.assertEqual(paths, ["easypicker"])
+        self.assertTrue(any("OFFICIAL-DIFFERENCES" in e for e in self.errors(paths)))
+
+    def test_local_committed_pin_still_requires_official_review(self):
+        child = self.submodule()
+        self.advance_child(child)
+        self.commit("adopt parent pin")
+        paths = impact.local_changed_files(self.root, "origin/my-maplibre")
+        self.assertEqual(paths, ["easypicker"])
+        self.assertTrue(any("OFFICIAL-DIFFERENCES" in e for e in self.errors(paths)))
+
+    def test_local_paths_preserve_staged_unstaged_untracked_and_deleted_unicode(self):
+        deleted = "notes/исходный файл.txt"
+        untracked = "notes/новый файл.txt"
+        self.write(deleted, "before\n")
+        self.base = self.commit("tracked name")
+        self.git("update-ref", "refs/remotes/origin/my-maplibre", self.base)
+        self.write(OFFICIAL, "staged\n")
+        self.git("add", OFFICIAL)
+        self.write("maplib", "unstaged\n")
+        self.write(untracked, "new\n")
+        (self.root / deleted).unlink()
+        self.assertEqual(set(impact.local_changed_files(self.root, "origin/my-maplibre")),
+                         {OFFICIAL, "maplib", deleted, untracked})
+
+    def test_local_command_returns_json_without_cloud_event_or_token(self):
+        environment = {k: v for k, v in os.environ.items() if not k.startswith("GITHUB_")}
+        result = subprocess.run([sys.executable, "-B", str(DOCS / "scripts/check_change_impact.py"),
+                                 "--workspace-root", str(self.root), "--local-paths",
+                                 "--base", "origin/my-maplibre"],
+                                env=environment, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout), [])
+
+    def test_local_missing_base_fails_closed(self):
+        with self.assertRaises(subprocess.CalledProcessError):
+            impact.local_changed_files(self.root, "origin/missing")
+
+    @unittest.skipUnless(shutil.which("powershell.exe") or shutil.which("pwsh"),
+                         "PowerShell is required for the local launcher transport")
+    def test_local_powershell_preserves_each_changed_path_argument(self):
+        self.write("tools/docs-check.ps1",
+                   (DOCS.parent / "tools/docs-check.ps1").read_text(encoding="utf-8-sig"))
+        self.write("tools/update-report-policy.json", json.dumps({"base_branch": "my-maplibre"}))
+        # This test exercises the actual launcher/helper transport. Report and
+        # validator semantics have their own real suites; here argv is the oracle.
+        self.write("tools/check_update_reports.py", "pass\n")
+        phase_stub = "import unittest\nclass StubPhase(unittest.TestCase):\n    def test_stub(self): pass\n"
+        self.write("tools/test_check_update_reports.py", phase_stub)
+        self.write("docs/tests/test_phase_stub.py", phase_stub)
+        self.write("docs/scripts/check_change_impact.py",
+                   (DOCS / "scripts/check_change_impact.py").read_text(encoding="utf-8-sig"))
+        self.write("docs/scripts/validate_docs.py",
+                   "import json,sys\nfrom pathlib import Path\n"
+                   "(Path(__file__).resolve().parents[2]/'captured-arguments.json').write_text("
+                   "json.dumps(sys.argv[1:]),encoding='utf-8')\n")
+        child = self.submodule()
+        self.advance_child(child)
+        self.write("maplib", "unstaged\n")
+        name = "notes/новый файл.txt"
+        self.write(name, "new\n")
+        shell = shutil.which("powershell.exe") or shutil.which("pwsh")
+        result = subprocess.run([shell, "-NoProfile", "-File", "tools/docs-check.ps1", "-RunTests"],
+                                cwd=self.root, capture_output=True, text=True, timeout=120)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        args = json.loads((self.root / "captured-arguments.json").read_text(encoding="utf-8"))
+        paths = [args[i+1] for i, value in enumerate(args) if value == "--changed-file"]
+        self.assertEqual(set(paths), {"maplib", name})
+        self.assertEqual(len(paths), 2)
+        self.assertIn("--enforce-diff", args)
 
 
 class PullRequestLookupTest(unittest.TestCase):

@@ -1,0 +1,102 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:question:instruction-hook-config-wording",
+  "kind": "question",
+  "owner": "android_projects/android_gisapp",
+  "topic": "instruction-policy-review",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "not_applicable",
+    "source_verification": "UNKNOWN",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain complete source wording and distinct subject identity until individually reconciled before relevant migration/client cutover; never silently exclude UNKNOWN."
+  },
+  "facets": {
+    "title": {
+      "role": "question",
+      "value": "Cursor no-config wording versus required guarded hook installation"
+    },
+    "observation": {
+      "role": "source_migration_question_not_product_defect",
+      "value": "The original Cursor source unconditionally says not to change Git config. The owning AGENTS requires per-clone hook inspection and automatic normal installer setup when missing, retaining other hooks/configuration and installing only the declared PyYAML prerequisite. Existing hooks in this clone were already connected; no configuration was changed by this block."
+    },
+    "next_step": {
+      "role": "bounded_migration_question",
+      "value": "Before generated-client cutover, preserve the default configuration protection and the narrowly scoped mandatory normal installer exception in one reviewed shared projection. Do not weaken hooks, branch policy or authorize unrelated configuration changes."
+    },
+    "protected": {
+      "role": "protected_behavior",
+      "value": "Current user authority remains external. Preserve own/foreign ownership, original instructions and evidence, one writer, paused product/native/cloud stages, no merge/publication and no unmerged accepted pin."
+    },
+    "source_witnesses": {
+      "role": "exact_individually_reviewed_sources",
+      "value": [
+        {
+          "id": "lisa:mobile:instruction:cursor-git-workflow.no-config-change-source",
+          "path": ".cursor/rules/git-workflow.mdc",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "7b4e5b4d876d6175c5bad3aae59afffd0adec834",
+          "source_sha256_utf8_lf": "7a1077006b6df5fced3ddbc6f8eba786d4b36f5d1b15d04658bcfbd29fb6e2b3",
+          "spans": [
+            [
+              146,
+              170
+            ]
+          ],
+          "record_sha256": "b7ae4cccc91631c7d321d3f2cf5579541add53a9826530f5a198db0cb8d743eb"
+        },
+        {
+          "id": "lisa:mobile:instruction:workspace.report-hook-admission",
+          "path": "AGENTS.md",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "b958d839ec2f6da77ff9959feae5efd312aac9a4",
+          "source_sha256_utf8_lf": "dce3800f871279f3c01b1e1ec6e51b697bb0c62f3b96d325ff4249c4b0a1ad1f",
+          "spans": [
+            [
+              27132,
+              27748
+            ]
+          ],
+          "record_sha256": "9b8faadd736b2fcd0765699bc21c11239c9b97f1dca167a0ab84e3ab694397a0"
+        }
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "related_unknown",
+      "target": "lisa:mobile:instruction:cursor-git-workflow.no-config-change-source",
+      "status": "source_backed"
+    },
+    {
+      "type": "related_unknown",
+      "target": "lisa:mobile:instruction:workspace.report-hook-admission",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/migration/instruction-review.json",
+    "scopes": [
+      "instruction-hook-config-wording"
+    ]
+  }
+}

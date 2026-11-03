@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:instruction:workspace.ui-identity-and-oracles",
+  "kind": "instruction",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-workspace",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "permanent_rule",
+      "value": "Явно различать координаты устройства/raw/display fix, центр камеры, сохранённый\nviewport, охват проекта, выбранную геометрию и координаты ввода; указывать CRS,\nпорядок осей, единицы, свежесть и условия отсутствия данных. Нижняя GPS-панель\nне является источником центра камеры. Русская команда «Слежение» не доказывает\nfollow-camera: читать фактический обработчик и условия autopan отдельно.\nПеред проверкой выбрать независимое ожидание с различающимися значениями.\nСкриншот доказывает видимое состояние; source — происхождение; разрешённый\nruntime — переходы. Одно не подменяет другое. Новые пробелы сохранять как UNKNOWN.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "permanent_rule"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Complete device/camera/viewport/geometry/coordinate distinctions, CRS/units/freshness, discriminating expectations and separate source/screenshot/runtime evidence."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# GeonicalSystem NextGIS Mobile fork — инструкции для ИИ-агентов",
+        "## Репозитории и git",
+        "### Смысл элементов интерфейса до действий и выводов"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:instruction:workspace.ui-identity-and-oracles"
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:cursor-android-development-contracts.loading-metadata",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-cursor-android-development-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "source_metadata",
+      "value": "---\ndescription: Контракты разработки GeonicalSystem NextGIS Mobile\nalwaysApply: true\n---\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "source_metadata"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Preserve the complete Cursor description and alwaysApply field with original YAML lexical metadata."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": []
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    },
+    "metadata_nodes": {
+      "role": "lossless_yaml_metadata",
+      "value": [
+        {
+          "pointer": "",
+          "type": "mapping",
+          "value": {
+            "tag": "tag:yaml.org,2002:map",
+            "keys": [
+              {
+                "key": "description",
+                "type": "tag:yaml.org,2002:str"
+              },
+              {
+                "key": "alwaysApply",
+                "type": "tag:yaml.org,2002:str"
+              }
+            ]
+          },
+          "label": ""
+        },
+        {
+          "pointer": "/description",
+          "type": "tag:yaml.org,2002:str",
+          "value": "Контракты разработки GeonicalSystem NextGIS Mobile",
+          "label": "description"
+        },
+        {
+          "pointer": "/alwaysApply",
+          "type": "tag:yaml.org,2002:bool",
+          "value": "true",
+          "label": "alwaysApply"
+        }
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:metadata:cursor-android-development-contracts.loading-metadata"
+    ]
+  }
+}
