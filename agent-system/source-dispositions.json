@@ -70,6 +70,21 @@
         "agent-system/knowledge/smoke-tests"
       ],
       "reason": "Pinned original Draft blobs and full ordered value and source-span evidence for three keyed App registries."
+    },
+    {
+      "path": "agent-system/provenance/sectioned-docs-registries.json",
+      "sha256": "1cae6c05e81c279fff124b0723959efe0ebac368e90baf7a5ab2d0bb3e2f0f35",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/config-keys.yaml",
+        "docs/registry/dependencies.yaml",
+        "docs/registry/ecosystem.yaml",
+        "agent-system/knowledge/config-keys",
+        "agent-system/knowledge/dependencies",
+        "agent-system/knowledge/ecosystem"
+      ],
+      "reason": "Pinned original Draft blobs, contiguous line spans, complete section and row values and original notes."
     }
   ]
 }

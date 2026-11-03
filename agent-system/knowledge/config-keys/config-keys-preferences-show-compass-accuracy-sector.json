@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-preferences-show-compass-accuracy-sector",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "preferences"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "show_compass_accuracy_sector"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "app",
+        "type": "boolean",
+        "default": false,
+        "user_configurable": true,
+        "source": "app/src/main/res/xml/preferences_location.xml",
+        "purpose": "Persist opt-in compass uncertainty fill and both contours; MapFragment applies it on resume through MapDrawable.setCompassAccuracySectorVisible, independent of the direction arrow and GPS accuracy. XML and runtime fallback are false."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-preferences-show-compass-accuracy-sector"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ecosystem-systems-mobile-app",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ecosystem",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "systems"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "mobile-app"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "GeonicalSystem NextGIS Mobile",
+        "kind": "workspace",
+        "location": ".",
+        "repository": "root",
+        "origin": "https://github.com/GeonicalSys/nextgis-mobile-custom.git",
+        "docs_entry": "docs/START-HERE.md",
+        "docs_url": "https://github.com/GeonicalSys/nextgis-mobile-custom/blob/my-maplibre/docs/START-HERE.md",
+        "source_of_truth": "Android source, phone/emulator verification and isolated mobile script lifecycle, Gradle variants, local GIS storage, NGW/Collector consumer behavior, APK release and updater identity enforcement across supported Android PackageManager versions."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:ecosystem-systems-mobile-app"
+    ]
+  }
+}
