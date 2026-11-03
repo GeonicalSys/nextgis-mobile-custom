@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "owner": "android_projects/android_gisapp",
+  "sources": [
+    {
+      "path": "docs/START-HERE.md",
+      "record": "start-here.json",
+      "id": "lisa:mobile:resource:documentation-start-here",
+      "revision": "0da52fc4c70cdb8a80bfe18bf56084150eed0fe2",
+      "blob": "caf80c525b075213d7cdac32d07655593821883d",
+      "sha256": "84a9c16de2a90471935b1a63e4fe567fbc4b86c25b59e1d3818c152f79730376",
+      "bytes": 10199
+    },
+    {
+      "path": "docs/guides/change-checklist.md",
+      "record": "change-checklist.json",
+      "id": "lisa:mobile:resource:documentation-change-checklist",
+      "revision": "0da52fc4c70cdb8a80bfe18bf56084150eed0fe2",
+      "blob": "f815dfe742d52686d73edb7396ccbfb06fd28229",
+      "sha256": "af5b93e1f1ca6fde8072b84b904d86eaaab339f453595dd0a7f0fe7e8a37c331",
+      "bytes": 10192
+    }
+  ]
+}
