@@ -1,0 +1,87 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-layer-chooser-and-mobile-acceptance",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "LAYER-CHOOSER-AND-MOBILE-ACCEPTANCE",
+        "paths": [
+          "maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestApplication.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java",
+          "tools/run_mobile_tests.py",
+          "tools/mobile_build_identity.py",
+          "tools/mobile_test_support.py",
+          "tools/mobile_test_project.py",
+          "tools/mobile-test-plan.json",
+          "tools/verify-mobile-tests.ps1",
+          "tools/tests"
+        ],
+        "owners": [
+          "app",
+          "maplibui",
+          "maplib"
+        ],
+        "read": [
+          "docs/architecture/ui-accessibility.md",
+          "docs/runbooks/automated-tests.md"
+        ],
+        "invariants": [
+          "INV-SCROLLING-DIALOG-VIEWPORT",
+          "INV-MOBILE-PUBLICATION-ACCEPTANCE",
+          "INV-UI-VISIBLE-BOUNDS"
+        ],
+        "must_update_docs": [
+          "docs/architecture/ui-accessibility.md",
+          "docs/runbooks/automated-tests.md",
+          "docs/runbooks/release-apk.md",
+          "docs/guides/change-checklist.md",
+          "docs/reference/official-differences.md",
+          "app/docs/README.md",
+          "app/docs/manifest.yaml",
+          "maplibui/docs/README.md",
+          "maplibui/docs/manifest.yaml"
+        ],
+        "verify": [
+          "AUTO-MOBILE-RELATED",
+          "AUTO-MOBILE-FULL",
+          "AUTO-MOBILE-PUBLICATION-GATE",
+          "SMOKE-LAYER-CHOOSER"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-layer-chooser-and-mobile-acceptance"
+    ]
+  }
+}

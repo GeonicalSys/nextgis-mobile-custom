@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-official-differences",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "OFFICIAL-DIFFERENCES",
+        "paths": [
+          "app/build.gradle",
+          "app/src/**",
+          "maplib",
+          "maplibui",
+          "easypicker",
+          ".gitmodules"
+        ],
+        "owners": [
+          "app",
+          "maplib",
+          "maplibui",
+          "easypicker-module"
+        ],
+        "read": [
+          "docs/reference/official-differences.md",
+          "docs/reference/fork-customizations.md",
+          "docs/runbooks/upstream-sync.md"
+        ],
+        "invariants": [],
+        "must_update_docs": [
+          "docs/reference/official-differences.md"
+        ],
+        "verify": [
+          "AUTO-DOCS-VALIDATE"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-official-differences"
+    ]
+  }
+}

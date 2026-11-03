@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-ngw-resource-row-text-fit",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "NGW-RESOURCE-ROW-TEXT-FIT",
+        "paths": [
+          "maplibui/src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+          "maplibui/src/main/res/layout/row_ngwlayer_check.xml",
+          "maplibui/src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "maplibui/src/main/res/layout/layout_resources.xml",
+          "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java",
+          "maplibui/src/main/res/layout/activity_resources.xml"
+        ],
+        "owners": [
+          "maplibui",
+          "app"
+        ],
+        "read": [
+          "docs/architecture/ui-contracts.md",
+          "docs/registry/ui-contracts.json"
+        ],
+        "invariants": [
+          "INV-NGW-RESOURCE-ROW-TEXT-FIT",
+          "INV-NGW-RESOURCE-CHECKBOX-SELECTION"
+        ],
+        "must_update_docs": [
+          "docs/architecture/ui-contracts.md",
+          "docs/registry/ui-contracts.json"
+        ],
+        "verify": [
+          "AUTO-NGW-RESOURCE-ROW-TEXT-FIT",
+          "AUTO-UI-SOURCE-CONTRACTS"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-ngw-resource-row-text-fit"
+    ]
+  }
+}

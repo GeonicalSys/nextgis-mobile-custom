@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-mobile-usage",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "MOBILE-USAGE",
+        "paths": [
+          "app/src/main/java/com/nextgis/mobile/usage",
+          "app/src/test/java/com/nextgis/mobile/usage",
+          "app/src/androidTest/java/com/nextgis/mobile/usage"
+        ],
+        "owners": [
+          "app"
+        ],
+        "read": [
+          "docs/architecture/mobile-usage.md"
+        ],
+        "invariants": [
+          "INV-MOBILE-USAGE"
+        ],
+        "must_update_docs": [
+          "docs/architecture/mobile-usage.md",
+          "app/docs/README.md",
+          "app/docs/manifest.yaml",
+          "docs/reference/official-differences.md"
+        ],
+        "verify": [
+          "AUTO-APP-RELEASES",
+          "AUTO-MOBILE-USAGE"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-mobile-usage"
+    ]
+  }
+}

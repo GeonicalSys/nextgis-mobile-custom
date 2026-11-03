@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-backup-and-destructive-layer-change",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "BACKUP-AND-DESTRUCTIVE-LAYER-CHANGE",
+        "paths": [
+          "maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java"
+        ],
+        "owners": [
+          "maplibui"
+        ],
+        "read": [
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/runbooks/incident-and-rollback.md"
+        ],
+        "invariants": [
+          "INV-BACKUP-BEFORE-DESTRUCTION"
+        ],
+        "must_update_docs": [
+          "docs/architecture/ngw-sync-and-storage.md",
+          "maplibui/docs/README.md"
+        ],
+        "verify": [
+          "SMOKE-BACKUP-GATE"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-backup-and-destructive-layer-change"
+    ]
+  }
+}

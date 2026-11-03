@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-shared-map-api",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "SHARED-MAP-API",
+        "paths": [
+          "maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java",
+          "maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java"
+        ],
+        "owners": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "read": [
+          "docs/registry/dependencies.yaml",
+          "docs/architecture/overview.md"
+        ],
+        "invariants": [
+          "INV-HOT-ADD-CONSISTENCY"
+        ],
+        "must_update_docs": [
+          "docs/registry/dependencies.yaml",
+          "maplib/docs/manifest.yaml",
+          "maplibui/docs/manifest.yaml",
+          "app/docs/manifest.yaml"
+        ],
+        "verify": [
+          "AUTO-MAPLIB-UNIT",
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "AUTO-APP-RELEASES"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-shared-map-api"
+    ]
+  }
+}
