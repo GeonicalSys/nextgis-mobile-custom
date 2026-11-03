@@ -42,6 +42,19 @@
         "agent-system/knowledge/change-impact"
       ],
       "reason": "Pinned original Draft registry and contiguous source spans for every complete trigger."
+    },
+    {
+      "path": "agent-system/provenance/repository-topology.json",
+      "sha256": "7b31a8c220b49e3a0d49634f2564a059eff9503f83608737c9fbe229b1ca34e9",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/repositories.yaml",
+        "docs/registry/modules.yaml",
+        "agent-system/knowledge/repositories",
+        "agent-system/knowledge/modules"
+      ],
+      "reason": "Pinned original Draft blobs, contiguous source spans and complete ordered values for the two App topology registries."
     }
   ]
 }
