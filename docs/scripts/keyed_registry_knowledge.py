@@ -10,7 +10,13 @@ import yaml
 
 
 OWNER = "android_projects/android_gisapp"
-REGISTRIES = ("repositories", "modules")
+REGISTRIES = {
+    "repositories": "repositories",
+    "modules": "modules",
+    "invariants": "invariants",
+    "upstream-overlaps": "hotspots",
+    "smoke-tests": "tests",
+}
 
 
 def project_registry(owner: Path, name: str) -> dict:
@@ -46,7 +52,7 @@ def project_registry(owner: Path, name: str) -> dict:
                 or not isinstance(definition, dict)):
             raise ValueError(f"Invalid {name} definition for {key}: {target}")
         definitions[key] = definition
-    return {"schema_version": version, name: definitions}
+    return {"schema_version": version, REGISTRIES[name]: definitions}
 
 
 def render_registry(name: str, registry: dict) -> str:

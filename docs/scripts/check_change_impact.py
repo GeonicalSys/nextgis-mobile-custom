@@ -143,10 +143,9 @@ def main() -> int:
             print(f"Documentation impact: {comparison.label}, {len(paths)} changed path(s)", flush=True)
             if paths:
                 command = [sys.executable, str(Path(__file__).with_name("validate_docs.py")),
-                           "--workspace-root", str(workspace), "--enforce-diff"]
-                for path in paths:
-                    command.extend(("--changed-file", path))
-                if subprocess.call(command, cwd=workspace) != 0:
+                           "--workspace-root", str(workspace), "--enforce-diff", "--changed-files-stdin"]
+                completed = subprocess.run(command, cwd=workspace, input=json.dumps(paths).encode("ascii"))
+                if completed.returncode != 0:
                     result = 1
         return result
     except (OSError, ValueError, KeyError, RuntimeError, subprocess.CalledProcessError) as exc:

@@ -323,12 +323,12 @@ class ChangeImpactHistoryTest(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("powershell.exe") or shutil.which("pwsh"),
                          "PowerShell is required for the local launcher transport")
-    def test_local_powershell_preserves_each_changed_path_argument(self):
+    def test_local_powershell_preserves_a_path_list_larger_than_windows_argv(self):
         self.write("tools/docs-check.ps1",
                    (DOCS.parent / "tools/docs-check.ps1").read_text(encoding="utf-8-sig"))
         self.write("tools/update-report-policy.json", json.dumps({"base_branch": "my-maplibre"}))
         # This test exercises the actual launcher/helper transport. Report and
-        # validator semantics have their own real suites; here argv is the oracle.
+        # validator semantics have their own suites; capture the transport here.
         self.write("tools/check_update_reports.py", "pass\n")
         phase_stub = "import unittest\nclass StubPhase(unittest.TestCase):\n    def test_stub(self): pass\n"
         self.write("tools/test_check_update_reports.py", phase_stub)
@@ -338,21 +338,25 @@ class ChangeImpactHistoryTest(unittest.TestCase):
         self.write("docs/scripts/validate_docs.py",
                    "import json,sys\nfrom pathlib import Path\n"
                    "(Path(__file__).resolve().parents[2]/'captured-arguments.json').write_text("
-                   "json.dumps(sys.argv[1:]),encoding='utf-8')\n")
+                   "json.dumps({'args':sys.argv[1:],'paths':json.load(sys.stdin)}),encoding='utf-8')\n")
         child = self.submodule()
         self.advance_child(child)
         self.write("maplib", "unstaged\n")
         name = "notes/новый файл.txt"
         self.write(name, "new\n")
+        long_paths = {f"notes/{number:03d}-{'scope-' * 20}.txt" for number in range(270)}
+        for path in long_paths:
+            self.write(path, "new\n")
+        self.assertGreater(sum(map(len, long_paths)), 32767)
         shell = shutil.which("powershell.exe") or shutil.which("pwsh")
         result = subprocess.run([shell, "-NoProfile", "-File", "tools/docs-check.ps1", "-RunTests"],
                                 cwd=self.root, capture_output=True, text=True, timeout=120)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        args = json.loads((self.root / "captured-arguments.json").read_text(encoding="utf-8"))
-        paths = [args[i+1] for i, value in enumerate(args) if value == "--changed-file"]
-        self.assertEqual(set(paths), {"maplib", name})
-        self.assertEqual(len(paths), 2)
-        self.assertIn("--enforce-diff", args)
+        captured = json.loads((self.root / "captured-arguments.json").read_text(encoding="utf-8"))
+        self.assertEqual(captured["paths"], sorted({"maplib", name} | long_paths))
+        self.assertIn("--enforce-diff", captured["args"])
+        self.assertIn("--changed-files-stdin", captured["args"])
+        self.assertNotIn("--changed-file", captured["args"])
 
 
 class PullRequestLookupTest(unittest.TestCase):
@@ -391,7 +395,7 @@ class ChangeImpactCommandTest(unittest.TestCase):
             with mock.patch.dict(os.environ, environment), \
                     mock.patch.object(sys, "argv", ["check_change_impact.py"]), \
                     mock.patch.object(impact, "urlopen", side_effect=URLError("unavailable")), \
-                    mock.patch.object(impact.subprocess, "call") as run_validator, \
+                    mock.patch.object(impact.subprocess, "run") as run_validator, \
                     mock.patch("sys.stderr", new_callable=io.StringIO) as error:
                 self.assertEqual(impact.main(), 1)
                 run_validator.assert_not_called()
@@ -405,14 +409,19 @@ class ChangeImpactCommandTest(unittest.TestCase):
                 "base": {"sha": "a" * 40}, "head": {"sha": "b" * 40}}}), encoding="utf-8")
             environment = {"GITHUB_EVENT_NAME": "pull_request", "GITHUB_EVENT_PATH": str(event_path),
                            "GITHUB_REF": "refs/pull/77/merge", "GITHUB_SHA": "c" * 40}
+            paths = ["maplib", "notes/новый файл.txt"] + [f"notes/{n:04d}-{'scope-' * 20}.txt" for n in range(270)]
             with mock.patch.dict(os.environ, environment), \
                     mock.patch.object(sys, "argv", ["check_change_impact.py"]), \
-                    mock.patch.object(impact, "changed_files", return_value=["maplib"]), \
+                    mock.patch.object(impact, "changed_files", return_value=paths), \
                     mock.patch("sys.stdout", new_callable=io.StringIO):
                 for validator_result in (1, -9):
                     with self.subTest(returncode=validator_result), \
-                            mock.patch.object(impact.subprocess, "call", return_value=validator_result):
+                            mock.patch.object(impact.subprocess, "run", return_value=mock.Mock(returncode=validator_result)) as run_validator:
                         self.assertEqual(impact.main(), 1)
+                        call = run_validator.call_args
+                        self.assertIn("--changed-files-stdin", call.args[0])
+                        self.assertNotIn("--changed-file", call.args[0])
+                        self.assertEqual(json.loads(call.kwargs["input"]), paths)
 
 
 if __name__ == "__main__":

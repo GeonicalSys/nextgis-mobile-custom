@@ -32,6 +32,11 @@ standalone YAML views. The [topology provenance](provenance/repository-topology.
 pins the original Draft blobs and covers every ordered value. For rollback,
 first regenerate both views so they carry any intervening owner edits.
 
+The same generator refreshes the YAML views for `knowledge/invariants/`,
+`knowledge/upstream-overlaps/` and `knowledge/smoke-tests/`. The validator
+reads their owner records. The [keyed registry provenance](provenance/keyed-docs-registries.json)
+pins all three original blobs and ordered values.
+
 AGENTS/Cursor, the other registries and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

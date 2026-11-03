@@ -33,6 +33,7 @@ foreach ($candidate in $candidates) {
         continue
     }
     $localValidatorTask = @($ValidatorArgs)
+    $changedJsonTask = $null
     if ($RunTests) {
         & $candidate.Exe @($candidate.Prefix) -B 'tools/check_update_reports.py'
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -44,15 +45,17 @@ foreach ($candidate in $candidates) {
         if ($LASTEXITCODE -ne 0) { throw 'Cannot read complete local task paths for documentation impact' }
         $impactPathsTask = ConvertFrom-Json -InputObject ($changedJsonTask -join [Environment]::NewLine)
         if ($impactPathsTask.Count -gt 0) {
-            $localValidatorTask += '--enforce-diff'
-            foreach ($pathTask in $impactPathsTask) {
-                $localValidatorTask += @('--changed-file', $pathTask)
-            }
+            $localValidatorTask += @('--enforce-diff', '--changed-files-stdin')
         } else {
+            $changedJsonTask = $null
             Write-Host 'Documentation impact: no task/worktree changes; complete workspace validation still runs.'
         }
     }
-    & $candidate.Exe @($candidate.Prefix) -B 'docs/scripts/validate_docs.py' @localValidatorTask
+    if ($null -eq $changedJsonTask) {
+        & $candidate.Exe @($candidate.Prefix) -B 'docs/scripts/validate_docs.py' @localValidatorTask
+    } else {
+        $changedJsonTask | & $candidate.Exe @($candidate.Prefix) -B 'docs/scripts/validate_docs.py' @localValidatorTask
+    }
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }

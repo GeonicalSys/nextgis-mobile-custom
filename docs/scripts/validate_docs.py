@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import configparser
+import json
 import re
 import runpy
 import sys
@@ -27,10 +28,7 @@ except ImportError:  # pragma: no cover - exercised by a user without dependenci
 REGISTRY_FILES = (
     "dependencies.yaml",
     "ecosystem.yaml",
-    "invariants.yaml",
     "config-keys.yaml",
-    "upstream-overlaps.yaml",
-    "smoke-tests.yaml",
 )
 CENTRAL_FRONTMATTER = {"title", "type", "last_verified", "related_code"}
 MODULE_FRONTMATTER = {"title", "module_id", "last_verified"}
@@ -939,15 +937,28 @@ def main(argv: Iterable[str] | None = None) -> int:
         help="Report change-impact requirements for a changed workspace path",
     )
     parser.add_argument(
+        "--changed-files-stdin",
+        action="store_true",
+        help="Read an additional JSON array of changed paths from standard input",
+    )
+    parser.add_argument(
         "--enforce-diff",
         action="store_true",
         help="Fail strict triggers if required docs are absent from --changed-file",
     )
     args = parser.parse_args(list(argv) if argv is not None else None)
+    if args.changed_files_stdin:
+        try:
+            paths = json.load(sys.stdin)
+        except (OSError, ValueError) as exc:
+            parser.error(f"cannot read changed paths from standard input: {exc}")
+        if not isinstance(paths, list) or any(not isinstance(path, str) or not path for path in paths):
+            parser.error("--changed-files-stdin requires a JSON array of non-empty strings")
+        args.changed_file.extend(paths)
     if args.require_pack and not args.module:
         parser.error("--require-pack requires --module")
     if args.enforce_diff and not args.changed_file:
-        parser.error("--enforce-diff requires at least one --changed-file")
+        parser.error("--enforce-diff requires at least one changed path")
 
     docs_root = args.docs_root.resolve()
     workspace = args.workspace_root.resolve()

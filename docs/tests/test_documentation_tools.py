@@ -166,8 +166,18 @@ class DocumentationToolsTest(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
             knowledge = root / "agent-system" / "knowledge"
-            for name in ("modules", "repositories", "change-impact"):
+            for name in ("modules", "repositories", "change-impact", "invariants", "upstream-overlaps", "smoke-tests"):
                 shutil.copytree(WORKSPACE / "agent-system" / "knowledge" / name, knowledge / name)
+            invariants = docs / "registry" / "invariants.yaml"
+            contents = invariants.read_text(encoding="utf-8")
+            invariants.write_text(contents + "# stale\n", encoding="utf-8")
+            result = self.run_tool(VALIDATOR, *validator_args)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Generated invariants registry is stale", result.stdout)
+            result = self.run_tool(SCAFFOLD, *scaffold_args)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            invariants.write_text(contents, encoding="utf-8")
+
             view = docs / "registry" / "modules.yaml"
             view.write_text(view.read_text(encoding="utf-8") + "# stale\n", encoding="utf-8")
             for script, arguments in ((VALIDATOR, validator_args), (SCAFFOLD, scaffold_args)):

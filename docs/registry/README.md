@@ -16,11 +16,11 @@ Registry — структурированный источник истины д
 | `modules.yaml` | Производное представление Gradle modules, entry points, ownership |
 | `dependencies.yaml` | Compile/runtime/API связи |
 | `ecosystem.yaml` | Владельцы и контракты между Android, `standart_profiles` и QGIS Plugins |
-| `invariants.yaml` | Непереговорные продуктовые контракты |
+| `invariants.yaml` | Производное представление продуктовых контрактов |
 | `change-impact.yaml` | Производное представление path triggers, связанных документов и проверок |
 | `config-keys.yaml` | Preferences, metadata, storage и config keys |
-| `upstream-overlaps.yaml` | Конфликтные области форка |
-| `smoke-tests.yaml` | Стабильные IDs автоматических и device checks |
+| `upstream-overlaps.yaml` | Производное представление конфликтных областей форка |
+| `smoke-tests.yaml` | Производное представление стабильных IDs автоматических и device checks |
 
 Локальные пути POSIX-relative от workspace root, без `..`, drive prefix и
 секретов. В `ecosystem.yaml` внешнее расположение хранится отдельно как
@@ -29,10 +29,12 @@ Registry — структурированный источник истины д
 в пределах соответствующего файла; межфайловые ссылки проверяет
 `validate_docs.py`.
 
-Репозитории и модули редактируются в `agent-system/knowledge/repositories/` и
-`agent-system/knowledge/modules/`. После правки обнови оба YAML командой
+Репозитории, модули, инварианты, пересечения с upstream и проверки
+редактируются в одноимённых каталогах `agent-system/knowledge/`.
+После правки обнови YAML командой
 `python -B docs/scripts/keyed_registry_knowledge.py --write` из корня App.
-Валидатор и `scaffold_module_docs.py` сверяют представления с записями.
+Валидатор сверяет все пять представлений с записями. `scaffold_module_docs.py`
+сверяет репозитории и модули.
 Отдельное дерево документации, выбранное через `--docs-root`, читает свои YAML,
 если рядом с ним нет источника App.
 
