@@ -23,13 +23,25 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "174f4858331e7c087fe6cde76bd7259547c82e2e977a4387f31f6331477f2735",
+      "sha256": "872da4abd82fde3cc045a7c63b3d5065654f35d03d2c40880e04164014cee918",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
         "."
       ],
-      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work."
+      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work. The change-impact cutover describes the owner edit and rollback routes."
+    },
+    {
+      "path": "agent-system/provenance/change-impact.json",
+      "sha256": "469b25b9ae32e16d5581764528052a3f6abc076450f1a9624121fafd8da8baf1",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/change-impact.yaml",
+        "docs/scripts/validate_docs.py",
+        "agent-system/knowledge/change-impact"
+      ],
+      "reason": "Pinned original Draft registry and contiguous source spans for every complete trigger."
     }
   ]
 }

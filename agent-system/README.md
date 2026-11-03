@@ -17,10 +17,17 @@ two Git wording conflicts and two distinct subjects sharing legacy MOB-02. The
 current task's explicit routine Git authorization is external. Neither the old
 Cursor wording nor a stored retry can authorize a new product/native operation.
 
-The unchanged AGENTS/Cursor, registries, checkers and hooks stay effective until
-actual client loading/capacity/agreement and cutover are proved. Original Git
-object retention before future squash/branch deletion still needs its separate
-durable-reachability decision; a SHA is not a retention ref. No source is deleted.
+The App docs validator reads its change-impact triggers from
+`knowledge/change-impact/`. Regenerate the standalone YAML from the App root with
+`python -B docs/scripts/change_impact_knowledge.py --write`. The original Draft
+blob and all source spans are identified in
+[`provenance/change-impact.json`](provenance/change-impact.json).
+For rollback, project intervening owner edits back to YAML and compare the full
+ordered registry before restoring the former reader.
+
+AGENTS/Cursor, the other registries and hooks still serve their existing clients.
+Original Git object retention before future squash/branch deletion needs its
+own durable reachability decision.
 
 From the LISA root use `py -3.13 -B -m tools.agent_system check-policy-migration`
 with this owned working repository included in the declared source frame when

@@ -1,7 +1,7 @@
 ---
 title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА
 type: roadmap
-last_verified: 2026-11-03
+last_verified: 2026-11-04
 related_code:
   - AGENTS.md
   - .github/PULL_REQUEST_TEMPLATE.md
@@ -26,6 +26,11 @@ related_code:
 Проверка исходных символов/условий, независимых ожидаемых context IDs/полей и
 полной выдачи отделена от merge, device/runtime, release и реального client
 cutover. Прежние AGENTS/Cursor/hooks действуют до отдельной доказанной замены.
+
+В Draft App #91 перенесён реестр change-impact. Локальная проверка и ручной
+workflow используют общий валидатор с записями владельца. Производный YAML
+сохраняет автономный вход для документации. Остальные реестры и клиенты
+предстоит переключить отдельно.
 Зависимости: согласованные owner PR, общий LISA compiler/registry, последующий
 перенос остальных типов знаний и owners; library Merge Commit до fetched app pin.
 Приёмка ВСЕЙ цели: полный migration map/lifecycle, фактические Codex/ChatGPT/

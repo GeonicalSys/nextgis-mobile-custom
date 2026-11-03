@@ -30,9 +30,51 @@ def load_script(name):
 
 impact = load_script("check_change_impact")
 validator = load_script("validate_docs")
+knowledge = load_script("change_impact_knowledge")
 TRIGGERS = yaml.safe_load((DOCS / "registry" / "change-impact.yaml").read_text(encoding="utf-8"))["triggers"]
 OFFICIAL = "docs/reference/official-differences.md"
 REPOSITORY = "example/mobile"
+
+
+class ChangeImpactOwnerTest(unittest.TestCase):
+    def test_standalone_view_is_read_without_owner_sources(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            view = root / knowledge.REGISTRY
+            view.parent.mkdir(parents=True)
+            shutil.copyfile(DOCS / "registry/change-impact.yaml", view)
+            validation = validator.Validation()
+            self.assertEqual(validator.load_change_impact(root / "docs", validation)["triggers"], TRIGGERS)
+            self.assertEqual(validation.errors, [])
+
+    def test_owner_changes_require_regeneration_and_missing_records_fail_closed(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            shutil.copytree(DOCS.parent / knowledge.DIRECTORY, root / knowledge.DIRECTORY)
+            view = root / knowledge.REGISTRY
+            view.parent.mkdir(parents=True)
+            shutil.copyfile(DOCS / "registry/change-impact.yaml", view)
+            record = root / knowledge.DIRECTORY / "change-impact-documentation-ci.json"
+            value = json.loads(record.read_text(encoding="utf-8"))
+            value["facets"]["definition"]["value"]["strict_docs"] = False
+            record.write_text(json.dumps(value), encoding="utf-8")
+
+            validation = validator.Validation()
+            self.assertEqual(validator.load_change_impact(root / "docs", validation), {})
+            self.assertIn("registry is stale", validation.errors[0])
+
+            regenerated = knowledge.project_change_impact(root)
+            view.write_text(knowledge.render_change_impact(regenerated), encoding="utf-8")
+            validation = validator.Validation()
+            actual = validator.load_change_impact(root / "docs", validation)
+            self.assertEqual(actual, regenerated)
+            changed = next(trigger for trigger in actual["triggers"] if trigger["id"] == "DOCUMENTATION-CI")
+            self.assertIs(changed["strict_docs"], False)
+            self.assertEqual(validation.errors, [])
+
+            record.unlink()
+            self.assertEqual(validator.load_change_impact(root / "docs", validation), {})
+            self.assertIn("records and relations differ", validation.errors[0])
 
 
 def pull(number, base, repository=REPOSITORY, branch="feature/docs"):

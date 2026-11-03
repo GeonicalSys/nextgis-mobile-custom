@@ -93,6 +93,16 @@ covers:
   - agent-system/knowledge/change-impact/change-impact-vector-spatial-cache-recovery.json
   - agent-system/knowledge/change-impact/change-impact-visible-line-labels.json
   - agent-system/provenance/change-impact.json
+  - agent-system/README.md
+  - agent-system/source-dispositions.json
+  - docs/changelog.md
+  - docs/reference/build-matrix.md
+  - docs/registry/README.md
+  - docs/registry/change-impact.yaml
+  - docs/roadmap/mobile.md
+  - docs/scripts/change_impact_knowledge.py
+  - docs/scripts/validate_docs.py
+  - docs/tests/test_change_impact_ci.py
 ---
 
 MOB-DEV-02. Сохранены 85 триггеров в исходном порядке, включая 81 строгий,
@@ -105,8 +115,9 @@ App PR #90 сверена отдельно. SHA-256 полного значен�
 Прямой потребитель правил — валидатор документации. Локальный PowerShell
 передаёт ему полный рабочий диапазон, ручной workflow передаёт Git-диапазон
 через check_change_impact.py. Сценарии регрессии и ссылки документации
-читают YAML по существующему адресу. Переключение валидатора идёт отдельным
-шагом с сохранением этого формата поставки.
+читают производный YAML по прежнему адресу. Валидатор в App строит реестр
+из записей и отклоняет устаревший YAML или неполный набор записей. В поставке
+документации без agent-system используется производный YAML.
 
 Source discovery для двух путей завершил план с UNKNOWN и 40 выбранными
 плагинами. Влияние этой миграции относится к проверкам документации App.

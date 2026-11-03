@@ -1,7 +1,7 @@
 ---
 title: Машиночитаемые реестры
 type: reference
-last_verified: 2026-07-23
+last_verified: 2026-11-04
 related_code:
   - docs/scripts/validate_docs.py
 ---
@@ -17,7 +17,7 @@ Registry — структурированный источник истины д
 | `dependencies.yaml` | Compile/runtime/API связи |
 | `ecosystem.yaml` | Владельцы и контракты между Android, `standart_profiles` и QGIS Plugins |
 | `invariants.yaml` | Непереговорные продуктовые контракты |
-| `change-impact.yaml` | Path triggers, blast radius, docs и проверки |
+| `change-impact.yaml` | Производное представление path triggers, связанных документов и проверок |
 | `config-keys.yaml` | Preferences, metadata, storage и config keys |
 | `upstream-overlaps.yaml` | Конфликтные области форка |
 | `smoke-tests.yaml` | Стабильные IDs автоматических и device checks |
@@ -28,3 +28,8 @@ Registry — структурированный источник истины д
 текущей машине external docs дополнительно проверяются validator. IDs уникальны
 в пределах соответствующего файла; межфайловые ссылки проверяет
 `validate_docs.py`.
+
+Триггеры change-impact редактируются в `agent-system/knowledge/change-impact/`.
+После правки обнови YAML командой
+`python -B docs/scripts/change_impact_knowledge.py --write` из корня App.
+В отдельной поставке документации YAML можно читать по прежнему пути.

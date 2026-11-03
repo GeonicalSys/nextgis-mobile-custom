@@ -30,7 +30,6 @@ REGISTRY_FILES = (
     "dependencies.yaml",
     "ecosystem.yaml",
     "invariants.yaml",
-    "change-impact.yaml",
     "config-keys.yaml",
     "upstream-overlaps.yaml",
     "smoke-tests.yaml",
@@ -95,6 +94,23 @@ def load_yaml(path: Path, validation: Validation) -> Any:
         return yaml.safe_load(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, yaml.YAMLError) as exc:
         validation.error(path.as_posix(), f"invalid YAML: {exc}")
+        return {}
+
+
+def load_change_impact(docs_root: Path, validation: Validation) -> Any:
+    view = docs_root / "registry/change-impact.yaml"
+    owner = docs_root.parent
+    sources = owner / "agent-system"
+    if not sources.exists() and not sources.is_symlink():
+        return load_yaml(view, validation)
+
+    projector = runpy.run_path(str(Path(__file__).with_name("change_impact_knowledge.py")))
+    try:
+        registry = projector["project_change_impact"](owner)
+        projector["check_generated"](view, registry)
+        return registry
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        validation.error(view.as_posix(), f"change-impact projection failed: {exc}")
         return {}
 
 
@@ -983,7 +999,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         validation,
     )
     triggers = validate_change_impact(
-        loaded["change-impact.yaml"],
+        load_change_impact(docs_root, validation),
         modules,
         invariant_ids,
         smoke_ids,
