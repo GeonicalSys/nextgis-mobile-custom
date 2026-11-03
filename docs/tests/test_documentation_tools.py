@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -150,6 +151,35 @@ class DocumentationToolsTest(unittest.TestCase):
             )
             self.assertNotEqual(repeated.returncode, 0)
             self.assertIn("already exists", repeated.stderr)
+
+    def test_topology_readers_check_owner_records_and_accept_standalone_yaml(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            docs = root / "docs"
+            shutil.copytree(DOCS_ROOT / "registry", docs / "registry")
+            shutil.copytree(DOCS_ROOT / "templates", docs / "templates")
+            (root / "app").mkdir()
+            validator_args = ("--docs-root", str(docs), "--workspace-root", str(WORKSPACE))
+            scaffold_args = ("app", "--docs-root", str(docs), "--workspace-root", str(root), "--dry-run")
+            for script, arguments in ((VALIDATOR, validator_args), (SCAFFOLD, scaffold_args)):
+                result = self.run_tool(script, *arguments)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+            knowledge = root / "agent-system" / "knowledge"
+            for name in ("modules", "repositories", "change-impact"):
+                shutil.copytree(WORKSPACE / "agent-system" / "knowledge" / name, knowledge / name)
+            view = docs / "registry" / "modules.yaml"
+            view.write_text(view.read_text(encoding="utf-8") + "# stale\n", encoding="utf-8")
+            for script, arguments in ((VALIDATOR, validator_args), (SCAFFOLD, scaffold_args)):
+                result = self.run_tool(script, *arguments)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("Generated modules registry is stale", result.stdout + result.stderr)
+
+            (knowledge / "modules" / "modules-app.json").unlink()
+            for script, arguments in ((VALIDATOR, validator_args), (SCAFFOLD, scaffold_args)):
+                result = self.run_tool(script, *arguments)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("modules registry order, records and relations differ", result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

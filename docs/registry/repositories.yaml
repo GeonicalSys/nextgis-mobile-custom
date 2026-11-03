@@ -1,3 +1,5 @@
+# Generated from agent-system/knowledge/repositories.
+# Edit the owner records, then run python -B docs/scripts/keyed_registry_knowledge.py --write.
 schema_version: 1
 repositories:
   root:
@@ -8,7 +10,9 @@ repositories:
     origin: https://github.com/GeonicalSys/nextgis-mobile-custom.git
     upstream: https://github.com/nextgis/nextgis_mobile_android.git
     docs_policy: required
-    module_ids: [app, wizardpager]
+    module_ids:
+    - app
+    - wizardpager
   maplib:
     title: GeonicalSystem Android Maplib
     path: maplib
@@ -17,7 +21,8 @@ repositories:
     origin: https://github.com/GeonicalSys/android_maplib.git
     upstream: https://github.com/nextgis/android_maplib.git
     docs_policy: required
-    module_ids: [maplib]
+    module_ids:
+    - maplib
   maplibui:
     title: GeonicalSystem Android Maplib UI
     path: maplibui
@@ -26,7 +31,8 @@ repositories:
     origin: https://github.com/GeonicalSys/android_maplibui.git
     upstream: https://github.com/nextgis/android_maplibui.git
     docs_policy: required
-    module_ids: [maplibui]
+    module_ids:
+    - maplibui
   easypicker:
     title: GeonicalSystem EasyPicker fork
     path: easypicker
@@ -35,4 +41,5 @@ repositories:
     origin: https://github.com/GeonicalSys/easypicker.git
     upstream: https://github.com/nextgis/easypicker.git
     docs_policy: required
-    module_ids: [easypicker-module]
+    module_ids:
+    - easypicker-module

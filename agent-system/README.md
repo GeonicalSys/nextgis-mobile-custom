@@ -25,6 +25,13 @@ blob and all source spans are identified in
 For rollback, project intervening owner edits back to YAML and compare the full
 ordered registry before restoring the former reader.
 
+The App docs validator and module pack scaffolder read topology from
+`knowledge/repositories/` and `knowledge/modules/`. Run
+`python -B docs/scripts/keyed_registry_knowledge.py --write` to refresh both
+standalone YAML views. The [topology provenance](provenance/repository-topology.json)
+pins the original Draft blobs and covers every ordered value. For rollback,
+first regenerate both views so they carry any intervening owner edits.
+
 AGENTS/Cursor, the other registries and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

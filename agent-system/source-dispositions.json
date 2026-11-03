@@ -23,13 +23,13 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "872da4abd82fde3cc045a7c63b3d5065654f35d03d2c40880e04164014cee918",
+      "sha256": "fea38f05bbcf2fc35e5fec5a6258586dac43883b92c8473a488780ef146be15e",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
         "."
       ],
-      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work. The change-impact cutover describes the owner edit and rollback routes."
+      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work. The change-impact cutover describes the owner edit and rollback routes. The topology cutover describes the same boundaries for the paired App registries."
     },
     {
       "path": "agent-system/provenance/change-impact.json",

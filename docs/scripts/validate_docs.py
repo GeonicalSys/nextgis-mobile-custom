@@ -25,8 +25,6 @@ except ImportError:  # pragma: no cover - exercised by a user without dependenci
 
 
 REGISTRY_FILES = (
-    "repositories.yaml",
-    "modules.yaml",
     "dependencies.yaml",
     "ecosystem.yaml",
     "invariants.yaml",
@@ -965,6 +963,16 @@ def main(argv: Iterable[str] | None = None) -> int:
     loaded = {
         name: load_yaml(registry_root / name, validation) for name in REGISTRY_FILES
     }
+    projector = runpy.run_path(str(Path(__file__).with_name("keyed_registry_knowledge.py")))
+    for name in projector["REGISTRIES"]:
+        filename = f"{name}.yaml"
+        view = registry_root / filename
+        try:
+            registry = projector["project_for_docs"](docs_root, name)
+            loaded[filename] = load_yaml(view, validation) if registry is None else registry
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            validation.error(view.as_posix(), f"{name} projection failed: {exc}")
+            loaded[filename] = {}
     repos, declared_repo_modules = validate_repositories(
         loaded["repositories.yaml"], workspace, validation
     )

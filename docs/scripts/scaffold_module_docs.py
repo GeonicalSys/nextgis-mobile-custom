@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import runpy
 import sys
 from datetime import date
 from pathlib import Path
@@ -74,12 +75,15 @@ def main() -> int:
 
     workspace = args.workspace_root.resolve()
     docs_root = args.docs_root.resolve()
+    projector = runpy.run_path(str(Path(__file__).with_name("keyed_registry_knowledge.py")))
     try:
-        module_registry = load_mapping(docs_root / "registry" / "modules.yaml")
-        repository_registry = load_mapping(
-            docs_root / "registry" / "repositories.yaml"
-        )
-    except ValueError as exc:
+        module_registry = projector["project_for_docs"](docs_root, "modules")
+        if module_registry is None:
+            module_registry = load_mapping(docs_root / "registry" / "modules.yaml")
+        repository_registry = projector["project_for_docs"](docs_root, "repositories")
+        if repository_registry is None:
+            repository_registry = load_mapping(docs_root / "registry" / "repositories.yaml")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
         return fail(str(exc))
     modules = module_registry.get("modules")
     repositories = repository_registry.get("repositories")

@@ -12,8 +12,8 @@ Registry — структурированный источник истины д
 
 | Файл | Назначение |
 |---|---|
-| `repositories.yaml` | Git boundaries, remotes, branches, docs policy |
-| `modules.yaml` | Gradle modules, entry points, ownership |
+| `repositories.yaml` | Производное представление Git boundaries, remotes, branches, docs policy |
+| `modules.yaml` | Производное представление Gradle modules, entry points, ownership |
 | `dependencies.yaml` | Compile/runtime/API связи |
 | `ecosystem.yaml` | Владельцы и контракты между Android, `standart_profiles` и QGIS Plugins |
 | `invariants.yaml` | Непереговорные продуктовые контракты |
@@ -28,6 +28,13 @@ Registry — структурированный источник истины д
 текущей машине external docs дополнительно проверяются validator. IDs уникальны
 в пределах соответствующего файла; межфайловые ссылки проверяет
 `validate_docs.py`.
+
+Репозитории и модули редактируются в `agent-system/knowledge/repositories/` и
+`agent-system/knowledge/modules/`. После правки обнови оба YAML командой
+`python -B docs/scripts/keyed_registry_knowledge.py --write` из корня App.
+Валидатор и `scaffold_module_docs.py` сверяют представления с записями.
+Отдельное дерево документации, выбранное через `--docs-root`, читает свои YAML,
+если рядом с ним нет источника App.
 
 Триггеры change-impact редактируются в `agent-system/knowledge/change-impact/`.
 После правки обнови YAML командой
