@@ -19,6 +19,33 @@
       "blob": "f815dfe742d52686d73edb7396ccbfb06fd28229",
       "sha256": "af5b93e1f1ca6fde8072b84b904d86eaaab339f453595dd0a7f0fe7e8a37c331",
       "bytes": 10192
+    },
+    {
+      "path": "docs/README.md",
+      "record": "docs-index.json",
+      "id": "lisa:mobile:resource:documentation-docs-index",
+      "revision": "66131230239d170a41e538fad8269d77b0cca275",
+      "blob": "864d708d379c102b7dfd404d13cecd21a063f2ba",
+      "sha256": "bca78773079cfa09c9d589ee18ecf9598afc865ccaadad06d456f45b00881178",
+      "bytes": 6480
+    },
+    {
+      "path": "docs/registry/README.md",
+      "record": "registry-index.json",
+      "id": "lisa:mobile:resource:documentation-registry-index",
+      "revision": "66131230239d170a41e538fad8269d77b0cca275",
+      "blob": "dd0dee4c83f6107495c4ffcdc3d445e91af9d64e",
+      "sha256": "c242b98bd5e934e32a73c95385b0d69d371f14ad44e36d64bd6a38abe3d7be69",
+      "bytes": 3380
+    },
+    {
+      "path": "docs/guides/documentation-maintenance.md",
+      "record": "documentation-maintenance.json",
+      "id": "lisa:mobile:resource:documentation-documentation-maintenance",
+      "revision": "66131230239d170a41e538fad8269d77b0cca275",
+      "blob": "d27a7b56c6b01a693f53b63df93e136832223929",
+      "sha256": "4d5775927364273b03e94b8444cdc47f1f2154e69ef23aa865f1dae8a0b02447",
+      "bytes": 3191
     }
   ]
 }

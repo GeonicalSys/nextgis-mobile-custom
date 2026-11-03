@@ -23,11 +23,14 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "de4eec236eb486881ebab4363d5867e27f9240b9be874b3c63cad4ceae9b08a9",
+      "sha256": "42fb344f5403dad390b784443785ee42bd288fbbf774d478c218dd72c3186772",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
-        "."
+        ".",
+        "docs/README.md",
+        "docs/registry/README.md",
+        "docs/guides/documentation-maintenance.md"
       ],
       "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work. The change-impact cutover describes the owner edit and rollback routes. The topology cutover describes the same boundaries for the paired App registries. The keyed registry cutover covers the invariant, upstream and smoke views. The sectioned registry cutover covers settings, dependencies and ecosystem. The UI catalogue cutover describes the default and standalone JSON routes. The App prose cutover documents its edit, view and rollback routes."
     },
@@ -99,19 +102,22 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "da12d3f7b02fe6e3ff2ff47953f5f088c422ab1afc6b07b757f59a60185639ce",
+      "sha256": "75c36686d1ec78a14028c05d1e78281646d630071cd1cb85545a2e0870338863",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
         "docs/START-HERE.md",
         "docs/guides/change-checklist.md",
-        "agent-system/knowledge/documentation"
+        "agent-system/knowledge/documentation",
+        "docs/README.md",
+        "docs/registry/README.md",
+        "docs/guides/documentation-maintenance.md"
       ],
       "reason": "Pinned exact App Markdown source bytes and stable published addresses."
     },
     {
       "path": "agent-system/migration/prose-inventory.json",
-      "sha256": "0f288cb48d16c6a9fcae9f90f89819c95d7d45027b3b7f92a32567c13b23e2c6",
+      "sha256": "024e9e29f3769b5da1d6902d659d95d64aef8042f1a4746c7c4dd451c9167933",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [

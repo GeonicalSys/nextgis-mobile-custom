@@ -9,7 +9,8 @@
     "historical_evidence": "Dated receipts, handoffs, audits, release history and their indexes. Preserve exact evidence and inbound links. Existing linked technical advice remains retrievable. Promote verified current rules explicitly before any retirement.",
     "mixed_review_required": "Reliability audit contains dated findings and later updates. Resolve live and historical claims individually before cutover.",
     "generation_inputs": "Live scaffold or PR template inputs. Preserve output and invocation contracts.",
-    "protected_test_fixture": "Documentation beside Android test fixture data. Retain as part of the test fixture."
+    "protected_test_fixture": "Documentation beside Android test fixture data. Retain as part of the test fixture.",
+    "working_bridge": "Active migration and owner editing instructions. Retain until the documented authoring routes and rollback have replacement coverage."
   },
   "pilot_consumers": {
     "docs/START-HERE.md": [
@@ -174,6 +175,14 @@
     ],
     "protected_test_fixture": [
       "app/src/androidTest/assets/feature-types/README.md"
+    ],
+    "working_bridge": [
+      "agent-system/README.md"
     ]
+  },
+  "separate_reporting_corpus": {
+    "directory": "update-reports/entries",
+    "tracked_at_inventory_revision": 157,
+    "disposition": "Retained report evidence with its own schema, pre-push checker and stable IDs. This phase preserves the report reader."
   }
 }
