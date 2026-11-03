@@ -47,7 +47,17 @@ JSON. Use `python -B docs/scripts/ui_catalogue_knowledge.py --write` after an
 approved catalogue edit. The [UI provenance](provenance/ui-contracts.json)
 pins the exact original bytes, record spans and explicit evidence links.
 
-AGENTS/Cursor, the other registries and hooks still serve their existing clients.
+The App documentation entry and change checklist are edited in
+`knowledge/documentation/`. Run `python -B docs/scripts/prose_knowledge.py --write`
+to refresh both Markdown views. The ordinary validator reads the records and
+checks both views. GitHub, links in existing instructions and standalone doc
+packs continue to open the published paths. The
+[prose provenance](provenance/documentation.json) pins the original Git bytes.
+To restore the previous reader, regenerate both views first so they carry any
+intervening edits. The [App inventory](migration/prose-inventory.json) separates
+the other active entrances, current documents and historical evidence.
+
+AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.
 

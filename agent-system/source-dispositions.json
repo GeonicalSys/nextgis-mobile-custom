@@ -23,13 +23,13 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "3047cce2cabf724d9567cd9b114d37bc7e259c2960987a9ff454a56d25548d96",
+      "sha256": "de4eec236eb486881ebab4363d5867e27f9240b9be874b3c63cad4ceae9b08a9",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
         "."
       ],
-      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work. The change-impact cutover describes the owner edit and rollback routes. The topology cutover describes the same boundaries for the paired App registries. The keyed registry cutover covers the invariant, upstream and smoke views. The sectioned registry cutover covers settings, dependencies and ecosystem. The UI catalogue cutover describes the default and standalone JSON routes."
+      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work. The change-impact cutover describes the owner edit and rollback routes. The topology cutover describes the same boundaries for the paired App registries. The keyed registry cutover covers the invariant, upstream and smoke views. The sectioned registry cutover covers settings, dependencies and ecosystem. The UI catalogue cutover describes the default and standalone JSON routes. The App prose cutover documents its edit, view and rollback routes."
     },
     {
       "path": "agent-system/provenance/change-impact.json",
@@ -96,6 +96,30 @@
         "agent-system/knowledge/ui-contracts"
       ],
       "reason": "Pinned original App UI catalogue, complete source byte spans, ordered definitions and explicit evidence links."
+    },
+    {
+      "path": "agent-system/provenance/documentation.json",
+      "sha256": "da12d3f7b02fe6e3ff2ff47953f5f088c422ab1afc6b07b757f59a60185639ce",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/START-HERE.md",
+        "docs/guides/change-checklist.md",
+        "agent-system/knowledge/documentation"
+      ],
+      "reason": "Pinned exact App Markdown source bytes and stable published addresses."
+    },
+    {
+      "path": "agent-system/migration/prose-inventory.json",
+      "sha256": "0f288cb48d16c6a9fcae9f90f89819c95d7d45027b3b7f92a32567c13b23e2c6",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/START-HERE.md",
+        "docs/guides/change-checklist.md",
+        "agent-system/knowledge/documentation"
+      ],
+      "reason": "Checkpoint inventory of App prose addresses, types and pilot consumers at the pinned App revision."
     }
   ]
 }

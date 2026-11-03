@@ -169,11 +169,12 @@ def workspace_target(
 
 
 def read_frontmatter(
-    path: Path, required: set[str], validation: Validation
+    path: Path, required: set[str], validation: Validation, *, text: str | None = None
 ) -> Mapping[str, Any]:
     location = path.as_posix()
     try:
-        text = path.read_text(encoding="utf-8")
+        if text is None:
+            text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
         validation.error(location, f"cannot read UTF-8: {exc}")
         return {}
@@ -198,9 +199,12 @@ def read_frontmatter(
     return mapping
 
 
-def validate_markdown_links(path: Path, workspace: Path, validation: Validation) -> None:
+def validate_markdown_links(
+    path: Path, workspace: Path, validation: Validation, *, text: str | None = None
+) -> None:
     try:
-        text = path.read_text(encoding="utf-8")
+        if text is None:
+            text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeError):
         return
     for raw_target in LINK_RE.findall(text):
@@ -225,10 +229,25 @@ def validate_markdown_links(path: Path, workspace: Path, validation: Validation)
 def validate_central_markdown(
     docs_root: Path, workspace: Path, validation: Validation
 ) -> None:
-    for path in sorted(docs_root.rglob("*.md")):
+    sources = docs_root.parent / "agent-system"
+    projected = {}
+    if sources.exists() or sources.is_symlink():
+        projector = runpy.run_path(str(Path(__file__).with_name("prose_knowledge.py")))
+        try:
+            projected = {docs_root / path.relative_to("docs"): text
+                         for path, text in projector["project_documents"](docs_root.parent).items()}
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            validation.error(docs_root.as_posix(), f"prose projection failed: {exc}")
+    for path in sorted(set(docs_root.rglob("*.md")) | projected.keys()):
         if "templates" in path.relative_to(docs_root).parts:
             continue
-        frontmatter = read_frontmatter(path, CENTRAL_FRONTMATTER, validation)
+        text = projected.get(path)
+        if text is not None:
+            try:
+                projector["check_generated"](path, text)
+            except (OSError, ValueError) as exc:
+                validation.error(path.as_posix(), str(exc))
+        frontmatter = read_frontmatter(path, CENTRAL_FRONTMATTER, validation, text=text)
         for index, related in enumerate(as_list(frontmatter.get("related_code"))):
             workspace_target(
                 workspace,
@@ -237,7 +256,7 @@ def validate_central_markdown(
                 validation,
                 allow_dot=True,
             )
-        validate_markdown_links(path, workspace, validation)
+        validate_markdown_links(path, workspace, validation, text=text)
 
 
 def validate_repositories(

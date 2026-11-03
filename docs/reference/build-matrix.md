@@ -22,6 +22,12 @@ related_code:
 
 ## Проверка документации
 
+Записи точки входа и чеклиста находятся в
+`agent-system/knowledge/documentation/`. После правки записи обновить
+Markdown командой `python -B docs/scripts/prose_knowledge.py --write`.
+Обычный валидатор читает запись и сверяет представление, а автономная
+документация использует Markdown по прежнему адресу.
+
 В репозитории App валидатор читает записи change-impact из
 `agent-system/knowledge/change-impact/` и проверяет актуальность производного
 `docs/registry/change-impact.yaml`. Поставка документации без `agent-system/`
