@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-device-true-heading",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "device-true-heading"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "device-true-heading",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt",
+        "marker": "fun heading(): Sample?",
+        "requires": [
+          "if (rotationSensor == null) return null",
+          "SystemClock.elapsedRealtime() - headingElapsedMillis > SENSOR_STALE_MILLIS",
+          "Sample(normalize(magnetic + declinationDegrees), halfAngle)"
+        ],
+        "forbids": [],
+        "sha256": "c7c3275fe668db468ee3b5c50f9bf7fe8fd6b0f878dcbe60adff65063917f0ea"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-device-true-heading"
+    ]
+  }
+}

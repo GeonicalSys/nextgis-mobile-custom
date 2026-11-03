@@ -85,6 +85,17 @@
         "agent-system/knowledge/ecosystem"
       ],
       "reason": "Pinned original Draft blobs, contiguous line spans, complete section and row values and original notes."
+    },
+    {
+      "path": "agent-system/provenance/ui-contracts.json",
+      "sha256": "466c091fc7477ee2e0949e1cb84defa7eaf2f4473aae773aab024d21e512dc7c",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/ui-contracts.json",
+        "agent-system/knowledge/ui-contracts"
+      ],
+      "reason": "Pinned original App UI catalogue, complete source byte spans, ordered definitions and explicit evidence links."
     }
   ]
 }

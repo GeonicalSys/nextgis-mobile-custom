@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-form-required",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-FORM-REQUIRED"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-FORM-REQUIRED",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+        "marker": "private boolean validateRequiredFields(ContentValues values)",
+        "requires": [
+          "RequiredFieldUi.fieldView(field, mFields) == null",
+          "values.containsKey(field.getName()) ? values.get(field.getName()) : stored.get(field.getName())",
+          "RequiredFieldValidation.isMissing(value)",
+          "R.string.form_required_field_unavailable"
+        ],
+        "forbids": [],
+        "sha256": "22f1d3df14139428a9aa524a684e3ccc5febc8d927505c85f40c9844b5a26d33"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-form-required"
+    ]
+  }
+}

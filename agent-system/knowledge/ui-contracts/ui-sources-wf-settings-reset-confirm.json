@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-settings-reset-confirm",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-SETTINGS-RESET-CONFIRM"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-SETTINGS-RESET-CONFIRM",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+        "marker": "public static void initializeReset(\n            final Activity activity,\n            final Preference preference)",
+        "requires": [
+          "R.string.reset_settings_title",
+          "setPositiveButton(android.R.string.ok",
+          "resetSettings(activity)"
+        ],
+        "forbids": [],
+        "sha256": "a88358fbdfc9e01932287b8056ded33a991405052679195f453fa5e126431863"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-settings-reset-confirm"
+    ]
+  }
+}

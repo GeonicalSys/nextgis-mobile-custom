@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-map-persist-camera",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "map-persist-camera"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "map-persist-camera",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "marker": "override fun onPause()",
+        "requires": [
+          "SettingsConstantsUI.KEY_PREF_ZOOM_LEVEL",
+          "val point2 = mMapRef.get()!!.map.getMaplibreCenter()",
+          "SettingsConstantsUI.KEY_PREF_SCROLL_X",
+          "SettingsConstantsUI.KEY_PREF_SCROLL_Y",
+          "AppSettingsConstants.KEY_PREF_MAP_BEARING"
+        ],
+        "forbids": [],
+        "sha256": "d2e3d43bd33fed8e243763a95a7c9f9f000c8c0f24b52a53f0773696d783dfc2"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-map-persist-camera"
+    ]
+  }
+}

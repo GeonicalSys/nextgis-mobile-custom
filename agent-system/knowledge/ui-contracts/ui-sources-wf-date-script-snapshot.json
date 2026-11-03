@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-date-script-snapshot",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-DATE-SCRIPT-SNAPSHOT"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-DATE-SCRIPT-SNAPSHOT",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/util/ProjectScriptFormController.java",
+        "marker": "private JSONObject snapshot(String alias, ContentValues values, long id) throws Exception",
+        "requires": [
+          "!values.containsKey(name)",
+          "ProjectScriptHost.readValue(stored, i, field)",
+          "field.getType() == GeoConstants.FTDate",
+          "Instant.ofEpochMilli(((Number)value).longValue()).atOffset(ZoneOffset.UTC).toLocalDate().toString()"
+        ],
+        "forbids": [],
+        "sha256": "1af7eefa40a000f9814ac4d0d6c5c88508b82216fd9051a47b4b9897494f5a10"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-date-script-snapshot"
+    ]
+  }
+}

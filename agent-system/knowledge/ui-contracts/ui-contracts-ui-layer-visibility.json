@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-layer-visibility",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-LAYER-VISIBILITY"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-LAYER-VISIBILITY",
+        "group": "layers",
+        "title": "Видимость слоя и отметка изменений",
+        "surface": "Панель слоёв",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "btShow",
+          "tvLayerName",
+          "layer_pending_badge",
+          "ivEdited"
+        ],
+        "meaning": "Глаз управляет видимостью слоя; жёлтая отметка означает ожидающие изменения, а карандаш — занятую редактированием/обходом строку.",
+        "value_origin": "layer.getName/isVisible, pending set по layer ID, isLocked/isLayerReservedForWalk; изменение setVisible затем layer.save.",
+        "units": "Булевы состояния; не количество объектов.",
+        "updates": [
+          "Повторное bind сбрасывает видимость badge для переиспользованной строки.",
+          "Глаз инвертирует сохранённую видимость."
+        ],
+        "actions": [
+          "Показать/скрыть слой"
+        ],
+        "conditions": [
+          "Lookup tables не получают обычную строку.",
+          "Locked/walk-reserved слой скрывает btMore и btShow и показывает ivEdited."
+        ],
+        "saved_state": "Видимость сохраняется в слое; pending badge берётся из отдельного состояния очереди.",
+        "source_ids": [
+          "WF-LAYER-ROW"
+        ],
+        "expectations": [
+          "Oracle: скрытие слоя сохраняет его объекты и принадлежность проекту; переиспользованная чистая строка не наследует чужой badge.",
+          "Контрпример: скрытие удаляет объект либо у чистого слоя остаётся жёлтая метка предыдущей строки."
+        ],
+        "unknowns": [
+          "Фактическая карта после toggle, pickability скрытых объектов и native размеры кнопок ещё не проверены."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-layer-row",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-layer-visibility"
+    ]
+  }
+}

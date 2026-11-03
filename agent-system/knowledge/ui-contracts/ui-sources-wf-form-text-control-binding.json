@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-form-text-control-binding",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-FORM-TEXT-CONTROL-BINDING"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-FORM-TEXT-CONTROL-BINDING",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+        "marker": "protected void addToLayout(IFormControl control, JSONObject element, List<Field> fields, Bundle savedState,\n                               Cursor featureCursor, LinearLayout layout, final ModifyAttributesActivity modifyAttributesActivity) throws JSONException",
+        "requires": [
+          "appendData(mLayer, mPreferences, mTable, mRow, control, element);",
+          "control.init(element, fields, savedState, featureCursor, mSharedPreferences, mTranslations, modifyAttributesActivity);",
+          "mFields.put(fieldName, control);"
+        ],
+        "forbids": [],
+        "sha256": "f78d4fec00ce4aeeac46dd73b90373ccaeb023491346dede3d482be1ef6e1889"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-form-text-control-binding"
+    ]
+  }
+}

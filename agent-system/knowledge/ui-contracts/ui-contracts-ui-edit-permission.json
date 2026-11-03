@@ -1,0 +1,108 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-edit-permission",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-EDIT-PERMISSION"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-EDIT-PERMISSION",
+        "group": "editing",
+        "title": "Редактирование разрешённых объектов",
+        "surface": "Меню слоя и панель атрибутов",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "menu_edit",
+          "menu_edit_attributes"
+        ],
+        "meaning": "Наличие слоя на карте не означает доступность редактирования.",
+        "value_origin": "NGWVectorLayer.isEditingAllowed → LayerEditingPolicy: managed Collector использует collectorEditable AND outboundSyncAllowed; прочие слои layerEditable AND collectorEditable.",
+        "units": "Булево разрешение.",
+        "updates": [
+          "Меню вычисляет разрешение при построении и повторно перед edit action."
+        ],
+        "actions": [
+          "Открыть редактирование только допустимого слоя"
+        ],
+        "conditions": [
+          "Для managed NGW важна project policy и разрешённое направление отправки.",
+          "lh_mera.lh_mery и lh_mera.nep текущей реализации подтверждены пользователем read-only; area_origin остаётся desktop/server-only и намеренно отсутствует в mobile config.",
+          "Общие Save/PUT методы не доказывают редактируемость этих двух слоёв."
+        ],
+        "saved_state": "Действуют сохранённые layer/project policy и sync direction; новый контракт сервера требует повторной оценки.",
+        "source_ids": [
+          "WF-LAYER-ROW",
+          "WF-NGW-EDIT-POLICY",
+          "WF-EDIT-POLICY",
+          "WF-IDENTIFY-TOOLBAR"
+        ],
+        "expectations": [
+          "Oracle: managed слой с collectorEditable=false либо outbound=false не предлагает edit; read-only lh_mery/nep не получают требования CREATE/PUT для area_origin.",
+          "Контрпример: включить edit только потому, что тип слоя vector, либо потребовать добавить area_origin в мобильную форму ради полного списка полей."
+        ],
+        "unknowns": [
+          "Эффективные tenant overrides/server permissions не запрашивались; native доступность конкретного опубликованного ресурса не проверена."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-layer-row",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-edit-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-edit-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-identify-toolbar",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-edit-permission"
+    ]
+  }
+}

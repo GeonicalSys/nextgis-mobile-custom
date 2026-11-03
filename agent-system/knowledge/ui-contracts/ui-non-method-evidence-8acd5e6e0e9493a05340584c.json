@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-non-method-evidence-8acd5e6e0e9493a05340584c",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "non_method_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/util/CheckState.java"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/util/CheckState.java",
+        "purpose": "Reviewed local int/two-boolean state and unchanged Parcelable shape; does not assert durable/local-ID identity across unrelated process trees.",
+        "contract_ids": [
+          "UI-NGW-RESOURCE-CHECKBOX-SELECTION"
+        ],
+        "sha256": "a6f33523b7b67a8022027d81578600133f2ea7cc170880a18c9c15e916b349e9"
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-ngw-resource-checkbox-selection",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-non-method-evidence-8acd5e6e0e9493a05340584c"
+    ]
+  }
+}

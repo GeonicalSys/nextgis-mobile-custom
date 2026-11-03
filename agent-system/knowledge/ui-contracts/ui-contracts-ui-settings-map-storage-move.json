@@ -1,0 +1,303 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-settings-map-storage-move",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-SETTINGS-MAP-STORAGE-MOVE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-SETTINGS-MAP-STORAGE-MOVE",
+        "group": "project",
+        "title": "Путь к картам: перенос текущей карты между хранилищами",
+        "surface": "Настройки → Карта → preference key map_path; SelectMapPathPreference storage chooser",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "menu_settings"
+        ],
+        "meaning": "Параметр «Путь к картам» выбирает каталог данных текущей application map. Обработчик физически переносит только её referenced layer directories, database files и .ngm; множественное слово «карты» не означает перенос всего Collector registry или shared storage. Это отдельное действие от display-name переименования проекта.",
+        "value_origin": "menu_settings → MainApplication.showSettings(GENERAL) → SettingsActivity/SettingsHeaderFragment(PREFS_MAP) → NGPreferenceActivity default sub-screen → SettingsFragment ACTION_PREFS_MAP → map_path custom preference. Chooser получает ContextCompat.getExternalFilesDirs(context,null), value=selectedRoot/map. startMapMove после tryBegin(PROJECT_SWITCH) захватывает application.getMap на caller/UI и передаёт exact map в BackgroundMoveTask. Worker использует captured owner, retire-ит его и вызывает moveTo; direct-field MainApplication predicate и atomic rebind проверяют exact owner/raw actual path под app monitor.",
+        "units": "Filesystem directory path в app-specific external storage; mapName/.ngm и Collector UID отдельны. CRS, координат или геометрических единиц у этого значения нет.",
+        "updates": [
+          "Chooser определяет текущий storage по сохранённому map_path; тот же индекс — no-op. Capture current map и default destination resolver для Reset выполняются после успешного PROJECT_SWITCH admission.",
+          "Listener всегда возвращает false: requested path/card/summary не публикуются chooser до результата. Worker retire-ит exact live map перед moveTo, затем commit-ит фактический path; owned terminal обновляет widget и запрашивает REFRESH."
+        ],
+        "actions": [
+          "Открыть storage chooser и выбрать другую доступную storage root.",
+          "Текущий selected storage index закрывает диалог без вызова move.",
+          "Непустой destination запрашивает подтверждение; MapBase.moveTo отдельно отказывает, если owned destination уже существует."
+        ],
+        "conditions": [
+          "Доступность физического переноса зависит от getExternalFilesDirs: нужен другой selectable storage либо unmatched current path; на обычном single-storage/same-index выборе действие не выполняется.",
+          "Held DATA_SYNC/LAYER_FILL/SCHEMA_REBUILD либо walk draft запрещает admission до resolver/prefs/reset/render/move/result; UI показывает существующее project_operation_wait без ожидания на main thread. Header AccountUtil check относится к NGW, не к MAP.",
+          "Lisa/Belka используют общие main Java/XML declarations; одноимённых variant/qualified XML overrides под app/src не найдено. APK merge и реальные device capabilities не выполнялись."
+        ],
+        "saved_state": "MapBase.moveTo переносит referenced children, layers.db/journal/WAL/SHM и map entry last; mPath меняется после всех rename, IOException пытается rollback и может вернуть старый path. Requested≠actual означает target not reached, не atomic recovery. Обычный commit(false) после memory mutation и cancel после retirement допускают guarded rebind actual map и RESULT_OK=REFRESH, без Reset defaults/deletes. Unexpected RuntimeException/Error сохраняет worker propagation/finally lease close; mismatch owner/raw path не заменяет карту. Registry/project.json и независимые journals/clock/draft keys не мигрируются; renderer retirement не является active-reader drain.",
+        "source_ids": [
+          "WF-MAP-STORAGE-MENU",
+          "WF-MAP-STORAGE-SETTINGS-INTENT",
+          "WF-MAP-STORAGE-HEADER-FACTORY",
+          "WF-MAP-STORAGE-HEADERS",
+          "WF-MAP-STORAGE-SUBSCREEN",
+          "WF-MAP-STORAGE-SUBSCREEN-BASE",
+          "WF-MAP-STORAGE-FRAGMENT-BASE",
+          "WF-MAP-STORAGE-FRAGMENT-FACTORY",
+          "WF-MAP-STORAGE-ACTION-ROOT",
+          "WF-MAP-STORAGE-MAP-PREFS",
+          "WF-MAP-STORAGE-STORAGE-CHOOSER",
+          "WF-MAP-STORAGE-PERSIST-TEXT",
+          "WF-MAP-STORAGE-CHANGE-LISTENER",
+          "WF-MAP-STORAGE-MOVE-START",
+          "WF-MAP-STORAGE-MOVE-WORKER",
+          "WF-MAP-STORAGE-MOVE-FINISH",
+          "WF-MAP-STORAGE-MOVE-MAP",
+          "WF-MAP-STORAGE-MAP-OWNER",
+          "WF-MAP-STORAGE-ADMISSION",
+          "WF-MAP-STORAGE-RETIRE-OWNER",
+          "WF-MAP-STORAGE-OWNER-PREDICATE",
+          "WF-MAP-STORAGE-OWNER-MATCH",
+          "WF-MAP-STORAGE-ATOMIC-REBIND",
+          "WF-MAP-STORAGE-TERMINAL",
+          "WF-MAP-STORAGE-TASK-OWNER",
+          "WF-MAP-STORAGE-REFRESH",
+          "WF-MAP-STORAGE-CANCEL",
+          "WF-MAP-STORAGE-CANCEL-EMPTY",
+          "WF-MAP-STORAGE-PRE-EXECUTE",
+          "WF-MAP-STORAGE-START-FAILURE",
+          "WF-MAP-STORAGE-RELEASE",
+          "WF-MAP-STORAGE-WIDGET-RESULT",
+          "WF-MAP-STORAGE-CARD-NAME",
+          "WF-MAP-STORAGE-CARD-SAVE",
+          "WF-MAP-STORAGE-RESULT-CONSUMER"
+        ],
+        "expectations": [
+          "Oracle: same selected storage index dismisses without async move; different storage derives exactly chosenRoot/map and captures the current application map, а не все registry workspaces.",
+          "Oracle для source-only состава: move list содержит только referenced layer paths, существующие database sidecars и текущий map entry; shared catalog/registry не должны объявляться перенесёнными по одному изменению summary.",
+          "Независимая будущая state-проверка различает active path B, registry path A, UID, mapName, recovery target и каждый draft owner. Совпавшее display name или toast не доказывают согласованную миграцию.",
+          "Failure acceptance должна отдельно проверить фактический old/new mPath, preference publication и rollback outcome; source presence rollback loop не доказывает atomic move.",
+          "Busy обеих action routes: whole prefs/result/owner unchanged, zero retire/move/reset; admitted listener всё ещё false до worker actual-path publication.",
+          "Lease удерживается до завершения actual UI reset/widget/result; cancellation callback следует после unwind worker; duplicate old terminal не меняет нового owner.",
+          "RESULT_OK связан с RELOAD_ACTIVITY_DATA и перезапуском MainActivity, не с ACK физического move. Failure/cancel после retire восстанавливает view только при exact owner и raw cached path=actual path; чужой/null owner не вызывает getMap factory."
+        ],
+        "unknowns": [
+          "Native runtime NOT_RUN: storage capability, physical rename/rollback, active renderer read drain, visual/recreation and APK resource merge не принимаются21 техническими JVM-regressions.",
+          "Managed-workspace migration/refusal policy и непредвиденные before-cache exception/restart исходы отдельно UNKNOWN; scoped lease fix не выбирает судьбу registry/journals/drafts.",
+          "Source risk: успешный A→B move не переписывает registry A; trusted inventory dedup по path может получить две цели одного UID, registry activation публикует A. Адресный actual-body/state witness ещё требуется; потери данных не воспроизведены."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-menu",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-settings-intent",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-header-factory",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-headers",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-subscreen",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-subscreen-base",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-fragment-base",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-fragment-factory",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-action-root",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-map-prefs",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-storage-chooser",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-persist-text",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-change-listener",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-start",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-worker",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-finish",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-map",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-map-owner",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-retire-owner",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-owner-predicate",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-owner-match",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-atomic-rebind",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-terminal",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-task-owner",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-refresh",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-cancel",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-cancel-empty",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-pre-execute",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-start-failure",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-release",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-widget-result",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-card-name",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-card-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-result-consumer",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-settings-map-storage-move"
+    ]
+  }
+}

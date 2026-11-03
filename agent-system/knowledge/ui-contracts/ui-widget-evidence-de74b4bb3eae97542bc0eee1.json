@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-widget-evidence-de74b4bb3eae97542bc0eee1",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "widget_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "root",
+        "app/src/main/res/menu/menu_measurements.xml",
+        "measurement_azimuth_current"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "root",
+        "path": "app/src/main/res/menu/menu_measurements.xml",
+        "id": "measurement_azimuth_current",
+        "sha256": "1ac77660ccf5837e92aa18572e05639e3930395b1b1845c693864302d1bffbae"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-widget-evidence-de74b4bb3eae97542bc0eee1"
+    ]
+  }
+}

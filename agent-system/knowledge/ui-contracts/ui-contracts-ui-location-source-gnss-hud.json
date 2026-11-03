@@ -1,0 +1,114 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-location-source-gnss-hud",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-LOCATION-SOURCE-GNSS-HUD"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-LOCATION-SOURCE-GNSS-HUD",
+        "group": "location",
+        "title": "Источник, спутники и внешний GNSS",
+        "surface": "Status source and GNSS HUD",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "tv_source",
+          "gnss_hud",
+          "gnss_hud_quality",
+          "gnss_hud_detail"
+        ],
+        "meaning": "Status icon/satellites describe displayed Location; external HUD separately describes selected receiver/session/fix quality. Connected does not equal usable fix.",
+        "value_origin": "Location.provider/extras -> tv_source; external session+GnssFix -> fillGnssHud -> quality/detail",
+        "units": "Satellite count, HDOP, horizontal accuracy cm below1m else metres;4fix/5float/2DGPS/other auto.",
+        "updates": [
+          "Location, external fix and external status callbacks."
+        ],
+        "actions": [
+          "Select system/external; connect or lose receiver fix."
+        ],
+        "conditions": [
+          "HUD hidden unless external input; no-device, connecting and no-fix are distinct branches."
+        ],
+        "saved_state": "Input choice persists upstream; transient HUD is rebuilt from session state.",
+        "source_ids": [
+          "map-status-location",
+          "gnss-hud",
+          "gnss-quality",
+          "gnss-accuracy-format",
+          "map-init-autopan"
+        ],
+        "expectations": [
+          "Connecting/no-fix must not display old positive fix quality; system input hides external HUD.",
+          "Counterexample: satellite count is not project object count and cannot certify recorder readiness."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-status-location",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-gnss-hud",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-gnss-quality",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-gnss-accuracy-format",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-init-autopan",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-location-source-gnss-hud"
+    ]
+  }
+}

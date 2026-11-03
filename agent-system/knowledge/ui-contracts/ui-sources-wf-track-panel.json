@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-track-panel",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-TRACK-PANEL"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-TRACK-PANEL",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java",
+        "marker": "public void bind(TrackLayer.TrackInfo info, Listener listener)",
+        "requires": [
+          "title.setText(info.visible ? info.name",
+          "visibility.setText(info.visible ? R.string.menu_visibility_off : R.string.menu_visibility_on)",
+          "setVisibility(VISIBLE)"
+        ],
+        "forbids": [],
+        "sha256": "bea909f5cfc833bd320a784730c7ca832e385ff784c1717886972284a4d45d93"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-track-panel"
+    ]
+  }
+}

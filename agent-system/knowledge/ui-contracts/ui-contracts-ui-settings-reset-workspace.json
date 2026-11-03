@@ -1,0 +1,251 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-settings-reset-workspace",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-SETTINGS-RESET-WORKSPACE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-SETTINGS-RESET-WORKSPACE",
+        "group": "project",
+        "title": "Сброс настроек: исключительное владение и отложенная очистка карты",
+        "surface": "Настройки → Общие → Preference key reset_settings → confirmation positive button",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "menu_settings"
+        ],
+        "meaning": "Сброс — не только смена UI preferences: после принятого переноса к default destination существующая feature очищает district и удаляет layers кроме OSM/tracks, затем инициализирует base layers. Эти старые разрушительные эффекты не расширены.",
+        "value_origin": "menu_settings → showSettings(GENERAL) → SettingsActivity/SettingsFragment createPreferences(preferences_general.xml) → reset_settings → initializeReset confirmation → resetSettings → startMapMove(reset=true). Default app map directory resolver вызывается после lease; actual-path worker commit предшествует applyResetPreferences и UI cleanup.",
+        "units": "Filesystem directory path в app-specific external storage; mapName/.ngm и Collector UID отдельны. CRS, координат или геометрических единиц у этого значения нет.",
+        "updates": [
+          "Busy admission оставляет whole prefs/map/result/owner без изменений; positive button сам не меняет настройки.",
+          "После нормального target/path persistence terminal применяет прежние remove/default XML правила к actual path, resetMap, district/init/delete/district/init и RESULT_OK=REFRESH под lease.",
+          "Failed target/commit или cancellation после retirement допускают actual-map refresh только при exact owner/raw actual path; иначе rebind отвергается. Defaults/delete/init не исполняются."
+        ],
+        "actions": [
+          "Подтвердить reset_settings после просмотра предупреждения либо отменить диалог.",
+          "Повторить только после завершения существующей sync/fill/schema/walk работы; отказ не отменяет чужого owner."
+        ],
+        "conditions": [
+          "Общий Lisa/Belka main XML; reset_settings — Preference key, не android:id.",
+          "Публичный PROJECT_SWITCH mutation lease атомарно исключает coordinated owners и walk draft; no isBusy-only check/use gap.",
+          "Task terminal claim, UI cleanup и exact lease release однократны; main-thread join/ожидание worker и новый synchronous path commit не добавлены."
+        ],
+        "saved_state": "До admission ни один mutation effect не исполняется. После admission worker может переместить owned files и публикует actual map_path; остальные Reset preferences/defaults и прежнее удаление отложены до нормального target/path completion. Arbitrary workspace key migration и atomic rollback не добавлены. RESULT_OK просит rebind, поэтому допустим и после failed/cancelled retired move при exact owner/raw actual path, без Reset разрушительной части.",
+        "source_ids": [
+          "WF-MAP-STORAGE-MENU",
+          "WF-MAP-STORAGE-SETTINGS-INTENT",
+          "WF-MAP-STORAGE-MAP-PREFS",
+          "WF-MAP-STORAGE-ADMISSION",
+          "WF-MAP-STORAGE-RETIRE-OWNER",
+          "WF-MAP-STORAGE-OWNER-PREDICATE",
+          "WF-MAP-STORAGE-OWNER-MATCH",
+          "WF-MAP-STORAGE-ATOMIC-REBIND",
+          "WF-MAP-STORAGE-TERMINAL",
+          "WF-MAP-STORAGE-TASK-OWNER",
+          "WF-MAP-STORAGE-REFRESH",
+          "WF-MAP-STORAGE-CANCEL",
+          "WF-MAP-STORAGE-CANCEL-EMPTY",
+          "WF-MAP-STORAGE-PRE-EXECUTE",
+          "WF-MAP-STORAGE-START-FAILURE",
+          "WF-MAP-STORAGE-RELEASE",
+          "WF-MAP-STORAGE-WIDGET-RESULT",
+          "WF-MAP-STORAGE-CARD-NAME",
+          "WF-MAP-STORAGE-CARD-SAVE",
+          "WF-MAP-STORAGE-RESULT-CONSUMER",
+          "WF-SETTINGS-RESET-CONFIRM",
+          "WF-SETTINGS-RESET-START",
+          "WF-SETTINGS-RESET-PREFERENCES",
+          "WF-SETTINGS-RESET-DELETE",
+          "WF-SETTINGS-RESET-DISTRICT",
+          "WF-MAP-STORAGE-MOVE-WORKER",
+          "WF-MAP-STORAGE-MOVE-FINISH"
+        ],
+        "expectations": [
+          "Hold real DATA_SYNC/fill/schema owner: actual positive callback не вызывает prefs.edit/default destination resolver/reset/delete/result; operation count/kind/workspace сохраняются и исходный owner не отменяется.",
+          "Idle actual Reset: prefs и destructive callbacks не меняются во время held worker; после completion прежние effects исполняются один раз под owner.",
+          "Target-not-reached, false-after-cache и started cancellation: actual path/UI refresh отдельно от defaults/delete, foreign/null owner не создаёт map.",
+          "Pre-lock window failure не unlock-ит неприсвоенную orientation; rejection/duplicate terminal освобождает только свою lease."
+        ],
+        "unknowns": [
+          "21 Robolectric/JVM cases — technical source verification, native Reset/data deletion/storage/renderer not executed.",
+          "Renderer drain, partial file rollback, registry/journal/draft migration и restart durability остаются owner TODO; этот контракт не сертифицирует destructive native acceptance."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-menu",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-settings-intent",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-map-prefs",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-retire-owner",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-owner-predicate",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-owner-match",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-atomic-rebind",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-terminal",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-task-owner",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-refresh",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-cancel",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-cancel-empty",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-pre-execute",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-start-failure",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-release",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-widget-result",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-card-name",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-card-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-result-consumer",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-confirm",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-start",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-preferences",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-delete",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-district",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-worker",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-finish",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-settings-reset-workspace"
+    ]
+  }
+}

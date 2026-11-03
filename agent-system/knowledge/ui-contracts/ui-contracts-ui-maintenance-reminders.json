@@ -1,0 +1,129 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-maintenance-reminders",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-MAINTENANCE-REMINDERS"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-MAINTENANCE-REMINDERS",
+        "group": "sync",
+        "title": "Напоминания об обновлении и полной синхронизации",
+        "surface": "Automatic foreground startup companion dialog",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "Separate advisory ages for known uninstalled update, successful update check and complete sync of the current online project.",
+        "value_origin": "Validated manifest/ready APK and canonical ProjectSyncState -> MaintenanceReminders.read -> AppUpdateManager foreground/current-project guard -> warning or ready-install dialog.",
+        "units": "Wall-clock elapsed milliseconds; strict >7 days overdue, >=24 hours before another review within the same process UUID.",
+        "updates": [
+          "Update age starts when this installation first learns of a newer validated release; another newer release does not postpone it.",
+          "Full sync uses the current canonical online-project path; unknown sync age starts at first project observation. Local-only maps receive no sync reminder.",
+          "Successful update check has a separate clock; local ready-APK validation does not prove internet success."
+        ],
+        "actions": [
+          "Acknowledge the advisory; a ready APK uses the existing manual Install/Later offer.",
+          "The reminder does not perform full sync or silently install an APK."
+        ],
+        "conditions": [
+          "Only noninteractive focused usable Activity, same captured/current project, and a needed reminder.",
+          "Same UUID process session suppresses another display until24h after shown_at; a new process UUID permits another display the same calendar day.",
+          "Programmatic dialogs: widgets intentionally empty."
+        ],
+        "saved_state": "Availability/observed/check/shown times remain SharedPreferences. Full-project sync has its own canonical path clock; partial/error sync does not replace it. Layout extraction changes none of these keys or clocks.",
+        "source_ids": [
+          "maintenance-warning-age",
+          "maintenance-warning-week",
+          "maintenance-warning-session",
+          "maintenance-warning-day",
+          "maintenance-warning-foreground",
+          "warning-dialog-layout",
+          "warning-dialog-measure"
+        ],
+        "expectations": [
+          "Oracle: exactly seven days does not warn, more than seven days does; update/check/project clocks advance only from their own events.",
+          "Same process within24h suppresses another advisory; new process can warn again the same day. Local-only/different project cannot reuse the previous project warning.",
+          "Complete warning and Install/Later/OK actions remain available with bounded scrolling and unchanged handlers."
+        ],
+        "unknowns": [
+          "Process-scoped suppression is weaker than a global once-per-day policy; this release does not change that policy.",
+          "Stored sync clock does not certify physical durability or live NGW completion; existing clock-delivery risks remain separate.",
+          "Earlier Full passed MaintenanceRemindersNativeTest; extracted-helper regression is pending."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-age",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-week",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-session",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-day",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-foreground",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-warning-dialog-layout",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-warning-dialog-measure",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-maintenance-reminders"
+    ]
+  }
+}

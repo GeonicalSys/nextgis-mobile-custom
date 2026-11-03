@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-track-gpx-xml-name",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-TRACK-GPX-XML-NAME"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-TRACK-GPX-XML-NAME",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java",
+        "marker": "private void appendTrack(File temp, String name, StringBuilder sb, Formatter f, Cursor trackpoints) throws IOException",
+        "requires": [
+          "TextUtils.htmlEncode(name).replace(\"\\r\", \"&#13;\")",
+          "FIELD_SEGMENT",
+          "previousSegment"
+        ],
+        "forbids": [
+          "sb.append(name);"
+        ],
+        "sha256": "d13a88785f752aac1676b4c2bdd78a205e93dcdacf402aaf298cd8a36ba8711e"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-track-gpx-xml-name"
+    ]
+  }
+}

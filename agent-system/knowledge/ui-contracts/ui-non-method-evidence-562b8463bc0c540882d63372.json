@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-non-method-evidence-562b8463bc0c540882d63372",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "non_method_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "maplibui",
+        "src/main/res/layout/template_datetime.xml"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "maplibui",
+        "path": "src/main/res/layout/template_datetime.xml",
+        "purpose": "Actual template_datetime root class/style binding has no android:id; do not invent a widget declaration.",
+        "contract_ids": [
+          "UI-FORM-DATE-STANDARD-VALUE",
+          "UI-FORM-DATE-NGFP-VALUE"
+        ],
+        "sha256": "48ab223bfd883d5cfcd6e2e6809699a64444aeb1c6413134fa85a241f0669cb1"
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-date-standard-value",
+      "status": "source_backed"
+    },
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-date-ngfp-value",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-non-method-evidence-562b8463bc0c540882d63372"
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-identify-navigation",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-IDENTIFY-NAVIGATION"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-IDENTIFY-NAVIGATION",
+        "group": "identify",
+        "title": "Просмотр соседних объектов по ID",
+        "surface": "Панель идентификации",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "menu_prev",
+          "menu_next"
+        ],
+        "meaning": "Переход выбирает соседнюю запись списка существующих DB IDs, не арифметически следующий FID.",
+        "value_origin": "queryAllFeatureIdsFromDb → mFeatureIDs; mItemPosition → mItemId; overlay получает выбранный ID.",
+        "units": "Позиция списка; FID является идентификатором.",
+        "updates": [
+          "При выборе слоя собираются ID.",
+          "Следующий/предыдущий обновляет атрибуты и выделение только в границах списка."
+        ],
+        "actions": [
+          "Следующий",
+          "Предыдущий"
+        ],
+        "conditions": [
+          "Границы не увеличивают/уменьшают position.",
+          "Повторная внешняя фильтрация/изменение БД требует нового списка."
+        ],
+        "saved_state": "Activity сохраняет selected item отдельно; актуальность списка после параллельного удаления требует проверки.",
+        "source_ids": [
+          "WF-IDENTIFY-SELECT",
+          "WF-IDENTIFY-NEXT"
+        ],
+        "expectations": [
+          "Oracle: у набора FID10,50,900 переход с10 ведёт к50, затем900; на концах список не переполняется.",
+          "Контрпример: поиск FID11 или выход за размер списка вместо выбора следующей существующей записи."
+        ],
+        "unknowns": [
+          "Сортировка и freshness queryAllFeatureIdsFromDb после конкурентных правок этим UI-обзором не приняты."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-identify-select",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-identify-next",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-identify-navigation"
+    ]
+  }
+}

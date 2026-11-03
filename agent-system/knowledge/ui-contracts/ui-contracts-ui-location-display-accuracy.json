@@ -1,0 +1,99 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-location-display-accuracy",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-LOCATION-DISPLAY-ACCURACY"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-LOCATION-DISPLAY-ACCURACY",
+        "group": "location",
+        "title": "Отображаемая точность и исходный fix",
+        "surface": "Status accuracy and location circle",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "tv_accuracy"
+        ],
+        "meaning": "Display accuracy is a metric radius with a3m floor only for eligible phone GPS; it does not mutate the fix and is not heading uncertainty or range to a target.",
+        "value_origin": "Location.accuracy -> LocationDisplayAccuracy.meters -> status text and MapDrawable.updateLocation",
+        "units": "Metres; phone GPS min3m; external/receiver streams/Network keep reported value.",
+        "updates": [
+          "Each displayed fix/overlay update."
+        ],
+        "actions": [
+          "Compare display result with unchanged input fix."
+        ],
+        "conditions": [
+          "Floor requires positive finite GPS accuracy, no external input, no receiver stream."
+        ],
+        "saved_state": "Display transform stores no rewritten accuracy or provenance.",
+        "source_ids": [
+          "accuracy-display",
+          "map-status-location",
+          "map-device-fix"
+        ],
+        "expectations": [
+          "Phone1m displays3m while original remains1m; external1m remains1m.",
+          "Counterexample: displayed3m does not mean arrival tolerance3m or externally supplied accuracy was modified."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-accuracy-display",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-status-location",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-device-fix",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-location-display-accuracy"
+    ]
+  }
+}

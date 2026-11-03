@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-azimuth-current-target",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "azimuth-current-target"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "azimuth-current-target",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "marker": "private fun selectCurrentLocationAzimuthTarget(screenX: Float, screenY: Float)",
+        "requires": [
+          "val target = mapPointFromScreen(screenX, screenY)",
+          "azimuthStartPoint = null",
+          "azimuthTargetPoint = target",
+          "mStakeoutController?.start(target, enableSound = false)"
+        ],
+        "forbids": [],
+        "sha256": "b2842a06ba792d1e783e916c92a3172837e58ad0dcb19e5c8624cfd7aa7c2188"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-azimuth-current-target"
+    ]
+  }
+}

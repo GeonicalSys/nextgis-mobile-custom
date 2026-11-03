@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-date-copy-values",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-DATE-COPY-VALUES"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-DATE-COPY-VALUES",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+        "marker": "public static ContentValues values(String encoded, List<Field> fields)",
+        "requires": [
+          "if (encoded == null) return result",
+          "raw.isNull(name)",
+          "case FTLong: case FTDate: case FTTime: case FTDateTime:",
+          "result.put(name, raw.getLong(name))"
+        ],
+        "forbids": [],
+        "sha256": "574b1050439af5aa18b1eed4acb11385c407fd5b29db88dcc37b88445601357d"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-date-copy-values"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-form-draft",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-FORM-DRAFT"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-FORM-DRAFT",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+        "marker": "private boolean captureFormDraft(boolean force)",
+        "requires": [
+          "snapshot.operationId = mFormOperationId",
+          "snapshot.mapPath = com.nextgis.maplib.util.DatabaseContext.getMapForLayer(mLayer) .getPath().getAbsolutePath()",
+          "saveAdditionalFormState(controlState)",
+          "FeatureFormDraftStore.save(this, snapshot)"
+        ],
+        "forbids": [],
+        "sha256": "2f0dc1a9ea4b867a3300eac15cfbe7f89f02150821584c20bb49e1421efe8a12"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-form-draft"
+    ]
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:ui-coverage-checkbox-widget-source-review-20261101",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "coverage"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "checkbox_widget_source_review_20261101"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "reviewed_at": "2026-11-01",
+        "state": "bounded_source_review",
+        "runtime": "not_run",
+        "source_context": {
+          ".": "0f882114de6e4ed32c2fa3caeaee50f2d5996e66",
+          "android_projects/android_gisapp": "57fb5dbabbc17afa136ec8ada1bbf927a600499a",
+          "android_projects/android_gisapp/maplib": "baa94f361101051b09f762d7eda1f36466436d5c",
+          "android_projects/android_gisapp/maplibui": "be0ed0c4933573b99752b4e447f088951b88120b"
+        },
+        "basis": "Selected existing NGFP Checkbox and conditional generic FTInteger TextEdit contrast. Root-owned Date metadata transition is separate; code pins remain original observed source, not repinned to a metadata commit.",
+        "source_packet_sha256": "9721eed61a097b615807761ec919110b8548c3c620f0e2d0cfcb02d17b7f3d5b",
+        "independent_source_peer_sha256": "004558ae0926a955ad7415ab90274b4dacec00146f2cc6a188dcdf623b9d85a4",
+        "source_observations": {
+          "records": 7,
+          "routes": 4,
+          "value_namespaces": 4,
+          "unknowns": 8,
+          "conditional_observations": 0,
+          "confirmed_bugs": 0
+        },
+        "proof_scope": "Independent SOURCE peer supports bounded7/4/4 facts and separately reobserved3official API contracts; its98 passive metadata checks differ from author23+42bounds. New method/file guards are lexical drift detection, not tests/native acceptance.",
+        "new_contract_ids": [
+          "UI-FORM-CHECKBOX-NGFP-VALUE"
+        ],
+        "no_android_id": "Both selected XML roots have no android:id. widgets[] is intentional; actual class/layout and method/non-method evidence establish binding.",
+        "existing_guards_reused": "All old46contracts/213sources/64widgets/54nonmethod entries remain untouched; shared factory/binding/capture/copy/snapshot/Save guards and existing ConstantsUI/ControlHelper global file evidence are reused without expectation edits.",
+        "official_api_documents": {
+          "schema": 1,
+          "kind": "PUBLIC_ANDROID_API_DOCUMENTED_CONTRACT_NOT_INSTALLED_IMPLEMENTATION",
+          "accessed_utc": "2026-11-01T08:31:42Z",
+          "observation_method": "Official Android reference pages opened and exact method sections read; no customer API or code/runtime invocation.",
+          "verbatim_words_per_page": 0,
+          "pages": [
+            {
+              "id": "CBA-CURSOR-INT",
+              "url": "https://developer.android.com/reference/android/database/Cursor#getInt(int)",
+              "method": "android.database.Cursor.getInt(int)",
+              "documented_contract": "Returns an int; for SQL NULL, non-integral storage type or an out-of-int-range value, both result and exception behavior are implementation-defined.",
+              "bounded_page_lines": [
+                2219,
+                2234
+              ],
+              "consequence": "Checkbox.init calls getInt without its own isNull check; the public interface does not establish SQL NULL becomes unchecked.",
+              "limits": "No pinned concrete Cursor/framework/libcore implementation, installed device or actual data acceptance."
+            },
+            {
+              "id": "CBA-BUNDLE-BOOL",
+              "url": "https://developer.android.com/reference/android/os/BaseBundle#getBoolean(java.lang.String)",
+              "method": "android.os.BaseBundle.getBoolean(String)",
+              "documented_contract": "Reads a Boolean mapping; when a mapping of that requested type is unavailable, the no-default overload supplies false.",
+              "bounded_page_lines": [
+                2026,
+                2039
+              ],
+              "consequence": "ControlHelper.hasKey selects the Bundle branch by key presence; this is not a separate nullable checkbox state.",
+              "limits": "Documentation only, not proof of any actual wrong-type Bundle, OS implementation or widget lifecycle."
+            },
+            {
+              "id": "CBA-JSON-BOOL",
+              "url": "https://developer.android.com/reference/org/json/JSONObject#getBoolean(java.lang.String)",
+              "method": "org.json.JSONObject.getBoolean(String)",
+              "documented_contract": "Reads an existing Boolean or a value coercible to Boolean, and throws JSONException if the property is absent or not coercible.",
+              "bounded_page_lines": [
+                2143,
+                2159
+              ],
+              "consequence": "The new-control branch asks getBoolean(init_value); false fallback at the later value==null check is not a catch for missing/invalid init_value.",
+              "limits": "No private NGFP or specific invalid input inspected/executed; documentation is not a pinned implementation or customer-form acceptance."
+            }
+          ]
+        },
+        "limits": [
+          "Actual private forms/schema/runtime/provider/server outcomes and native lifecycle remain UNKNOWN.",
+          "SQL NULL→false and schema BOOLEAN support are not inferred from a checked-state Boolean or Integer getter.",
+          "Date209d/acb and Save86c4/0aff/required/draft/unbound contracts remain whole."
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:metadata:ui-coverage-checkbox-widget-source-review-20261101"
+    ]
+  }
+}

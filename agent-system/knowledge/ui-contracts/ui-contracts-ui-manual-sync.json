@@ -1,0 +1,140 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-manual-sync",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-MANUAL-SYNC"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-MANUAL-SYNC",
+        "group": "sync",
+        "title": "Ручной запуск использует единую очередь",
+        "surface": "Кнопка синхронизации панели слоёв",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "sync",
+          "sync_progress_ring"
+        ],
+        "meaning": "Короткое нажатие запускает штатный serial service; forced recheck — отдельный режим. Анимация и кольцо показывают lifecycle/взвешенную работу очереди, не durable подтверждение полного проекта.",
+        "value_origin": "Current accounts, preferences offline_sync/ngid_url, forceRecheck → OfflineSyncIntentService; ProjectSyncRunner управляет session completion. onCreateView связывает XML sync/sync_progress_ring; ring читает NgwSyncProgress.snapshot, activity — NGWSyncService OR ProjectOperationCoordinator.",
+        "units": "Кольцо 0–1000 условных единиц; не числовой процент точности/полноты данных. Веса pull10 + push до30, reserve5% до finish.",
+        "updates": [
+          "После принятия запуска обновляются анимация, info и badges.",
+          "Занятая операция показывает wait.",
+          "refreshSyncProgressRing скрывает и сбрасывает кольцо при inactive; при active показывает determinate done либо0.",
+          "SYNC_PROGRESS и lifecycle receiver перечитывают snapshot; finishSessionLocked устанавливает1 и при окончании ошибочной очереди, поэтому это не project ACK."
+        ],
+        "actions": [
+          "Синхронизировать",
+          "Повторная проверка пропущенного по подтверждению"
+        ],
+        "conditions": [
+          "Есть context и сеть.",
+          "Без accounts возможен отдельный track work, а не фиктивный полный NGW sync.",
+          "Root completion требует account/children/pending-edit gates.",
+          "Общие main XML/controller используются Lisa/Belka; flavor source override этой панели не найден, APK/resource merge NOT_RUN.",
+          "Snapshot растёт без rewind, а завершение session и успешное сохранение full clock имеют разные gates."
+        ],
+        "saved_state": "Служба/queue владеют pending work; кнопка сама не подтверждает полный обмен проекта.",
+        "source_ids": [
+          "WF-SYNC-MANUAL",
+          "WF-SYNC-RUN",
+          "WF-SYNC-WIDGET-BINDING",
+          "WF-SYNC-RING",
+          "WF-SYNC-ACTIVE",
+          "WF-SYNC-RECEIVER",
+          "WF-SYNC-PROGRESS-COMPUTE",
+          "WF-SYNC-PROGRESS-FINISH"
+        ],
+        "expectations": [
+          "Oracle: один ручной запуск не создаёт два независимых workers; busy отказ оставляет прежние pending edits.",
+          "Контрпример: одновременно framework sync и serial service для одного tap либо запись полного clock при простом запуске.",
+          "Oracle: fail после pair ACK не становится успешным full project только из-за finish broadcast, завершённого кольца или закрывшегося spinner; отдельно сверить clock и durable pairs."
+        ],
+        "unknowns": [
+          "Фактическая single-flight/cancellation цепочка и all-project preference screen в этой source-подборке не приняты native.",
+          "Native ring/spinner redraw и post-last-ACK failure NOT_RUN; lifecycle progress не проверяет фактическую серверную полноту."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-manual",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-run",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-widget-binding",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-ring",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-active",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-receiver",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-progress-compute",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-progress-finish",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-manual-sync"
+    ]
+  }
+}

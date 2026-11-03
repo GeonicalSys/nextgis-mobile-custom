@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-non-method-evidence-10057810b4b4118f7ef7adf9",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "non_method_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "maplibui",
+        "src/main/res/layout/formtemplate_checkbox.xml"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "maplibui",
+        "path": "src/main/res/layout/formtemplate_checkbox.xml",
+        "purpose": "Actual NGFP root class/layout has no android:id; no fabricated widget ID.",
+        "contract_ids": [
+          "UI-FORM-CHECKBOX-NGFP-VALUE"
+        ],
+        "sha256": "ecbc196b255761b84379da3dbb46c152217cb764ea973b4c088acd3280279cce"
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-checkbox-ngfp-value",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-non-method-evidence-10057810b4b4118f7ef7adf9"
+    ]
+  }
+}

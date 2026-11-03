@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-map-locate",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "map-locate"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "map-locate",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "marker": "fun locateCurrentPosition()",
+        "requires": [
+          "maxOf(mapLibreMap.cameraPosition.zoom, LOCATE_MIN_ZOOM)",
+          "mapViewOrNull!!.panTo(mCurrentCenter)",
+          ".bearing(0.0)",
+          ".tilt(0.0)",
+          "updateLastLocation()",
+          "else if (!locateFirstLayerExtent())"
+        ],
+        "forbids": [
+          "setAutopanningEnabled("
+        ],
+        "sha256": "d082cfff4e90e26182a537f46328466a6c0bf406aa051ddedec934689420ce69"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-map-locate"
+    ]
+  }
+}
