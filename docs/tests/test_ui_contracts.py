@@ -68,6 +68,18 @@ class UiContractCheckTest(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertIn("runtime NOT_RUN", summary)
 
+    def test_default_catalogue_needs_owner_records_and_explicit_json_still_works(self):
+        view = self.root / "docs/registry/ui-contracts.json"
+        view.parent.mkdir(parents=True)
+        view.write_text(json.dumps(self.data), encoding="utf-8")
+        self.assertEqual(CHECKER.check_catalog(self.root)[0], [])
+
+        (self.root / "agent-system/knowledge/ui-contracts").mkdir(parents=True)
+        errors, summary = CHECKER.check_catalog(self.root)
+        self.assertIn("Missing or invalid UI catalogue metadata", str(errors))
+        self.assertEqual(summary, "UI coverage UNKNOWN")
+        self.assertEqual(CHECKER.check_catalog(self.root, view)[0], [])
+
     def test_camera_substitution_invalidates_review(self):
         self.source.write_text(SOURCE.replace("format(location.latitude, location.longitude)",
                                               "format(getMaplibreCenter())"), encoding="utf-8")

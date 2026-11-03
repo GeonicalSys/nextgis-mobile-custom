@@ -36,6 +36,8 @@
           "maplibui/src/main/java/com/nextgis/maplibui/**",
           "docs/registry/ui-contracts.json",
           "docs/scripts/check_ui_contracts.py",
+          "docs/scripts/ui_catalogue_knowledge.py",
+          "agent-system/knowledge/ui-contracts/**",
           "app/src/main/java/com/nextgis/mobile/MainApplication.java",
           "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
           "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",

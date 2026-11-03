@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 import re
+import runpy
 import xml.etree.ElementTree as ET
 from pathlib import Path, PurePosixPath, PureWindowsPath
 
@@ -162,12 +163,19 @@ def source_path(workspace: Path, repository: str, relative: str) -> Path:
 
 
 def check_catalog(workspace: Path, registry: Path | None = None) -> tuple[list[str], str]:
-    registry = registry or workspace / "docs/registry/ui-contracts.json"
+    explicit_registry = registry is not None
+    registry = registry if explicit_registry else workspace / "docs/registry/ui-contracts.json"
+    owner_sources = workspace / "agent-system"
     errors: list[str] = []
     try:
         if registry.stat().st_size > 4 * 1024 * 1024:
             raise ValueError("catalogue exceeds checker budget")
-        data = json.loads(registry.read_text(encoding="utf-8-sig"))
+        if not explicit_registry and (owner_sources.exists() or owner_sources.is_symlink()):
+            projector = runpy.run_path(str(Path(__file__).with_name("ui_catalogue_knowledge.py")))
+            data = projector["project_catalogue"](workspace)
+            projector["check_generated"](registry, data)
+        else:
+            data = json.loads(registry.read_text(encoding="utf-8-sig"))
         if (not isinstance(data, dict) or type(data.get("schema_version")) is not int
                 or data["schema_version"] != 1):
             raise ValueError("unsupported UI catalogue schema")
@@ -183,7 +191,7 @@ def check_catalog(workspace: Path, registry: Path | None = None) -> tuple[list[s
         sources, contracts = data.get("sources"), data.get("contracts")
         if not isinstance(sources, list) or not sources or not isinstance(contracts, list) or not contracts:
             raise ValueError("nonempty source evidence and contracts are required")
-    except (OSError, UnicodeError, ValueError, TypeError, AttributeError) as exc:
+    except (OSError, UnicodeError, ValueError, KeyError, TypeError, AttributeError) as exc:
         return [f"UI catalogue: {exc}"], "UI coverage UNKNOWN"
     source_ids: set[str] = set()
     widget_ids: set[str] = set()

@@ -42,6 +42,11 @@ section order, keyed maps, ordered lists and reviewed YAML comments stored in
 the App records. The [sectioned registry provenance](provenance/sectioned-docs-registries.json)
 pins the original values and every source line.
 
+The UI checker reads `knowledge/ui-contracts/` and checks the standalone
+JSON. Use `python -B docs/scripts/ui_catalogue_knowledge.py --write` after an
+approved catalogue edit. The [UI provenance](provenance/ui-contracts.json)
+pins the exact original bytes, record spans and explicit evidence links.
+
 AGENTS/Cursor, the other registries and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.
