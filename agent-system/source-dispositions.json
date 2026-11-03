@@ -23,13 +23,13 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "fd431a0e8b925adb441797c4c2c9078ac6b800907c4ac9323693a19fea1f168b",
+      "sha256": "c6a8c9d3e94c2c8b12f2a7569db7a0a8419e3ed574e472910c46f972e2d9c130",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
         "."
       ],
-      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work. The change-impact cutover describes the owner edit and rollback routes. The topology cutover describes the same boundaries for the paired App registries. The keyed registry cutover covers the invariant, upstream and smoke views."
+      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work. The change-impact cutover describes the owner edit and rollback routes. The topology cutover describes the same boundaries for the paired App registries. The keyed registry cutover covers the invariant, upstream and smoke views. The sectioned registry cutover covers settings, dependencies and ecosystem."
     },
     {
       "path": "agent-system/provenance/change-impact.json",

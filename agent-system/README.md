@@ -37,6 +37,11 @@ The same generator refreshes the YAML views for `knowledge/invariants/`,
 reads their owner records. The [keyed registry provenance](provenance/keyed-docs-registries.json)
 pins all three original blobs and ordered values.
 
+Configuration keys, dependencies and ecosystem use the same generator with
+section order, keyed maps, ordered lists and reviewed YAML comments stored in
+the App records. The [sectioned registry provenance](provenance/sectioned-docs-registries.json)
+pins the original values and every source line.
+
 AGENTS/Cursor, the other registries and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

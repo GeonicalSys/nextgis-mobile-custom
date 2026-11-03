@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+import runpy
 import shutil
 import subprocess
 import sys
@@ -166,7 +168,8 @@ class DocumentationToolsTest(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
             knowledge = root / "agent-system" / "knowledge"
-            for name in ("modules", "repositories", "change-impact", "invariants", "upstream-overlaps", "smoke-tests"):
+            for name in ("modules", "repositories", "change-impact", "invariants", "upstream-overlaps",
+                         "smoke-tests", "config-keys", "dependencies", "ecosystem"):
                 shutil.copytree(WORKSPACE / "agent-system" / "knowledge" / name, knowledge / name)
             invariants = docs / "registry" / "invariants.yaml"
             contents = invariants.read_text(encoding="utf-8")
@@ -190,6 +193,27 @@ class DocumentationToolsTest(unittest.TestCase):
                 result = self.run_tool(script, *arguments)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("modules registry order, records and relations differ", result.stdout + result.stderr)
+
+    def test_sectioned_registry_preserves_notes_and_checks_list_identity(self) -> None:
+        projector = runpy.run_path(str(DOCS_ROOT / "scripts" / "keyed_registry_knowledge.py"))
+        with tempfile.TemporaryDirectory() as temporary:
+            owner = Path(temporary)
+            relative = Path("agent-system/knowledge/ecosystem")
+            shutil.copytree(WORKSPACE / relative, owner / relative)
+            registry, notes = projector["project_registry"](owner, "ecosystem")
+            view = (DOCS_ROOT / "registry/ecosystem.yaml").read_text(encoding="utf-8")
+            self.assertEqual(registry, yaml.safe_load(view))
+            self.assertIsInstance(registry["contracts"], list)
+            self.assertIsInstance(registry["systems"], dict)
+            self.assertTrue(notes)
+            self.assertTrue(view.endswith("\n".join(notes) + "\n"))
+
+            contract = next((owner / relative).glob("ecosystem-contracts-*.json"))
+            record = json.loads(contract.read_text(encoding="utf-8"))
+            record["facets"]["definition"]["value"]["id"] = "different-contract"
+            contract.write_text(json.dumps(record), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Invalid ecosystem list key"):
+                projector["project_registry"](owner, "ecosystem")
 
 
 if __name__ == "__main__":

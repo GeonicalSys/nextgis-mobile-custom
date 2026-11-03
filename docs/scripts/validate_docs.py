@@ -25,11 +25,6 @@ except ImportError:  # pragma: no cover - exercised by a user without dependenci
     raise SystemExit(2)
 
 
-REGISTRY_FILES = (
-    "dependencies.yaml",
-    "ecosystem.yaml",
-    "config-keys.yaml",
-)
 CENTRAL_FRONTMATTER = {"title", "type", "last_verified", "related_code"}
 MODULE_FRONTMATTER = {"title", "module_id", "last_verified"}
 MODULE_MANIFEST_FIELDS = {
@@ -971,9 +966,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         return validation.finish()
 
     registry_root = docs_root / "registry"
-    loaded = {
-        name: load_yaml(registry_root / name, validation) for name in REGISTRY_FILES
-    }
+    loaded = {}
     projector = runpy.run_path(str(Path(__file__).with_name("keyed_registry_knowledge.py")))
     for name in projector["REGISTRIES"]:
         filename = f"{name}.yaml"

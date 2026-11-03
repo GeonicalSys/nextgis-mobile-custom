@@ -8,17 +8,17 @@ related_code:
 
 # Машиночитаемые реестры
 
-Registry — структурированный источник истины для агентов и validator.
+В этом каталоге находятся реестры и автономные представления записей App.
 
 | Файл | Назначение |
 |---|---|
 | `repositories.yaml` | Производное представление Git boundaries, remotes, branches, docs policy |
 | `modules.yaml` | Производное представление Gradle modules, entry points, ownership |
-| `dependencies.yaml` | Compile/runtime/API связи |
-| `ecosystem.yaml` | Владельцы и контракты между Android, `standart_profiles` и QGIS Plugins |
+| `dependencies.yaml` | Производное представление compile/runtime/API связей |
+| `ecosystem.yaml` | Производное представление владельцев и контрактов Android, `standart_profiles` и QGIS Plugins |
 | `invariants.yaml` | Производное представление продуктовых контрактов |
 | `change-impact.yaml` | Производное представление path triggers, связанных документов и проверок |
-| `config-keys.yaml` | Preferences, metadata, storage и config keys |
+| `config-keys.yaml` | Производное представление preferences, metadata, storage и config keys |
 | `upstream-overlaps.yaml` | Производное представление конфликтных областей форка |
 | `smoke-tests.yaml` | Производное представление стабильных IDs автоматических и device checks |
 
@@ -29,12 +29,13 @@ Registry — структурированный источник истины д
 в пределах соответствующего файла; межфайловые ссылки проверяет
 `validate_docs.py`.
 
-Репозитории, модули, инварианты, пересечения с upstream и проверки
-редактируются в одноимённых каталогах `agent-system/knowledge/`.
+Записи каждого YAML-реестра редактируются в одноимённом каталоге
+`agent-system/knowledge/`.
 После правки обнови YAML командой
 `python -B docs/scripts/keyed_registry_knowledge.py --write` из корня App.
-Валидатор сверяет все пять представлений с записями. `scaffold_module_docs.py`
-сверяет репозитории и модули.
+Для change-impact действует отдельная команда ниже. Валидатор сверяет YAML
+с записями. `scaffold_module_docs.py` сверяет репозитории и модули.
+Пояснения к настройкам и экосистеме хранятся в записи структуры каждого реестра.
 Отдельное дерево документации, выбранное через `--docs-root`, читает свои YAML,
 если рядом с ним нет источника App.
 
