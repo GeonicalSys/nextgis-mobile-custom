@@ -46,6 +46,51 @@
       "blob": "d27a7b56c6b01a693f53b63df93e136832223929",
       "sha256": "4d5775927364273b03e94b8444cdc47f1f2154e69ef23aa865f1dae8a0b02447",
       "bytes": 3191
+    },
+    {
+      "path": "docs/guides/bug-reports-user-guide.md",
+      "record": "bug-reports-user-guide.json",
+      "id": "lisa:mobile:resource:documentation-bug-reports-user-guide",
+      "revision": "1a07cfbfd5a09b2fef3eb20c7b25e24c200c236d",
+      "blob": "a470b0d17bd1647ac4ac4029014bf74b845cac7b",
+      "sha256": "4f61ba961eebd43a7886e0f8d8e929e94e28bc385557fdb35c29b94711d15916",
+      "bytes": 17292
+    },
+    {
+      "path": "docs/guides/cascading-form-lists-user-guide.md",
+      "record": "cascading-form-lists-user-guide.json",
+      "id": "lisa:mobile:resource:documentation-cascading-form-lists-user-guide",
+      "revision": "1a07cfbfd5a09b2fef3eb20c7b25e24c200c236d",
+      "blob": "57968328c00ea453aafe13fbb4d2d2b0b07d7e3d",
+      "sha256": "4692fd75e39c4ce58b4788f7343a1bbcba947dab7107f931d2e05176d55e6eb5",
+      "bytes": 5671
+    },
+    {
+      "path": "docs/guides/form-behavior-user-guide.md",
+      "record": "form-behavior-user-guide.json",
+      "id": "lisa:mobile:resource:documentation-form-behavior-user-guide",
+      "revision": "1a07cfbfd5a09b2fef3eb20c7b25e24c200c236d",
+      "blob": "a59eea051eaaaa4fac25e183a66bc7648e7fbe63",
+      "sha256": "4f56b9be4c41867934007329a341d2411e690526cea979b8755075996d65f689",
+      "bytes": 9019
+    },
+    {
+      "path": "docs/guides/project-scripts-user-guide.md",
+      "record": "project-scripts-user-guide.json",
+      "id": "lisa:mobile:resource:documentation-project-scripts-user-guide",
+      "revision": "1a07cfbfd5a09b2fef3eb20c7b25e24c200c236d",
+      "blob": "5faf863bee97762cd158916f9e7de5716bb0fd30",
+      "sha256": "914f2f882bf2aec7950a98e1adcb412762d99c654bb4cbd958c96ed0fe0d1c6b",
+      "bytes": 8083
+    },
+    {
+      "path": "docs/guides/project-synchronization-user-guide.md",
+      "record": "project-synchronization-user-guide.json",
+      "id": "lisa:mobile:resource:documentation-project-synchronization-user-guide",
+      "revision": "1a07cfbfd5a09b2fef3eb20c7b25e24c200c236d",
+      "blob": "6ab0efcfd1b28871c024449827f4d8bae9f16f43",
+      "sha256": "e0d7fdc478690d08a9aaebfacf819de737074feef86622135dfe72d1706edefb",
+      "bytes": 15362
     }
   ]
 }

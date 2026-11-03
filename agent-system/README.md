@@ -48,7 +48,8 @@ approved catalogue edit. The [UI provenance](provenance/ui-contracts.json)
 pins the exact original bytes, record spans and explicit evidence links.
 
 Edit the App documentation entry, change checklist, documentation and registry
-indexes, and documentation maintenance guide in `knowledge/documentation/`.
+indexes, documentation maintenance guide and five user guides in
+`knowledge/documentation/`.
 Run `python -B docs/scripts/prose_knowledge.py --write` to refresh their Markdown
 views. The ordinary validator reads the records and checks the views.
 GitHub, links in existing instructions and standalone doc

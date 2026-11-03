@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "42fb344f5403dad390b784443785ee42bd288fbbf774d478c218dd72c3186772",
+      "sha256": "b544e18a4ae6c80d70dcf026f6b7b9cdb329ed8f5b0fe55f2a3ca06a0037a7ee",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "75c36686d1ec78a14028c05d1e78281646d630071cd1cb85545a2e0870338863",
+      "sha256": "68f0d925a924a62c06424e8677aee1adfc26d95822171d408596f8e09df0e6d4",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [

@@ -1519,8 +1519,6 @@ triggers:
   - docs/scripts/validate_docs.py
   - docs/tests/test_change_impact_ci.py
   - docs/tests/test_prose_knowledge.py
-  - agent-system/knowledge/documentation/**
-  - agent-system/provenance/documentation.json
   owners:
   - app
   read:

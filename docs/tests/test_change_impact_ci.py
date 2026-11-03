@@ -37,6 +37,20 @@ REPOSITORY = "example/mobile"
 
 
 class ChangeImpactOwnerTest(unittest.TestCase):
+    def test_prose_edit_does_not_require_build_matrix_change(self):
+        validation = validator.Validation()
+        validator.report_changed_files(TRIGGERS, [
+            "agent-system/knowledge/documentation/change-checklist.json",
+            "docs/guides/change-checklist.md",
+        ], True, validation)
+        self.assertEqual(validation.errors, [])
+
+        validation = validator.Validation()
+        validator.report_changed_files(
+            TRIGGERS, ["docs/scripts/prose_knowledge.py"], True, validation
+        )
+        self.assertTrue(any("change-impact:DOCUMENTATION-CI" in error for error in validation.errors))
+
     def test_standalone_view_is_read_without_owner_sources(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
