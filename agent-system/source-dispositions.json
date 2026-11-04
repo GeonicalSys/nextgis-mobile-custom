@@ -821,6 +821,135 @@
         "docs/architecture/track-controls.md",
         "docs/architecture/visible-line-labels.md"
       ]
+    },
+    {
+      "path": "docs/reference/glitchtip-layer-reorder-2026-10-10.md",
+      "sha256": "a8768d34afdb88278233aaa375225604e0486a4aecc65f91fa550766088c1d20",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Issue 52 exit on a list drag retains the diagnosed owner transition, focused gesture checks, original close authorization and remaining phone gaps.",
+      "applies_to": [
+        "docs/reference/glitchtip-layer-reorder-2026-10-10.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/map-rendering.md",
+        "docs/architecture/error-reporting.md"
+      ]
+    },
+    {
+      "path": "docs/reference/glitchtip-triage-2026-10-13.md",
+      "sha256": "eb70f7559f694800598384b5c01fba03f63a6a5f2d13e00e86c7d73fdbb282c0",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 13 triage retains group-level causes, targeted crash and gesture evidence and the distinction between handled permission refusal and process exit.",
+      "applies_to": [
+        "docs/reference/glitchtip-triage-2026-10-13.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/error-reporting.md",
+        "docs/architecture/crash-recovery.md"
+      ]
+    },
+    {
+      "path": "docs/reference/glitchtip-triage-2026-10-17.md",
+      "sha256": "a0d2fe3648d9b5b6c58e2d06fbaf72cf84a080faa226ceca4466eb5e264ee8ef",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 17 nine-group triage preserves the sync ownership and reporting observations, targeted verification and dated delivery and group disposition.",
+      "applies_to": [
+        "docs/reference/glitchtip-triage-2026-10-17.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/error-reporting.md"
+      ]
+    },
+    {
+      "path": "docs/reference/glitchtip-triage-2026-10-23.md",
+      "sha256": "b18ec9c9d1f7b58ccfe9fd1b95dddd12f27c7587f8eb40dba43cac4fc5e7ec40",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 23 twelve-group triage preserves fatal compass evidence, narrowly identified local queue noise, old sync journal limitations and failed-then-passing fixture results.",
+      "applies_to": [
+        "docs/reference/glitchtip-triage-2026-10-23.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/error-reporting.md",
+        "docs/architecture/location-pipeline.md"
+      ]
+    },
+    {
+      "path": "docs/reference/glitchtip-triage-2026-10-29.md",
+      "sha256": "ec9834581f5561501e8d4a7cec94a9395a20649f9e2e0851316cd88372834f39",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 29 triage preserves individual group decisions, native/OS witnesses, diagnostic-only follow-up and the two unrun emulator cases.",
+      "applies_to": [
+        "docs/reference/glitchtip-triage-2026-10-29.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/error-reporting.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-crash-224-2026-10-27.md",
+      "sha256": "11b711ee15256592a7e4b0c1424db9f29beaddfc1e3a50d2700cf9e137f5903e",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 224 exit dossier keeps original process evidence, revoked assumptions, uncommitted private candidate, later JVM/build checks and remaining field attribution limits.",
+      "applies_to": [
+        "docs/reference/mobile-crash-224-2026-10-27.md",
+        "docs/architecture/crash-recovery.md",
+        "docs/architecture/error-reporting.md",
+        "docs/architecture/map-rendering.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-full-2026-10-25.md",
+      "sha256": "1cf772dd681b45a8c026ba7ae08a093c03fad0c5739bcd1db505adbcddb0ff54",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October Full chronology preserves complete failed passes, independent address-specific reruns, distinct device matrices and the actual publication gate.",
+      "applies_to": [
+        "docs/reference/mobile-full-2026-10-25.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-release-fixes-2026-10-26.md",
+      "sha256": "653192894457434df0176e6e0b7efb67ed1930a26ec71cf91a0e085339152a9d",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 26–27 release checkpoint separates historical phone Full, tablet setup failure, limited later related cases, and the current-at-the-time publication refusal and dry-run.",
+      "applies_to": [
+        "docs/reference/mobile-release-fixes-2026-10-26.md",
+        "docs/runbooks/release-apk.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "WHATS_NEW.md",
+      "sha256": "a4e9077dd967728154e040f2a800829e0d62891d6380775c94577744dff3142c",
+      "sha256_scope": "utf8_lf",
+      "category": "working_bridge",
+      "reason": "Active user-facing release history keeps the documented product changes and stable links to the fork catalogue and upstream history.",
+      "applies_to": [
+        "WHATS_NEW.md",
+        "docs/reference/fork-customizations.md",
+        "docs/runbooks/release-apk.md",
+        "docs/START-HERE.md"
+      ]
+    },
+    {
+      "path": "docs/changelog.md",
+      "sha256": "ee39966ca77feaab950a4ff714b9e8df81f5e4bfba78d3bd7e934608a3054bc7",
+      "sha256_scope": "utf8_lf",
+      "category": "working_bridge",
+      "reason": "Active documentation-maintenance history retains ordered edit and proof notes at its published address. Its exact disposition hash must follow an ordinary edit.",
+      "applies_to": [
+        "docs/changelog.md",
+        "docs/guides/documentation-maintenance.md",
+        "docs/README.md"
+      ]
     }
   ]
 }
