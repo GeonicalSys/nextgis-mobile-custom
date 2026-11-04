@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-location-permission-and-process-ordering",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| System location | Interactive Start is rejected before changing durable intent when Android system location is off. The app explains the requirement and opens Location settings; the service repeats the check to close lifecycle races. |",
+        "| Process ordering | `TrackerService` runs in the default application process. The toolbar Start lifecycle therefore executes before a later toolbar Stop, and both sides observe one in-process preference state; a stale delayed Start is rejected if the durable flag is already off |"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-location-permission-and-process-ordering"
+    ]
+  }
+}

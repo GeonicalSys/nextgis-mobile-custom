@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-cold-save-map-reload-and-mode-reset",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Save result after cold restore | The result carries layer id and whether the row was newly inserted. `MapFragment` resolves the layer from the active map and reloads the persisted feature without assuming that the pre-crash `mSelectedLayer` or temporary MapLibre edit object still exists. When the new id is absent from the process-local GeoJSON list, `MapDrawable` performs a full layer-data reload instead of a style-only refresh, so the object becomes visible without restarting the app. Every successful result then terminates creation/existing-feature editing, clears edit and view selection, and returns the standard `MODE_NORMAL` map UI |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-cold-save-map-reload-and-mode-reset"
+    ]
+  }
+}

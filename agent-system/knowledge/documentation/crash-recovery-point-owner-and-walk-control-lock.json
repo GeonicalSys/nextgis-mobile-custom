@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-point-owner-and-walk-control-lock",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Point start | A durable point UUID is acquired before the layer chooser. Only one Point/MultiPoint creation session may accompany the recording; stage progresses through choose, geometry and form |",
+        "| Complete control lock | From point start until successful point Save or explicit Cancel/Discard, all walk controls and notification/backend Pause/Resume/Finish/Discard are disabled. GPS processing and geometry persistence continue |",
+        "| Lifecycle | Camera, backgrounding, screen off, failed Save and process recreation retain the point lock. GPS loss leaves recording intent and the point lock intact; fresh fixes continue recording automatically |"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-point-owner-and-walk-control-lock"
+    ]
+  }
+}

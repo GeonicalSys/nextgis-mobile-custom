@@ -4838,6 +4838,529 @@
           "end_byte": 20501
         }
       ]
+    },
+    {
+      "path": "docs/architecture/maintenance-reminders.md",
+      "record": "maintenance-reminders.json",
+      "id": "lisa:mobile:resource:maintenance-reminders",
+      "revision": "40e1d998d14f333cd602c65ada66e514fb7e98fc",
+      "blob": "6e62ee56ca8cf9f225f9d5a47222fbe7ab0be2e8",
+      "sha256": "6bc19ceeedf97be319685fb02f3aebba0a927f7150d63f79051a3bed7bb21f7a",
+      "bytes": 9908,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders",
+          "start_byte": 0,
+          "end_byte": 527
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-native-window-attachment-oracle",
+          "start_byte": 527,
+          "end_byte": 879
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-advisory-actions-and-roadmap",
+          "start_byte": 879,
+          "end_byte": 1272
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-seven-day-state-to-action-table",
+          "start_byte": 1272,
+          "end_byte": 2432
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-online-project-detection-and-stale-result",
+          "start_byte": 2432,
+          "end_byte": 3204
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-canonical-project-full-sync-clock",
+          "start_byte": 3204,
+          "end_byte": 3759
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-manifest-clock-available-version-and-validated-apk",
+          "start_byte": 3759,
+          "end_byte": 4861
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-unknown-history-and-strict-overdue-threshold",
+          "start_byte": 4861,
+          "end_byte": 5608
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-foreground-presentation-and-pending-retry",
+          "start_byte": 5608,
+          "end_byte": 6239
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-session-cooldown-and-open-trigger",
+          "start_byte": 6239,
+          "end_byte": 6759
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-verification-clock-and-dialog-matrix",
+          "start_byte": 6759,
+          "end_byte": 7706
+        },
+        {
+          "id": "lisa:mobile:evidence:maintenance-reminders-october-25-full-evidence",
+          "start_byte": 7706,
+          "end_byte": 7947
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-bounded-scroll-message-and-actions",
+          "start_byte": 7947,
+          "end_byte": 8779
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-november-2-review-heading",
+          "start_byte": 8779,
+          "end_byte": 8840
+        },
+        {
+          "id": "lisa:mobile:resource:maintenance-reminders-ui-contract-clock-and-process-identity",
+          "start_byte": 8840,
+          "end_byte": 9229
+        },
+        {
+          "id": "lisa:mobile:evidence:maintenance-reminders-release-31231-cooldown-and-a56-evidence",
+          "start_byte": 9229,
+          "end_byte": 9908
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/mobile-usage.md",
+      "record": "mobile-usage.json",
+      "id": "lisa:mobile:resource:mobile-usage",
+      "revision": "40e1d998d14f333cd602c65ada66e514fb7e98fc",
+      "blob": "0e1baa5fa51a6c7fbf7eac83f2856b7a30cac17f",
+      "sha256": "ae8cb430b108e8ffcdc4c00bacc21a76bd7ea97cc4d4f056ed16e3b349cf80b8",
+      "bytes": 5606,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:mobile-usage",
+          "start_byte": 0,
+          "end_byte": 358
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-usage-production-default-process-and-private-config",
+          "start_byte": 358,
+          "end_byte": 965
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-usage-recorded-metadata-and-ui-event-boundaries",
+          "start_byte": 965,
+          "end_byte": 1767
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-usage-project-identity-capture-and-inventory",
+          "start_byte": 1767,
+          "end_byte": 2789
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-usage-durable-outbox-and-saturation",
+          "start_byte": 2789,
+          "end_byte": 3572
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-usage-upload-worker-packet-ack-and-retry",
+          "start_byte": 3572,
+          "end_byte": 4368
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-usage-server-and-operator-ownership",
+          "start_byte": 4368,
+          "end_byte": 4689
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-usage-original-delivery-order-and-backfill-limit",
+          "start_byte": 4689,
+          "end_byte": 5037
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-usage-related-client-and-server-oracles",
+          "start_byte": 5037,
+          "end_byte": 5530
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-usage-october-17-results",
+          "start_byte": 5530,
+          "end_byte": 5606
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/crash-recovery.md",
+      "record": "crash-recovery.json",
+      "id": "lisa:mobile:resource:crash-recovery",
+      "revision": "40e1d998d14f333cd602c65ada66e514fb7e98fc",
+      "blob": "50870104de12db82f22e089eb5f2e27b9b7d2bc6",
+      "sha256": "4fe2a12b11acd32fcfa434060e5eb89ea1e8bf482a4c8b2786f95028182dc697",
+      "bytes": 33067,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:crash-recovery",
+          "start_byte": 0,
+          "end_byte": 971
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-delete-and-close-owned-recording",
+          "start_byte": 971,
+          "end_byte": 1481
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-copy-and-transform-draft-recovery",
+          "start_byte": 1481,
+          "end_byte": 2253
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-gps-diagnostic-and-recording-owner",
+          "start_byte": 2253,
+          "end_byte": 2914
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-shared-track-migration-and-pending-stop",
+          "start_byte": 2914,
+          "end_byte": 3655
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-post-commit-outbox-and-project-clock",
+          "start_byte": 3655,
+          "end_byte": 4468
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-automatic-gps-and-durable-recording-intent",
+          "start_byte": 4468,
+          "end_byte": 5021
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-recovery-dialog-and-host-lifecycle",
+          "start_byte": 5021,
+          "end_byte": 5760
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-typed-feature-defaults-checkpoint",
+          "start_byte": 5760,
+          "end_byte": 6072
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-cascade-ui-saved-state",
+          "start_byte": 6072,
+          "end_byte": 6566
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-required-gate-and-terminal-draft",
+          "start_byte": 6566,
+          "end_byte": 7351
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-scope-and-recovery-invariant",
+          "start_byte": 7351,
+          "end_byte": 7723
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-track-recording-power-warning",
+          "start_byte": 7723,
+          "end_byte": 8059
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-track-recovery-table",
+          "start_byte": 8059,
+          "end_byte": 8105
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-recording-mode-checkpoint",
+          "start_byte": 8105,
+          "end_byte": 8507
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-idempotent-point-durability",
+          "start_byte": 8507,
+          "end_byte": 8775
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-gps-filter-and-acquisition-owner",
+          "start_byte": 8775,
+          "end_byte": 9231
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-gap-segments-and-walk-resume",
+          "start_byte": 9231,
+          "end_byte": 9450
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-recording-intent-service-state-and-stop-uuid",
+          "start_byte": 9450,
+          "end_byte": 10146
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-location-permission-and-process-ordering",
+          "start_byte": 10146,
+          "end_byte": 10666
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-silent-boot-and-track-continuity",
+          "start_byte": 10666,
+          "end_byte": 11113
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-external-receiver-state-and-late-callbacks",
+          "start_byte": 11113,
+          "end_byte": 11403
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-fresh-gnss-and-background-sound",
+          "start_byte": 11403,
+          "end_byte": 12166
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-sticky-restart-permission-revocation",
+          "start_byte": 12166,
+          "end_byte": 12475
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-track-types-and-monotonic-fix-age",
+          "start_byte": 12475,
+          "end_byte": 12895
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-owner-and-control-surface",
+          "start_byte": 12895,
+          "end_byte": 13328
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-recovery-table",
+          "start_byte": 13328,
+          "end_byte": 13374
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-journal-and-full-geometry",
+          "start_byte": 13374,
+          "end_byte": 13804
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-preview-source-and-reload",
+          "start_byte": 13804,
+          "end_byte": 14050
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-point-owner-and-walk-control-lock",
+          "start_byte": 14050,
+          "end_byte": 14699
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-finish-and-tail-commit",
+          "start_byte": 14699,
+          "end_byte": 15044
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-pause-resume-and-stale-commands",
+          "start_byte": 15044,
+          "end_byte": 15399
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-panel-targets",
+          "start_byte": 15399,
+          "end_byte": 15718
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-minimum-finished-walk-geometry",
+          "start_byte": 15718,
+          "end_byte": 16097
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-final-save-and-draft-retention",
+          "start_byte": 16097,
+          "end_byte": 16473
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-process-recovery-and-startup-reconciliation",
+          "start_byte": 16473,
+          "end_byte": 17070
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-emergency-reset-and-owner-commands",
+          "start_byte": 17070,
+          "end_byte": 17484
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-layer-protection-and-legacy-adoption",
+          "start_byte": 17484,
+          "end_byte": 17908
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-gnss-and-ui-lifecycle",
+          "start_byte": 17908,
+          "end_byte": 18362
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-panel-and-preview-restoration",
+          "start_byte": 18362,
+          "end_byte": 18832
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-manual-geometry-table",
+          "start_byte": 18832,
+          "end_byte": 18924
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-manual-geometry-journal-writes",
+          "start_byte": 18924,
+          "end_byte": 19251
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-manual-geometry-existing-and-new-restore",
+          "start_byte": 19251,
+          "end_byte": 19513
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-manual-geometry-terminal-clear-and-map-validation",
+          "start_byte": 19513,
+          "end_byte": 19808
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-manual-geometry-cold-style-retry",
+          "start_byte": 19808,
+          "end_byte": 20034
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-polygon-rings-and-wkt-reconstruction",
+          "start_byte": 20034,
+          "end_byte": 20678
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-derived-insertion-overlay-and-key-types",
+          "start_byte": 20678,
+          "end_byte": 21079
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-attribute-form-table",
+          "start_byte": 21079,
+          "end_byte": 21144
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-form-owner-and-checkpoint-contents",
+          "start_byte": 21144,
+          "end_byte": 21419
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-form-write-cadence-and-terminal-clear",
+          "start_byte": 21419,
+          "end_byte": 21836
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-form-hub-restore-and-validation",
+          "start_byte": 21836,
+          "end_byte": 22073
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-cold-save-map-reload-and-mode-reset",
+          "start_byte": 22073,
+          "end_byte": 22722
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-explicit-save-gate",
+          "start_byte": 22722,
+          "end_byte": 22772
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-cascading-definition-and-selection-recovery",
+          "start_byte": 22772,
+          "end_byte": 23467
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-recovery-hub-precedence",
+          "start_byte": 23467,
+          "end_byte": 24194
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-and-point-coexistence",
+          "start_byte": 24194,
+          "end_byte": 24463
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-privacy-safe-recovery-logging",
+          "start_byte": 24463,
+          "end_byte": 24699
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-recovery-exclusions",
+          "start_byte": 24699,
+          "end_byte": 24935
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-reporting-and-journal-isolation",
+          "start_byte": 24935,
+          "end_byte": 25572
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-uuid-lost-reply-and-cross-store-save",
+          "start_byte": 25572,
+          "end_byte": 26273
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-spool-pressure-and-failed-stop",
+          "start_byte": 26273,
+          "end_byte": 26765
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-pending-stop-permission-and-device-gap",
+          "start_byte": 26765,
+          "end_byte": 26981
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-persistence-warning-and-checkpoint-cost",
+          "start_byte": 26981,
+          "end_byte": 27390
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-script-reference-pin-and-save-hook",
+          "start_byte": 27390,
+          "end_byte": 28191
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-required-and-visibility-rule-pin",
+          "start_byte": 28191,
+          "end_byte": 28934
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-registered-controls-and-tabs-state",
+          "start_byte": 28934,
+          "end_byte": 29434
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-project-account-sync-recovery",
+          "start_byte": 29434,
+          "end_byte": 30116
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-walk-initial-values-and-form-handoff",
+          "start_byte": 30116,
+          "end_byte": 30849
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-upload-opt-in-and-retained-points",
+          "start_byte": 30849,
+          "end_byte": 31420
+        },
+        {
+          "id": "lisa:mobile:evidence:crash-recovery-former-project-worker-ownership",
+          "start_byte": 31420,
+          "end_byte": 31734
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-location-disabled-error-and-resume",
+          "start_byte": 31734,
+          "end_byte": 32222
+        },
+        {
+          "id": "lisa:mobile:resource:crash-recovery-sync-journal-process-and-restart-boundary",
+          "start_byte": 32222,
+          "end_byte": 33067
+        }
+      ]
     }
   ]
 }

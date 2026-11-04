@@ -91,6 +91,14 @@ related_code:
 проверок. После проекции проверьте [общую историю](../architecture/shared-tracks.md)
 и [управление треками](../architecture/track-controls.md).
 
+## Восстановление, напоминания и статистика
+
+Правьте владельцев черновиков, часы напоминаний и подтверждение статистики
+по отдельным темам. После проекции проверьте
+[восстановление](../architecture/crash-recovery.md),
+[напоминания](../architecture/maintenance-reminders.md) и
+[статистику](../architecture/mobile-usage.md).
+
 ## Maturity
 
 - `draft`: разрешены подтверждённые TODO, документ ещё не полон.

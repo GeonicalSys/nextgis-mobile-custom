@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-shared-track-migration-and-pending-stop",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Shared track migration",
+        "",
+        "The durable spool, UUID insert journal and current track URI move to the shared",
+        "store before map database upgrades. Migration includes pending points in the same",
+        "target transaction and retains the source spool. A failed Stop closes only its",
+        "current global track ID. Details: [shared tracks](shared-tracks.md).",
+        "",
+        "Migration resolves the real `layers.db` through DatabaseContext. Atomic checkpoint",
+        "recovery reads `.bak`/complete `.new` without repairing or deleting the source",
+        "files. UUID acknowledgements prevent duplicate tail points. An injected target",
+        "failure rolls back rows, mappings and completion; retry preserves both old and",
+        "post-update tracks. Native recovery verifies remapped URI/owner and pending Stop.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:shared-tracks-durable-tail-read-only-replay-and-rollback",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-shared-track-migration-and-pending-stop"
+    ]
+  }
+}

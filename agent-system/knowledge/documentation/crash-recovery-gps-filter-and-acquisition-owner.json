@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-gps-filter-and-acquisition-owner",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| GPS validation | Shared `LocationTrackFilter` retains valid movement through 160 km/h, rejects invalid/old/inaccurate fixes and isolated material spikes, and drains its delayed two-fix buffer on stop or before a long-gap segment reset |",
+        "| Provider ownership | Application-owned GpsEventSource; GPS (chip, mock or native NMEA) for display with Network only as GPS-absent fallback; GNSS chip, mock receiver extras or native NMEA for track/walk recording |"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-gps-filter-and-acquisition-owner"
+    ]
+  }
+}

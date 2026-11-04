@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-usage-durable-outbox-and-saturation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-usage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/mobile-usage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`UsageStore` хранит installation UUID, следующий seq, hashable snapshot и",
+        "неизменяемые события в private noBackup SQLite WAL с FULL synchronous.",
+        "Снимок ставится в outbox только при изменении; snapshot checkpoint и событие",
+        "коммитятся одной транзакцией. Предел 100000 событий; при заполнении новые",
+        "события не вытесняют старые, увеличивается `dropped_events` для оператора.",
+        "Удаление данных приложения/переустановка удаляют неотправленную очередь;",
+        "Android backup не клонирует identity/outbox на другой телефон.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-usage-durable-outbox-and-saturation"
+    ]
+  }
+}

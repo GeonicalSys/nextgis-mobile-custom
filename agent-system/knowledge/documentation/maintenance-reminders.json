@@ -1,0 +1,143 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:maintenance-reminders",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/maintenance-reminders.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/maintenance-reminders.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Напоминания о синхронизации и обновлении",
+        "type: architecture",
+        "last_verified: 2026-11-02",
+        "related_code:",
+        "  - app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java",
+        "  - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+        "  - app/src/androidTest/java/com/nextgis/mobile/util/MaintenanceRemindersNativeTest.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Напоминания о синхронизации и обновлении",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-native-window-attachment-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-advisory-actions-and-roadmap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-seven-day-state-to-action-table",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-online-project-detection-and-stale-result",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-canonical-project-full-sync-clock",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-manifest-clock-available-version-and-validated-apk",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-unknown-history-and-strict-overdue-threshold",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-foreground-presentation-and-pending-retry",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-session-cooldown-and-open-trigger",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-verification-clock-and-dialog-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:maintenance-reminders-october-25-full-evidence",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-bounded-scroll-message-and-actions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-november-2-review-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:maintenance-reminders-ui-contract-clock-and-process-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:maintenance-reminders-release-31231-cooldown-and-a56-evidence",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:maintenance-reminders"
+    ]
+  }
+}

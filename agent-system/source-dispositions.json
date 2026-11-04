@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "ba7ae06253c75f28d4a85d57c5930e250c28d4894e9cc383394ece96ae6885dd",
+      "sha256": "e6ddceedf3aa132f9c2e2b5a09e7cbfa5de8d50de5107589c2b02b4f414a5863",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "4f7968a3e9047faa852626e1708325223429eb044099b2cfabe1e79f7b35fc9b",
+      "sha256": "cf06f9e5b338707b5447951addf5e37f2b3d59dde689da038a2aee836ab02325",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -145,7 +145,10 @@
         "docs/runbooks/collector-project-setup.md",
         "docs/roadmap/collector.md",
         "docs/architecture/shared-tracks.md",
-        "docs/architecture/track-controls.md"
+        "docs/architecture/track-controls.md",
+        "docs/architecture/maintenance-reminders.md",
+        "docs/architecture/mobile-usage.md",
+        "docs/architecture/crash-recovery.md"
       ],
       "reason": "Pinned exact App Markdown source bytes and stable published addresses."
     },
