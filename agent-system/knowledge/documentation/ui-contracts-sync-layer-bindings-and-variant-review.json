@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-sync-layer-bindings-and-variant-review",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Часы, кольцо и метки синхронизации",
+        "",
+        "Существующие `UI-MANUAL-SYNC`, `UI-SYNC-COMPLETION-CLOCK` и",
+        "`UI-SYNC-PENDING-BADGES` уточнены без новых параллельных IDs. Общий",
+        "`LayersFragment.onCreateView` связывает `fragment_layers.xml` с `sync`,",
+        "`sync_progress_ring`, `sync_pending_badge` и `info`; отдельного flavor override",
+        "этой цепочки под `app/src` не найдено. Общие main declarations применимы к",
+        "Lisa/Belka, но APK merge и native redraw здесь **NOT_RUN**.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-sync-layer-bindings-and-variant-review"
+    ]
+  }
+}

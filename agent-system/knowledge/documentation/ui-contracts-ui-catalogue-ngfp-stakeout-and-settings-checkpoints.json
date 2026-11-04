@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-contracts-ui-catalogue-ngfp-stakeout-and-settings-checkpoints",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После текущего source-only дополнения цели выноса каталог содержит39 контрактов,142 method",
+        "tripwires и19 non-method files. Исторический NGFP checkpoint39/134/17 добавил6 methods",
+        "и3 file tripwires, сохранив прежние38/128/14. Дополнение выноса добавляет8 адресных",
+        "method guards и2 file guards; остальные IDs, старые hashes, widget evidence,",
+        "coverage history и полный исходный F61 clock row сохранены. Для V4 вручную пересмотрены затронутые Settings/widget bodies и добавлены",
+        "admission/owner/terminal/reset/result-consumer anchors. General XML добавлен как",
+        "Preference-key evidence. В EN/RU изменён ровно один failure string: все прежние",
+        "378/375 значения и порядок независимо сохранены. Unaffected IDs/hashes удержаны.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Catalogue counts and settings/string witness changes describe their original source frames."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-contracts-ui-catalogue-ngfp-stakeout-and-settings-checkpoints"
+    ]
+  }
+}

@@ -165,6 +165,11 @@ Keep asset identity, project links, migration and deletion journals, and transfe
 Preserve each device, APK and native check in its original frame.
 Regenerate the published view with the ordinary projector.
 
+Edit App UI value and accessibility prose in **knowledge/documentation/**.
+Keep the machine catalogue, widget meaning, fitting and real-client evidence distinct.
+Preserve source-only checkpoints and device gaps in their original scope.
+Regenerate both published views with the ordinary prose projector.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

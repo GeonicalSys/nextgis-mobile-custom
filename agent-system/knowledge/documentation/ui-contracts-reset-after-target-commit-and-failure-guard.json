@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-reset-after-target-commit-and-failure-guard",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Reset positive callback сам не меняет prefs. После нормального target/path",
+        "completion применяются прежние remove/default XML правила, resetMap,",
+        "district/init/delete/district/init. Существующая feature удаляет слои кроме",
+        "OSM/tracks; объём удаления не расширен. Failed target/commit и cancel после",
+        "retirement допускают refresh только при exact owner/raw actual path, без Reset defaults,",
+        "init или удаления. Ordinary commit false моделируется после cache mutation;",
+        "unexpected before-cache RuntimeException/Error сохраняет worker failure policy.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:ui-contracts-storage-worker-exact-map-and-refresh-result",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-reset-after-target-commit-and-failure-guard"
+    ]
+  }
+}

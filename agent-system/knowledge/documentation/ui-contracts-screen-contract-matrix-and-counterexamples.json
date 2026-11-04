@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-screen-contract-matrix-and-counterexamples",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Экран | Смысл и источник | Что проверять отдельно |",
+        "| --- | --- | --- |",
+        "| Выбор проекта | Имя показывается пользователю; callback передаёт выбранную project identity | Совпадающие имена, отмена, восстановление диалога |",
+        "| Переключение проекта | Registry активирует owning workspace после проверок занятости и сохранения карты | Track/edit/walk/fill, ошибка сохранения, старые асинхронные callbacks |",
+        "| Слои | Строка относится к layer ID; глаз управляет видимостью; pending badge относится к очереди | Порядок модели и списка, переиспользование строк, реальная карта после toggle |",
+        "| Идентификация | Просмотр использует существующие DB IDs; Edit зависит от политики слоя | Разрывы между FID, границы навигации, изменение прав во время просмотра |",
+        "| Формы | Типизированные controls и schema metadata проходят общий Save gate | Required, поля вне формы, pins, потеря процесса, provider failure |",
+        "| Работа без сети | Ручной sync проверяет сеть до старта службы; повтор идёт тем же путём | Сохранность очереди, фактическая доступность offline ресурсов карты |",
+        "| Синхронизация | Полный clock относится к active map; pending badge показывает локальную очередь | Другой workspace, partial uploads, регистрация tracker, cancellation |",
+        "| Управление треком | Rename/Visibility/Delete обращаются к выбранным track IDs и общему storage | Cancel, пустое имя, подтверждённый набор удаления, активный сеанс |",
+        "| Карта и приборы | Отдельные контракты различают camera, device fix и состояния приборов | Единицы, свежесть fix, autopan и состояние без координаты |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-screen-contract-matrix-and-counterexamples"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-canonical-catalogue-projection-and-standalone-route",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Машиночитаемый каталог находится в",
+        "[ui-contracts.json](../registry/ui-contracts.json). Он связывает пользовательский",
+        "контракт с конкретными телами методов и XML resource IDs, условиями Lisa/Belka,",
+        "защищённым состоянием, независимыми ожиданиями и явными неизвестными.",
+        "Каталог строится из записей `agent-system/knowledge/ui-contracts/`.",
+        "После подтверждённой правки записей выполни",
+        "`python -B docs/scripts/ui_catalogue_knowledge.py --write`. Проверка App",
+        "сверяет JSON с записями. Автономная копия и явный `--registry` читают JSON."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-canonical-catalogue-projection-and-standalone-route"
+    ]
+  }
+}

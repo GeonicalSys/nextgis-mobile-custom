@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-ngfp-text-display-line-cap-and-save-boundary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Высота текстового поля и ссылки на ресурсы",
+        "",
+        "`UI-FORM-TEXT-LINE-CAP` прослеживает `type=text_edit` через factory,",
+        "`formtemplate_edittext.xml` и normalized attributes.field до TextEdit.init.",
+        "`max_string_count` читает int и вызывает single-line при значении<2 либо",
+        "setMaxLines; единица — строка отображения, а не символ/NGW ID/значение поля.",
+        "Все3 canonical `descript` имеют cap4; label —1/10/1 для линий/точек/площадей.",
+        "Text/draft/cursor/default priority и login overrides самостоятельны. getValue и",
+        "saveState используют текст; layout cap сам не подтверждает Save или sync.",
+        "У dynamic field нет `android:id`; XML фиксирует класс, control map — field key.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-ngfp-text-display-line-cap-and-save-boundary"
+    ]
+  }
+}

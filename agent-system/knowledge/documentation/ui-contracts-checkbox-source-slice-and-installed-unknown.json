@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-contracts-checkbox-source-slice-and-installed-unknown",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Срез source-backed:7records/4routes/4value namespaces;3official Android API",
+        "contracts отделены от installed implementation. Actual private forms/schema,",
+        "Cursor/AppCompat/OS, device lifecycle, data/provider/upload и fleet adoption",
+        "остаются UNKNOWN; widget/native execution и product fixes здесь не выполнялись.",
+        "",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Read-only source boundary and installed lifecycle/provider/device gaps."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-contracts-checkbox-source-slice-and-installed-unknown"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-sync-clock-ring-busy-and-pending-value-matrix",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Widget → binding | Producer и преобразование | Граница значения |",
+        "| --- | --- | --- |",
+        "| `info` → `updateInfo` → `setText` | Active map path → `ProjectSyncState.lastComplete` → `ControlHelper.getSyncTime`: `dd MMM` и `HH:mm`, default locale/timezone | Unix ms; нет года/секунд или относительной давности. Exact-owner/canonical-key process shield возвращает подтверждённое API-visible время, публикуя попытку после commit=true. Physical disk/restart остаётся отдельным oracle |",
+        "| `sync_progress_ring` → `refreshSyncProgressRing` | `NgwSyncProgress.snapshot`: scale1000, pull10 + push до30, monotone display с5% reserve до finish | Взвешенная работа очереди, без percent text. `finishSessionLocked` завершает progress и при ошибке; inactive UI скрывает/сбрасывает кольцо |",
+        "| `sync` → `isSyncActive`/receiver | `NGWSyncService.isSyncStarted OR ProjectOperationCoordinator.isDataSyncActive`; lifecycle broadcast и повторная проверка состояния | Busy/activity и окончание очереди отдельно от полного project ACK; SYNC_FINISH не доказывает успешную запись clock |",
+        "| `sync_pending_badge` / `layer_pending_badge` → async query / row binding | `collectPendingLayers`: raw `VectorLayer.isChanges` либо разрешённый track pending; group IDs распространяются вверх, row проверяет `mPendingChanges.contains(layer.getId())` | Булева локальная очередь, не число ошибок и не тот же ready-outbox gate полного clock. Результат принимает только прежний map/generation |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-sync-clock-ring-busy-and-pending-value-matrix"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-standard-and-ngfp-date-widget-bindings",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Значение даты и времени в форме — исходники 2026-11-01",
+        "",
+        "Контракты `UI-FORM-DATE-STANDARD-VALUE` и `UI-FORM-DATE-NGFP-VALUE` в",
+        "[каталоге](../registry/ui-contracts.json) разделяют две реализации. Стандартная",
+        "форма выбирает `control.DateTime` по типу Field; NGFP `type=date_time` использует",
+        "отдельный `formcontrol.DateTime` и `date_type`:0 — DATE,1 — TIME,2 — DATETIME.",
+        "Это не номера schema-type и не внутренние selector constants. У корней обоих",
+        "layout нет отдельного `android:id`: привязка идёт через class/layout и field name.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-standard-and-ngfp-date-widget-bindings"
+    ]
+  }
+}

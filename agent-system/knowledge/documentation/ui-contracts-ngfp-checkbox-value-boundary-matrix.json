@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-ngfp-checkbox-value-boundary-matrix",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Граница | Подтверждённое значение |",
+        "| --- | --- |",
+        "| NGFP widget | checked-state Boolean; `getValue` выдаёт Integer1 либо0 |",
+        "| Bundle / optional last cache | Boolean под prefixed field key / normalized field key |",
+        "| Cursor | при наличии столбца `getInt()!=0`; SQL NULL/nonintegral/out-of-int result/exception implementation-defined по официальному API |",
+        "| Новый control | `init_value` через `JSONObject.getBoolean`, затем optional last; missing/invalid property может бросить исключение |",
+        "| Raw copy | NULL/empty может отображаться unchecked; отдельный equal-typed-baseline gate сохраняет исходную пустоту |",
+        "| Capture / Save | runtime Integer в ContentValues, затем прежние validation/owner/persistence gates; это ещё не local/server ACK |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-ngfp-checkbox-value-boundary-matrix"
+    ]
+  }
+}

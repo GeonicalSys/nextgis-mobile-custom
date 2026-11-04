@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-accessibility-real-settings-navigation-and-stale-screen-listeners",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-accessibility"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-accessibility.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Отдельный тест открывает настоящее меню настроек и разделы «Общие», «Карта»,",
+        "«Местоположение», «Треки», проверяет все строки их реальных адаптеров,",
+        "а затем окна учётных записей, входа, проекта и каталога подложек.",
+        "Штатные списки и уже прокручиваемые формы сохраняют прокрутку.",
+        "Отложенное обновление настроек игнорирует уничтоженный экран после поворота;",
+        "новое окно создаёт собственные listeners и продолжает отображать настройки.",
+        "Рабочий телефон не использовать.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-accessibility-real-settings-navigation-and-stale-screen-listeners"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-accessibility-gnss-hud-drawer-walk-and-login-sizing",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-accessibility"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-accessibility.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "GNSS HUD вписывается",
+        "в отдельную область рядом с компасом. `BoundedDrawerLayout` ограничивает предпочитаемую",
+        "ширину бокового меню фактической шириной окна. Панель обхода переносит длинное",
+        "название над строкой действий; при недостатке высоты она тоже вписывается.",
+        "Формы входа используют тот же ограниченный контейнер. В горизонтальном окне Веб ГИС пояснение и поля расположены",
+        "в двух колонках, декоративный логотип и отступы уменьшены до вписывания текста;",
+        "русское пояснение сокращено с сохранением ссылки создания Веб ГИС. Это позволяет",
+        "избежать чрезмерного уменьшения всей формы. Физические цели 48 dp",
+        "предпочтительны, но при необходимом уменьшении проверяется реальное попадание",
+        "touch в отображаемое действие.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-accessibility-gnss-hud-drawer-walk-and-login-sizing"
+    ]
+  }
+}
