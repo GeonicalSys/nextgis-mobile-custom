@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:classic-style-verification-http-fixture-retirement-20261102",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification",
+      "lisa:mobile:resource:classic-style-verification-direct-live-style-reload-oracle"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "По поручению владельца2ноября старый HTTP renderer удалён вместе со своими",
+        "fixtures. DirectVectorTilesTest использует точные опубликованные конфиги",
+        "kvartal/vydel/vertexfeature_recent с provenance, проверяет сохранность schema/",
+        "rows/rights и прямой CustomVectorSource; offline case сохраняет независимые",
+        "single-anchor и glyph/fill/outline pixel expectations. Новая матрица NOT_RUN.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:classic-style-verification-http-fixture-retirement-20261102"
+    ]
+  }
+}

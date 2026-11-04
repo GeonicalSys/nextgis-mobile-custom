@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:visible-line-labels-viewport-clip-axial-direction-and-anchor",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:visible-line-labels"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/visible-line-labels.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "В Mercator сегменты клиппируются выпуклым четырёхугольником истинного экрана,",
+        "включая поворот/pitch. Переход через 180° разворачивается относительно viewport.",
+        "Streaming planner готовит viewport один раз и обрабатывает целиком LineString/",
+        "MultiLineString одного DB ID; повтор полного original не создаёт вторую подпись.",
+        "Прежний List planner продолжает объединять native fragments одного ID и не",
+        "учитывать одинаковую геометрию повторно. Направление — length-weighted axial mean:",
+        "противоположное направление оцифровки не разворачивает надпись. При отсутствии",
+        "преобладания используется длинная ось видимого bbox. Точка привязки — ближайшая",
+        "к центру экрана точка видимого сегмента, поэтому она остаётся на самом объекте.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:visible-line-labels-viewport-clip-axial-direction-and-anchor"
+    ]
+  }
+}

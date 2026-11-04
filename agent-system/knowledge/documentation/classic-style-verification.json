@@ -1,0 +1,173 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:classic-style-verification",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/classic-style-verification.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Проверки обычных векторных стилей и подписей",
+        "type: architecture",
+        "last_verified: 2026-11-02",
+        "related_code:",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/FieldStyleRule.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/LabelAttributes.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/Style.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/MplStyleMapper.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/MarkerIconRegistry.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/mpl/LineLayerFactory.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/mpl/MplLayerBuildContext.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/RuleLabelLayouts.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/RuleGeometryLayouts.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/mpl/PointLayerFactory.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonLayerFactory.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java",
+        "  - tools/mobile-test-plan.json"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Проверки обычных векторных стилей и подписей",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:classic-style-verification-polygon-legacy-matrix-with-http-fallback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-firefly-classic-fixture",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-direct-live-style-reload-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-classic-fixture-rendering-route",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:classic-style-verification-swiftshader-observed-failures",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-disposable-fixture-preferences-and-camera",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:classic-style-verification-http-fixture-retirement-20261102",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-classic-binding-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-ordinary-style-test-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-label-and-style-inheritance-presence",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-related-and-full-acceptance-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-native-label-layout-groups",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-native-geometry-layout-groups-and-picking",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:classic-style-verification-maplibre-13-0-2-line-layout-and-paint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-native-font-and-polygon-pixel-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-category-zoom-curves-and-explicit-defaults",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-style-snapshot-fingerprint-and-native-frame",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-marker-sdf-boundary-and-range",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:classic-style-verification-line-label-fixture",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:classic-style-verification"
+    ]
+  }
+}

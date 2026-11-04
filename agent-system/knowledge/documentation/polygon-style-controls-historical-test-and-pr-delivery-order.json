@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:polygon-style-controls-historical-test-and-pr-delivery-order",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:polygon-style-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/polygon-style-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Все классы включены в Related styles и полный native каталог. Related PhoneOnly",
+        "разрешён только для `com.nextgis.mobile.verification.debug`; Full остаётся",
+        "отдельным обязательным этапом перед публикацией. Текущие Draft PR: maplib #60 →",
+        "maplibui #44 → app #78. До будущего выпуска библиотеки сливаются Merge Commit,",
+        "затем consumers закрепляют remote merge commits; приложение сливается Squash.",
+        "Публикация, merge и выпуск сейчас не выполняются. Фактический результат текущего",
+        "прогона записывается отдельно, наличие теста не означает PASS.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:polygon-style-controls-historical-test-and-pr-delivery-order"
+    ]
+  }
+}

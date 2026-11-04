@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:polygon-style-controls-current-direct-sqlite-generation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:polygon-style-controls",
+      "lisa:mobile:resource:classic-style-verification-direct-live-style-reload-oracle"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/polygon-style-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После удаления HTTP renderer2ноября обычный advanced polygon остаётся на",
+        "прямом SQLite source. DirectVectorTilesTest проверяет live style generation и",
+        "неизменность полных SQL rows; прежний HTTP→classic fixture удалён. Pattern alpha0",
+        "имеет прежний native FAIL18886red на A56 и software emulator; причина UNKNOWN,",
+        "ожидание не ослаблено. Новый JSON collector нужен для следующего диагноза.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:polygon-style-controls-current-direct-sqlite-generation"
+    ]
+  }
+}

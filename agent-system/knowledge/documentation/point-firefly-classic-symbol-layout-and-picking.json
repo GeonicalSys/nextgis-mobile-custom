@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:point-firefly-classic-symbol-layout-and-picking",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:point-firefly",
+      "lisa:mobile:resource:classic-style-verification-firefly-classic-fixture"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/point-firefly.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`FireflyLayerFactory` создаёт отдельные non-SDF `SymbolLayer` с идентификаторами",
+        "`<geometry-id>-layout-firefly-*`. Обычные Circle/SDF слои исключают type=9;",
+        "их blur/paint не меняются при добавлении категории «Светлячок». Collision flags",
+        "собираются в обычные группы констант layout. Дочерние слои разделяют GeoJSON",
+        "source, zoom, порядок, видимость и picking логического слоя. Подписи и custom",
+        "icon overlay сохраняют собственные существующие настройки.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:point-firefly-classic-symbol-layout-and-picking"
+    ]
+  }
+}

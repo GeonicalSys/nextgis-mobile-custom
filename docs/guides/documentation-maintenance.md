@@ -42,6 +42,15 @@ related_code:
 Следуйте [порядку редактирования App](../../agent-system/README.md) и
 проверяйте [проекцию по прежнему адресу](../architecture/map-performance.md).
 
+## Стили и подписи
+
+Правьте правила отрисовки и критерии проверки по отдельным темам.
+Датированные результаты и прежний переход с HTTP храните в свидетельствах.
+После проекции проверьте [матрицу стилей](../architecture/classic-style-verification.md),
+[«Светлячок»](../architecture/point-firefly.md),
+[полигоны](../architecture/polygon-style-controls.md) и
+[линейные подписи](../architecture/visible-line-labels.md).
+
 ## Maturity
 
 - `draft`: разрешены подтверждённые TODO, документ ещё не полон.

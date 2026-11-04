@@ -2845,6 +2845,360 @@
           "end_byte": 39329
         }
       ]
+    },
+    {
+      "path": "docs/architecture/classic-style-verification.md",
+      "record": "classic-style-verification.json",
+      "id": "lisa:mobile:resource:classic-style-verification",
+      "revision": "8ce54fe5d91dcd17e579d8be502ca4e49e40e5a6",
+      "blob": "23dff67dfc5857e8dd3522ee4e73ba7afd7993fb",
+      "sha256": "0685e8eb65bf887485b0ff17527a7422d2f62761328d8fd408fff7cd5ece12e3",
+      "bytes": 13368,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:classic-style-verification",
+          "start_byte": 0,
+          "end_byte": 1239
+        },
+        {
+          "id": "lisa:mobile:evidence:classic-style-verification-polygon-legacy-matrix-with-http-fallback",
+          "start_byte": 1239,
+          "end_byte": 2105
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-firefly-classic-fixture",
+          "start_byte": 2105,
+          "end_byte": 3091
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-direct-live-style-reload-oracle",
+          "start_byte": 3091,
+          "end_byte": 3318
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-classic-fixture-rendering-route",
+          "start_byte": 3318,
+          "end_byte": 4143
+        },
+        {
+          "id": "lisa:mobile:evidence:classic-style-verification-swiftshader-observed-failures",
+          "start_byte": 4143,
+          "end_byte": 4994
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-disposable-fixture-preferences-and-camera",
+          "start_byte": 4994,
+          "end_byte": 5305
+        },
+        {
+          "id": "lisa:mobile:evidence:classic-style-verification-http-fixture-retirement-20261102",
+          "start_byte": 5305,
+          "end_byte": 5837
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-classic-binding-diagnostics",
+          "start_byte": 5837,
+          "end_byte": 6448
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-ordinary-style-test-matrix",
+          "start_byte": 6448,
+          "end_byte": 7734
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-label-and-style-inheritance-presence",
+          "start_byte": 7734,
+          "end_byte": 8434
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-related-and-full-acceptance-boundaries",
+          "start_byte": 8434,
+          "end_byte": 8978
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-native-label-layout-groups",
+          "start_byte": 8978,
+          "end_byte": 9905
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-native-geometry-layout-groups-and-picking",
+          "start_byte": 9905,
+          "end_byte": 10478
+        },
+        {
+          "id": "lisa:mobile:evidence:classic-style-verification-maplibre-13-0-2-line-layout-and-paint",
+          "start_byte": 10478,
+          "end_byte": 11042
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-native-font-and-polygon-pixel-oracles",
+          "start_byte": 11042,
+          "end_byte": 11354
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-category-zoom-curves-and-explicit-defaults",
+          "start_byte": 11354,
+          "end_byte": 11924
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-style-snapshot-fingerprint-and-native-frame",
+          "start_byte": 11924,
+          "end_byte": 12475
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-marker-sdf-boundary-and-range",
+          "start_byte": 12475,
+          "end_byte": 12864
+        },
+        {
+          "id": "lisa:mobile:resource:classic-style-verification-line-label-fixture",
+          "start_byte": 12864,
+          "end_byte": 13368
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/point-firefly.md",
+      "record": "point-firefly.json",
+      "id": "lisa:mobile:resource:point-firefly",
+      "revision": "8ce54fe5d91dcd17e579d8be502ca4e49e40e5a6",
+      "blob": "e5e9165afadc769eca0f488e07293a3b0050c3fe",
+      "sha256": "3f4a85cc2a92e0ca7f460a749b5f4d1f8305ea9af8dd80a1d90f2d20be55d973",
+      "bytes": 9050,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:point-firefly",
+          "start_byte": 0,
+          "end_byte": 972
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-visible-core-and-halo",
+          "start_byte": 972,
+          "end_byte": 1797
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-editor-type-and-live-preview",
+          "start_byte": 1797,
+          "end_byte": 2561
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-marker-json-and-clone",
+          "start_byte": 2561,
+          "end_byte": 3175
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-sprite-coverage-and-cpu-budget",
+          "start_byte": 3175,
+          "end_byte": 3931
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-native-image-ownership",
+          "start_byte": 3931,
+          "end_byte": 4461
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-classic-symbol-layout-and-picking",
+          "start_byte": 4461,
+          "end_byte": 5145
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-category-canvas-preview",
+          "start_byte": 5145,
+          "end_byte": 5275
+        },
+        {
+          "id": "lisa:mobile:evidence:point-firefly-legacy-configured-tile-fallback",
+          "start_byte": 5275,
+          "end_byte": 6117
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-bitmap-and-native-fixture-oracles",
+          "start_byte": 6117,
+          "end_byte": 6713
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-editor-touch-and-preview-profiles",
+          "start_byte": 6713,
+          "end_byte": 7240
+        },
+        {
+          "id": "lisa:mobile:evidence:point-firefly-legacy-tile-fallback-fixture",
+          "start_byte": 7240,
+          "end_byte": 7528
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-verification-and-release-boundary",
+          "start_byte": 7528,
+          "end_byte": 8050
+        },
+        {
+          "id": "lisa:mobile:evidence:point-firefly-historical-pr-delivery-order",
+          "start_byte": 8050,
+          "end_byte": 8389
+        },
+        {
+          "id": "lisa:mobile:evidence:point-firefly-style-verification-20261024",
+          "start_byte": 8389,
+          "end_byte": 8603
+        },
+        {
+          "id": "lisa:mobile:resource:point-firefly-current-direct-sqlite-live-reload",
+          "start_byte": 8603,
+          "end_byte": 9050
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/polygon-style-controls.md",
+      "record": "polygon-style-controls.json",
+      "id": "lisa:mobile:resource:polygon-style-controls",
+      "revision": "8ce54fe5d91dcd17e579d8be502ca4e49e40e5a6",
+      "blob": "8a08bcca2f5935102ce1e9ecb1e6a725e87b3a10",
+      "sha256": "5a707a3d7f56e56203560576089e33b5eb6cf10798b616a755f890e4b757be9e",
+      "bytes": 12242,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls",
+          "start_byte": 0,
+          "end_byte": 1832
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-small-window-preview-and-actions",
+          "start_byte": 1832,
+          "end_byte": 2460
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-optional-json-and-inheritance",
+          "start_byte": 2460,
+          "end_byte": 3295
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-pattern-geometry-and-opacity",
+          "start_byte": 3295,
+          "end_byte": 4523
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-tile-motif-and-native-image-lifecycle",
+          "start_byte": 4523,
+          "end_byte": 5470
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-classic-outline-layout-and-picking",
+          "start_byte": 5470,
+          "end_byte": 6509
+        },
+        {
+          "id": "lisa:mobile:evidence:polygon-style-controls-legacy-mvt-to-classic-fallback",
+          "start_byte": 6509,
+          "end_byte": 6777
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-offline-live-preview",
+          "start_byte": 6777,
+          "end_byte": 8149
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-style-option-and-pixel-fixtures",
+          "start_byte": 8149,
+          "end_byte": 8724
+        },
+        {
+          "id": "lisa:mobile:evidence:polygon-style-controls-legacy-tile-fallback-fixture",
+          "start_byte": 8724,
+          "end_byte": 8808
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-editor-profile-matrix",
+          "start_byte": 8808,
+          "end_byte": 9127
+        },
+        {
+          "id": "lisa:mobile:evidence:polygon-style-controls-historical-test-and-pr-delivery-order",
+          "start_byte": 9127,
+          "end_byte": 9958
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-bounded-native-png-capture",
+          "start_byte": 9958,
+          "end_byte": 10514
+        },
+        {
+          "id": "lisa:mobile:evidence:polygon-style-controls-style-verification-20261024",
+          "start_byte": 10514,
+          "end_byte": 10644
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-category-effective-style-save-and-cancel",
+          "start_byte": 10644,
+          "end_byte": 11238
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-category-editor-real-touch-oracle",
+          "start_byte": 11238,
+          "end_byte": 11698
+        },
+        {
+          "id": "lisa:mobile:resource:polygon-style-controls-current-direct-sqlite-generation",
+          "start_byte": 11698,
+          "end_byte": 12242
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/visible-line-labels.md",
+      "record": "visible-line-labels.json",
+      "id": "lisa:mobile:resource:visible-line-labels",
+      "revision": "8ce54fe5d91dcd17e579d8be502ca4e49e40e5a6",
+      "blob": "2d70080f4002692cffff2f81bb1ecacd92d99ad4",
+      "sha256": "521500bdabf86ca035b845bc66d0da1cf3dcbd1ad3356f68cad06477260b39c2",
+      "bytes": 7458,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:visible-line-labels",
+          "start_byte": 0,
+          "end_byte": 886
+        },
+        {
+          "id": "lisa:mobile:resource:visible-line-labels-visible-object-label-contract",
+          "start_byte": 886,
+          "end_byte": 1658
+        },
+        {
+          "id": "lisa:mobile:resource:visible-line-labels-camera-and-query-ownership",
+          "start_byte": 1658,
+          "end_byte": 3032
+        },
+        {
+          "id": "lisa:mobile:resource:visible-line-labels-viewport-clip-axial-direction-and-anchor",
+          "start_byte": 3032,
+          "end_byte": 4226
+        },
+        {
+          "id": "lisa:mobile:resource:visible-line-labels-point-source-and-rotation",
+          "start_byte": 4226,
+          "end_byte": 5110
+        },
+        {
+          "id": "lisa:mobile:resource:visible-line-labels-style-json-and-source-compatibility",
+          "start_byte": 5110,
+          "end_byte": 6066
+        },
+        {
+          "id": "lisa:mobile:resource:visible-line-labels-pure-layout-and-streaming-oracles",
+          "start_byte": 6066,
+          "end_byte": 6712
+        },
+        {
+          "id": "lisa:mobile:resource:visible-line-labels-native-related-oracle",
+          "start_byte": 6712,
+          "end_byte": 7054
+        },
+        {
+          "id": "lisa:mobile:resource:visible-line-labels-spec-and-measurement-boundary",
+          "start_byte": 7054,
+          "end_byte": 7458
+        }
+      ]
     }
   ]
 }

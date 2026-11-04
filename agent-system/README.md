@@ -103,6 +103,12 @@ measurements. Record each run with its source frame, scope and acceptance limits
 Keep unresolved investigations linked to MOB-04. Run the same prose projector
 after edits and review the generated document.
 
+Edit the classic verification matrix, firefly, polygon styles and visible line
+labels in their respective records under **knowledge/documentation/**.
+Keep the retired HTTP fallback and older runs in historical evidence.
+Use the current SQLite live reload and classic preview records when updating
+renderer and test contracts. Run the same projector after editing.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

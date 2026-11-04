@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:point-firefly-editor-type-and-live-preview",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:point-firefly"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/point-firefly.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Сам выбор типа сохраняет существующие параметры. Отдельная кнопка",
+        "«Образец “Полевые точки”» удалена по замечанию пользователя: это было применение",
+        "бело-розового пресета, которое незаметно при уже совпадающих значениях.",
+        "Живой образец, ручные размеры/цвета/свечение, Save и Cancel сохранены.",
+        "Визуальный ориентир типа — сочетание чёткого ядра и мягкого внешнего ореола",
+        "эталонных полевых точек; Desktop и эталон не меняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:point-firefly-editor-type-and-live-preview"
+    ]
+  }
+}

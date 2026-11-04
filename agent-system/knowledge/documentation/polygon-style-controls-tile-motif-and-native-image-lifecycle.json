@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:polygon-style-controls-tile-motif-and-native-image-lifecycle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:polygon-style-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/polygon-style-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Для бесшовного повторения используются целочисленные волновые векторы на текстуре",
+        "512×512 (для кирпичной перевязки — чётная решётка). Угол и шаг слегка привязываются",
+        "к этой решётке; максимальный шаг имеет более заметное округление направления.",
+        "Имена изображений зависят от параметров стиля, а не от отдельных объектов.",
+        "RGBA texture не содержит общей alpha: pattern opacity и layer opacity применяются",
+        "ровно по одному разу. CPU LRU ограничен 4 MiB; native images сохраняются только",
+        "до удаления/смены стиля последнего использующего их логического слоя.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:polygon-style-controls-tile-motif-and-native-image-lifecycle"
+    ]
+  }
+}
