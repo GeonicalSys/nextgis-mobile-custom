@@ -17,9 +17,9 @@ VIEW = Path("app/docs/manifest.yaml")
 LAYOUT_ID = f"lisa:mobile:metadata:{TOPIC}"
 METADATA_FIELDS = ("schema_version", "module_id", "repository_id", "maturity", "last_verified")
 OBJECT_FIELDS = {
-    "key_components": {"path", "responsibility"},
-    "public_contracts": {"id", "symbol", "path", "consumers"},
-    "storage_contracts": {"id", "path"},
+    "key_components": ("path", "responsibility"),
+    "public_contracts": ("id", "symbol", "path", "consumers"),
+    "storage_contracts": ("id", "path"),
 }
 REFERENCE_FIELDS = {
     "entrypoints", "settings_refs", "invariant_refs", "global_docs", "smoke_tests", "upstream_hotspots",
@@ -44,9 +44,11 @@ def project_manifest(owner: Path) -> dict:
     layout = records.pop(LAYOUT_ID)
     if layout["kind"] != "metadata" or facet(layout, "view-path") != VIEW.as_posix():
         raise ValueError("Invalid App module manifest layout")
-    manifest = dict(facet(layout, "manifest-metadata"))
-    if tuple(manifest) != METADATA_FIELDS or type(manifest["schema_version"]) is not int:
-        raise ValueError("Invalid App module manifest metadata fields or order")
+    metadata = facet(layout, "manifest-metadata")
+    if set(metadata) != set(METADATA_FIELDS) or type(metadata["schema_version"]) is not int:
+        raise ValueError("Invalid App module manifest metadata fields")
+    # Canonical JSON storage can sort object keys. YAML field order is part of the view.
+    manifest = {field: metadata[field] for field in METADATA_FIELDS}
     manifest["last_verified"] = date.fromisoformat(manifest["last_verified"])
 
     field_order = facet(layout, "manifest-field-order")
@@ -68,9 +70,10 @@ def project_manifest(owner: Path) -> dict:
         if not actual_sections or actual_sections[-1] != field:
             actual_sections.append(field)
         if field in OBJECT_FIELDS:
-            if record["kind"] != "contract" or not isinstance(value, dict) or set(value) != OBJECT_FIELDS[field]:
+            keys = OBJECT_FIELDS[field]
+            if record["kind"] != "contract" or not isinstance(value, dict) or set(value) != set(keys):
                 raise ValueError(f"Invalid App module manifest definition: {identity}")
-            manifest[field].append(value)
+            manifest[field].append({key: value[key] for key in keys})
         elif field in REFERENCE_FIELDS:
             if (record["kind"] != "resource" or manifest[field] or not isinstance(value, list) or not value
                     or any(not isinstance(item, str) or not item for item in value)):

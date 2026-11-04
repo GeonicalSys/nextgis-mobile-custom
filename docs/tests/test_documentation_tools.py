@@ -194,6 +194,22 @@ class DocumentationToolsTest(unittest.TestCase):
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("modules registry order, records and relations differ", result.stdout + result.stderr)
 
+    def test_module_manifest_preserves_yaml_order_after_json_key_sorting(self) -> None:
+        projector = runpy.run_path(str(DOCS_ROOT / "scripts" / "module_manifest_knowledge.py"))
+        directory = projector["DIRECTORY"]
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            records = root / directory
+            records.mkdir(parents=True)
+            for source in (WORKSPACE / directory).glob("*.json"):
+                payload = json.loads(source.read_bytes())
+                (records / source.name).write_text(
+                    json.dumps(payload, ensure_ascii=False, sort_keys=True), encoding="utf-8"
+                )
+            manifest = projector["project_manifest"](root)
+            expected = (WORKSPACE / projector["VIEW"]).read_text(encoding="utf-8")
+            self.assertEqual(projector["render_manifest"](manifest), expected)
+
     def test_sectioned_registry_preserves_notes_and_checks_list_identity(self) -> None:
         projector = runpy.run_path(str(DOCS_ROOT / "scripts" / "keyed_registry_knowledge.py"))
         with tempfile.TemporaryDirectory() as temporary:
