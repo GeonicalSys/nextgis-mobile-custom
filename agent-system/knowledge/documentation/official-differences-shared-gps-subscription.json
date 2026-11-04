@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-shared-gps-subscription",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Общий источник сохраняет GPS-подписку при выключенном экране. Глобальное",
+        "энергосбережение Android всё же может остановить или замедлить доставку GPS.",
+        "Перед записью форк предупреждает о действующем ограничении и предлагает",
+        "настройки батареи; при изменении режима во время записи обновляет её постоянное",
+        "уведомление. Разрешение фоновой работы и прежнее «не спрашивать» не скрывают",
+        "это предупреждение. Внешний приёмник, читаемый напрямую, не получает предупреждение",
+        "об отключении GPS телефона. Предупреждение для системного GPS пересчитывается",
+        "при возврате на карту и снимается после отключения ограничения.",
+        "Сверка с официальными головами выше повторена",
+        "6 октября: такой проверки политики GPS и уведомления записи в upstream нет.",
+        "Карта не",
+        "перерегистрирует спутниковую подписку при уходе/возврате; wake lock записи",
+        "не зависит от включённого звука. Акселерометр дополняет проверку стоянки,",
+        "согласованное движение GPS сохраняет возможность ходьбы и езды с телефоном",
+        "в держателе. Устойчивое уточнение стоянки исправляет одну собственную вершину",
+        "без добавления ложного пути. Сырые cadence/accuracy и число GPS-перерегистраций",
+        "фиксируются в GPS health для проверки реального фона на устройстве. На карте",
+        "доступна позиция GPS (чип, mock или native NMEA) с кругом точности; сеть Wi‑Fi/соты — только",
+        "если GPS нет или старше 8 с, и никогда вместо живого грубого GNSS. При внешнем NMEA",
+        "Network не запрашивается, а сам NMEA-фикс не отбрасывается как чип. Старый экранный",
+        "кэш не выдаётся за текущие координаты. HUD внешнего GNSS справа от компаса, с короткими",
+        "подписями качества. В запись попадает GNSS чипа, mock",
+        "приёмника (extras `hdop`/`diffStatus`) или native NMEA; заглушка 47 м без extras и сеть не пишутся.",
+        "Mock и native NMEA не сглаживаются пешеходным фильтром и прореживаются не грубее 2 с / 1 м.",
+        "Внешний GNSS читается приложением по Bluetooth Classic/LE, USB или TCP/IP без Mock Location.",
+        "PiGoLite/ComNav по BLE по умолчанию отдаёт CNB, не `$GGA`: координаты берутся",
+        "из BESTPOSB (сообщение 42). `unlogall` не отправляется. ASCII GGA — дополнение,",
+        "не условие фикса. BLE UART Pigo `3A20` имеет write `3A21` / notify `3A22`;",
+        "тихая сессия добавляет только BESTPOSB, без `unlogall` и смены поправок.",
+        "Подписка и фрагменты write подтверждаются; ошибки и таймаут восстанавливают",
+        "соединение. Старые callbacks игнорируются, качество HUD сбрасывается при обрыве",
+        "или 8 с тишины. Профиль и failure paths проверены на API 26/36;",
+        "физический Pigo/PiRat smoke остаётся непроверенным.",
+        "Пока выбран внешний приёмник, соединение не рвётся при сворачивании карты: процесс",
+        "удерживает foreground-сервис connected-device и wake lock. Диагностический",
+        "`verbose_log` пишет GNSS/NMEA в локальный HyperLog только по явному чекбоксу.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-shared-gps-subscription"
+    ]
+  }
+}

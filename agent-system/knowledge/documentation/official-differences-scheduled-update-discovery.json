@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-scheduled-update-discovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Подготовка обновления в фоне — 2026-10-23",
+        "",
+        "В форке WorkManager проверяет новую версию раз в шесть часов и при запуске,",
+        "скачивает APK по Wi-Fi и мобильной сети без роуминга. Смена сети/роуминг/остановка",
+        "задачи прерывают HTTP; частичные байты продолжаются с проверкой диапазона и",
+        "полного hash. Проверенный APK хранится во внутренней папке приложения.",
+        "При открытии, в том числе offline, появляется «Обновление готово» с кнопками",
+        "«Обновить» и «Позже». Установка начинается только по нажатию, с сохранением",
+        "проверок подлинности и продолжения после Android install permission.",
+        "[Контракт](../runbooks/release-apk.md), Related `-Area updater`.",
+        "В native-сценарии нажатие «Обновить» проверяется после обработки очереди",
+        "Android на instrumentation thread; само `performClick()` не означает, что",
+        "обработчик установки уже выполнен. «Позже» не вызывает действие установки.",
+        "Transfer regression ждёт явного уничтожения Activity до отпускания HTTP-ответа;",
+        "первый завершившийся MainActivity не переводится обратно в живое состояние.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-scheduled-update-discovery"
+    ]
+  }
+}

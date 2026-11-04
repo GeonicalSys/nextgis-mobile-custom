@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-field-line-selection-priority",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Единый выбор и приоритет полевых линий — 2026-10-25",
+        "",
+        "Форк объединяет видимые треки и SQL-кандидаты всех допустимых типов векторов",
+        "в один прокручиваемый список, включая повторный выбор поверх текущего.",
+        "«Полевые линейные» с body/labels рисуются над треками и под точками; это не",
+        "фильтр hit-test. Official app master 04d57c9fd843db6745c170147d6a2863da807352",
+        "и maplib master 014247eea4a424e828c24d9e52e45fefed362f8d повторно проверены",
+        "через API, ревизии прежние; named field-line role и TrackMapStyle/queryTrackIds",
+        "являются частью fork. [Контракт](../architecture/track-controls.md).",
+        "",
+        "29 октября восстанавливается этот же fork contract для ordinary SQLite",
+        "CustomVectorSource: whole groups получают exact current controller alias,",
+        "canonical bottom-to-top model relative order независимо от bind/cache arrival",
+        "и сохранение cached wrapper/filter identity при order repair. Производители",
+        "ресурсов/NGW/Collector и правила выбора объектов не меняются. Новый isolated",
+        "`sqlite-priority` проверяет actual sources/passes/labels/pixels/SQL и hide/Undo;",
+        "первый native run выявил реальную ошибку порядка; после canonical traversal fix",
+        "focused case1/1 PASS на T40/API30 (`priority-related-t40-02`), затем весь класс",
+        "10 distinct методов PASS (`sqlite-related-t40-03/result.json`), final83 JVM",
+        "PASS. Nested/recreation ещё не проверены; vendor UID logcat `--uid` unsupported —",
+        "diagnostic gap. Это уточнение локального rendering consumer,",
+        "не новая проверка official master: база upstream comparison выше датирована",
+        "25 октября и в этом документационном шаге повторно не проверялась.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-field-line-selection-priority"
+    ]
+  }
+}

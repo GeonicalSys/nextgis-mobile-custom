@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-recovery-journal-process-view",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Подтверждённый process view recovery journal — 2026-10-30",
+        "",
+        "В текущей task-ветке форка failed ACK не должен попадать в последующую успешную",
+        "очередь через изменённый Android cache. Journal сохраняет один принятый typed",
+        "cohort семи queue/legacy ключей у точного preferences owner, публикует только true",
+        "и переносит весь cohort при следующей обычной записи. Нет нового формата,",
+        "compensating writes, resend policy или restart rollback. Карточка android-20261030-sync-journal-confirmation,",
+        "существующий MOB-02; это не upstream merge, выпуск или native acceptance.",
+        "Library clock63/app F61 delivery gate остаётся отдельным.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-recovery-journal-process-view"
+    ]
+  }
+}

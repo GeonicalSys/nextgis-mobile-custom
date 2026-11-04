@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-git-eol-delivery",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Git tooling: переносы строк — 2026-11-02",
+        "",
+        "MOB-DEV-01 добавляет общий для шести Geonical repositories блок `.gitattributes`:",
+        "обычный текст LF, Windows bat/cmd/ps1 — CRLF при checkout/export, ресурсы binary.",
+        "App `gradlew.bat` нормализуется отдельным commit (CRLF blob → LF blob), при",
+        "checkout остаётся CRLF. Содержимое команд и Android runtime не меняются.",
+        "Upstream QuickJS в maplib сохраняет явное `-text -whitespace`; source tripwires",
+        "уже нормализуют EOL и не переписываются. После Merge Commit maplib67,",
+        "maplibui49 и easypicker6 app90 закрепляет fetched merged pins `7152e3cd`,",
+        "`69cccf20`, `d4405ab4`; trees библиотек равны проверенным task tips.",
+        "Официальные ветки/upstream не меняются, APK не публикуется.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-git-eol-delivery"
+    ]
+  }
+}

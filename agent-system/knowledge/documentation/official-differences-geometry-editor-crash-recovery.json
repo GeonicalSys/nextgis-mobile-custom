@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-geometry-editor-crash-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "#### Crash recovery обычного редактора геометрии",
+        "",
+        "Помимо обхода, форк сохраняет последний результат обычного `MODE_EDIT` в",
+        "отдельном `geometry_edit_draft`. Запись выполняется синхронно после изменения",
+        "MapLibre-вершин, добавления тапом, undo/redo, окончания перемещения вершины и в",
+        "`onPause()`. Старый draft режима касания (`5`) мигрирует в `MODE_EDIT`. После",
+        "process/task death recovery hub предлагает",
+        "Continue/Discard между черновиком обхода и черновиком формы.",
+        "",
+        "Независимый walk draft сосуществует с черновиком создаваемой точки. Их UUID",
+        "разделяют владельцев; переданный в форму скетч не открывается повторно. Начальный",
+        "черновик формы точки сохраняется до запуска Activity и имеет приоритет при recovery.",
+        "",
+        "Черновик содержит WKT и идентификаторы активной карты, слоя, объекта и режима.",
+        "При Continue существующий объект заново читается из SQLite (атрибуты не",
+        "заменяются), а его геометрия подменяется черновиком; новый объект возвращается",
+        "с id `-1`. Совпадение map path и типа геометрии обязательно, поэтому одинаковые",
+        "`layer_id` в разных Collector workspaces не смешиваются. Полный undo/redo stack",
+        "не сериализуется — сохраняется только последняя видимая геометрия. Перед",
+        "восстановлением Polygon/MultiPolygon конвертер явно замыкает GeoJSON-кольца,",
+        "поэтому заливка и порядок вершин не расходятся после перемещения узла.",
+        "",
+        "Если после восстановления геометрии процесс прерван уже на форме нового",
+        "объекта, успешный Save возвращает карте `layer_id`, новый `feature_id` и признак",
+        "insert. Карта повторно разрешает слой из активного workspace и перезагружает",
+        "сохранённый объект, не полагаясь на уничтоженные вместе с процессом",
+        "`mSelectedLayer`, `editingObject` и `originalSelectedFeature`. Новый id ещё",
+        "отсутствует в process-local GeoJSON-списке, поэтому эта ветка перечитывает данные",
+        "слоя из SQLite, а не ограничивается обновлением стиля старого списка; объект",
+        "становится виден без перезапуска приложения.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-geometry-editor-crash-recovery"
+    ]
+  }
+}

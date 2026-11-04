@@ -1,0 +1,91 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-vector-layer-render-cache",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "#### Render cache (`VectorLayerRenderCache`)",
+        "",
+        "Классический путь при cold start: `MapDrawable.loadLayersToMaplibreMap()` на",
+        "worker-потоке для каждого видимого `VectorLayer` читает все строки SQLite,",
+        "конвертирует геометрию в GeoJSON `Feature`, применяет стиль (включая rule-based",
+        "и подписи) и кладёт результат в `GeoJsonSource`. На слоях с десятками тысяч",
+        "объектов это доминирует во времени запуска.",
+        "",
+        "Render cache хранит подготовленную геометрию на диске в",
+        "`<cacheDir>/maplibre_vector_render/v2/<layerId>/`:",
+        "",
+        "| Файл | Назначение |",
+        "|------|------------|",
+        "| `features-geom.geojson` | geometry-only shells (schema 3) |",
+        "| `features-styled.geojson` | полный набор для опционального native URI |",
+        "| `meta.json` | schema, `geomGeneration`, `styleFp`, `featureCount` |",
+        "",
+        "**Попадание в cache (hit).** При открытии карты `tryLoadFeatures()` читает",
+        "`features-geom.geojson`, затем в памяти вызывает",
+        "`MPLFeaturesUtils.refreshMaplibreStyleOnFeatures()` — стиль накладывается поверх",
+        "геометрии без повторного полного скана SQLite. Смена только стиля",
+        "(`invalidateOnStyleChange`) не сбрасывает geometry cache; меняется лишь",
+        "`features-styled.geojson`.",
+        "",
+        "Hot style refresh не изменяет `Feature` из live `sourceFeaturesHashMap` на",
+        "worker-потоке. Он загружает независимый geometry snapshot из render cache,",
+        "применяет props в общей последовательной vector-reload очереди и публикует",
+        "готовый список на main thread; cache miss переводит операцию в полный data",
+        "reload. Так Gson `LinkedTreeMap` одного MapLibre feature не записывается",
+        "одновременно из двух потоков.",
+        "",
+        "**Промах (miss) и запись.** Если cache отсутствует, устарел или `geomGeneration`",
+        "в `meta.json` не совпадает с `KEY_PREF_GEOM_CACHE_GENERATION` слоя — данные",
+        "снова читаются из БД, после чего `save()` атомарно пишет tmp-файлы и meta.",
+        "Любое изменение данных (`invalidateOnDataChange`) инкрементирует",
+        "`geomGeneration` и удаляет каталог cache.",
+        "",
+        "**Ограничения.** Cache hit всё ещё парсит GeoJSON в Java и для rule-style /",
+        "шаблонов подписей может дочитывать атрибуты из SQLite. Экспериментальный путь",
+        "`USE_MAPLIBRE_NATIVE_GEOJSON_URI` (передача file URI в MapLibre для native parse)",
+        "в production выключен (`false`) из-за риска пустых слоёв на части устройств.",
+        "Флаг `VECTOR_RENDER_DISK_CACHE_ENABLED` сейчас также false и отключает весь",
+        "legacy whole-layer механизм. Новый bounded complete-PBF кэш local MVT независим",
+        "от него. Native handoff проходит через компактный payload, поэтому старый",
+        "styled URI не может обойти проекцию.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-vector-layer-render-cache"
+    ]
+  }
+}

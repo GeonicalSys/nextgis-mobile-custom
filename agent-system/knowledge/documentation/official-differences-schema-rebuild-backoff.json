@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-schema-rebuild-backoff",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "При неизменной причине schema mismatch тяжёлый слой перестраивается не более",
+        "двух раз за 24 часа и не чаще раза в 10 минут. Новая копия сначала полностью",
+        "строится отдельно, затем одним main-thread commit заменяет прежние копии той же",
+        "project identity; состояние old+new не сохраняется. Перед account sync старые",
+        "дубликаты без pending changes/attachments проходят backup gate и схлопываются",
+        "до одной копии. Edited-копии не объединяются автоматически и блокируют sync.",
+        "Счётчик остановленных rebuild и ручной сброс защиты находятся в",
+        "настройках проекта. Пустой повторный запуск и системный timeout fill-service",
+        "останавливают foreground service, сохраняя durable import journal для resume.",
+        "Map/layer JSON сохраняется через `AtomicFile`, поэтому убийство процесса во",
+        "время commit не оставляет обрезанный `default.ngm` или `config.json`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-schema-rebuild-backoff"
+    ]
+  }
+}

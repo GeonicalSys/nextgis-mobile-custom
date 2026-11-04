@@ -145,6 +145,927 @@
       "blob": "44b4489c614c2f84ac6fa241177e8245f9464028",
       "sha256": "e1163efd99539d71b300482f53881e7dae554b508eff2a38e0ac1ba4dfa5f6e7",
       "bytes": 33641
+    },
+    {
+      "path": "docs/reference/official-differences.md",
+      "record": "official-differences.json",
+      "id": "lisa:mobile:resource:documentation-official-differences",
+      "revision": "04ad7aef8ed71401e4d3f2355dc9fe3b4691011a",
+      "blob": "f4d82a6443844d9276894164fae3fbda1f13f545",
+      "sha256": "88f44733be40d64fecbe8851fa7457b050b7942a2c09f0a1645f94e4bb117755",
+      "bytes": 246991,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:documentation-official-differences",
+          "start_byte": 0,
+          "end_byte": 307
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-git-eol-delivery",
+          "start_byte": 307,
+          "end_byte": 1272
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-release-225-preparation",
+          "start_byte": 1272,
+          "end_byte": 1837
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-release-225-native-followup",
+          "start_byte": 1837,
+          "end_byte": 2933
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-attachment-terminal-404",
+          "start_byte": 2933,
+          "end_byte": 4268
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-ngfp-prefetch-reader",
+          "start_byte": 4268,
+          "end_byte": 5220
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-recovery-journal-process-view",
+          "start_byte": 5220,
+          "end_byte": 6095
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-legacy-storage-reset-ownership",
+          "start_byte": 6095,
+          "end_byte": 7593
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-spatial-index-readiness",
+          "start_byte": 7593,
+          "end_byte": 8510
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-spatial-index-source-validation",
+          "start_byte": 8510,
+          "end_byte": 8972
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-bounded-small-blob-transport",
+          "start_byte": 8972,
+          "end_byte": 10192
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-sqlite-render-attribute-reads",
+          "start_byte": 10192,
+          "end_byte": 10865
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-sqlite-render-phase-diagnostics",
+          "start_byte": 10865,
+          "end_byte": 11699
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-ordinary-sqlite-vector-tiles",
+          "start_byte": 11699,
+          "end_byte": 12414
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-compact-native-payload",
+          "start_byte": 12414,
+          "end_byte": 13400
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-map-cache-memory-budget",
+          "start_byte": 13400,
+          "end_byte": 14401
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-map-memory-profiling-787",
+          "start_byte": 14401,
+          "end_byte": 15844
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-editor-hit-test-and-exit-history",
+          "start_byte": 15844,
+          "end_byte": 16551
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-full14-native-verification",
+          "start_byte": 16551,
+          "end_byte": 17342
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-offline-mvt-api30",
+          "start_byte": 17342,
+          "end_byte": 18354
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-offline-mvt-library-delivery",
+          "start_byte": 18354,
+          "end_byte": 18661
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-field-line-selection-priority",
+          "start_byte": 18661,
+          "end_byte": 20822
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-field-reminders",
+          "start_byte": 20822,
+          "end_byte": 22229
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-pending-gestures-mapview-close",
+          "start_byte": 22229,
+          "end_byte": 23069
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-track-list-selection-and-rename",
+          "start_byte": 23069,
+          "end_byte": 24192
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-category-effective-draft",
+          "start_byte": 24192,
+          "end_byte": 25255
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-fill-patterns-and-outline-preview",
+          "start_byte": 25255,
+          "end_byte": 26401
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-firefly-point-style",
+          "start_byte": 26401,
+          "end_byte": 27820
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-feature-copy-and-transform",
+          "start_byte": 27820,
+          "end_byte": 29423
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-lisa-release-224-preparation",
+          "start_byte": 29423,
+          "end_byte": 30032
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-glitchtip-triage-diagnostics",
+          "start_byte": 30032,
+          "end_byte": 32060
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-scheduled-update-discovery",
+          "start_byte": 32060,
+          "end_byte": 33730
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-sync-startup-migration-verification",
+          "start_byte": 33730,
+          "end_byte": 34650
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-compass-accuracy-sector",
+          "start_byte": 34650,
+          "end_byte": 35687
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-gps-recovery-episodes",
+          "start_byte": 35687,
+          "end_byte": 36362
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-error-reporting-contract-3",
+          "start_byte": 36362,
+          "end_byte": 37332
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-offline-usage-statistics",
+          "start_byte": 37332,
+          "end_byte": 38078
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-map-attribution-and-logo",
+          "start_byte": 38078,
+          "end_byte": 38881
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-gps-display-accuracy-floor",
+          "start_byte": 38881,
+          "end_byte": 39557
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-branded-contacts",
+          "start_byte": 39557,
+          "end_byte": 40332
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-single-parcel-mvt-label",
+          "start_byte": 40332,
+          "end_byte": 41728
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-legacy-track-history-migration",
+          "start_byte": 41728,
+          "end_byte": 42861
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-fast-change-delivery-and-project-clock",
+          "start_byte": 42861,
+          "end_byte": 43665
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-deferred-tabs-verification-and-behavior",
+          "start_byte": 43665,
+          "end_byte": 44656
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-automatic-background-gps",
+          "start_byte": 44656,
+          "end_byte": 46723
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-map-runtime-diagnostics",
+          "start_byte": 46723,
+          "end_byte": 47923
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-large-font-map-layout",
+          "start_byte": 47923,
+          "end_byte": 49117
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-map-bottom-indicators",
+          "start_byte": 49117,
+          "end_byte": 50005
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-track-loopback-verification-isolation",
+          "start_byte": 50005,
+          "end_byte": 50593
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-classic-style-verification-backend",
+          "start_byte": 50593,
+          "end_byte": 51014
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-layer-drag-cancellation",
+          "start_byte": 51014,
+          "end_byte": 51623
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-feature-target-layer-picker",
+          "start_byte": 51623,
+          "end_byte": 53686
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-pending-change-dot",
+          "start_byte": 53686,
+          "end_byte": 54233
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-comparison-purpose",
+          "start_byte": 54233,
+          "end_byte": 54768
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-comparison-basis-october-pins",
+          "start_byte": 54768,
+          "end_byte": 56187
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-october-official-comparison-and-live-measurement",
+          "start_byte": 56187,
+          "end_byte": 57138
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-account-project-sync-comparison",
+          "start_byte": 57138,
+          "end_byte": 58289
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-clear-fields-and-visibility",
+          "start_byte": 58289,
+          "end_byte": 59012
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-pinned-form-tabs-and-required",
+          "start_byte": 59012,
+          "end_byte": 59755
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-cascading-lists-rules",
+          "start_byte": 59755,
+          "end_byte": 60438
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-split-cascade-fields-and-gestures",
+          "start_byte": 60438,
+          "end_byte": 61341
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-cascade-snapshot-durability",
+          "start_byte": 61341,
+          "end_byte": 62118
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-cascading-forms-debug-delivery",
+          "start_byte": 62118,
+          "end_byte": 62820
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-prepared-version-and-official-3-2-0",
+          "start_byte": 62820,
+          "end_byte": 63723
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-october-release-lineage",
+          "start_byte": 63723,
+          "end_byte": 68999
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-initial-comparison-refs",
+          "start_byte": 68999,
+          "end_byte": 70551
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-unified-map-layout-comparison",
+          "start_byte": 70551,
+          "end_byte": 71317
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-september-sync-and-anr-comparison",
+          "start_byte": 71317,
+          "end_byte": 72584
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-september-background-and-interior-point",
+          "start_byte": 72584,
+          "end_byte": 73369
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-september-opengl-dependency-comparison",
+          "start_byte": 73369,
+          "end_byte": 73753
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-sync-interruption-and-progress",
+          "start_byte": 73753,
+          "end_byte": 75239
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-comparison-inclusion-rule",
+          "start_byte": 75239,
+          "end_byte": 75502
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-august-resource-tree-errors",
+          "start_byte": 75502,
+          "end_byte": 76072
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-august-local-vector-and-coordinate-import",
+          "start_byte": 76072,
+          "end_byte": 77414
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-august-camera-comparison",
+          "start_byte": 77414,
+          "end_byte": 78025
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-august-hidden-layer-comparison",
+          "start_byte": 78025,
+          "end_byte": 78441
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-august-library-pins",
+          "start_byte": 78441,
+          "end_byte": 78858
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-upstream-candidates-intro",
+          "start_byte": 78858,
+          "end_byte": 79436
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-ngw-required-form-attributes",
+          "start_byte": 79436,
+          "end_byte": 80677
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-mapview-lifecycle",
+          "start_byte": 80677,
+          "end_byte": 84940
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-initial-field-sketch",
+          "start_byte": 84940,
+          "end_byte": 89600
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-sketch-walk-continuation",
+          "start_byte": 89600,
+          "end_byte": 90268
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-track-button-and-recording-state",
+          "start_byte": 90268,
+          "end_byte": 90989
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-background-audio-monitor",
+          "start_byte": 90989,
+          "end_byte": 93217
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-form-without-intermediate-save",
+          "start_byte": 93217,
+          "end_byte": 94172
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-camera-rotation-and-location-fallback",
+          "start_byte": 94172,
+          "end_byte": 96811
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-local-geojson-crs-aliases",
+          "start_byte": 96811,
+          "end_byte": 97960
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-create-in-hidden-layer",
+          "start_byte": 97960,
+          "end_byte": 98835
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-layer-visibility-color",
+          "start_byte": 98835,
+          "end_byte": 99447
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-kml-gpx-coordinate-import",
+          "start_byte": 99447,
+          "end_byte": 100798
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-separate-collector-projects",
+          "start_byte": 100798,
+          "end_byte": 105262
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-shared-track-history",
+          "start_byte": 105262,
+          "end_byte": 106208
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-collector-import-preflight-and-composition",
+          "start_byte": 106208,
+          "end_byte": 109801
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-collector-district-filter",
+          "start_byte": 109801,
+          "end_byte": 115976
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-collector-import-process-recovery",
+          "start_byte": 115976,
+          "end_byte": 116501
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-server-schema-change-backup",
+          "start_byte": 116501,
+          "end_byte": 119340
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-server-managed-layer-config",
+          "start_byte": 119340,
+          "end_byte": 123245
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-feature-card-label-template",
+          "start_byte": 123245,
+          "end_byte": 123953
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-server-managed-form-package",
+          "start_byte": 123953,
+          "end_byte": 124715
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-config-only-sync",
+          "start_byte": 124715,
+          "end_byte": 128073
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-project-managed-layer-rights",
+          "start_byte": 128073,
+          "end_byte": 129695
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-renderer-selection-on-initial-bind",
+          "start_byte": 129695,
+          "end_byte": 130370
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-server-config-user-outcomes",
+          "start_byte": 130370,
+          "end_byte": 132116
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-advanced-maplibre-styles-intro",
+          "start_byte": 132116,
+          "end_byte": 134254
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-point-style-editor",
+          "start_byte": 134254,
+          "end_byte": 135090
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-line-style-editor",
+          "start_byte": 135090,
+          "end_byte": 135929
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-polygon-style-editor",
+          "start_byte": 135929,
+          "end_byte": 136489
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-label-style-editor",
+          "start_byte": 136489,
+          "end_byte": 138122
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-rule-based-style-editor",
+          "start_byte": 138122,
+          "end_byte": 140680
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-rendering-load-order-intro",
+          "start_byte": 140680,
+          "end_byte": 142676
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-vector-layer-render-cache",
+          "start_byte": 142676,
+          "end_byte": 146147
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-direct-vector-tiles-and-render-flags",
+          "start_byte": 146147,
+          "end_byte": 147679
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-batch-load-and-hot-add",
+          "start_byte": 147679,
+          "end_byte": 150534
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-map-user-location-overlay",
+          "start_byte": 150534,
+          "end_byte": 157152
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-immutable-local-ngrc",
+          "start_byte": 157152,
+          "end_byte": 157935
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-raster-mbtiles-legacy-debug",
+          "start_byte": 157935,
+          "end_byte": 161034
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-rendering-user-workflow",
+          "start_byte": 161034,
+          "end_byte": 161763
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-photo-coordinate-overlay",
+          "start_byte": 161763,
+          "end_byte": 163681
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-keep-map-screen-awake",
+          "start_byte": 163681,
+          "end_byte": 164449
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-bearing-distance-and-stakeout",
+          "start_byte": 164449,
+          "end_byte": 170115
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-walk-feature-capture",
+          "start_byte": 170115,
+          "end_byte": 175676
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-walk-feature-device-verification",
+          "start_byte": 175676,
+          "end_byte": 176019
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-multipolygon-topology-repair",
+          "start_byte": 176019,
+          "end_byte": 178063
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-geometry-editor-crash-recovery",
+          "start_byte": 178063,
+          "end_byte": 181190
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-recorder-native-verification",
+          "start_byte": 181190,
+          "end_byte": 181844
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-bluetooth-gnss-device-signal",
+          "start_byte": 181844,
+          "end_byte": 182512
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-durable-track-recorder",
+          "start_byte": 182512,
+          "end_byte": 185577
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-shared-gps-subscription",
+          "start_byte": 185577,
+          "end_byte": 190078
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-track-filtering",
+          "start_byte": 190078,
+          "end_byte": 192187
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-track-segments-after-gps-loss",
+          "start_byte": 192187,
+          "end_byte": 193089
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-track-audio-pipeline",
+          "start_byte": 193089,
+          "end_byte": 193867
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-resource-url-import",
+          "start_byte": 193867,
+          "end_byte": 195974
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-background-work-and-serial-fill",
+          "start_byte": 195974,
+          "end_byte": 197493
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-workspace-lease-and-path-allocation",
+          "start_byte": 197493,
+          "end_byte": 199234
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-interrupted-fill-quarantine",
+          "start_byte": 199234,
+          "end_byte": 200186
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-streamed-fill-geometry-validation",
+          "start_byte": 200186,
+          "end_byte": 200768
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-schema-rebuild-backoff",
+          "start_byte": 200768,
+          "end_byte": 202071
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-authoritative-schema-check",
+          "start_byte": 202071,
+          "end_byte": 202891
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-per-account-scheduled-sync",
+          "start_byte": 202891,
+          "end_byte": 203722
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-sync-foreground-service",
+          "start_byte": 203722,
+          "end_byte": 204517
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-transient-feature-sync-retry",
+          "start_byte": 204517,
+          "end_byte": 205346
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-sync-adapter-indicators",
+          "start_byte": 205346,
+          "end_byte": 205755
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-incremental-feature-pull",
+          "start_byte": 205755,
+          "end_byte": 206555
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-streamed-untracked-snapshot",
+          "start_byte": 206555,
+          "end_byte": 207681
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-fork-product-choices-intro",
+          "start_byte": 207681,
+          "end_byte": 207958
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-opengl-backend-choice",
+          "start_byte": 207958,
+          "end_byte": 209196
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-brand-and-variant-identities",
+          "start_byte": 209196,
+          "end_byte": 210628
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-signed-apk-update",
+          "start_byte": 210628,
+          "end_byte": 213263
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-local-telemetry-and-diagnostics",
+          "start_byte": 213263,
+          "end_byte": 215041
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-october-telemetry-comparison",
+          "start_byte": 215041,
+          "end_byte": 217667
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-october-library-delivery-receipt",
+          "start_byte": 217667,
+          "end_byte": 218063
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-comparison-exclusions",
+          "start_byte": 218063,
+          "end_byte": 218748
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-comparison-maintenance",
+          "start_byte": 218748,
+          "end_byte": 219437
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-shared-underlays-and-debug-transfer",
+          "start_byte": 219437,
+          "end_byte": 222327
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-september-shared-underlay-comparison",
+          "start_byte": 222327,
+          "end_byte": 222867
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-pr45-ngid-and-resource-picker",
+          "start_byte": 222867,
+          "end_byte": 223797
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-pr45-durable-form-track-and-outbox",
+          "start_byte": 223797,
+          "end_byte": 224881
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-pr45-comparison-and-delivery",
+          "start_byte": 224881,
+          "end_byte": 225721
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-mobile-project-rule-checks",
+          "start_byte": 225721,
+          "end_byte": 227007
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-track-delivery-after-registration",
+          "start_byte": 227007,
+          "end_byte": 228419
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-sync-notification-policy",
+          "start_byte": 228419,
+          "end_byte": 229131
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-october-sync-notification-comparison",
+          "start_byte": 229131,
+          "end_byte": 230506
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-fitted-chooser-dialog",
+          "start_byte": 230506,
+          "end_byte": 230950
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-opt-in-verification-apk",
+          "start_byte": 230950,
+          "end_byte": 231366
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-project-script-reader-callback-guard",
+          "start_byte": 231366,
+          "end_byte": 231775
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-native-verification-map-readiness",
+          "start_byte": 231775,
+          "end_byte": 232765
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-safe-stop-and-track-history",
+          "start_byte": 232765,
+          "end_byte": 233454
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-direct-visible-line-labels",
+          "start_byte": 233454,
+          "end_byte": 234119
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-restart-fallback-and-render-stress-gate",
+          "start_byte": 234119,
+          "end_byte": 234561
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-opt-in-cold-render-instrumentation",
+          "start_byte": 234561,
+          "end_byte": 235758
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-ngfp-source-review",
+          "start_byte": 235758,
+          "end_byte": 236511
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-lookup-key-set-replacement",
+          "start_byte": 236511,
+          "end_byte": 237566
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-stakeout-source-contract-review",
+          "start_byte": 237566,
+          "end_byte": 238218
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-scoped-full-pull-and-save-signal",
+          "start_byte": 238218,
+          "end_byte": 238881
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-scoped-pull-source-verification",
+          "start_byte": 238881,
+          "end_byte": 239798
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-typed-ngw-error-delivery",
+          "start_byte": 239798,
+          "end_byte": 241120
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-ngw-error-source-verification",
+          "start_byte": 241120,
+          "end_byte": 242357
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-spatial-cache-recovery",
+          "start_byte": 242357,
+          "end_byte": 244747
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-track-panel-gpx-sharing",
+          "start_byte": 244747,
+          "end_byte": 245379
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-direct-tile-upstream-comparison",
+          "start_byte": 245379,
+          "end_byte": 245903
+        },
+        {
+          "id": "lisa:mobile:resource:official-differences-debug-underlay-transfer-progress",
+          "start_byte": 245903,
+          "end_byte": 246701
+        },
+        {
+          "id": "lisa:mobile:evidence:official-differences-november-source-compilation",
+          "start_byte": 246701,
+          "end_byte": 246991
+        }
+      ]
     }
   ]
 }

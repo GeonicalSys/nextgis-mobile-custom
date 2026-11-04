@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-glitchtip-triage-diagnostics",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Обработка GlitchTip — 2026-10-23",
+        "",
+        "Компас переживает отсутствие сервиса/оборудования вибрации. Штатный no-fix,",
+        "acquisition/filter wait и явно распознанный локальный tile backpressure остаются",
+        "в локальном журнале. GPS callback-stall warning требует 30 s непрерывного сбоя;",
+        "snapshot v3 сохраняет длительность причины и интервалы observer/сна устройства.",
+        "OS process_exit metadata дополняет historical ANR/native failures только при",
+        "совпадении процесса, типа завершения и времени. Native scope хранит operation/phase.",
+        "Отдельный restart fallback форка на API30+ пробует OS trace для SIGNALED:",
+        "bounded AUTO parser сохраняет native либо ANR frames с возможной связью с прежним",
+        "зависанием (`association=may_precede_exit`), без вывода о причине сигнала/OOM.",
+        "Пределы и явные unknown/missing/IO состояния описаны в [контракте](../architecture/error-reporting.md).",
+        "CLI подключения и workflow закрытия уже находятся в репозитории:",
+        "[runbook](../runbooks/glitchtip-triage.md), [разбор](glitchtip-triage-2026-10-23.md).",
+        "API комментариев использует nested data.text; wire shape закреплён regression test.",
+        "Source GPS integration tests проверяют настоящий prior callback/status silence",
+        "и новый snapshot v3; ordinary acquisition больше не служит fixture сбоя доставки.",
+        "Это диагностические улучшения и конкретный NPE fix; точные причины старых ANR",
+        "и SIGABRT не объявляются установленными, APK этим PR не публикуется.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-glitchtip-triage-diagnostics"
+    ]
+  }
+}

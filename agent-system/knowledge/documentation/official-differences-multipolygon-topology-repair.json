@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-multipolygon-topology-repair",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "#### Исправление самопересечений мультиполигона при сохранении",
+        "",
+        "Если контур слоя с точным типом `GTMultiPolygon` после обхода или ручного",
+        "редактирования невалиден, форк перед открытием формы атрибутов проверяет и",
+        "исправляет его через JTS `GeometryFixer`. Самопересекающееся кольцо может стать",
+        "несколькими частями, а перекрывающиеся части — объединиться, но это остаётся",
+        "одним feature и одним `GeoMultiPolygon`: форма открывается один раз, поэтому",
+        "атрибуты не дублируются между частями.",
+        "",
+        "При ручном редактировании конвертер MapLibre явно сохраняет Web Mercator CRS на",
+        "контейнере мультиполигона и его кольцах. Если старый edit/draft-объект содержит",
+        "CRS только на дочернем полигоне или точках, repair восстанавливает его до",
+        "обратной конвертации из JTS. Поэтому ветка работает для любого количества вершин,",
+        "а не только для заранее подготовленных геометрий с CRS на верхнем уровне.",
+        "",
+        "Пустой, неполигональный или всё ещё невалидный результат не сохраняется:",
+        "пользователь остаётся в редакторе с исходной геометрией. Автоматическая ветка",
+        "намеренно не включена для простого `GTPolygon`, `LineString` и",
+        "`MultiLineString`; их прежнее поведение не меняется. Контракт проверяется",
+        "`SMOKE-MULTIPOLYGON-REPAIR`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-multipolygon-topology-repair"
+    ]
+  }
+}

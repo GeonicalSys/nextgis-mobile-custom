@@ -60,6 +60,13 @@ To restore the previous reader, regenerate the views first so they carry any
 intervening edits. The [App inventory](migration/prose-inventory.json) separates
 the other active entrances, current documents and historical evidence.
 
+For the official comparison, edit the appropriate `official-differences-*.json`
+record. `official-differences.json` carries the frontmatter and orders the
+topics through `contains` relations. Add, move or remove a topic through
+those relations, then regenerate the Markdown. The pinned byte spans in
+provenance describe the original revision. Keep dated comparisons and
+verification in evidence records with their original scope.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-native-verification-map-readiness",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Fork test fixtures ожидают attached MapView с готовым текущим MapLibre instance,",
+        "явный synthetic fix и enabled creation action. Stateful map/sync cases получают",
+        "отдельный процесс и чистую verification базу; diagnostic restart chain сохраняет",
+        "данные намеренно. Legacy CI повторно выдаёт background location permission после",
+        "переустановки и denied сценария, а map/layers проверяет тем же runner. Эти",
+        "изменения стабилизируют проверку Android lifecycle и не меняют production GPS",
+        "permissions или поведение карты. Полный phone/emulator прогон подтвердил все",
+        "177 native cases и 36 chooser UI profiles; доказательства и границы проверки",
+        "приведены в [истории приёмки](../history/2026-10-14-layer-chooser-tests.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-native-verification-map-readiness"
+    ]
+  }
+}

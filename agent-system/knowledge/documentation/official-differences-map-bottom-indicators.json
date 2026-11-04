@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-map-bottom-indicators",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Нижняя панель сохраняет две группы: координаты/масштаб и GPS/точность.",
+        "Если масштаб не помещается рядом с координатами, он переходит к GPS/точности;",
+        "короткие показатели располагаются вместе, когда хватает ширины.",
+        "Высота и скорость удалены; пустой footer при повышенном display size не добавляется.",
+        "Прозрачные слоты свёрнутого меню создания передают карте тапы и жесты,",
+        "несмотря на старую AnimatorProxy-анимацию скрытых кнопок. Native regression",
+        "проверяет DOWN/MOVE/UP, видимый плюс и компактную панель при разном DPI.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-map-bottom-indicators"
+    ]
+  }
+}

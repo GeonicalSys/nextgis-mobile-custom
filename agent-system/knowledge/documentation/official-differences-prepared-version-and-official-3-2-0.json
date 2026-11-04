@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-prepared-version-and-official-3-2-0",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Подготовленные исходники форка: Lisa/Belka Release `3.1.2.27` / `versionCode` 221; Lisa Debug",
+        "`3.1.2.23` / `versionCode` 218. Сверено с официальным приложением `3.2.0` и с",
+        "головами официальных repositories, повторно проверенными 7 октября 2026 года: app",
+        "`482f26f30abea1468ebfefaa45092d86f921d68b`, maplib",
+        "`f260631d4f4c2c7ea4ccaa8c0d28311507e30040`, maplibui",
+        "`90cf6769aed0a5aa835b142977b9d31f89270e82`. Проверка выполнена через",
+        "GitHub API по pinned SHA, так как configured upstream remote в этом checkout",
+        "отсутствует. В частности, учтён",
+        "официальный выпуск `3.2.0`",
+        "[`7152fa3`](https://github.com/nextgis/nextgis_mobile_android/commit/7152fa3),",
+        "в котором объявлена поддержка raster MBTiles:",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-prepared-version-and-official-3-2-0"
+    ]
+  }
+}

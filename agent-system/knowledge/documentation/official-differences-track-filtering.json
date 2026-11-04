@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-track-filtering",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Адаптивный фильтр сглаживает шум, удерживает остановку и отбрасывает одиночные",
+        "выбросы, учитывая скорость, точность и изменение курса автомобиля. Общий источник",
+        "сохраняет движение до 160 км/ч и повороты; ограничение режима «Пешеход» применяется",
+        "отдельно в recorder и не меняет курсор или обход геометрии.",
+        "Движение телефона в руках не считается началом пути: требуется подтверждённое",
+        "удаление за пределы погрешности. Начало пути временно буферизуется и добавляется",
+        "после подтверждения с исходными временами и поворотами. GPX шарится с именем",
+        "`.gpx`; Intent остаётся `application/gpx+xml`. FileProvider отдаёт `text/xml`,",
+        "чтобы клиент с `MimeTypeMap` не дописывал `.bin` и не превращал неизвестный GPX",
+        "MIME в `.null`; MAX может показать `.gpx.xml`.",
+        "Текущая сглаженная позиция отделена от удерживаемой вершины стоянки. Ожидание",
+        "подтверждения линии не удерживает курсор в начале маршрута и не превращает",
+        "пройденное расстояние в радиус accuracy. Короткие окна для хорошего сигнала и",
+        "медианные части окна для обычной уличной точности уменьшают задержку начала",
+        "ходьбы, сохраняя ранние повороты из буфера. Реальные пределы требуют полевой",
+        "проверки; синтетические регрессии не являются измерением всех устройств.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-track-filtering"
+    ]
+  }
+}

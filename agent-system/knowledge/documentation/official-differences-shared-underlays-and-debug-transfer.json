@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-shared-underlays-and-debug-transfer",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Общие подложки и перенос из Debug",
+        "",
+        "Офлайн-NGRc/MBTiles хранятся один раз в каталоге приложения и подключаются к нескольким проектам. Новый NGRc сразу превращается в MBTiles без дерева файлов; старые распакованные тайлы переносятся без перекодирования. Удаление слоя снимает ссылку, удаление файла доступно из хранилища с перечнем проектов. Geonical предлагает обновить доверенный старый Debug для переноса подложек; обычное самообновление сохраняет отдельные проверки. Пока перенос идёт, выход из хранилища спрашивает подтверждение; обновлённый Debug с картой без project registry не трогает исходные папки до явного экспорта.",
+        "",
+        "Объединение одинакового архива, представленного деревом тайлов и MBTiles,",
+        "сохраняет отображение и проектные настройки. Ссылки старых сборок с неверным",
+        "форматом восстанавливаются при загрузке слоя.",
+        "Управление общими подложками открывается прямо из настроек, рядом с управлением",
+        "проектом; выбор сохранённой подложки доступен из меню добавления слоя. «Открыть локальный»",
+        "и «Новая подложка из файла» кладут NGRc, raster MBTiles и ZIP с MBTiles/NGRc",
+        "в то же хранилище. Диалог загрузки показывает имя файла и прогресс, а не",
+        "идентификатор документа Android. Перенос",
+        "из старого Debug запускается в хранилище пунктом «Импортировать из старого",
+        "приложения», только в Geonical при установленном доверенном Debug и не в режиме",
+        "выбора слоя.",
+        "",
+        "Потоковый импорт принимает штатный `Mapnik.json` и тайлы JPEG/PNG/WebP;",
+        "ошибка импорта не обрушает карту при удалении незавершённого слоя. Отсутствие",
+        "exporter старого доверенного Debug проверяется по установленной Activity,",
+        "поэтому запуск и хранилище подложек показывают предложение обновления.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-shared-underlays-and-debug-transfer"
+    ]
+  }
+}

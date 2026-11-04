@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-photo-coordinate-overlay",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Координаты и время на фотографиях",
+        "",
+        "**Что это.** Приложение может наносить на новую фотографию-вложение видимую",
+        "плашку с координатами и, при необходимости, временем съёмки. Координаты также",
+        "записываются в EXIF итогового JPEG.",
+        "",
+        "**Для чего.** Снимок остаётся привязанным к месту даже после выгрузки из базы или",
+        "отправки как обычного файла. Это полезно для актов, обследований и ситуаций, где",
+        "координаты должны быть видны без специализированного GIS-приложения.",
+        "",
+        "**Как используется.** В настройках карты включается нанесение координат на",
+        "фото. Там же выбирается источник: текущее положение устройства либо координаты",
+        "редактируемого объекта, а также включается отображение времени. После съёмки или",
+        "добавления нового фото приложение исправляет ориентацию изображения, формирует",
+        "плашку в выбранном формате координат и сохраняет обработанную копию как",
+        "вложение. Нанесение координат и использование координаты объекта включены по умолчанию;",
+        "одноразовая миграция включает их и на уже установленной версии, после чего ручной выбор",
+        "пользователя сохраняется.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-photo-coordinate-overlay"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-field-reminders",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Недельные напоминания полевому пользователю — 2026-10-25",
+        "",
+        "При запуске форк различает давность успешного полного sync онлайн-проекта,",
+        "успешной проверки обновлений и давно известного неустановленного APK до/после",
+        "проверенной загрузки. Для локальных проектов sync не проверяется; неизвестная",
+        "старая история не получает выдуманную дату успеха. Работа остаётся доступной,",
+        "установка требует явного действия. Одна сводная подсказка не повторяется на",
+        "каждый retry/поворот; постоянно живой процесс повторяет review при открытии",
+        "через сутки. [Контракт](../architecture/maintenance-reminders.md).",
+        "Official `nextgis/nextgis_mobile_android` master повторно проверен через API:",
+        "`04d57c9fd843db6745c170147d6a2863da807352`, ревизия прежняя; tree не содержит",
+        "AppUpdateManager, StartupUpdateCheckScheduler или MaintenanceReminders.",
+        "Это политика fork self-hosted updater, без изменения NGW/desktop протокола.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-field-reminders"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-map-cache-memory-budget",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Cache economy учитывает текущую свободную системную/Java память и OS low-memory,",
+        "в том числе занятое устройство8GiB. Used/native/RSS и номинальный low-RAM класс",
+        "сами по себе не включают предупреждение/замедление; RSS хранится как диагностика.",
+        "SDK cache trim, local MVT coarse-prefetch off, два normal builder/один constrained",
+        "и private complete-PBF disk cache32/128MiB снижают лишнюю работу. App предупреждает",
+        "один раз за процесс с ручным повторным статусом. Это не hard native cap,",
+        "не файл подкачки и не eviction внутреннего GeoJSONVT index. Явный503 никогда",
+        "не маскируется неполным200; восстановление SDK после возвращения RAM ещё",
+        "требует native приёмки.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-map-cache-memory-budget"
+    ]
+  }
+}

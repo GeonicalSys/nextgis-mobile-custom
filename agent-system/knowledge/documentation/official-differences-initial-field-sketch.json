@@ -1,0 +1,87 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-initial-field-sketch",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Упрощённый полевой скетч полигонов",
+        "",
+        "**Что это.** После выбора слоя точка либо первый узел LineString/Polygon и их",
+        "Multi-вариантов сразу появляется точно в экранной проекции актуального центра",
+        "камеры; линии и полигоны преобразуют экранные вершины через ту же текущую",
+        "MapLibre-проекцию, что и линейка. Нижняя панель не дублирует запуск кнопкой `+`,",
+        "а отмена нового скетча после подтверждения возвращает на карту.",
+        "Следующие узлы создаются тапами,",
+        "а промежуточные — нажатием на маркер середины ребра; тот же midpoint-механизм",
+        "доступен линейке. В панелях линий и полигонов нет дополнения касанием и overflow-",
+        "кнопки. У полигонов также нет добавления/удаления частей и отверстий; новый",
+        "MultiPolygon не может получить вторую часть случайным повторным нажатием.",
+        "Перед вставкой выбранная вершина остаётся красной, следующая по порядку вершина",
+        "той же линии или кольца показывается увеличенной оранжевой точкой, а сегмент до",
+        "неё — толстой оранжевой линией. На конце незамкнутой линии направления нет, а",
+        "последняя вершина кольца указывает на первую. В проверенном official maplib HEAD",
+        "[`21578af`](https://github.com/nextgis/android_maplib/commit/21578af6bfc54bbb3e064c6772a2d596083716de)",
+        "такого указателя направления вставки нет.",
+        "Существующие multipart/holed объекты при открытии не упрощаются. Площадь в режиме",
+        "линейки подписывается в гектарах. Сохранение одноточечного MultiPolygon не запускает",
+        "topology repair и сообщает «Недостаточно точек».",
+        "",
+        "Undo/Redo хранит до 100 снимков с различающимся координатным WKT; повторные",
+        "callbacks, включая обновление только CRS, не занимают новый шаг и не требуют",
+        "дополнительного нажатия. Переполнение не создаёт пустой шаг. В official",
+        "`android_maplibui/master` по-прежнему используются лимит 10,",
+        "без удаления одинаковых снимков и с предварительным сдвигом курсора истории.",
+        "В режиме линейки форк показывает те же кнопки Undo/Redo и применяет эту историю",
+        "к добавлению и переносу измерительных точек; official `RulerOverlay` истории",
+        "действий и панели отмены/повтора не имеет. Снимки форка берутся из фактически",
+        "отображаемого MapLibre `MeasurmentLine`, поэтому восстановление шага меняет",
+        "линию на карте, а не только состояние legacy overlay.",
+        "",
+        "При crash recovery и NGW fill WKT Polygon/MultiPolygon разбирается по уровню",
+        "скобок без дублирования внешнего кольца как дырки, обрыва member на первой дырке",
+        "или потери следующих частей. Поэтому заливка, части и узлы восстанавливаются",
+        "согласованно. Для обычного Polygon самопересечение сообщается отдельно от",
+        "недостаточного числа точек. При ошибке полного NGW fill форк дополнительно пишет",
+        "в локальный HyperLog слой, remote id, нулевой индекс объекта, класс/сообщение и",
+        "ограниченный стек без feature payload. В official master сохранены позиционные",
+        "WKT parsers, `printStackTrace()` и общий текст ошибки в fill/save path.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-initial-field-sketch"
+    ]
+  }
+}

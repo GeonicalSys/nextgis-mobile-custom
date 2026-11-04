@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-background-audio-monitor",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "**Звуковой контроль фоновой записи.** Для трека и обхода по умолчанию включён",
+        "короткий контрольный сигнал: он звучит только при скрытом UI/выключенном экране,",
+        "по фиксированному расписанию каждые 10 секунд, пока отдельная health-подписка",
+        "получает свежие пригодные координаты. Библиотечная реализация, слитая в актуальные",
+        "`maplib`/`maplibui`, использует порог перемещения 0 м и позволяет отличить",
+        "неподвижное устройство от прекращения доставки; health-фиксы сами не добавляются",
+        "в геометрию. Явная ошибка записи получает отдельный сигнал не чаще раза в минуту.",
+        "Звук идёт через системный alarm stream, поэтому минимальная громкость уведомлений",
+        "его не глушит. При нулевой/выключенной громкости будильника используется короткая",
+        "вибрация, а для ошибки записи — двойная; DND приложение не обходит. Прекращение",
+        "ожидаемых подтверждений сообщает пользователю, что координаты перестали доходить",
+        "либо recorder больше не работает. В проверенном official",
+        "app/maplibui такого общего fresh-location heartbeat для track/walk нет.",
+        "При отзыве location permission активный или sticky-restarted recorder не пытается",
+        "запустить запрещённый Android location-FGS: `SecurityException` перехватывается,",
+        "трек сохраняет durable intent, а обход — crash draft. После возврата разрешения",
+        "запись может продолжиться штатным recovery path без цикла падений.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-background-audio-monitor"
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-lookup-key-set-replacement",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Lookup key-set и source-контракт цели — 30 октября2026",
+        "",
+        "Собственный maplib сравнивает equal-count lookup через nonnull remote value:",
+        "новый ключ вызывает штатную замену содержимого кеша вместо null dereference.",
+        "Обработанные IOException/NGException/JSONException сохраняют прежний sync кеш;",
+        "valid-but-incomplete/silent partial snapshot остаётся UNKNOWN в существующем",
+        "Root AUDIT-TODO-NGW-PARTIAL-SNAPSHOT.",
+        "Кеш сохраняет объект, unchanged/reordered no-write и прежние failure/savefalse",
+        "ветви; retry/disk гарантии не добавлены. Отдельные9 App JVM PASS и BelkaRelease",
+        "source compile37с не подтверждают upstream delta, merged pointer или native NGW.",
+        "Подробности: [обмен и хранение](../architecture/ngw-sync-and-storage.md),",
+        "android-20261030-lookup-cache-regression и maplib-20261030-lookup-cache-keys.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-lookup-key-set-replacement"
+    ]
+  }
+}

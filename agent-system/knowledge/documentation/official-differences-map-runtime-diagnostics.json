@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-map-runtime-diagnostics",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Форк добавляет MapRuntimeDiagnostics: независимое наблюдение синхронных touch",
+        "queries, bounded atomic snapshot для delayed AppExitInfo, этапы/нагрузка локальных",
+        "тайлов и точные queue_full/heap_headroom headers. Sync enqueue передаёт исходную",
+        "причину и этап ошибки, сохраняя журнал. Это дополнение к [контракту диагностики](../architecture/error-reporting.md).",
+        "GitHub API 2026-10-13: official maplib",
+        "`fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4` и official app",
+        "`04d57c9fd843db6745c170147d6a2863da807352`",
+        "не содержат MapRuntimeDiagnostics и SyncRecoveryJournal соответственно.",
+        "App закрепляет fetched Merge Commit maplib #52",
+        "`527291e0c426c8f32c06813cd799c81d87c6e542`, включающий #51",
+        "`28a4300ae308c6f531c9b8073382f09c1d6ad052` и #50",
+        "`6f398acb59d98fdb5a858754404646c3dfe73f4f`. Диагностическое дерево равно",
+        "проверенному `f6735d2`; production VERSION_NAME — `3.1.2.29`.",
+        "Lisa/Belka Release — `3.1.2.29` / `223`. Debug остаётся `3.1.2.23` / `218`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-map-runtime-diagnostics"
+    ]
+  }
+}

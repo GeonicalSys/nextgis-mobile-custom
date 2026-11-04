@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-pinned-form-tabs-and-required",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Форк закрепляет вкладки NGFP над вертикальной прокруткой и переключает их",
+        "горизонтальным взмахом по содержимому. Независимый `lisa_form_rules` задаёт",
+        "универсальную условную обязательность с offline-проверкой, динамическими",
+        "маркерами и pin черновика. Официальный maplibui HEAD `90cf6769` повторно проверен",
+        "через GitHub API 7 октября: сохраняет прежнее расположение Tabs и ошибку",
+        "формирования metadata prefix при автоматическом выборе формы.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-pinned-form-tabs-and-required"
+    ]
+  }
+}

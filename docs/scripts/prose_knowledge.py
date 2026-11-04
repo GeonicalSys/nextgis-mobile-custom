@@ -4,47 +4,72 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path, PurePosixPath
 
 
 OWNER = "android_projects/android_gisapp"
 DIRECTORY = Path("agent-system/knowledge/documentation")
 MANIFEST = Path("agent-system/provenance/documentation.json")
+SECTION_ID = re.compile(r"lisa:mobile:(resource|evidence):([a-z0-9][a-z0-9_.-]*)")
 
 
-def project_documents(owner: Path) -> dict[Path, str]:
+def markdown_lines(facets: dict, key: str, name: str) -> list[str]:
+    lines = facets[key]["value"]
+    if (not isinstance(lines, list) or not lines
+            or any(not isinstance(line, str) or "\n" in line or "\r" in line for line in lines)):
+        raise ValueError(f"Invalid documentation lines in {key}: {name}")
+    return lines
+
+
+def project_documents(owner: Path) -> dict[PurePosixPath, str]:
     manifest = json.loads((owner / MANIFEST).read_bytes())
     if manifest["schema_version"] != 1 or manifest["owner"] != OWNER or not manifest["sources"]:
         raise ValueError("Invalid documentation provenance")
     documents = {}
     expected = set()
     identities = set()
-    for source in manifest["sources"]:
-        view = PurePosixPath(source["path"])
-        name = source["record"]
-        identity = source["id"]
-        if (view.parts[:1] != ("docs",) or view.suffix != ".md"
-                or ".." in view.parts or "\\" in str(view)
-                or Path(name).name != name or not name.endswith(".json")
-                or name in expected or identity in identities or view in documents):
-            raise ValueError(f"Invalid or duplicate documentation address: {source}")
+
+    def read_record(name: str, identity: str, view: PurePosixPath, kind: str) -> dict:
+        if (Path(name).name != name or "\\" in name or not name.endswith(".json")
+                or name in expected or identity in identities):
+            raise ValueError(f"Invalid or duplicate documentation record: {name}")
         expected.add(name)
         identities.add(identity)
         record = json.loads((owner / DIRECTORY / name).read_bytes())
         if (record["schema_version"] != 2 or record["id"] != identity
                 or record["owner"] != OWNER or record["topic"] != "documentation"
-                or record["kind"] != "resource"
+                or record["kind"] != kind
                 or record["provenance"] != {"manifest": MANIFEST.as_posix(), "scopes": [identity]}):
             raise ValueError(f"Invalid documentation record: {name}")
-        facets = record["facets"]
-        if facets["view-path"]["value"] != view.as_posix():
+        if record["facets"]["view-path"]["value"] != view.as_posix():
             raise ValueError(f"Documentation view path differs: {name}")
-        frontmatter = facets["frontmatter"]["value"]
-        body = facets["body"]["value"]
-        for lines in (frontmatter, body):
-            if (not isinstance(lines, list) or not lines
-                    or any(not isinstance(line, str) or "\n" in line or "\r" in line for line in lines)):
-                raise ValueError(f"Invalid documentation lines: {name}")
+        return record
+
+    for source in manifest["sources"]:
+        view = PurePosixPath(source["path"])
+        if (view.parts[:1] != ("docs",) or view.suffix != ".md"
+                or ".." in view.parts or "\\" in str(view) or view in documents):
+            raise ValueError(f"Invalid or duplicate documentation address: {source}")
+        name = source["record"]
+        record = read_record(name, source["id"], view, "resource")
+        frontmatter = markdown_lines(record["facets"], "frontmatter", name)
+        body = list(markdown_lines(record["facets"], "body", name))
+        # Ordered contains relations are the layout. Provenance spans describe the original only.
+        for edge in record["relations"]:
+            if edge["type"] != "contains":
+                continue
+            identity = edge["target"]
+            match = SECTION_ID.fullmatch(identity)
+            if match is None or edge["status"] != "source_backed":
+                raise ValueError(f"Invalid documentation section: {identity}")
+            kind, slug = match.groups()
+            section_name = f"{slug}.json"
+            section = read_record(section_name, identity, view, kind)
+            if ("frontmatter" in section["facets"]
+                    or any(edge["type"] == "contains" for edge in section["relations"])):
+                raise ValueError(f"Nested documentation section: {identity}")
+            body.extend(markdown_lines(section["facets"], "body", section_name))
         documents[view] = "\n".join(["---", *frontmatter, "---", *body])
     if {path.relative_to(owner / DIRECTORY).as_posix()
             for path in (owner / DIRECTORY).rglob("*.json")} != expected:

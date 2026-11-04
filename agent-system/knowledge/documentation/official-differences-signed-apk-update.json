@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-signed-apk-update",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Самостоятельное обновление APK",
+        "",
+        "Пользователь может проверить обновления из приложения; после свежего запуска",
+        "также выполняется тихая проверка при наличии сети. Неудачная попытка повторяется",
+        "после восстановления сети или возврата к карте с ограниченной частотой.",
+        "Восстановление окна в новом процессе не отключает проверку; системный признак",
+        "VALIDATED не блокирует запрос к доступному серверу. Причины ожидания/ошибок и",
+        "результат записываются в локальный журнал. GitHub API 2026-10-13: official app",
+        "master `04d57c9fd843db6745c170147d6a2863da807352` не содержит self-hosted updater",
+        "и startup scheduler. Для Lisa, Belka и Debug",
+        "используются отдельные ветки репозитория `apps-geonical.ru/lisa-mobile`. Перед",
+        "предложением установки приложение сверяет schema, ветку/channel, package ID,",
+        "версию и versioned URL, а после скачивания — размер, SHA-256, реальные",
+        "versionCode/versionName и сертификат подписи APK. APK другого бренда или",
+        "неподтверждённый файл не передаётся системному установщику.",
+        "",
+        "На Android 9–10 PackageManager может не заполнить современный `SigningInfo` для",
+        "скачанного archive APK. Форк одновременно запрашивает legacy `signatures` и",
+        "использует его только как источник тех же SHA-256 сертификатов; package/flavor,",
+        "версия, hash и совпадение сертификата с установленным приложением не ослабляются.",
+        "",
+        "Если Android требует отдельно разрешить установку из этого источника,",
+        "приложение открывает системные настройки и после возврата автоматически",
+        "продолжает установку уже скачанного и повторно проверенного APK. Повторно",
+        "запускать проверку обновлений или перезапускать приложение не требуется.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-signed-apk-update"
+    ]
+  }
+}

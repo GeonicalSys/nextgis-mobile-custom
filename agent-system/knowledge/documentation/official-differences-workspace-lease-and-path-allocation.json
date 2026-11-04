@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-workspace-lease-and-path-allocation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Один process-wide lease удерживает активный workspace от нажатия ручной sync до",
+        "завершения всех её аккаунтов и зависимых fill/rebuild стадий. На этом интервале",
+        "переключение, создание, переименование и удаление проекта запрещены; повторный",
+        "полный sync также не стартует. Ручная sync обходит только NGW-слои активной карты,",
+        "а не все сохранённые проекты.",
+        "",
+        "Даже если fill-задачи готовятся параллельно, каждая атомарно резервирует",
+        "уникальный UUID-каталог слоя до создания SQLite-таблицы. Первая ошибка batch",
+        "insert откатывает неполный слой вместо тысяч повторных запросов к неверной",
+        "таблице. Перезагрузка карты считается завершённой только после проверки, что",
+        "видимые vector sources и style layers действительно появились в MapLibre;",
+        "неполный apply автоматически получает один полный повтор.",
+        "Если слой был намеренно выключен во время импорта, его последующее локальное",
+        "включение проверяет live MapLibre style и при отсутствии source/layer загружает",
+        "их сразу — серверный `visible`, синхронизация и перезапуск для этого не нужны.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-workspace-lease-and-path-allocation"
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-bounded-small-blob-transport",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Bounded small-BLOB transport — 2026-10-28",
+        "",
+        "Невыпущенный fork-кандидат после actual6039 BLOB1458ms/3051 originals добавляет",
+        "geometry-only32-ID cursor: whole BLOB<=16KiB в explicit1MiB window на API28+;",
+        "большие, API26/27 и safely unsupported driver сохраняют полный PFD путь.",
+        "Attrs projection не расширяется, bytes/order/types/NULL/epochs/style не меняются.",
+        "OrdinaryD101 normalall3/matrixPASS,71focusedPASS; physicalAPI30 cold1403 дал",
+        "1350inline+2PFD/1352consumed originals без retained read/window failures.",
+        "121/110-feature same9counter BLOB stages83.57→13.28ms и134.11→15.37ms, но",
+        "IOqueue/limited snapshots не принимают весь кадр.512KiB small payload не означает",
+        "общий RAM budget; native PSS/полный кадр и sharp17→12/new extent — отдельные gates.",
+        "Freshcurrent787lateRSS820.42→643.06MiB в однойcab9/D101паре при выросшемGraphics",
+        "143.36→210.14MiB, не pooledoldABBA/2GiB acceptance. Это не упрощение карты",
+        "и не заявленный результат2–3s. Baseline6039 APK сохранён отдельно.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-bounded-small-blob-transport"
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-server-config-user-outcomes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "**Что видит пользователь на практике.**",
+        "",
+        "- После синхронизации на карте может измениться цвет, толщина линий или набор",
+        "  подписей — без переустановки APK.",
+        "- В карточке объекта могут появиться новые поля или другие подписи атрибутов.",
+        "- При крупном изменении схемы приложение предупредит о резервной копии и",
+        "  перезагрузке слоя; локальные данные при этом не теряются безвозвратно, пока",
+        "  backup успешен.",
+        "- Read-only слой продолжает «подтягивать» стиль с сервера, хотя объекты в него",
+        "  не синхронизируются.",
+        "",
+        "**Ограничения, важные для администратора.**",
+        "",
+        "- Удалённые на сервере поля автоматически не исчезают из локальной таблицы —",
+        "  меняется только то, что явно описано в новом конфиге.",
+        "- Расширенные ключи MapLibre (см. раздел ниже) доставляются через Description",
+        "  только там, где их поддерживает мобильный рендерер форка.",
+        "- Локальные правки стиля на устройстве для управляемого слоя могут быть",
+        "  перезаписаны при следующей синхронизации, если администратор изменил Description",
+        "  на сервере.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-server-config-user-outcomes"
+    ]
+  }
+}
