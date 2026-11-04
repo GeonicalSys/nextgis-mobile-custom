@@ -177,6 +177,112 @@
         "agent-system/knowledge/documentation"
       ],
       "reason": "Checkpoint inventory of App prose addresses, types and pilot consumers at the pinned App revision."
+    },
+    {
+      "path": "CUSTOMIZATIONS.md",
+      "sha256": "640730db83079cd3e618483f0452c80dc9c2519a4347c8a6a0782b15f3895046",
+      "sha256_scope": "utf8_lf",
+      "category": "working_bridge",
+      "reason": "Compatibility address for older links. The file directs readers to the current fork catalogue and contains no additional product rules.",
+      "applies_to": [
+        "CUSTOMIZATIONS.md",
+        "docs/reference/fork-customizations.md",
+        "agent-system/knowledge/documentation"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-reliability-audit.md",
+      "sha256": "95bec873a51d1c6cbff8f08751177042f022c363fcf6ce78d14426ba0353331f",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Whole October PR45 audit witness with its source revisions, historical authorizations, results, remaining checks and retained lint failure.",
+      "applies_to": [
+        "docs/reference/mobile-reliability-audit.md",
+        "docs/architecture/crash-recovery.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/runbooks/incident-and-rollback.md",
+        "docs/runbooks/workstation-and-build.md"
+      ]
+    },
+    {
+      "path": "docs/history/2026-10-14-background-gps.md",
+      "sha256": "9277a01f0b6fb8b3c4cd7a7a64e73f4922e2bccca9c47f4e43ea87497474350a",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 14 background GPS delivery frame, independent emulator and layout receipts, and limits for RF, OEM behavior and battery.",
+      "applies_to": [
+        "docs/history/2026-10-14-background-gps.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/ui-accessibility.md",
+        "docs/architecture/error-reporting.md"
+      ]
+    },
+    {
+      "path": "docs/history/2026-10-14-layer-chooser-tests.md",
+      "sha256": "6f1c0a1bb937675a3a0884382937c29e7b56e6b1874449fddc21970da1e10af6",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 14 layer chooser defect and Full 177-case receipt, with separate phone, emulator, permission and verification-package scope.",
+      "applies_to": [
+        "docs/history/2026-10-14-layer-chooser-tests.md",
+        "docs/architecture/ui-accessibility.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/2026-10-14-local-delivery-stakeout.md",
+      "sha256": "f58c19baf60ce62c05a2bb1d0ddcb71d23adf16ae1222100c945707d76b23963",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 14 read-only phone observation, local outbox and project clock regressions, independent navigation panels and draft-only release frame.",
+      "applies_to": [
+        "docs/history/2026-10-14-local-delivery-stakeout.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/stakeout.md",
+        "docs/architecture/ui-accessibility.md"
+      ]
+    },
+    {
+      "path": "docs/history/error-reporting-verification-2026-10-08.md",
+      "sha256": "b3807b8c549780d419402e02da55637eefc06bf4495fe5630b5208fa7bcf93ae",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 8 diagnostic delivery evidence for five isolated phases and earlier redaction behavior. Native crash, ANR and physical-device limits remain part of the receipt.",
+      "applies_to": [
+        "docs/history/error-reporting-verification-2026-10-08.md",
+        "docs/architecture/error-reporting.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/mobile-diagnostics-verification-2026-10-10.md",
+      "sha256": "69cbeb169fe1415514f82e6463f8fedaa0635999665cf6e97a5faf2d22fdc3ac",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 10 HyperLog and HTTP noise diagnosis, canonical form hash investigation, original contract-2 reporting scope and separate GPS and CI results.",
+      "applies_to": [
+        "docs/history/mobile-diagnostics-verification-2026-10-10.md",
+        "docs/architecture/error-reporting.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/ngw-sync-and-storage.md"
+      ]
+    },
+    {
+      "path": "docs/history/mobile-usage-verification-2026-10-17.md",
+      "sha256": "ca4917ff6008532c42404ef46540a8f4ae64436fbd5510246aeddc6949730bc6",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 17 usage verification with source and server ownership, bounded isolated cases, earlier failed attempt and separate release gate.",
+      "applies_to": [
+        "docs/history/mobile-usage-verification-2026-10-17.md",
+        "docs/architecture/mobile-usage.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/release-apk.md"
+      ]
     }
   ]
 }
