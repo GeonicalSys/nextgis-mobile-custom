@@ -6126,6 +6126,918 @@
           "end_byte": 3184
         }
       ]
+    },
+    {
+      "path": "docs/runbooks/automated-tests.md",
+      "record": "automated-tests.json",
+      "id": "lisa:mobile:resource:automated-tests",
+      "revision": "2573b549ff62103c96c3b8ead69bc3973419bde0",
+      "blob": "b6f94a4f80f3cd9b505bfb55f0834cf21189b0d2",
+      "sha256": "b546cfab4bbd15d86ff263958fc008aefca946216d04abe06f054af51ea46bd5",
+      "bytes": 84853,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:automated-tests",
+          "start_byte": 0,
+          "end_byte": 760
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-related-editing-source-native-identity",
+          "start_byte": 760,
+          "end_byte": 1181
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-related-memory-dialog-layout-oracle",
+          "start_byte": 1181,
+          "end_byte": 1882
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-related-orbit-model-stack",
+          "start_byte": 1882,
+          "end_byte": 2254
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-october-29-focused-sqlite-priority-authorization",
+          "start_byte": 2254,
+          "end_byte": 2996
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-focused-sqlite-priority-selection-and-isolation",
+          "start_byte": 2996,
+          "end_byte": 3949
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-sqlite-priority-independent-content-and-order",
+          "start_byte": 3949,
+          "end_byte": 4910
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-sqlite-priority-source-red-and-correction",
+          "start_byte": 4910,
+          "end_byte": 5308
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-sqlite-priority-t40-native-result-and-gaps",
+          "start_byte": 5308,
+          "end_byte": 5952
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-sqlite-priority-ordinary-apk-matrix",
+          "start_byte": 5952,
+          "end_byte": 6730
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-sqlite-priority-ordinary-t40-install-smoke",
+          "start_byte": 6730,
+          "end_byte": 7617
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-cache-admission-technical-fixture-oracles",
+          "start_byte": 7617,
+          "end_byte": 8117
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-october-28-ordinary-apk-scope",
+          "start_byte": 8117,
+          "end_byte": 8656
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-d101-final-jvm-source-closure",
+          "start_byte": 8656,
+          "end_byte": 9077
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-d101-independent-dense-video-gate",
+          "start_byte": 9077,
+          "end_byte": 9482
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-small-blob-window-red-green-and-api-proof",
+          "start_byte": 9482,
+          "end_byte": 10686
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-sqlite-phase-logical-buffer-counter-scope",
+          "start_byte": 10686,
+          "end_byte": 10869
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-small-blob-window-cold-d101-observation",
+          "start_byte": 10869,
+          "end_byte": 11612
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-bounded-original-reads-red-green",
+          "start_byte": 11612,
+          "end_byte": 12754
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-same-tablet-sharp-zoom-and-new-extent-oracle",
+          "start_byte": 12754,
+          "end_byte": 13624
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-sqlite-phase-jvm-checkpoint",
+          "start_byte": 13624,
+          "end_byte": 14452
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-sqlite-phase-tablet-identity-and-coverage",
+          "start_byte": 14452,
+          "end_byte": 15421
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-related-independent-assertion-and-logcat-lifecycle",
+          "start_byte": 15421,
+          "end_byte": 16302
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-sqlite-render-native-payload-and-raw-hit-oracles",
+          "start_byte": 16302,
+          "end_byte": 17268
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-sqlite-render-failure-capture-and-first-software-failure",
+          "start_byte": 17268,
+          "end_byte": 17916
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-render-memory-related-device-isolation",
+          "start_byte": 17916,
+          "end_byte": 18467
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-memory-warning-independent-data-and-window-oracle",
+          "start_byte": 18467,
+          "end_byte": 19851
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-free-memory-warning-admission-and-queue",
+          "start_byte": 19851,
+          "end_byte": 21037
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-native-feature-projection-preserves-editable-source",
+          "start_byte": 21037,
+          "end_byte": 21776
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-stress-required-load-device-matrix-and-failure",
+          "start_byte": 21776,
+          "end_byte": 22897
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-memory-checkpoint-before-native-acceptance",
+          "start_byte": 22897,
+          "end_byte": 23572
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-free-only-queue-addressed-jvm-result",
+          "start_byte": 23572,
+          "end_byte": 24140
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-native-heap-map-route-ownership",
+          "start_byte": 24140,
+          "end_byte": 25140
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-native-heap-map-route-command-shape",
+          "start_byte": 25140,
+          "end_byte": 25493
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-native-heap-input-versus-render-and-trace-proof",
+          "start_byte": 25493,
+          "end_byte": 26362
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-october-27-avd-host-failures-and-authorization",
+          "start_byte": 26362,
+          "end_byte": 27745
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-emulator-software-admission-and-phone-only",
+          "start_byte": 27745,
+          "end_byte": 28695
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-emulator-and-host-evidence-references",
+          "start_byte": 28695,
+          "end_byte": 29012
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-crash-startup-related-and-os-exit",
+          "start_byte": 29012,
+          "end_byte": 29750
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-render-stress-separate-process-and-native-camera",
+          "start_byte": 29750,
+          "end_byte": 30907
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-render-stress-exact-visible-fid-and-failure-evidence",
+          "start_byte": 30907,
+          "end_byte": 32135
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-render-stress-publication-matrix-boundary",
+          "start_byte": 32135,
+          "end_byte": 32423
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-sqlite-marker-related-pixel-and-capture-oracle",
+          "start_byte": 32423,
+          "end_byte": 33125
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-local-full-and-real-window-publication-gate",
+          "start_byte": 33125,
+          "end_byte": 33911
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-local-docs-and-environment-check-route",
+          "start_byte": 33911,
+          "end_byte": 34572
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-offline-mvt-related-and-october-26-catalogue",
+          "start_byte": 34572,
+          "end_byte": 35361
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-track-map-action-and-snackbar-evidence",
+          "start_byte": 35361,
+          "end_byte": 36298
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-full-and-related-failures-continue-only-independent-cases",
+          "start_byte": 36298,
+          "end_byte": 37033
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-instrumentation-start-timeout-and-package-reset",
+          "start_byte": 37033,
+          "end_byte": 37717
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-clean-target-full-documentation-validation",
+          "start_byte": 37717,
+          "end_byte": 38032
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-owned-avd-stop-before-pass",
+          "start_byte": 38032,
+          "end_byte": 38438
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-authorized-metadata-only-policy-fixture",
+          "start_byte": 38438,
+          "end_byte": 39300
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-policy-fixture-private-transport-and-hash",
+          "start_byte": 39300,
+          "end_byte": 39877
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-form-layout-related-native-oracle",
+          "start_byte": 39877,
+          "end_byte": 40572
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-offline-sync-related-backoff-and-no-attempt",
+          "start_byte": 40572,
+          "end_byte": 41065
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-form-navigation-related-focus-and-blank-area",
+          "start_byte": 41065,
+          "end_byte": 42211
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-map-teardown-related-addressed-methods",
+          "start_byte": 42211,
+          "end_byte": 42564
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-track-controls-related-allowed-routes",
+          "start_byte": 42564,
+          "end_byte": 43183
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-polygon-style-related-case-selection",
+          "start_byte": 43183,
+          "end_byte": 43938
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-firefly-and-style-editor-native-routes",
+          "start_byte": 43938,
+          "end_byte": 44883
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-copy-transform-and-maintenance-related-heading",
+          "start_byte": 44883,
+          "end_byte": 44959
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-maintenance-related-variant-and-ui",
+          "start_byte": 44959,
+          "end_byte": 45505
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-feature-editing-related-device-scope",
+          "start_byte": 45505,
+          "end_byte": 46289
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-windows-acceleration-read-only-diagnosis",
+          "start_byte": 46289,
+          "end_byte": 46996
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-october-23-hypervisor-readback",
+          "start_byte": 46996,
+          "end_byte": 47619
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-hypervisor-change-explicit-consent-and-reboot-proof",
+          "start_byte": 47619,
+          "end_byte": 48368
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-october-23-bcd-change-without-reboot",
+          "start_byte": 48368,
+          "end_byte": 48875
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-october-26-aehd-bcd-and-next-boot",
+          "start_byte": 48875,
+          "end_byte": 50007
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-glitchtip-october-23-related-diagnostics",
+          "start_byte": 50007,
+          "end_byte": 50959
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-updater-transfer-after-destroyed-activity",
+          "start_byte": 50959,
+          "end_byte": 51583
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-verification-startup-recovery-and-lease-barrier",
+          "start_byte": 51583,
+          "end_byte": 52283
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-project-sync-fixture-startup-lease",
+          "start_byte": 52283,
+          "end_byte": 52907
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-orbit-method-isolation-and-geometry-readback",
+          "start_byte": 52907,
+          "end_byte": 54043
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-phone-lock-wait-and-full-order",
+          "start_byte": 54043,
+          "end_byte": 55055
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-manual-linux-emulator-graphics-and-pin",
+          "start_byte": 55055,
+          "end_byte": 56087
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-background-gps-native-lifecycle-and-listeners",
+          "start_byte": 56087,
+          "end_byte": 56779
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-isolated-verification-apk-and-data",
+          "start_byte": 56779,
+          "end_byte": 57486
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-physical-phone-identity-and-fixed-package-guard",
+          "start_byte": 57486,
+          "end_byte": 58219
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-classic-style-graphics-and-fixture-guards",
+          "start_byte": 58219,
+          "end_byte": 59300
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-shared-track-native-fixtures-and-related-route",
+          "start_byte": 59300,
+          "end_byte": 60229
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-updater-related-versus-published-device-smoke",
+          "start_byte": 60229,
+          "end_byte": 61044
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-local-mvt-label-rendering-oracle",
+          "start_byte": 61044,
+          "end_byte": 61531
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-related-command-and-reuse-boundary",
+          "start_byte": 61531,
+          "end_byte": 63076
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-full-and-check-publication-entry",
+          "start_byte": 63076,
+          "end_byte": 63601
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-full-variant-matrix-and-native-routing",
+          "start_byte": 63601,
+          "end_byte": 64425
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-local-diagnostic-delivery-and-crash-ack",
+          "start_byte": 64425,
+          "end_byte": 64896
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-former-host-egl-screenshot-route",
+          "start_byte": 64896,
+          "end_byte": 64995
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-synthetic-gnss-and-separate-rf-field-gates",
+          "start_byte": 64995,
+          "end_byte": 65300
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-native-ui-profile-matrix-and-device-restoration",
+          "start_byte": 65300,
+          "end_byte": 65934
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-exact-build-basis-before-device-action",
+          "start_byte": 65934,
+          "end_byte": 66681
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-skip-build-related-only-and-stale-refusal",
+          "start_byte": 66681,
+          "end_byte": 67503
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-publication-build-basis-and-apk-identity-limits",
+          "start_byte": 67503,
+          "end_byte": 68594
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-full-result-and-raw-production-data-exclusion",
+          "start_byte": 68594,
+          "end_byte": 69087
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-check-publication-fingerprint-and-complete-native-membership",
+          "start_byte": 69087,
+          "end_byte": 70012
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-publication-dependency-closure-and-review-pins",
+          "start_byte": 70012,
+          "end_byte": 70309
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-approved-project-and-policy-only-snapshot",
+          "start_byte": 70309,
+          "end_byte": 71342
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-missing-or-ambiguous-test-project-requires-choice",
+          "start_byte": 71342,
+          "end_byte": 72413
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-keyguard-and-screen-awake-scope",
+          "start_byte": 72413,
+          "end_byte": 72800
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-source-guards-for-project-and-receipt",
+          "start_byte": 72800,
+          "end_byte": 73080
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-native-project-script-isolated-process-guard",
+          "start_byte": 73080,
+          "end_byte": 73490
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-per-method-fixture-isolation",
+          "start_byte": 73490,
+          "end_byte": 74132
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-sync-outbox-isolation-and-diagnostic-exception",
+          "start_byte": 74132,
+          "end_byte": 74512
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-manual-reliability-ci-and-local-phone-gate",
+          "start_byte": 74512,
+          "end_byte": 74897
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-former-194-case-ci-and-delayed-ack",
+          "start_byte": 74897,
+          "end_byte": 75294
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-october-17-glitchtip-regression-catalogue",
+          "start_byte": 75294,
+          "end_byte": 76145
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-bounded-native-png-and-live-style-oracle",
+          "start_byte": 76145,
+          "end_byte": 76701
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-style-category-real-touch-and-viewport",
+          "start_byte": 76701,
+          "end_byte": 77615
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-style-editor-related-scope",
+          "start_byte": 77615,
+          "end_byte": 78102
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-track-stop-confirmation-and-colour-migration",
+          "start_byte": 78102,
+          "end_byte": 78813
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-line-label-and-firefly-editor-related",
+          "start_byte": 78813,
+          "end_byte": 79338
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-cursor-rendering-scene-barrier",
+          "start_byte": 79338,
+          "end_byte": 79742
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-track-candidate-route-and-stationary-verification",
+          "start_byte": 79742,
+          "end_byte": 80230
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-cold-render-stress-and-crash-transport",
+          "start_byte": 80230,
+          "end_byte": 81308
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-stress-full-device-matrix-and-incident-model",
+          "start_byte": 81308,
+          "end_byte": 82030
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-private-cold-rendering-profiling-boundary",
+          "start_byte": 82030,
+          "end_byte": 83227
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-prepared-direct-vector-tile-related",
+          "start_byte": 83227,
+          "end_byte": 83688
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-prepared-underlay-related-limits",
+          "start_byte": 83688,
+          "end_byte": 83871
+        },
+        {
+          "id": "lisa:mobile:resource:automated-tests-allowlisted-artifact-json-and-png-budgets",
+          "start_byte": 83871,
+          "end_byte": 84316
+        },
+        {
+          "id": "lisa:mobile:evidence:automated-tests-november-2-prepared-source-and-paused-runtime",
+          "start_byte": 84316,
+          "end_byte": 84853
+        }
+      ]
+    },
+    {
+      "path": "docs/runbooks/device-smoke-tests.md",
+      "record": "device-smoke-tests.json",
+      "id": "lisa:mobile:resource:device-smoke-tests",
+      "revision": "2573b549ff62103c96c3b8ead69bc3973419bde0",
+      "blob": "1f6bc98fc1ff22655c1de192557da4dc652ab7b2",
+      "sha256": "c8feff77d1693c3d1e93e5014e84e1f4d4b95e0aee6d4d3891a8f836c79100d7",
+      "bytes": 44049,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests",
+          "start_byte": 0,
+          "end_byte": 332
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-sqlite-priority-scripted-isolation-and-t40-receipt",
+          "start_byte": 332,
+          "end_byte": 1285
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-sqlite-priority-manual-render-order-and-open-gates",
+          "start_byte": 1285,
+          "end_byte": 2328
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-feature-copy-transform-and-undo-smoke",
+          "start_byte": 2328,
+          "end_byte": 3270
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-smoke-selection-from-change-impact",
+          "start_byte": 3270,
+          "end_byte": 3415
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-base-smoke-matrix-heading",
+          "start_byte": 3415,
+          "end_byte": 3449
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-cursor-bearing-accuracy-and-style-refresh",
+          "start_byte": 3449,
+          "end_byte": 4586
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-feature-type-create-and-cancel",
+          "start_byte": 4586,
+          "end_byte": 5701
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-diagnostic-offline-fatal-restart-and-retry-smoke",
+          "start_byte": 5701,
+          "end_byte": 6529
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-stakeout-permission-emulator-smoke",
+          "start_byte": 6529,
+          "end_byte": 7454
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-stakeout-physical-smoke-and-android-fifteen-gap",
+          "start_byte": 7454,
+          "end_byte": 7995
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-cascading-form-lists-heading",
+          "start_byte": 7995,
+          "end_byte": 8037
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-pending-indicator-layer-identity",
+          "start_byte": 8037,
+          "end_byte": 8578
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-cascading-lists-automatic-and-project-smoke",
+          "start_byte": 8578,
+          "end_byte": 9634
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-form-aliases-and-split-pair",
+          "start_byte": 9634,
+          "end_byte": 10117
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-all-project-sync-isolated-emulator",
+          "start_byte": 10117,
+          "end_byte": 11010
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-all-project-sync-manual-and-existing-draft-guard",
+          "start_byte": 11010,
+          "end_byte": 12141
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-map-layout-and-recording-device-matrix",
+          "start_byte": 12141,
+          "end_byte": 12441
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-measurements-menu-and-control-bounds",
+          "start_byte": 12441,
+          "end_byte": 13248
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-track-mode-menu-and-rotation",
+          "start_byte": 13248,
+          "end_byte": 13799
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-walking-speed-segments-and-loss-of-fix",
+          "start_byte": 13799,
+          "end_byte": 14327
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-walk-panel-resume-and-finish",
+          "start_byte": 14327,
+          "end_byte": 15099
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-device-hit-testing-versus-source-proofs",
+          "start_byte": 15099,
+          "end_byte": 15359
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-base-clean-existing-and-layer-order",
+          "start_byte": 15359,
+          "end_byte": 15828
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-offline-sync-project-and-walk-smoke",
+          "start_byte": 15828,
+          "end_byte": 16351
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-tracking-audio-provider-loss-and-permission-return",
+          "start_byte": 16351,
+          "end_byte": 17339
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-updater-heavy-sync-and-import-navigation",
+          "start_byte": 17339,
+          "end_byte": 17669
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-package-profile-and-evidence-instructions",
+          "start_byte": 17669,
+          "end_byte": 18121
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-project-list-and-delete-guard",
+          "start_byte": 18121,
+          "end_byte": 19008
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-sync-lock-and-switch",
+          "start_byte": 19008,
+          "end_byte": 19689
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-heavy-layer-rebuild",
+          "start_byte": 19689,
+          "end_byte": 20408
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-big-geometry-and-fill-checkpoint",
+          "start_byte": 20408,
+          "end_byte": 21278
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-incremental-pull-and-style",
+          "start_byte": 21278,
+          "end_byte": 22003
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-network-retry",
+          "start_byte": 22003,
+          "end_byte": 22728
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-editable-layer-direction",
+          "start_byte": 22728,
+          "end_byte": 23260
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-import-back-navigation",
+          "start_byte": 23260,
+          "end_byte": 23623
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-sketch-start-and-cancel",
+          "start_byte": 23623,
+          "end_byte": 24585
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-selected-vertex-midpoint-and-part-boundaries",
+          "start_byte": 24585,
+          "end_byte": 25938
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-walk-state-and-checkpoint",
+          "start_byte": 25938,
+          "end_byte": 26942
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-gps-centre-and-form-save",
+          "start_byte": 26942,
+          "end_byte": 28334
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-multipart-measurement-and-undo-redo",
+          "start_byte": 28334,
+          "end_byte": 30170
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-import-lease-and-project-deletion",
+          "start_byte": 30170,
+          "end_byte": 30865
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-identify-visible-layers",
+          "start_byte": 30865,
+          "end_byte": 31332
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-polygon-restore-and-self-intersection",
+          "start_byte": 31332,
+          "end_byte": 32397
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-walk-recovery-and-deferred-renderer",
+          "start_byte": 32397,
+          "end_byte": 34142
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-august-21-fast-two-finger-rotation",
+          "start_byte": 34142,
+          "end_byte": 34777
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-device-smoke-result-and-not-run",
+          "start_byte": 34777,
+          "end_byte": 35146
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-independent-walk-manual-finish-oracle",
+          "start_byte": 35146,
+          "end_byte": 36377
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-a54-isolated-walk-and-point-receipt",
+          "start_byte": 36377,
+          "end_byte": 37375
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-walk-point-remaining-device-and-audio-guards",
+          "start_byte": 37375,
+          "end_byte": 37820
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-reliability-audit-separate-field-acceptance",
+          "start_byte": 37820,
+          "end_byte": 38649
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-reliability-recovery-and-resource-stress",
+          "start_byte": 38649,
+          "end_byte": 39201
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-physical-pigo-ble-cold-start-smoke",
+          "start_byte": 39201,
+          "end_byte": 39991
+        },
+        {
+          "id": "lisa:mobile:evidence:device-smoke-tests-pigo-gatt-api-result-and-unrun-physical-smoke",
+          "start_byte": 39991,
+          "end_byte": 40155
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-project-script-forms-and-package-rollback",
+          "start_byte": 40155,
+          "end_byte": 41024
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-tracker-registration-and-durable-upload-smoke",
+          "start_byte": 41024,
+          "end_byte": 41922
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-tracker-toggle-server-identity-and-packet-ack",
+          "start_byte": 41922,
+          "end_byte": 42730
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-stationary-phone-versus-movement-emulator",
+          "start_byte": 42730,
+          "end_byte": 43508
+        },
+        {
+          "id": "lisa:mobile:resource:device-smoke-tests-full-approved-project-and-settings-restoration",
+          "start_byte": 43508,
+          "end_byte": 44049
+        }
+      ]
     }
   ]
 }

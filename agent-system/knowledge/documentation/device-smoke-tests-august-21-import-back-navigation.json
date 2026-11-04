@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:device-smoke-tests-august-21-import-back-navigation",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "7. **Назад в импорте Веб-ГИС.** Зайти минимум на два уровня каталога. Верхняя",
+        "   стрелка и системная Back по одному уровню возвращают к родителю; только Back",
+        "   из корня закрывает импорт и возвращает на карту."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Dated package scenario for parent navigation."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:device-smoke-tests-august-21-import-back-navigation"
+    ]
+  }
+}

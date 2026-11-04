@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-same-tablet-sharp-zoom-and-new-extent-oracle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Сохранять исходный diagnostic843d APK и все RED receipts. Для нового private",
+        "кандидата повторить на том же T40/Collector1403 именно sharp17→12 и полностью",
+        "новую область с теми же полными геометриями/подписями. Сверять objects/BLOB bytes,",
+        "тот же typed phase contract и независимое время полного содержимого, не только",
+        "SDK return.39 unobserved scopes первого capture — diagnostic cap loss в",
+        "опубликованных слоях, не потерянные render requests. Полностью unobserved слой",
+        "может не иметь snapshot/counters; process-global denominator неизвестен.",
+        "Небольшие warm11.7 pans не опровергают reported3–10s.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-same-tablet-sharp-zoom-and-new-extent-oracle"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:device-smoke-tests-updater-heavy-sync-and-import-navigation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "9. Update: manifest flavor/version/signature validation и безопасный отказ.",
+        "10. Heavy sync: switch/double-sync exclusion, staged schema rebuild/circuit",
+        "    breaker и `LayerFillService` timeout/resume.",
+        "11. NGW import navigation: toolbar/system Back поднимают дерево по одному уровню.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:device-smoke-tests-updater-heavy-sync-and-import-navigation"
+    ]
+  }
+}

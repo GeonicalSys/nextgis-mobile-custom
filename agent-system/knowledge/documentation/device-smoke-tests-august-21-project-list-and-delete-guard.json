@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:device-smoke-tests-august-21-project-list-and-delete-guard",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "1. **Проекты и список.** Открыть быстрый выбор: в каждой хорошо отделённой строке",
+        "   должно быть только имя. В «Настройки → Проект» сверить имя, тип, account,",
+        "   resource id и district. Создать пустой локальный проект, добавить объект,",
+        "   переименовать, переключиться туда/обратно и удалить. Удаление Web GIS-проекта",
+        "   должно удалить только локальную копию; при несохранённых данных сначала",
+        "   создаётся backup, а ошибка backup отменяет удаление. После удаления последнего",
+        "   проекта создаётся пустой локальный fallback."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Dated package scenario for project lifecycle."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:device-smoke-tests-august-21-project-list-and-delete-guard"
+    ]
+  }
+}

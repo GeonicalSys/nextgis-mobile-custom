@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-local-full-and-real-window-publication-gate",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "С26 октября2026 основной маршрут полностью локальный. Android reliability и",
+        "docs Actions оставлены только workflow_dispatch: push/PR не расходуют минуты",
+        "GitHub. Облачный запуск допустим только по отдельному запросу пользователя.",
+        "Локальный Full собирает все variants, выполняет unit/native/docs/version",
+        "проверки,36 chooser profiles и6 бывших cloud-only реальных окон при620dpi,",
+        "font200%, portrait/landscape, native/compat и settings. Успех последних хранит",
+        "обязательный `real_window_matrix`; его отсутствие блокирует публикацию.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-local-full-and-real-window-publication-gate"
+    ]
+  }
+}

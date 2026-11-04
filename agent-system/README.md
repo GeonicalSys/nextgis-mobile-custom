@@ -151,6 +151,11 @@ Keep version, build, updater, Full and publication gates separate.
 Preserve dated authorizations, release frames and earlier device setup in evidence.
 Regenerate the two published views with the ordinary projector.
 
+Edit App automated testing and device smoke in **knowledge/documentation/**.
+Keep runner scope, device isolation, build identity, independent oracles and publication gates separate.
+Preserve older scenario lists, outcomes and user authorizations with their source frames.
+Regenerate both published views with the ordinary projector.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

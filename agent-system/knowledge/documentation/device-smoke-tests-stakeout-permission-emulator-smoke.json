@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:device-smoke-tests-stakeout-permission-emulator-smoke",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Азимут и вынос",
+        "",
+        "`SMOKE-STAKEOUT-PERMISSIONS` запускать на изолированном Android14+ эмуляторе",
+        "с запрещённым Bluetooth. Проверить foreground-уведомление, уход в фон,",
+        "остановку и быстрый повторный старт; GPS listener/lease должны освобождаться",
+        "только у остановленного владельца. Отдельный проход с отозванным coarse/fine",
+        "location должен завершить измерение без вылета и оставить доступным повторный",
+        "запуск. После теста вернуть разрешения. Автоматический native-тест контроллера",
+        "не заменяет ручную проверку сообщения и возврата карты в обычный режим.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:device-smoke-tests-stakeout-permission-emulator-smoke"
+    ]
+  }
+}

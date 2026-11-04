@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-sqlite-priority-independent-content-and-order",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Проверять exact current SQLite alias и CustomVectorSource, пустой global Java",
+        "cache, native ranges целых field/point групп и всех saved/current track passes,",
+        "canonical bottom-to-top model relative order, placed literal labels, отдельный",
+        "Firefly Symbol body/rule icon, background pixel patches и полные SQL originals/",
+        "row hashes. Full/lite/reorder, style/data generation, завершённый literal",
+        "track-name refresh, unchanged-source style apply и hide/Undo не должны ломать",
+        "cached provider/source/promoted wrappers или исходные filters. Не добавлять",
+        "GPS/вызов private order helper для прохождения теста; order repair имеет явный",
+        "публичный source-reapply trigger. JSON/PNG failure capture выполняется внутри",
+        "fixture до cleanup, затем штатный runner сохраняет bounded evidence до reset.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-sqlite-priority-independent-content-and-order"
+    ]
+  }
+}

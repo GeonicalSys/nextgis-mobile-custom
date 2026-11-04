@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-feature-editing-related-device-scope",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`tools\\verify-mobile-tests.ps1 -Scope Related -Area feature-editing` проверяет новые команды на эмуляторе. Добавить `-PhoneSerial <serial>` для трёх неподвижных проверок на verification APK смартфона; `-PhoneOnly` выполняет только эту разрешённую часть с обязательным serial. Системные настройки смартфона не меняются. Native исходы/полнота сохраняются по каждому сценарию; Related не заменяет Full. Каталог/маршрутизация находятся в mobile-test-plan.json. [Контракт и покрытие](../architecture/feature-copy-transform.md).",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-feature-editing-related-device-scope"
+    ]
+  }
+}

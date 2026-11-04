@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-render-stress-exact-visible-fid-and-failure-evidence",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Стартовый viewport задаётся в private preferences fixture, без изменения",
+        "GPS/производственной карты. После возврата actual camera zoom11/center0 из",
+        "четырёх viewport corners и независимой сетки/radius140 вычисляется неизменный",
+        "набор полностью видимых полигонов; каждый FID обязан присутствовать в Fill",
+        "queries. Пограничные пересечения допустимы, неизвестные FID/Point label roles",
+        "отклоняются. Малый слой может быть целиком вне viewport; это явно отражается",
+        "в coverage, а не заменяется выдуманным ожиданием. Число кадров/peak memory —",
+        "наблюдения живучести, не FPS benchmark, memory plateau/leak proof или парный787",
+        "замер. При assertion owned AVD",
+        "сохраняет снимок до закрытия Activity, native camera/lifecycle/style state,",
+        "ограниченный logcat и ещё два отсчёта через5/10s. Поздний recovery не отменяет FAIL."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-render-stress-exact-visible-fid-and-failure-evidence"
+    ]
+  }
+}

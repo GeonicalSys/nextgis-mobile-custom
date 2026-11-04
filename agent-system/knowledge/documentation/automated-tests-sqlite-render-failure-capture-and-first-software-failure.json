@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-sqlite-render-failure-capture-and-first-software-failure",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Failure-only JSON≤64KiB и PNG≤2MiB сохраняются versioned collector до очистки",
+        "fixture/verification package, с хешами/source fingerprint/serial. Transport",
+        "failure, отсутствие файла и malformed media различаются; сбор не маскирует",
+        "исходный native FAIL. Первый software01 подтвердил правильные129 polygon ID и",
+        "paint, но лишние Point hits в FillLayer; FAIL сохранён, ожидается повтор после",
+        "production role filter. Наличие девяти методов в каталоге не означает PASS.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The capture contract remains reusable. The first software run and its pending repeat are dated evidence."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-sqlite-render-failure-capture-and-first-software-failure"
+    ]
+  }
+}

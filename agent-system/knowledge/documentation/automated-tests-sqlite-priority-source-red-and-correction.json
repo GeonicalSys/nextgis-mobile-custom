@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-sqlite-priority-source-red-and-correction",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Первый source batch81 JVM/20 Python PASS относится к исходному варианту;",
+        "первый actual native run FAIL по реальному defect reverse source-cache insertion.",
+        "Oracle сохранён, canonical model traversal исправлен;13 planner unit PASS,",
+        "затем exact final83 JVM/10classes PASS, 0fail/error/skip (`focused-units03`,",
+        "`unit-results03`)."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Keeps the first native order defect and exact final JVM pass distinct."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-sqlite-priority-source-red-and-correction"
+    ]
+  }
+}

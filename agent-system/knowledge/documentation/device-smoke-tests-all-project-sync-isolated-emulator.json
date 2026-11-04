@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:device-smoke-tests-all-project-sync-isolated-emulator",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Синхронизация всех проектов",
+        "",
+        "`SMOKE-ALL-PROJECT-SYNC` запускается только на изолированном эмуляторе:",
+        "синтетические A/B/C имеют отдельные SQLite и одинаковые имена слоёв.",
+        "Проверяются ручной и автоматический проходы, выключение общей настройки,",
+        "ошибка B с продолжением C, отмена с удержанием базы до завершения дочерней",
+        "задачи, точечное восстановление B и реальный `LayerFillService` в фоне.",
+        "Открытая карта и её черновик должны остаться прежними; нельзя переносить",
+        "выделение или события фоновых слоёв на экран.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:device-smoke-tests-all-project-sync-isolated-emulator"
+    ]
+  }
+}

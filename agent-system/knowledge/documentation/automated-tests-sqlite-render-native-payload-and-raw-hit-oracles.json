@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-sqlite-render-native-payload-and-raw-hit-oracles",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Related `-Area sqlite-render` проверяет новый production reload в отдельном",
+        "verification APK. NativeSqliteVectorRenderingTest создаёт129 технических",
+        "полигонов по65 координат; сравнивает все native ID, каждый Rule/NULL/Other",
+        "paint, три размещённые подписи и pixel patches, полные DB originals и whole-row",
+        "hash. Перед свёрткой FID проверяется каждый raw hit: Fill только Polygon без",
+        "anchor роли, Symbol только Point anchor. Смешанные роли нельзя скрыть фильтром",
+        "самого теста. Отдельно проверяются data/style invalidation, hide/show и поздние",
+        "запросы после teardown. Edit/cancel/temporary hide проходят штатный UI путь;",
+        "это не полная Walk service/Save/sync или787 speed/memory приёмка.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-sqlite-render-native-payload-and-raw-hit-oracles"
+    ]
+  }
+}

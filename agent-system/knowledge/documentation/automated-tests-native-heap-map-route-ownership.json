@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-native-heap-map-route-ownership",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Ручной диагностический маршрут native heap",
+        "",
+        "`tools/native_heap_map_route.py` не входит в Full и не выполняется как приёмка.",
+        "Оператор заранее проверяет фактический проект787/экран выбранного телефона,",
+        "измеряет map rectangle и zoom controls и передаёт их вместе с active owned",
+        "capture receipt. Скрипт требует project_id787/serial в receipt и перед каждым",
+        "input проверяет foreground приложения, неизменный app PID и принадлежность",
+        "Perfetto command/config/trace. Он посылает3zoom-out taps,32pan swipes и3zoom-in",
+        "taps, сохраняя38действий в `map-route.json`; при потере ownership останавливается.",
+        "Настройки, business features, установка APK и завершение процесса сюда не входят.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-native-heap-map-route-ownership"
+    ]
+  }
+}

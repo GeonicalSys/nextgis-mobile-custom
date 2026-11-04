@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-track-controls-related-allowed-routes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Адресная проверка управления треками: `tools/verify-mobile-tests.ps1 -Scope Related -Area track-controls`.",
+        "Она использует verification APK и включает виджеты/жесты, native pixels/order,",
+        "Save/Cancel, пересоздание и отказ удаления активного трека. Stationary поднабор",
+        "доступен с явным PhoneSerial; recorder/retry выполняется на эмуляторе. Полная",
+        "регрессия записи/выгрузки — Related tracks, редактора — Related feature-editing.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-track-controls-related-allowed-routes"
+    ]
+  }
+}

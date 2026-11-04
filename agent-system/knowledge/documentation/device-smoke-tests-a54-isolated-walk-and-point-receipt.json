@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:device-smoke-tests-a54-isolated-walk-and-point-receipt",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "На Samsung Galaxy A54 (SM-A546E, Android 16/API 36) в отдельном Debug-приложении",
+        "локальный instrumentation harness создал временные слои и проверил реальный",
+        "поток: старт сервиса, блокировка от выбора слоя точки, редактор, форма,",
+        "успешное сохранение точки, отклонение отложенных команд и старого UUID, затем",
+        "подтверждённый Finish. Проверка MapLibre `queryRenderedFeatures` нашла линию",
+        "из Web Mercator-координат на обычной карте, при редактировании точки и после",
+        "возврата из формы. Снимки обоих экранов просмотрены; временные слои и harness",
+        "удалены. GPS pause в этом тесте задан синтетически; это не полевой маршрут.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Observed temporary native fixtures and screenshots; synthetic GPS pause is not the field walk."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:device-smoke-tests-a54-isolated-walk-and-point-receipt"
+    ]
+  }
+}

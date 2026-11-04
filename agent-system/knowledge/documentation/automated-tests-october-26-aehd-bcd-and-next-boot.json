@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-october-26-aehd-bcd-and-next-boot",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Актуализация 2026-10-26: после последующих настроек/перезагрузок WHP,",
+        "VirtualMachinePlatform и WSL фактически Disabled, Hyper-V/VBS не работают.",
+        "По явному выбору пользователя сохраняется выключенный Windows hypervisor:",
+        "в BCD закреплён `hypervisorlaunchtype Off`, установлен уже имеющийся подписанный",
+        "AEHD2.2. `emulator -accel-check` подтвердил usable/exit0 без новой перезагрузки.",
+        "Следующая загрузка требует readback BCD/HypervisorPresent/AEHD; обычный reboot",
+        "не должен считаться новой настройкой Auto. Google объявил sunset AEHD",
+        "31 декабря2026 и рекомендует WHPX; будущий переход согласовывается отдельно.",
+        "Подробности и Full06 environment failure:",
+        "[квитанция](../reference/mobile-full-2026-10-25.md#шестой-full-блок-среды-после-перезагрузки-26-октября).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Records the subsequent BCD, AEHD and acceleration readback. Future migration remains separately authorized."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-october-26-aehd-bcd-and-next-boot"
+    ]
+  }
+}

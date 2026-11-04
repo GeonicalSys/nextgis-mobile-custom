@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-sqlite-priority-ordinary-apk-matrix",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После этого собраны три обычных variant (LisaDebug/LisaRelease/BelkaRelease,",
+        "PASS71с) и version matrix PASS. Обычный Lisa Release224/3.1.2.30:",
+        "70580085 bytes, SHA256",
+        "`57a495854c9c18a5265bf42074101b9dd6d5750ad0fe5e3d6e606c5ef10984bd`,",
+        "прежний signing certificate. Release DEBUG/FIELD_VERIFICATION/",
+        "PRIVATE_RESOURCE_PROFILING false, profileable отсутствует; APK не проходил",
+        "postprocessing. Сборка выполнена до task commits, поэтому SOURCE_REVISION",
+        "`5e85446a088868e8055c6b802e697c94031a5822+dirty`; это не утверждение нового Git",
+        "tip. Runtime1658-file fingerprint до/после сборки один:",
+        "`2b10b4707b0e9b4ed72b0c6874464ea2a3f25657e557fa3403456803da555eb6`.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Artifact checksum, source+dirty identity and fingerprint describe the October 29 package only."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-sqlite-priority-ordinary-apk-matrix"
+    ]
+  }
+}

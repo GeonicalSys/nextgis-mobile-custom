@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-track-map-action-and-snackbar-evidence",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Related `-Area track-map-actions` адресно выполняет исходную последовательность",
+        "color/rename/hide/recreate/overlap/delete. Перед pointer сохраняются bounds,",
+        "центр и Snackbar overlap под TrackTouchQA; ошибка включает предыдущее нажатие.",
+        "Это диагностика, без повторной инъекции жеста или увеличения таймаута.",
+        "Track UI перед pointer закрывает только известный startup GPS/battery Snackbar",
+        "его штатным accessibility ACTION_DISMISS и ждёт исчезновения. Это проверка",
+        "действий фонового экрана после закрытия уведомления; dedicated power-warning",
+        "native case не исключается, системные ограничения устройства не меняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-track-map-action-and-snackbar-evidence"
+    ]
+  }
+}

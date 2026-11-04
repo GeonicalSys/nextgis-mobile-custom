@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-related-memory-dialog-layout-oracle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`Related -Area memory-dialog` выбирает RenderMemorySafetyTest без повторения",
+        "всего stress workload. На A56 допустим только отдельный opt-in verification",
+        "package (`-PhoneSerial ... -PhoneOnly`); software emulator требует отдельного",
+        "разрешения и `-AllowEmulator`. Layout failure сохраняет точный theme/font/",
+        "viewport, widget и line bounds. Проверяется видимый текст Layout.getLineMax,",
+        "а не конечные wrap-boundary пробелы getLineWidth; каждый символ должен иметь",
+        "layout line, ellipsis запрещён, scroll/buttons gates сохранены.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-related-memory-dialog-layout-oracle"
+    ]
+  }
+}

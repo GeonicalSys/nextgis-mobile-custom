@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-related-independent-assertion-and-logcat-lifecycle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MOB-04: чтение SQLite без полной GeoJSON копии",
+        "",
+        "Related сохраняет каждый завершённый assertion/protocol FAIL и исполняет",
+        "остальные независимые isolated методы после собственного reset; общий статус",
+        "остаётся FAIL. Setup/transport/неизвестная runtime ошибка останавливает прогон,",
+        "seed-dependent шаги не продолжаются без seed. SQLite методы дополнительно",
+        "получают ограниченный UID-only logcat с начала instrumentation; собственный",
+        "host adb client останавливается в finally до artifacts/reset. Ошибка сбора",
+        "отмечается отдельно и не подменяет исходный результат теста.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-related-independent-assertion-and-logcat-lifecycle"
+    ]
+  }
+}
