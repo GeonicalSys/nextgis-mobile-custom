@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-delivery-identity-and-retention-limits",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Доставка как минимум один раз: потерянное HTTP-подтверждение допускает повтор",
+        "того же event UUID. Приёмник группирует события; новый UUID для replay не создаётся.",
+        "Android Doze/ограничения батареи могут отложить job. После force-stop пользователем",
+        "Android возобновит фоновую работу только после открытия приложения. Нет гарантии",
+        "сохранения при заполненном/повреждённом диске, удалении данных приложения или",
+        "вытеснении старейших отчётов; SIGKILL/low-memory kill сами по себе не являются",
+        "перехватываемым Java exception.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-delivery-identity-and-retention-limits"
+    ]
+  }
+}

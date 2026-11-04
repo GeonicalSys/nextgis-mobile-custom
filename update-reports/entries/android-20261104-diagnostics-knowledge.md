@@ -1,0 +1,105 @@
+---
+id: android-20261104-diagnostics-knowledge
+area: Документация
+kind: internal
+at: 2026-11-04T15:17:20+04:00
+title: Диагностика и разбор инцидентов из записей App
+why: Проверить штатную правку тем и сохранность прежних документов
+covers:
+  - agent-system/README.md
+  - agent-system/knowledge/documentation/documentation-maintenance.json
+  - agent-system/knowledge/documentation/error-reporting-actual-ndk-scope-tags.json
+  - agent-system/knowledge/documentation/error-reporting-app-diagnostics-receiver-and-build-secret.json
+  - agent-system/knowledge/documentation/error-reporting-automatic-gps-recovery-and-owner-stop.json
+  - agent-system/knowledge/documentation/error-reporting-background-gps-delayed-promotion-test-oracle.json
+  - agent-system/knowledge/documentation/error-reporting-background-gps-diagnostic-observation-boundary.json
+  - agent-system/knowledge/documentation/error-reporting-background-gps-group-118.json
+  - agent-system/knowledge/documentation/error-reporting-background-gps-request-and-failure-snapshots.json
+  - agent-system/knowledge/documentation/error-reporting-background-gps-stage-enum-and-budget.json
+  - agent-system/knowledge/documentation/error-reporting-cached-exit-history-matching-and-privacy.json
+  - agent-system/knowledge/documentation/error-reporting-cold-start-noise-and-tile-http-oracle.json
+  - agent-system/knowledge/documentation/error-reporting-delivery-identity-and-retention-limits.json
+  - agent-system/knowledge/documentation/error-reporting-delivery-verification-phases.json
+  - agent-system/knowledge/documentation/error-reporting-delivery06-and-delivery01-native-evidence.json
+  - agent-system/knowledge/documentation/error-reporting-diagnostic-cache-and-memory-bounds.json
+  - agent-system/knowledge/documentation/error-reporting-diagnostic-report-fields-and-safe-lifecycle.json
+  - agent-system/knowledge/documentation/error-reporting-diagnostics-contract-3-original-event-data.json
+  - agent-system/knowledge/documentation/error-reporting-diagnostics-owner-and-startup-guards.json
+  - agent-system/knowledge/documentation/error-reporting-disabled-generic-attachments-and-log-separation.json
+  - agent-system/knowledge/documentation/error-reporting-durable-envelope-enqueue-and-ack.json
+  - agent-system/knowledge/documentation/error-reporting-durable-gps-pair-delivery.json
+  - agent-system/knowledge/documentation/error-reporting-explicit-zip-os-history-scope.json
+  - agent-system/knowledge/documentation/error-reporting-first-tablet-capture-saturation-limit.json
+  - agent-system/knowledge/documentation/error-reporting-gps-platform-context-and-addon-basis.json
+  - agent-system/knowledge/documentation/error-reporting-gps-recovery-reasons-and-report-policy.json
+  - agent-system/knowledge/documentation/error-reporting-gps-snapshot-ages-and-history.json
+  - agent-system/knowledge/documentation/error-reporting-handled-failure-eligibility-and-limiter.json
+  - agent-system/knowledge/documentation/error-reporting-historical-anr-section-heading.json
+  - agent-system/knowledge/documentation/error-reporting-http-response-and-redirect-retry-policy.json
+  - agent-system/knowledge/documentation/error-reporting-http-source-and-provider-versus-transport.json
+  - agent-system/knowledge/documentation/error-reporting-local-log-initializer-and-legacy-url.json
+  - agent-system/knowledge/documentation/error-reporting-local-tile-noise-and-http-limiter.json
+  - agent-system/knowledge/documentation/error-reporting-local-tile-reason-and-request-headers.json
+  - agent-system/knowledge/documentation/error-reporting-map-runtime-slow-operation-witness.json
+  - agent-system/knowledge/documentation/error-reporting-map-runtime-writer-and-event-provenance.json
+  - agent-system/knowledge/documentation/error-reporting-october-23-triage-reference.json
+  - agent-system/knowledge/documentation/error-reporting-october-28-signal-trace-api-evidence.json
+  - agent-system/knowledge/documentation/error-reporting-october-29-gps-cache-evidence.json
+  - agent-system/knowledge/documentation/error-reporting-october-8-delivery-receipt-link.json
+  - agent-system/knowledge/documentation/error-reporting-opt-in-delivery-runner-and-test-project.json
+  - agent-system/knowledge/documentation/error-reporting-passive-gps-cache-raw-monotonic-timestamp.json
+  - agent-system/knowledge/documentation/error-reporting-passive-gps-witness-fields-and-timing-bounds.json
+  - agent-system/knowledge/documentation/error-reporting-passive-system-gps-cache-probe.json
+  - agent-system/knowledge/documentation/error-reporting-payload-and-priority-context-budgets.json
+  - agent-system/knowledge/documentation/error-reporting-prior-process-journal-and-origin-snapshot.json
+  - agent-system/knowledge/documentation/error-reporting-private-profiling-opt-in-and-contract-links.json
+  - agent-system/knowledge/documentation/error-reporting-rejected-sync-journal-report-and-restart-unknown.json
+  - agent-system/knowledge/documentation/error-reporting-restart-fallback-owner-and-durable-ack.json
+  - agent-system/knowledge/documentation/error-reporting-restart-fallback-unowned-history-and-android-gate.json
+  - agent-system/knowledge/documentation/error-reporting-restart-trace-allowlist-and-post-start-read.json
+  - agent-system/knowledge/documentation/error-reporting-same-listener-reregistration-conditions.json
+  - agent-system/knowledge/documentation/error-reporting-sdk-replay-worker-and-network-gate.json
+  - agent-system/knowledge/documentation/error-reporting-sdk-upgrade-native-delivery-gates.json
+  - agent-system/knowledge/documentation/error-reporting-sentry-fatal-delegation-and-draft-isolation.json
+  - agent-system/knowledge/documentation/error-reporting-signal-trace-auto-format-and-association.json
+  - agent-system/knowledge/documentation/error-reporting-signal-trace-result-status-and-jvm-limit.json
+  - agent-system/knowledge/documentation/error-reporting-sqlite-attributes-blob-and-sdk-boundaries.json
+  - agent-system/knowledge/documentation/error-reporting-sqlite-phase-local-scope.json
+  - agent-system/knowledge/documentation/error-reporting-sqlite-private-counter-fields-and-ownership.json
+  - agent-system/knowledge/documentation/error-reporting-sqlite-scope-bounds-and-saturation.json
+  - agent-system/knowledge/documentation/error-reporting-startup-observer-stage-witness.json
+  - agent-system/knowledge/documentation/error-reporting-sync-journal-persistence-diagnostics.json
+  - agent-system/knowledge/documentation/error-reporting-zip-reporter-identity-and-history-availability.json
+  - agent-system/knowledge/documentation/error-reporting.json
+  - agent-system/knowledge/documentation/glitchtip-triage-cli-verification-command.json
+  - agent-system/knowledge/documentation/glitchtip-triage-comment-payload-and-operation-boundary.json
+  - agent-system/knowledge/documentation/glitchtip-triage-complete-export-and-event-freshness.json
+  - agent-system/knowledge/documentation/glitchtip-triage-fix-observability-and-noise-classification.json
+  - agent-system/knowledge/documentation/glitchtip-triage-mobile-project-cli-and-server-address.json
+  - agent-system/knowledge/documentation/glitchtip-triage-october-29-triage-and-october-28-field-evidence.json
+  - agent-system/knowledge/documentation/glitchtip-triage-private-credentials-and-session-lifetime.json
+  - agent-system/knowledge/documentation/glitchtip-triage-read-and-export-commands.json
+  - agent-system/knowledge/documentation/glitchtip-triage-resolution-authorization-and-comment.json
+  - agent-system/knowledge/documentation/glitchtip-triage-resolution-command-and-readback.json
+  - agent-system/knowledge/documentation/glitchtip-triage-snapshot-guard-and-retained-events.json
+  - agent-system/knowledge/documentation/glitchtip-triage-triage-preflight-and-preservation.json
+  - agent-system/knowledge/documentation/glitchtip-triage-verified-api-session-and-pagination.json
+  - agent-system/knowledge/documentation/glitchtip-triage.json
+  - agent-system/knowledge/documentation/incident-and-rollback-apk-and-git-rollback-compatibility.json
+  - agent-system/knowledge/documentation/incident-and-rollback-archive-identity-and-schema-validation.json
+  - agent-system/knowledge/documentation/incident-and-rollback-backup-limits-and-dated-native-scope.json
+  - agent-system/knowledge/documentation/incident-and-rollback-confirmed-risk-follow-up.json
+  - agent-system/knowledge/documentation/incident-and-rollback-contain-incident-and-copy-local-data.json
+  - agent-system/knowledge/documentation/incident-and-rollback-copy-readback-and-server-reconciliation.json
+  - agent-system/knowledge/documentation/incident-and-rollback-incident-classification.json
+  - agent-system/knowledge/documentation/incident-and-rollback-layerbackup-recovery-copy-and-writer-stop.json
+  - agent-system/knowledge/documentation/incident-and-rollback-offline-sqlite-and-attachment-restore.json
+  - agent-system/knowledge/documentation/incident-and-rollback.json
+  - agent-system/provenance/documentation.json
+  - agent-system/source-dispositions.json
+  - docs/changelog.md
+  - docs/guides/documentation-maintenance.md
+---
+
+MOB-DEV-02. Штатные проекции сохраняют исходный Markdown.
+Политика отчётов, доставка, разбор и датированные результаты разделены.

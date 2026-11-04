@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-map-runtime-slow-operation-witness",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "MapRuntimeDiagnostics добавляет адресную диагностику локальных тайлов и",
+        "touch queries MapLibre. Быстрые успешные операции не пишутся в журнал.",
+        "Slow/failed операции содержат request id, map mode, lifecycle/scene state,",
+        "возраст последнего полученного кадра, heap, число workers/queued requests,",
+        "этап и длительность queue/lock/index query/feature-read-and-clip/MVT encoding.",
+        "Наблюдатель запускается через 1 s независимо от UI; заканчивающаяся операция",
+        "с длительностью от 500 ms тоже фиксируется. Повтор одного вида сообщения",
+        "ограничен 10 s и содержит число подавленных повторов.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-map-runtime-slow-operation-witness"
+    ]
+  }
+}

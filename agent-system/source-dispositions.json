@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "e6ddceedf3aa132f9c2e2b5a09e7cbfa5de8d50de5107589c2b02b4f414a5863",
+      "sha256": "e6f7c550d55d9d0c0ae8f2f7e29a2d43a8663a83695469e8792f1b5a0c32d5a7",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "cf06f9e5b338707b5447951addf5e37f2b3d59dde689da038a2aee836ab02325",
+      "sha256": "dcaea623d091fb08dbcae256091e8b3cb4d39576f6201efbab63051a57bf55aa",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -148,7 +148,10 @@
         "docs/architecture/track-controls.md",
         "docs/architecture/maintenance-reminders.md",
         "docs/architecture/mobile-usage.md",
-        "docs/architecture/crash-recovery.md"
+        "docs/architecture/crash-recovery.md",
+        "docs/architecture/error-reporting.md",
+        "docs/runbooks/incident-and-rollback.md",
+        "docs/runbooks/glitchtip-triage.md"
       ],
       "reason": "Pinned exact App Markdown source bytes and stable published addresses."
     },

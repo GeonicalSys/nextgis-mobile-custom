@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-prior-process-journal-and-origin-snapshot",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Прежний journal читается bounded writer до первой записи нового процесса и",
+        "сохраняется в памяти: новый медленный старт не стирает контекст delayed AppExitInfo.",
+        "Общий файл остаётся до 16 KiB; при переполнении удаляется старейшее наблюдение.",
+        "Идентичность snapshot соответствует исходному процессу. Cached и Backfillable",
+        "(Android AnrV2Hint) события не получают текущую operation. Их исходные release/tags",
+        "сохраняются, отдельно report_origin содержит reporter_version/build/revision.",
+        "Отсутствующая в старом отчёте исходная версия не восстанавливается догадкой.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-prior-process-journal-and-origin-snapshot"
+    ]
+  }
+}

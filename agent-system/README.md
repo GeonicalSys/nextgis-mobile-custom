@@ -141,6 +141,11 @@ Keep form, geometry, walk, track and project sync journals separate.
 Edit the reminder clocks and analytics acknowledgment in their own records.
 Regenerate the three published Markdown views with the ordinary projector.
 
+Edit App diagnostics, incident recovery and GlitchTip triage in **knowledge/documentation/**.
+Keep event eligibility, transport acknowledgment, OS exit evidence and backup recovery independent.
+Keep dated incident results and original limits in evidence records.
+Regenerate the three published views with the ordinary projector.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

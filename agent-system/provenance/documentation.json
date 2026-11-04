@@ -5361,6 +5361,474 @@
           "end_byte": 33067
         }
       ]
+    },
+    {
+      "path": "docs/architecture/error-reporting.md",
+      "record": "error-reporting.json",
+      "id": "lisa:mobile:resource:error-reporting",
+      "revision": "1cd987a99714cbf86f77a92b26d97027d66911df",
+      "blob": "2e9d4a71cff2fd6a67f55be930692861ae445458",
+      "sha256": "ce8b0b9b0d1fe823310240d84e29c9aeaf8dfd38f5e206d706178f88c4ad434b",
+      "bytes": 48476,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:error-reporting",
+          "start_byte": 0,
+          "end_byte": 1488
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-sqlite-phase-local-scope",
+          "start_byte": 1488,
+          "end_byte": 2144
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-sqlite-attributes-blob-and-sdk-boundaries",
+          "start_byte": 2144,
+          "end_byte": 3082
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-sqlite-scope-bounds-and-saturation",
+          "start_byte": 3082,
+          "end_byte": 3741
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-sqlite-private-counter-fields-and-ownership",
+          "start_byte": 3741,
+          "end_byte": 4430
+        },
+        {
+          "id": "lisa:mobile:evidence:error-reporting-first-tablet-capture-saturation-limit",
+          "start_byte": 4430,
+          "end_byte": 5283
+        },
+        {
+          "id": "lisa:mobile:evidence:error-reporting-background-gps-group-118",
+          "start_byte": 5283,
+          "end_byte": 5901
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-background-gps-request-and-failure-snapshots",
+          "start_byte": 5901,
+          "end_byte": 6724
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-background-gps-stage-enum-and-budget",
+          "start_byte": 6724,
+          "end_byte": 7630
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-background-gps-diagnostic-observation-boundary",
+          "start_byte": 7630,
+          "end_byte": 8321
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-background-gps-delayed-promotion-test-oracle",
+          "start_byte": 8321,
+          "end_byte": 8981
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-explicit-zip-os-history-scope",
+          "start_byte": 8981,
+          "end_byte": 9924
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-zip-reporter-identity-and-history-availability",
+          "start_byte": 9924,
+          "end_byte": 10758
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-passive-gps-cache-raw-monotonic-timestamp",
+          "start_byte": 10758,
+          "end_byte": 11512
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-passive-system-gps-cache-probe",
+          "start_byte": 11512,
+          "end_byte": 12328
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-passive-gps-witness-fields-and-timing-bounds",
+          "start_byte": 12328,
+          "end_byte": 13440
+        },
+        {
+          "id": "lisa:mobile:evidence:error-reporting-october-29-gps-cache-evidence",
+          "start_byte": 13440,
+          "end_byte": 14610
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-automatic-gps-recovery-and-owner-stop",
+          "start_byte": 14610,
+          "end_byte": 15269
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-gps-recovery-reasons-and-report-policy",
+          "start_byte": 15269,
+          "end_byte": 16620
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-gps-snapshot-ages-and-history",
+          "start_byte": 16620,
+          "end_byte": 17493
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-same-listener-reregistration-conditions",
+          "start_byte": 17493,
+          "end_byte": 18197
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-durable-gps-pair-delivery",
+          "start_byte": 18197,
+          "end_byte": 18302
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-map-runtime-slow-operation-witness",
+          "start_byte": 18302,
+          "end_byte": 19193
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-map-runtime-writer-and-event-provenance",
+          "start_byte": 19193,
+          "end_byte": 20237
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-local-tile-reason-and-request-headers",
+          "start_byte": 20237,
+          "end_byte": 21001
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-app-diagnostics-receiver-and-build-secret",
+          "start_byte": 21001,
+          "end_byte": 21513
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-diagnostics-owner-and-startup-guards",
+          "start_byte": 21513,
+          "end_byte": 22214
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-sentry-fatal-delegation-and-draft-isolation",
+          "start_byte": 22214,
+          "end_byte": 22965
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-local-log-initializer-and-legacy-url",
+          "start_byte": 22965,
+          "end_byte": 23813
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-diagnostic-cache-and-memory-bounds",
+          "start_byte": 23813,
+          "end_byte": 24289
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-durable-envelope-enqueue-and-ack",
+          "start_byte": 24289,
+          "end_byte": 24942
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-http-response-and-redirect-retry-policy",
+          "start_byte": 24942,
+          "end_byte": 25630
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-sdk-replay-worker-and-network-gate",
+          "start_byte": 25630,
+          "end_byte": 26427
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-delivery-identity-and-retention-limits",
+          "start_byte": 26427,
+          "end_byte": 27299
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-diagnostic-report-fields-and-safe-lifecycle",
+          "start_byte": 27299,
+          "end_byte": 28181
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-disabled-generic-attachments-and-log-separation",
+          "start_byte": 28181,
+          "end_byte": 28766
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-diagnostics-contract-3-original-event-data",
+          "start_byte": 28766,
+          "end_byte": 29946
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-payload-and-priority-context-budgets",
+          "start_byte": 29946,
+          "end_byte": 31348
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-handled-failure-eligibility-and-limiter",
+          "start_byte": 31348,
+          "end_byte": 31945
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-local-tile-noise-and-http-limiter",
+          "start_byte": 31945,
+          "end_byte": 33509
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-http-source-and-provider-versus-transport",
+          "start_byte": 33509,
+          "end_byte": 34200
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-sdk-upgrade-native-delivery-gates",
+          "start_byte": 34200,
+          "end_byte": 34742
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-opt-in-delivery-runner-and-test-project",
+          "start_byte": 34742,
+          "end_byte": 35331
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-delivery-verification-phases",
+          "start_byte": 35331,
+          "end_byte": 35769
+        },
+        {
+          "id": "lisa:mobile:evidence:error-reporting-october-8-delivery-receipt-link",
+          "start_byte": 35769,
+          "end_byte": 35945
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-cold-start-noise-and-tile-http-oracle",
+          "start_byte": 35945,
+          "end_byte": 36484
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-historical-anr-section-heading",
+          "start_byte": 36484,
+          "end_byte": 36544
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-startup-observer-stage-witness",
+          "start_byte": 36544,
+          "end_byte": 37226
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-prior-process-journal-and-origin-snapshot",
+          "start_byte": 37226,
+          "end_byte": 38115
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-actual-ndk-scope-tags",
+          "start_byte": 38115,
+          "end_byte": 38431
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-cached-exit-history-matching-and-privacy",
+          "start_byte": 38431,
+          "end_byte": 39674
+        },
+        {
+          "id": "lisa:mobile:evidence:error-reporting-october-23-triage-reference",
+          "start_byte": 39674,
+          "end_byte": 39884
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-sync-journal-persistence-diagnostics",
+          "start_byte": 39884,
+          "end_byte": 40284
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-restart-fallback-owner-and-durable-ack",
+          "start_byte": 40284,
+          "end_byte": 41379
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-restart-fallback-unowned-history-and-android-gate",
+          "start_byte": 41379,
+          "end_byte": 41895
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-restart-trace-allowlist-and-post-start-read",
+          "start_byte": 41895,
+          "end_byte": 42511
+        },
+        {
+          "id": "lisa:mobile:evidence:error-reporting-october-28-signal-trace-api-evidence",
+          "start_byte": 42511,
+          "end_byte": 43380
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-signal-trace-auto-format-and-association",
+          "start_byte": 43380,
+          "end_byte": 44135
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-signal-trace-result-status-and-jvm-limit",
+          "start_byte": 44135,
+          "end_byte": 45023
+        },
+        {
+          "id": "lisa:mobile:evidence:error-reporting-delivery06-and-delivery01-native-evidence",
+          "start_byte": 45023,
+          "end_byte": 45813
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-gps-platform-context-and-addon-basis",
+          "start_byte": 45813,
+          "end_byte": 46632
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-private-profiling-opt-in-and-contract-links",
+          "start_byte": 46632,
+          "end_byte": 47829
+        },
+        {
+          "id": "lisa:mobile:resource:error-reporting-rejected-sync-journal-report-and-restart-unknown",
+          "start_byte": 47829,
+          "end_byte": 48476
+        }
+      ]
+    },
+    {
+      "path": "docs/runbooks/incident-and-rollback.md",
+      "record": "incident-and-rollback.json",
+      "id": "lisa:mobile:resource:incident-and-rollback",
+      "revision": "1cd987a99714cbf86f77a92b26d97027d66911df",
+      "blob": "96344d81125aa43cf86344314dc228526d06a130",
+      "sha256": "9a0d17360a4204dbdff8cf2cc8828a014d7ba25a2aac00a4c577d434f2fbfd9c",
+      "bytes": 5003,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback",
+          "start_byte": 0,
+          "end_byte": 312
+        },
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback-contain-incident-and-copy-local-data",
+          "start_byte": 312,
+          "end_byte": 1421
+        },
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback-incident-classification",
+          "start_byte": 1421,
+          "end_byte": 1653
+        },
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback-apk-and-git-rollback-compatibility",
+          "start_byte": 1653,
+          "end_byte": 2039
+        },
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback-confirmed-risk-follow-up",
+          "start_byte": 2039,
+          "end_byte": 2213
+        },
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback-layerbackup-recovery-copy-and-writer-stop",
+          "start_byte": 2213,
+          "end_byte": 2647
+        },
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback-archive-identity-and-schema-validation",
+          "start_byte": 2647,
+          "end_byte": 3302
+        },
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback-offline-sqlite-and-attachment-restore",
+          "start_byte": 3302,
+          "end_byte": 3919
+        },
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback-copy-readback-and-server-reconciliation",
+          "start_byte": 3919,
+          "end_byte": 4243
+        },
+        {
+          "id": "lisa:mobile:resource:incident-and-rollback-backup-limits-and-dated-native-scope",
+          "start_byte": 4243,
+          "end_byte": 5003
+        }
+      ]
+    },
+    {
+      "path": "docs/runbooks/glitchtip-triage.md",
+      "record": "glitchtip-triage.json",
+      "id": "lisa:mobile:resource:glitchtip-triage",
+      "revision": "1cd987a99714cbf86f77a92b26d97027d66911df",
+      "blob": "3e89449a0d0952d07fbfb2aaeee500cb4fd2dc52",
+      "sha256": "58f713972a902d833ec3daa112d9fe052c90251ea949c521a81f596fdf6e6b82",
+      "bytes": 6471,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage",
+          "start_byte": 0,
+          "end_byte": 272
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-mobile-project-cli-and-server-address",
+          "start_byte": 272,
+          "end_byte": 699
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-private-credentials-and-session-lifetime",
+          "start_byte": 699,
+          "end_byte": 1398
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-read-and-export-commands",
+          "start_byte": 1398,
+          "end_byte": 1737
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-complete-export-and-event-freshness",
+          "start_byte": 1737,
+          "end_byte": 2648
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-verified-api-session-and-pagination",
+          "start_byte": 2648,
+          "end_byte": 3076
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-triage-preflight-and-preservation",
+          "start_byte": 3076,
+          "end_byte": 3496
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-fix-observability-and-noise-classification",
+          "start_byte": 3496,
+          "end_byte": 4427
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-resolution-authorization-and-comment",
+          "start_byte": 4427,
+          "end_byte": 4714
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-resolution-command-and-readback",
+          "start_byte": 4714,
+          "end_byte": 4922
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-snapshot-guard-and-retained-events",
+          "start_byte": 4922,
+          "end_byte": 5441
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-comment-payload-and-operation-boundary",
+          "start_byte": 5441,
+          "end_byte": 5889
+        },
+        {
+          "id": "lisa:mobile:resource:glitchtip-triage-cli-verification-command",
+          "start_byte": 5889,
+          "end_byte": 5980
+        },
+        {
+          "id": "lisa:mobile:evidence:glitchtip-triage-october-29-triage-and-october-28-field-evidence",
+          "start_byte": 5980,
+          "end_byte": 6471
+        }
+      ]
     }
   ]
 }

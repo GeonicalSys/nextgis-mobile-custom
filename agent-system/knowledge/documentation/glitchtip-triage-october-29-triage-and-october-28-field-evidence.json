@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:glitchtip-triage-october-29-triage-and-october-28-field-evidence",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:glitchtip-triage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/glitchtip-triage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Последний разбор: [2026-10-29](../reference/glitchtip-triage-2026-10-29.md)",
+        "(свежие8групп/593записи;877JVM и сборки PASS, source commit и серверное закрытие пока pending). Предыдущий подтверждённый итог",
+        "28 октября: [инцидент 224](../reference/mobile-crash-224-2026-10-27.md#итог-обработки-и-незавершённый-полевой-профиль-28-октября-2026).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Preserves the point-in-time pending statements and source/device evidence links without assigning current closure."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:glitchtip-triage-october-29-triage-and-october-28-field-evidence"
+    ]
+  }
+}

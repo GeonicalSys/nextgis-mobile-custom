@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-signal-trace-result-status-and-jvm-limit",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Null даёт `missing`, ошибка getter/read — `unavailable` с ограниченным именем",
+        "класса ошибки без её сообщения, нераспознанные bytes — `unrecognized_format`,",
+        "переполнение — `oversized` либо `captured_truncated`. Пропуск политикой теперь",
+        "называется `not_requested_for_reason`, API ниже30 — `unsupported_api`.",
+        "Byte/frame/privacy budgets прежние; никакие дополнительные native handlers не",
+        "устанавливаются.29октября повторены16JVM cases NativeTrace/ExitInfo/Reporter и",
+        "4TracePolicy cases — PASS; реальная OS-проверка нового SIGNALED пути не выполнена.",
+        "Исторический native result ниже относится к прежнему ANR/native reason gate.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The original status paragraph also records October 29 JVM checks. Those checks did not exercise the Android OS signal trace path."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-signal-trace-result-status-and-jvm-limit"
+    ]
+  }
+}

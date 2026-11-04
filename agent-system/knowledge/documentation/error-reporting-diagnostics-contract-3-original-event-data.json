@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-diagnostics-contract-3-original-event-data",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Контракт `diagnostics_contract=3` сохраняет содержимое уже собранного события:",
+        "URL с путём и исходным userinfo, отдельные query/fragment, метод, HTTP headers/cookies,",
+        "response status/headers, доступные request/response data, extras, custom contexts,",
+        "user и breadcrumbs, variables/absolute paths/source context в frames. Пароли,",
+        "токены, координаты, SQL и значения полей не маскируются по явному требованию",
+        "владельца системы. Для автоматических HTTP-ошибок оригинальные URL/headers берутся",
+        "из SDK OkHttp hint: SDK самостоятельно скрывает часть этих полей в event.",
+        "Потоковые тела HTTP не читаются и не расходуются ради диагностики; сохраняются",
+        "данные, уже предоставленные событию. `sendDefaultPii=false` не меняется, но это",
+        "не фильтр данных, явно переданных приложением/OkHttp hint.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-diagnostics-contract-3-original-event-data"
+    ]
+  }
+}
