@@ -15,6 +15,7 @@ related_code:
   - docs/scripts/check_change_impact.py
   - docs/scripts/change_impact_knowledge.py
   - docs/tests/test_change_impact_ci.py
+  - docs/scripts/structured_view_proof.py
   - tools/docs-check.ps1
 ---
 
@@ -79,6 +80,10 @@ branch, включая первый push новой ветки. Push в default 
 новая ветка, default/tag/manual события и имена с пробелами/кириллицей.
 Отдельно проверяются pagination API, точный head repository и отказ API.
 Эти проверки не требуют сборки APK, телефона или эмулятора.
+
+Полная проверка App сверяет одиннадцать YAML и JSON представлений с
+обычными генераторами и упорядоченными записями. После регенерации
+обнови квитанцию командой `python -B docs/scripts/structured_view_proof.py --write`.
 
 Локальный `tools/docs-check.ps1 -RunTests` получает JSON путей из того же
 `check_change_impact.py --local-paths --base origin/my-maplibre`, без GitHub API

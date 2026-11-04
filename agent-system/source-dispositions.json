@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "ad91cd4c63ffd4d61175d2676b5ee0aa942b68e334e18151c5f4936236dbe09e",
+      "sha256": "d4365be982d1a0e342001c16db3b7c4adf8cdc0e7ed2fb8f36f03b91c4cf8f67",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -941,7 +941,7 @@
     },
     {
       "path": "docs/changelog.md",
-      "sha256": "ee39966ca77feaab950a4ff714b9e8df81f5e4bfba78d3bd7e934608a3054bc7",
+      "sha256": "5c39d3e87a872fcd5f52afeea2f43bfed64aa73d387b9cbc2c73938cc68ab05a",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "reason": "Active documentation-maintenance history retains ordered edit and proof notes at its published address. Its exact disposition hash must follow an ordinary edit.",

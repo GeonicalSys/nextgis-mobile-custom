@@ -47,6 +47,11 @@ JSON. Use `python -B docs/scripts/ui_catalogue_knowledge.py --write` after an
 approved catalogue edit. The [UI provenance](provenance/ui-contracts.json)
 pins the exact original bytes, record spans and explicit evidence links.
 
+After regenerating a structured YAML or JSON view, refresh the ordered proof
+with `python -B docs/scripts/structured_view_proof.py --write`. The ordinary
+App validator checks the proof against the owner renderers, exact view bytes
+and complete ordered records. The standalone views keep their existing paths.
+
 Edit the App documentation entry, change checklist, documentation and registry
 indexes, documentation maintenance guide, five user guides, safe patterns,
 glossary and build, compatibility, flavors and settings references in

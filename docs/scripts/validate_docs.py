@@ -1071,6 +1071,15 @@ def main(argv: Iterable[str] | None = None) -> int:
         validation,
     )
     module_readmes = validate_central_markdown(docs_root, workspace, validation)
+    owned_app_pack = docs_root == workspace / "docs" and (
+        (workspace / "agent-system").exists() or (workspace / "agent-system").is_symlink()
+    )
+    if owned_app_pack:
+        proof = runpy.run_path(str(Path(__file__).with_name("structured_view_proof.py")))
+        try:
+            proof["check_proof"](workspace)
+        except (OSError, ValueError, KeyError) as error:
+            validation.error("agent-system/provenance/structured-views.json", str(error))
     validate_module_packs(
         modules,
         config_ids,
@@ -1082,8 +1091,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         args.module,
         args.require_pack,
         module_readmes=module_readmes,
-        owned_app_pack=(docs_root == workspace / "docs"
-                        and ((workspace / "agent-system").exists() or (workspace / "agent-system").is_symlink())),
+        owned_app_pack=owned_app_pack,
     )
     if args.changed_file:
         report_changed_files(triggers, args.changed_file, args.enforce_diff, validation)

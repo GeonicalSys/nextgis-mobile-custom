@@ -1520,6 +1520,8 @@ triggers:
   - docs/scripts/validate_docs.py
   - docs/tests/test_change_impact_ci.py
   - docs/tests/test_prose_knowledge.py
+  - docs/scripts/structured_view_proof.py
+  - agent-system/provenance/structured-views.json
   owners:
   - app
   read:

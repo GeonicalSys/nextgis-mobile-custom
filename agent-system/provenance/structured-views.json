@@ -1,0 +1,127 @@
+{
+  "format": "lisa.agent-system.app-structured-views.v1",
+  "owner": "android_projects/android_gisapp",
+  "views": {
+    "docs/registry/repositories.yaml": {
+      "layout_id": "lisa:mobile:metadata:repositories-registry",
+      "sha256_utf8_lf": "95f33f206b6ee84697fd37044f008ac7c320d9c8cec57b8bff901a41cdb797c5",
+      "source_fingerprints": {
+        "agent-system/provenance/repository-topology.json": "7b31a8c220b49e3a0d49634f2564a059eff9503f83608737c9fbe229b1ca34e9",
+        "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "93228869b227a88465cbd9d7202cc86ae8a7bb693215868f77f4f5f2d6ce1c87",
+      "ordered_count": 5
+    },
+    "docs/registry/modules.yaml": {
+      "layout_id": "lisa:mobile:metadata:modules-registry",
+      "sha256_utf8_lf": "edaeb27473a358ffddb48f69a9a9296a76a5d4a7c72c0ba84ffe67410d7f0048",
+      "source_fingerprints": {
+        "agent-system/provenance/repository-topology.json": "7b31a8c220b49e3a0d49634f2564a059eff9503f83608737c9fbe229b1ca34e9",
+        "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "a2983783c04299aee3c856dd9aabb9bb6d8f0374a6319301f91959474d2c0a34",
+      "ordered_count": 6
+    },
+    "docs/registry/invariants.yaml": {
+      "layout_id": "lisa:mobile:metadata:invariants-registry",
+      "sha256_utf8_lf": "ed6671ad2b60a883e0acb3ce40b5447c38a885c30fc22a908ededd9f5e45907d",
+      "source_fingerprints": {
+        "agent-system/provenance/keyed-docs-registries.json": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
+        "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "1e9426b4cbe7b97654b67b38f9da39227caa41a74003cfc3bd4e7de32e2e4b77",
+      "ordered_count": 93
+    },
+    "docs/registry/upstream-overlaps.yaml": {
+      "layout_id": "lisa:mobile:metadata:upstream-overlaps-registry",
+      "sha256_utf8_lf": "608a790ef40cb8f76145671a258d45b8ee0c5355ba3c5ec533ac77ede779f318",
+      "source_fingerprints": {
+        "agent-system/provenance/keyed-docs-registries.json": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
+        "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "373873f1594e06fb096fa968ee0567bbabdc8f05ff0188acff1d0e1f6d28517e",
+      "ordered_count": 13
+    },
+    "docs/registry/smoke-tests.yaml": {
+      "layout_id": "lisa:mobile:metadata:smoke-tests-registry",
+      "sha256_utf8_lf": "4fea941d72fde499cca88c19bad7db5d0ba2528334feaee67dbb46b32e7fae20",
+      "source_fingerprints": {
+        "agent-system/provenance/keyed-docs-registries.json": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
+        "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "d70e3cee4b69052262d8bc0d13567561c8645937156b5a53530c2e8c5b9aa644",
+      "ordered_count": 121
+    },
+    "docs/registry/config-keys.yaml": {
+      "layout_id": "lisa:mobile:metadata:config-keys-registry",
+      "sha256_utf8_lf": "9bdbf14a5760fee83ff8fd8421ef76765a280be6d8b768e4bc3639b2297e5eb8",
+      "source_fingerprints": {
+        "agent-system/provenance/sectioned-docs-registries.json": "1cae6c05e81c279fff124b0723959efe0ebac368e90baf7a5ab2d0bb3e2f0f35",
+        "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "2eb28c28fdd25d6a735663eafd88e974208735574afdd8a2c10e45421012fb2d",
+      "ordered_count": 114
+    },
+    "docs/registry/dependencies.yaml": {
+      "layout_id": "lisa:mobile:metadata:dependencies-registry",
+      "sha256_utf8_lf": "f2669778988d1579e236008f523cab478525691e33240ef172473a7dce27c5ee",
+      "source_fingerprints": {
+        "agent-system/provenance/sectioned-docs-registries.json": "1cae6c05e81c279fff124b0723959efe0ebac368e90baf7a5ab2d0bb3e2f0f35",
+        "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "163124ce5f9381a8a4665535dd98f761d2c6d0e73d14f613c025ad06b5602d56",
+      "ordered_count": 36
+    },
+    "docs/registry/ecosystem.yaml": {
+      "layout_id": "lisa:mobile:metadata:ecosystem-registry",
+      "sha256_utf8_lf": "de24739d58fac4a41dbd686a69e9b5ac6dfbffd434e9e90b89aef14642ca7185",
+      "source_fingerprints": {
+        "agent-system/provenance/sectioned-docs-registries.json": "1cae6c05e81c279fff124b0723959efe0ebac368e90baf7a5ab2d0bb3e2f0f35",
+        "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "421cd97cb0bbbebaf59e3022644926eb88f22e99f2e1ba0a22c6ee9dc73dc4f2",
+      "ordered_count": 15
+    },
+    "docs/registry/change-impact.yaml": {
+      "layout_id": "lisa:mobile:metadata:change-impact-registry",
+      "sha256_utf8_lf": "89e5d2ce8635490731fa4228d4f545d2a7d81b27bad54ccf94ca15a1aa1ac783",
+      "source_fingerprints": {
+        "agent-system/provenance/change-impact.json": "469b25b9ae32e16d5581764528052a3f6abc076450f1a9624121fafd8da8baf1",
+        "docs/scripts/change_impact_knowledge.py": "e704490ef51b887a56890d8c1a55dbcc1396231c9075e2f01c7ce49c79360899",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "148230b197ebb0321b6f68cada8b41d5fed0aceed1240f631aedb2f0e70238b6",
+      "ordered_count": 86
+    },
+    "app/docs/manifest.yaml": {
+      "layout_id": "lisa:mobile:metadata:app-module-manifest",
+      "sha256_utf8_lf": "6b4d9397fdcbb5af91d34e1e2e0b6cd85a0d608b68af38c9d2fca866d76c2154",
+      "source_fingerprints": {
+        "agent-system/provenance/app-module-manifest.json": "b272578296400a9bb749e4242f9c1b4502b9234a54e40089554a97279bc1cbdc",
+        "docs/scripts/module_manifest_knowledge.py": "97a1eb94b80a5fd569cb3bb78cc398fbac0c4d57d3272417bd8055137ab386e2",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "02e715dba53a005b7ae6cecff47154929651747d29421e2757d41881fb95e2ca",
+      "ordered_count": 212
+    },
+    "docs/registry/ui-contracts.json": {
+      "layout_id": "lisa:mobile:metadata:ui-contracts-registry",
+      "sha256_utf8_lf": "b70df43752cec608c99cc9884ea6f12a6485633788a20a09d10876fcf3d73e94",
+      "source_fingerprints": {
+        "agent-system/provenance/ui-contracts.json": "466c091fc7477ee2e0949e1cb84defa7eaf2f4473aae773aab024d21e512dc7c",
+        "docs/scripts/ui_catalogue_knowledge.py": "123673e3984832ec94154f4ad354b47b396782de67fdd544be9edab098ba33f9",
+        "docs/scripts/structured_view_proof.py": "ba367483a4722c2834a0458a9aa8cf9523834198808019e9b3a6b6d5dd95511c"
+      },
+      "ordered_records_sha256": "6537d562b89d24dbb411c4425b8d714e44c05581a041d40a1df073cce39c6920",
+      "ordered_count": 488
+    }
+  }
+}
