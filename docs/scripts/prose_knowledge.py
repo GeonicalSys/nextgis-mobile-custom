@@ -1,4 +1,4 @@
-"""Project App-owned documents to their established Markdown and module YAML addresses."""
+"""Project owner documents to their established Markdown and module YAML addresses."""
 
 from __future__ import annotations
 
@@ -13,6 +13,10 @@ OWNER = "android_projects/android_gisapp"
 DIRECTORY = Path("agent-system/knowledge/documentation")
 MANIFEST = Path("agent-system/provenance/documentation.json")
 SECTION_ID = re.compile(r"lisa:mobile:(resource|evidence|task):([a-z0-9][a-z0-9_.-]*)")
+EASYPICKER_MODULE = "easypicker-module"
+EASYPICKER_PATH = Path("easypicker")
+EASYPICKER_VIEWS = {PurePosixPath("README.md"), PurePosixPath("docs/README.md")}
+EASYPICKER_SECTION_ID = re.compile(r"lisa:easypicker:(resource|evidence|task):([a-z0-9][a-z0-9_.-]*)")
 
 
 def markdown_lines(facets: dict, key: str, name: str) -> list[str]:
@@ -23,9 +27,15 @@ def markdown_lines(facets: dict, key: str, name: str) -> list[str]:
     return lines
 
 
-def project_documents(owner: Path) -> dict[PurePosixPath, str]:
+def project_documents(owner: Path, *, module_id: str = "app") -> dict[PurePosixPath, str]:
+    if module_id == EASYPICKER_MODULE:
+        owner_id, section_id = OWNER + "/" + EASYPICKER_PATH.as_posix(), EASYPICKER_SECTION_ID
+    elif module_id == "app":
+        owner_id, section_id = OWNER, SECTION_ID
+    else:
+        raise ValueError(f"Unknown module documentation projection: {module_id}")
     manifest = json.loads((owner / MANIFEST).read_bytes())
-    if manifest["schema_version"] != 1 or manifest["owner"] != OWNER or not manifest["sources"]:
+    if manifest["schema_version"] != 1 or manifest["owner"] != owner_id or not manifest["sources"]:
         raise ValueError("Invalid documentation provenance")
     documents = {}
     expected = set()
@@ -39,7 +49,7 @@ def project_documents(owner: Path) -> dict[PurePosixPath, str]:
         identities.add(identity)
         record = json.loads((owner / DIRECTORY / name).read_bytes())
         if (record["schema_version"] != 2 or record["id"] != identity
-                or record["owner"] != OWNER or record["topic"] != "documentation"
+                or record["owner"] != owner_id or record["topic"] != "documentation"
                 or record["kind"] != kind
                 or record["provenance"] != {"manifest": MANIFEST.as_posix(), "scopes": [identity]}):
             raise ValueError(f"Invalid documentation record: {name}")
@@ -49,20 +59,28 @@ def project_documents(owner: Path) -> dict[PurePosixPath, str]:
 
     for source in manifest["sources"]:
         view = PurePosixPath(source["path"])
-        if ((view.parts[:1] != ("docs",) and view != PurePosixPath("app/docs/README.md"))
-                or view.suffix != ".md"
-                or ".." in view.parts or "\\" in str(view) or view in documents):
+        allowed = (
+            view in EASYPICKER_VIEWS if module_id == EASYPICKER_MODULE
+            else view.parts[:1] == ("docs",) or view == PurePosixPath("app/docs/README.md")
+        )
+        if not allowed or view.suffix != ".md" or ".." in view.parts or "\\" in str(view) or view in documents:
             raise ValueError(f"Invalid or duplicate documentation address: {source}")
         name = source["record"]
         record = read_record(name, source["id"], view, "resource")
-        frontmatter = markdown_lines(record["facets"], "frontmatter", name)
-        body = list(markdown_lines(record["facets"], "body", name))
+        if view == PurePosixPath("README.md"):
+            if "frontmatter" in record["facets"]:
+                raise ValueError(f"Unexpected frontmatter in the library README: {name}")
+            lines = []
+        else:
+            frontmatter = markdown_lines(record["facets"], "frontmatter", name)
+            lines = ["---", *frontmatter, "---"]
+        lines.extend(markdown_lines(record["facets"], "body", name))
         # Ordered contains relations are the layout. Provenance spans describe the original only.
         for edge in record["relations"]:
             if edge["type"] != "contains":
                 continue
             identity = edge["target"]
-            match = SECTION_ID.fullmatch(identity)
+            match = section_id.fullmatch(identity)
             if match is None or edge["status"] != "source_backed":
                 raise ValueError(f"Invalid documentation section: {identity}")
             kind, slug = match.groups()
@@ -71,8 +89,10 @@ def project_documents(owner: Path) -> dict[PurePosixPath, str]:
             if ("frontmatter" in section["facets"]
                     or any(edge["type"] == "contains" for edge in section["relations"])):
                 raise ValueError(f"Nested documentation section: {identity}")
-            body.extend(markdown_lines(section["facets"], "body", section_name))
-        documents[view] = "\n".join(["---", *frontmatter, "---", *body])
+            lines.extend(markdown_lines(section["facets"], "body", section_name))
+        documents[view] = "\n".join(lines)
+    if module_id == EASYPICKER_MODULE and documents.keys() != EASYPICKER_VIEWS:
+        raise ValueError("EasyPicker requires both documentation views")
     if {path.relative_to(owner / DIRECTORY).as_posix()
             for path in (owner / DIRECTORY).rglob("*.json")} != expected:
         raise ValueError("Documentation manifest and record membership differ")
@@ -89,18 +109,26 @@ def main() -> int:
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--write", action="store_true")
+    parser.add_argument("--module", choices=("app", EASYPICKER_MODULE), default="app")
     args = parser.parse_args()
     owner = Path(__file__).resolve().parents[2]
+    module_readme = PurePosixPath("app/docs/README.md")
+    if args.module == EASYPICKER_MODULE:
+        owner /= EASYPICKER_PATH
+        module_readme = PurePosixPath("docs/README.md")
     try:
-        documents = project_documents(owner)
+        documents = project_documents(owner, module_id=args.module)
         manifest_view = None
-        if PurePosixPath("app/docs/README.md") in documents:
+        if module_readme in documents:
             projector = runpy.run_path(str(Path(__file__).with_name("module_manifest_knowledge.py")))
-            manifest = projector["project_manifest"](owner)
+            manifest = projector["project_manifest"](owner, module_id=args.module)
             if args.write:
-                manifest_view = (owner / projector["VIEW"], projector["render_manifest"](manifest))
+                manifest_view = (
+                    owner / projector["PROFILES"][args.module].view,
+                    projector["render_manifest"](manifest, module_id=args.module),
+                )
             else:
-                projector["check_view"](owner, manifest)
+                projector["check_view"](owner, manifest, module_id=args.module)
         for view, text in documents.items():
             if args.write:
                 (owner / view).write_bytes(text.encode("utf-8"))

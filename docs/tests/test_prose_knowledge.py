@@ -11,6 +11,10 @@ from pathlib import Path, PurePosixPath
 APP = Path(__file__).resolve().parents[2]
 PROJECTOR = runpy.run_path(str(APP / "docs/scripts/prose_knowledge.py"))
 VALIDATOR = runpy.run_path(str(APP / "docs/scripts/validate_docs.py"))
+MANIFEST_SCRIPT = Path("docs/scripts/module_manifest_knowledge.py")
+MANIFEST_PROJECTOR = runpy.run_path(str(APP / MANIFEST_SCRIPT))
+STRUCTURED_PROOF = runpy.run_path(str(APP / "docs/scripts/structured_view_proof.py"))
+EASYPICKER_MODULE = "easypicker-module"
 COMPARISON = PurePosixPath("docs/reference/official-differences.md")
 
 
@@ -61,6 +65,72 @@ class ProseKnowledgeTest(unittest.TestCase):
         validation = VALIDATOR["Validation"]()
         VALIDATOR["validate_central_markdown"](docs, standalone, validation)
         self.assertEqual([], validation.errors)
+
+    def test_easypicker_module_preserves_and_counts_empty_lists(self):
+        owner = self.owner / "easypicker"
+        profile = MANIFEST_PROJECTOR["PROFILES"][EASYPICKER_MODULE]
+        source = MANIFEST_PROJECTOR["DIRECTORY"]
+        directory = owner / source.parent / profile.topic
+        directory.mkdir(parents=True)
+        provenance = f"agent-system/provenance/{profile.topic}.json"
+        empty_fields = {"settings_refs", "invariant_refs", "upstream_hotspots"}
+
+        def library_identity(identity):
+            return identity.replace("lisa:mobile:", "lisa:easypicker:").replace(
+                "app-module-manifest", profile.topic
+            )
+
+        def write_record(record):
+            name = record["id"].rsplit(":", 1)[-1] + ".json"
+            (directory / name).write_text(json.dumps(record, sort_keys=True), encoding="utf-8")
+
+        for path in (APP / source).glob("*.json"):
+            record = json.loads(path.read_bytes())
+            record["id"] = library_identity(record["id"])
+            record["owner"], record["topic"] = profile.owner, profile.topic
+            record["provenance"] = {"manifest": provenance, "scopes": [record["id"]]}
+            for edge in record["relations"]:
+                edge["target"] = library_identity(edge["target"])
+            facets = record["facets"]
+            if record["kind"] == "metadata":
+                layout = record
+                facets["view-path"]["value"] = "docs/manifest.yaml"
+                facets["manifest-metadata"]["value"]["module_id"] = EASYPICKER_MODULE
+            elif facets["manifest-field"]["value"] in empty_fields:
+                facets["definition"]["value"] = []
+                empty_record = record
+            write_record(record)
+
+        manifest = MANIFEST_PROJECTOR["project_manifest"](owner, module_id=EASYPICKER_MODULE)
+        self.assertEqual(EASYPICKER_MODULE, manifest["module_id"])
+        self.assertEqual([[], [], []], [manifest[field] for field in sorted(empty_fields)])
+        self.assertEqual(layout["facets"]["manifest-field-order"]["value"], list(manifest)[5:])
+
+        duplicate_id = empty_record["id"] + "-duplicate"
+        empty_record["id"] = duplicate_id
+        empty_record["provenance"]["scopes"] = [duplicate_id]
+        layout["relations"].append({"type": "contains", "target": duplicate_id, "status": "source_backed"})
+        write_record(empty_record)
+        write_record(layout)
+        with self.assertRaisesRegex(ValueError, "Invalid module manifest reference list"):
+            MANIFEST_PROJECTOR["project_manifest"](owner, module_id=EASYPICKER_MODULE)
+
+    def test_generated_easypicker_manifest_requires_proof(self):
+        owner = self.owner / "easypicker"
+        script = self.owner / MANIFEST_SCRIPT
+        script.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(APP / MANIFEST_SCRIPT, script)
+        view = owner / "docs/manifest.yaml"
+        view.parent.mkdir(parents=True)
+        view.write_text("schema_version: 1\n", encoding="utf-8")
+        self.assertFalse(STRUCTURED_PROOF["library_view_declared"](owner))
+        view.write_text(
+            "# Generated from agent-system/knowledge/easypicker-module-manifest.\nschema_version: 1\n",
+            encoding="utf-8",
+        )
+        self.assertTrue(STRUCTURED_PROOF["library_view_declared"](owner))
+        with self.assertRaises(FileNotFoundError):
+            STRUCTURED_PROOF["check_proof"](owner, module_id=EASYPICKER_MODULE)
 
     def comparison_layout(self):
         layout = self.owner / PROJECTOR["DIRECTORY"] / "official-differences.json"

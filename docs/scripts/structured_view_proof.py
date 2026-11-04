@@ -1,4 +1,4 @@
-"""Seal App structured views after the ordinary owner renderers check their bytes."""
+"""Seal structured views after the ordinary owner renderers check their bytes."""
 
 from __future__ import annotations
 
@@ -11,8 +11,11 @@ import runpy
 OWNER = "android_projects/android_gisapp"
 PROOF = Path("agent-system/provenance/structured-views.json")
 FORMAT = "lisa.agent-system.app-structured-views.v1"
+LIBRARY_FORMAT = "lisa.agent-system.module-structured-views.v1"
+EASYPICKER_MODULE = "easypicker-module"
 SCRIPTS = Path("docs/scripts")
 EDITOR = SCRIPTS / "structured_view_proof.py"
+MODULE_PROJECTOR = SCRIPTS / "module_manifest_knowledge.py"
 KEYED = ("repositories", "modules", "invariants", "upstream-overlaps", "smoke-tests",
          "config-keys", "dependencies", "ecosystem")
 
@@ -25,7 +28,24 @@ def value_hash(value) -> str:
     return sha256(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def structured_views(owner: Path):
+def library_view_declared(owner: Path) -> bool:
+    proof = owner / PROOF
+    if proof.exists() or proof.is_symlink():
+        return True
+    projector = runpy.run_path(str(owner.parent / MODULE_PROJECTOR))
+    view = owner / projector["PROFILES"][EASYPICKER_MODULE].view
+    with view.open(encoding="utf-8") as stream:
+        return stream.readline().rstrip("\n") == projector["generated_heading"](EASYPICKER_MODULE)
+
+
+def structured_views(owner: Path, *, module_id: str = "app"):
+    if module_id == EASYPICKER_MODULE:
+        projector = runpy.run_path(str(owner.parent / MODULE_PROJECTOR))
+        profile = projector["PROFILES"][module_id]
+        manifest = projector["project_manifest"](owner, module_id=module_id)
+        yield (profile.view, profile.topic, profile.layout_id, MODULE_PROJECTOR,
+               projector["render_manifest"](manifest, module_id=module_id))
+        return
     keyed_path = SCRIPTS / "keyed_registry_knowledge.py"
     keyed = runpy.run_path(str(owner / keyed_path))
     for name in KEYED:
@@ -47,9 +67,12 @@ def structured_views(owner: Path):
         yield path, topic, f"lisa:mobile:metadata:{index}", tool, projector[render](projector[project](owner))
 
 
-def build_proof(owner: Path) -> dict:
+def build_proof(owner: Path, *, module_id: str = "app") -> dict:
+    is_app = module_id == "app"
+    owner_id = OWNER if is_app else OWNER + "/easypicker"
+    scripts_owner = owner if is_app else owner.parent
     result = {}
-    for view, topic, layout_id, projector, rendered in structured_views(owner):
+    for view, topic, layout_id, projector, rendered in structured_views(owner, module_id=module_id):
         expected = rendered.encode("utf-8")
         if (owner / view).read_bytes().replace(b"\r\n", b"\n") != expected:
             raise ValueError(f"Generated structured view is stale: {view}")
@@ -58,7 +81,7 @@ def build_proof(owner: Path) -> dict:
         for path in sorted(folder.rglob("*.json")):
             record = json.loads(path.read_bytes())
             identity = record["id"]
-            if identity in records or record["owner"] != OWNER or record["topic"] != topic:
+            if identity in records or record["owner"] != owner_id or record["topic"] != topic:
                 raise ValueError(f"Invalid structured view member: {path}")
             records[identity] = record
         layout = records[layout_id]
@@ -69,16 +92,19 @@ def build_proof(owner: Path) -> dict:
         result[view.as_posix()] = {
             "layout_id": layout_id,
             "sha256_utf8_lf": text_hash(expected),
-            "source_fingerprints": {path.as_posix(): text_hash((owner / path).read_bytes()) for path in (provenance, projector, EDITOR)},
+            "source_fingerprints": {
+                path.as_posix(): text_hash((root / path).read_bytes())
+                for path, root in ((provenance, owner), (projector, scripts_owner), (EDITOR, scripts_owner))
+            },
             "ordered_records_sha256": value_hash([(identity, value_hash(records[identity])) for identity in ordered]),
             "ordered_count": len(ordered),
         }
-    return {"format": FORMAT, "owner": OWNER, "views": result}
+    return {"format": FORMAT if is_app else LIBRARY_FORMAT, "owner": owner_id, "views": result}
 
 
-def check_proof(owner: Path) -> None:
-    if json.loads((owner / PROOF).read_bytes()) != build_proof(owner):
-        raise ValueError("App structured view proof is stale. Verify the views and regenerate their proof.")
+def check_proof(owner: Path, *, module_id: str = "app") -> None:
+    if json.loads((owner / PROOF).read_bytes()) != build_proof(owner, module_id=module_id):
+        raise ValueError("Structured view proof is stale. Verify the views and regenerate their proof.")
 
 
 def main() -> int:
@@ -86,18 +112,21 @@ def main() -> int:
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--write", action="store_true")
+    parser.add_argument("--module", choices=("app", EASYPICKER_MODULE), default="app")
     args = parser.parse_args()
     owner = Path(__file__).resolve().parents[2]
+    if args.module == EASYPICKER_MODULE:
+        owner /= "easypicker"
     try:
         if args.write:
-            proof = build_proof(owner)
+            proof = build_proof(owner, module_id=args.module)
             (owner / PROOF).write_bytes((json.dumps(proof, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
         else:
-            check_proof(owner)
+            check_proof(owner, module_id=args.module)
     except (OSError, ValueError, KeyError) as error:
         print(str(error))
         return 1
-    print("App structured views and their ordered record proof agree.")
+    print("Structured views and their ordered record proof agree.")
     return 0
 
 

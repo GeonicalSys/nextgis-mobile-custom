@@ -191,6 +191,14 @@ The App module manifest uses separate ordered component and reference records.
 Refresh the YAML with `python -B docs/scripts/prose_knowledge.py --write`.
 The original Git blob and complete byte spans are pinned in its provenance.
 
+The EasyPicker reader verifies both README views and the module manifest from
+EasyPicker's owner records when its generated pack is present. From the App
+root, refresh the views with
+`python -B docs/scripts/prose_knowledge.py --write --module easypicker-module`
+and seal the YAML with
+`python -B docs/scripts/structured_view_proof.py --write --module easypicker-module`.
+App checkouts with earlier EasyPicker pins read the module's checked-in YAML.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

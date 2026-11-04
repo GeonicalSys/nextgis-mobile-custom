@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-11-04
+last_verified: 2026-11-05
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -14,6 +14,8 @@ related_code:
   - .github/workflows/docs-validate.yml
   - docs/scripts/check_change_impact.py
   - docs/scripts/change_impact_knowledge.py
+  - docs/scripts/module_manifest_knowledge.py
+  - docs/scripts/prose_knowledge.py
   - docs/tests/test_change_impact_ci.py
   - docs/scripts/structured_view_proof.py
   - tools/docs-check.ps1
@@ -84,6 +86,14 @@ branch, включая первый push новой ветки. Push в default 
 Полная проверка App сверяет одиннадцать YAML и JSON представлений с
 обычными генераторами и упорядоченными записями. После регенерации
 обнови квитанцию командой `python -B docs/scripts/structured_view_proof.py --write`.
+
+Если установлен пакет EasyPicker с производным манифестом, валидатор
+сверяет оба README, YAML и квитанцию с записями EasyPicker. Из корня App
+обнови представления командой
+`python -B docs/scripts/prose_knowledge.py --write --module easypicker-module`
+и квитанцию командой
+`python -B docs/scripts/structured_view_proof.py --write --module easypicker-module`.
+Закреплённые ревизии EasyPicker со старым пакетом используют YAML.
 
 Локальный `tools/docs-check.ps1 -RunTests` получает JSON путей из того же
 `check_change_impact.py --local-paths --base origin/my-maplibre`, без GitHub API
