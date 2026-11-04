@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-cache-queue-apk-build-and-owner-observation-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-cache-queue-acceptance-boundary"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Техническая проверка:70 JVM tests/9classes PASS50с, включая25 cache и7 admission;",
+        "0fail/error/skip. LisaDebug/LisaRelease/BelkaRelease PASS1мин50с, version matrix",
+        "PASS с прежними версиями. Source fingerprint1658 runtime/build files",
+        "`1ea9ac886867116d6e3d5c6707e83b74f6caad7644410e563441cdc37952de3d` неизменен",
+        "до/после сборки. Обычный Lisa APK224/3.1.2.30:",
+        "SHA256`b0f55cda77d4bc3965d00e12a316654f9a7de98c9eab060ded7e56337bb67e37`,",
+        "70 580 085 байт, прежний signer, DEBUG/FIELD_VERIFICATION/PRIVATE_RESOURCE_PROFILING",
+        "false, profileable element отсутствует. Никакого postprocessing/установки/профиля.",
+        "После самостоятельной проверки владелец сообщил «Почти моментально отрисовывается",
+        "всё». Это положительный субъективный отзыв, не численный benchmark и не проверка",
+        "полноты всех объектов/подписей. Её владелец явно оставил на потом.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-cache-queue-apk-build-and-owner-observation-20261028"
+    ]
+  }
+}

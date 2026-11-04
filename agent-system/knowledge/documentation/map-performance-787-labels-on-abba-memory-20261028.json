@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-787-labels-on-abba-memory-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-direct-sqlite-render-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Отдельная A-B-B-A серия обычных baselinecab9/SQLite APK с одинаковыми подписями",
+        "и камерой реального PK3688 дала168 samples: A1/B1/B2/A2 retry по42/6/210s.",
+        "Среднее двух run-level statistics A→B: median RSS последних60s958.12→659.66MiB",
+        "(−31.15%), sampled peak1043.82→792.76MiB (−24.05%). Graphics PSS late60",
+        "219.48→230.91MiB (+5.2%). Это не pooled median, confidence interval или",
+        "retained-ownership profile. Во время memory нет heapprofd/видеозаписи.",
+        "A1 итоговый UI export FAIL сохранён; original A2 partial после ADB5037 отказа",
+        "исключён, completed retry отдельный. Все168 raw meminfo проверены, вся DB",
+        "побайтно неизменна, все16 configs совпали с labels-ON basis. Exact camera UNKNOWN.",
+        "Отдельные A1/B1/B2 phone scene medians примерно0.2–0.5s перекрываются, speedup",
+        "не установлен. Остаётся f809 numeric20px legacy CENTER/generic TOP difference.",
+        "[Подробные факты и незакрытые проверки](../reference/mobile-crash-224-2026-10-27.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-787-labels-on-abba-memory-20261028"
+    ]
+  }
+}

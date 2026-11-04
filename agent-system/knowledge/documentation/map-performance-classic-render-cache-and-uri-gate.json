@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-classic-render-cache-and-uri-gate",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-classic-editor-and-native-payload"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`VectorLayerRenderCache` сокращает повторное чтение геометрии, но обычный cache hit всё ещё парсит",
+        "GeoJSON в Java и может повторно читать атрибуты для rule-style и подписей. Native GeoJSON URI не",
+        "считается production fast path: `USE_MAPLIBRE_NATIVE_GEOJSON_URI = false` до отдельной on-device",
+        "проверки. Он сохранён для неподдерживаемых расширенных renderers и технических",
+        "compatibility bind, а не является обычным startup путём поддерживаемых слоёв.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-classic-render-cache-and-uri-gate"
+    ]
+  }
+}

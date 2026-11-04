@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-implemented-rendering-boundaries",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-direct-sqlite-render-pipeline",
+      "lisa:mobile:resource:map-performance-derived-pbf-cache-ledger",
+      "lisa:mobile:resource:map-performance-shared-io-admission"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Уже реализовано",
+        "",
+        "- spatial query через RTree и `VectorLayer.query(GeoEnvelope)`;",
+        "  identify затем уточняет hit: полигоны — PIP, линии — пересечение с",
+        "  tap-envelope (±20dp), не bbox объекта;",
+        "- legacy zoom-aware геометрии `geom_<zoom>` остаются отдельным механизмом;",
+        "  эта защита памяти не вводит дополнительного упрощения или отбора ID;",
+        "- render cache с безопасным fallback на построение из БД;",
+        "- lite reload для уже подготовленных source-данных;",
+        "- direct SQLite CustomVectorSource для всех поддерживаемых Simple/Field Rule",
+        "  векторов; old local_vector_tiles metadata не выбирает backend;",
+        "- shared cancellable two-permit admission до IO dispatch, per-layer lock и",
+        "  actual-free-memory gate; нет HTTP workers/socket queue/503 route;",
+        "- прежний bounded derived PBF disk cache, полные IDs/геометрии и source/content/",
+        "  style generation fences:32/128MiB,1024 файлов,4MiB на запись.",
+        "  LocalVectorTileDiskCache остаётся текущим компонентом;",
+        "- compact native свойства отдельно от rich classic снимка; текущий direct",
+        "  polygon label anchor остаётся внутри PBF того же source;",
+        "- точный повторяемый ARGB мотив штриховки вместо полной512×512 текстуры,",
+        "  если он восстанавливает каждый пиксель исходной решётки;",
+        "",
+        "- явный classic converter для неизвестных renderer extensions и preview/overlay.",
+        "  Поддерживаемые обычные стили, включая сложные полигоны и Светлячок, остаются",
+        "  на direct SQLite после live style reload.",
+        "",
+        "Старый HTTP точечный fast path удалён. Capability нового direct SQLite",
+        "renderer определяется Simple/Field Rule и известными style-классами для всех",
+        "шести геометрий, независимо от old config flag. Unknown renderer extensions",
+        "могут использовать явный classic converter; HTTP routing отсутствует.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-implemented-rendering-boundaries"
+    ]
+  }
+}

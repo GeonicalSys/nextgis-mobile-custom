@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-private-profiler-aggregation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-sqlite-phase-observation"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`RenderResourceProfiler` независимо от старых cap16/32 считает запросы, исходы,",
+        "объёмы BLOB/PBF/подписей и wall/CPU по этапам. CPU clock сравнивается только внутри",
+        "одного TID, но этого недостаточно через coroutine suspension/cancellation:",
+        "в trial28октября CPU `io_queue` признан непригодным и исключён из рейтингов;",
+        "до повторного использования wait/suspend phases требуют CPU-unknown. Handoff",
+        "wall не превращается в CPU. Глобальные/послойные агрегаты сохраняются",
+        "при потере raw: явны queue/active/layer overflow и пропущенные подробности.",
+        "Layer rows объединяют одинаковые numeric IDs; первая сессия ограничивается одним",
+        "проектом, raw source_epoch позволяет отличать поколения. Это не присвоение",
+        "нативной памяти конкретному слою по дельтам общей памяти процесса.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-private-profiler-aggregation"
+    ]
+  }
+}

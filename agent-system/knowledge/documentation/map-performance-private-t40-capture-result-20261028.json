@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-private-t40-capture-result-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-derived-pbf-cache-ledger",
+      "lisa:mobile:resource:map-performance-private-profiler-aggregation"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Первый ручной сеанс завершён пользователем через19мин; получены3окна по180с,",
+        "полный23270-record app footer и independently checked counts, loss0.",
+        "Подтверждён приоритет обслуживания текущего disk cache перед геометрией:",
+        "пустой/непустой новый тайл требует почти одинакового CPU, scan/regex/sort/stat",
+        "каталога выполняется перед каждым put. Native profiler заметно влияет на CPU;",
+        "эти времена не являются ordinary-build benchmark. Полные выводы/границы и",
+        "приоритет без нового долговременного кэша:",
+        "[разбор T40](../reference/mobile-resource-profile-t40-2026-10-28.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-private-t40-capture-result-20261028"
+    ]
+  }
+}

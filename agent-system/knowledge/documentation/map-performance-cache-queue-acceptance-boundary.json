@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-cache-queue-acceptance-boundary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-derived-pbf-cache-ledger",
+      "lisa:mobile:resource:map-performance-shared-io-admission"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Контракт `INV-LOCAL-TILE-CACHE-ADMISSION`, карточка",
+        "`maplib-20261028-tile-cache-queue`. Адресные source/build результаты принадлежат",
+        "новому APK receipt; прежние114мс и p95очереди8,59с не являются результатами",
+        "после исправления. Реальная скорость/полнота кадра и2–3с проверяются отдельно;",
+        "Full/публикация по-прежнему отложены.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-cache-queue-acceptance-boundary"
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-d101-api30-read-transport-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-bounded-original-read-transport"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Последний ordinary PRIVATE D101 собран normalall3 PASS62s, matrixall3 PASS,",
+        "71focused JVM PASS/independent review. Actual API30 cold1403 подтвердил window",
+        "и PFD:1350inline+2PFD в10 terminal representatives/1352 consumed originals,",
+        "нулевые read/window/SQLite/fatal markers в retainedPIDlog. Same9logical-counter",
+        "cohorts121features/140772B/PBF22217: BLOB83.57→13.28ms;110features/41376B/",
+        "78labels/PBF16476:134.11→15.37ms;163line originals/47484B:42.24→8.59ms.",
+        "Это совпадение объёмов, не cryptographic equality/tileidentity.110-feature elapsed",
+        "при этом791.51→3775.86ms из-за IOqueue6.17→3374.41ms: каждый tile быстрее не",
+        "объявлен.3051 terminal detail D101 не попал в throttle snapshot, поэтому его",
+        "сравнение с6039 недоступно. Полностью unobserved layers/33published lost scopes",
+        "оставляют process-global denominator/max/p95 неизвестными.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-d101-api30-read-transport-20261028"
+    ]
+  }
+}

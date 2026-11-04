@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-original-data-and-label-safety",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-direct-sqlite-render-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Ограничения безопасности",
+        "",
+        "- `sourceFeaturesHashMap` остаётся rich editor cache только в classic compatibility;",
+        "  direct SQLite editor/selection читает один original, общий список пуст.",
+        "- Непустые polygon labels в direct SQLite — inline Point anchors PBF с отдельной",
+        "  ролью; classic сохраняет отдельный GeoJSON point source. Пустые подписи не",
+        "  создают anchor records, Fill/Line не используют Point роль.",
+        "- Ограничения старого HTTP point MVT (нет MultiPoint/rules/custom icon/template)",
+        "  относятся к прежнему provider; новый direct route имеет отдельный metadata-only",
+        "  capability contract и native parity gates для всех шести geometry types.",
+        "- Rule-style и label templates получают атрибуты из одного DB original за раз.",
+        "- Progressive/lazy загрузка не должна менять порядок слоёв или терять deferred reload после batch fill.",
+        "- По прямому поручению MOB-04 direct SQLite включён для поддерживаемых ordinary",
+        "  editable/read-only слоёв; неизвестные расширенные renderers сохраняют classic",
+        "  fallback. Старый HTTP opt-in не является переключателем нового direct пути.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-original-data-and-label-safety"
+    ]
+  }
+}

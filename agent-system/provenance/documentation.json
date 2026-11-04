@@ -2579,6 +2579,272 @@
           "end_byte": 99962
         }
       ]
+    },
+    {
+      "path": "docs/architecture/map-performance.md",
+      "record": "map-performance.json",
+      "id": "lisa:mobile:resource:map-performance",
+      "revision": "e84e44e0fa60ee7ba05e550ce1d716652fbeb469",
+      "blob": "4e218441e36f3e70db195a667132bbcfd8bba0e7",
+      "sha256": "abe09060e8fdba17d22f441ce630ea8c17eb453ef8c6f717d06b555062ed0453",
+      "bytes": 39329,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:map-performance",
+          "start_byte": 0,
+          "end_byte": 1221
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-cache-queue-follow-up-20261028",
+          "start_byte": 1221,
+          "end_byte": 1810
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-derived-pbf-cache-ledger",
+          "start_byte": 1810,
+          "end_byte": 2906
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-shared-io-admission",
+          "start_byte": 2906,
+          "end_byte": 3554
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-cache-queue-acceptance-boundary",
+          "start_byte": 3554,
+          "end_byte": 4067
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-cache-queue-apk-build-and-owner-observation-20261028",
+          "start_byte": 4067,
+          "end_byte": 5208
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-cache-queue-discovery-invalid-20261028",
+          "start_byte": 5208,
+          "end_byte": 5925
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-tablet-diagnostics-heading",
+          "start_byte": 5925,
+          "end_byte": 6001
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-d101-dense-1403-frame-and-maplib-20261028",
+          "start_byte": 6001,
+          "end_byte": 6698
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-843d-t40-phase-capture-20261028",
+          "start_byte": 6698,
+          "end_byte": 7516
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-6039-attribute-read-comparison-20261028",
+          "start_byte": 7516,
+          "end_byte": 7898
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-bounded-original-read-transport",
+          "start_byte": 7898,
+          "end_byte": 8926
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-d101-api30-read-transport-20261028",
+          "start_byte": 8926,
+          "end_byte": 9930
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-787-current-cab9-d101-memory-pair-20261028",
+          "start_byte": 9930,
+          "end_byte": 10540
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-sqlite-phase-observation",
+          "start_byte": 10540,
+          "end_byte": 11341
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-tablet-diagnostic-acceptance-boundary",
+          "start_byte": 11341,
+          "end_byte": 11967
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-pipeline-heading",
+          "start_byte": 11967,
+          "end_byte": 11995
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-track-render-snapshot",
+          "start_byte": 11995,
+          "end_byte": 12603
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-direct-sqlite-render-pipeline",
+          "start_byte": 12603,
+          "end_byte": 13945
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-787-private-build-20261028",
+          "start_byte": 13945,
+          "end_byte": 14459
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-787-observed-source-ids-20261028",
+          "start_byte": 14459,
+          "end_byte": 15148
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-787-first-b-diagnostic-20261028",
+          "start_byte": 15148,
+          "end_byte": 15474
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-787-labels-on-abba-memory-20261028",
+          "start_byte": 15474,
+          "end_byte": 16701
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-classic-editor-and-native-payload",
+          "start_byte": 16701,
+          "end_byte": 17558
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-classic-render-cache-and-uri-gate",
+          "start_byte": 17558,
+          "end_byte": 18228
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-787-geojsonvt-allocation-profile-20261028",
+          "start_byte": 18228,
+          "end_byte": 19028
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-geojsonvt-plateau-and-crash-trigger",
+          "start_byte": 19028,
+          "end_byte": 19574
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-ec71-native-allocation-candidate-20261028",
+          "start_byte": 19574,
+          "end_byte": 21005
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-implemented-rendering-boundaries",
+          "start_byte": 21005,
+          "end_byte": 23402
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-memory-pressure-policy",
+          "start_byte": 23402,
+          "end_byte": 24665
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-memory-pressure-data-and-lifecycle",
+          "start_byte": 24665,
+          "end_byte": 25362
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-memory-notice-process-scope",
+          "start_byte": 25362,
+          "end_byte": 25737
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-cache-and-sdk-recovery-limits",
+          "start_byte": 25737,
+          "end_byte": 26460
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-open-candidates-heading",
+          "start_byte": 26460,
+          "end_byte": 26502
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-open-tablet-replay",
+          "start_byte": 26502,
+          "end_byte": 27086
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-open-native-style-and-memory-matrix",
+          "start_byte": 27086,
+          "end_byte": 27334
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-open-geojsonvt-ownership",
+          "start_byte": 27334,
+          "end_byte": 27683
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-open-lazy-render-preparation",
+          "start_byte": 27683,
+          "end_byte": 28048
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-original-data-and-label-safety",
+          "start_byte": 28048,
+          "end_byte": 29528
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-performance-acceptance-matrix",
+          "start_byte": 29528,
+          "end_byte": 29954
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-memory-safety-fixture-oracle",
+          "start_byte": 29954,
+          "end_byte": 30500
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-map-stress-fixture-oracle",
+          "start_byte": 30500,
+          "end_byte": 31507
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-related-full-and-release-gates",
+          "start_byte": 31507,
+          "end_byte": 31870
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-private-profile-route-20261028",
+          "start_byte": 31870,
+          "end_byte": 32896
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-private-profiler-aggregation",
+          "start_byte": 32896,
+          "end_byte": 34098
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-private-profiler-export-fields",
+          "start_byte": 34098,
+          "end_byte": 34849
+        },
+        {
+          "id": "lisa:mobile:resource:map-performance-private-profiler-export-and-stop",
+          "start_byte": 34849,
+          "end_byte": 35431
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-private-t40-capture-plan-20261028",
+          "start_byte": 35431,
+          "end_byte": 36269
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-private-t40-install-and-smoke-boundary-20261028",
+          "start_byte": 36269,
+          "end_byte": 37454
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-private-t40-capture-result-20261028",
+          "start_byte": 37454,
+          "end_byte": 38315
+        },
+        {
+          "id": "lisa:mobile:evidence:map-performance-memory-notice-a56-result-20261102",
+          "start_byte": 38315,
+          "end_byte": 39329
+        }
+      ]
     }
   ]
 }

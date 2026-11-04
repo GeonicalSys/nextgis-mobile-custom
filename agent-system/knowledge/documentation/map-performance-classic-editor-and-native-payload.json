@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-classic-editor-and-native-payload",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-rendering-classic-native-payload-projection"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Классический путь для видимого векторного слоя читает все объекты и сохраняет полный",
+        "rich Java снимок для редактирования. `NativeFeaturePayload` формирует отдельную",
+        "компактную `FeatureCollection` для `GeoJsonSource`, сохраняя исходную геометрию,",
+        "bbox, IDs, неизвестные поля и фактически используемые paint/label значения.",
+        "`MapDrawable.loadLayersToMaplibreMap()` готовит данные в worker-потоке до полного",
+        "применения style. Стоимость зависит от числа объектов, чтения geometry BLOB,",
+        "стилизации, Java/native копий и внутреннего GeoJSONVT индекса SDK.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-classic-editor-and-native-payload"
+    ]
+  }
+}

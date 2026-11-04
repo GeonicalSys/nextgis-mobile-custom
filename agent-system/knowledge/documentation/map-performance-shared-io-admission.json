@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-shared-io-admission",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "До shared IO dispatch добавлен общий отменяемый допуск2. SDK cancel удаляет",
+        "ожидание до blocking payload; активное IO держит lease до настоящего unwind,",
+        "отдаёт его до Main, а predispatch failure освобождает один раз. Валидные",
+        "parent/fade/adjacent tiles не отсекаются по возрасту или масштабу. Existing memory",
+        "gate2/1 и владелец source/content/style/edited object остаются прежними;",
+        "HTTP/line-label scheduler и общее число SDK Job этим не изменяются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-shared-io-admission"
+    ]
+  }
+}

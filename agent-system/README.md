@@ -96,6 +96,13 @@ refinement. Preserve their labels and order in the view. Record dated device
 and source results as evidence linked to the applicable topic. After editing,
 run the ordinary prose projector and check the generated Markdown.
 
+Edit map performance topics in **knowledge/documentation/map-performance-*.json**.
+**map-performance.json** preserves their order at `docs/architecture/map-performance.md`.
+Keep cache, admission and rendering contracts separate from D101 and 787
+measurements. Record each run with its source frame, scope and acceptance limits.
+Keep unresolved investigations linked to MOB-04. Run the same prose projector
+after edits and review the generated document.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

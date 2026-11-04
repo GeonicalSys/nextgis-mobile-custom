@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-direct-sqlite-render-pipeline",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-rendering-direct-sqlite-geometry-and-paint"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Обычные поддерживаемые Simple/Field Rule векторные слои всех шести geometry",
+        "types теперь подключаются через `SqliteVectorLayerController`: SQLite/RTree",
+        "читает нужные полные оригиналы на ограниченных IO workers, encoder формирует",
+        "MVT8192, штатный `CustomVectorSource13.7.1` передаёт PBF native без HTTP. Полного",
+        "стартового GeoJSON/Java списка слоя нет. Это не zero-copy: JNI и native PBF",
+        "decoder имеют свои allocations. Источник читает полную геометрию; редактор",
+        "получает один не обрезанный DB original, а не MVT координаты.",
+        "Polygon anchors закодированы в том же PBF с отдельной Point ролью; Fill/Line",
+        "исключают эти точки, Symbol использует их. Line labels читают только viewport",
+        "оригиналы. Малые edit/selection/cursor sources остаются GeoJSON. SQLite и",
+        "project/interchange JSON не меняются. Новый source lifecycle, все стили и",
+        "скорость требуют отдельной native приёмки; текущая реализация ещё не выпущена.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-direct-sqlite-render-pipeline"
+    ]
+  }
+}
