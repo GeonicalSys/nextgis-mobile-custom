@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:manual-resource-profiling-t40-run-and-interpretation-limits",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:manual-resource-profiling"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/manual-resource-profiling.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Первый завершённый прогон и границы интерпретации:",
+        "[T40, 28 октября2026](../reference/mobile-resource-profile-t40-2026-10-28.md).",
+        "CPU `io_queue` текущего сборщика непригоден через suspension/cancellation даже",
+        "при совпадении TID; исключать его из CPU-рейтингов. Native heap hooks в том",
+        "прогоне занимали23–33% user CPU samples, поэтому не выдавать тяжёлые окна за",
+        "обычную скорость. Live scoped-storage view может быть неполным до закрытия:",
+        "перед приёмкой выгрузки проверять итоговый app_end и равенство raw→footer.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The T40 CPU overhead is a dated measurement. The existing io_queue exclusion and export closure caveats remain in the original span."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:manual-resource-profiling-t40-run-and-interpretation-limits"
+    ]
+  }
+}

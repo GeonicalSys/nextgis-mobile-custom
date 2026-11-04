@@ -156,6 +156,10 @@ Keep runner scope, device isolation, build identity, independent oracles and pub
 Preserve older scenario lists, outcomes and user authorizations with their source frames.
 Regenerate both published views with the ordinary projector.
 
+Edit the manual resource profiling runbook in **knowledge/documentation/**.
+Keep capture ownership, stop acknowledgment, transfer and interpretation independent.
+Keep T40 evidence in its original frame and regenerate the established view.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

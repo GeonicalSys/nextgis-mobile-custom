@@ -7038,6 +7038,167 @@
           "end_byte": 44049
         }
       ]
+    },
+    {
+      "path": "docs/runbooks/manual-resource-profiling.md",
+      "record": "manual-resource-profiling.json",
+      "id": "lisa:mobile:resource:manual-resource-profiling",
+      "revision": "7f61bdbff869aab456d786c97ae98d676a355dd0",
+      "blob": "70dffd514f11f79905c743f060b013402ba7d36c",
+      "sha256": "221035d0bf07ff2ba5c4008f5d3716afeeadcf28c7bfa9c464869f113f6d5636",
+      "bytes": 19154,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling",
+          "start_byte": 0,
+          "end_byte": 453
+        },
+        {
+          "id": "lisa:mobile:evidence:manual-resource-profiling-t40-run-and-interpretation-limits",
+          "start_byte": 453,
+          "end_byte": 1232
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-private-manual-profiling-scope",
+          "start_byte": 1232,
+          "end_byte": 1903
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-profileable-apk-and-device-identity",
+          "start_byte": 1903,
+          "end_byte": 2504
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-owned-host-storage-and-oem-capability",
+          "start_byte": 2504,
+          "end_byte": 3079
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-start-new-owned-session",
+          "start_byte": 3079,
+          "end_byte": 3618
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-start-command-shape",
+          "start_byte": 3618,
+          "end_byte": 4052
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-bounded-light-sampler",
+          "start_byte": 4052,
+          "end_byte": 4663
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-host-supervisor-command-shape",
+          "start_byte": 4663,
+          "end_byte": 4949
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-window-schedule-resume-and-gap-readback",
+          "start_byte": 4949,
+          "end_byte": 5880
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-heavy-window-mode-and-byte-bounds",
+          "start_byte": 5880,
+          "end_byte": 6754
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-callgraph-comparison-and-manual-window",
+          "start_byte": 6754,
+          "end_byte": 7254
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-session-time-and-per-process-export-budget",
+          "start_byte": 7254,
+          "end_byte": 8148
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-cold-stop-consent-and-idle-gate",
+          "start_byte": 8148,
+          "end_byte": 8792
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-perfetto-stdin-and-daemon-ack",
+          "start_byte": 8792,
+          "end_byte": 9616
+        },
+        {
+          "id": "lisa:mobile:evidence:manual-resource-profiling-t40-config-file-refusal",
+          "start_byte": 9616,
+          "end_byte": 9846
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-owned-legacy-recovery-and-prestop-recheck",
+          "start_byte": 9846,
+          "end_byte": 10341
+        },
+        {
+          "id": "lisa:mobile:evidence:manual-resource-profiling-short-native-probe-observations",
+          "start_byte": 10341,
+          "end_byte": 10760
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-startup-coverage-and-attach-interpretation",
+          "start_byte": 10760,
+          "end_byte": 11480
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-session-status-stop-and-pull-commands",
+          "start_byte": 11480,
+          "end_byte": 11822
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-collector-process-ownership-and-failed-start",
+          "start_byte": 11822,
+          "end_byte": 12544
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-export-session-matching-and-stop-ack",
+          "start_byte": 12544,
+          "end_byte": 13718
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-immutable-pull-and-profile-quality",
+          "start_byte": 13718,
+          "end_byte": 14328
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-stable-copy-retry-and-host-budget",
+          "start_byte": 14328,
+          "end_byte": 15184
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-owned-remote-retention-and-cleanup",
+          "start_byte": 15184,
+          "end_byte": 16009
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-simpleperf-parent-identity-and-child-stop",
+          "start_byte": 16009,
+          "end_byte": 17138
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-process-heap-cpu-and-gpu-interpretation",
+          "start_byte": 17138,
+          "end_byte": 18245
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-profile-scope-and-publication-gates",
+          "start_byte": 18245,
+          "end_byte": 18635
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-ordinary-source-only-regression",
+          "start_byte": 18635,
+          "end_byte": 18856
+        },
+        {
+          "id": "lisa:mobile:resource:manual-resource-profiling-platform-and-capture-references",
+          "start_byte": 18856,
+          "end_byte": 19154
+        }
+      ]
     }
   ]
 }

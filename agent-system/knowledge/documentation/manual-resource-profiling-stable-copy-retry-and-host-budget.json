@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:manual-resource-profiling-stable-copy-retry-and-host-budget",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:manual-resource-profiling"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/manual-resource-profiling.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Remote копия app-файла не создаётся. После STOP переносится исходный bounded",
+        "export; если запись продолжилась во время pull, hash/size validation отклоняет",
+        "его и сохраняет partial. Повтор возможен после app_end/deadline. Допускаются",
+        "не более2неперезаписываемых pull attempts на сеанс; прогресс и FAIL receipt",
+        "сохраняются даже при ошибке inventory или budget. До480МиБ — данные одного",
+        "capture, а не общий host disk cap с retry: две попытки могут сохранить до960МиБ",
+        "наQ. Перед каждой проверяется свободное место, дальнейшие копии требуют review.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:manual-resource-profiling-stable-copy-retry-and-host-budget"
+    ]
+  }
+}

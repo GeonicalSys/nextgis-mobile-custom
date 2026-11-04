@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:manual-resource-profiling-export-session-matching-and-stop-ack",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:manual-resource-profiling"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/manual-resource-profiling.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "App exports выбираются по filename `lisa-resources-<32hex>.jsonl`, точному",
+        "`app_session` header, source_revision/package/private flag, исходному inventory",
+        "и PID. Старые посторонние файлы не удаляются и не скачиваются «все по префиксу».",
+        "`stop` посылает private DUMP-protected STOP broadcast с точным session ID;",
+        "успех shell команды не заменяет финальный `app_end`. После STOP в том же PID",
+        "app-сборщик не включается заново: перед новым опытом нужен безопасный новый",
+        "процесс. `start` требует активный app_session текущего PID с будущим deadline",
+        "и без app_end; завершённый старый файл не даёт успешного начала опыта.",
+        "При отсутствии ACK",
+        "локальный перенос допустим только при стабильном hash, с явными incomplete/active",
+        "flags; changing source остаётся transfer failure до следующего STOP/deadline.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:manual-resource-profiling-collector-process-ownership-and-failed-start",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:manual-resource-profiling-export-session-matching-and-stop-ack"
+    ]
+  }
+}
