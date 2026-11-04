@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem-shared-source-registry-owners-and-roles",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Общие source-контракты всей ЛИСЫ",
+        "",
+        "Межкомпонентный разбор не ограничен цепочкой PostgreSQL/NGW: launcher/roles,",
+        "шаблоны и overlays, SQL/QLR, diagnostics, build/release и сохранённое состояние",
+        "имеют собственных производителей, потребителей и условия. Точные общие записи",
+        "находятся в доступном `qgis-plugins` source root:",
+        "",
+        "- `geonical-docs/registry/scenario-contracts.yaml` — сценарии, owners/consumers,",
+        "  applicability, защищённые режимы и ожидаемые результаты;",
+        "- `geonical-docs/registry/dependencies.yaml` — imports и resource contracts;",
+        "- `geonical-docs/registry/layer-resource-audit.json` — source hashes, QLR/provider",
+        "  поля и выражения, relations, trigger→table/view/function связи и явные unknowns.",
+        "",
+        "Ссылки проверяются через `ECO-SHARED-SOURCE-CONTRACTS` в",
+        "[ecosystem.yaml](../registry/ecosystem.yaml). Android не дублирует эти реестры.",
+        "Это source-only метаданные анализа; они не являются входными файлами APK,",
+        "единой runtime-последовательностью служб или сертификатом исполнения.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem-shared-source-registry-owners-and-roles"
+    ]
+  }
+}

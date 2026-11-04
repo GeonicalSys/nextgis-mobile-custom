@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:lisa-ecosystem-november-2-discovery-and-foreign-root-receipt",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Read-only общий discovery после удаления выявляет4 invalid path/evidence refs",
+        "в каноническом LISA scenario-contracts.yaml для resource/scenario",
+        "audit_depth_ngw_vector_identity_ack на удалённый LocalVectorTileProvider.",
+        "Требуется owner review новой SqliteVectorTileProvider + source/identity closure",
+        "и refresh/check общего index. Последний preflight: root чужой",
+        "codex/function-etalon-roundtrip, clean,4ahead main, own upstream0/0/fetchOK.",
+        "Он не редактировался; Android Draft delivery не объявляет весь контур green.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Retains the four former invalid paths and the separately owned Root branch observation from the November 2 frame."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:lisa-ecosystem-november-2-discovery-and-foreign-root-receipt"
+    ]
+  }
+}

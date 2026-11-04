@@ -175,6 +175,10 @@ Keep display position, raw fix, recorder and guidance ownership independent.
 Preserve old queue and provider behavior and field evidence in their original frames.
 Regenerate the established Markdown views with the ordinary projector.
 
+Edit App ecosystem prose in **knowledge/documentation/**.
+Keep source-frame discovery, operational ownership, portable artifacts and actual acceptance distinct.
+Preserve the dated foreign-owner observation and regenerate the published view.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

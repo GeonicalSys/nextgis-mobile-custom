@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem-publisher-idqgs-readonly-contract",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "В publisher-режиме `vector_only` управляемые `sync_ngw` слои могут содержать",
+        "служебное `idqgs BIGINT`. Оно связывает web-объект с первичным `id` PostgreSQL для",
+        "одностороннего обновления сервера. Publisher включает `idqgs` в mobile `fields[]`",
+        "как `LONG` (`type: 13`), чтобы локальная SQLite-схема совпадала со схемой NGW и",
+        "не вызывала повторную перестройку слоя. Колонка в PostgreSQL и изменение",
+        "Android-кода не требуются; слой остаётся нередактируемым, контрактное направление —",
+        "только NGW → Android.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem-publisher-idqgs-readonly-contract"
+    ]
+  }
+}

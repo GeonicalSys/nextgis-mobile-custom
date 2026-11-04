@@ -8574,6 +8574,217 @@
           "end_byte": 23778
         }
       ]
+    },
+    {
+      "path": "docs/architecture/lisa-ecosystem.md",
+      "record": "lisa-ecosystem.json",
+      "id": "lisa:mobile:resource:lisa-ecosystem",
+      "revision": "f88d158c52d50ee43c050a15bad8d3307e4333cd",
+      "blob": "9f18a186054f1e80b99eefcf1196661185e88515",
+      "sha256": "80ce4483b34c8dd9a2061bd90e87c07a5e55d5378835a7b778269f7155326776",
+      "bytes": 28417,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem",
+          "start_byte": 0,
+          "end_byte": 658
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-dependency-discovery-and-two-way-semantic-closure",
+          "start_byte": 658,
+          "end_byte": 1272
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-one-local-graph-and-no-apk-index-dependency",
+          "start_byte": 1272,
+          "end_byte": 1781
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-actual-owner-root-and-read-only-plan",
+          "start_byte": 1781,
+          "end_byte": 2369
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-full-eligible-input-digest-and-new-consumer",
+          "start_byte": 2369,
+          "end_byte": 3344
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-graph-write-and-explicit-live-owner-frame",
+          "start_byte": 3344,
+          "end_byte": 3934
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-mobile-submodule-and-provisional-source-context",
+          "start_byte": 3934,
+          "end_byte": 4564
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-ordinary-precommit-graph-check",
+          "start_byte": 4564,
+          "end_byte": 4746
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-graph-readback-and-retained-foreign-observations",
+          "start_byte": 4746,
+          "end_byte": 5940
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-persist-proven-links-and-reevaluate-changed-scope",
+          "start_byte": 5940,
+          "end_byte": 6476
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-alternate-source-root-and-uncovered-owner",
+          "start_byte": 6476,
+          "end_byte": 7454
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-desktop-and-mobile-reverse-scope-and-runtime-boundary",
+          "start_byte": 7454,
+          "end_byte": 8426
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-shared-source-registry-owners-and-roles",
+          "start_byte": 8426,
+          "end_byte": 9817
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-shared-resource-family-and-protected-state-matrix",
+          "start_byte": 9817,
+          "end_byte": 11916
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-resource-unknowns-and-independent-proof-boundary",
+          "start_byte": 11916,
+          "end_byte": 12897
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-app-usage-versus-feature-sync",
+          "start_byte": 12897,
+          "end_byte": 13472
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-app-owned-updater-and-user-install",
+          "start_byte": 13472,
+          "end_byte": 14002
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-desktop-plugin-and-mobile-source-ownership",
+          "start_byte": 14002,
+          "end_byte": 14591
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-profile-plugin-mirrors-and-source-delivery",
+          "start_byte": 14591,
+          "end_byte": 14910
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-ngfp-rule-pins-and-user-upgrade-order",
+          "start_byte": 14910,
+          "end_byte": 15637
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-ecosystem-producer-consumer-diagram",
+          "start_byte": 15637,
+          "end_byte": 16593
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-ngw-and-portable-artifacts-versus-desktop-path",
+          "start_byte": 16593,
+          "end_byte": 16921
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-interproject-contracts-heading",
+          "start_byte": 16921,
+          "end_byte": 16969
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-ngw-resource-identity-schema-and-mobile-catalogue",
+          "start_byte": 16969,
+          "end_byte": 18453
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-publisher-idqgs-readonly-contract",
+          "start_byte": 18453,
+          "end_byte": 19237
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-ngw-authoritative-schema-and-atomic-refill",
+          "start_byte": 19237,
+          "end_byte": 19956
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-transient-ngw-pull-and-outbox-protection",
+          "start_byte": 19956,
+          "end_byte": 20626
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-desktop-publisher-contract-change-and-android-smoke",
+          "start_byte": 20626,
+          "end_byte": 20975
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-qtiles-replace-after-success",
+          "start_byte": 20975,
+          "end_byte": 21381
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-explicit-raster-mbtiles-transfer-and-android-import",
+          "start_byte": 21381,
+          "end_byte": 22198
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-credential-and-identity-owner-boundaries",
+          "start_byte": 22198,
+          "end_byte": 22745
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-independent-apk-release-and-server-compatibility",
+          "start_byte": 22745,
+          "end_byte": 23280
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-android-legacy-certificate-source-and-hash-check",
+          "start_byte": 23280,
+          "end_byte": 23767
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-task-owner-routing-matrix",
+          "start_byte": 23767,
+          "end_byte": 24579
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-desktop-local-and-web-documentation-entrances",
+          "start_byte": 24579,
+          "end_byte": 25098
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-cross-owner-change-and-check-order",
+          "start_byte": 25098,
+          "end_byte": 26027
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-project-script-package-and-runtime-ownership",
+          "start_byte": 26027,
+          "end_byte": 26630
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-direct-sqlite-vector-producer-and-consumer-identity",
+          "start_byte": 26630,
+          "end_byte": 27480
+        },
+        {
+          "id": "lisa:mobile:resource:lisa-ecosystem-debug-raster-uri-transfer-independent-of-vector-http",
+          "start_byte": 27480,
+          "end_byte": 27776
+        },
+        {
+          "id": "lisa:mobile:evidence:lisa-ecosystem-november-2-discovery-and-foreign-root-receipt",
+          "start_byte": 27776,
+          "end_byte": 28417
+        }
+      ]
     }
   ]
 }

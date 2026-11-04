@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem-cross-owner-change-and-check-order",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Правило изменения",
+        "",
+        "1. Определить publisher, consumer и фактически изменяемый контракт.",
+        "2. Читать инструкции и registry каждого затронутого владельца.",
+        "3. Менять код только в его каноническом source workspace.",
+        "4. Обновить app-side `ecosystem.yaml` и основной документ владельца, если",
+        "   изменилась внешняя семантика.",
+        "5. Выполнить локальные проверки обоих проектов и end-to-end NGW/Collector smoke",
+        "   либо явно зафиксировать, что он не выполнен.",
+        "",
+        "Не делать вывод о совместимости по plugin mirror, совпадающему имени слоя,",
+        "успешному desktop login или одной только Android-сборке.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem-cross-owner-change-and-check-order"
+    ]
+  }
+}

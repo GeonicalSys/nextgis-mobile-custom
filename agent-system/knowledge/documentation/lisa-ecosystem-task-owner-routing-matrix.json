@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem-task-owner-routing-matrix",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Маршрутизация задачи",
+        "",
+        "| Изменение | Проект-владелец | Дополнительный контекст |",
+        "|---|---|---|",
+        "| launcher, QGIS runtime, role, brand profile | `standart_profiles` | его `AGENTS.md` и `docs/START-HERE.md` |",
+        "| исходник QGIS-плагина или WebGIS publisher | `C:\\dev\\lisa\\plugins` | root `AGENTS.md`, `geonical-docs/START-HERE.md`, pack плагина |",
+        "| Android import, Collector, sync, storage, updater | этот workspace | root/module `AGENTS.md`, Android registries |",
+        "| общий NGW resource contract | publisher и consumer | docs/registry обоих владельцев + end-to-end smoke |",
+        "| offline basemap для Android | QGIS plugin + Android importer | qtiles pack, app rendering/storage docs и import smoke |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem-task-owner-routing-matrix"
+    ]
+  }
+}

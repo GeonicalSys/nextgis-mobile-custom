@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem-full-eligible-input-digest-and-new-consumer",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "До impact он сверяет manifest/hashes всего eligible current source-контура,",
+        "при новых/удалённых/изменённых источниках обновляет discovery в памяти. Новый",
+        "неизвестный consumer находится и до изменения существующего producer. Для",
+        "clean CRLF text используется нормализованный hash, для бинарных ресурсов точный.",
+        "Readonly `py -3.13 -B -m tools.ecosystem_tests.dependency_discovery` остаётся",
+        "необязательным обзором, а не вторым обязательным полным parse. Начальный анализ",
+        "наблюдает текущие деревья, включая чужие uncommitted источники; manual semantic",
+        "closure и сохранение новых подтверждённых связей по-прежнему обязательны.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem-full-eligible-input-digest-and-new-consumer"
+    ]
+  }
+}

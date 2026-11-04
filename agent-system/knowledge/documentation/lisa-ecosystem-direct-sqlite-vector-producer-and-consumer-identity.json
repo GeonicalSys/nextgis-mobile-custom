@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem-direct-sqlite-vector-producer-and-consumer-identity",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Прямые векторные тайлы и Debug raster transfer —2ноября2026",
+        "",
+        "Проверены reverse producer links: stand_project/ngw_standard/Общий для всех/",
+        "mobile_configs/{kvartal,vydel,vertexfeature_recent}.json → NGW mobile config →",
+        "NGWVectorLayer.applyMobileConfigPreservingAuthoritativeSchema → renderer/direct",
+        "SQLite → selection/editor originals. Producer configs не менялись. Старый",
+        "mobile_render_mode сохраняется, но не выбирает backend/hidden identify;",
+        "authoritative schema/geometry/FID и отдельные editable/sync permissions прежние.",
+        "Точные clean-source bytes/hashes закреплены в technical AndroidTest assets,",
+        "без полевых бизнес-строк. Server/PostgreSQL/schema updates для этого не нужны.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem-direct-sqlite-vector-producer-and-consumer-identity"
+    ]
+  }
+}
