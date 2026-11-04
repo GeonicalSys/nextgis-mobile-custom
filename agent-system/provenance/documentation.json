@@ -3677,6 +3677,168 @@
           "end_byte": 19483
         }
       ]
+    },
+    {
+      "path": "docs/architecture/feature-copy-transform.md",
+      "record": "feature-copy-transform.json",
+      "id": "lisa:mobile:resource:feature-copy-transform",
+      "revision": "dc7e642a2141e0dde3b198f3201cc7093fb9afc9",
+      "blob": "6267b79a533553dc338165cddf25813a975cd138",
+      "sha256": "8bb4d5f907863f8287e8e9ff1d18271aa7a028dd499d3ba605762668e953fbcd",
+      "bytes": 10726,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform",
+          "start_byte": 0,
+          "end_byte": 711
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-source-read-and-destination-eligibility",
+          "start_byte": 711,
+          "end_byte": 1532
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-destination-type-and-new-row-save",
+          "start_byte": 1532,
+          "end_byte": 2035
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-exact-field-types-and-destination-defaults",
+          "start_byte": 2035,
+          "end_byte": 2844
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-typed-controls-null-and-form-checkpoint",
+          "start_byte": 2844,
+          "end_byte": 3721
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-source-identity-and-destination-revalidation",
+          "start_byte": 3721,
+          "end_byte": 4405
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-dialog-recreation-and-int64",
+          "start_byte": 4405,
+          "end_byte": 4841
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-translation-rotation-and-stationary-camera",
+          "start_byte": 4841,
+          "end_byte": 5449
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-crs-journal-undo-and-exact-cancel",
+          "start_byte": 5449,
+          "end_byte": 6461
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-toolbar-fitting-and-accessibility",
+          "start_byte": 6461,
+          "end_byte": 7073
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-related-and-full-runner-boundaries",
+          "start_byte": 7073,
+          "end_byte": 8118
+        },
+        {
+          "id": "lisa:mobile:resource:feature-copy-transform-copy-and-multipart-transform-test-oracles",
+          "start_byte": 8118,
+          "end_byte": 8945
+        },
+        {
+          "id": "lisa:mobile:evidence:feature-copy-transform-phone-and-source-verification-20261023",
+          "start_byte": 8945,
+          "end_byte": 9659
+        },
+        {
+          "id": "lisa:mobile:evidence:feature-copy-transform-emulator-boot-and-bcd-20261023",
+          "start_byte": 9659,
+          "end_byte": 10326
+        },
+        {
+          "id": "lisa:mobile:evidence:feature-copy-transform-historical-pr-59-43-77-integration",
+          "start_byte": 10326,
+          "end_byte": 10726
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/feature-type-creation.md",
+      "record": "feature-type-creation.json",
+      "id": "lisa:mobile:resource:feature-type-creation",
+      "revision": "dc7e642a2141e0dde3b198f3201cc7093fb9afc9",
+      "blob": "561ab5e925d2150332af67f49589cadbd5210071",
+      "sha256": "7e57a4b50d19960fa1b1f5e585d7e875c7ab750fff47398e83d7852db66bf647",
+      "bytes": 8743,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:feature-type-creation",
+          "start_byte": 0,
+          "end_byte": 503
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-destination-category-and-copy-identity",
+          "start_byte": 503,
+          "end_byte": 1132
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-creation-mode-and-local-style-catalog",
+          "start_byte": 1132,
+          "end_byte": 2265
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-scrollable-picker-and-unavailable-category",
+          "start_byte": 2265,
+          "end_byte": 2746
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-gps-geometry-camera-and-cancel",
+          "start_byte": 2746,
+          "end_byte": 3470
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-default-form-meta-and-legacy-parent",
+          "start_byte": 3470,
+          "end_byte": 4304
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-cascade-candidate-keys-and-and-filters",
+          "start_byte": 4304,
+          "end_byte": 5217
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-typed-defaults-cascade-pin-and-draft-recovery",
+          "start_byte": 5217,
+          "end_byte": 6190
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-point-lock-form-checkpoint-and-save-precedence",
+          "start_byte": 6190,
+          "end_byte": 7063
+        },
+        {
+          "id": "lisa:mobile:evidence:feature-type-creation-historical-integration-and-build-221",
+          "start_byte": 7063,
+          "end_byte": 7489
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-category-and-durable-creation-test-oracles",
+          "start_byte": 7489,
+          "end_byte": 8147
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-standard-category-fixture-and-boundaries",
+          "start_byte": 8147,
+          "end_byte": 8560
+        },
+        {
+          "id": "lisa:mobile:resource:feature-type-creation-device-smoke-and-isolated-suite",
+          "start_byte": 8560,
+          "end_byte": 8743
+        }
+      ]
     }
   ]
 }

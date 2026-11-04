@@ -115,6 +115,12 @@ Keep the common Save boundary, each form pin and the isolated script grants
 distinct. Store dated source anchors and results as historical evidence.
 Run the ordinary projector after editing and verify the established addresses.
 
+Edit feature copying, geometry transforms and feature type creation in
+their records under **knowledge/documentation/**. Keep source identity,
+destination eligibility, gesture cancellation and form checkpoints separate.
+Keep earlier device, boot and integration results as historical evidence.
+Run the ordinary projector after editing and check the established addresses.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

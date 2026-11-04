@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:feature-copy-transform-phone-and-source-verification-20261023",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:feature-copy-transform"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated verification or delivery checkpoint and its limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/feature-copy-transform.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Фактически 2026-10-23: Related PhoneOnly — 3/3 PASS без skips на SM-A566B,",
+        "Android 16/API 36, в отдельном verification APK. Копирование проверено настоящими",
+        "касаниями кнопки, отмены, строки назначения и Save; оба выбора пересозданы.",
+        "UI component case включает 72 конфигурации. Source fingerprint результата:",
+        "`bb91a2f77e8771507d870c23fa12892dba0a7ccaacd0fc69465305e1797f22cc`.",
+        "Также прошли 28 адресных unit cases maplib/maplibui, 24 runner/support cases,",
+        "7 docs tests, сборка verification APK и компиляция Lisa/Belka Release sources."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:feature-copy-transform-phone-and-source-verification-20261023"
+    ]
+  }
+}

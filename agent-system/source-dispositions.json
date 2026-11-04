@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "ee49ee99399059b2b66b09c75069435803c2ca166eb094ca38f2d48c5cfc3304",
+      "sha256": "31412be3686cac7254b46a77df34da76126c33b2e6a20d57a364e2ba4688f4ac",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "e652772efd9517482b11db5572f2814e974d71458ff7481f0eba1d7a51a7300d",
+      "sha256": "4934b9bb542e22e6411b019e17cdea60f1b6616936e182a7949f0a4dc094ee2a",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -134,7 +134,9 @@
         "docs/architecture/visible-line-labels.md",
         "docs/architecture/conditional-form-rules.md",
         "docs/architecture/cascading-form-lists.md",
-        "docs/architecture/project-scripts.md"
+        "docs/architecture/project-scripts.md",
+        "docs/architecture/feature-copy-transform.md",
+        "docs/architecture/feature-type-creation.md"
       ],
       "reason": "Pinned exact App Markdown source bytes and stable published addresses."
     },
