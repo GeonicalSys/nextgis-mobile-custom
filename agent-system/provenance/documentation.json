@@ -1552,6 +1552,492 @@
           "end_byte": 136803
         }
       ]
+    },
+    {
+      "path": "docs/roadmap/mobile.md",
+      "record": "mobile-roadmap-layout.json",
+      "id": "lisa:mobile:resource:mobile-roadmap-layout",
+      "revision": "5aef74e15c1ecd205ea0d69877a32f94493e5a01",
+      "blob": "4463d277630027087a7a93743411f76cfc126076",
+      "sha256": "67f70ca941024eb3d908e51f76d6480b2fbc3254303c23f9a6bc4642fe134cff",
+      "bytes": 124321,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-layout",
+          "start_byte": 0,
+          "end_byte": 572
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-agent-knowledge",
+          "start_byte": 572,
+          "end_byte": 4166
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-git-line-endings",
+          "start_byte": 4166,
+          "end_byte": 5177
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-git-line-endings-delivery-20261102",
+          "start_byte": 5177,
+          "end_byte": 5701
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-release-225-git-delivery-20261102",
+          "start_byte": 5701,
+          "end_byte": 6386
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-release-225-renderer-and-debug-import-20261102",
+          "start_byte": 6386,
+          "end_byte": 7392
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-release-225",
+          "start_byte": 7392,
+          "end_byte": 9157
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-release-225-full-first-checkpoint",
+          "start_byte": 9157,
+          "end_byte": 9813
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-release-225-library-git-delivery-20261029",
+          "start_byte": 9813,
+          "end_byte": 10561
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-queue-trim-20261028",
+          "start_byte": 10561,
+          "end_byte": 11718
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-t40-resource-profile-20261028",
+          "start_byte": 11718,
+          "end_byte": 13101
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-draft-and-dependencies-20261027",
+          "start_byte": 13101,
+          "end_byte": 14292
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-private-d101-comparison",
+          "start_byte": 14292,
+          "end_byte": 15197
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-dense-full-scene-video",
+          "start_byte": 15197,
+          "end_byte": 15806
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-native-allocations",
+          "start_byte": 15806,
+          "end_byte": 16528
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-map-memory-guard-and-cache-policy",
+          "start_byte": 16528,
+          "end_byte": 17666
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-experimental-ec71-comparison",
+          "start_byte": 17666,
+          "end_byte": 18414
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-map-memory-direct-sqlite-contract",
+          "start_byte": 18414,
+          "end_byte": 19961
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-ordinary-build-and-actual-device-20261028",
+          "start_byte": 19961,
+          "end_byte": 21782
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-map-memory",
+          "start_byte": 21782,
+          "end_byte": 22415
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-process-exit-224-glitchtip-20261029",
+          "start_byte": 22415,
+          "end_byte": 24469
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-process-exit-224",
+          "start_byte": 24469,
+          "end_byte": 26292
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-roadmap-basis-20261025",
+          "start_byte": 26292,
+          "end_byte": 26542
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-development-direction",
+          "start_byte": 26542,
+          "end_byte": 27532
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-change-admission-policy",
+          "start_byte": 27532,
+          "end_byte": 30348
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-roadmap-adoption",
+          "start_byte": 30348,
+          "end_byte": 32210
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-ui-knowledge",
+          "start_byte": 32210,
+          "end_byte": 33852
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-ui-date-contracts-20261101",
+          "start_byte": 33852,
+          "end_byte": 34980
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-ui-checkbox-contract-20261101",
+          "start_byte": 34980,
+          "end_byte": 35966
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-dependency-discovery",
+          "start_byte": 35966,
+          "end_byte": 39570
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-workspace-ack-source-checkpoint",
+          "start_byte": 39570,
+          "end_byte": 40533
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-post-ack-clock-risk-checkpoint",
+          "start_byte": 40533,
+          "end_byte": 41523
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-storage-move-20261029",
+          "start_byte": 41523,
+          "end_byte": 43173
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-started-work-heading",
+          "start_byte": 43173,
+          "end_byte": 43211
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-layer-order-20261029",
+          "start_byte": 43211,
+          "end_byte": 46336
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-release-224-20261027",
+          "start_byte": 46336,
+          "end_byte": 47374
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-chooser-20261025",
+          "start_byte": 47374,
+          "end_byte": 48003
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-stable-window-20261026",
+          "start_byte": 48003,
+          "end_byte": 48517
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-full-09-and-02",
+          "start_byte": 48517,
+          "end_byte": 49225
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-publication-follow-up-20261026",
+          "start_byte": 49225,
+          "end_byte": 50131
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-library-merge-20261026",
+          "start_byte": 50131,
+          "end_byte": 50412
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-local-ci-checkpoint",
+          "start_byte": 50412,
+          "end_byte": 51074
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-phone-tablet-and-release-checkpoint",
+          "start_byte": 51074,
+          "end_byte": 52576
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-styles-and-tracks",
+          "start_byte": 52576,
+          "end_byte": 53653
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-queue-order",
+          "start_byte": 53653,
+          "end_byte": 55688
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-state-and-priority-rules",
+          "start_byte": 55688,
+          "end_byte": 56745
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-data-safety-heading",
+          "start_byte": 56745,
+          "end_byte": 56784
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-reliable-server-ack",
+          "start_byte": 56784,
+          "end_byte": 59094
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-project-recovery-and-draft-preservation",
+          "start_byte": 59094,
+          "end_byte": 61546
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-interruption-and-resource-exhaustion",
+          "start_byte": 61546,
+          "end_byte": 63361
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-performance-measurement-heading",
+          "start_byte": 63361,
+          "end_byte": 63419
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-field-measurement-baseline",
+          "start_byte": 63419,
+          "end_byte": 65569
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-server-sync-boundary",
+          "start_byte": 65569,
+          "end_byte": 66069
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-skip-unchanged-postgres-layers",
+          "start_byte": 66069,
+          "end_byte": 67963
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-incremental-server-sync",
+          "start_byte": 67963,
+          "end_byte": 69810
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-vector-tile-heading",
+          "start_byte": 69810,
+          "end_byte": 69872
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-mvt-offline-blocker-20261026",
+          "start_byte": 69872,
+          "end_byte": 70965
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-mvt-correctness-and-freshness",
+          "start_byte": 70965,
+          "end_byte": 72157
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-mvt-performance-and-bounded-cache",
+          "start_byte": 72157,
+          "end_byte": 74282
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-peer-exchange-scope",
+          "start_byte": 74282,
+          "end_byte": 74834
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-peer-operation-and-trust-protocol",
+          "start_byte": 74834,
+          "end_byte": 76558
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-peer-two-device-exchange",
+          "start_byte": 76558,
+          "end_byte": 78191
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-peer-multi-hop-and-automation",
+          "start_byte": 78191,
+          "end_byte": 79781
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-measurement-reliability-heading",
+          "start_byte": 79781,
+          "end_byte": 79824
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-gps-accuracy-and-full-day",
+          "start_byte": 79824,
+          "end_byte": 81456
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-usability-and-expansion-scope",
+          "start_byte": 81456,
+          "end_byte": 81860
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-offline-readiness",
+          "start_byte": 81860,
+          "end_byte": 82937
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-sync-and-changes-center",
+          "start_byte": 82937,
+          "end_byte": 84219
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-field-actions-and-offline-search",
+          "start_byte": 84219,
+          "end_byte": 85646
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-actionable-errors-and-recovery",
+          "start_byte": 85646,
+          "end_byte": 87120
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-stale-data-and-update-reminders",
+          "start_byte": 87120,
+          "end_byte": 89152
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-feature-expansion-candidates",
+          "start_byte": 89152,
+          "end_byte": 92360
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-protected-existing-capabilities",
+          "start_byte": 92360,
+          "end_byte": 94025
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-roadmap-review-process",
+          "start_byte": 94025,
+          "end_byte": 95142
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-roadmap-first-draft-78",
+          "start_byte": 95142,
+          "end_byte": 95599
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-roadmap-overview-and-authority",
+          "start_byte": 95599,
+          "end_byte": 96019
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-roadmap-source-basis-20261025",
+          "start_byte": 96019,
+          "end_byte": 97784
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-heavy-map-diagnostics",
+          "start_byte": 97784,
+          "end_byte": 99004
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-heavy-map-public-withdrawal-224",
+          "start_byte": 99004,
+          "end_byte": 99558
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-heavy-map-avd-software-checkpoint",
+          "start_byte": 99558,
+          "end_byte": 100698
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-journal-confirmation-20261030",
+          "start_byte": 100698,
+          "end_byte": 101784
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-form-values-20261030",
+          "start_byte": 101784,
+          "end_byte": 102640
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-lookup-cache-keys-20261030",
+          "start_byte": 102640,
+          "end_byte": 103398
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-stakeout-target-20261030",
+          "start_byte": 103398,
+          "end_byte": 104038
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-prefetch-20261030",
+          "start_byte": 104038,
+          "end_byte": 105230
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-full-pull-and-save-signal-20261030",
+          "start_byte": 105230,
+          "end_byte": 106719
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-discovery-ui-error-messages-20261030",
+          "start_byte": 106719,
+          "end_byte": 108085
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-ui-resource-checkboxes-20261030",
+          "start_byte": 108085,
+          "end_byte": 109405
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-cache-lifecycle-20261030",
+          "start_byte": 109405,
+          "end_byte": 111860
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-ui-resource-caption-and-breadcrumb-20261030",
+          "start_byte": 111860,
+          "end_byte": 116519
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-ui-track-sharing-20261030",
+          "start_byte": 116519,
+          "end_byte": 119409
+        },
+        {
+          "id": "lisa:mobile:task:mobile-roadmap-sync-attachment-and-schema-fixes",
+          "start_byte": 119409,
+          "end_byte": 119881
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-sync-attachment-and-schema-source-checkpoint",
+          "start_byte": 119881,
+          "end_byte": 121295
+        },
+        {
+          "id": "lisa:mobile:resource:mobile-roadmap-sync-attachment-and-schema-delivery-gates",
+          "start_byte": 121295,
+          "end_byte": 122632
+        },
+        {
+          "id": "lisa:mobile:evidence:mobile-roadmap-ui-mobile-project-labels-20261101",
+          "start_byte": 122632,
+          "end_byte": 124321
+        }
+      ]
     }
   ]
 }

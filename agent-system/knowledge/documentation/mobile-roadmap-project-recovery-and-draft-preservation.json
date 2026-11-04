@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-project-recovery-and-draft-preservation",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## REL-02 Восстановление проекта и сохранение повреждённых черновиков",
+        "",
+        "Приоритет P0 для сохранения оригинала черновика, P1 для полного восстановления. Состояние: Исследуется. Основание: подтверждено кодом и действующим описанием backup.",
+        "",
+        "FeatureFormDraftStore очищает повреждённый/некорректный черновик при чтении. Сначала нужно сохранять исходные байты в карантин и давать повторную попытку или экспорт. Нельзя обещать автоматическое восстановление любого повреждённого содержимого.",
+        "",
+        "LayerBackup format2 уже сохраняет данные слоя и вложения, но не является полным архивом проекта: config/forms/assets включены не полностью, готового универсального restore нет. Нужны проверяемый формат полного архива, совместимость схемы и мастер восстановления на отдельной копии.",
+        "",
+        "Приёмка: проверить архив до destructive действия; восстановить проект офлайн с объектами, геометрией, фото, формами, настройками и несинхронизированными правками. Сравнить ID, значения и хеши вложений. Чужая identity, повреждённый архив, нехватка места и несовместимая версия отклоняются без изменения рабочей копии. Восстановленная очередь не отправляется на сервер до согласованной сверки.",
+        "",
+        "Основание: [FeatureFormDraftStore](https://github.com/GeonicalSys/android_maplibui/blob/ff4a1cce63d11fea864843550173ec22a508d334/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java#L115), [границы восстановления](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/runbooks/incident-and-rollback.md#L41).",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "REL-02"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P0/P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "P0 covers preserving the original draft. P1 covers full project recovery."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-project-recovery-and-draft-preservation"
+    ]
+  }
+}

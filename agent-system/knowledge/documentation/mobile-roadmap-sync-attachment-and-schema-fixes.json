@@ -1,0 +1,74 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-sync-attachment-and-schema-fixes",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "implemented",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unpublished",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MOB-SYNC-01 Подтверждённые source fixes: вложения и class metadata",
+        "",
+        "Текущий порядок задан явным поручением владельца01.11: завершить начатые audit",
+        "blocks и исправить подтверждённые ошибки прежде новых audit frontiers. Это",
+        "адресная доработка, не автоматическое возобновление paused native stages.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-SYNC-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": null
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Scoped library regressions are recorded. Consumer pin adoption, runtime and release are separate."
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-sync-attachment-and-schema-source-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:mobile-roadmap-sync-attachment-and-schema-delivery-gates",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-sync-attachment-and-schema-fixes"
+    ]
+  }
+}

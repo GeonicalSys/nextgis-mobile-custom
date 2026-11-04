@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-discovery-workspace-ack-source-checkpoint",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-dependency-discovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Текущий глубокий срез: `android-20261029-dependency-depth-01` дополняет",
+        "существующие sync/storage контракты и исправляет устаревший active-project-only",
+        "oracle в SMOKE-MULTI-ACCOUNT-SYNC. Приёмка среза — проверяемая по source цепочка",
+        "owner→scope→provider/service→drain→pair ACK→cleanup→full clock, разные persisted",
+        "keys и независимые ожидания. Статус: source/docs в собственной ветке, runtime",
+        "NOT_RUN; три открытые ветви ведутся в едином LISA dependency-audit-todo по IDs",
+        "AUDIT-TODO-SYNC-ACK-RECOVERY, AUDIT-TODO-SYNC-CLAIMED-LIVENESS,",
+        "AUDIT-TODO-WORKSPACE-KEY-MIGRATION. Продукт, БД, NGW, APK и библиотечные gitlinks",
+        "не меняются; этот список не становится параллельной очередью работ.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-discovery-workspace-ack-source-checkpoint"
+    ]
+  }
+}

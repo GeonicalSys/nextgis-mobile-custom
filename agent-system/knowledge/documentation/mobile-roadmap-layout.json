@@ -1,0 +1,540 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-roadmap-layout",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/roadmap/mobile.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА",
+        "type: roadmap",
+        "last_verified: 2026-11-04",
+        "related_code:",
+        "  - AGENTS.md",
+        "  - .github/PULL_REQUEST_TEMPLATE.md",
+        "  - docs/guides/change-checklist.md",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Дорожная карта мобильного приложения ЛИСА и БЕЛКА",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-agent-knowledge",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-git-line-endings",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-git-line-endings-delivery-20261102",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-release-225-git-delivery-20261102",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-release-225-renderer-and-debug-import-20261102",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-release-225",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-release-225-full-first-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-release-225-library-git-delivery-20261029",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-queue-trim-20261028",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-t40-resource-profile-20261028",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-draft-and-dependencies-20261027",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-private-d101-comparison",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-dense-full-scene-video",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-native-allocations",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-map-memory-guard-and-cache-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-experimental-ec71-comparison",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-map-memory-direct-sqlite-contract",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-ordinary-build-and-actual-device-20261028",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-map-memory",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-process-exit-224-glitchtip-20261029",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-process-exit-224",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-roadmap-basis-20261025",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-development-direction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-change-admission-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-roadmap-adoption",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-ui-knowledge",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-date-contracts-20261101",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-checkbox-contract-20261101",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-dependency-discovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-workspace-ack-source-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-post-ack-clock-risk-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-storage-move-20261029",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-started-work-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-layer-order-20261029",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-release-224-20261027",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-chooser-20261025",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-stable-window-20261026",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-full-09-and-02",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-publication-follow-up-20261026",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-library-merge-20261026",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-local-ci-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-phone-tablet-and-release-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-styles-and-tracks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-queue-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-state-and-priority-rules",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-data-safety-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-reliable-server-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-project-recovery-and-draft-preservation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-interruption-and-resource-exhaustion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-performance-measurement-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-field-measurement-baseline",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-server-sync-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-skip-unchanged-postgres-layers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-incremental-server-sync",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-vector-tile-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-mvt-offline-blocker-20261026",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-mvt-correctness-and-freshness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-mvt-performance-and-bounded-cache",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-peer-exchange-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-peer-operation-and-trust-protocol",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-peer-two-device-exchange",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-peer-multi-hop-and-automation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-measurement-reliability-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-gps-accuracy-and-full-day",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-usability-and-expansion-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-offline-readiness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-sync-and-changes-center",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-field-actions-and-offline-search",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-actionable-errors-and-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-stale-data-and-update-reminders",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-feature-expansion-candidates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-protected-existing-capabilities",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-roadmap-review-process",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-roadmap-first-draft-78",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-roadmap-overview-and-authority",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-roadmap-source-basis-20261025",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-heavy-map-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-heavy-map-public-withdrawal-224",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-heavy-map-avd-software-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-journal-confirmation-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-form-values-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-lookup-cache-keys-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-stakeout-target-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-prefetch-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-full-pull-and-save-signal-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-ui-error-messages-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-resource-checkboxes-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-cache-lifecycle-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-resource-caption-and-breadcrumb-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-track-sharing-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-sync-attachment-and-schema-fixes",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-sync-attachment-and-schema-source-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-sync-attachment-and-schema-delivery-gates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-mobile-project-labels-20261101",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ]
+  }
+}

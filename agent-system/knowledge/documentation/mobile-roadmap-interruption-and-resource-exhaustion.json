@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-interruption-and-resource-exhaustion",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## REL-03 Работа при прерывании и нехватке ресурсов",
+        "",
+        "Приоритет P1. Состояние: Предложена по результатам анализа. Основание: оставшиеся архитектурные расходы и риски.",
+        "",
+        "Потоковая полная синхронизация уже реализована, но хранит крупные наборы ID в памяти; одна огромная геометрия остаётся отдельным риском. Предварительная проверка диска не покрывает весь рост staging, backup и SQLite. Длинный обход сериализует полный checkpoint синхронно в пути GPS callback.",
+        "",
+        "Приёмка: контроль бюджета RAM и временного диска на всех стадиях; безопасный отказ при ENOSPC; отсутствие потери предыдущей базы и очереди. Длинные checkpoint переносятся из чувствительного к задержкам пути с упорядоченной записью и обязательным flush перед Finish. Проверить process kill, reboot, отмену, отзыв разрешения и повторное продолжение. Незавершённая работа остаётся видимой и восстанавливаемой.",
+        "",
+        "Основание: NGWVectorLayer.java, WalkEditService.java, WalkSessionStore.java; подробности и исторические замеры — в mobile-reliability-audit.md. Исторический замер не принимается за производительность текущего APK.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "REL-03"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Proposal based on architectural limits. Earlier native evidence applies only to named scopes."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-interruption-and-resource-exhaustion"
+    ]
+  }
+}

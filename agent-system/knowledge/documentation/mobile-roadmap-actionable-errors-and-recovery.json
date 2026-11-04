@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-actionable-errors-and-recovery",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## UX-04 Ошибки и восстановление понятным языком",
+        "",
+        "Приоритет P1. Состояние: Предложена.",
+        "",
+        "Единый список «нужно внимание»: восстановить черновик, закончить отправку, проверить разрешение, освободить место. Текст сообщает, что сохранено и что делать дальше. Для ручной передачи поддержке предложить диагностический пакет с предварительным просмотром. Существующая политика полного диагностического payload принята владельцем; изменение состава, доступа и срока хранения требует отдельного решения и не включается в эту UX задачу автоматически.",
+        "",
+        "Приёмка: типовые сетевые, дисковые и lifecycle сбои приводят к понятному следующему действию; повторный старт не прячет проблему. Поддержке хватает безопасного ID операции и технических стадий для поиска, координаты и рабочие данные не отправляются без принятой политики.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "UX-04"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The existing diagnostic payload policy stays in scope as a constraint."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-actionable-errors-and-recovery"
+    ]
+  }
+}

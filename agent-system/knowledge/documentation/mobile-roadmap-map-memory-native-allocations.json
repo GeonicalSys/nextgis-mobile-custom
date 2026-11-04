@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-native-allocations",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-map-memory"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Подтверждены std::bad_alloc в main и RenderThread27 октября17:10:23UTC на",
+        "SM-X115, OS SIGABRT и исторические LOW_MEMORY с RSS до5816068KiB. Java headroom",
+        "сам по себе недостаточен. На проекте787 реальные sampled malloc-стеки показали",
+        "673MiB в GeoJSONVT, включая не менее564MiB словарей свойств, из907MiB net retained;",
+        "растры128MiB. Это удержание копий свойств обычных векторов, не свидетельство",
+        "сложности исходной геометрии. Точный триггер223→224 и все native abort не установлены.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-map-memory-native-allocations"
+    ]
+  }
+}

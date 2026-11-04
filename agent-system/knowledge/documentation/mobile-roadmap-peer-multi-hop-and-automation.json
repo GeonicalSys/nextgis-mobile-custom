@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-peer-multi-hop-and-automation",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## P2P-03 Передача дальше и автоматический режим",
+        "",
+        "Приоритет P2. Состояние: Предложена. Зависимость: принятый P2P-02.",
+        "",
+        "Сначала доказать сценарий A → B → C → сервер, повторную встречу A/C, пропущенные номера, дубли и конфликт update/delete. Потом включать автоматический обмен доверенных устройств с режимами выключен/вручную/автоматически и наблюдаемым расходом батареи.",
+        "",
+        "Приёмка: повторные маршруты сходятся без дублей и потери правок; история не удаляется до достаточного подтверждения; квоты не вытесняют неподтверждённую работу. Свежесть сервера, последняя встреча и прямая связь с сервером различаются; «передано соседу» не означает «принято сервером».",
+        "",
+        "Топология и одновременность передачи выбираются по пилоту. Автоматическое переключение между стратегиями и скорость на 50 метрах не считаются гарантированными. [Официальные стратегии Nearby](https://developers.google.com/nearby/connections/strategies).",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "P2P-03"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P2"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Depends on acceptance of the two-device exchange."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-peer-two-device-exchange",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-peer-multi-hop-and-automation"
+    ]
+  }
+}

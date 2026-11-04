@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-dense-full-scene-video",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-map-memory"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Конкретный strict full-scene video gate dense1403/11.7z:32.45–34.09s843d →",
+        "13.68–15.65s6039 →10.33–12.27sD101, oneprocesscold run/build/diskretained;",
+        "late map ROI MAE0 с обоими предыдущими. Это наблюдаемый выигрыш одной сцены,",
+        "не повторная статистика/все стили и не2–3s target. Final allmaplib750PASS/59s,",
+        "132classes/0fail/error/skip,source unchanged. TrackLayer по-прежнему полными",
+        "GeoJSON snapshots, вне этого ordinary-vector улучшения; trackRAM не измерена.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-map-memory-dense-full-scene-video"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-roadmap-first-draft-78",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-roadmap-adoption"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Карта и регламент включены в текущий Draft PR #78 по явному решению владельца. MOB-00 находится в PR; после слияния нужно отдельно подтвердить, что стартовые инструкции, чеклист и шаблон PR доступны из целевой ветки. Автоматическая блокировка PR не включалась.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-roadmap-first-draft-78"
+    ]
+  }
+}

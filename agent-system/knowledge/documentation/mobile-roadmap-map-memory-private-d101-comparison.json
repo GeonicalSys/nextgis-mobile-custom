@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-private-d101-comparison",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-map-memory"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Последний PRIVATE D101: normalall3 PASS62s/versionmatrix PASS, sourcefp62de8740…",
+        "59ec91 frozen/71focused PASS/independent review без blockers. Actual T40/API30",
+        "проверил inline/PFD reads; сопоставимые121/110-feature BLOB stages83.57→13.28ms",
+        "и134.11→15.37ms, но очередь остаётся и SDKreturn не полный кадр. FreshCURRENT787",
+        "cab9→D10142+42 samples/6+6taps:lateRSS820.42→643.06MiB(-21.62%), sampledpeak",
+        "896.19→751.16(-16.18%); Graphicslate143.36→210.14MiB вырос. Current configs/data",
+        "изменились после старойABBA, actorUNKNOWN; серии не объединять. Полная видео",
+        "приёмка sharp17→12/newextent,2–3s target/2GiB/Full остаются отдельными gates.",
+        "Подробные ограничения — [разбор224](../reference/mobile-crash-224-2026-10-27.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-map-memory-private-d101-comparison"
+    ]
+  }
+}

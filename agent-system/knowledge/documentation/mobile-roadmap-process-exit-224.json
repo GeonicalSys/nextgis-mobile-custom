@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-process-exit-224",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "not_applicable",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Приоритет P1. Состояние: В Draft PR app82/maplib61; memory failure подтверждён,",
+        "конкретный триггер регрессии и остальные abort ожидают свидетельств/проверок.",
+        "Основание — поручение пользователя27 октября,",
+        "логи повторных запусков Samsung Galaxy Tab при движении карты и GlitchTip53/67.",
+        "Владельцы — app и maplib; зависимости — сохранённые pins MOB-01. Внеплановая",
+        "причина — инцидент опубликованной224; на время разбора откладывается следующая",
+        "обычная задача очереди, приоритеты остальных пунктов не меняются.",
+        "",
+        "Объём: убрать доказанно пустые marker/vertex native queries, буферизовать чтение",
+        "прежнего индекса и добавить ограниченную OS exit metadata к явному экспорту ZIP.",
+        "Данные/sync/фон/GPS не меняются. Полный async startup, переработка MVT и новое",
+        "обновление SDK сюда не входят. Критерии: legacy byte-compatible persistence,",
+        "пустой handle без native access, прежнее редактирование/линейка, bounded export,",
+        "Related на изолированном AVD, обе release build-проверки и строгие docs.",
+        "Прямая причина вылетов224 без fatal stack остаётся неизвестной; выпуск отдельно.",
+        "[Свидетельства, карточки и порядок доставки](../reference/mobile-crash-224-2026-10-27.md).",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-02"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The complete incident and its unresolved trigger are the lifecycle goal. Diagnostic source work and named drafts have narrower scope. Publication of the incident APK is historical evidence, not the outcome of the investigation."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-styles-and-tracks",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-process-exit-224-glitchtip-20261029",
+      "status": "source_backed"
+    },
+    {
+      "type": "related_unknown",
+      "target": "lisa:mobile:question:roadmap-mob02-distinct-subjects",
+      "status": "unknown"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-process-exit-224"
+    ]
+  }
+}

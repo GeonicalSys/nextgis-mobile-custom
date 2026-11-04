@@ -23,6 +23,13 @@ related_code:
 - Текущее пользовательское отличие от official для передачи upstream →
   `reference/official-differences.md`; история и уже устранённые отличия туда не попадают.
 
+## Дорожная карта
+
+Обновляйте задачи и датированные свидетельства по
+[порядку редактирования App](../../agent-system/README.md). После правки
+запустите `python -B docs/scripts/prose_knowledge.py --write` из корня App.
+Проверяйте итог по [прежнему адресу карты](../roadmap/mobile.md).
+
 ## Maturity
 
 - `draft`: разрешены подтверждённые TODO, документ ещё не полон.

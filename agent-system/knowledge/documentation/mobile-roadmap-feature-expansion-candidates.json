@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-feature-expansion-candidates",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## EXT-01 Кандидаты на расширение функционала",
+        "",
+        "Приоритет P2. Состояние: Идеи для продуктового отбора. Это возможные следующие эпики, а не обещанный состав ближайшего выпуска.",
+        "",
+        "| Идея | Польза | Первый ограниченный результат |",
+        "|---|---|---|",
+        "| Назначенные полевые задания | Человек видит, что осмотреть и что уже выполнено | Список задач по объектам/территории, офлайн статус и явное подтверждение доставки; начать с формата заданий и полномочий |",
+        "| Проверка перед отправкой | Меньше возвратов из-за пропущенной информации | Предупреждения о необходимых фото, подозрительной геометрии или несогласованных атрибутах по правилам проекта; исключения объяснимы и не уничтожают данные |",
+        "| Пакет выезда по территории | Быстрее подготовка тяжёлого проекта | Выбор территории, состава слоёв и подложки с оценкой объёма; зависит от поддержки источников, фильтров и UX-01 |",
+        "| История объекта и сравнение изменений | Проще понять конфликт и восстановить решение | «Что изменил я / что пришло с сервера» с автором и доступными версиями; серверная история может потребовать SYNC-02 |",
+        "| Профиль интерфейса по роли | Новичок видит нужные инструменты | Упрощённый набор действий и краткие подсказки для полевого сотрудника; права доступа по-прежнему проверяются отдельно |",
+        "| Импорт маршрутов и треков с предпросмотром | Сотрудник получает готовый маршрут для полевого обхода | Отдельный согласованный режим GPX/KML для линий/треков, состава и атрибутов; текущий режим импорта координат в точки сохраняется |",
+        "",
+        "Предлагаемый порядок отбора: готовность к выезду и центр изменений → быстрые действия/поиск → полевые задания и проверка качества → территориальные пакеты и история. Для каждой идеи сначала пройти один настоящий рабочий сценарий с пользователями; затем выделить собственный ID и критерии.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "EXT-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P2"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The idea catalogue requires product selection and independent IDs after a workflow review."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-feature-expansion-candidates"
+    ]
+  }
+}

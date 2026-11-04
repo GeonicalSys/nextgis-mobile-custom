@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-experimental-ec71-comparison",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-map-memory"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Частный experimentalec71 APK на787 дал373MiB sampled retained против907MiB;",
+        "GeoJSONVT265MiB, словари свойств199MiB. Профили180s/18dumps без ошибок,38 одинаковых",
+        "команд, но разное время начала маршрута и прежняя RSS-политика candidate мешают",
+        "считать это строгой приёмкой нового tip или выделить эффект одной оптимизации.",
+        "Обычный GeoJSONVT ещё хранит посещённые участки без eviction; абсолютной гарантии",
+        "против OOM нет. Исходные трассы и неуспешные прогоны сохранены.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-map-memory-experimental-ec71-comparison"
+    ]
+  }
+}

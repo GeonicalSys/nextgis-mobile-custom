@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-field-actions-and-offline-search",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## UX-03 Быстрые полевые действия и офлайн поиск",
+        "",
+        "Приоритет P2. Состояние: Предложена.",
+        "",
+        "Проверить пользу избранных слоёв/действий, последних и закреплённых объектов, сохранённых фильтров и поиска по понятным полям проекта. Это развитие существующих средств поиска и редактирования; сначала сравнить с фактическим рабочим маршрутом. Для большого списка проектов добавить отдельный поиск и избранное, сохраняя простые строки с именами и запрет переключения во время активной записи.",
+        "",
+        "Приёмка: пользователь без сети находит объект по принятому полевому идентификатору, открывает форму, добавляет фото и возвращается к прежней области карты. Вынести частые команды ближе к карте, сохранив отдельные сложные настройки; зафиксировать сокращение шагов относительно текущего сценария.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "UX-03"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P2"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Compare the actual workflow before adopting proposed shortcuts."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-field-actions-and-offline-search"
+    ]
+  }
+}

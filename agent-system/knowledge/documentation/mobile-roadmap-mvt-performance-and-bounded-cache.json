@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-mvt-performance-and-bounded-cache",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MVT-02 Производительность и ограниченный кэш",
+        "",
+        "Приоритет P1. Состояние: Предложена. Зависимости: PERF-01 и MVT-01.",
+        "",
+        "Сократить повторное чтение полной геометрии и атрибутов, измерить batch чтение и безопасное упрощение для отображения. Добавить ограниченный RAM/disk кэш с identity проекта, слоя и ревизией данных, а при необходимости — стиля. Общие запросы одного тайла не должны повторять сборку.",
+        "",
+        "Приёмка: повторный просмотр области уменьшает DB/encode работу; sync немедленно делает старый кэш непригодным; быстрый pan/смена проекта отменяют устаревшую активную работу. Бюджеты времени/вершин/байтов соблюдаются без выдачи неполного тайла как успешного. Исходная бизнес геометрия сохраняется.",
+        "",
+        "Уже существуют два worker, очередь 16, защита по свободной heap памяти, сериализация одного слоя и classic fallback. Их нужно сохранить. Расширение на редактируемые слои — отдельное решение после проектирования edit/sync. Обычные стили, custom icons и rule styles продолжают работать через поддерживаемый путь.",
+        "",
+        "Основание: [LocalVectorTileProvider](https://github.com/GeonicalSys/android_maplib/blob/7e7055e54002b116e7a147fcd2791486913ddd9a/src/main/java/com/nextgis/maplib/map/LocalVectorTileProvider.java#L71), [MapDrawable](https://github.com/GeonicalSys/android_maplib/blob/7e7055e54002b116e7a147fcd2791486913ddd9a/src/main/java/com/nextgis/maplib/map/MapDrawable.java#L1424).",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MVT-02"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Existing worker and fallback limits are retained while changes are evaluated."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-field-measurement-baseline",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-mvt-correctness-and-freshness",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-mvt-performance-and-bounded-cache"
+    ]
+  }
+}

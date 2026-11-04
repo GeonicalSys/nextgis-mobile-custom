@@ -1,0 +1,91 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-agent-knowledge",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "open",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MOB-DEV-02 Типизированная система знаний агентов",
+        "",
+        "Прямое поручение владельца02–03.11: перестроить ВСЮ систему знаний шести",
+        "репозиториев, сохранив читаемые owner-local Git records как редактируемый",
+        "источник и производную SQLite вне Git. Техническая работа не меняет очередь",
+        "продуктовых задач, данные, sync, карту, фон, батарею, APK или library pointers.",
+        "Связанный общий план: `C:/dev/lisa/agent-system/migration-plan.md`.",
+        "",
+        "Цель ACTIVE/не завершена. Реализован перенос шести полных instruction sources",
+        "в132 логических значения/134 проекции плюс три явных вопроса миграции.",
+        "Проверка исходных символов/условий, независимых ожидаемых context IDs/полей и",
+        "полной выдачи отделена от merge, device/runtime, release и реального client",
+        "cutover. Прежние AGENTS/Cursor/hooks действуют до отдельной доказанной замены.",
+        "",
+        "В Draft App #91 переключены все девять YAML-реестров центральной документации.",
+        "Локальная проверка и ручной workflow используют общий валидатор с записями",
+        "владельца. Scaffolder использует те же записи состава. Производные YAML",
+        "сохраняют автономный вход для документации. Каталог UI использует записи App",
+        "и совместимое представление JSON. Точка входа и чеклист изменений читаются",
+        "из записей App и доступны как Markdown по прежним адресам. Инвентаризация",
+        "разделяет остальные документы, исторические материалы и точки входа клиентов.",
+        "Оглавления документации и реестров, руководство по сопровождению и пять",
+        "пользовательских руководств используют тот же маршрут. К ним добавлены",
+        "безопасные паттерны, глоссарий и справочники сборки, совместимости,",
+        "flavors и настроек. Сравнение с official собирается из отдельных тем",
+        "и датированных свидетельств по прежнему Markdown-адресу. Архитектура",
+        "синхронизации и хранения использует тот же порядок редактирования.",
+        "Зависимости: согласованные owner PR, общий LISA compiler/registry, последующий",
+        "перенос остальных типов знаний и owners; library Merge Commit до fetched app pin.",
+        "Приёмка ВСЕЙ цели: полный migration map/lifecycle, фактические Codex/ChatGPT/",
+        "Cursor/custom clients, authoring/loading/limits/agreement и индивидуальная",
+        "очистка. Новый source checkpoint или Draft не закрывает цель. Native/AVD/device,",
+        "cloud, merge и публикация этим пунктом не запускаются.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-DEV-02"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": null
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Six-owner goal. Draft #91 and the source receipts cover individual projections. Actual clients and whole-system acceptance remain open."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-agent-knowledge"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-roadmap-state-and-priority-rules",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Состояния: Предложена → Исследуется → Готова к работе → В работе → В PR → Слита → Проверена на устройствах → Выпущена. Дополнительные состояния: Блокирована и Отложена с причиной. Для исследования результатом служит принятое решение; выпуск к нему не применяется. Код в PR, merge, проверка и доступный пользователям APK учитываются отдельно.",
+        "",
+        "P0 — возможная потеря данных или ложное подтверждение успеха; P1 — надёжность основных сценариев и заметная производительность; P2 — удобство и расширение возможностей. Новая функция не должна обходить незакрытую P0 проблему в том же пути.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-roadmap-state-and-priority-rules"
+    ]
+  }
+}

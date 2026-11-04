@@ -73,6 +73,22 @@ the published headings and orders topics through contains relations. The
 account acknowledgment, full-project clock and local outbox have separate
 records. Earlier pins and dated checks are evidence with their original scope.
 
+Edit mobile roadmap tasks in **knowledge/documentation/mobile-roadmap-*.json**.
+Each task has a stable ID, its published alias and separate goal, implementation,
+source verification, merge, runtime verification and release fields. Update
+the affected task's prose for Markdown readers. Add dated outcomes as evidence
+and link them from the task. Use **mobile-roadmap-layout.json** to order topics
+and evidence, then run `python -B docs/scripts/prose_knowledge.py --write`.
+The published `docs/roadmap/mobile.md` address carries the generated view.
+
+The two **MOB-02** headings remain in the view. The process exit incident is
+`lisa:mobile:task:mobile-roadmap-process-exit-224` and dependency discovery is
+`lisa:mobile:task:mobile-roadmap-dependency-discovery`. Use the stable ID for
+knowledge queries. The original ambiguity is documented in
+[the instruction review question](knowledge/policy-questions/roadmap-mob02-distinct-subjects.json).
+For rollback, project the latest task records and check the full Markdown
+before restoring the former authoring route.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-peer-two-device-exchange",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## P2P-02 Обмен двух устройств",
+        "",
+        "Приоритет P2 для реализации после протокола. Состояние: Предложена.",
+        "",
+        "Прототип Nearby Connections как одного из транспортов; отдельно решить поддержку устройств без Google Play services. Файловый пакет/локальная Wi-Fi сеть — кандидаты для запасного способа того же протокола, без замены рабочей БД целиком.",
+        "",
+        "Приёмка: устройства без интернета обмениваются после однократного доверенного подключения; незнакомое устройство не получает данные; обрыв, повтор, недостаток места и несовместимая схема безопасны. Проверить фото, конфликт, проверку целостности и одинаковые ID разных проектов.",
+        "",
+        "Nearby предоставляет локальный транспорт, но не готовую репликацию приложения. Фоновые ограничения Android требуют отдельной проверки; постоянная доступность не следует из наличия foreground service. [Nearby overview](https://developers.google.com/nearby/connections/overview), [ограничения Android](https://developer.android.com/develop/background-work/services/fgs/restrictions-bg-start).",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "P2P-02"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P2"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Implementation follows the protocol and trust design."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-peer-operation-and-trust-protocol",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-peer-two-device-exchange"
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-sync-attachment-and-schema-source-checkpoint",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-sync-attachment-and-schema-fixes"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Состояние: implementation/source regression подготовлены в отдельных library",
+        "branches; commits/связанные Draft PR и merge фиксируются по фактической доставке.",
+        "App87 пока сохраняет прежние library gitlinks, поэтому не объявляется исправленным.",
+        "",
+        "- Attachment failure state: sole404 завершает matching work marker; request-owned",
+        "  staging публикуется после завершённого200/close через atomic move без copy",
+        "  fallback. Failure сохраняет прежний final и соседние файлы. Одинаковый final",
+        "  fixture: old source7 assertion FAIL/0ERROR/0skip → fixed7PASS/0/0/0, XML2.703s.",
+        "- Class-only schema metadata: известная смена vector/PostGIS class не должна",
+        "  теряться при совпадающих geometry/SQLite fields. Отдельный owning maplib",
+        "  пакет: 14GREEN (11новых+3прежних); runtime/currenttenant не доказывается.",
+        "- MOB-UI-01 сохраняет source meaning: добавлен attachment UI contract, а прежний",
+        "  typed HTTP fetch guard уточнён до двух неизменных overload с сохранением всей",
+        "  старой whole-file evidence в history. Existing expectations/checker не менялись.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-sync-attachment-and-schema-source-checkpoint"
+    ]
+  }
+}

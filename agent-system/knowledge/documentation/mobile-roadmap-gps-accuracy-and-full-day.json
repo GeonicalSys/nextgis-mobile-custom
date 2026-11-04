@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-gps-accuracy-and-full-day",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## GEO-01 Понятная оценка GPS и длинный рабочий день",
+        "",
+        "Приоритет P1. Состояние: Исследуется. Основание: подтверждённая семантика усреднения и необходимость полевой приёмки.",
+        "",
+        "AccurateLocationTaker использует разброс накопленных точек как accuracy усреднённой позиции. Кучность не доказывает абсолютную точность. Разделить оценку положения, разброс и свежесть; сохранить происхождение данных встроенного/внешнего приёмника. Ограничение отображения снизу само по себе эту проблему не решает.",
+        "",
+        "Приёмка: статическая и движущаяся проверка с независимой опорой; помещение, лес и открытая местность; временная потеря GPS/внешнего приёмника. Не вводить «95%» простым пересчётом без подтверждённой модели. Отдельно проверить запись полного рабочего дня, screen off, восстановление процесса и расход батареи.",
+        "",
+        "Основание: [AccurateLocationTaker](https://github.com/GeonicalSys/android_maplib/blob/7e7055e54002b116e7a147fcd2791486913ddd9a/src/main/java/com/nextgis/maplib/location/AccurateLocationTaker.java#L173).",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "GEO-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Source semantics and full-day field verification have distinct scope."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-gps-accuracy-and-full-day"
+    ]
+  }
+}

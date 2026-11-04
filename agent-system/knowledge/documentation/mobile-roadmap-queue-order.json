@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-roadmap-queue-order",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "# Очередность и состояния",
+        "",
+        "| Этап | Задачи | Результат перехода |",
+        "|---|---|---|",
+        "| Основа | MOB-00, REL-01, REL-02, PERF-01; текущий MOB-01 учитывается отдельно | Правки не теряются молча, есть путь восстановления и измеримый исходный уровень |",
+        "| Первые улучшения | SYNC-01, MVT-01, UX-01, UX-02 | Неизменённые PostgreSQL слои пропускаются безопасно; карта обновляется; пользователь понимает состояние данных |",
+        "| Производительность | SYNC-02, MVT-02, REL-03 | Передаются изменения; тайлы и длинные операции укладываются в измеренные бюджеты |",
+        "| Проверка офлайн обмена | P2P-01, P2P-02 | Два доверенных устройства обмениваются без интернета и без потери/дублирования операций |",
+        "| Распространение через другие устройства | P2P-03 | Повторные встречи и маршруты A → B → C → сервер сходятся к согласованным данным |",
+        "| Развитие полевой работы | GEO-01, UX-03, UX-04, EXT-01 | Более понятные измерения и меньше действий в повседневных сценариях |",
+        "",
+        "Этапы задают зависимости, а не календарные обещания. MVT и небольшие UX задачи могут идти параллельно серверной синхронизации. P2P использует общий контракт операций; прототип транспорта можно исследовать раньше, но нельзя выдавать его за готовую синхронизацию.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-roadmap-queue-order"
+    ]
+  }
+}

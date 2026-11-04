@@ -11,7 +11,7 @@ from pathlib import Path, PurePosixPath
 OWNER = "android_projects/android_gisapp"
 DIRECTORY = Path("agent-system/knowledge/documentation")
 MANIFEST = Path("agent-system/provenance/documentation.json")
-SECTION_ID = re.compile(r"lisa:mobile:(resource|evidence):([a-z0-9][a-z0-9_.-]*)")
+SECTION_ID = re.compile(r"lisa:mobile:(resource|evidence|task):([a-z0-9][a-z0-9_.-]*)")
 
 
 def markdown_lines(facets: dict, key: str, name: str) -> list[str]:

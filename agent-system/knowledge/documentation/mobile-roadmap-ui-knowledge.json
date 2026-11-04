@@ -1,0 +1,121 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-ui-knowledge",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "not_applicable",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MOB-UI-01 Проверяемые знания об интерфейсе и источниках значений",
+        "",
+        "Приоритет P1. Состояние: source/docs review в собственной ветке, runtime NOT_RUN.",
+        "Основание — прямое поручение29.10 после слияния текущих веток: агент принял",
+        "GPS-координаты нижней панели за центр проекта. Владелец — Android root для",
+        "UI-каталога/проверок, LISA geonical-docs для сквозных связей и общего порядка.",
+        "Зависимости: MOB-02, merged app/maplib/maplibui, существующие формы/Collector/",
+        "sync/location contracts. Доставка — связанные Draft PR LISA и Android; APK,",
+        "БД, NGW, настройки, продуктовые приоритеты и runtime не меняются.",
+        "",
+        "Приёмка: из входных AGENTS доступен source-backed каталог основных UI групп с",
+        "producer/transform/widget, action/state/side effects, variants/conditions,",
+        "units/CRS/freshness, сохранённым состоянием и независимыми ожиданиями. Проверки",
+        "ловят потерю/переназначение reviewed methods и source fragments. Пробелы и",
+        "неисполненная runtime матрица явные; missing contract агент исследует и сохраняет",
+        "в этой же задаче. Исторический source review не равен полной приёмке интерфейса.",
+        "",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-UI-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The source catalog has individual accepted slices. The whole device and runtime matrix remains unverified."
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-date-contracts-20261101",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-checkbox-contract-20261101",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-stakeout-target-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-ui-error-messages-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-resource-checkboxes-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-resource-caption-and-breadcrumb-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-track-sharing-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-ui-mobile-project-labels-20261101",
+      "status": "source_backed"
+    },
+    {
+      "type": "related_unknown",
+      "target": "lisa:mobile:question:roadmap-mob02-distinct-subjects",
+      "status": "unknown"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-ui-knowledge"
+    ]
+  }
+}

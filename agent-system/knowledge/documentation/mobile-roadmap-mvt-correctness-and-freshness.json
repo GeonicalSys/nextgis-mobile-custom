@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-mvt-correctness-and-freshness",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep independent lifecycle scope and original roadmap wording."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "При обновлении существующего источника используется прежний URL тайлов. Нужно проверить обновление уже видимой области после изменения/удаления объекта и синхронизации, без перезапуска и движения карты. Смена проекта с одинаковыми layer ID также не должна показывать данные другого проекта.",
+        "",
+        "Приёмка: геометрия, подпись и identify согласованы; известна версия данных, по которой построен тайл; принята явная инвалидация. Отдельная матрица покрывает multipart, holes, границы тайлов, тонкие полигоны, подписи, порядок/видимость, смену стиля и lifecycle. Пока воспроизведения нет, устаревшее изображение учитывается как риск, а не установленный пользовательский дефект.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MVT-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The offline blocker and the unresolved stale-tile risk are separate."
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-mvt-offline-blocker-20261026",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-mvt-correctness-and-freshness"
+    ]
+  }
+}

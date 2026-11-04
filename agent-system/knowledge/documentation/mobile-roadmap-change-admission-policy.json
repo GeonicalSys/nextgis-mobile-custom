@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-roadmap-change-admission-policy",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "# Правило для любой доработки",
+        "",
+        "Карта согласует работу, но сама по себе не разрешает исполнение всех перечисленных задач, изменение рабочих данных/серверов или выпуск APK. Внедрение регламента не заменяет существующие разрешения и ограничения.",
+        "",
+        "Любое изменение, включая срочное исправление, запрос заказчика и работу стороннего разработчика, связывается с ID этой карты. Если подходящего пункта нет, до начала обычной разработки добавляется новый пункт с причиной, приоритетом, зависимостями и влиянием на текущую очередь. Срочный инцидент можно исправлять сразу; карточка и причина изменения очереди должны появиться до слияния PR.",
+        "",
+        "Владелец продукта согласует изменение приоритетов и объёма. Технический ответственный проверяет данные, совместимость и зависимости. Имена ответственных назначаются при переводе задачи в «Готова к работе». Проходить повторное согласование каждого технического шага внутри принятого объёма не требуется.",
+        "",
+        "Карточка содержит: ID; проблему и пользователя; ожидаемое поведение; основание; приоритет; владельца; репозитории; зависимости; что входит и отложено; критерии приёмки; проверки; ссылки на issue/PR; состояние доставки. Одна задача может иметь несколько PR в разных репозиториях, а один PR — несколько ID.",
+        "",
+        "В PR обязательны ID карты, объяснение связи с целью, влияние на данные/синхронизацию/карту/фон/батарею, выполненные проверки и состояние зависимостей. Для внеплановой работы дополнительно указываются причина срочности и задачи, которые она сдвигает. «Не влияет» сопровождается коротким обоснованием.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-roadmap-change-admission-policy"
+    ]
+  }
+}

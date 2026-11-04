@@ -123,3 +123,32 @@ class ProseKnowledgeTest(unittest.TestCase):
         section.write_text(json.dumps(record, ensure_ascii=False), encoding="utf-8")
         projected = PROJECTOR["project_documents"](self.owner)[view]
         self.assertEqual(original.replace(old_span, "\n".join(body)), projected)
+
+    def test_roadmap_legacy_alias_does_not_join_tasks_or_evidence(self):
+        directory = self.owner / PROJECTOR["DIRECTORY"]
+        incident_path = directory / "mobile-roadmap-process-exit-224.json"
+        discovery_path = directory / "mobile-roadmap-dependency-discovery.json"
+        incident = json.loads(incident_path.read_bytes())
+        discovery = json.loads(discovery_path.read_bytes())
+        self.assertEqual(["task", "task"], [incident["kind"], discovery["kind"]])
+        self.assertEqual(["MOB-02", "MOB-02"], [
+            row["facets"]["legacy-id"]["value"] for row in (incident, discovery)
+        ])
+        self.assertNotEqual(incident["id"], discovery["id"])
+        self.assertEqual("merged", discovery["lifecycle"]["merge"])
+        self.assertEqual("NOT_APPLICABLE", discovery["lifecycle"]["runtime_verification"])
+        self.assertEqual("UNKNOWN", incident["lifecycle"]["runtime_verification"])
+        journal = "lisa:mobile:evidence:mobile-roadmap-discovery-journal-confirmation-20261030"
+        self.assertIn(journal, [edge["target"] for edge in discovery["relations"]])
+        self.assertNotIn(journal, [edge["target"] for edge in incident["relations"]])
+
+        view = PurePosixPath("docs/roadmap/mobile.md")
+        original = PROJECTOR["project_documents"](self.owner)[view]
+        body = discovery["facets"]["body"]["value"]
+        span = "\n".join(body)
+        self.assertEqual(1, original.count(span))
+        body[2] += " (test edit)"
+        discovery_path.write_text(json.dumps(discovery, ensure_ascii=False), encoding="utf-8")
+        projected = PROJECTOR["project_documents"](self.owner)[view]
+        self.assertEqual(original.replace(span, "\n".join(body)), projected)
+        self.assertEqual(incident, json.loads(incident_path.read_bytes()))

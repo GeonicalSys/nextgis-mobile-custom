@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-ui-resource-checkboxes-20261030",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-ui-knowledge"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### MOB-UI-01 — флажки ресурсов ВебГИС, source checkpoint30 октября",
+        "",
+        "По текущему поручению углубления аудита подготовлен bounded selector slice:",
+        "ANY-by-localID/mode rendering, symmetric false callback, no-amplification true,",
+        "восстановление type1 label при recycling и OR duplicate flags только в owned",
+        "JSON restore после каждого прежнего resolve. Source ownership — maplibui;",
+        "28 новых +9 protected browser models в App: actual37 PASS; Belka source compile0/BUILD47s; native acceptance отдельно NOT_RUN. Это не refresh/tree policy,",
+        "external setter/Parcel normalization или generic import dedup; неизвестные",
+        "свидетельства и следующий шаг едины в Root `AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH`. Карточки `android-20261030-ngw-resource-checkbox-selection` и",
+        "`maplibui-20261030-ngw-resource-checkbox-binding` сохраняют source/model/native границы. Приоритеты других этапов,",
+        "device/Related/Full и Wiki не возобновлены. Message89/Belka59 — исторический",
+        "срез с другим Adapter, без rerun/пересуммирования. F61 clock/pins ещё held.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-ui-resource-checkboxes-20261030"
+    ]
+  }
+}
