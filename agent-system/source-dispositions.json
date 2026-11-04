@@ -950,6 +950,26 @@
         "docs/guides/documentation-maintenance.md",
         "docs/README.md"
       ]
+    },
+    {
+      "path": "agent-system/migration/instruction-reconciliation.json",
+      "sha256": "c4de4c1cf107994482c932f31405ed3d8b8e24e238eb79dcccd9bf35d4b8a4e3",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Pinned original App policy questions, exact source clauses and reviewed current decision records.",
+      "applies_to": [
+        ".cursor/rules/git-workflow.mdc",
+        ".githooks/pre-push",
+        "AGENTS.md",
+        "agent-system/knowledge/policy-decisions/guarded-report-hook-installation.json",
+        "agent-system/knowledge/policy-decisions/legacy-mob02-subject-resolution.json",
+        "agent-system/knowledge/policy-decisions/routine-git-delivery-admission.json",
+        "agent-system/knowledge/policy-questions/instruction-commit-push-wording.json",
+        "agent-system/knowledge/policy-questions/instruction-hook-config-wording.json",
+        "agent-system/knowledge/policy-questions/roadmap-mob02-distinct-subjects.json",
+        "docs/roadmap/mobile.md",
+        "tools/check_update_reports.py"
+      ]
     }
   ]
 }

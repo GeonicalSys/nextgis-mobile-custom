@@ -4,10 +4,10 @@
   "kind": "question",
   "owner": "android_projects/android_gisapp",
   "topic": "instruction-policy-review",
-  "status": "active",
+  "status": "superseded",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
+    "review_status": "reviewed",
     "paths": [
       {
         "repository": "android_projects/android_gisapp",
@@ -22,13 +22,13 @@
     "unknown_behavior": "include_with_unknown_reason"
   },
   "lifecycle": {
-    "goal": "open",
+    "goal": "complete",
     "implementation": "not_applicable",
-    "source_verification": "UNKNOWN",
+    "source_verification": "PASS",
     "merge": "not_applicable",
     "runtime_verification": "NOT_APPLICABLE",
     "release": "not_applicable",
-    "retention": "Retain complete source wording and distinct subject identity until individually reconciled before relevant migration/client cutover; never silently exclude UNKNOWN."
+    "retention": "Preserve the prior open question and exact evidence. The linked decision records its source reconciliation."
   },
   "facets": {
     "title": {
@@ -79,6 +79,10 @@
           "legacy_alias": "MOB-02"
         }
       ]
+    },
+    "resolution": {
+      "role": "current_resolution_record",
+      "value": "lisa:mobile:decision:legacy-mob02-subject-resolution"
     }
   },
   "relations": [],
