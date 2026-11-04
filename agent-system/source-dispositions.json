@@ -296,6 +296,86 @@
       ],
       "sha256": "b272578296400a9bb749e4242f9c1b4502b9234a54e40089554a97279bc1cbdc",
       "sha256_scope": "utf8_lf"
+    },
+    {
+      "path": "docs/history/project-sync-verification-2026-10-07.md",
+      "sha256": "bbff4863b8d74c128b581026c93b18ea1df1aa7a698247d93845883150bc5043",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 7 draft delivery matrix and isolated workspace, callback and NGFP checks. Real multi-account WebGIS, scheduler, process kill and phone rendering were outside the run.",
+      "applies_to": [
+        "docs/history/project-sync-verification-2026-10-07.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/guides/project-synchronization-user-guide.md",
+        "docs/architecture/cascading-form-lists.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/sync-notifications-verification-2026-10-10.md",
+      "sha256": "cfe190f9b06004c592cb63a88c2fe8adbafcf9b99c5543189f06edaf58aba014",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 10 orphan-notification diagnosis and later isolated regression. The observed phone trace, native emulator result and old merge state are different evidence.",
+      "applies_to": [
+        "docs/history/sync-notifications-verification-2026-10-10.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/guides/project-synchronization-user-guide.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/sync-offline-walk-verification-2026-10-10.md",
+      "sha256": "06b5ca8bec8da849e64b3ff8eb4b587aff670b0e7e069d4c9b643deb4f872f6e",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 10 offline queue, upload and walk continuation receipt with exact older #35/#55 delivery frames and native scope. Includes a later local release authorization and a corrected track fixture, confined to that dated task.",
+      "applies_to": [
+        "docs/history/sync-offline-walk-verification-2026-10-10.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/feature-type-delivery-2026-10-09.md",
+      "sha256": "dc0c1a3d864d69c90cb9d787060df49fc6503447366f1d8dab12841dc1c8dc12",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 9 App #53 merge-preparation matrix with fetched library provenance and isolated category/form/SQLite tests. Historical merge and no-bump APK directions belong to that delivery.",
+      "applies_to": [
+        "docs/history/feature-type-delivery-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/history/feature-type-empty-lists-2026-10-09.md",
+      "sha256": "708d09132dc9e225c8c93cc0657eeb1fe4ddc151395e3b69191976f4b9bcea97",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 9 empty-list incident, 40-category regression, and one expressly dated local-build exception on the #34/#54 Draft pins. The exception belongs to its original task.",
+      "applies_to": [
+        "docs/history/feature-type-empty-lists-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/cascading-form-lists.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/history/feature-type-all-tools-2026-10-09.md",
+      "sha256": "b2835631dabc39525b545dff0839f7c7e86078511a9cd632ed049cdc6063519c",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 9 category-selection continuity for pencil, position and walk, including earlier harness failures, five final isolated native cases and distinct field GNSS/process-death gaps.",
+      "applies_to": [
+        "docs/history/feature-type-all-tools-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/crash-recovery.md",
+        "docs/architecture/location-pipeline.md"
+      ]
     }
   ]
 }
