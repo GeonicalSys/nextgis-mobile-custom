@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:cascading-form-lists-historical-pr-order-and-version-218",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:cascading-form-lists"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/cascading-form-lists.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Порядок интеграции: Merge Commit maplib → Merge Commit maplibui → обновление",
+        "root pins и Squash app → Squash desktop. Версии APK/плагина в этой задаче не",
+        "поднимаются; выпуск и активация на рабочих ресурсах — отдельное действие.",
+        "",
+        "Для Debug без изменения версии закрыты library PR",
+        "[maplib #41](https://github.com/GeonicalSys/android_maplib/pull/41) и",
+        "[maplibui #29](https://github.com/GeonicalSys/android_maplibui/pull/29).",
+        "Приложение закрепляет fetched remote Merge Commits",
+        "`a16f3fd17c427439a9b385a86bfa064964f34a9b` и",
+        "`2c43fc4fdbef274e3e222a48ddb9a34c5f21b7bd`: исходные проверенные tips являются",
+        "их предками, деревья библиотек совпадают. App",
+        "[PR #49](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/49) направлен",
+        "в `my-maplibre`, desktop",
+        "[PR #163](https://github.com/GeonicalSys/lisa/pull/163) — в `main`.",
+        "Сборка выполняется после обоих Squash Merge и сверки удалённых целевых веток;",
+        "версия Lisa Debug остаётся `3.1.2.23` / `218`. APK и ZIP плагина не публикуются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:cascading-form-lists-historical-pr-order-and-version-218"
+    ]
+  }
+}

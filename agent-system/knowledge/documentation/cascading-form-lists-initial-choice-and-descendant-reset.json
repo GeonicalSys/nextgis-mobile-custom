@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:cascading-form-lists-initial-choice-and-descendant-reset",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:cascading-form-lists"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/cascading-form-lists.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Состояние и сохранение",
+        "",
+        "Новая форма начинается без выбора, даже при одном варианте или `last=true`.",
+        "Исключение — явный [выбор типа объекта по стилю](feature-type-creation.md):",
+        "он закрепляет выбранную категорию и всю допустимую цепочку родителей до",
+        "рисования. Остальные ветви остаются пустыми; смена родителя очищает потомков.",
+        "Пока родители не выбраны, ребёнок недоступен. Смена поля очищает всех потомков,",
+        "включая ответвления и общие дочерние узлы. Пустой список отличается от ожидания",
+        "родителя. `Нет значения`, пустота и Unicode-пробелы означают отсутствие выбора;",
+        "`не применимо` допустимо, если явно присутствует в данных справочника.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:cascading-form-lists-initial-choice-and-descendant-reset"
+    ]
+  }
+}

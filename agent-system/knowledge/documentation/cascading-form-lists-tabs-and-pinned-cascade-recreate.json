@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:cascading-form-lists-tabs-and-pinned-cascade-recreate",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:cascading-form-lists",
+      "lisa:mobile:resource:conditional-form-rules-tabs-resume-safe-page-selection"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/cascading-form-lists.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Вкладки сохраняют последний запрос страницы, если Activity уже сохранила состояние",
+        "или её view не прикреплена. Транзакция выполняется после Resume/attach при безопасном",
+        "FragmentManager; уничтожение отменяет callback. Выбор подрядчика/сотрудника и pin",
+        "не сбрасываются. CascadingFormsTest проверяет сохранённое состояние, фактическую",
+        "видимость страницы после Resume и закрытие сразу после выбора вкладки.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:cascading-form-lists-tabs-and-pinned-cascade-recreate"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:conditional-form-rules-historical-delivery-and-verification-reference",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:conditional-form-rules"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/conditional-form-rules.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Порядок интеграции: maplib Merge Commit → maplibui Merge Commit → pins/app Squash",
+        "→ desktop clone Squash. Версии остаются прежними; изменения PostGIS не нужны.",
+        "",
+        "[Результаты и границы проверки](../reference/form-behavior-verification.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:conditional-form-rules-historical-delivery-and-verification-reference"
+    ]
+  }
+}

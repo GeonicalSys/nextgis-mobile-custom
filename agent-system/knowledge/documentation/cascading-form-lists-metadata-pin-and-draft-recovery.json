@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:cascading-form-lists-metadata-pin-and-draft-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:cascading-form-lists",
+      "lisa:mobile:resource:conditional-form-rules-metadata-pin-and-draft-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/cascading-form-lists.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Открытая форма закрепляет определение, выбранные key и исходные значения",
+        "существующего объекта. Полное определение атомарно сохраняется в",
+        "`<owning layer>/form_dependencies/<sha256>.json`. Activity Bundle и typed",
+        "`controlState` хранят короткую ссылку `lisa_cascade_pin=sha256:<hash>`,",
+        "`lisa_cascade_keys`, `lisa_cascade_original` и список привязок",
+        "`lisa_cascade_fields`. Большая таблица не попадает в Binder-состояние Activity.",
+        "При восстановлении файл читается только из своего слоя и проверяется по SHA-256.",
+        "Пустой pin означает отсутствие правил; прежний inline JSON pin читается для",
+        "совместимости и сохраняется уже ссылкой. Отдельная миграция draft store не нужна.",
+        "Обновление NGFP не меняет открытый сеанс или черновик. Несовместимый layout,",
+        "отсутствие или повреждение закреплённого файла блокируют Save, сохраняя исходный",
+        "выбор в черновике. Автоматического удаления старых снимков нет: они нужны",
+        "незавершённым формам. Удаление самого слоя защищено существующим owner gate.",
+        "LayerBackup не включает форму и этот кеш; это не механизм переноса черновиков.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:cascading-form-lists-metadata-pin-and-draft-recovery"
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:cascading-form-lists-ngfp-v1-layout-and-example",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:cascading-form-lists"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/cascading-form-lists.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Формат v1",
+        "",
+        "NGFP по-прежнему содержит ровно `form.json`, `meta.json`, `data.geojson`.",
+        "Расширение хранится в `meta.json.lisa_form_dependencies`:",
+        "",
+        "```json",
+        "{",
+        "  \"schema_version\": 1,",
+        "  \"tables\": {",
+        "    \"companies\": [{\"id\": \"c1\", \"name\": \"Компания A\"}],",
+        "    \"staff\": [{\"id\": \"e1\", \"company\": \"c1\", \"role_id\": \"p1\", \"role\": \"Мастер\", \"name\": \"Тестовый сотрудник\"}]",
+        "  },",
+        "  \"fields\": [",
+        "    {\"field\": \"contractor\", \"table\": \"companies\", \"key\": \"id\", \"value\": \"name\", \"label\": \"name\", \"filters\": []},",
+        "    {\"field\": \"jobtitle1\", \"table\": \"staff\", \"key\": \"role_id\", \"value\": \"role\", \"label\": \"role\", \"filters\": [{\"column\": \"company\", \"field\": \"contractor\"}]},",
+        "    {\"field\": \"eployee1\", \"table\": \"staff\", \"key\": \"id\", \"value\": \"name\", \"label\": \"name\", \"filters\": [{\"column\": \"company\", \"field\": \"contractor\"}, {\"column\": \"role_id\", \"field\": \"jobtitle1\"}]}",
+        "  ]",
+        "}",
+        "```",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:cascading-form-lists-ngfp-v1-layout-and-example"
+    ]
+  }
+}

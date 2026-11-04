@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:cascading-form-lists-canonical-legacy-pair-without-graph",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:cascading-form-lists",
+      "lisa:mobile:resource:conditional-form-rules-classobj-typeobj-restored-pair-precedence"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/cascading-form-lists.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Legacy pair без графа",
+        "",
+        "Каноническая classobj/typeobj форма не содержит lisa_form_dependencies или lisa_form_rules. Ее default Прочие / прочие и last=false относятся к legacy DoubleCombobox, не к правилу cascade «не выбирать первый элемент». Bundle/cursor/explicit category precedence и сохранение обеих raw names разобраны в [общем контракте формы](conditional-form-rules.md#каноническая-пара-classobjtypeobj-источник-defaults-и-save). NULL/unlisted old values требуют отдельной политики; это не основание изменять значения канонического default.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:cascading-form-lists-canonical-legacy-pair-without-graph"
+    ]
+  }
+}

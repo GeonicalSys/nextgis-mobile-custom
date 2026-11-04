@@ -3199,6 +3199,484 @@
           "end_byte": 7458
         }
       ]
+    },
+    {
+      "path": "docs/architecture/conditional-form-rules.md",
+      "record": "conditional-form-rules.json",
+      "id": "lisa:mobile:resource:conditional-form-rules",
+      "revision": "2a76b4e95983bc64c3f989c6bbadcff78efb1892",
+      "blob": "e1d184d1a509ba6432e37f985623c273421dd230",
+      "sha256": "6b2232e83dd76f7fc092485bbb713d9107c1b6395192f593592644fb4ce26c17",
+      "bytes": 23937,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules",
+          "start_byte": 0,
+          "end_byte": 957
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-native-scroll-and-overflow-oracle",
+          "start_byte": 957,
+          "end_byte": 1681
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-tabs-resume-safe-page-selection",
+          "start_byte": 1681,
+          "end_byte": 2209
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-new-feature-category-before-evaluation",
+          "start_byte": 2209,
+          "end_byte": 2569
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-v1-v2-definition-and-example",
+          "start_byte": 2569,
+          "end_byte": 3831
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-operators-and-absent-values",
+          "start_byte": 3831,
+          "end_byte": 4852
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-rule-label-precedence",
+          "start_byte": 4852,
+          "end_byte": 5267
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-visible-target-and-portable-lisa-id",
+          "start_byte": 5267,
+          "end_byte": 6547
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-visibility-enclosing-elements-and-current-values",
+          "start_byte": 6547,
+          "end_byte": 7107
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-required-union-and-hidden-field-retention",
+          "start_byte": 7107,
+          "end_byte": 8118
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-bounds-and-fail-closed-schema",
+          "start_byte": 8118,
+          "end_byte": 9100
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-form-values-and-common-save-gate",
+          "start_byte": 9100,
+          "end_byte": 10156
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-metadata-pin-and-draft-recovery",
+          "start_byte": 10156,
+          "end_byte": 10981
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-matched-default-form-and-legacy-meta",
+          "start_byte": 10981,
+          "end_byte": 11438
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-external-tabs-gesture-and-accessibility",
+          "start_byte": 11438,
+          "end_byte": 13595
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-desktop-clone-access-and-ngw-ownership",
+          "start_byte": 13595,
+          "end_byte": 14113
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-historical-delivery-and-verification-reference",
+          "start_byte": 14113,
+          "end_byte": 14439
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-form-field-layout-and-fixed-save",
+          "start_byte": 14439,
+          "end_byte": 15803
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-legacy-pair-lisa-id-and-visibility",
+          "start_byte": 15803,
+          "end_byte": 16311
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-classobj-typeobj-canonical-template",
+          "start_byte": 16311,
+          "end_byte": 17070
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-classobj-typeobj-control-binding",
+          "start_byte": 17070,
+          "end_byte": 17702
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-classobj-typeobj-restored-pair-precedence",
+          "start_byte": 17702,
+          "end_byte": 18499
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-ngw-required-field-and-local-save",
+          "start_byte": 18499,
+          "end_byte": 19233
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-tenant-resolution-and-open-unknowns",
+          "start_byte": 19233,
+          "end_byte": 19906
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-table-layout",
+          "start_byte": 19906,
+          "end_byte": 20494
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-01",
+          "start_byte": 20494,
+          "end_byte": 20685
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-02",
+          "start_byte": 20685,
+          "end_byte": 20919
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-03",
+          "start_byte": 20919,
+          "end_byte": 21075
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-04",
+          "start_byte": 21075,
+          "end_byte": 21234
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-05",
+          "start_byte": 21234,
+          "end_byte": 21405
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-06",
+          "start_byte": 21405,
+          "end_byte": 21586
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-07",
+          "start_byte": 21586,
+          "end_byte": 21757
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-08",
+          "start_byte": 21757,
+          "end_byte": 21976
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-09",
+          "start_byte": 21976,
+          "end_byte": 22212
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-10",
+          "start_byte": 22212,
+          "end_byte": 22361
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-11",
+          "start_byte": 22361,
+          "end_byte": 22662
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-review-acceptance-boundary",
+          "start_byte": 22662,
+          "end_byte": 22971
+        },
+        {
+          "id": "lisa:mobile:resource:conditional-form-rules-lookup-prefetch-layout-and-reader-boundaries",
+          "start_byte": 22971,
+          "end_byte": 23741
+        },
+        {
+          "id": "lisa:mobile:evidence:conditional-form-rules-lookup-prefetch-jvm-and-native-boundary",
+          "start_byte": 23741,
+          "end_byte": 23937
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/cascading-form-lists.md",
+      "record": "cascading-form-lists.json",
+      "id": "lisa:mobile:resource:cascading-form-lists",
+      "revision": "2a76b4e95983bc64c3f989c6bbadcff78efb1892",
+      "blob": "6b35d5e721bb184a582ae8e0e8e0c78e7040f1f1",
+      "sha256": "002102adad6676a72c4cf24aee6676cf931e0b3be882db3dd44cf16606041123",
+      "bytes": 18037,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists",
+          "start_byte": 0,
+          "end_byte": 402
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-tabs-and-pinned-cascade-recreate",
+          "start_byte": 402,
+          "end_byte": 1080
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-gesture-fixture-stability",
+          "start_byte": 1080,
+          "end_byte": 1559
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-short-viewport-and-form-layout-fixture",
+          "start_byte": 1559,
+          "end_byte": 2094
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-fitted-picker-and-key-callback",
+          "start_byte": 2094,
+          "end_byte": 2497
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-legacy-pair-conversion",
+          "start_byte": 2497,
+          "end_byte": 4646
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-feature-type-selection-before-create",
+          "start_byte": 4646,
+          "end_byte": 5466
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-ngfp-v1-layout-and-example",
+          "start_byte": 5466,
+          "end_byte": 6399
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-stable-key-stored-value-and-filter-join",
+          "start_byte": 6399,
+          "end_byte": 7350
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-validation-graph-and-resource-limits",
+          "start_byte": 7350,
+          "end_byte": 7875
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-initial-choice-and-descendant-reset",
+          "start_byte": 7875,
+          "end_byte": 9006
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-metadata-pin-and-draft-recovery",
+          "start_byte": 9006,
+          "end_byte": 10711
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-common-save-checkpoint-membership-and-null",
+          "start_byte": 10711,
+          "end_byte": 11192
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-legacy-value-retention-and-name-ambiguity",
+          "start_byte": 11192,
+          "end_byte": 12027
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-access-lookup-producer-and-parser-ownership",
+          "start_byte": 12027,
+          "end_byte": 12520
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-ngw-legacy-format-and-round-trip",
+          "start_byte": 12520,
+          "end_byte": 13133
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-desktop-clone-and-local-identity",
+          "start_byte": 13133,
+          "end_byte": 13482
+        },
+        {
+          "id": "lisa:mobile:evidence:cascading-form-lists-historical-pr-order-and-version-218",
+          "start_byte": 13482,
+          "end_byte": 14797
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-deep-cascade-bundle-and-stale-pin-oracles",
+          "start_byte": 14797,
+          "end_byte": 15377
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-matched-form-meta-and-legacy-pins",
+          "start_byte": 15377,
+          "end_byte": 15836
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-blank-area-gesture-fixture",
+          "start_byte": 15836,
+          "end_byte": 16476
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-canonical-legacy-pair-without-graph",
+          "start_byte": 16476,
+          "end_byte": 17264
+        },
+        {
+          "id": "lisa:mobile:resource:cascading-form-lists-prefetch-identity-boundary",
+          "start_byte": 17264,
+          "end_byte": 18037
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/project-scripts.md",
+      "record": "project-scripts.json",
+      "id": "lisa:mobile:resource:project-scripts",
+      "revision": "2a76b4e95983bc64c3f989c6bbadcff78efb1892",
+      "blob": "d3ccc11eb5f1958616b8b1a2041506d12c841333",
+      "sha256": "c0b721cceb713efe89804f3868d59a4dc07e5c918c9ed5e93d5543b8f4664b89",
+      "bytes": 19483,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:project-scripts",
+          "start_byte": 0,
+          "end_byte": 497
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-fitted-dialog-and-form-callback",
+          "start_byte": 497,
+          "end_byte": 995
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-zip-owner-and-broker-authority",
+          "start_byte": 995,
+          "end_byte": 1835
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-owner-responsibilities-and-delivery-flow",
+          "start_byte": 1835,
+          "end_byte": 3296
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-package-ownership-and-ngfp-separation",
+          "start_byte": 3296,
+          "end_byte": 3671
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-carrier-attachment-round-trip-and-retention",
+          "start_byte": 3671,
+          "end_byte": 4325
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-manifest-v1-and-source-zip",
+          "start_byte": 4325,
+          "end_byte": 5197
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-live-ngw-reference-and-layer-bindings",
+          "start_byte": 5197,
+          "end_byte": 5678
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-idempotent-publication-hash-and-rights",
+          "start_byte": 5678,
+          "end_byte": 6336
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-portable-keyname-reference",
+          "start_byte": 6336,
+          "end_byte": 6614
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-package-root-priority-and-clone-boundaries",
+          "start_byte": 6614,
+          "end_byte": 7468
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-isolated-run-and-context-api",
+          "start_byte": 7468,
+          "end_byte": 8787
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-bounded-query-and-scalar-encoding",
+          "start_byte": 8787,
+          "end_byte": 9397
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-query-warning-example",
+          "start_byte": 9397,
+          "end_byte": 10006
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-gis-broker-owner-and-current-project-grants",
+          "start_byte": 10006,
+          "end_byte": 10656
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-verified-active-package-cache-and-removal",
+          "start_byte": 10656,
+          "end_byte": 11472
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-per-form-pin-and-fresh-data",
+          "start_byte": 11472,
+          "end_byte": 11989
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-form-events-and-before-save",
+          "start_byte": 11989,
+          "end_byte": 12914
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-warning-ack-block-and-failure-policy",
+          "start_byte": 12914,
+          "end_byte": 13777
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-quickjs-isolated-uid-and-init-guard",
+          "start_byte": 13777,
+          "end_byte": 14456
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-zip-heap-binder-query-and-message-budgets",
+          "start_byte": 14456,
+          "end_byte": 15031
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-watchdog-isolation-and-native-build",
+          "start_byte": 15031,
+          "end_byte": 15693
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-audit-history-window-and-local-scope",
+          "start_byte": 15693,
+          "end_byte": 16938
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-open-api-capabilities-and-transaction-boundary",
+          "start_byte": 16938,
+          "end_byte": 17958
+        },
+        {
+          "id": "lisa:mobile:evidence:project-scripts-historical-integration-and-source-verification",
+          "start_byte": 17958,
+          "end_byte": 18337
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-android-16-isolated-invocation-and-api-fallback",
+          "start_byte": 18337,
+          "end_byte": 19174
+        },
+        {
+          "id": "lisa:mobile:resource:project-scripts-native-repeat-call-and-isolation-oracles",
+          "start_byte": 19174,
+          "end_byte": 19483
+        }
+      ]
     }
   ]
 }

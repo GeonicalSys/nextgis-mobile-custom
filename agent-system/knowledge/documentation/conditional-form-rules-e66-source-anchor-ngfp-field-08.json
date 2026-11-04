@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-08",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:conditional-form-rules",
+      "lisa:mobile:resource:conditional-form-rules-ngw-required-field-and-local-save"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/conditional-form-rules.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| `NGFP-FIELD-08` | NGW feature_layer.fields → Stored Android Field type and required flag | `NGWVectorLayer.java:676-704; NGWUtil.java:504-522; maplib LayerUtil.java:97-98; GeoConstants.java:115; Field.java:53-86` |"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-08"
+    ]
+  }
+}

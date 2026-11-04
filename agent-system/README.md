@@ -109,6 +109,12 @@ Keep the retired HTTP fallback and older runs in historical evidence.
 Use the current SQLite live reload and classic preview records when updating
 renderer and test contracts. Run the same projector after editing.
 
+Edit conditional NGFP rules, cascading lists and project scripts in their
+respective records under **knowledge/documentation/**.
+Keep the common Save boundary, each form pin and the isolated script grants
+distinct. Store dated source anchors and results as historical evidence.
+Run the ordinary projector after editing and verify the established addresses.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

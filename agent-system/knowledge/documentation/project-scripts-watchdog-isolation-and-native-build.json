@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-watchdog-isolation-and-native-build",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Бесконечный JS прерывается, зависший sandbox уничтожает только свой процесс.",
+        "Sentry Gradle app-start instrumentation отключён: он вставлял запрещённый",
+        "isolated UID вызов перед guard `onCreate`. Остальные tracing/crash reporting",
+        "сохраняются; автоматическое измерение времени старта отключено для APK.",
+        "NDK 28.2.13676358, CMake 3.22.1; arm64-v8a, armeabi-v7a, x86, x86_64,",
+        "ELF page alignment 16 KiB. ABI сборка не заменяет проверку на физическом телефоне.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-watchdog-isolation-and-native-build"
+    ]
+  }
+}

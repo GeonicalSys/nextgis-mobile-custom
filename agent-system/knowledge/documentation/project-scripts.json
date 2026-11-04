@@ -1,0 +1,199 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/project-scripts.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Пакеты правил мобильного проекта",
+        "type: architecture",
+        "last_verified: 2026-10-14",
+        "related_code:",
+        "  - maplib/src/main/java/com/nextgis/maplib/scripts",
+        "  - maplib/src/main/cpp",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectScriptFormController.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+        "  - examples/project-scripts/contractor-audit"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Пакеты правил мобильного проекта",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-fitted-dialog-and-form-callback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-zip-owner-and-broker-authority",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-owner-responsibilities-and-delivery-flow",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-package-ownership-and-ngfp-separation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-carrier-attachment-round-trip-and-retention",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-manifest-v1-and-source-zip",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-live-ngw-reference-and-layer-bindings",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-idempotent-publication-hash-and-rights",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-portable-keyname-reference",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-package-root-priority-and-clone-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-isolated-run-and-context-api",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-bounded-query-and-scalar-encoding",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-query-warning-example",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-gis-broker-owner-and-current-project-grants",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-verified-active-package-cache-and-removal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-per-form-pin-and-fresh-data",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-form-events-and-before-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-warning-ack-block-and-failure-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-quickjs-isolated-uid-and-init-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-zip-heap-binder-query-and-message-budgets",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-watchdog-isolation-and-native-build",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-audit-history-window-and-local-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-open-api-capabilities-and-transaction-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:project-scripts-historical-integration-and-source-verification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-android-16-isolated-invocation-and-api-fallback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:project-scripts-native-repeat-call-and-isolation-oracles",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts"
+    ]
+  }
+}
