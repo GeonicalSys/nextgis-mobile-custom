@@ -51,7 +51,7 @@
   "relations": [
     {
       "type": "depends_on",
-      "target": "lisa:mobile:resource:ngw-sync-and-storage",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-recovery-pair-journal",
       "status": "source_backed"
     }
   ],
