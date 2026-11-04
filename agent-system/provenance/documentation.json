@@ -7927,6 +7927,653 @@
           "end_byte": 24893
         }
       ]
+    },
+    {
+      "path": "docs/architecture/location-pipeline.md",
+      "record": "location-pipeline.json",
+      "id": "lisa:mobile:resource:location-pipeline",
+      "revision": "2387eadfd6d7e086d7070790725d2a7ced019a5d",
+      "blob": "bcd87984953d7e9db78b8de4a4a8e618f5d27767",
+      "sha256": "725dab6050b0ef7f0f96e3f8b0172e44773e95d0b6a0af70186683c2f14c95e1",
+      "bytes": 75073,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:location-pipeline",
+          "start_byte": 0,
+          "end_byte": 2095
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-device-display-coordinate-versus-camera",
+          "start_byte": 2095,
+          "end_byte": 2771
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-network-display-age-and-no-recording-fallback",
+          "start_byte": 2771,
+          "end_byte": 3458
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-compass-heading-and-target-azimuth-independence",
+          "start_byte": 3458,
+          "end_byte": 4229
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-track-metadata-versus-recording-listener",
+          "start_byte": 4229,
+          "end_byte": 4787
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-built-in-gps-display-only-accuracy-floor",
+          "start_byte": 4787,
+          "end_byte": 5890
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-installation-track-store-and-project-switch",
+          "start_byte": 5890,
+          "end_byte": 6235
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-automatic-foreground-and-service-owner-leases",
+          "start_byte": 6235,
+          "end_byte": 7033
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-background-timeout-and-pending-service-cleanup",
+          "start_byte": 7033,
+          "end_byte": 7932
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-explicit-app-exit-versus-home-and-recording-owners",
+          "start_byte": 7932,
+          "end_byte": 8947
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-display-network-fallback-age-and-gps-freshness",
+          "start_byte": 8947,
+          "end_byte": 10091
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-gps-recovery-episode-classification-and-report-admission",
+          "start_byte": 10091,
+          "end_byte": 11413
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-recovery-snapshot-timing-and-private-history",
+          "start_byte": 11413,
+          "end_byte": 12179
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-same-listener-reregistration-and-preserved-owners",
+          "start_byte": 12179,
+          "end_byte": 12883
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-library-adoption-order",
+          "start_byte": 12883,
+          "end_byte": 13101
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-passive-system-cache-measurement-witness",
+          "start_byte": 13101,
+          "end_byte": 13938
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-passive-witness-privacy-and-evidence-limit",
+          "start_byte": 13938,
+          "end_byte": 14717
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-application-gps-source-and-shared-subscribers",
+          "start_byte": 14717,
+          "end_byte": 15597
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-independent-gps-and-network-subscription-updates",
+          "start_byte": 15597,
+          "end_byte": 16303
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-wake-lock-and-external-gnss-service-ownership",
+          "start_byte": 16303,
+          "end_byte": 17852
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-verbose-gnss-log-privacy",
+          "start_byte": 17852,
+          "end_byte": 18064
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-walk-pause-sampler-and-camera-boundary",
+          "start_byte": 18064,
+          "end_byte": 18999
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-screen-off-android-power-policy-and-source",
+          "start_byte": 18999,
+          "end_byte": 19889
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-start-warning-and-live-power-notification",
+          "start_byte": 19889,
+          "end_byte": 20733
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-resume-background-policy-and-settings-action",
+          "start_byte": 20733,
+          "end_byte": 22354
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-native-background-warning-lifecycle-oracle",
+          "start_byte": 22354,
+          "end_byte": 22963
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-oem-power-policy-observability-and-ui-lease",
+          "start_byte": 22963,
+          "end_byte": 23903
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-october-6-field-screen-off-evidence",
+          "start_byte": 23903,
+          "end_byte": 24400
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-gps-health-power-witness",
+          "start_byte": 24400,
+          "end_byte": 24652
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-native-track-power-test-provider-and-field-gap",
+          "start_byte": 24652,
+          "end_byte": 25139
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-api36-screen-off-power-and-recording-receipt",
+          "start_byte": 25139,
+          "end_byte": 26130
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-bluetooth-discovery-rssi-meaning",
+          "start_byte": 26130,
+          "end_byte": 26740
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-ble-and-classic-rssi-producer-and-identity",
+          "start_byte": 26740,
+          "end_byte": 27581
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-bluetooth-discovery-stale-callback-and-permissions",
+          "start_byte": 27581,
+          "end_byte": 28100
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-bluetooth-rssi-platform-references",
+          "start_byte": 28100,
+          "end_byte": 28330
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-pigo-ble-uart-characteristics-and-gatt-ack",
+          "start_byte": 28330,
+          "end_byte": 29431
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-quiet-pigo-bestposb-without-configuration-mutation",
+          "start_byte": 29431,
+          "end_byte": 30036
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-gnss-transport-session-identity-and-quality-expiry",
+          "start_byte": 30036,
+          "end_byte": 30775
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-gps-map-callback-async-track-snapshot",
+          "start_byte": 30775,
+          "end_byte": 31373
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-map-track-start-mode-and-state-colour",
+          "start_byte": 31373,
+          "end_byte": 32201
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-location-disabled-recording-start-guard",
+          "start_byte": 32201,
+          "end_byte": 32576
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-gps-and-network-map-selection-and-external-hud",
+          "start_byte": 32576,
+          "end_byte": 33651
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-input-mode-preference-migration-and-permissions",
+          "start_byte": 33651,
+          "end_byte": 34266
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-cnb-binary-framing-and-optional-gga-commands",
+          "start_byte": 34266,
+          "end_byte": 35202
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-monotonic-fix-freshness-and-display-snapshot",
+          "start_byte": 35202,
+          "end_byte": 36193
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-cursor-native-source-order-and-heading-fallback",
+          "start_byte": 36193,
+          "end_byte": 37715
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-geodesic-accuracy-ring-and-heading-inner-hole",
+          "start_byte": 37715,
+          "end_byte": 38899
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-compass-sector-preference-and-reload",
+          "start_byte": 38899,
+          "end_byte": 39611
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-compass-sector-uncertainty-and-projected-length",
+          "start_byte": 39611,
+          "end_byte": 40691
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-heading-expiry-and-native-orientation-ownership",
+          "start_byte": 40691,
+          "end_byte": 41347
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-accuracy-probability-and-smoothing-offset",
+          "start_byte": 41347,
+          "end_byte": 41873
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-recording-fix-admission-and-raw-navigation-stream",
+          "start_byte": 41873,
+          "end_byte": 42861
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-kalman-trajectory-and-no-synthetic-fixes",
+          "start_byte": 42861,
+          "end_byte": 43829
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-stationarity-accelerometer-and-measurement-clock",
+          "start_byte": 43829,
+          "end_byte": 44653
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-movement-evidence-distance-and-speed-uncertainty",
+          "start_byte": 44653,
+          "end_byte": 45765
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-medium-accuracy-median-centres-and-turns",
+          "start_byte": 45765,
+          "end_byte": 46572
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-short-accurate-window-and-car-motion",
+          "start_byte": 46572,
+          "end_byte": 47652
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-display-motion-versus-bounded-recording-buffer",
+          "start_byte": 47652,
+          "end_byte": 48903
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-unconfirmed-buffer-and-history-time-limit",
+          "start_byte": 48903,
+          "end_byte": 49611
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-stationary-anchor-refinement-and-bounded-windows",
+          "start_byte": 49611,
+          "end_byte": 50520
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-stationary-row-correction-and-remote-limit",
+          "start_byte": 50520,
+          "end_byte": 51324
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-reacquisition-and-physical-filter-limits",
+          "start_byte": 51324,
+          "end_byte": 52111
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-postfilter-sampling-and-stop-buffer",
+          "start_byte": 52111,
+          "end_byte": 52682
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-walking-speed-gate-and-fallback-clock",
+          "start_byte": 52682,
+          "end_byte": 53575
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-speed-gap-segment-and-heartbeat",
+          "start_byte": 53575,
+          "end_byte": 54248
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-durable-mode-default-and-no-live-switch",
+          "start_byte": 54248,
+          "end_byte": 54808
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-gpx-chooser-provider-mime-and-contained-grant",
+          "start_byte": 54808,
+          "end_byte": 55840
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-segment-schema-legacy-data-and-durable-render",
+          "start_byte": 55840,
+          "end_byte": 56785
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-walk-pause-versus-signal-loss-and-resume",
+          "start_byte": 56785,
+          "end_byte": 57640
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-walk-finishing-and-confirmed-draft-open",
+          "start_byte": 57640,
+          "end_byte": 58388
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-walk-fresh-start-and-sticky-pause-recovery",
+          "start_byte": 58388,
+          "end_byte": 58935
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-android-batch-age-order-and-live-display",
+          "start_byte": 58935,
+          "end_byte": 59500
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-platform-and-map-provider-references",
+          "start_byte": 59500,
+          "end_byte": 61220
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-september-12-a54-field-regression-intake",
+          "start_byte": 61220,
+          "end_byte": 61745
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-gps-health-metrics-and-coordinate-privacy",
+          "start_byte": 61745,
+          "end_byte": 62482
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-gps-technical-oracles-and-real-recording-smoke",
+          "start_byte": 62482,
+          "end_byte": 63552
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-september-12-source-and-sqlite-before-delay-fix",
+          "start_byte": 63552,
+          "end_byte": 64116
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-september-12-stationary-gpx-and-raw-a54",
+          "start_byte": 64116,
+          "end_byte": 65254
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-earlier-variants-and-a54-provider-mime",
+          "start_byte": 65254,
+          "end_byte": 66293
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-a54-old-stop-and-corrected-cold-starts",
+          "start_byte": 66293,
+          "end_byte": 67335
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-earlier-gps-library-merge-pins",
+          "start_byte": 67335,
+          "end_byte": 67626
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-september-13-walk-delay-gpx-evidence",
+          "start_byte": 67626,
+          "end_byte": 68498
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-september-13-motion-red-green-and-field-gaps",
+          "start_byte": 68498,
+          "end_byte": 69698
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-former-max-gpx-suffix-observation",
+          "start_byte": 69698,
+          "end_byte": 70028
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-september-13-build-and-a54-walk-checkpoint",
+          "start_byte": 70028,
+          "end_byte": 70739
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-september-13-a54-installed-artifact",
+          "start_byte": 70739,
+          "end_byte": 71299
+        },
+        {
+          "id": "lisa:mobile:evidence:location-pipeline-former-project-owned-track-queue",
+          "start_byte": 71299,
+          "end_byte": 71921
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-walk-checkpoint-failure-and-invalid-sampling-defaults",
+          "start_byte": 71921,
+          "end_byte": 72295
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-track-registration-default-and-retry",
+          "start_byte": 72295,
+          "end_byte": 73180
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-track-stop-confirmation-and-session-identity",
+          "start_byte": 73180,
+          "end_byte": 73646
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-cursor-fixture-readiness-and-failure-evidence",
+          "start_byte": 73646,
+          "end_byte": 74559
+        },
+        {
+          "id": "lisa:mobile:resource:location-pipeline-native-lifecycle-stage-observation",
+          "start_byte": 74559,
+          "end_byte": 75073
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/stakeout.md",
+      "record": "stakeout.json",
+      "id": "lisa:mobile:resource:stakeout",
+      "revision": "2387eadfd6d7e086d7070790725d2a7ced019a5d",
+      "blob": "44d70d102e64298cfdb321c25958b2b6212a8e87",
+      "sha256": "8637cdd1b173071e8fd1f11b6ec11319762bd7840f995dc923085c1af2d73113",
+      "bytes": 23778,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:stakeout",
+          "start_byte": 0,
+          "end_byte": 1136
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-automatic-background-gps-versus-navigation-owner",
+          "start_byte": 1136,
+          "end_byte": 1717
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-screen-off-power-policy-and-track-only-warning",
+          "start_byte": 1717,
+          "end_byte": 2206
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-three-user-entries-one-geodesic-contract",
+          "start_byte": 2206,
+          "end_byte": 2682
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-app-maplib-and-maplibui-ownership",
+          "start_byte": 2682,
+          "end_byte": 3651
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-recording-snapshot-and-fast-gps-callback",
+          "start_byte": 3651,
+          "end_byte": 4164
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-target-geometry-types-crs-and-boundaries",
+          "start_byte": 4164,
+          "end_byte": 4713
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-private-index-projected-nearest-and-wgs84-inverse",
+          "start_byte": 4713,
+          "end_byte": 5700
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-static-live-and-coincident-point-meaning",
+          "start_byte": 5700,
+          "end_byte": 6187
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-volatile-measurement-overlay-and-dragging",
+          "start_byte": 6187,
+          "end_byte": 6934
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-separate-stakeout-panel-controls",
+          "start_byte": 6934,
+          "end_byte": 7539
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-azimuth-controls-and-independent-sound-choice",
+          "start_byte": 7539,
+          "end_byte": 8573
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-magnetic-azimuth-sign-and-declination-correction",
+          "start_byte": 8573,
+          "end_byte": 9345
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-wmm2025-point-height-time-and-cache",
+          "start_byte": 9345,
+          "end_byte": 10265
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-magnetic-heading-versus-map-bearing",
+          "start_byte": 10265,
+          "end_byte": 11062
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-magnetic-interference-and-unknown-vendor-heading",
+          "start_byte": 11062,
+          "end_byte": 11440
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-audio-zone-thresholds-and-default-profile",
+          "start_byte": 11440,
+          "end_byte": 12147
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-pcm-cue-monotonic-scheduler-and-android-channel",
+          "start_byte": 12147,
+          "end_byte": 13056
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-audio-eligible-provider-fix-confirmation-and-hysteresis",
+          "start_byte": 13056,
+          "end_byte": 14137
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-owner-based-raw-gps-lease",
+          "start_byte": 14137,
+          "end_byte": 14655
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-foreground-service-background-and-sensor-restoration",
+          "start_byte": 14655,
+          "end_byte": 15301
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-location-only-fgs-and-start-failure-cleanup",
+          "start_byte": 15301,
+          "end_byte": 16289
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-session-identity-and-stale-foreground-intent",
+          "start_byte": 16289,
+          "end_byte": 17068
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-explicit-stop-and-fix-freshness",
+          "start_byte": 17068,
+          "end_byte": 18008
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-static-two-point-mode-without-gps-service",
+          "start_byte": 18008,
+          "end_byte": 18403
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-survey-receiver-wgs84-and-datum-prerequisites",
+          "start_byte": 18403,
+          "end_byte": 19176
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-mock-location-privacy-and-accuracy-limit",
+          "start_byte": 19176,
+          "end_byte": 19607
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-independent-unit-permission-and-device-oracles",
+          "start_byte": 19607,
+          "end_byte": 20619
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-navigation-ux-and-magnetic-model-references",
+          "start_byte": 20619,
+          "end_byte": 21115
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-raw-fix-versus-pedestrian-recording-smoothing",
+          "start_byte": 21115,
+          "end_byte": 21505
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-selected-overlay-geometry-and-db-fallback",
+          "start_byte": 21505,
+          "end_byte": 22397
+        },
+        {
+          "id": "lisa:mobile:resource:stakeout-layer-lock-versus-sync-and-restored-target",
+          "start_byte": 22397,
+          "end_byte": 23445
+        },
+        {
+          "id": "lisa:mobile:evidence:stakeout-target-source-review-and-native-limits",
+          "start_byte": 23445,
+          "end_byte": 23778
+        }
+      ]
     }
   ]
 }

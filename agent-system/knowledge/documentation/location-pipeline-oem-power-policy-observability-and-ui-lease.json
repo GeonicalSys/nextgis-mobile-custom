@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-oem-power-policy-observability-and-ui-lease",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Foreground location service и wake lock уже используются; программно отключать",
+        "системный Battery Saver или пользовательский запрет фоновой работы приложение",
+        "не может. Документация Android описывает",
+        "[фоновые ограничения](https://developer.android.com/topic/performance/background-optimization)",
+        "и [частичное исключение Doze](https://developer.android.com/training/monitoring-device-state/doze-standby).",
+        "Часть OEM-ограничений не видна через публичные API; проверка не обещает обнаружить",
+        "все режимы производителя. Экран снимает только свою подписку при Pause и",
+        "возвращает при Resume; активный recorder сохраняет общий GPS source.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-oem-power-policy-observability-and-ui-lease"
+    ]
+  }
+}

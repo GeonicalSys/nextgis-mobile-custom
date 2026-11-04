@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-independent-unit-permission-and-device-oracles",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Проверки",
+        "",
+        "- Автоматически: `AUTO-MAPLIB-UNIT`, WMM2025/перевод азимута и коррекция склонения",
+        "  в app unit tests и `AUTO-APP-DEBUG`.",
+        "- `SMOKE-STAKEOUT-PERMISSIONS`: реальный Android 14+ emulator, запрещённый",
+        "  Bluetooth и два режима GPS permissions. Проверить background/Stop, оба",
+        "  отказа старта, cleanup, быстрый restart и stale/unowned Intent.",
+        "- На устройстве: `SMOKE-STAKEOUT` с реальным RTK-приёмником и контрольными",
+        "  точками/линиями/полигонами; отдельно оба режима азимута из меню «Измерения», совпадающие",
+        "  точки, north-up/повёрнутая карта, отсутствие компаса и обновление линии GPS.",
+        "- Регрессия: `SMOKE-GPS-RECORDING` и `SMOKE-WALK`, потому что изменён общий",
+        "  `GpsEventSource`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-independent-unit-permission-and-device-oracles"
+    ]
+  }
+}

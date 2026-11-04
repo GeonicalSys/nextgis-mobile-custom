@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-magnetic-heading-versus-map-bearing",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Rotation-vector телефона даёт ориентацию относительно магнитного севера; круговой",
+        "EMA-фильтр подавляет дрожание около перехода `359°/0°`. GNSS `Location.bearing`",
+        "не используется даже при движении. С живым компасом стрелка показывает разность",
+        "магнитного азимута и магнитного heading. Без компаса стрелка остаётся",
+        "согласованной с картой: из истинного курса вычитается bearing карты. В измерении A→B датчик не требуется; стрелка в панели измерения не отображается.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-magnetic-heading-versus-map-bearing"
+    ]
+  }
+}

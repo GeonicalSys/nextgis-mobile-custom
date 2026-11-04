@@ -137,6 +137,12 @@ related_code:
 После проекции проверьте [контракты UI](../architecture/ui-contracts.md) и
 [крупный интерфейс](../architecture/ui-accessibility.md).
 
+## Позиция и вынос
+
+Правьте источник позиции, запись, расчёт и lifecycle наведения по отдельным темам.
+После проекции проверьте [позицию и GPS](../architecture/location-pipeline.md) и
+[азимут и вынос](../architecture/stakeout.md).
+
 ## Maturity
 
 - `draft`: разрешены подтверждённые TODO, документ ещё не полон.

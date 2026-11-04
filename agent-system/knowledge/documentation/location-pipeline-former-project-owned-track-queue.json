@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:location-pipeline-former-project-owned-track-queue",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Повторная запись после ошибки SQLite",
+        "",
+        "GNSS/filter/sampling rules remain unchanged. Accepted track points first enter",
+        "`PendingTrackPoints` inside the owning map directory, then drain serially into",
+        "`TrackLayer` with UUID deduplication. Queue capacity2048 and a high-water pause",
+        "bound memory; recovery starts a new segment after a gap. Stop persists its intent,",
+        "flushes the filter tail and closes unfinished sessions only after drain succeeds.",
+        "Failures keep points and session open for retry rather than confirming a false Stop.",
+        "Stationary correction does not overtake queued/in-flight inserts.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Retains the former map-directory PendingTrackPoints source. The current contract uses shared-v1 installation storage."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:location-pipeline-former-project-owned-track-queue"
+    ]
+  }
+}

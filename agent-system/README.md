@@ -170,6 +170,11 @@ Keep the machine catalogue, widget meaning, fitting and real-client evidence dis
 Preserve source-only checkpoints and device gaps in their original scope.
 Regenerate both published views with the ordinary prose projector.
 
+Edit App location and field guidance in **knowledge/documentation/**.
+Keep display position, raw fix, recorder and guidance ownership independent.
+Preserve old queue and provider behavior and field evidence in their original frames.
+Regenerate the established Markdown views with the ordinary projector.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

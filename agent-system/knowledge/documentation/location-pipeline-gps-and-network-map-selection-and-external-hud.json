@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-gps-and-network-map-selection-and-external-hud",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Карта показывает свежую позицию GPS (чип телефона, mock внешнего GNSS или",
+        "native NMEA внешнего приёмника)",
+        "либо, если GPS нет или старше 8 секунд, Wi‑Fi/сотовой сети — но не при",
+        "`gnss_input=external`. Свежий GPS любой",
+        "точности не заменяется «более точной» сетью. Пока жив mock или native NMEA, чип телефона",
+        "игнорируется; native NMEA не считается чипом и не отбрасывается правилом",
+        "`dropChipWhileMock`. Заглушка GPS Connector без extras (`hAcc=47`) не сменяет фикс",
+        "с `hdop`/`diffStatus`. HUD внешнего GNSS стоит справа от компаса у верхнего края",
+        "рабочей области карты и показывает короткие подписи качества (фикс / плав / авто). Настройка `gnss_input` выбирает системный GNSS Android"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-gps-and-network-map-selection-and-external-hud"
+    ]
+  }
+}

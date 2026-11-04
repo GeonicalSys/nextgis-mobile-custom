@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:location-pipeline-api36-screen-off-power-and-recording-receipt",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Локальная проверка API 36 прошла: 5 точек до сна, 13 после screen-off без",
+        "Battery Saver, 14 после его включения (успела одна переходная точка), 22 после",
+        "выключения Battery Saver при всё ещё погашенном экране. Track id сохранился,",
+        "GPS subscription не перерегистрировалась. Второй native тест проверил текст",
+        "диалога, переход в настройки без Start и явное продолжение при скрытом старом",
+        "Doze prompt. JVM: maplib 458, maplibui 87, app 41 — без ошибок; оба release",
+        "source set скомпилированы, debug QA APK собран без bump/publication.",
+        "Полный локальный native reliability suite: 36/36, включая оба новых power",
+        "сценария, режимы записи, Stop recovery, SQLite и обход.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The API36, JVM and QA build results retain their original test frame and publication limits."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:location-pipeline-api36-screen-off-power-and-recording-receipt"
+    ]
+  }
+}

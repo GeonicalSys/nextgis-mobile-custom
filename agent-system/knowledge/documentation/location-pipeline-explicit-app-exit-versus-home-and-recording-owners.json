@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-explicit-app-exit-versus-home-and-recording-owners",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Смахивание задачи из последних приложений и подтверждённый выход двойным Back",
+        "являются явным закрытием: controller disarm снимает оба автоматических lease,",
+        "отменяет refresh/timeout и останавливает службу. Home, гашение экрана и переход",
+        "в другое приложение сохраняют прежний двухчасовой фон. Back внутри формы или",
+        "инструмента сначала выполняет обычное действие этого экрана. После явного выхода",
+        "смена настройки или отложенный callback не запускают GPS; новый Activity start",
+        "снова разрешает автоматическое получение. Track/Walk сохраняют свои recording",
+        "listeners, foreground services и wake lock до собственного Stop.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-explicit-app-exit-versus-home-and-recording-owners"
+    ]
+  }
+}

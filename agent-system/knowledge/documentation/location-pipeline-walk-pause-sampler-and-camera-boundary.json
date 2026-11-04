@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-walk-pause-sampler-and-camera-boundary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Подтверждённая ручная пауза обхода использует существующий gps_paused:",
+        "сервис сначала сбрасывает принятый хвост в геометрию, сохраняет её и перестаёт",
+        "добавлять новые точки. Курсор карты и другой recorder сохраняют общий GNSS",
+        "источник. Продолжение требует подтверждения соединения и свежего recording fix;",
+        "sampler начинается заново. Звуковой heartbeat во время паузы не подтверждает",
+        "запись. Стартовое центрирование карты использует ту же опору геометрии при",
+        "неизменном масштабе; pan не становится источником записываемых координат.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-walk-pause-sampler-and-camera-boundary"
+    ]
+  }
+}

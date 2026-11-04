@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-recovery-snapshot-timing-and-private-history",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Snapshot v3 добавляет reason_duration_ms, observed_reason, diagnostic_tick_gap_ms",
+        "и device_sleep_gap_ms. Разрыв observer и глубокий сон различаются по elapsed",
+        "и uptime, но сами по себе не доказывают причину тишины provider. Snapshot содержит",
+        "`last_callback_age_ms` (время с последнего callback) отдельно",
+        "от `last_callback_delivery_lag_ms` (возраст координаты при той доставке).",
+        "История — максимум 24 компактных строки раз в 5 s: monotonic time, raw/callback/status",
+        "ages, used/visible, C/N0, решение фильтра, screen и owners. Координат в истории нет."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-recovery-snapshot-timing-and-private-history"
+    ]
+  }
+}

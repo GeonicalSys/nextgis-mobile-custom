@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-audio-eligible-provider-fix-confirmation-and-hysteresis",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Звуковая зона определяется расстоянием и не блокируется заявленной `Location.accuracy`: ряд",
+        "mock-поставщиков передаёт исправленную RTK-координату, но оставляет в accuracy грубую",
+        "заглушку. Оператор видит это значение в виджете и оценивает его сам. Network-fix по-прежнему",
+        "не ведёт точное звуковое наведение, но штатный GPS и любой Android `Location` с mock-флагом",
+        "допускаются. Для финального сигнала нужны два последовательных свежих фикса внутри порога;",
+        "гистерезис 10% не даёт звуку дрожать на границах. Аудиорежим `AudioManager` не глушит подсказки;",
+        "они идут по каналу навигации с учётом системной громкости и беззвучного режима.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-audio-eligible-provider-fix-confirmation-and-hysteresis"
+    ]
+  }
+}

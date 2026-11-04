@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-built-in-gps-display-only-accuracy-floor",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Нижний порог отображения встроенного GPS — 2026-10-15",
+        "",
+        "`LocationDisplayAccuracy` в app вычисляет `max(3 м, accuracy)` только для",
+        "встроенного GPS. `MapFragment` использует результат для числа в нижней панели",
+        "и метрического круга MapLibre. Исходный `Location` не меняется: фильтры,",
+        "порог записи, трек/обход, координаты и временные метки получают прежние значения.",
+        "External input, native NMEA, mock GPS и Network сохраняют свою accuracy.",
+        "Неизвестная или невалидная accuracy не подменяется числом 3 м.",
+        "Новых подписей, процентов доверия и настроек интерфейса нет.",
+        "Related `-Area accuracy`: реальная панель/GeoJSON круга, сохранность входного fix,",
+        "внешний NMEA/mock и Network; русская панель в 36 enlarged UI profiles.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-built-in-gps-display-only-accuracy-floor"
+    ]
+  }
+}

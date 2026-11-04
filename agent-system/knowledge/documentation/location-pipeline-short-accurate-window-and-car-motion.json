@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-short-accurate-window-and-car-motion",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "При accuracy до 5 м согласованного 5-секундного тренда от 0.5 м/с достаточно",
+        "для отдельного короткого подтверждения; дистанционный порог здесь равен",
+        "1.5 радиуса accuracy. Если первая стоянка была значительно неточнее новых",
+        "измерений, устойчивое смещение внутри нового точного окна может подтвердить",
+        "движение до выхода из огромного круга старого якоря. Для слабых координат",
+        "сохраняется более осторожное подтверждение. Согласованный автомобильный тренд",
+        "от 8 м/с допускает ранний выход; спокойный акселерометр требует более сильного",
+        "GNSS-свидетельства и не блокирует достоверное движение автомобиля.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-short-accurate-window-and-car-motion"
+    ]
+  }
+}
