@@ -4586,6 +4586,258 @@
           "end_byte": 4630
         }
       ]
+    },
+    {
+      "path": "docs/architecture/shared-tracks.md",
+      "record": "shared-tracks.json",
+      "id": "lisa:mobile:resource:shared-tracks",
+      "revision": "3e6116f3a4514bdb0e5a8b1913198c264391796f",
+      "blob": "267f5a8d79f66507264ca4311672cd29f4db0d00",
+      "sha256": "54bdca761b5f96b9a06d8b37369a7e79ba42920ab81f616728210208bfcc8d16",
+      "bytes": 12714,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:shared-tracks",
+          "start_byte": 0,
+          "end_byte": 597
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-controls-and-history-navigation",
+          "start_byte": 597,
+          "end_byte": 965
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-render-color-derivation",
+          "start_byte": 965,
+          "end_byte": 1438
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-installation-history-and-project-isolation",
+          "start_byte": 1438,
+          "end_byte": 2247
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-schema-color-backfill",
+          "start_byte": 2247,
+          "end_byte": 2728
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-database-owner-and-legacy-file-resolution",
+          "start_byte": 2728,
+          "end_byte": 3402
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-point-identities-checkpoint-and-recording-stop",
+          "start_byte": 3402,
+          "end_byte": 3938
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-legacy-migration-layout",
+          "start_byte": 3938,
+          "end_byte": 3957
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-tracks-legacy-database-path-repair-20261015",
+          "start_byte": 3957,
+          "end_byte": 4633
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-legacy-source-enumeration-and-transaction",
+          "start_byte": 4633,
+          "end_byte": 5676
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-workspace-mapping-and-session-high-water-mark",
+          "start_byte": 5676,
+          "end_byte": 6293
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-legacy-schema-bootstrap-and-checkpoint-remap",
+          "start_byte": 6293,
+          "end_byte": 7094
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-durable-tail-read-only-replay-and-rollback",
+          "start_byte": 7094,
+          "end_byte": 7964
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-shared-worker-packet-ack-and-project-lease-independence",
+          "start_byte": 7964,
+          "end_byte": 8971
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-project-deletion-retains-shared-history",
+          "start_byte": 8971,
+          "end_byte": 9198
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-shared-store-regression",
+          "start_byte": 9198,
+          "end_byte": 9760
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-switch-and-recording-regression",
+          "start_byte": 9760,
+          "end_byte": 10354
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-legacy-recovery-native-oracles",
+          "start_byte": 10354,
+          "end_byte": 11283
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-verification-gates-and-disk-full-boundary",
+          "start_byte": 11283,
+          "end_byte": 11789
+        },
+        {
+          "id": "lisa:mobile:resource:shared-tracks-selected-id-and-gpx-snapshot-boundary",
+          "start_byte": 11789,
+          "end_byte": 12714
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/track-controls.md",
+      "record": "track-controls.json",
+      "id": "lisa:mobile:resource:track-controls",
+      "revision": "3e6116f3a4514bdb0e5a8b1913198c264391796f",
+      "blob": "819261121409aa69f98a5d055b51a336a82379d4",
+      "sha256": "e6ea53f91ac7729e6cd8e66e7e6f4acf9aff6a11146880c18120332213cdcbc9",
+      "bytes": 20501,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:track-controls",
+          "start_byte": 0,
+          "end_byte": 877
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-rename-preserves-shared-identity",
+          "start_byte": 877,
+          "end_byte": 1392
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-mixed-hit-testing-and-selection",
+          "start_byte": 1392,
+          "end_byte": 3129
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-hidden-selection-and-history-delete",
+          "start_byte": 3129,
+          "end_byte": 3698
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-current-session-delete-and-retry",
+          "start_byte": 3698,
+          "end_byte": 4085
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-stop-confirmation-and-session-uuid",
+          "start_byte": 4085,
+          "end_byte": 5149
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-color-assignment-and-preserved-values",
+          "start_byte": 5149,
+          "end_byte": 6318
+        },
+        {
+          "id": "lisa:mobile:evidence:track-controls-desktop-palette-deferral",
+          "start_byte": 6318,
+          "end_byte": 6426
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-native-glow-selection-and-core",
+          "start_byte": 6426,
+          "end_byte": 7698
+        },
+        {
+          "id": "lisa:mobile:evidence:track-controls-october-25-color-decision-and-test-scope",
+          "start_byte": 7698,
+          "end_byte": 8223
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-layer-stack-and-geometry-classification",
+          "start_byte": 8223,
+          "end_byte": 9125
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-idempotent-stack-restoration",
+          "start_byte": 9125,
+          "end_byte": 9391
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-sqlite-alias-order-and-wrapper-ownership",
+          "start_byte": 9391,
+          "end_byte": 10511
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-order-repair-and-track-only-refresh",
+          "start_byte": 10511,
+          "end_byte": 10932
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-track-controls-regression-matrix",
+          "start_byte": 10932,
+          "end_byte": 12130
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-stop-regression-and-receipt-link",
+          "start_byte": 12130,
+          "end_byte": 12495
+        },
+        {
+          "id": "lisa:mobile:evidence:track-controls-october-29-sqlite-priority-verification",
+          "start_byte": 12495,
+          "end_byte": 14058
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-field-line-role-and-order",
+          "start_byte": 14058,
+          "end_byte": 15028
+        },
+        {
+          "id": "lisa:mobile:evidence:track-controls-october-25-mixed-selection-verification",
+          "start_byte": 15028,
+          "end_byte": 15680
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-stop-dialog-dismiss-oracle",
+          "start_byte": 15680,
+          "end_byte": 16323
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-stop-tap-window-and-uid-delivery",
+          "start_byte": 16323,
+          "end_byte": 16808
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-share-selected-track-and-durable-history",
+          "start_byte": 16808,
+          "end_byte": 17549
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-gpx-launch-guards-naming-and-grants",
+          "start_byte": 17549,
+          "end_byte": 18265
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-share-panel-targets-and-jvm-limits",
+          "start_byte": 18265,
+          "end_byte": 18940
+        },
+        {
+          "id": "lisa:mobile:resource:track-controls-gpx-async-and-snapshot-unknown",
+          "start_byte": 18940,
+          "end_byte": 19096
+        },
+        {
+          "id": "lisa:mobile:evidence:track-controls-october-31-panel-and-belka-compile-receipt",
+          "start_byte": 19096,
+          "end_byte": 20501
+        }
+      ]
     }
   ]
 }

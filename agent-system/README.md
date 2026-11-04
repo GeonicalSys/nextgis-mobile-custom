@@ -131,6 +131,11 @@ Edit the mobile project architecture, setup and roadmap in
 backup and form commits, dated evidence and open work separate.
 Regenerate and check the three established Markdown addresses.
 
+Edit shared track storage and controls in **knowledge/documentation/**.
+Keep the shared history ID, recording session UUID and selected track distinct.
+Edit migration, rendering order and GPX ownership in their own records.
+Regenerate both Markdown views with the ordinary projector.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

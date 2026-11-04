@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:track-controls-track-controls-regression-matrix",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:track-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Проверки",
+        "",
+        "`tools/verify-mobile-tests.ps1 -Scope Related -Area track-controls` проверяет",
+        "список/Save/Cancel, цвета в native source, реальные тапы, скрытие/возврат,",
+        "пересоздание экрана, совпадающие треки, подтверждение удаления, GPU пиксели и",
+        "Point/MultiPoint над линиями. Отдельная native регрессия провоцирует отказ",
+        "удаления активного сеанса и проверяет повтор без потери намерения. Русская",
+        "панель проверяется в двух темах, portrait/landscape, fontScale 1/1.3/2 и",
+        "viewport 320/280 dp. Related feature-editing проверяет прежний редактор.",
+        "Диалоги Rename/Color/Delete дополнительно проверяются в 24 профилях native",
+        "окна (72 настоящих открытия и нажатия Cancel), с реальной сменой ориентации",
+        "Activity и локальными font/density overrides; системные настройки телефона",
+        "не меняются."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:track-controls-track-controls-regression-matrix"
+    ]
+  }
+}

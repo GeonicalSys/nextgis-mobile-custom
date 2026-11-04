@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-tracks-point-identities-checkpoint-and-recording-stop",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-tracks.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Точки имеют INTEGER PRIMARY KEY AUTOINCREMENT, поэтому удалённый ID не может быть",
+        "переиспользован перед запоздалым ACK. Новая очередь pending-track-points принадлежит",
+        "общему каталогу. UUID журнал записи и снятие checkpoint после commit сохраняются.",
+        "Stop закрывает только текущий ID после сохранения хвоста, сохраняя другие истории.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-tracks-point-identities-checkpoint-and-recording-stop"
+    ]
+  }
+}

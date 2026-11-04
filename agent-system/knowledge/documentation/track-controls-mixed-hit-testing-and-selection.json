@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:track-controls-mixed-hit-testing-and-selection",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:track-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Обычный тап собирает все допустимые векторные объекты и видимые треки",
+        "в одном списке. Векторы проходят прежний SQL/RTree поиск и уточнение геометрии;",
+        "сегменты трека объединяются по track_id из native query. Один кандидат",
+        "выбирается сразу. Для нескольких показывается общий прокручиваемый список:",
+        "имя слоя/описание объекта и «Трек: название» различают типы. В списке только",
+        "треков прежние названия сохранены. Feature ID привязан к собственному слою,",
+        "track ID имеет отдельную ветвь выбора. Точки не запрещают выбор треков,",
+        "треки не прерывают поиск линий, полигонов или точек. После уже выбранного",
+        "объекта/трека доступны все кандидаты следующего тапа. Cancel не меняет выбор;",
+        "callback старой карты игнорируется, диалог закрывается вместе с view.",
+        "Строки переносятся полностью при крупном шрифте. Метаданные треков читаются",
+        "одним снимком; скрытые треки исключены.",
+        "Редактирование, линейка, азимут и другие инструменты не выбирают",
+        "треки. При переходе в инструмент панель закрывается.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:track-controls-mixed-hit-testing-and-selection"
+    ]
+  }
+}

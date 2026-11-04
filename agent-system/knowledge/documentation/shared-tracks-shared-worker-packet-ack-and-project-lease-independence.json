@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-tracks-shared-worker-packet-ack-and-project-lease-independence",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-tracks.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Отправка и проектные операции",
+        "",
+        "TrackWorker планирует одну unique immediate и одну periodic работу shared-v1.",
+        "Старые проектные задания удаляются по известным именам, а уже запущенная старая",
+        "работа перепланирует общую очередь без чтения старой БД и отменяет свой Work ID:",
+        "одного success недостаточно для прекращения старой periodic работы, в том числе",
+        "для удалённого workspace. TrackUploader сериализует",
+        "live/durable packets одним lock; ACK меняет только IDs принятого пакета общей БД.",
+        "track_send, точный server/UID registration gate, network retry и opt-out сохраняются.",
+        "Отправка трека не занимает project DATA_SYNC lease и не обновляет full-project clock."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-tracks-shared-worker-packet-ack-and-project-lease-independence"
+    ]
+  }
+}

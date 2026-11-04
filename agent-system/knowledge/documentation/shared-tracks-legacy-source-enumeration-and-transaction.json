@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-tracks-legacy-source-enumeration-and-transaction",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-tracks.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "SharedTrackProjects читает сохранённого владельца незавершённого сеанса, текущий",
+        "workspace и все зарегистрированные проекты до открытия map helpers. Источник",
+        "открывается read-only. Одна target-транзакция переносит tracks, точки в исходном",
+        "rowid-порядке, sent/segment/accuracy и остальные показатели, UUID lost-reply journal,",
+        "затем replay durable tail и completion marker. Исходные таблицы и файлы очереди",
+        "сохраняются. Ошибка, orphan или повреждённый checkpoint откатывает весь источник;",
+        "готовые источники не импортируются повторно. Удалённая общая история не воскресает",
+        "из rollback-копии. Большая история читается курсорами, без массива всех точек.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-tracks-legacy-source-enumeration-and-transaction"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:shared-tracks-legacy-database-path-repair-20261015",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-tracks.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Исправление 2026-10-15 повторяет перенос для уже обновлённых установок: прежний",
+        "код искал `layers` и пропускал настоящий `layers.db`, не ставя completion marker.",
+        "Сбрасывать общую БД или маркеры не требуется. Уже записанные после обновления",
+        "треки остаются; коллизии старых IDs получают отдельные общие IDs. Regression",
+        "создаёт исходник через настоящий DatabaseHelper, а не прямой SQLite open с",
+        "логическим именем.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The October 15 correction describes the earlier missed layers.db migration. Current import and retry behavior has its own records."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:shared-tracks-legacy-database-path-repair-20261015"
+    ]
+  }
+}
