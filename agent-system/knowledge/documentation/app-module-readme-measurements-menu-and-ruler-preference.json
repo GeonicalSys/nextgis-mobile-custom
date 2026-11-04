@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-measurements-menu-and-ruler-preference",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Одна кнопка «Измерения» со значком линейки заменяет отдельные кнопки линейки",
+        "и азимута. Она открывает компактное меню: «Линейка», «Азимут от местоположения»,",
+        "«Азимут между точками», каждый режим запускается сразу. Кнопка скрыта во время",
+        "редактирования/измерения и возвращается после завершения. Существующий",
+        "show_ruler_measuring выключает только пункт линейки, сохраняя оба входа азимута.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-measurements-menu-and-ruler-preference"
+    ]
+  }
+}

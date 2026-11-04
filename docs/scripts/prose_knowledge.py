@@ -48,7 +48,8 @@ def project_documents(owner: Path) -> dict[PurePosixPath, str]:
 
     for source in manifest["sources"]:
         view = PurePosixPath(source["path"])
-        if (view.parts[:1] != ("docs",) or view.suffix != ".md"
+        if ((view.parts[:1] != ("docs",) and view != PurePosixPath("app/docs/README.md"))
+                or view.suffix != ".md"
                 or ".." in view.parts or "\\" in str(view) or view in documents):
             raise ValueError(f"Invalid or duplicate documentation address: {source}")
         name = source["record"]

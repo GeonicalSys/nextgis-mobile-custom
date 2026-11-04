@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-local-workspace-and-layer-defaults",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- выбор и переключение проектов по списку только из имён: строка выбирает",
+        "  radio, «Открыть» открывает карту, «Отмена» оставляет текущий проект; раздел",
+        "  «Настройки → Проект» с Web GIS-реквизитами, созданием пустого local workspace,",
+        "  локальным переименованием и удалением локальной копии; создание и активация",
+        "  выполняются под одним lease, а при сбое прежний workspace восстанавливается",
+        "  до удаления неактивного stage. Чистая установка до",
+        "  первой карты уже имеет активный «Локальный проект», а обновление один раз",
+        "  добавляет туда прежние standalone-слои без удаления их исходной копии;",
+        "- сохранение «Мои треки» наверху списка слоёв при создании и открытии карты;",
+        "- сохранение дефолтного `OpenStreetMap Standard aka Mapnik` внизу списка каждой",
+        "  карты, включая новый Collector workspace;"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-local-workspace-and-layer-defaults"
+    ]
+  }
+}

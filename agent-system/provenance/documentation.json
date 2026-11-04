@@ -8785,6 +8785,847 @@
           "end_byte": 28417
         }
       ]
+    },
+    {
+      "path": "app/docs/README.md",
+      "record": "app-module-readme.json",
+      "id": "lisa:mobile:resource:app-module-readme",
+      "revision": "1e35f6996bc43ebf206d654a70502162e31b341e",
+      "blob": "76fd8f89754e5cfbed7abea8a8d1d271d0463dca",
+      "sha256": "05be1848b1142e79df1a35b1f45be34579e8cfd5f3412a05faa0660b7912aa85",
+      "bytes": 141165,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:app-module-readme",
+          "start_byte": 0,
+          "end_byte": 156
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-warning-dialog-measurement-and-scope",
+          "start_byte": 156,
+          "end_byte": 1113
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-ui-value-producer-and-source-registry",
+          "start_byte": 1113,
+          "end_byte": 1821
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-private-profiler-enable-and-build-isolation",
+          "start_byte": 1821,
+          "end_byte": 2408
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-profiler-numeric-export-and-units",
+          "start_byte": 2408,
+          "end_byte": 3130
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-profiler-frame-readiness-and-writer-bounds",
+          "start_byte": 3130,
+          "end_byte": 4302
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-profiler-periodic-checkpoint-and-process-identity",
+          "start_byte": 4302,
+          "end_byte": 5357
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-private-profiler-stop-receiver-and-owner",
+          "start_byte": 5357,
+          "end_byte": 5915
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-sqlite-phase-probes-and-privacy",
+          "start_byte": 5915,
+          "end_byte": 6872
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-earlier-phase-jvm-result",
+          "start_byte": 6872,
+          "end_byte": 7129
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-verification-uid-log-admission",
+          "start_byte": 7129,
+          "end_byte": 8057
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-bounded-log-ring-and-finalization",
+          "start_byte": 8057,
+          "end_byte": 8717
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-earlier-uid-log-probe-and-native-failures",
+          "start_byte": 8717,
+          "end_byte": 9187
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-independent-native-pbf-witness",
+          "start_byte": 9187,
+          "end_byte": 9888
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-signaled-restart-trace-and-cause-boundary",
+          "start_byte": 9888,
+          "end_byte": 10791
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-restart-trace-resource-and-privacy-bounds",
+          "start_byte": 10791,
+          "end_byte": 11313
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-free-memory-and-notice-owner",
+          "start_byte": 11313,
+          "end_byte": 12626
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-rich-source-and-compact-renderer-input",
+          "start_byte": 12626,
+          "end_byte": 13471
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-mvt-cache-admission-and-complete-pbf",
+          "start_byte": 13471,
+          "end_byte": 14100
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-render-stress-independent-content-oracle",
+          "start_byte": 14100,
+          "end_byte": 15012
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-marker-regression-and-bounded-capture",
+          "start_byte": 15012,
+          "end_byte": 15470
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-earlier-787-resource-profile-and-unknown",
+          "start_byte": 15470,
+          "end_byte": 16333
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-render-memory-independent-payload-and-window-proof",
+          "start_byte": 16333,
+          "end_byte": 17246
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-manual-process-exit-export-and-startup-fixtures",
+          "start_byte": 17246,
+          "end_byte": 18016
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-local-android-validation-and-real-window-gate",
+          "start_byte": 18016,
+          "end_byte": 18459
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-earlier-lisa-only-publication-stage",
+          "start_byte": 18459,
+          "end_byte": 19087
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-october-26-full-and-offline-defect-results",
+          "start_byte": 19087,
+          "end_byte": 19914
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-track-pointer-and-snackbar-fixture",
+          "start_byte": 19914,
+          "end_byte": 20381
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-form-blank-area-oracle",
+          "start_byte": 20381,
+          "end_byte": 20722
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-form-and-accuracy-fixtures-with-prior-device-results",
+          "start_byte": 20722,
+          "end_byte": 21566
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-full-failure-retention-and-offline-retry",
+          "start_byte": 21566,
+          "end_byte": 22151
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-maintenance-reminder-clock-boundary",
+          "start_byte": 22151,
+          "end_byte": 23013
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-mapview-gesture-teardown",
+          "start_byte": 23013,
+          "end_byte": 23348
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-track-selection-and-vector-candidate-scope",
+          "start_byte": 23348,
+          "end_byte": 23913
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-prior-track-style-acceptance-order",
+          "start_byte": 23913,
+          "end_byte": 24316
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-polygon-style-fixtures-and-visible-touch",
+          "start_byte": 24316,
+          "end_byte": 25232
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-firefly-fixtures-and-isolation",
+          "start_byte": 25232,
+          "end_byte": 25769
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-former-firefly-vector-fallback-route",
+          "start_byte": 25769,
+          "end_byte": 26010
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-prior-app-version-and-variant-scope",
+          "start_byte": 26010,
+          "end_byte": 26522
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-feature-copy-transform-and-test-routing",
+          "start_byte": 26522,
+          "end_byte": 27300
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-existing-glitchtip-triage-entrance",
+          "start_byte": 27300,
+          "end_byte": 27651
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnostic-filter-episode-and-exit-boundaries",
+          "start_byte": 27651,
+          "end_byte": 28519
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-compass-null-vibrator-and-earlier-phone-result",
+          "start_byte": 28519,
+          "end_byte": 29131
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-compass-sector-resume-and-regression",
+          "start_byte": 29131,
+          "end_byte": 30270
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-gps-episode-schema4-passive-cache-witness",
+          "start_byte": 30270,
+          "end_byte": 31877
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-usage-data-scope-and-ack",
+          "start_byte": 31877,
+          "end_byte": 32475
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-built-in-gps-floor-and-independent-orbit-fixtures",
+          "start_byte": 32475,
+          "end_byte": 33633
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-verification-startup-and-underlay-lease-barrier",
+          "start_byte": 33633,
+          "end_byte": 34136
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-help-contacts-and-user-guide",
+          "start_byte": 34136,
+          "end_byte": 34832
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-direct-native-tile-label-and-offline-geometry-oracle",
+          "start_byte": 34832,
+          "end_byte": 35584
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-installation-track-history-and-legacy-recovery",
+          "start_byte": 35584,
+          "end_byte": 36637
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-classic-style-fixture-and-former-ci-renderer",
+          "start_byte": 36637,
+          "end_byte": 36959
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-owning-project-outbox-and-full-clock",
+          "start_byte": 36959,
+          "end_byte": 37738
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-independent-stakeout-and-azimuth-panel",
+          "start_byte": 37738,
+          "end_byte": 38625
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-storage-move-project-switch-lease",
+          "start_byte": 38625,
+          "end_byte": 39477
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-captured-map-and-actual-path-commit",
+          "start_byte": 39477,
+          "end_byte": 40384
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-reset-and-refresh-versus-success",
+          "start_byte": 40384,
+          "end_byte": 41377
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-earlier-storage-ownership-red-and-runtime-scope",
+          "start_byte": 41377,
+          "end_byte": 41962
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-renderer-fence-and-open-durable-migration",
+          "start_byte": 41962,
+          "end_byte": 42654
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-deferred-tab-resume-and-owner-state",
+          "start_byte": 42654,
+          "end_byte": 43259
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-real-form-swipe-and-visible-target",
+          "start_byte": 43259,
+          "end_byte": 43905
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-background-gps-service-and-open-screen-lease",
+          "start_byte": 43905,
+          "end_byte": 44731
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-explicit-ui-exit-and-other-recording-owners",
+          "start_byte": 44731,
+          "end_byte": 45207
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-gps-recovery-and-network-display-diagnostics",
+          "start_byte": 45207,
+          "end_byte": 45818
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-lifecycle-stage-and-stable-native-fixture-actions",
+          "start_byte": 45818,
+          "end_byte": 46597
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-drag-end-missing-row-and-model-order",
+          "start_byte": 46597,
+          "end_byte": 47204
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-system-scale-adaptation-and-real-touch",
+          "start_byte": 47204,
+          "end_byte": 47940
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-map-status-attribution-and-transparent-actions",
+          "start_byte": 47940,
+          "end_byte": 49215
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-manual-offline-sync-and-walk-recording-state",
+          "start_byte": 49215,
+          "end_byte": 50019
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-background-offline-outbox-and-retry",
+          "start_byte": 50019,
+          "end_byte": 50389
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-radio-fixture-ready-and-restored-state",
+          "start_byte": 50389,
+          "end_byte": 50970
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-background-warning-resume-regression",
+          "start_byte": 50970,
+          "end_byte": 51453
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-sync-notification-preference-and-service-indicator",
+          "start_byte": 51453,
+          "end_byte": 52423
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-local-log-http-policy-and-ngfp-hash-boundary",
+          "start_byte": 52423,
+          "end_byte": 53602
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-tracker-registration-and-pending-badge",
+          "start_byte": 53602,
+          "end_byte": 54499
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-measurements-menu-and-ruler-preference",
+          "start_byte": 54499,
+          "end_byte": 55202
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-feature-category-draft-and-walk-point-cancel",
+          "start_byte": 55202,
+          "end_byte": 56564
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-ngfp-rule-visibility-and-save",
+          "start_byte": 56564,
+          "end_byte": 57601
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-split-cascade-controls-and-gesture-ownership",
+          "start_byte": 57601,
+          "end_byte": 58307
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-layer-pending-row-snapshot-and-reuse",
+          "start_byte": 58307,
+          "end_byte": 58999
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-built-in-cascade-and-metadata-recovery",
+          "start_byte": 58999,
+          "end_byte": 59441
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-external-gnss-rssi-identity",
+          "start_byte": 59441,
+          "end_byte": 60099
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-app-host-brand-icon-and-renderer-ownership",
+          "start_byte": 60099,
+          "end_byte": 60898
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-former-223-production-version-and-publication",
+          "start_byte": 60898,
+          "end_byte": 61295
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-pigo-ble-fix-expiry-and-physical-gap",
+          "start_byte": 61295,
+          "end_byte": 61687
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-main-scenarios-heading",
+          "start_byte": 61687,
+          "end_byte": 61725
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-ngw-required-save-oracle",
+          "start_byte": 61725,
+          "end_byte": 62484
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-track-background-gps",
+          "start_byte": 62484,
+          "end_byte": 63982
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-map-gps-callback-and-reload",
+          "start_byte": 63982,
+          "end_byte": 64301
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-recording-permission-owner",
+          "start_byte": 64301,
+          "end_byte": 65306
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-normal-map-launch",
+          "start_byte": 65306,
+          "end_byte": 65374
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-legacy-debug-raster-transfer",
+          "start_byte": 65374,
+          "end_byte": 66328
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-native-renderer-lifecycle",
+          "start_byte": 66328,
+          "end_byte": 67818
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-rotation-camera-and-hot-raster",
+          "start_byte": 67818,
+          "end_byte": 69106
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-map-delegated-controls",
+          "start_byte": 69106,
+          "end_byte": 69192
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-polygon-label-anchors",
+          "start_byte": 69192,
+          "end_byte": 69412
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-project-menu-webgis-identity",
+          "start_byte": 69412,
+          "end_byte": 70348
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-keep-screen-awake",
+          "start_byte": 70348,
+          "end_byte": 70464
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-direct-sqlite-vector-old-metadata",
+          "start_byte": 70464,
+          "end_byte": 70703
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-geometry-sketch-save-undo",
+          "start_byte": 70703,
+          "end_byte": 72512
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-local-import-and-layer-visibility",
+          "start_byte": 72512,
+          "end_byte": 73234
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-stakeout-azimuth-gps-and-wmm",
+          "start_byte": 73234,
+          "end_byte": 74272
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-measurement-service-without-bluetooth",
+          "start_byte": 74272,
+          "end_byte": 74732
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-gps-cursor-compass-external-gnss-and-tracker",
+          "start_byte": 74732,
+          "end_byte": 78899
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-crash-recovery-ownership-and-geometry",
+          "start_byte": 78899,
+          "end_byte": 80377
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-geometry-editor-exit-and-repair",
+          "start_byte": 80377,
+          "end_byte": 82074
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-visible-identification-and-attribute-panel",
+          "start_byte": 82074,
+          "end_byte": 82525
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-local-workspace-and-layer-defaults",
+          "start_byte": 82525,
+          "end_byte": 83867
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-collector-batch-and-journal",
+          "start_byte": 83867,
+          "end_byte": 84340
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-visible-sync-progress-and-lifecycle",
+          "start_byte": 84340,
+          "end_byte": 85221
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-sync-full-geometry-and-serialized-projects",
+          "start_byte": 85221,
+          "end_byte": 86847
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-sync-duplicate-admission-and-recovery",
+          "start_byte": 86847,
+          "end_byte": 87462
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-incremental-pull-cache-and-transaction",
+          "start_byte": 87462,
+          "end_byte": 88125
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-ngw-url-and-desktop-portable-import",
+          "start_byte": 88125,
+          "end_byte": 88519
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-settings-updater-and-layer-backups",
+          "start_byte": 88519,
+          "end_byte": 89320
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-legacy-debug-underlay-transfer-limits",
+          "start_byte": 89320,
+          "end_byte": 90378
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-flavors-maplibre-backend-and-lifecycle-limits",
+          "start_byte": 90378,
+          "end_byte": 91321
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-owner-and-desktop-runtime-boundaries",
+          "start_byte": 91321,
+          "end_byte": 91574
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-updater-signing-and-version-limits",
+          "start_byte": 91574,
+          "end_byte": 92662
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-account-identity-and-reporting-limits",
+          "start_byte": 92662,
+          "end_byte": 93579
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnostic-snapshots-and-historical-triage",
+          "start_byte": 93579,
+          "end_byte": 94484
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnose-renderer-and-camera",
+          "start_byte": 94484,
+          "end_byte": 97067
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnose-flavor-version-and-updater",
+          "start_byte": 97067,
+          "end_byte": 99504
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnose-project-ownership-and-fill",
+          "start_byte": 99504,
+          "end_byte": 100445
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnose-sync-cancel-and-project-lifecycle",
+          "start_byte": 100445,
+          "end_byte": 102014
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnose-tracks-and-draft-recovery",
+          "start_byte": 102014,
+          "end_byte": 103480
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnose-gnss-stakeout-and-form-save",
+          "start_byte": 103480,
+          "end_byte": 105037
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnose-osm-sync-and-fill",
+          "start_byte": 105037,
+          "end_byte": 105975
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnose-identify-and-geometry-repair",
+          "start_byte": 105975,
+          "end_byte": 106686
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-diagnose-ngw-and-portable-import",
+          "start_byte": 106686,
+          "end_byte": 109011
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-verification-entry-and-track-export",
+          "start_byte": 109011,
+          "end_byte": 110247
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-independent-walk-ui-and-touch-targets",
+          "start_byte": 110247,
+          "end_byte": 112406
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-walk-service-preview-point-lock-and-save",
+          "start_byte": 112406,
+          "end_byte": 114353
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-walk-position-and-gps-evidence-boundary",
+          "start_byte": 114353,
+          "end_byte": 114714
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-underlay-catalog-and-debug-companion",
+          "start_byte": 114714,
+          "end_byte": 115843
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-catalog-theme-insets-and-route",
+          "start_byte": 115843,
+          "end_byte": 116773
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-exporter-trust-and-install-resume",
+          "start_byte": 116773,
+          "end_byte": 118097
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-map-tools-tap-toolbar-and-back-contract",
+          "start_byte": 118097,
+          "end_byte": 119490
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-script-guard-and-native-build-owner",
+          "start_byte": 119490,
+          "end_byte": 119993
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-sync-workspace-owner-and-terminal-pass",
+          "start_byte": 119993,
+          "end_byte": 120989
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-verification-runner-and-publication-receipt",
+          "start_byte": 120989,
+          "end_byte": 121867
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-layer-picker-controls-and-real-project-snapshot",
+          "start_byte": 121867,
+          "end_byte": 122345
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-native-fixture-lease-and-shared-track-cleanup",
+          "start_byte": 122345,
+          "end_byte": 122635
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-real-window-and-camera-fixture",
+          "start_byte": 122635,
+          "end_byte": 123227
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-earlier-sync-journal-and-sdk-diagnostics",
+          "start_byte": 123227,
+          "end_byte": 123851
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-earlier-polygon-style-verification",
+          "start_byte": 123851,
+          "end_byte": 123989
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-track-stop-owner-and-regression",
+          "start_byte": 123989,
+          "end_byte": 124287
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-related-line-labels-and-firefly-oracles",
+          "start_byte": 124287,
+          "end_byte": 124553
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-location-orbit-layer-readiness",
+          "start_byte": 124553,
+          "end_byte": 125037
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-candidate-dialog-line-priority-and-previous-device-result",
+          "start_byte": 125037,
+          "end_byte": 125431
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-native-vector-alias-and-render-order",
+          "start_byte": 125431,
+          "end_byte": 126162
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-sqlite-priority-oracle-and-past-results",
+          "start_byte": 126162,
+          "end_byte": 127458
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-earlier-224-release-installation",
+          "start_byte": 127458,
+          "end_byte": 128514
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-os-exit-fallback-and-previous-delivery",
+          "start_byte": 128514,
+          "end_byte": 129318
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-gps-platform-snapshot-privacy-and-unknown",
+          "start_byte": 129318,
+          "end_byte": 130137
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-sync-journal-commit-and-process-view",
+          "start_byte": 130137,
+          "end_byte": 131026
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-initial-journal-origin-and-restart-boundary",
+          "start_byte": 131026,
+          "end_byte": 131481
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-ngfp-default-required-and-line-cap",
+          "start_byte": 131481,
+          "end_byte": 132319
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-stakeout-target-source-and-open-replacement-policy",
+          "start_byte": 132319,
+          "end_byte": 133043
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-historical-lookup-cache-8ca",
+          "start_byte": 133043,
+          "end_byte": 135059
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-historical-ngfp-prefetch-verification",
+          "start_byte": 135059,
+          "end_byte": 136478
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-historical-shared-19-sync-regression",
+          "start_byte": 136478,
+          "end_byte": 138404
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-ngw-message-owner-and-offline-priority",
+          "start_byte": 138404,
+          "end_byte": 139076
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-historical-ngw-message-model-regressions",
+          "start_byte": 139076,
+          "end_byte": 139620
+        },
+        {
+          "id": "lisa:mobile:resource:app-module-readme-selected-track-shared-gpx-identity",
+          "start_byte": 139620,
+          "end_byte": 140420
+        },
+        {
+          "id": "lisa:mobile:evidence:app-module-readme-historical-direct-vector-and-underlay-preparation",
+          "start_byte": 140420,
+          "end_byte": 141165
+        }
+      ]
     }
   ]
 }

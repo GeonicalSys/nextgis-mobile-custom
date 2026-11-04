@@ -228,14 +228,23 @@ def validate_markdown_links(
 
 def validate_central_markdown(
     docs_root: Path, workspace: Path, validation: Validation
-) -> None:
+) -> dict[Path, str]:
     sources = docs_root.parent / "agent-system"
     projected = {}
+    module_readmes = {}
     if sources.exists() or sources.is_symlink():
         projector = runpy.run_path(str(Path(__file__).with_name("prose_knowledge.py")))
         try:
-            projected = {docs_root / path.relative_to("docs"): text
-                         for path, text in projector["project_documents"](docs_root.parent).items()}
+            for path, text in projector["project_documents"](docs_root.parent).items():
+                if path.parts[0] == "docs":
+                    projected[docs_root / path.relative_to("docs")] = text
+                elif docs_root == workspace / "docs":
+                    view = workspace / path
+                    module_readmes[view] = text
+                    try:
+                        projector["check_generated"](view, text)
+                    except (OSError, ValueError) as exc:
+                        validation.error(view.as_posix(), str(exc))
         except (OSError, ValueError, KeyError, TypeError) as exc:
             validation.error(docs_root.as_posix(), f"prose projection failed: {exc}")
     for path in sorted(set(docs_root.rglob("*.md")) | projected.keys()):
@@ -257,6 +266,7 @@ def validate_central_markdown(
                 allow_dot=True,
             )
         validate_markdown_links(path, workspace, validation, text=text)
+    return module_readmes
 
 
 def validate_repositories(
@@ -762,6 +772,8 @@ def validate_manifest(
     hotspot_ids: set[str],
     workspace: Path,
     validation: Validation,
+    *,
+    readme_text: str | None = None,
 ) -> None:
     location = manifest_path.as_posix()
     manifest = require_mapping(load_yaml(manifest_path, validation), location, validation)
@@ -820,16 +832,17 @@ def validate_manifest(
         if hotspot not in hotspot_ids:
             validation.error(location, f"unknown upstream hotspot {hotspot!r}")
 
-    readme_frontmatter = read_frontmatter(readme_path, MODULE_FRONTMATTER, validation)
+    readme_frontmatter = read_frontmatter(readme_path, MODULE_FRONTMATTER, validation, text=readme_text)
     if readme_frontmatter.get("module_id") != expected_module:
         validation.error(readme_path.as_posix(), f"module_id must be {expected_module!r}")
     if manifest.get("maturity") == "maintained":
         try:
-            if "TODO" in readme_path.read_text(encoding="utf-8").upper():
+            text = readme_text if readme_text is not None else readme_path.read_text(encoding="utf-8")
+            if "TODO" in text.upper():
                 validation.error(readme_path.as_posix(), "maintained README must not contain TODO")
         except OSError:
             pass
-    validate_markdown_links(readme_path, workspace, validation)
+    validate_markdown_links(readme_path, workspace, validation, text=readme_text)
 
 
 def validate_module_packs(
@@ -842,6 +855,8 @@ def validate_module_packs(
     validation: Validation,
     target_module: str | None,
     require_pack: bool,
+    *,
+    module_readmes: Mapping[Path, str] | None = None,
 ) -> None:
     if target_module and target_module not in modules:
         validation.error("arguments", f"unknown module {target_module!r}")
@@ -887,6 +902,7 @@ def validate_module_packs(
             hotspot_ids,
             workspace,
             validation,
+            readme_text=module_readmes.get(readme) if module_readmes is not None else None,
         )
 
 
@@ -1037,7 +1053,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         workspace,
         validation,
     )
-    validate_central_markdown(docs_root, workspace, validation)
+    module_readmes = validate_central_markdown(docs_root, workspace, validation)
     validate_module_packs(
         modules,
         config_ids,
@@ -1048,6 +1064,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         validation,
         args.module,
         args.require_pack,
+        module_readmes=module_readmes,
     )
     if args.changed_file:
         report_changed_files(triggers, args.changed_file, args.enforce_diff, validation)

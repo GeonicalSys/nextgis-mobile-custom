@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-prior-track-style-acceptance-order",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Текущий двухслойный образец трека: сердцевина 1.4 px / затемнение 73%, свечение",
+        "6.5 px / blur 3 / opacity .83. Native pixel expectations обновлены под этот",
+        "выбор; по новому поручению пользователя выполняется полный прогон смартфона, затем планшета.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-prior-track-style-acceptance-order"
+    ]
+  }
+}

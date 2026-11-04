@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-manual-process-exit-export-and-startup-fixtures",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Разбор завершений 224 — 2026-10-27",
+        "",
+        "Явная отправка логов включает process-exits.json с ограниченной системной",
+        "историей основного процесса. Полный контракт и границы —",
+        "[диагностика](../../docs/architecture/error-reporting.md); подтверждённые ANR,",
+        "неподтверждённые вылеты 224 и проверки —",
+        "[разбор](../../docs/reference/mobile-crash-224-2026-10-27.md).",
+        "Related crash-startup проверяет пустые edit handles, линейку и OS/observer export",
+        "на изолированном эмуляторе. Рабочие данные пользователей не участвуют.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:error-reporting",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-manual-process-exit-export-and-startup-fixtures"
+    ]
+  }
+}

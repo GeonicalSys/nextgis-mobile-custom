@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-map-tools-tap-toolbar-and-back-contract",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Надёжность и инструменты — 2026-10-03",
+        "",
+        "Выбор редактируемого объекта сразу открывает действия формы, удаления и",
+        "геометрии. Сброс выбора завершает этот режим; read-only слой остаётся просмотром.",
+        "Рисование, линейка и азимут принимают короткий тап со смещением до 12dp либо",
+        "системного touch slop, если он больше. Перетаскивание, долгий тап и несколько",
+        "пальцев не добавляют точку. Панель учитывает доступную ширину и высоту, а",
+        "непоместившиеся действия доступны через меню с исходными обработчиками.",
+        "`MainActivity` использует AndroidX Back dispatcher; внешние ссылки атрибутов",
+        "проверяются и отказ обработчика сопровождается обычным сообщением.",
+        "",
+        "[Результаты аудита и проверки](../../docs/reference/mobile-reliability-audit.md),",
+        "[долговечные формы и трек](../../docs/architecture/crash-recovery.md),",
+        "[матрица сборки и CI](../../docs/reference/build-matrix.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:crash-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-build-matrix",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-map-tools-tap-toolbar-and-back-contract"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-diagnose-ngw-and-portable-import",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- URL не импортируется: проверить parser, совпадение server URL с аккаунтом,",
+        "  response code, тип ресурса и `data.read`; отсутствие `data.write` — read-only,",
+        "  а не ошибка импорта.",
+        "- Локальный GeoJSON сообщает о неподдерживаемой системе координат: проверить",
+        "  `crs.properties.name`; отсутствие `crs`, CRS84 и распространённые имена",
+        "  EPSG:4326 являются WGS 84 и должны импортироваться.",
+        "- На Android 16 локальный GeoJSON дошёл до SQLite, но импорт прерван сообщением",
+        "  о safety level/transaction: проверить порядок bulk-write PRAGMA в `maplib`;",
+        "  настройки БД должны применяться до транзакции.",
+        "- Ручной или импортированный локальный слой нельзя редактировать: проверить его",
+        "  `is_editable` в конфигурации; для нового обычного слоя значение должно быть `true`.",
+        "- NGW-слой стал read-only после простого просмотра свойств: направление sync не",
+        "  должно меняться от начального события списка; managed Collector-слой с",
+        "  разрешённым редактированием можно вернуть из «только с сервера» в режим «в",
+        "  обе стороны» без удаления.",
+        "- KML/GPX не загружается: проверить расширение документа и `CoordinatePointParser`.",
+        "  Поддерживаются KML `coordinates` и GPX `wpt`/`rtept`/`trkpt`; пустой или",
+        "  повреждённый XML должен дать обычное сообщение и не оставить неполный слой.",
+        "- Веб ГИС принимает логин, но не появляется: сверить merged-значения",
+        "  `nextgis_accounts_auth`, `nextgis_accounts_auth_type` и runtime account type.",
+        "  Локальный отказ `AccountManager` должен оставить форму открытой и попасть в HyperLog.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-diagnose-ngw-and-portable-import"
+    ]
+  }
+}

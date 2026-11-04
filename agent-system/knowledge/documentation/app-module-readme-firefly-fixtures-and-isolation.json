@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-firefly-fixtures-and-isolation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Проверки «Светлячка»",
+        "",
+        "Related styles включает два новых native pixel/lifecycle случая и настоящий",
+        "редактор в 72 локальных конфигурациях крупного интерфейса. На явно выбранном",
+        "смартфоне используется только verification APK; системные настройки и рабочее",
+        "приложение сохраняются. Контракт — consuming docs/architecture/point-firefly.md.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-firefly-fixtures-and-isolation"
+    ]
+  }
+}

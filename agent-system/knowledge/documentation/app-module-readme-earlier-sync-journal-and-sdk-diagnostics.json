@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-earlier-sync-journal-and-sdk-diagnostics",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Разбор 2026-10-17: SyncJournalCommit выполняет durable enqueue/ACK на собственном",
+        "writer и сохраняет caller cancellation. PersistenceFailure сохраняет structured",
+        "sync_journal и cause. Contract 3 резервирует payload budget, actual SDK scope tags",
+        "для NDK и фиксирует startup stages. Cached/Backfillable reports сохраняют original",
+        "identity; report_origin содержит отправителя. Related bugreports включён в CI.",
+        "[Группы и ограничения вывода](../../docs/reference/glitchtip-triage-2026-10-17.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-earlier-sync-journal-and-sdk-diagnostics"
+    ]
+  }
+}

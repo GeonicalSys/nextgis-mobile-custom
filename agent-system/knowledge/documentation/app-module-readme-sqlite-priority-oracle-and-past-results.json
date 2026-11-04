@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-sqlite-priority-oracle-and-past-results",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Related `sqlite-priority` адресно запускает новый production-SQLite native case",
+        "в отдельном verification APK; он проверяет тела, Firefly sprite, rule icon,",
+        "подписи, native ranges, пиксели и исходные SQL rows после full/lite/reorder,",
+        "style/data generation и hide/Undo. Первые81 JVM и20 Python checks PASS;",
+        "первый native запуск выявил реальную зависимость порядка от cache insertion.",
+        "После canonical traversal исправления focused case1/1 PASS на T40/API30",
+        "(`priority-related-t40-02`), затем весь NativeSqliteVectorRenderingTest10/10",
+        "distinct PASS (`sqlite-related-t40-03/result.json`). Final83 JVM/10classes PASS,",
+        "0fail/error/skip; исходный81-test batch остаётся историческим. UID logcat",
+        "collector на T40 не поддерживает `--uid`, диагностический пробел остаётся.",
+        "Вложенные группы и Activity recreation",
+        "в этом новом native case не проверены. Старый4/4 PASS их не подтверждает.",
+        "Новых замеров производительности, Full и публикации этот этап не заменяет.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-sqlite-priority-oracle-and-past-results"
+    ]
+  }
+}

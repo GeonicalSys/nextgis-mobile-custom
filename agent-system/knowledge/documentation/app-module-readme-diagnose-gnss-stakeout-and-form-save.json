@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-diagnose-gnss-stakeout-and-form-save",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Трек или обход перестал расти в автомобиле: проверить причины",
+        "  `LocationTrackFilter` и наличие свежего GNSS. Network никогда не записывается;",
+        "  проверить пригодность следующих fix и автоматическое продолжение обхода после",
+        "  потери GPS; ручная пауза сохраняется до явного Resume.",
+        "- Вынос молчит или показывает «Ожидание GPS»: проверить возраст fix, provider/mock-флаг,",
+        "  системную громкость навигации, уведомление активного выноса и owner lease частого потока;",
+        "  accuracy mock GPS отображается, но не блокирует звуковую зону. Координаты и расширенные",
+        "  поля mock `Location` в прикладной debug-журнал не записываются.",
+        "- Save восстановленной формы упал после успешного insert: проверить",
+        "  `FormSave result ready`, `FormSave result received` и разрешение `layer_id`",
+        "  из активной карты; cold restore не должен требовать старый `mSelectedLayer`.",
+        "- Форма предлагается сразу после успешного Save: проверить terminal guard",
+        "  `ModifyAttributesActivity.clearFormDraft()` перед последующим `onPause()`."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-diagnose-gnss-stakeout-and-form-save"
+    ]
+  }
+}

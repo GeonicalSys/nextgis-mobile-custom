@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-candidate-dialog-line-priority-and-previous-device-result",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "MapSelectionDialog переносит длинные строки общего списка, оставляет прокрутку",
+        "и Cancel. Полевые линейные рисуются над треками/обычными данными, но под точками,",
+        "включая отдельные подписи. Related track-candidates 4/4 native PASS; Full обязателен.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-candidate-dialog-line-priority-and-previous-device-result"
+    ]
+  }
+}

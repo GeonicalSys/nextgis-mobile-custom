@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-earlier-storage-ownership-red-and-runtime-scope",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "На прежнем коде6 actual-body Robolectric-проверок дали5 FAIL и1 штатный PASS;",
+        "окончательные JVM-проверки и source compile фиксируются в",
+        "[карточке](../../update-reports/entries/android-20261029-storage-move-ownership.md).",
+        "Тестовые map/renderer/database probes не запускают GIS/SQLite engine или business",
+        "данные. AGP unit-resource archive нужен для Robolectric; ordinary APK, устройство,",
+        "Related/Full и реальный перенос не принимались.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-earlier-storage-ownership-red-and-runtime-scope"
+    ]
+  }
+}

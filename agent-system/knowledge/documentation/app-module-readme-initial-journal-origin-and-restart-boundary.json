@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-initial-journal-origin-and-restart-boundary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Начальный raw snapshot имеет неизвестную disk provenance. Защита API не",
+        "откатывает raw cache/файл и не устанавливает политику restart или повторной",
+        "отправки уже успешных account passes. Проверки и ограничения:",
+        "[android-20261030-sync-journal-confirmation](../../update-reports/entries/android-20261030-sync-journal-confirmation.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-initial-journal-origin-and-restart-boundary"
+    ]
+  }
+}

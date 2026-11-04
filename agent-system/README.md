@@ -179,6 +179,9 @@ Edit App ecosystem prose in **knowledge/documentation/**.
 Keep source-frame discovery, operational ownership, portable artifacts and actual acceptance distinct.
 Preserve the dated foreign-owner observation and regenerate the published view.
 
+The App module README uses the same prose projector as the central documents.
+Its module pack validator checks the generated Markdown at the original address.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

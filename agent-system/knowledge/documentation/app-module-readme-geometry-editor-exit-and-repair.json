@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-geometry-editor-exit-and-repair",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- редактирование геометрии: выход крестиком на нижней панели (`cancelEdits`),",
+        "  причём для нового объекта сначала требуется подтвердить удаление скетча; после",
+        "  подтверждения приложение возвращает сразу на карту, а не в пустую панель",
+        "  выбора действия; у линии/полигона выбранная вершина красная, а её следующая",
+        "  вершина и редактируемый сегмент в пределах той же части/кольца оранжевые;",
+        "- измерение площади линейкой всегда подписывается в гектарах;",
+        "- сохранение `GTMultiPolygon`: невалидный контур исправляется в один",
+        "  многокомпонентный feature до единственной формы атрибутов; простой Polygon и",
+        "  линии автоматически не исправляются; ручной MapLibre-конвертер сохраняет CRS",
+        "  контейнера и колец; одноточечный/слишком короткий контур останавливается до",
+        "  repair с сообщением «Недостаточно точек»;",
+        "- невалидный обычный Polygon остаётся в редакторе; самопересечение получает",
+        "  отдельное сообщение «Обнаружено самопересечение», а не ложное «Недостаточно точек»;"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-geometry-editor-exit-and-repair"
+    ]
+  }
+}

@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "d5959abe71642f119d02e33da2a3bf5d75d11bc0b928e809ec5efab3ec9d2315",
+      "sha256": "7768088cd4faf06e2dc9f8234e735ee13971d64fb2eec1a8e23b41c064c76a7d",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "5c6a600809c57541c9049b0ff121e22d8e5949e2b4c94db92f220d7e312f8408",
+      "sha256": "dff5c12e62f9b90f100a6c207787ace392d9d5054a2e9b0b4940053c9615140a",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -162,7 +162,8 @@
         "docs/architecture/ui-accessibility.md",
         "docs/architecture/location-pipeline.md",
         "docs/architecture/stakeout.md",
-        "docs/architecture/lisa-ecosystem.md"
+        "docs/architecture/lisa-ecosystem.md",
+        "app/docs/README.md"
       ],
       "reason": "Pinned exact App Markdown source bytes and stable published addresses."
     },

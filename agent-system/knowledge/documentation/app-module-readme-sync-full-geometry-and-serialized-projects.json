@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-sync-full-geometry-and-serialized-projects",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- длительное нажатие sync-кнопки с подтверждением перепроверяет пропущенные",
+        "  серверные геометрии, обходя часовой checkpoint `SYNC_NONE`; обычное нажатие",
+        "  сохраняет стандартный режим и всё ещё получает новые server counts;",
+        "- ручная и scheduled синхронизация по умолчанию обходят все загруженные проекты; общая настройка может ограничить их открытой картой;",
+        "  все account обрабатываются одним serial foreground worker под одним lease,",
+        "  без параллельного дублирования через `ContentResolver.requestSync`; повторный",
+        "  запуск отклоняется. При попытке переключить, создать, переименовать или удалить",
+        "  проект, загрузить слой или подложку во время sync приложение предупреждает и",
+        "  предлагает корректно прервать её. Read-only сетевое ожидание закрывается сразу,",
+        "  tracked apply откатывается транзакцией, а один уже отправленный server write",
+        "  получает однозначный ответ перед освобождением lease. Запросы во время",
+        "  fill/rebuild по-прежнему ждут завершения фоновой операции;"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-sync-full-geometry-and-serialized-projects"
+    ]
+  }
+}

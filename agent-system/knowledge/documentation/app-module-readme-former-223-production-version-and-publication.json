@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-former-223-production-version-and-publication",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Текущий production выпуск Lisa/Belka — `3.1.2.29` / `223`, сопряжённая",
+        "maplib — `3.1.2.29`. Lisa Debug и maplib debug остаются `3.1.2.23` / `218`.",
+        "APK version matrix выполняется после закрытия library/app PRs; в этом цикле",
+        "публикуются только Lisa Release и Belka Release, Debug не публикуется.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-former-223-production-version-and-publication"
+    ]
+  }
+}

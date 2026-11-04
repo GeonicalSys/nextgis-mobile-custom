@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-built-in-gps-floor-and-independent-orbit-fixtures",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Отображение точности встроенного GPS",
+        "",
+        "В нижней панели и круге карты встроенный GPS имеет нижний порог 3 м:",
+        "0,5 м отображаются как 3 м, 8 м остаются 8 м. Общий helper",
+        "`LocationDisplayAccuracy` не меняет `Location`, координаты, фильтры или запись.",
+        "Внешний input, native NMEA/mock GPS и Network сохраняют свои значения.",
+        "Related `-Area accuracy` проверяет панель и реальный круг MapLibre, неизменность",
+        "исходного fix и обе темы/ориентации при крупном интерфейсе.",
+        "В Full оба метода LocationOrbitTest получают отдельные process/workspace:",
+        "проверка точности не наследует renderer и камеру после Orbit smoke.",
+        "После переключения сектора smoke ждёт не только видимость layers, но и",
+        "сохранённую native geometry радиусом 56 dp, включая скрытый сектор."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-built-in-gps-floor-and-independent-orbit-fixtures"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-diagnose-tracks-and-draft-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- «Мои треки» оказался внизу: проверить прямой порядок `LayerGroup` и",
+        "  `MainApplication.checkTracksLayerExist()`.",
+        "- Курсор положения движется, но линия трека не появляется: сначала проверить",
+        "  `TrackerService.onStartCommand`. Если до Stop нет фактического Start и",
+        "  `accepted=0`, это lifecycle запуска сервиса, а не отбрасывание GPS-фильтром.",
+        "- Форма точки поверх активного обхода восстанавливается первой по UUID владельца.",
+        "  Проверить `MainActivity.maybeOfferCrashRecovery()` и `WalkSessionStore`; старый",
+        "  part-only обход отдельно проходит legacy adoption.",
+        "- После crash пропала линия из обычного редактора: проверить HyperLog-события",
+        "  `MapFragment mode`, `GeometryDraft saved`, `CrashRecovery` и",
+        "  `GeometryDraft resumed`; координаты в журнал намеренно не попадают.",
+        "- Crash `GeoJsonSource.setGeoJson` сразу после раннего Continue означает регрессию",
+        "  current-style readiness: в журнале сначала допустим `renderer attach deferred`,",
+        "  затем обязателен `renderer attached after style load` без второго recovery prompt."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-diagnose-tracks-and-draft-recovery"
+    ]
+  }
+}

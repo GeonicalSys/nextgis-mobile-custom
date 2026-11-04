@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-track-background-gps",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- До ручной записи `TrackPowerWarning` проверяет политику GPS в энергосбережении.",
+        "  При ограничении на погашенном экране предлагает настройки батареи или явное",
+        "  продолжение. Resume и сообщение живого сервиса обновляют предупреждение;",
+        "  Doze «не спрашивать» его не скрывает. Настройки не запускают запись автоматически.",
+        "  Отдельный `BackgroundLocationWarning` проверяет эти ограничения при открытии",
+        "  карты и Resume без активного recorder, включая запрет фоновой работы и Doze",
+        "  оптимизацию. Полоса предупреждения с «Настроить» ведёт к соответствующим",
+        "  системным настройкам. При одном доступном действии системный запрос или",
+        "  страница открывается сразу; список выбора показывается только при нескольких",
+        "  ограничениях. Неизменная ситуация не повторяется до нового запуска;",
+        "  изменение ограничений вызывает новое предупреждение, устранение убирает его.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-track-background-gps"
+    ]
+  }
+}

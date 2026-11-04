@@ -148,6 +148,10 @@ related_code:
 Правьте карту владельцев, обнаружение связей и контракты ресурсов раздельно.
 После проекции проверьте [экосистему ЛИСА](../architecture/lisa-ecosystem.md).
 
+The App module README at `app/docs/README.md` is also a generated view.
+Edit the App module README topic records and regenerate with the same prose command.
+The ordinary module validator checks its frontmatter and links.
+
 ## Maturity
 
 - `draft`: разрешены подтверждённые TODO, документ ещё не полон.

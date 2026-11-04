@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-feature-category-draft-and-walk-point-cancel",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Карандаш, создание по местоположению и обходом после выбора слоя предлагают",
+        "конкретную категорию с символом из стиля проекта. MapFragment сохраняет явные",
+        "начальные значения в geometry draft, для фонового обхода — в WalkSessionStore,",
+        "и передаёт их штатной форме. Отмена категории точки освобождает point lock",
+        "и сохраняет текущую фоновую запись. Тип и его родители уже заполнены;",
+        "повторное восстановление формы сохраняет последующие изменения пользователя.",
+        "Контракт: [выбор типа](../../docs/architecture/feature-type-creation.md).",
+        "StandardFeatureTypesTest проверяет все 40 категорий и связанные классы на",
+        "копиях стандартных форм и стилей без подключений и полевых данных.",
+        "CascadingFormsTest также проверяет видимую отмену для 40 категорий и понятное",
+        "сообщение при ошибке подготовки списка, без создания объекта.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:feature-type-creation",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-feature-category-draft-and-walk-point-cancel"
+    ]
+  }
+}

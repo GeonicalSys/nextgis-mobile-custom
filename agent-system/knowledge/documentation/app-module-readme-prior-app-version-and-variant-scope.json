@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-prior-app-version-and-variant-scope",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Production подготавливается к 3.1.2.31/225, Lisa Debug сохраняет 3.1.2.23/218.",
+        "Состав, проверки и незакрытые условия публикации:",
+        "[подготовка 3.1.2.31](../../docs/reference/mobile-release-3.1.2.31-2026-11-01.md).",
+        "По запросу 2026-10-23 собирается только подписанный Lisa Release; Belka APK",
+        "и публикация отложены. Проверки и состав — в consuming release runbook.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-prior-app-version-and-variant-scope"
+    ]
+  }
+}

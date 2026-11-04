@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-underlay-catalog-and-debug-companion",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Хранилище и обновление Debug",
+        "",
+        "`UnderlayCatalogActivity` доступна из настроек и меню добавления: имя, формат, размер, проекты, переименование и подтверждённое удаление. В Geonical при установленном доверенном Debug каталог (не режим выбора слоя) показывает «Импортировать из старого приложения» в активный проект. `DebugCompanionInstaller` отдельно от self-updater обновляет доверенный старый Debug, продолжает после install permission и возвращает к подтверждению переноса в хранилище только для исходного проекта. Кэш и preferences разделены; обычный updater сохраняет свои identity checks. Контракт и ограничение текущего публичного канала: [shared-underlays](../../docs/architecture/shared-underlays.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:shared-underlays",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-underlay-catalog-and-debug-companion"
+    ]
+  }
+}
