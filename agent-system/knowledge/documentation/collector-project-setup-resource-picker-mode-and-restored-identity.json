@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-project-setup-resource-picker-mode-and-restored-identity",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-project-setup"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/collector-project-setup.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Флажки перед загрузкой ресурса — source Draft",
+        "",
+        "В списке ресурсов флажок выбирает способ загрузки: «Растр» для отображения",
+        "картинкой, «Вектор» для векторного слоя; у Collector выбирается импорт проекта.",
+        "У векторного слоя со стилем доступны оба способа. Один видимый флажок у",
+        "векторного слоя без стиля означает векторную загрузку. Это отдельный выбор,",
+        "не галочка разрешения редактирования элемента Collector из раздела выше.",
+        "При прокрутке строка должна показывать сделанный выбор и соответствующую",
+        "подпись. После восстановления экрана выбор связан с account и remote resource,",
+        "а не с номером строки. Поведение после обновления/изменения дерева ресурсов",
+        "ещё требует отдельного разбора. Исправление пока source prepared; проверка",
+        "на устройстве и выпуск APK не выполнялись.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Pinned source Draft wording. Account/resource identity and raster/vector selection stay distinct from managed-layer editing authority. Tree-change behavior, device verification and release have separate status."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-project-setup-resource-picker-mode-and-restored-identity"
+    ]
+  }
+}

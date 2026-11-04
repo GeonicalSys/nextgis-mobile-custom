@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-project-setup-post-import-owner-and-permission-oracles",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-project-setup"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/collector-project-setup.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Проверка после импорта",
+        "",
+        "- проект появился в registry и открывается в отдельном workspace;",
+        "- «Загрузить проект» находит каталог `lisa` и предлагает те же Collector-проекты,",
+        "  что лежат в этой группе;",
+        "- порядок project-managed слоёв совпадает с NGW composition;",
+        "- «Мои треки» находится наверху списка слоёв;",
+        "- создание объекта предлагает только элементы Collector с включённым",
+        "  редактированием и исходящей синхронизацией;",
+        "- просмотр вкладок свойств слоя без изменений сохраняет двустороннее",
+        "  направление, а временно выбранный режим «только с сервера» можно вернуть в",
+        "  двусторонний без удаления слоя;"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-project-setup-post-import-owner-and-permission-oracles"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:collector-roadmap-real-attachment-backup-recovery",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-roadmap"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep the original roadmap action and review each lifecycle independently."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/collector.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Backup gateway перед rebuild/removal | реализовано | проверить восстановление backup на реальных attachment-наборах |"
+      ]
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Lifecycle describes the next action in the pinned roadmap. Existing implementation claims are source wording."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:collector-roadmap-real-attachment-backup-recovery"
+    ]
+  }
+}

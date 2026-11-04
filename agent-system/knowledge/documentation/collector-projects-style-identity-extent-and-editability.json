@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-style-identity-extent-and-editability",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Уже штатно известные `Connection` типы `qgis_vector_style` и",
+        "  `qgis_raster_style` создаются как authenticated `NGWRasterLayer`: тайлы",
+        "  запрашиваются через render endpoint по remote id самого стиля.",
+        "- Для растрового представления remote id стиля остаётся identity слоя, а remote",
+        "  id родительского vector/raster resource хранится отдельно и используется",
+        "  только для extent. Поэтому исходный вектор и его стиль могут находиться в",
+        "  проекте одновременно.",
+        "- Style layer всегда read-only, не участвует в создании объектов и не",
+        "  маскируется под векторный слой.",
+        "- Другие современные style classes намеренно не добавляются в `Connection.java`",
+        "  этим контрактом. Расширение поддерживаемых серверных типов требует отдельного",
+        "  продуктового решения и тестовой матрицы.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-style-identity-extent-and-editability"
+    ]
+  }
+}

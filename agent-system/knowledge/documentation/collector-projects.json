@@ -1,0 +1,431 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/collector-projects.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Collector projects, composition sync и backups",
+        "type: architecture",
+        "last_verified: 2026-11-02",
+        "related_code:",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/DistrictFilterUtil.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalog.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+        "  - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+        "  - app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt",
+        "  - app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt",
+        "  - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Collector projects, composition sync и backups",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-shared-track-resolver-and-delete-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-resource-picker-identity-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-import-owner-flow",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-lisa-catalog-entry-and-manual-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-project-identity-registry-and-sidecar",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-complete-remote-snapshot-and-layer-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-workspace-preparation-lease-transfer",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-editable-vector-and-postgis-support",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-style-identity-extent-and-editability",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-shared-picker-and-raster-import-helper",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-workspace-db-and-shared-tracks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-district-key-and-subset",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-manual-layer-and-save-before-switch",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-operation-lease-drain-and-scheduled-fill",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-active-track-switch-and-preparation-guards",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-registry-sidecar-and-workspace-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-active-account-sync-after-switch",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-project-settings-and-picker-data",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-initial-local-project-and-map-startup",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-default-map-migration-and-rollback-copy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:collector-projects-pre-registry-debug-project-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-manual-target-selection-before-debug-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-debug-underlay-grant-and-signature",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-debug-framed-stream-and-idempotent-asset-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-exporter-source-preservation-and-progress",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-debug-transfer-cancel-and-lease-release",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-local-delete-backup-tombstone-and-fallback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-durable-batch-journal-and-repair-resume",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-fill-target-group-and-staged-replacement",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-database-owner-and-project-scoped-repair",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-atomic-layer-directory-and-batch-rollback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-partial-marker-and-cleanup-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-multipolygon-wkt-parts-and-failure-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-jts-validity-and-feature-cost",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-toolbar-back-and-resource-tree-parent",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-composition-snapshot-and-backup-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-managed-layer-identity-and-config-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-ambiguous-layer-match-and-addition-deferral",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-duplicate-repair-same-owner-backup-and-map-commit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-schema-refill-and-single-replacement-swap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-http-404-and-composition-only-removal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-backup-retention-and-local-attachment-files",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-paired-form-file-transaction-and-rollback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-canonical-form-hash-and-snapshot-check",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-required-metadata-independent-of-form-hash",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-sync-none-config-and-positive-count-reload",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-managed-item-and-manual-write-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-invalid-geometry-vs-object-error-and-retention",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-properties-spinner-and-restored-direction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-composition-stack-osm-and-track-positions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-immutable-local-underlay-provenance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-workspace-lease-and-project-ui-test-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:collector-projects-historical-project-track-db-test-wording",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-debug-bridge-and-source-map-test-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-composition-heavy-fill-and-journal-test-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-backup-duplicate-and-rebuild-test-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-district-style-order-and-editability-test-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-fill-resume-and-geometry-safety-test-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-staged-import-and-upgrade-test-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-setup-and-roadmap-navigation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-shared-underlay-asset-and-closed-project-unlink",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-shared-underlay-redirect-and-link-properties",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-mapnik-archive-import-and-exporter-detection",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-project-script-ownership-and-form-pin",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-closed-project-sync-owning-map-and-journal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:collector-projects-visible-line-labels-and-baked-raster-labels",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:collector-projects-debug-transfer-observability-20261102",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects"
+    ]
+  }
+}

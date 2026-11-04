@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:collector-roadmap-dated-local-vector-tile-foundation",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-roadmap"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated verification or delivery checkpoint and its limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/collector.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Local vector tiles | foundation включён | clipping/simplification, cache, style parity и lifecycle |",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Pinned roadmap status row. The current setup guide and map performance contract describe direct SQLite tiles as the ordinary path. Native acceptance remains separately evidenced."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:collector-roadmap-dated-local-vector-tile-foundation"
+    ]
+  }
+}

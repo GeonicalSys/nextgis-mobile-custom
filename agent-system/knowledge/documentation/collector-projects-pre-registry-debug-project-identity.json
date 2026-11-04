@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:collector-projects-pre-registry-debug-project-identity",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated verification or delivery checkpoint and its limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Перенос старого Debug-профиля в Geonical",
+        "",
+        "Версии `3.0.3.2` и `3.0.3.3` ещё не сохраняли устойчивую identity исходного",
+        "Collector-проекта: загруженный список проекта жил в процессе, а у слоёв",
+        "оставались только account/remote resource и синхронизированные конфиги. Поэтому",
+        "миграция не сопоставляет старую карту с Web GIS/Collector-проектом автоматически."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:collector-projects-pre-registry-debug-project-identity"
+    ]
+  }
+}

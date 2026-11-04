@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-atomic-layer-directory-and-batch-rollback",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Каталог каждого нового слоя резервируется атомарным `mkdir` с UUID до открытия",
+        "SQLite. Время запуска, число слоёв и короткое случайное число не являются",
+        "identity: параллельные задачи одной партии не должны получить одну таблицу.",
+        "Если первый либо любой следующий batch insert вернул ошибку, задача немедленно",
+        "выходит через exception, транзакция откатывается, а неполный слой удаляется.",
+        "Продолжать тысячи вставок после первой ошибки схемы запрещено.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-atomic-layer-directory-and-batch-rollback"
+    ]
+  }
+}

@@ -4038,6 +4038,554 @@
           "end_byte": 2793
         }
       ]
+    },
+    {
+      "path": "docs/architecture/collector-projects.md",
+      "record": "collector-projects.json",
+      "id": "lisa:mobile:resource:collector-projects",
+      "revision": "f925117e5d84aa943c3b87630ab185bae4efd571",
+      "blob": "4bf5c69ae2c3071b175158e4730f9745c88ad98b",
+      "sha256": "f67c908e62b3be2dc2d418421811d3e6e4d6ebf0c0b1eac004e3a6f83dba29de",
+      "bytes": 48131,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:collector-projects",
+          "start_byte": 0,
+          "end_byte": 2684
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-shared-track-resolver-and-delete-gate",
+          "start_byte": 2684,
+          "end_byte": 3200
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-resource-picker-identity-recovery",
+          "start_byte": 3200,
+          "end_byte": 3740
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-import-owner-flow",
+          "start_byte": 3740,
+          "end_byte": 4102
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-lisa-catalog-entry-and-manual-import",
+          "start_byte": 4102,
+          "end_byte": 4845
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-project-identity-registry-and-sidecar",
+          "start_byte": 4845,
+          "end_byte": 5533
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-complete-remote-snapshot-and-layer-identity",
+          "start_byte": 5533,
+          "end_byte": 6192
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-workspace-preparation-lease-transfer",
+          "start_byte": 6192,
+          "end_byte": 7361
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-editable-vector-and-postgis-support",
+          "start_byte": 7361,
+          "end_byte": 7640
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-style-identity-extent-and-editability",
+          "start_byte": 7640,
+          "end_byte": 8844
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-shared-picker-and-raster-import-helper",
+          "start_byte": 8844,
+          "end_byte": 9143
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-workspace-db-and-shared-tracks",
+          "start_byte": 9143,
+          "end_byte": 9770
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-district-key-and-subset",
+          "start_byte": 9770,
+          "end_byte": 10215
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-manual-layer-and-save-before-switch",
+          "start_byte": 10215,
+          "end_byte": 10501
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-operation-lease-drain-and-scheduled-fill",
+          "start_byte": 10501,
+          "end_byte": 11681
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-active-track-switch-and-preparation-guards",
+          "start_byte": 11681,
+          "end_byte": 12118
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-registry-sidecar-and-workspace-recovery",
+          "start_byte": 12118,
+          "end_byte": 12527
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-active-account-sync-after-switch",
+          "start_byte": 12527,
+          "end_byte": 12660
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-project-settings-and-picker-data",
+          "start_byte": 12660,
+          "end_byte": 13475
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-initial-local-project-and-map-startup",
+          "start_byte": 13475,
+          "end_byte": 13913
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-default-map-migration-and-rollback-copy",
+          "start_byte": 13913,
+          "end_byte": 14976
+        },
+        {
+          "id": "lisa:mobile:evidence:collector-projects-pre-registry-debug-project-identity",
+          "start_byte": 14976,
+          "end_byte": 15548
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-manual-target-selection-before-debug-import",
+          "start_byte": 15548,
+          "end_byte": 15882
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-debug-underlay-grant-and-signature",
+          "start_byte": 15882,
+          "end_byte": 16549
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-debug-framed-stream-and-idempotent-asset-import",
+          "start_byte": 16549,
+          "end_byte": 17235
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-exporter-source-preservation-and-progress",
+          "start_byte": 17235,
+          "end_byte": 17575
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-debug-transfer-cancel-and-lease-release",
+          "start_byte": 17575,
+          "end_byte": 18320
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-local-delete-backup-tombstone-and-fallback",
+          "start_byte": 18320,
+          "end_byte": 19781
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-durable-batch-journal-and-repair-resume",
+          "start_byte": 19781,
+          "end_byte": 20917
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-fill-target-group-and-staged-replacement",
+          "start_byte": 20917,
+          "end_byte": 21499
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-database-owner-and-project-scoped-repair",
+          "start_byte": 21499,
+          "end_byte": 22338
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-atomic-layer-directory-and-batch-rollback",
+          "start_byte": 22338,
+          "end_byte": 23121
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-partial-marker-and-cleanup-ownership",
+          "start_byte": 23121,
+          "end_byte": 24089
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-multipolygon-wkt-parts-and-failure-diagnostics",
+          "start_byte": 24089,
+          "end_byte": 24971
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-jts-validity-and-feature-cost",
+          "start_byte": 24971,
+          "end_byte": 25673
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-toolbar-back-and-resource-tree-parent",
+          "start_byte": 25673,
+          "end_byte": 26020
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-composition-snapshot-and-backup-boundary",
+          "start_byte": 26020,
+          "end_byte": 26656
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-managed-layer-identity-and-config-recovery",
+          "start_byte": 26656,
+          "end_byte": 27333
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-ambiguous-layer-match-and-addition-deferral",
+          "start_byte": 27333,
+          "end_byte": 28151
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-duplicate-repair-same-owner-backup-and-map-commit",
+          "start_byte": 28151,
+          "end_byte": 29036
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-schema-refill-and-single-replacement-swap",
+          "start_byte": 29036,
+          "end_byte": 29464
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-http-404-and-composition-only-removal",
+          "start_byte": 29464,
+          "end_byte": 29837
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-backup-retention-and-local-attachment-files",
+          "start_byte": 29837,
+          "end_byte": 30764
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-paired-form-file-transaction-and-rollback",
+          "start_byte": 30764,
+          "end_byte": 31289
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-canonical-form-hash-and-snapshot-check",
+          "start_byte": 31289,
+          "end_byte": 32295
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-required-metadata-independent-of-form-hash",
+          "start_byte": 32295,
+          "end_byte": 32826
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-sync-none-config-and-positive-count-reload",
+          "start_byte": 32826,
+          "end_byte": 33911
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-managed-item-and-manual-write-policy",
+          "start_byte": 33911,
+          "end_byte": 34576
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-invalid-geometry-vs-object-error-and-retention",
+          "start_byte": 34576,
+          "end_byte": 35402
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-properties-spinner-and-restored-direction",
+          "start_byte": 35402,
+          "end_byte": 36085
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-composition-stack-osm-and-track-positions",
+          "start_byte": 36085,
+          "end_byte": 37110
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-immutable-local-underlay-provenance",
+          "start_byte": 37110,
+          "end_byte": 37657
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-workspace-lease-and-project-ui-test-oracles",
+          "start_byte": 37657,
+          "end_byte": 39011
+        },
+        {
+          "id": "lisa:mobile:evidence:collector-projects-historical-project-track-db-test-wording",
+          "start_byte": 39011,
+          "end_byte": 39325
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-debug-bridge-and-source-map-test-oracles",
+          "start_byte": 39325,
+          "end_byte": 39790
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-composition-heavy-fill-and-journal-test-oracles",
+          "start_byte": 39790,
+          "end_byte": 40714
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-backup-duplicate-and-rebuild-test-oracles",
+          "start_byte": 40714,
+          "end_byte": 41301
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-district-style-order-and-editability-test-oracles",
+          "start_byte": 41301,
+          "end_byte": 42073
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-fill-resume-and-geometry-safety-test-oracles",
+          "start_byte": 42073,
+          "end_byte": 42858
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-staged-import-and-upgrade-test-oracles",
+          "start_byte": 42858,
+          "end_byte": 43765
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-setup-and-roadmap-navigation",
+          "start_byte": 43765,
+          "end_byte": 43963
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-shared-underlay-asset-and-closed-project-unlink",
+          "start_byte": 43963,
+          "end_byte": 44598
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-shared-underlay-redirect-and-link-properties",
+          "start_byte": 44598,
+          "end_byte": 45025
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-mapnik-archive-import-and-exporter-detection",
+          "start_byte": 45025,
+          "end_byte": 45660
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-project-script-ownership-and-form-pin",
+          "start_byte": 45660,
+          "end_byte": 46291
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-closed-project-sync-owning-map-and-journal",
+          "start_byte": 46291,
+          "end_byte": 47169
+        },
+        {
+          "id": "lisa:mobile:resource:collector-projects-visible-line-labels-and-baked-raster-labels",
+          "start_byte": 47169,
+          "end_byte": 47555
+        },
+        {
+          "id": "lisa:mobile:evidence:collector-projects-debug-transfer-observability-20261102",
+          "start_byte": 47555,
+          "end_byte": 48131
+        }
+      ]
+    },
+    {
+      "path": "docs/runbooks/collector-project-setup.md",
+      "record": "collector-project-setup.json",
+      "id": "lisa:mobile:resource:collector-project-setup",
+      "revision": "f925117e5d84aa943c3b87630ab185bae4efd571",
+      "blob": "3a1476e6a43e90b5e48f49e802d81038e1e5d982",
+      "sha256": "fd35db2db2e2f9b99d016f932fb216675daec6431f2a3163f19204609fb16657",
+      "bytes": 7626,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:collector-project-setup",
+          "start_byte": 0,
+          "end_byte": 558
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-one-resource-per-workspace",
+          "start_byte": 558,
+          "end_byte": 949
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-lisa-catalog-and-server-layer-order",
+          "start_byte": 949,
+          "end_byte": 1465
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-district-key-and-feature-list",
+          "start_byte": 1465,
+          "end_byte": 1886
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-offline-underlay-and-account-resource-identity",
+          "start_byte": 1886,
+          "end_byte": 2252
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-layer-config-and-project-editability",
+          "start_byte": 2252,
+          "end_byte": 3300
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-legacy-render-metadata-and-form-binding",
+          "start_byte": 3300,
+          "end_byte": 3772
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-project-and-layer-origin-metadata",
+          "start_byte": 3772,
+          "end_byte": 4111
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-manual-layer-composition-exclusion",
+          "start_byte": 4111,
+          "end_byte": 4411
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-post-import-owner-and-permission-oracles",
+          "start_byte": 4411,
+          "end_byte": 5441
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-post-import-configuration-backup-and-native-rendering",
+          "start_byte": 5441,
+          "end_byte": 6088
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-architecture-and-roadmap-navigation",
+          "start_byte": 6088,
+          "end_byte": 6271
+        },
+        {
+          "id": "lisa:mobile:resource:collector-project-setup-resource-picker-mode-and-restored-identity",
+          "start_byte": 6271,
+          "end_byte": 7626
+        }
+      ]
+    },
+    {
+      "path": "docs/roadmap/collector.md",
+      "record": "collector-roadmap.json",
+      "id": "lisa:mobile:resource:collector-roadmap",
+      "revision": "f925117e5d84aa943c3b87630ab185bae4efd571",
+      "blob": "048a985dc9c373bacf63ccf361d3ca7d8251c5de",
+      "sha256": "1a7d0b16c025069f833050a2c4723f7d159b9f36d4192fecd7825e00aa695cf6",
+      "bytes": 4630,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:collector-roadmap",
+          "start_byte": 0,
+          "end_byte": 477
+        },
+        {
+          "id": "lisa:mobile:resource:collector-roadmap-dated-status-table-layout",
+          "start_byte": 477,
+          "end_byte": 580
+        },
+        {
+          "id": "lisa:mobile:resource:collector-roadmap-metadata-and-legacy-compatibility",
+          "start_byte": 580,
+          "end_byte": 734
+        },
+        {
+          "id": "lisa:mobile:evidence:collector-roadmap-dated-composition-implementation",
+          "start_byte": 734,
+          "end_byte": 868
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-real-attachment-backup-recovery",
+          "start_byte": 868,
+          "end_byte": 1044
+        },
+        {
+          "id": "lisa:mobile:evidence:collector-roadmap-dated-workspace-archive-and-delete-scope",
+          "start_byte": 1044,
+          "end_byte": 1190
+        },
+        {
+          "id": "lisa:mobile:evidence:collector-roadmap-dated-project-switch-registry-and-filter",
+          "start_byte": 1190,
+          "end_byte": 1379
+        },
+        {
+          "id": "lisa:mobile:evidence:collector-roadmap-dated-resumable-import-implementation",
+          "start_byte": 1379,
+          "end_byte": 1544
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-end-to-end-form-replacement-and-removal",
+          "start_byte": 1544,
+          "end_byte": 1726
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-config-hash-and-change-classification",
+          "start_byte": 1726,
+          "end_byte": 1843
+        },
+        {
+          "id": "lisa:mobile:evidence:collector-roadmap-dated-immutable-underlay-implementation",
+          "start_byte": 1843,
+          "end_byte": 2019
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-multi-account-device-soak",
+          "start_byte": 2019,
+          "end_byte": 2168
+        },
+        {
+          "id": "lisa:mobile:evidence:collector-roadmap-dated-local-vector-tile-foundation",
+          "start_byte": 2168,
+          "end_byte": 2280
+        },
+        {
+          "id": "lisa:mobile:resource:collector-roadmap-upcoming-tasks-layout",
+          "start_byte": 2280,
+          "end_byte": 2316
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-fault-injection-rollout",
+          "start_byte": 2316,
+          "end_byte": 2566
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-composition-apply-and-idempotency",
+          "start_byte": 2566,
+          "end_byte": 2761
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-project-search-diagnostics-and-archive",
+          "start_byte": 2761,
+          "end_byte": 3001
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-workspace-deletion-policy-and-recovery",
+          "start_byte": 3001,
+          "end_byte": 3307
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-underlay-server-specification",
+          "start_byte": 3307,
+          "end_byte": 3552
+        },
+        {
+          "id": "lisa:mobile:task:collector-roadmap-local-vector-tile-production-acceptance",
+          "start_byte": 3552,
+          "end_byte": 3772
+        },
+        {
+          "id": "lisa:mobile:resource:collector-roadmap-safety-defaults-managed-authority-and-snapshot",
+          "start_byte": 3772,
+          "end_byte": 4125
+        },
+        {
+          "id": "lisa:mobile:resource:collector-roadmap-recovery-and-destructive-operation-gates",
+          "start_byte": 4125,
+          "end_byte": 4630
+        }
+      ]
     }
   ]
 }

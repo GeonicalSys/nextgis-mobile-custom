@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-partial-marker-and-cleanup-ownership",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "До первого обращения к данным новый каталог получает `.layer-fill-partial`.",
+        "Marker удаляется только после успешного сохранения слоя в `LayerGroup`. При",
+        "холодном продолжении приложение удаляет из целевого workspace лишь помеченные",
+        "каталоги, которые не указаны в загруженной карте, и одноимённые data/change/",
+        "attachment tables. Если map уже ссылается на помеченный каталог, слой сохраняется",
+        "и marker снимается. Любые старые непомеченные `layer_*` остаются нетронутыми:",
+        "автоматически отличить прежний мусор от тяжёлой локальной подложки или",
+        "пользовательских данных нельзя.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-partial-marker-and-cleanup-ownership"
+    ]
+  }
+}

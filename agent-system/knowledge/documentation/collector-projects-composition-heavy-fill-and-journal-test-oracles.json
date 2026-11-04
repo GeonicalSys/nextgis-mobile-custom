@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-composition-heavy-fill-and-journal-test-oracles",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- добавление/переупорядочивание состава;",
+        "- импорт слоя с 15 MultiPolygon и примерно 140 тысячами координат, включая один",
+        "  объект около 60 тысяч координат: UI и fill продолжают отвечать, локальное число",
+        "  features равно серверному, а прогресс не интерпретирует вершины как объекты;",
+        "- оборвать fill, открыть другой проект и перезапустить приложение: journal ждёт",
+        "  исходный project UID, чужой `layers.db` не получает таблиц; после возврата в",
+        "  целевой проект удаляются только помеченные unpublished stages, а referenced и",
+        "  legacy unmarked каталоги/MBTiles сохраняются;"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-composition-heavy-fill-and-journal-test-oracles"
+    ]
+  }
+}
