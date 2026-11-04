@@ -561,6 +561,266 @@
         "docs/runbooks/automated-tests.md",
         "docs/runbooks/device-smoke-tests.md"
       ]
+    },
+    {
+      "path": "docs/reference/sync-hang-verification.md",
+      "sha256": "e458c48c71fa1f262527e73b1032d7510602b2d615a09655a7bdc6fcd79696d5",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Earlier snapshot and database-lock diagnosis with unit/build checks and a limited device observation. Forced sync, live import and the prescribed Android follow-up stayed outside that observation.",
+      "applies_to": [
+        "docs/reference/sync-hang-verification.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/collector-projects.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/handoff-sync-kill-resilience-2026-08-25.md",
+      "sha256": "6090273c813756a2cb2585b349c5370d66fdbab38ac14b094b997d40ef46b36b",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "August sync and Collector process-kill handoff retains the next-day correction, two original incidents, deferred schema analysis and the original work order.",
+      "applies_to": [
+        "docs/history/handoff-sync-kill-resilience-2026-08-25.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/collector-projects.md",
+        "docs/architecture/crash-recovery.md"
+      ]
+    },
+    {
+      "path": "docs/history/mobile-form-sync-delivery-2026-10-08.md",
+      "sha256": "6331790dec970dcd56d7dc8ff8a7a60a9c98fc43b9d68c420f9b966b0df55988",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 8 merge-preparation matrix for forms, common sync and diagnostics retains fetched dependency positions, one expected GPS skip and local-only release scope.",
+      "applies_to": [
+        "docs/history/mobile-form-sync-delivery-2026-10-08.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/history/form-visibility-verification-2026-10-08.md",
+      "sha256": "ab0d9b768d2f5ed99b00c0d0877000e7e80f57e304964f898d22d07c90b48f85",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 8 conditional visibility and style receipt keeps the original category 803 fixture and native results. Real audit writes and multi-account network sync were outside the test.",
+      "applies_to": [
+        "docs/history/form-visibility-verification-2026-10-08.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/architecture/cascading-form-lists.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/reference/form-behavior-verification.md",
+      "sha256": "72ae78c6d2fc0c9188bd086743f7a66ee06ee778859b36c834e9d1400ad22e97",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 7 dependent NGFP controls, tabs and required fields with later UI follow-up, bounded test projects and separate field-device and real QGIS cloning gaps.",
+      "applies_to": [
+        "docs/reference/form-behavior-verification.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/architecture/cascading-form-lists.md",
+        "docs/guides/form-behavior-user-guide.md"
+      ]
+    },
+    {
+      "path": "docs/reference/project-scripts-verification.md",
+      "sha256": "0a5dbde1161fb452a9c7d0459f27d2d984f57bfc585cc0f742d94a8b3fd13c42",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 7 script integration binds owner frames, App and desktop technical checks, historical initial failures and both QGIS dialog results. Live WebGIS acceptance remains separate.",
+      "applies_to": [
+        "docs/reference/project-scripts-verification.md",
+        "docs/architecture/project-scripts.md",
+        "docs/guides/project-scripts-user-guide.md",
+        "docs/architecture/collector-projects.md"
+      ]
+    },
+    {
+      "path": "docs/history/azimuth-crash-verification-2026-10-08.md",
+      "sha256": "aee7ecf9b96da416c5ef80fbf5998fe2cc57a3218da0edac81921e55cb0fbc57",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Azimuth foreground-service failure and six native regressions with a separate suite of existing cases, limited GPS/permission fixture and original release frame.",
+      "applies_to": [
+        "docs/history/azimuth-crash-verification-2026-10-08.md",
+        "docs/architecture/stakeout.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/crash-recovery.md"
+      ]
+    },
+    {
+      "path": "docs/history/background-walk-controls-2026-10-09.md",
+      "sha256": "24214aadac97f4b1fa2e395de52048bb664032c8c0e3c1b19addd687cc45e739",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Walk finish/cancel, attribute form and panel placement receipt with ten native scenarios and the then-open App and library dependency chain.",
+      "applies_to": [
+        "docs/history/background-walk-controls-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/ui-accessibility.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/contrast-orbit-delivery-2026-10-11.md",
+      "sha256": "49d1df794ecf1c0fc6b8b5805a873f059f395f294f4cf068c806de8c8acbeda4",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Contrast marker and sector delivery preserves merged library trees, repeated stopped startup fixture, and the physical compass gap.",
+      "applies_to": [
+        "docs/history/contrast-orbit-delivery-2026-10-11.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/map-rendering.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/measurement-menu-2026-10-09.md",
+      "sha256": "bdc4aedab86a52d2ea97f37f0a4410b10390d9709c1e52f6229d32d71ba07db0",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Shared measurement entry receipt preserves its layout test, then-current source inclusion and original release prerequisites.",
+      "applies_to": [
+        "docs/history/measurement-menu-2026-10-09.md",
+        "docs/architecture/ui-contracts.md",
+        "docs/architecture/ui-accessibility.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/orbit-ring-delivery-2026-10-11.md",
+      "sha256": "12433b92db5bda547bcbc5b8b814b5bef1133890c88aa3c8dbd131d12165f6e9",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Orbit-ring production 3.1.2.28/222 prep preserves the consumer pin, marker reload/zoom tests and the pending phone checks.",
+      "applies_to": [
+        "docs/history/orbit-ring-delivery-2026-10-11.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/map-rendering.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/history/track-delivery-2026-10-09.md",
+      "sha256": "c70da489fa6a00bd0575fd8a26a7329e67a4099077f3aa4b6df883db59e04453",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Track indication and automatic delivery receipt distinguishes background owner selection, corrected map fixture, failed startup and successful targeted retry.",
+      "applies_to": [
+        "docs/history/track-delivery-2026-10-09.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/ngw-sync-and-storage.md"
+      ]
+    },
+    {
+      "path": "docs/history/walk-card-and-start-extent-2026-10-09.md",
+      "sha256": "56402e7560865b19ee3857fc0a0f8a860a4965ce304cfac4537e593bbfed8dcb",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Walk panel and GPS start extent receipt keeps the initial geometry/form checks and explicit process-death, camera/save, phone and large-screen gaps.",
+      "applies_to": [
+        "docs/history/walk-card-and-start-extent-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/ui-accessibility.md"
+      ]
+    },
+    {
+      "path": "docs/reference/maplibre-13-7-1-verification-2026-10-24.md",
+      "sha256": "08dce63babc8a500e2cd744625a1be8e630d6e8b9f4ff418348ac3a07f5ef70e",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "MapLibre 13.7.1 OpenGL migration matrix records unit, APK and 27 phone native cases. Other OS and no-Vulkan devices stayed separate.",
+      "applies_to": [
+        "docs/reference/maplibre-13-7-1-verification-2026-10-24.md",
+        "docs/architecture/map-rendering.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-resource-profile-t40-2026-10-28.md",
+      "sha256": "6943aebfa6a2ab9525e8ff53c81da2a8b854881e1f0b7229751a283e1bc1d2d6",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "T40 map session preserves distinct queue, density, memory and observer-overhead measurements on the exact profile, with future checks scoped separately.",
+      "applies_to": [
+        "docs/reference/mobile-resource-profile-t40-2026-10-28.md",
+        "docs/architecture/map-performance.md",
+        "docs/runbooks/manual-resource-profiling.md",
+        "docs/architecture/map-rendering.md"
+      ]
+    },
+    {
+      "path": "docs/reference/point-firefly-verification-2026-10-24.md",
+      "sha256": "909f569570c4b5caf926d8476062f81c72da89678bf415313fff31ff76440a60",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Firefly style receipt preserves bitmap/JSON limits, the 18-case phone slice, the interrupted emulator setup and the unrun Full.",
+      "applies_to": [
+        "docs/reference/point-firefly-verification-2026-10-24.md",
+        "docs/architecture/classic-style-verification.md",
+        "docs/architecture/map-rendering.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/reference/polygon-style-verification-2026-10-24.md",
+      "sha256": "45a399321a87b2c37c60871aa580741eb01517c448a792aaf987ab16e416479d",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Polygon style receipt distinguishes the first passing native slice, later tablet result, fixture-induced failure and targeted editor rerun.",
+      "applies_to": [
+        "docs/reference/polygon-style-verification-2026-10-24.md",
+        "docs/architecture/polygon-style-controls.md",
+        "docs/architecture/classic-style-verification.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/reference/track-controls-verification-2026-10-25.md",
+      "sha256": "d4d482cb09e4e7c02ab7b72417f2a6a46b918e4d35ef7133b6dd83d160d3a417",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Track controls and point priority receipt keeps the editor finding, 876 unit and 62 related native cases and separate release-compilation scope.",
+      "applies_to": [
+        "docs/reference/track-controls-verification-2026-10-25.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/classic-style-verification.md"
+      ]
+    },
+    {
+      "path": "docs/reference/track-dark-core-2026-10-25.md",
+      "sha256": "759dbf1d00319aebd7c547f28ccd22a2ea93808919a734765982d31e6f6bd724",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Dated user selection of the two-layer dark-core style preserves sample parameters and prior verification from a different revision.",
+      "applies_to": [
+        "docs/reference/track-dark-core-2026-10-25.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/map-rendering.md"
+      ]
+    },
+    {
+      "path": "docs/reference/track-followup-2026-10-25.md",
+      "sha256": "613beadf0258f0c9e7cd804ef48602592518e7c29b30b2cc3ba999757caeb30e",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Track and line-label follow-up preserves the failed expanded emulator batch, targeted regression, phone coordinate evidence and original source pins.",
+      "applies_to": [
+        "docs/reference/track-followup-2026-10-25.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/visible-line-labels.md"
+      ]
     }
   ]
 }
