@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-spatial-cache-consumers-and-rebuild",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Причина важна для нескольких входов: GPX/KML CoordinatePointLayerImporter и GeoJSON",
+        "batch; initial NGW download через оба resource picker и Collector/form task; config",
+        "fromJSON и properties getCount повторно читают index. Старый clear мог оставить",
+        "header countN при уже пустом root; последующий save и новый load сохраняли равенство",
+        "counts и пропускали repair. Native query и обычный hit-test имеют разные readiness",
+        "gates. Смена стиля/видимости не строит spatial tree; manual rebuild создаёт новое",
+        "дерево и extents из исходных ID/geometry BLOB, но не переписывает LOD geometry.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-spatial-cache-consumers-and-rebuild"
+    ]
+  }
+}

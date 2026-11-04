@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-track-and-point-render-order",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Треки рисуются тонкой тёмной сердцевиной и свечением исходного насыщенного цвета.",
+        "Выбранные параметры и производный цвет сердцевины описаны в контракте треков;",
+        "дополнительных источников или проходов для нового вида нет. Настоящие",
+        "Point/MultiPoint группы вместе с их подписями находятся над обычными данными и",
+        "треками, сохраняя свой порядок в списке; инструменты и GPS выше. Служебный слой",
+        "треков остаётся первым в UI. Подробности: [управление треками](track-controls.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-track-and-point-render-order"
+    ]
+  }
+}

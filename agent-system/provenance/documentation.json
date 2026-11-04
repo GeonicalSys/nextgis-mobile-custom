@@ -2038,6 +2038,547 @@
           "end_byte": 124321
         }
       ]
+    },
+    {
+      "path": "docs/architecture/map-rendering.md",
+      "record": "map-rendering.json",
+      "id": "lisa:mobile:resource:map-rendering",
+      "revision": "82b0909f93760a82feeeecce0b3db25809529bf2",
+      "blob": "bd470c75b308c7605b0a94e50b7b170abc0fa954",
+      "sha256": "d2e2b1d3c435827e4285543bdd5b364e0aa3f9c5e04b6400e1d5fdec6f82f943",
+      "bytes": 99962,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:map-rendering",
+          "start_byte": 0,
+          "end_byte": 2353
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-map-indicator-producers",
+          "start_byte": 2353,
+          "end_byte": 3321
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-location-and-camera-actions",
+          "start_byte": 3321,
+          "end_byte": 4258
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-ui-source-review-checkpoint",
+          "start_byte": 4258,
+          "end_byte": 4956
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-tile-admission-and-derived-cache",
+          "start_byte": 4956,
+          "end_byte": 6031
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-original-reads-heading",
+          "start_byte": 6031,
+          "end_byte": 6090
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-d101-cold-frame-and-maplib-results-20261028",
+          "start_byte": 6090,
+          "end_byte": 6550
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-track-snapshot-boundary",
+          "start_byte": 6550,
+          "end_byte": 6717
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-bounded-original-reads",
+          "start_byte": 6717,
+          "end_byte": 8249
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-d101-read-transport-results-20261028",
+          "start_byte": 8249,
+          "end_byte": 8967
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-sqlite-phase-observation",
+          "start_byte": 8967,
+          "end_byte": 9809
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-sqlite-phase-terminal-signals",
+          "start_byte": 9809,
+          "end_byte": 10366
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-direct-sqlite-geometry-and-paint",
+          "start_byte": 10366,
+          "end_byte": 11420
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-classic-native-payload-projection",
+          "start_byte": 11420,
+          "end_byte": 12636
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-classic-native-payload-handoffs",
+          "start_byte": 12636,
+          "end_byte": 13131
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-free-memory-policy-and-notice",
+          "start_byte": 13131,
+          "end_byte": 14507
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-native-allocation-profiles-787-and-ec71",
+          "start_byte": 14507,
+          "end_byte": 15723
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-empty-editor-hit-test-and-index",
+          "start_byte": 15723,
+          "end_byte": 16778
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-legacy-render-mode-and-offline-routing",
+          "start_byte": 16778,
+          "end_byte": 17453
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-map-gesture-cancellation",
+          "start_byte": 17453,
+          "end_byte": 18412
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-track-and-point-render-order",
+          "start_byte": 18412,
+          "end_byte": 19246
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-opengl-sdk-dependency",
+          "start_byte": 19246,
+          "end_byte": 20087
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-polygon-patterns-and-outlines",
+          "start_byte": 20087,
+          "end_byte": 21304
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-copy-and-transform",
+          "start_byte": 21304,
+          "end_byte": 21939
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-gps-display-accuracy-floor",
+          "start_byte": 21939,
+          "end_byte": 22582
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-classic-style-firefly",
+          "start_byte": 22582,
+          "end_byte": 23204
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-classic-style-verification-scope",
+          "start_byte": 23204,
+          "end_byte": 23622
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-gps-edit-camera-state",
+          "start_byte": 23622,
+          "end_byte": 24257
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-separate-stakeout-and-azimuth-panels",
+          "start_byte": 24257,
+          "end_byte": 24955
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-network-cursor-between-fixes",
+          "start_byte": 24955,
+          "end_byte": 26169
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-touch-and-tile-observation",
+          "start_byte": 26169,
+          "end_byte": 27001
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-map-panel-accessibility",
+          "start_byte": 27001,
+          "end_byte": 27590
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-map-action-touch-and-attribution",
+          "start_byte": 27590,
+          "end_byte": 28695
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-reorder-gesture-cleanup",
+          "start_byte": 28695,
+          "end_byte": 29353
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-local-startup-and-http-diagnostics",
+          "start_byte": 29353,
+          "end_byte": 30151
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-new-feature-style-category",
+          "start_byte": 30151,
+          "end_byte": 30643
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-operation-mode-diagnostics",
+          "start_byte": 30643,
+          "end_byte": 31236
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-rendering-ownership",
+          "start_byte": 31236,
+          "end_byte": 32611
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-contracts-heading",
+          "start_byte": 32611,
+          "end_byte": 32634
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-release-221-preparation",
+          "start_byte": 32634,
+          "end_byte": 32931
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-incremental-track-reloads",
+          "start_byte": 32931,
+          "end_byte": 33998
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-osm-at-stack-bottom",
+          "start_byte": 33998,
+          "end_byte": 34319
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-underlay-insertion-position",
+          "start_byte": 34319,
+          "end_byte": 34550
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-style-sibling-anchors",
+          "start_byte": 34550,
+          "end_byte": 34742
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-raster-hot-add-order",
+          "start_byte": 34742,
+          "end_byte": 34967
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-full-and-lite-reloads",
+          "start_byte": 34967,
+          "end_byte": 35187
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-no-track-endpoint-flags",
+          "start_byte": 35187,
+          "end_byte": 35286
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-immutable-ngrc-import",
+          "start_byte": 35286,
+          "end_byte": 35633
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-top-location-overlay",
+          "start_byte": 35633,
+          "end_byte": 36517
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-user-track-layer-order",
+          "start_byte": 36517,
+          "end_byte": 36997
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-collector-order-and-workspace-lease",
+          "start_byte": 36997,
+          "end_byte": 37702
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-first-project-owned-map",
+          "start_byte": 37702,
+          "end_byte": 38251
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-rule-style-defaults-and-zoom",
+          "start_byte": 38251,
+          "end_byte": 39295
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-identify-refinement-and-label",
+          "start_byte": 39295,
+          "end_byte": 39802
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-cold-index-rebuild-and-config-safety",
+          "start_byte": 39802,
+          "end_byte": 40510
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-ordinary-sqlite-vector-source",
+          "start_byte": 40510,
+          "end_byte": 41711
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-direct-vector-tiles-compile-checkpoint",
+          "start_byte": 41711,
+          "end_byte": 41885
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-batch-fill-applied-style",
+          "start_byte": 41885,
+          "end_byte": 42430
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-visible-layer-live-style-check",
+          "start_byte": 42430,
+          "end_byte": 43085
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-sketch-insertion-form-and-edit-history",
+          "start_byte": 43085,
+          "end_byte": 49518
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-multipolygon-repair-and-crs",
+          "start_byte": 49518,
+          "end_byte": 51431
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-stakeout-and-azimuth-overlays",
+          "start_byte": 51431,
+          "end_byte": 52517
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-edit-rights-and-hidden-layers",
+          "start_byte": 52517,
+          "end_byte": 53112
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-camera-rotation-and-location-action",
+          "start_byte": 53112,
+          "end_byte": 54768
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-staged-schema-replacement",
+          "start_byte": 54768,
+          "end_byte": 55799
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-bulk-pull-index-and-render-refresh",
+          "start_byte": 55799,
+          "end_byte": 57223
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-visible-only-identify",
+          "start_byte": 57223,
+          "end_byte": 57661
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-opengl-backend-compatibility",
+          "start_byte": 57661,
+          "end_byte": 58400
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-mapview-lifecycle-and-surface-recovery",
+          "start_byte": 58400,
+          "end_byte": 62204
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-cold-sketch-and-walk-preview",
+          "start_byte": 62204,
+          "end_byte": 67010
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-raster-mbtiles-and-legacy-transfer",
+          "start_byte": 67010,
+          "end_byte": 69573
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-legacy-underlay-transfer-validation-checkpoint",
+          "start_byte": 69573,
+          "end_byte": 69933
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-invariant-registry-links",
+          "start_byte": 69933,
+          "end_byte": 70448
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-rendering-change-acceptance-matrix",
+          "start_byte": 70448,
+          "end_byte": 71740
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-performance-investigation-boundaries",
+          "start_byte": 71740,
+          "end_byte": 72185
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-compass-accuracy-preference",
+          "start_byte": 72185,
+          "end_byte": 73417
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-cursor-geometry-and-direction",
+          "start_byte": 73417,
+          "end_byte": 76584
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-shared-underlay-import",
+          "start_byte": 76584,
+          "end_byte": 77523
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-raster-visibility-and-background",
+          "start_byte": 77523,
+          "end_byte": 78330
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-shared-underlay-dedup-format",
+          "start_byte": 78330,
+          "end_byte": 78786
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-failed-underlay-import-cleanup",
+          "start_byte": 78786,
+          "end_byte": 79497
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-selected-feature-actions",
+          "start_byte": 79497,
+          "end_byte": 80112
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-tap-tolerance-and-placement",
+          "start_byte": 80112,
+          "end_byte": 80915
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-measurements-menu",
+          "start_byte": 80915,
+          "end_byte": 81936
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-responsive-tool-rail",
+          "start_byte": 81936,
+          "end_byte": 82528
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-rule-handler-process-isolation",
+          "start_byte": 82528,
+          "end_byte": 83014
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-background-map-ownership",
+          "start_byte": 83014,
+          "end_byte": 84354
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-common-creation-category",
+          "start_byte": 84354,
+          "end_byte": 84868
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-consumer-verification-profile",
+          "start_byte": 84868,
+          "end_byte": 85358
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-startup-and-delayed-anr-journal",
+          "start_byte": 85358,
+          "end_byte": 86346
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-track-stroke-and-shared-color",
+          "start_byte": 86346,
+          "end_byte": 86759
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-line-label-placement",
+          "start_byte": 86759,
+          "end_byte": 87259
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-cursor-fixture-readiness",
+          "start_byte": 87259,
+          "end_byte": 87967
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-cursor-fixture-related-result",
+          "start_byte": 87967,
+          "end_byte": 88172
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-field-line-and-point-priority",
+          "start_byte": 88172,
+          "end_byte": 88806
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-canonical-layer-order-and-style-aliases",
+          "start_byte": 88806,
+          "end_byte": 89615
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-sqlite-priority-t40-results",
+          "start_byte": 89615,
+          "end_byte": 90182
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-cursor-fixture-camera",
+          "start_byte": 90182,
+          "end_byte": 90752
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-private-cold-render-profiling",
+          "start_byte": 90752,
+          "end_byte": 91950
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-spatial-cache-import-readiness",
+          "start_byte": 91950,
+          "end_byte": 92906
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-spatial-cache-load-and-clear",
+          "start_byte": 92906,
+          "end_byte": 93873
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-spatial-cache-consumers-and-rebuild",
+          "start_byte": 93873,
+          "end_byte": 94674
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-spatial-cache-field-observations-20261030",
+          "start_byte": 94674,
+          "end_byte": 95704
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-spatial-cache-source-checkpoint-20261031",
+          "start_byte": 95704,
+          "end_byte": 97605
+        },
+        {
+          "id": "lisa:mobile:resource:map-rendering-selected-track-gpx",
+          "start_byte": 97605,
+          "end_byte": 98331
+        },
+        {
+          "id": "lisa:mobile:evidence:map-rendering-release-225-native-validation-20261102",
+          "start_byte": 98331,
+          "end_byte": 99962
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-spatial-cache-import-readiness",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Завершение и восстановление векторного spatial cache — 30 октября2026",
+        "",
+        "Обычный local/NGW vector импорт использует один VectorLayer lifecycle. После",
+        "успешного create только проверенные zero SQL rows + zero live cache становятся",
+        "готовой начальной точкой: count читается вне spatial lock, затем проверяются тот же",
+        "cache object, data generation и нулевой size. Начатый bulk по-прежнему блокирует",
+        "native reads. Готовность не устанавливается из finally и не выводится из одного",
+        "совпадения ненулевых counts; failed/cancelled/nonempty/unknown-count случаи не",
+        "получают новую гарантию commit/rollback или произвольного save после ошибки.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-spatial-cache-import-readiness"
+    ]
+  }
+}

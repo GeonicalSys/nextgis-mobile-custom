@@ -89,6 +89,13 @@ knowledge queries. The original ambiguity is documented in
 For rollback, project the latest task records and check the full Markdown
 before restoring the former authoring route.
 
+Edit rendering contracts in **knowledge/documentation/map-rendering-*.json**.
+**map-rendering.json** orders the topics for the published architecture.
+The two numbered clauses 12 have separate IDs for rule defaults and identify
+refinement. Preserve their labels and order in the view. Record dated device
+and source results as evidence linked to the applicable topic. After editing,
+run the ordinary prose projector and check the generated Markdown.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

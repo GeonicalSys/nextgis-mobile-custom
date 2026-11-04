@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-raster-mbtiles-and-legacy-transfer",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "28. Растровый MBTiles хранится одним файлом `map-mbtiles.mbtiles` внутри",
+        "    каталога локального TMS-слоя и подключается к MapLibre через `mbtiles:///`.",
+        "    До публикации слоя проверяются SQLite header, обязательные таблицы и поля,",
+        "    `quick_check`, raster `format`, zoom и bounds. Vector MBTiles этим путём не",
+        "    принимается. При переносе старой распакованной подложки Debug → Geonical",
+        "    тайлы читаются framed-потоком без центрального каталога и записываются",
+        "    пакетами прямо в новую MBTiles SQLite: промежуточный ZIP и второе дерево",
+        "    мелких файлов не создаются, а память не растёт с числом тайлов. Строка тайла",
+        "    переводится из OSM `y` в MBTiles/TMS один раз. После завершения выполняются",
+        "    sync файла и атомарное переименование; неполный stage удаляется, исходная",
+        "    Debug-подложка остаётся на месте. Provenance в `config.json` делает повторный",
+        "    запуск идемпотентным, а имя, видимость и взаимный порядок подложек сохраняются.",
+        "    Inactivity watchdog, явная отмена и подтверждённый выход с экрана хранилища",
+        "    закрывают cross-package descriptor до cleanup и не позволяют transfer lease",
+        "    блокировать последующий sync. Pre-registry Debug сохраняет исходную карту и",
+        "    папки тайлов до явного экспорта: фоновая shared-catalog migration там не",
+        "    запускается. Пользователь запускает этот перенос из «Хранилище подложек»,",
+        "    а не с экрана проекта. Теперь отдельные этапы OPENING/RECEIVING/FINALIZING/",
+        "    ATTACHING/STALLED и elapsed текущей попытки показываются в прокручиваемом",
+        "    статусе с фиксированной Cancel. После stream complete watchdog продолжает",
+        "    heartbeat/progress до close, не применяя remote inactivity к local finalize."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-raster-mbtiles-and-legacy-transfer"
+    ]
+  }
+}

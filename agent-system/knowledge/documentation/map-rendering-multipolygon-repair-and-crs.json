@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-multipolygon-repair-and-crs",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "18. При сохранении невалидной геометрии автоматическое исправление топологии",
+        "    включено только для слоя с точным типом `GTMultiPolygon`. JTS",
+        "    `GeometryFixer` может разделить самопересекающееся кольцо на несколько",
+        "    полигональных частей либо объединить перекрывающиеся части, но результат",
+        "    остаётся одним `GeoMultiPolygon` того же feature: форма атрибутов открывается",
+        "    один раз, а введённые значения принадлежат всему объекту. CRS и валидные",
+        "    отверстия сохраняются. Если исправление даёт пустой, неполигональный или",
+        "    всё ещё невалидный результат, сохранение останавливается и редактор остаётся",
+        "    открыт. Контур MultiPolygon с менее чем тремя различными позициями отделяется",
+        "    до topology repair и получает «Недостаточно точек», а не сообщение об ошибке",
+        "    исправления. `GTPolygon`, `LineString` и `MultiLineString` в эту ветку не входят.",
+        "    MapLibre → `GeoMultiPolygon` conversion обязан назначать Web Mercator CRS",
+        "    контейнеру, полигонам и кольцам. Repair дополнительно восстанавливает",
+        "    отсутствующий CRS контейнера из дочерней геометрии для ранее созданных",
+        "    edit/draft-объектов; количество вершин на это поведение не влияет."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-multipolygon-repair-and-crs"
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-cursor-geometry-and-direction",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`user-location-source` содержит свежие Point, Polygon accuracy и при наличии",
+        "компаса Polygon heading. Круг в метрах лежит под сектором, сектор — под верхним",
+        "курсором; при expiry source очищается. Ширина сектора следует за неопределённостью",
+        "heading, а не за фиксированным углом. Геодезическая длина сектора рассчитывается",
+        "для 56 логических пикселей карты и обновляется после смены zoom. Курсор «Орбита-кольцо»",
+        "использует центрированный векторный ресурс с прозрачным окном диаметром 21 dp,",
+        "синей центральной точкой 5 dp с белой обводкой 2 dp и синим ободом с внешним радиусом 13 dp.",
+        "Обод утолщён на 1 dp наружу за счёт белого обода с прежним внешним радиусом",
+        "15.2 dp и тонкой тёмной кромкой. Сохранён",
+        "треугольник 16 × 14 dp с двойной обводкой в общем canvas 72 dp. Сектор имеет",
+        "заливку `#137DE8` / 0.24 и независимые LineLayer: белый 2.8 px / 0.75 под",
+        "синим 1.2 px / 0.85. Контур сохраняет заметность на светлых картах и пёстрых",
+        "снимках, не увеличивая метрический круг GPS. Accuracy Polygon получает отверстие",
+        "радиусом 10.5 логических пикселей, сектор начинается с радиуса 13 пикселей,",
+        "скрывая внутренний halo под непрозрачным ободом. Радиусы переводятся в метры",
+        "через текущую проекцию; наружная граница GPS accuracy остаётся метрической.",
+        "Заливка accuracy, полностью помещающаяся в окно, не создаётся. Так меньший",
+        "точечный объект на фиксе виден через окно без подкрашивания служебными заливками",
+        "и без перестановки слоёв. Кольцо остаётся на фиксе, треугольник",
+        "вращается по истинному компасному heading; без компаса — по GPS-курсу движущегося",
+        "фикса. Нет обоих направлений — только круг. `has_direction` выбирает ресурс,",
+        "`bearing` задаёт угол; legacy `type=stand/go` сохраняется. Выравнивание вращения",
+        "по карте учитывает bearing камеры, центр иконки закреплён явно. Трек рисуется",
+        "только по сохранённым сегментам, без линии к",
+        "текущему display fix.",
+        "Подробности: [GPS pipeline](location-pipeline.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-cursor-geometry-and-direction"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-ordinary-sqlite-vector-source",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "14. Обычные Simple/Field Rule векторы всех шести геометрий используют прямой",
+        "    SQLite CustomVectorSource. Старый local_vector_tiles хранится как metadata,",
+        "    но не выбирает renderer; HTTP server/provider/encoder и URL factories удалены.",
+        "    Shared admission допускает два native IO builder, при измеренном дефиците",
+        "    fair gate сериализует полные builds. Cache остаётся derived PBF с прежними",
+        "    byte/file/entry/current guards. Отмена/смена поколения отвергает late result;",
+        "    partial successful PBF, ID thinning и simplification запрещены.",
+        "    Подписи полигонов остаются inline Point anchors одного source-layer features",
+        "    с исходным FID, owner tile, полной исходной геометрией и учётом отверстий.",
+        "    Fill/Line фильтруют Polygon, Symbol — anchor; отдельного объектного source нет.",
+        "    Незнакомые custom renderer extensions имеют только явный classic converter."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-ordinary-sqlite-vector-source"
+    ]
+  }
+}

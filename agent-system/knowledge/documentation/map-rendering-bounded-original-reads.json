@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-bounded-original-reads",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Direct tile и visible-line visitors читают прежний RTree candidate набор через",
+        "attributes-only cursors по32 eligible IDs. CASE order сохраняет исходный",
+        "порядок после dedup/hidden/excluded; attributes projection не содержит geometry.",
+        "API28+ добавляет отдельный geometry-only cursor с явным1MiB window: не более32",
+        "whole BLOB<=16KiB, nested CASE не материализует large/TEXT payload. Large BLOB",
+        "и API26/27 сохраняют полный PFD путь. Не более512KiB small payload в window",
+        "сосуществует с одним Java full original/decoded geometry; sorter/native RAM",
+        "не входит в эту границу и требует отдельного PSS измерения.",
+        "Каждый original проходит прежние style/clip/anchor/PBF операции;",
+        "один ленивый BLOB statement принадлежит только этому visit. Оба cursors/statement",
+        "закрываются при cancellation/error. Missing/extra/reordered ID, null/bad BLOB",
+        "дают ошибку всего тайла, не partial success/cache; реальные SQLite ошибки",
+        "сохраняются. Safely unsupported driver переключает только ещё не доставленные",
+        "IDs на PFD; cleanup/SQL/resource errors не становятся fallback success.",
+        "Current проверяется между attrs и geometry queries и после полного read."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-bounded-original-reads"
+    ]
+  }
+}

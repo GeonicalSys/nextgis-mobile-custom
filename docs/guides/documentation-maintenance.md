@@ -30,6 +30,12 @@ related_code:
 запустите `python -B docs/scripts/prose_knowledge.py --write` из корня App.
 Проверяйте итог по [прежнему адресу карты](../roadmap/mobile.md).
 
+## Архитектура отрисовки
+
+Правьте тему или датированное свидетельство по
+[порядку редактирования App](../../agent-system/README.md). После генерации
+проверяйте [архитектуру карты](../architecture/map-rendering.md).
+
 ## Maturity
 
 - `draft`: разрешены подтверждённые TODO, документ ещё не полон.

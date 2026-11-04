@@ -1,0 +1,621 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/map-rendering.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: MapLibre rendering и порядок слоёв",
+        "type: architecture",
+        "last_verified: 2026-11-02",
+        "related_code:",
+        "  - app/build.gradle",
+        "  - maplib/build.gradle",
+        "  - maplibui/build.gradle",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java",
+        "  - app/src/main/java/com/nextgis/mobile/MainApplication.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/LayerGroup.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MapEventSource.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/UserLocationGeometry.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/MbTilesInfo.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/CameraZoom.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/RenderTileWorkGate.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/LocalVectorTileDiskCache.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/PatternTilePeriod.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/VectorLayerRenderCache.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/fragment/ReorderedLayerView.java",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "  - app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt",
+        "  - app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# MapLibre rendering и порядок слоёв",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-map-indicator-producers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-location-and-camera-actions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-ui-source-review-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-tile-admission-and-derived-cache",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-original-reads-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-d101-cold-frame-and-maplib-results-20261028",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-track-snapshot-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-bounded-original-reads",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-d101-read-transport-results-20261028",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-sqlite-phase-observation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-sqlite-phase-terminal-signals",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-direct-sqlite-geometry-and-paint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-classic-native-payload-projection",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-classic-native-payload-handoffs",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-free-memory-policy-and-notice",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-native-allocation-profiles-787-and-ec71",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-empty-editor-hit-test-and-index",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-legacy-render-mode-and-offline-routing",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-map-gesture-cancellation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-track-and-point-render-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-opengl-sdk-dependency",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-polygon-patterns-and-outlines",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-copy-and-transform",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-gps-display-accuracy-floor",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-classic-style-firefly",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-classic-style-verification-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-gps-edit-camera-state",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-separate-stakeout-and-azimuth-panels",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-network-cursor-between-fixes",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-touch-and-tile-observation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-map-panel-accessibility",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-map-action-touch-and-attribution",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-reorder-gesture-cleanup",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-local-startup-and-http-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-new-feature-style-category",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-operation-mode-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-rendering-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-contracts-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-release-221-preparation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-incremental-track-reloads",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-osm-at-stack-bottom",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-underlay-insertion-position",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-style-sibling-anchors",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-raster-hot-add-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-full-and-lite-reloads",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-no-track-endpoint-flags",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-immutable-ngrc-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-top-location-overlay",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-user-track-layer-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-collector-order-and-workspace-lease",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-first-project-owned-map",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-rule-style-defaults-and-zoom",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-identify-refinement-and-label",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-cold-index-rebuild-and-config-safety",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-ordinary-sqlite-vector-source",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-direct-vector-tiles-compile-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-batch-fill-applied-style",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-visible-layer-live-style-check",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-sketch-insertion-form-and-edit-history",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-multipolygon-repair-and-crs",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-stakeout-and-azimuth-overlays",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-edit-rights-and-hidden-layers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-camera-rotation-and-location-action",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-staged-schema-replacement",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-bulk-pull-index-and-render-refresh",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-visible-only-identify",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-opengl-backend-compatibility",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-mapview-lifecycle-and-surface-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-cold-sketch-and-walk-preview",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-raster-mbtiles-and-legacy-transfer",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-legacy-underlay-transfer-validation-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-invariant-registry-links",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-rendering-change-acceptance-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-performance-investigation-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-compass-accuracy-preference",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-cursor-geometry-and-direction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-shared-underlay-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-raster-visibility-and-background",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-shared-underlay-dedup-format",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-failed-underlay-import-cleanup",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-selected-feature-actions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-tap-tolerance-and-placement",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-measurements-menu",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-responsive-tool-rail",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-rule-handler-process-isolation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-background-map-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-common-creation-category",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-consumer-verification-profile",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-startup-and-delayed-anr-journal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-track-stroke-and-shared-color",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-line-label-placement",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-cursor-fixture-readiness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-cursor-fixture-related-result",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-field-line-and-point-priority",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-canonical-layer-order-and-style-aliases",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-sqlite-priority-t40-results",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-cursor-fixture-camera",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-private-cold-render-profiling",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-spatial-cache-import-readiness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-spatial-cache-load-and-clear",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-spatial-cache-consumers-and-rebuild",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-spatial-cache-field-observations-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-spatial-cache-source-checkpoint-20261031",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:map-rendering-selected-track-gpx",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:map-rendering-release-225-native-validation-20261102",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering"
+    ]
+  }
+}

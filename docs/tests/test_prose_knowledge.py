@@ -152,3 +152,29 @@ class ProseKnowledgeTest(unittest.TestCase):
         projected = PROJECTOR["project_documents"](self.owner)[view]
         self.assertEqual(original.replace(span, "\n".join(body)), projected)
         self.assertEqual(incident, json.loads(incident_path.read_bytes()))
+
+    def test_rendering_clause_twelve_keeps_two_independent_subjects(self):
+        view = PurePosixPath("docs/architecture/map-rendering.md")
+        directory = self.owner / PROJECTOR["DIRECTORY"]
+        rule_path = directory / "map-rendering-rule-style-defaults-and-zoom.json"
+        identify_path = directory / "map-rendering-identify-refinement-and-label.json"
+        rule = json.loads(rule_path.read_bytes())
+        identify = json.loads(identify_path.read_bytes())
+        evidence = json.loads((directory / "map-rendering-sqlite-priority-t40-results.json").read_bytes())
+        self.assertNotEqual(rule["id"], identify["id"])
+        self.assertEqual("historical", evidence["status"])
+        self.assertFalse(evidence["execution_permission"])
+
+        original = PROJECTOR["project_documents"](self.owner)[view]
+        clauses = original.split("## Контракты\n", 1)[1].split("\nIDs:", 1)[0]
+        numbers = [int(line.split(".", 1)[0]) for line in clauses.splitlines()
+                   if line.split(".", 1)[0].isdigit()]
+        self.assertEqual([*range(1, 13), *range(12, 29)], numbers)
+        body = rule["facets"]["body"]["value"]
+        old_span = "\n".join(body)
+        self.assertEqual(1, original.count(old_span))
+        body[0] += " (test edit)"
+        rule_path.write_text(json.dumps(rule, ensure_ascii=False), encoding="utf-8")
+        projected = PROJECTOR["project_documents"](self.owner)[view]
+        self.assertEqual(original.replace(old_span, "\n".join(body)), projected)
+        self.assertEqual(identify, json.loads(identify_path.read_bytes()))

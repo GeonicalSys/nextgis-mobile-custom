@@ -1,0 +1,84 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-cold-sketch-and-walk-preview",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "27. Холодное восстановление ручного скетча проверяет принадлежность всех edit",
+        "    sources текущему `Style` и откладывает привязку до готовности источников.",
+        "    Независимый обход использует отдельный `walk-preview-source`: полный WKT",
+        "    из сервиса превращается в Point/LineString/Polygon, включая незавершённые",
+        "    кольца. Перед проецированием приватной копии явно восстанавливается CRS;",
+        "    иначе copy-конструкторы теряют корневой CRS и передают метры как lon/lat.",
+        "    Полная и облегчённая загрузка style восстанавливают cached preview.",
+        "    Смена экземпляра MapDrawable также требует повторной привязки снимка.",
+        "    `MapFragment` слушает `WALKEDIT_CHANGE` напрямую во время resume и перечитывает",
+        "    снимок при возврате на экран: preview не зависит от наличия панели.",
+        "    Все phone/landscape/tablet layouts включают один `layout_map_content` с",
+        "    обязательными кнопкой трека и панелью обхода. Кнопка трека открывает",
+        "    «Пешеход»/«Пешеход + машина», а при активной записи сразу завершает её.",
+        "    Активный значок — оранжевый человек с увеличенной красной точкой на белом фоне.",
+        "    `MapControlRail` пересчитывает",
+        "    число строк по доступной высоте при каждом measure, в том числе при повороте",
+        "    без пересоздания Activity, и переносит инструменты в столбцы справа налево.",
+        "    Меню создания раскрывается влево в отдельной нижней строке; панель обхода",
+        "    прижата к нижнему краю и слева от инструментов, поднимаясь над строкой",
+        "    лишь при раскрытом меню создания. Обычная панель — строка 48 dp с названием слоя",
+        "    и значками дискеты, паузы/плей и крестика. Каждый требует подтверждения;",
+        "    зоны нажатия 48 dp, светлая/тёмная поверхность и цвет бренда. Точность GPS",
+        "    и меню обхода отсутствуют. Пауза сохраняет геометрию и прекращает вставку.",
+        "    Начало создания по местоположению/обходом центрирует карту по GPS-опоре,",
+        "    сохраняя zoom; восстановление черновика не выполняет этот pan повторно.",
+        "    Редактор точки владеет своими selected/vertex sources, не забирая линию",
+        "    обхода. Панель обхода сохраняется при обычном режиме карты; все её команды",
+        "    блокируются от выбора слоя точки до успешного Save либо явного Cancel.",
+        "    После подтверждения дискеты и FINISHED геометрия передаётся обычному редактору",
+        "    с немедленным открытием атрибутов.",
+        "    Недостаточный контур (две разные вершины линии или три каждого кольца)",
+        "    завершается с сообщением без объекта. Активное Save панели и дискета открывают",
+        "    атрибуты с текущей геометрией, включая дополнение существующего объекта.",
+        "    Enabled и alpha Save/Undo/Redo обновляются после построения toolbar;",
+        "    `ControlHelper` изолирует drawable state перед изменением alpha/tint.",
+        "    При cold start владелец без первого подтверждённого снимка и без живого",
+        "    сервиса удаляется как несостоявшийся запуск; реальный остановленный черновик",
+        "    предлагается восстановить, а владелец другой карты — аварийно сбросить.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-cold-sketch-and-walk-preview"
+    ]
+  }
+}
