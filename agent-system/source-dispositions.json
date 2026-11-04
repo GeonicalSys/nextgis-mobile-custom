@@ -376,6 +376,191 @@
         "docs/architecture/crash-recovery.md",
         "docs/architecture/location-pipeline.md"
       ]
+    },
+    {
+      "path": "docs/history/README.md",
+      "sha256": "3789b91fc75065f60b0cbc5683d45a937b5c73993ca62924add8c6bb053e0450",
+      "sha256_scope": "utf8_lf",
+      "category": "working_bridge",
+      "reason": "Active history navigation keeps the dated sync matrix, upstream index, release notes and current fork catalogue reachable.",
+      "applies_to": [
+        "docs/history/README.md",
+        "docs/README.md",
+        "docs/START-HERE.md",
+        "docs/reference/fork-customizations.md"
+      ]
+    },
+    {
+      "path": "docs/history/upstream/README.md",
+      "sha256": "fcfd5bf6bf9e43c76327d9267dc72d5546ac4df93c92c6c551a84eff3947379a",
+      "sha256_scope": "utf8_lf",
+      "category": "working_bridge",
+      "reason": "Active navigation from the App start page to four retained upstream comparisons and the current upstream runbook.",
+      "applies_to": [
+        "docs/history/upstream/README.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/START-HERE.md",
+        "docs/architecture/upstream-fork-model.md"
+      ]
+    },
+    {
+      "path": "docs/history/upstream/2026-03-sync.md",
+      "sha256": "31220557b3d2fe5de312391d48dc30b09ff4e02a95a6283540b4d2ba9cb0035f",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "March 3.0.2/173 merge and pins, the layer-fill guard and date format changes, plus historical manual regression gaps and the 173/174 discrepancy.",
+      "applies_to": [
+        "docs/history/upstream/2026-03-sync.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/runbooks/workstation-and-build.md"
+      ]
+    },
+    {
+      "path": "docs/history/upstream/2026-03-30-layer-fill-comparison.md",
+      "sha256": "4c4f2bd0c9a47b179b8623c178f5e0cec6ad57ef78aa44e54c81f282379e6578",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "March comparison separates removed old diff snapshots, SQLite batch tuning, network timeout and one manual 28k-feature fill observation.",
+      "applies_to": [
+        "docs/history/upstream/2026-03-30-layer-fill-comparison.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/collector-projects.md"
+      ]
+    },
+    {
+      "path": "docs/history/upstream/2026-05-15-sync.md",
+      "sha256": "200c1a57f0bcd72ff9ad6414ba95c42565d176e3676816cae5c1967898824385",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "May 3.0.3/178 integration records exact fork tips, hybrid walk and map hooks, preserved Collector and flavor choices, and two historical assembly passes.",
+      "applies_to": [
+        "docs/history/upstream/2026-05-15-sync.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/architecture/upstream-fork-model.md",
+        "docs/architecture/collector-projects.md"
+      ]
+    },
+    {
+      "path": "docs/history/upstream/2026-07-19-sync-3.1.2.md",
+      "sha256": "c582f69127cef64cacc49e0d77d14c2ea9793b27d4ba2a679157c34bbdfd02c5",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "July 3.1.2 selective port records adopted, adapted and excluded changes plus build and phone dialog checks. Real NGW vector and raster import remained manual.",
+      "applies_to": [
+        "docs/history/upstream/2026-07-19-sync-3.1.2.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/architecture/upstream-fork-model.md",
+        "docs/architecture/collector-projects.md",
+        "docs/architecture/map-rendering.md"
+      ]
+    },
+    {
+      "path": "docs/history/mobile-release-3.1.2.30-2026-10-23.md",
+      "sha256": "5a0e5b15547815aa5939a73a6d2d320831aced24297a273d41e541e77c8ad74b",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 23 delivery preparation binds fetched library merge pins and predecessor trees before the App squash. The earlier phone slice and local APK checks retain their own scope.",
+      "applies_to": [
+        "docs/history/mobile-release-3.1.2.30-2026-10-23.md",
+        "docs/runbooks/release-apk.md",
+        "docs/reference/flavors-and-versioning.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/lisa-local-release-2026-10-25.md",
+      "sha256": "29f20ed87ec5971875d5e68071bbec19e09e451b00892203e9fd2e03213d667a",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "First local 224 candidate 77e1227 records unmerged source pins under one dated exception, production identity and signature, and separate earlier unit/native coverage.",
+      "applies_to": [
+        "docs/history/lisa-local-release-2026-10-25.md",
+        "docs/runbooks/release-apk.md",
+        "docs/reference/flavors-and-versioning.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/lisa-local-release-tracks-labels-2026-10-25.md",
+      "sha256": "a63260d1ef78f54a3527983b196b331455caf899067ee4de663f06d412cefe4b",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Second signed local 224 candidate caed88b preserves the track and label fix closure and its own limited verification on exact source pins.",
+      "applies_to": [
+        "docs/history/lisa-local-release-tracks-labels-2026-10-25.md",
+        "docs/runbooks/release-apk.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/visible-line-labels.md"
+      ]
+    },
+    {
+      "path": "docs/history/lisa-local-release-dark-core-2026-10-25.md",
+      "sha256": "18214930caef0108aab2edeb10a2d538573891748050b5236c7bd608c9579919",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Signed local 280b78b candidate preserves the selected 4.5 px glow, its old Draft pins, metadata and separate skipped unit/native/UI checks.",
+      "applies_to": [
+        "docs/history/lisa-local-release-dark-core-2026-10-25.md",
+        "docs/runbooks/release-apk.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md"
+      ]
+    },
+    {
+      "path": "docs/history/lisa-local-release-track-glow-2026-10-25.md",
+      "sha256": "2274cc835d8685e41903b2552502795897b1dc3c15fea154354069e95226bbf4",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Signed local f06ccfb candidate preserves the 6.5 px refinement and release metadata alongside earlier candidates for comparison.",
+      "applies_to": [
+        "docs/history/lisa-local-release-track-glow-2026-10-25.md",
+        "docs/runbooks/release-apk.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md"
+      ]
+    },
+    {
+      "path": "docs/reference/debug-3.1.2.23-delivery.md",
+      "sha256": "e754111fcc2b6e870ec5477ce48d4e79c3baad0695ea680e0290b1841ac97f75",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "The debug 3.1.2.23/218 receipt preserves its exact inventory and debug-only publication authorization, separate from the current variant and publishing gates.",
+      "applies_to": [
+        "docs/reference/debug-3.1.2.23-delivery.md",
+        "docs/runbooks/release-apk.md",
+        "docs/reference/flavors-and-versioning.md",
+        "docs/runbooks/workstation-and-build.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-release-3.1.2.31-2026-11-01.md",
+      "sha256": "38d2261c1e5ee4f2916c5e42db3fec3b93a1efbfc532ad9d3aa1568d78175d6b",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "The 225 release record preserves Full 256 PASS and 17 FAIL, narrower subsequent observations, exact pin matrices and the held signed baseline.",
+      "applies_to": [
+        "docs/reference/mobile-release-3.1.2.31-2026-11-01.md",
+        "docs/runbooks/release-apk.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/reference/flavors-and-versioning.md"
+      ]
+    },
+    {
+      "path": "docs/handoffs/2026-11-01-mobile-release-31231.md",
+      "sha256": "f09bf1e5dbccd3ec3bd2a98e39f4af11b00783c0e98db37a791ef7fb649a8617",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "The November 2 checkpoint preserves merged source status separately from the absent new APK, failed prior runs, paused device work and historical continuation instruction.",
+      "applies_to": [
+        "docs/handoffs/2026-11-01-mobile-release-31231.md",
+        "docs/runbooks/release-apk.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
     }
   ]
 }
