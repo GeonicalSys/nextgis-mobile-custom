@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-apk-contrast-orbit-delivery-frame",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "«Контрастная орбита»: maplib #48 (Merge Commit",
+        "`f2c676a6ea0e35dfb97f539ee3b5a9b653b273ab`) → fetched pin в app #57 →",
+        "зелёный CI итогового app head → app #57 (Squash). Для локального Lisa Release",
+        "проверить все строки [матрицы закрытия](../history/contrast-orbit-delivery-2026-10-11.md),",
+        "включение merged библиотеки и предыдущих исправлений. #48 слит и fetched pin",
+        "обновлён; до зелёного CI и Squash #57 release-сборка заблокирована.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Preserves the point-in-time blocked state before App #57 squash."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-apk-contrast-orbit-delivery-frame"
+    ]
+  }
+}

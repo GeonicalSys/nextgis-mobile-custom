@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:release-apk-publisher-dry-run-and-host-authentication",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Сначала обязательный dry-run:",
+        "",
+        "```powershell",
+        "Set-Location C:\\dev\\lisa\\android_projects\\upload_mobile",
+        ".\\publish_apk.bat \"ПУТЬ_К_APK\" --branch lisa --notes \"Описание\" --dry-run",
+        "```",
+        "",
+        "После проверки повторить без `--dry-run`. Для других вариантов заменить branch",
+        "на `belka` или `debug`. Для Lisa Debug передаётся APK из",
+        "`app\\build\\outputs\\apk\\lisa\\debug\\`, даже если его локальный basename содержит",
+        "production version: publisher читает реальную версию из APK и переименовывает",
+        "артефакт. Publisher требует SSH deploy-ключ и проверенный host key, не принимает",
+        "SSH-пароли и не устанавливает server scripts.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:release-apk-publisher-apk-identity-input",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:release-apk-publisher-dry-run-and-host-authentication"
+    ]
+  }
+}

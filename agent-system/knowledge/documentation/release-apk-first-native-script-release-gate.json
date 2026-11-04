@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:release-apk-first-native-script-release-gate",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Gate для native правил проекта",
+        "",
+        "При первом выпуске с project scripts проверить pinned NDK/CMake, четыре ABI,",
+        "16 KiB ELF alignment, отдельный UID, Unicode, timeout/OOM и фактический form Save.",
+        "Обязателен closure maplib → maplibui → app с fetched merge-commit pins; до него",
+        "не собирать/не публиковать release APK и не давать команды публикации.",
+        "[Архитектура](../architecture/project-scripts.md),",
+        "[текущая проверка](../reference/project-scripts-verification.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:release-apk-first-native-script-release-gate"
+    ]
+  }
+}

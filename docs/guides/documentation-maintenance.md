@@ -107,6 +107,13 @@ related_code:
 [инцидент и откат](../runbooks/incident-and-rollback.md) и
 [разбор GlitchTip](../runbooks/glitchtip-triage.md).
 
+## Сборка и выпуск
+
+Правьте настройку среды, матрицу APK, правила обновления и приёмки
+отдельно от датированных свидетельств. После проекции проверьте
+[настройку рабочего места](../runbooks/workstation-and-build.md) и
+[регламент выпуска](../runbooks/release-apk.md).
+
 ## Maturity
 
 - `draft`: разрешены подтверждённые TODO, документ ещё не полон.

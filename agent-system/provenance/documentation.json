@@ -5829,6 +5829,303 @@
           "end_byte": 6471
         }
       ]
+    },
+    {
+      "path": "docs/runbooks/release-apk.md",
+      "record": "release-apk.json",
+      "id": "lisa:mobile:resource:release-apk",
+      "revision": "496d7ba0c0cd8fc5a888b62ef710e4748e89bb14",
+      "blob": "173305e753a17878571a13fd5f915e735976ebff",
+      "sha256": "5f9ff18b5c9c5ac2b79aa570bc1e36f6218be83cb8cbae4a50c69b3a4fa06b44",
+      "bytes": 29254,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:release-apk",
+          "start_byte": 0,
+          "end_byte": 569
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-local-checks-and-real-window-publication-gate",
+          "start_byte": 569,
+          "end_byte": 1002
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-november-1-release-preparation",
+          "start_byte": 1002,
+          "end_byte": 1558
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-october-26-lisa-publication-stage",
+          "start_byte": 1558,
+          "end_byte": 2221
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-variant-diagnostic-dsn-and-sdk-checks",
+          "start_byte": 2221,
+          "end_byte": 3127
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-versioning-section",
+          "start_byte": 3127,
+          "end_byte": 3144
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-november-1-version-frame",
+          "start_byte": 3144,
+          "end_byte": 3373
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-production-versus-debug-versioning",
+          "start_byte": 3373,
+          "end_byte": 4277
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-independent-version-oracle-and-release-notes",
+          "start_byte": 4277,
+          "end_byte": 4827
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-mandatory-build-section",
+          "start_byte": 4827,
+          "end_byte": 4902
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-october-23-local-lisa-224",
+          "start_byte": 4902,
+          "end_byte": 5807
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-release-223-chain",
+          "start_byte": 5807,
+          "end_byte": 6181
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-october-17-local-build",
+          "start_byte": 6181,
+          "end_byte": 6679
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-orbit-ring-222-chain",
+          "start_byte": 6679,
+          "end_byte": 7200
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-contrast-orbit-delivery-frame",
+          "start_byte": 7200,
+          "end_byte": 7804
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-orbit-and-layer-drag-delivery",
+          "start_byte": 7804,
+          "end_byte": 8584
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-october-10-offline-sync-delivery",
+          "start_byte": 8584,
+          "end_byte": 9312
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-october-9-feature-type-delivery",
+          "start_byte": 9312,
+          "end_byte": 10537
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-ordinary-apk-version-matrix",
+          "start_byte": 10537,
+          "end_byte": 11266
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-basename-versus-apk-identity",
+          "start_byte": 11266,
+          "end_byte": 11715
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-flavor-identity-signature-and-install-checks",
+          "start_byte": 11715,
+          "end_byte": 12127
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-release-sdk-and-dependency-checks",
+          "start_byte": 12127,
+          "end_byte": 12756
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-legacy-debug-bridge-and-explicit-data-preservation",
+          "start_byte": 12756,
+          "end_byte": 14177
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-legacy-debug-bridge-negative-trust-check",
+          "start_byte": 14177,
+          "end_byte": 14372
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-background-update-job-and-startup-route",
+          "start_byte": 14372,
+          "end_byte": 14998
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-updater-and-main-screen-reminder-clocks",
+          "start_byte": 14998,
+          "end_byte": 15531
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-download-network-ownership-and-range-recovery",
+          "start_byte": 15531,
+          "end_byte": 16446
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-verified-apk-ready-state-and-user-install",
+          "start_byte": 16446,
+          "end_byte": 17422
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-foreground-update-timing-and-retry",
+          "start_byte": 17422,
+          "end_byte": 18523
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-pending-install-versus-new-update-check",
+          "start_byte": 18523,
+          "end_byte": 18881
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-manifest-network-and-log-diagnostics",
+          "start_byte": 18881,
+          "end_byte": 19839
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-startup-and-pending-unit-oracles",
+          "start_byte": 19839,
+          "end_byte": 20209
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-variant-manifest-address-and-schema",
+          "start_byte": 20209,
+          "end_byte": 20849
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-manifest-apk-and-certificate-validation",
+          "start_byte": 20849,
+          "end_byte": 21656
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-install-permission-return-and-one-shot-continuation",
+          "start_byte": 21656,
+          "end_byte": 22496
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-signing-privacy",
+          "start_byte": 22496,
+          "end_byte": 22705
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-android-nine-ten-device-gate",
+          "start_byte": 22705,
+          "end_byte": 23068
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-publisher-apk-identity-input",
+          "start_byte": 23068,
+          "end_byte": 23348
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-publisher-dry-run-and-host-authentication",
+          "start_byte": 23348,
+          "end_byte": 24182
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-server-lock-and-manifest-commit",
+          "start_byte": 24182,
+          "end_byte": 24584
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-publisher-rollback-and-prune-boundary",
+          "start_byte": 24584,
+          "end_byte": 25121
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-release-completion-readback-and-authorization",
+          "start_byte": 25121,
+          "end_byte": 25576
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-debug-companion-exporter-and-transfer-confirmation",
+          "start_byte": 25576,
+          "end_byte": 26230
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-first-native-script-release-gate",
+          "start_byte": 26230,
+          "end_byte": 26859
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-full-and-check-publication-order",
+          "start_byte": 26859,
+          "end_byte": 27441
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-publication-blockers-and-test-project-consent",
+          "start_byte": 27441,
+          "end_byte": 27929
+        },
+        {
+          "id": "lisa:mobile:resource:release-apk-retained-failure-and-owned-cleanup-gate",
+          "start_byte": 27929,
+          "end_byte": 28852
+        },
+        {
+          "id": "lisa:mobile:evidence:release-apk-october-17-native-catalogue-checkpoint",
+          "start_byte": 28852,
+          "end_byte": 29254
+        }
+      ]
+    },
+    {
+      "path": "docs/runbooks/workstation-and-build.md",
+      "record": "workstation-and-build.json",
+      "id": "lisa:mobile:resource:workstation-and-build",
+      "revision": "496d7ba0c0cd8fc5a888b62ef710e4748e89bb14",
+      "blob": "803f6978b606e0a0463807b9eba34f330868477c",
+      "sha256": "1c8233b3b619d605596c0756c34ad21cada5a688231d808333ae29eb7dd9e16d",
+      "bytes": 3184,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:workstation-and-build",
+          "start_byte": 0,
+          "end_byte": 282
+        },
+        {
+          "id": "lisa:mobile:resource:workstation-and-build-sdk-jdk-and-module-checkout",
+          "start_byte": 282,
+          "end_byte": 725
+        },
+        {
+          "id": "lisa:mobile:resource:workstation-and-build-local-config-and-secret-scope",
+          "start_byte": 725,
+          "end_byte": 1000
+        },
+        {
+          "id": "lisa:mobile:resource:workstation-and-build-ordinary-gradle-build-and-scope",
+          "start_byte": 1000,
+          "end_byte": 1436
+        },
+        {
+          "id": "lisa:mobile:resource:workstation-and-build-workstation-troubleshooting-table",
+          "start_byte": 1436,
+          "end_byte": 2060
+        },
+        {
+          "id": "lisa:mobile:resource:workstation-and-build-emulator-host-requirement-and-audit-isolation",
+          "start_byte": 2060,
+          "end_byte": 2705
+        },
+        {
+          "id": "lisa:mobile:evidence:workstation-and-build-historical-reliability-suite-scope",
+          "start_byte": 2705,
+          "end_byte": 3184
+        }
+      ]
     }
   ]
 }

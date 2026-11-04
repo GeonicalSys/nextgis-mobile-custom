@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-apk-orbit-and-layer-drag-delivery",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "«Орбита» и исправление завершения перетаскивания слоёв: maplib #47",
+        "(Merge Commit `fa11fc72226b776ed528e207772ac26575180577`) → fetched pin в app #56",
+        "→ зелёный CI на новом app head → app #56 (Squash). По запросу 11 октября нужен",
+        "локальный Lisa Release APK для проверки компаса на телефоне. Перед сборкой",
+        "сверить remote tip, pin и включение всех исправлений; затем выполнить version",
+        "matrix для Lisa Debug и обеих release. Версии остаются прежними; публикация и",
+        "установка на рабочий телефон не входят в этот шаг.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Retains the Oct 11 request and the version-matrix variants for that frame."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-apk-orbit-and-layer-drag-delivery"
+    ]
+  }
+}

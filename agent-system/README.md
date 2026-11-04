@@ -146,6 +146,11 @@ Keep event eligibility, transport acknowledgment, OS exit evidence and backup re
 Keep dated incident results and original limits in evidence records.
 Regenerate the three published views with the ordinary projector.
 
+Edit App workstation and APK release runbooks in **knowledge/documentation/**.
+Keep version, build, updater, Full and publication gates separate.
+Preserve dated authorizations, release frames and earlier device setup in evidence.
+Regenerate the two published views with the ordinary projector.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

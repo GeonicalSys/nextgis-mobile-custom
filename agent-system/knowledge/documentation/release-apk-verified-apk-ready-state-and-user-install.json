@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:release-apk-verified-apk-ready-state-and-user-install",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После проверки размера, hash, product/version и сертификата APK остаётся в",
+        "private `files/updates/`, а `app_update_state.ready_manifest` фиксируется синхронно.",
+        "При запуске сначала проверяется локальное состояние, включая offline: только",
+        "проверенный APK даёт диалог «Обновление готово» с «Обновить» и «Позже».",
+        "«Позже» оставляет файл до следующего запуска; фон сам не вызывает установщик.",
+        "Перед установкой файл проверяется повторно. Старый `cache/updates` поддерживается",
+        "только для незавершённого install-permission перехода прежней версии.",
+        "Verification APK не планирует запросы к production release repository.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:release-apk-manifest-apk-and-certificate-validation",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:release-apk-verified-apk-ready-state-and-user-install"
+    ]
+  }
+}

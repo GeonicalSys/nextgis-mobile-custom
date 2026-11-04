@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-apk-october-10-offline-sync-delivery",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Исправления offline sync, уведомлений и GPS обхода: maplibui #35 (Merge Commit",
+        "`795f2c681fbed53e0ef496775a10a05e1a6a7124`) → fetched pin в app #55 → app #55",
+        "(Squash). По запросу 10 октября нужен локальный Lisa Release APK без повышения",
+        "версии, публикации и установки на рабочий телефон. Все required изменения",
+        "в app base #54 / maplib #46 / maplibui #34 и этой цепочке должны входить в remote",
+        "tip; только затем запускать version matrix. Детали:",
+        "[проверка исправлений](../history/sync-offline-walk-verification-2026-10-10.md).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Pins and local Lisa scope belong to the Oct 10 delivery."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-apk-october-10-offline-sync-delivery"
+    ]
+  }
+}
