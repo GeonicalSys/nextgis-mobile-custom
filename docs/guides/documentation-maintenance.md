@@ -67,6 +67,14 @@ related_code:
 проверьте [копирование и преобразования](../architecture/feature-copy-transform.md)
 и [выбор типа](../architecture/feature-type-creation.md).
 
+## Архитектура и сопровождение форка
+
+Правьте границы владельцев и зависимостей отдельно от порядка upstream merge.
+После проекции проверьте [архитектуру](../architecture/overview.md),
+[модель форка](../architecture/upstream-fork-model.md),
+[каталог кастомизаций](../reference/fork-customizations.md) и
+[регламент синхронизации](../runbooks/upstream-sync.md).
+
 ## Maturity
 
 - `draft`: разрешены подтверждённые TODO, документ ещё не полон.

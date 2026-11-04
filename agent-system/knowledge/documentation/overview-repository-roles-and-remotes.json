@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:overview-repository-roles-and-remotes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:overview"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/overview.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Репозитории",
+        "",
+        "| Repository | Содержимое | Граница изменений |",
+        "|---|---|---|",
+        "| `android_gisapp` | `app`, `wizardpager`, root build, release и central docs | Пользовательский продукт и координация сабмодулей |",
+        "| `maplibui` | UI, services, Collector registry, layer fill | Android/UI orchestration поверх GIS model |",
+        "| `maplib` | GIS model, storage, NGW, MapLibre rendering | Библиотечные контракты и данные |",
+        "| `easypicker` | Picker widget | Вспомогательная upstream-библиотека |",
+        "",
+        "Точные remotes и политика документации:",
+        "[`../registry/repositories.yaml`](../registry/repositories.yaml).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:overview-repository-roles-and-remotes"
+    ]
+  }
+}

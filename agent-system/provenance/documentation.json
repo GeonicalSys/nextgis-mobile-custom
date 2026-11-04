@@ -3839,6 +3839,205 @@
           "end_byte": 8743
         }
       ]
+    },
+    {
+      "path": "docs/architecture/overview.md",
+      "record": "overview.json",
+      "id": "lisa:mobile:resource:overview",
+      "revision": "0c6d7028a8f89880bc020f7fee81b3b320cebfb5",
+      "blob": "985398720b29ba83b025dae192c158fbffcc246a",
+      "sha256": "13210e575166cdf7080dde4e3e9d562ce788a47336511db4cac564dc061b738d",
+      "bytes": 4133,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:overview",
+          "start_byte": 0,
+          "end_byte": 253
+        },
+        {
+          "id": "lisa:mobile:resource:overview-repository-roles-and-remotes",
+          "start_byte": 253,
+          "end_byte": 1010
+        },
+        {
+          "id": "lisa:mobile:resource:overview-gradle-api-and-transitive-consumers",
+          "start_byte": 1010,
+          "end_byte": 1765
+        },
+        {
+          "id": "lisa:mobile:resource:overview-runtime-owner-routes",
+          "start_byte": 1765,
+          "end_byte": 2559
+        },
+        {
+          "id": "lisa:mobile:resource:overview-dependency-direction-and-registry-updates",
+          "start_byte": 2559,
+          "end_byte": 3048
+        },
+        {
+          "id": "lisa:mobile:resource:overview-desktop-ngw-and-offline-import-boundaries",
+          "start_byte": 3048,
+          "end_byte": 4133
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture/upstream-fork-model.md",
+      "record": "upstream-fork-model.json",
+      "id": "lisa:mobile:resource:upstream-fork-model",
+      "revision": "0c6d7028a8f89880bc020f7fee81b3b320cebfb5",
+      "blob": "56ea19fe2c4976e42afa45751b4a8313068da1ae",
+      "sha256": "9734d59bfe2668c8d9586ffaf33f8055f59642ec1daeacf2a2837b9e76875995",
+      "bytes": 1793,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:upstream-fork-model",
+          "start_byte": 0,
+          "end_byte": 300
+        },
+        {
+          "id": "lisa:mobile:resource:upstream-fork-model-origin-upstream-and-effective-branch",
+          "start_byte": 300,
+          "end_byte": 613
+        },
+        {
+          "id": "lisa:mobile:resource:upstream-fork-model-conflict-classification-and-invariant",
+          "start_byte": 613,
+          "end_byte": 1229
+        },
+        {
+          "id": "lisa:mobile:resource:upstream-fork-model-library-commit-and-root-pointer",
+          "start_byte": 1229,
+          "end_byte": 1793
+        }
+      ]
+    },
+    {
+      "path": "docs/reference/fork-customizations.md",
+      "record": "fork-customizations.json",
+      "id": "lisa:mobile:resource:fork-customizations",
+      "revision": "0c6d7028a8f89880bc020f7fee81b3b320cebfb5",
+      "blob": "7e679db912517e36b156e795dce6f7e4b325853a",
+      "sha256": "ba23610b190e90f8947cc08332e6174410f926019b0a32f2e787c4b7b3f55615",
+      "bytes": 11072,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:fork-customizations",
+          "start_byte": 0,
+          "end_byte": 237
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-diagnostic-queue-owner-route",
+          "start_byte": 237,
+          "end_byte": 587
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-project-sync-owner-route",
+          "start_byte": 587,
+          "end_byte": 1037
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-catalog-scope-and-official-handoff",
+          "start_byte": 1037,
+          "end_byte": 1975
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-build-editing-and-rendering-routes",
+          "start_byte": 1975,
+          "end_byte": 2990
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-ngw-account-import-and-layer-config-routes",
+          "start_byte": 2990,
+          "end_byte": 4385
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-project-composition-backup-and-workspace-routes",
+          "start_byte": 4385,
+          "end_byte": 5179
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-preferences-underlays-upstream-and-delivery-routes",
+          "start_byte": 5179,
+          "end_byte": 6623
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-backup-and-render-order-invariants",
+          "start_byte": 6623,
+          "end_byte": 7429
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-composition-isolation-and-recovery-invariants",
+          "start_byte": 7429,
+          "end_byte": 8328
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-account-isolation-identity-and-versioning",
+          "start_byte": 8328,
+          "end_byte": 8764
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-stakeout-and-local-editing-invariants",
+          "start_byte": 8764,
+          "end_byte": 9755
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-catalog-maintenance-and-official-review",
+          "start_byte": 9755,
+          "end_byte": 10528
+        },
+        {
+          "id": "lisa:mobile:resource:fork-customizations-project-script-route-and-open-work",
+          "start_byte": 10528,
+          "end_byte": 11072
+        }
+      ]
+    },
+    {
+      "path": "docs/runbooks/upstream-sync.md",
+      "record": "upstream-sync.json",
+      "id": "lisa:mobile:resource:upstream-sync",
+      "revision": "0c6d7028a8f89880bc020f7fee81b3b320cebfb5",
+      "blob": "2ed2214a9f754e326dee5633ddef62c5f71ba45c",
+      "sha256": "191c0992784d10eea4b2959e329906a714d94a29492f147f3febd39aebd538e7",
+      "bytes": 2793,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:upstream-sync",
+          "start_byte": 0,
+          "end_byte": 237
+        },
+        {
+          "id": "lisa:mobile:resource:upstream-sync-inventory-and-conflict-inputs",
+          "start_byte": 237,
+          "end_byte": 599
+        },
+        {
+          "id": "lisa:mobile:resource:upstream-sync-windows-powershell-inventory-and-safe-directory",
+          "start_byte": 599,
+          "end_byte": 1142
+        },
+        {
+          "id": "lisa:mobile:resource:upstream-sync-heads-and-cleanliness-gate",
+          "start_byte": 1142,
+          "end_byte": 1363
+        },
+        {
+          "id": "lisa:mobile:resource:upstream-sync-backup-tags-and-library-merge-order",
+          "start_byte": 1363,
+          "end_byte": 1873
+        },
+        {
+          "id": "lisa:mobile:resource:upstream-sync-conflict-rationale-and-smoke-contract",
+          "start_byte": 1873,
+          "end_byte": 2358
+        },
+        {
+          "id": "lisa:mobile:resource:upstream-sync-compatibility-checks-and-delivery-authority",
+          "start_byte": 2358,
+          "end_byte": 2793
+        }
+      ]
     }
   ]
 }

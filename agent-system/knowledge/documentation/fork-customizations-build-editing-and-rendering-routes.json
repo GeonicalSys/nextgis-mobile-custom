@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:fork-customizations-build-editing-and-rendering-routes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:fork-customizations"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/fork-customizations.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Область | Где описано | Основные владельцы |",
+        "|---|---|---|",
+        "| Сборка, AGP, flavors и версии | [build-matrix.md](build-matrix.md), [release-apk.md](../runbooks/release-apk.md) | `app/build.gradle`, `maplib/build.gradle` |",
+        "| Walk-by-geometry | [map-rendering.md](../architecture/map-rendering.md) | `MapFragment`, `MapDrawable`, `EditLayerOverlay`, `WalkEditService` |",
+        "| Вынос координат и звуковое наведение | [stakeout.md](../architecture/stakeout.md) | `StakeoutGeometryTarget`, `GpsEventSource`, `StakeoutController`, `MapFragment` |",
+        "| MapLibre rendering, hot reload и порядок слоёв | [map-rendering.md](../architecture/map-rendering.md) | `MapDrawable`, `MPLFeaturesUtils`, `VectorLayerRenderCache` |",
+        "| Производительность карты и прямые SQLite vector tiles | [map-performance.md](../architecture/map-performance.md) | `VectorLayer`, `SqliteVectorTileProvider`, `SqliteVectorSourceBridge` |"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:fork-customizations-build-editing-and-rendering-routes"
+    ]
+  }
+}

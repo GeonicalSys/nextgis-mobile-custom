@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:fork-customizations-backup-and-render-order-invariants",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:fork-customizations"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/fork-customizations.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Обязательные инварианты",
+        "",
+        "- Локальные данные нельзя разрушать до успешного backup: `INV-BACKUP-BEFORE-DESTRUCTION`.",
+        "- Порядок модели слоёв и MapLibre style должен совпадать после cold start, hot add и reorder:",
+        "  `INV-LAYER-ORDER`, `INV-HOT-ADD-CONSISTENCY`.",
+        "- Start/end flags треков намеренно отключены: `INV-NO-TRACK-FLAGS`.",
+        "- Курсор текущего местоположения остаётся поверх треков и других объектов независимо от",
+        "  пользовательского порядка слоёв; под ним сектор направления компаса и круг точности:",
+        "  `INV-LOCATION-CURSOR-TOP`."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:fork-customizations-backup-and-render-order-invariants"
+    ]
+  }
+}

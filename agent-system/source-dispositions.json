@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "31412be3686cac7254b46a77df34da76126c33b2e6a20d57a364e2ba4688f4ac",
+      "sha256": "4d39d40b58f9b0d88a889dcdf6892a1feb2fc82cbc1ad2fdbc1d5928db7907d7",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "4934b9bb542e22e6411b019e17cdea60f1b6616936e182a7949f0a4dc094ee2a",
+      "sha256": "b1266e873b44ee4f342fa34b8093dcee80eedb44f82c428fbb3ad354a5a7d228",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -136,7 +136,11 @@
         "docs/architecture/cascading-form-lists.md",
         "docs/architecture/project-scripts.md",
         "docs/architecture/feature-copy-transform.md",
-        "docs/architecture/feature-type-creation.md"
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/overview.md",
+        "docs/architecture/upstream-fork-model.md",
+        "docs/reference/fork-customizations.md",
+        "docs/runbooks/upstream-sync.md"
       ],
       "reason": "Pinned exact App Markdown source bytes and stable published addresses."
     },

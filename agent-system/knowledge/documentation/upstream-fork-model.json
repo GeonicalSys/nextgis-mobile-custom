@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:upstream-fork-model",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/upstream-fork-model.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/upstream-fork-model.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Модель форка и взаимодействие с upstream",
+        "type: architecture",
+        "last_verified: 2026-07-19",
+        "related_code:",
+        "  - .gitmodules",
+        "  - tools/upstream-sync.ps1",
+        "  - docs/reference/fork-customizations.md"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Модель форка и взаимодействие с upstream",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:upstream-fork-model-origin-upstream-and-effective-branch",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:upstream-fork-model-conflict-classification-and-invariant",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:upstream-fork-model-library-commit-and-root-pointer",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:upstream-fork-model"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:fork-customizations-account-isolation-identity-and-versioning",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:fork-customizations"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/fork-customizations.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Ошибка одного account не подавляет синхронизацию активного проекта:",
+        "  `INV-SYNC-ACCOUNT-ISOLATION`.",
+        "- Runtime, authenticator и sync adapter используют один account type каждого variant:",
+        "  `INV-NGW-ACCOUNT-IDENTITY`.",
+        "- `versionName` приложения и `maplib` выравниваются, а `versionCode` форка остаётся уникальным."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:fork-customizations-account-isolation-identity-and-versioning"
+    ]
+  }
+}

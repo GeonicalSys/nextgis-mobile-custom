@@ -121,6 +121,11 @@ destination eligibility, gesture cancellation and form checkpoints separate.
 Keep earlier device, boot and integration results as historical evidence.
 Run the ordinary projector after editing and check the established addresses.
 
+Edit the App architecture, fork model, customizations catalog and upstream
+workflow under **knowledge/documentation/**. Keep runtime owner boundaries,
+conflict decisions and staged library pointers separate. Generate the views
+with the ordinary projector. Historical cycles keep their original scope.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.
