@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:shared-underlays-underlay-follow-up-draft-delivery",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Исправления каталога, импорта и companion оформлены в",
+        "maplib [PR #23](https://github.com/GeonicalSys/android_maplib/pull/23) и",
+        "app [PR #29](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/29).",
+        "Root закрепляет удалённый Merge Commit maplib",
+        "`96db5423c5afd50c2ff887068fe7b84a77acbe76`: его дерево идентично проверенному",
+        "`a5603fb7`, а ancestry сохраняет #21/#22/#23. App использует Squash Merge;",
+        "после него целевое дерево сверяется с итоговой веткой, включая этот pin.",
+        "Maplibui остаётся на `4052cde3`, easypicker — на `f91abdf`; незакрытых",
+        "библиотечных зависимостей для исправлений нет. GPS/обход и marker-icons-64",
+        "включены из прежних app #26/#27/#28. Повышение версии и публикация APK",
+        "отложены по отдельному решению пользователя; publisher не меняется.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Historical follow-up PRs, exact pins and then-current publication deferral."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:shared-underlays-underlay-follow-up-draft-delivery"
+    ]
+  }
+}

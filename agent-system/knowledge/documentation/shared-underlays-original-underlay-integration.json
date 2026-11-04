@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:shared-underlays-original-underlay-integration",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Исходные изменения интегрированы: app #26 (GPS/обход), #27 (маркеры 64×64),",
+        "#28 (каталог и companion); maplib #21/#22 и maplibui #13/#14. База исправлений —",
+        "app `b6eabfa`, maplib `998daff`, maplibui `4052cde3`. Сохранность app squash",
+        "проверена по содержимому, библиотек — по ancestry и итоговым pins."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The app and library integration bases retain distinct Git readback methods."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:shared-underlays-original-underlay-integration"
+    ]
+  }
+}

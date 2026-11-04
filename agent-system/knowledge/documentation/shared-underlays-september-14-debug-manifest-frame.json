@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:shared-underlays-september-14-debug-manifest-frame",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "На 2026-09-14 публичный debug manifest отдаёт `3.1.2.17/212`, commit `fd7b636`.",
+        "Эта версия уже содержит exporter и пригодна для обновления старого Debug",
+        "`3.0.3.5/183`; само отличие от локального `3.1.2.18/213` не требует публикации",
+        "ради переноса. Проверяется фактический скачанный APK, а не только версия или",
+        "manifest. Эта задача не публикует APK и не повышает версии; неподходящий",
+        "серверный APK не устанавливается.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Retains the observed public version and source frame, separate from current manifest rules."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:shared-underlays-september-14-debug-manifest-frame"
+    ]
+  }
+}

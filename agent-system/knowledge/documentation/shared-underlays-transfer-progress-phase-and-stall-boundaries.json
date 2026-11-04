@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays-transfer-progress-phase-and-stall-boundaries",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Наблюдаемость переноса Debug —2ноября2026",
+        "",
+        "LegacyUnderlayImporter публикует OPENING, RECEIVING, FINALIZING, ATTACHING и",
+        "STALLED с elapsed текущей попытки. Bytes/tiles — полученный объём, не процент",
+        "завершённого переноса. После complete record watchdog продолжает heartbeat/",
+        "progress через checkpoint, sync, inspect/hash/publish до close; remote90s",
+        "inactivity не применяется к local finalize/attach. Один retry сохранён.",
+        "Late PFD уже timed-out попытки закрывается до чтения. Current uncanceled",
+        "TransferControl владеет UI; отмена queued worker восстанавливает экран и",
+        "освобождает его lease, running IO удерживает ownership до выхода.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:shared-underlays-pipe-inactivity-retry-and-lease",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays-transfer-progress-phase-and-stall-boundaries"
+    ]
+  }
+}

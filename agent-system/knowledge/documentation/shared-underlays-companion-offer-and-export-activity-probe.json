@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays-companion-offer-and-export-activity-probe",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "# Обновление Debug перед переносом",
+        "",
+        "Только production Geonical предлагает обновить установленный доверенный Debug,",
+        "если у него ещё нет export Activity. При новом создании MainActivity предложение",
+        "повторяется; «Не сейчас» не сохраняется. Оно ждёт освобождения окна после crash",
+        "recovery. Pending self-update имеет приоритет. Показ предложения отменяет только",
+        "автоматическую проверку обновления Geonical в этом запуске; ручная доступна.",
+        "Наличие exporter проверяется через `PackageManager.resolveActivity` вместе",
+        "с enabled/exported Activity и enabled application. `Intent.resolveActivity`",
+        "здесь недопустим: для явного ComponentName он возвращает имя даже отсутствующей",
+        "Activity, из-за чего старый Debug ошибочно пропускал предложение обновления.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays-companion-offer-and-export-activity-probe"
+    ]
+  }
+}

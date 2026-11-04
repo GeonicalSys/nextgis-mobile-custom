@@ -160,6 +160,11 @@ Edit the manual resource profiling runbook in **knowledge/documentation/**.
 Keep capture ownership, stop acknowledgment, transfer and interpretation independent.
 Keep T40 evidence in its original frame and regenerate the established view.
 
+Edit shared underlay storage and the Debug bridge in **knowledge/documentation/**.
+Keep asset identity, project links, migration and deletion journals, and transfer ownership distinct.
+Preserve each device, APK and native check in its original frame.
+Regenerate the published view with the ordinary projector.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

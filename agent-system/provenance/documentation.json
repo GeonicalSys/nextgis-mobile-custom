@@ -7199,6 +7199,202 @@
           "end_byte": 19154
         }
       ]
+    },
+    {
+      "path": "docs/architecture/shared-underlays.md",
+      "record": "shared-underlays.json",
+      "id": "lisa:mobile:resource:shared-underlays",
+      "revision": "1d0a55b985eccbd8631af8d0acdb582d4c344a55",
+      "blob": "67dd1cf44e8541ca4420367cd44e38227a2a1ebf",
+      "sha256": "65cc5b9a2e113cfd875f4f9bf9eabe72bc317b511db706b94c672f833ebb9cbd",
+      "bytes": 28086,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:shared-underlays",
+          "start_byte": 0,
+          "end_byte": 1183
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-catalog-fitted-dialogs-and-callbacks",
+          "start_byte": 1183,
+          "end_byte": 1668
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-application-id-storage-ownership",
+          "start_byte": 1668,
+          "end_byte": 2213
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-asset-identity-and-project-owned-layer",
+          "start_byte": 2213,
+          "end_byte": 2855
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-streaming-ngrc-import-and-full-archive-hash",
+          "start_byte": 2855,
+          "end_byte": 3642
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-ngrc-entry-normalization-and-collision",
+          "start_byte": 3642,
+          "end_byte": 4126
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-raster-scheme-staging-and-mbtiles-import",
+          "start_byte": 4126,
+          "end_byte": 5089
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-import-classifier-and-picker-boundary",
+          "start_byte": 5089,
+          "end_byte": 6501
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-legacy-migration-eligibility-and-rename",
+          "start_byte": 6501,
+          "end_byte": 7145
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-moving-journal-and-restart-recovery",
+          "start_byte": 7145,
+          "end_byte": 7861
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-closed-project-lease-and-idempotent-marker",
+          "start_byte": 7861,
+          "end_byte": 8469
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-pre-registry-debug-source-preservation",
+          "start_byte": 8469,
+          "end_byte": 8960
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-dedup-redirect-and-durable-links",
+          "start_byte": 8960,
+          "end_byte": 9707
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-redirect-reference-config-and-project-settings",
+          "start_byte": 9707,
+          "end_byte": 10834
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-renderer-exporter-and-importer-payload-paths",
+          "start_byte": 10834,
+          "end_byte": 11318
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-pipe-inactivity-retry-and-lease",
+          "start_byte": 11318,
+          "end_byte": 12167
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-confirmed-user-cancel-and-process-teardown",
+          "start_byte": 12167,
+          "end_byte": 12829
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-catalog-theme-insets-and-menu-entry",
+          "start_byte": 12829,
+          "end_byte": 13777
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-project-unlink-and-catalog-retention",
+          "start_byte": 13777,
+          "end_byte": 14197
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-confirmed-payload-deletion-and-reference-sweep",
+          "start_byte": 14197,
+          "end_byte": 15198
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-companion-offer-and-export-activity-probe",
+          "start_byte": 15198,
+          "end_byte": 16357
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-catalog-companion-and-active-project-identity",
+          "start_byte": 16357,
+          "end_byte": 17280
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-companion-permission-recovery-and-project-pin",
+          "start_byte": 17280,
+          "end_byte": 18195
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-focus-race-and-external-window-owner",
+          "start_byte": 18195,
+          "end_byte": 19131
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-trusted-debug-manifest-and-apk-identity",
+          "start_byte": 19131,
+          "end_byte": 19761
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-underlays-september-14-debug-manifest-frame",
+          "start_byte": 19761,
+          "end_byte": 20422
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-jvm-regression-oracles",
+          "start_byte": 20422,
+          "end_byte": 20923
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-underlays-september-14-source-and-package-checks",
+          "start_byte": 20923,
+          "end_byte": 21237
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-underlays-september-14-a54-acceptance-and-limits",
+          "start_byte": 21237,
+          "end_byte": 22725
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-underlays-september-14-a56-user-archive",
+          "start_byte": 22725,
+          "end_byte": 23433
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-underlays-september-14-debug-offer-and-install",
+          "start_byte": 23433,
+          "end_byte": 24078
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-underlays-focus-race-local-install-receipt",
+          "start_byte": 24078,
+          "end_byte": 24829
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-underlays-original-underlay-integration",
+          "start_byte": 24829,
+          "end_byte": 25254
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-underlays-underlay-follow-up-draft-delivery",
+          "start_byte": 25254,
+          "end_byte": 26342
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-transfer-progress-phase-and-stall-boundaries",
+          "start_byte": 26342,
+          "end_byte": 27221
+        },
+        {
+          "id": "lisa:mobile:resource:shared-underlays-transfer-opening-ui-and-cancel-control",
+          "start_byte": 27221,
+          "end_byte": 27464
+        },
+        {
+          "id": "lisa:mobile:evidence:shared-underlays-november-2-compiled-checks-and-unknown",
+          "start_byte": 27464,
+          "end_byte": 28086
+        }
+      ]
     }
   ]
 }

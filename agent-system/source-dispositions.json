@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "b5e33add35d3164d091adbc7c360328891a4a4be9db609bbc7ee4d5fddf996bd",
+      "sha256": "cbab76f00b8d1c5cf292bd65b7ecefa886efd51e61596da1c2c4c6fc9f34dba9",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "7a13291f27cb88ea86a9cca084642ac168f0444700d87e0ca218a9273098c60e",
+      "sha256": "31b5177384e4d69323f50c600b4222bd320b558db69a325bde7ce8c1bb3a1f17",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -156,7 +156,8 @@
         "docs/runbooks/workstation-and-build.md",
         "docs/runbooks/automated-tests.md",
         "docs/runbooks/device-smoke-tests.md",
-        "docs/runbooks/manual-resource-profiling.md"
+        "docs/runbooks/manual-resource-profiling.md",
+        "docs/architecture/shared-underlays.md"
       ],
       "reason": "Pinned exact App Markdown source bytes and stable published addresses."
     },
