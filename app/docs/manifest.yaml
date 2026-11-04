@@ -1,467 +1,926 @@
+# Generated from agent-system/knowledge/app-module-manifest.
+# Edit the owner records, then run python -B docs/scripts/prose_knowledge.py --write.
 schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
 last_verified: 2026-11-02
 entrypoints:
-  - app/src/main/java/com/nextgis/mobile/MainApplication.java
-  - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-  - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-  - app/src/main/AndroidManifest.xml
+- app/src/main/java/com/nextgis/mobile/MainApplication.java
+- app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+- app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+- app/src/main/AndroidManifest.xml
 key_components:
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesOfflineTest.java
-    responsibility: Prepared emulator-only radio restoration, direct same-source polygon/anchor glyph/fill/outline pixels and offline live Firefly/polygon style edits; compilation is separate from execution.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
-    responsibility: Compile-only native coverage of old published configs, direct source epochs/styles, full original SQL rows and offline one-anchor glyph/fill/outline pixels; not device acceptance.
-  - path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayProgressText.java
-    responsibility: Format current transfer phase, monotonic per-attempt seconds and received counters without implying completed migration.
-  - path: app/src/test/java/com/nextgis/mobile/util/LegacyUnderlayTransferSessionTest.java
-    responsibility: Prepared fault injection for late timed-out descriptor closure and continued finalization progress until terminal session close; not executed.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/LegacyUnderlayProgressNativeTest.java
-    responsibility: Prepared isolated queued cancel, exact-control UI and Russian full-text/fixed-Cancel theme/font/narrow-orientation geometry checks; not real Debug throughput.
-  - path: app/src/main/java/com/nextgis/mobile/util/PrivateRenderResourceProfiler.java
-    responsibility: Default-OFF private local MediaStore JSONL observer with bounded queue/file/deadline, process and SDK numeric resource/frame statistics, monotonic scene boundaries, explicit observer/loss costs and priority final maplib aggregate footer; never changes rendering, cache, business data or Sentry.
-  - path: app/src/test/java/com/nextgis/mobile/util/PrivateRenderResourceProfilerTest.java
-    responsibility: Assert SDK seconds conversion, invalid counters and aggregate/subcategory separation, queue/memory/file bounds, reserved complete footer, writer failure and unknown process metrics on technical fixtures only.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/SqliteMvtEvidence.java
-    responsibility: Independently summarize up to4MiB MVT bytes into at most12KiB of geometry-role counts and bounded allowlisted focus FID properties; validate wire lengths/tags/indexes, expose malformed/limit states and never dump coordinates or reuse production encoder helpers.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
-    responsibility: Assert the real direct-SQLite native source, all129IDs and paints, separate polygon/anchor roles, placed Russian labels, pixels, original full DB geometry/rows and source invalidation without global Java features; additionally exercise exact current aliases, saved/current track passes, whole Point/Firefly/icon/field-label priority, canonical root-child order and cached binding/filter identity through full/lite/style/data/reorder/hide/Undo via sqlite-priority; retain bounded failure evidence before fixture cleanup. Nested groups and Activity recreation are not covered by the new priority case.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStart.java
-    responsibility: Attach bounded independent request/failure lifecycle, permission and process-importance snapshots to the existing handled background-GPS start refusal, with monotonic request age and explicit unknowns; never decide FGS eligibility or retain Activity/Context references in a request.
-  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStartTest.java
-    responsibility: Verify delayed promotion after reported Activity stop, permission changes and API28/unknown states, actual scoped handled delivery and diagnostic-priority sanitize/replay without running Android FGS or claiming native acceptance.
-  - path: app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java
-    responsibility: Claim one automatic foreground resource-economy notice per application process across maps, layers and Activity recreation; manual status remains independent and no setting or layer visibility is persisted.
-  - path: app/src/main/java/com/nextgis/mobile/util/ScrollableAlertDialogs.java
-    responsibility: Reserve complete title/action panels before measuring a bounded scrollable message; reuse the former maintenance-dialog algorithm for memory status, wrap positive/negative/neutral actions, and preserve existing handlers and text sizes.
-  - path: app/src/test/java/com/nextgis/mobile/util/RenderMemoryNoticeTest.java
-    responsibility: Assert the process-session claim is atomic, is not reset by another caller and starts clear only for an independent new session.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
-    responsibility: Independently verify all129 technical SQLite polygon IDs and65-coordinate Java inputs, complete native ID set and whole-row hashes, then exercise once-session notice across recreation and another layer plus eight bounded Russian component dialog profiles; measure visible line extents excluding trailing whitespace and retain exact profile/widget/bounds on failure. This is no real memory-pressure, Full real-window or2GiB acceptance.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
-    responsibility: Add optional permission/provider/background policy and at most one passive system GPS last-known measurement-time read to already emitted recovery reports; retain fixed numeric/enum witness only, fail open without coordinates/extras/accounts/business storage or source seeding and without changing acquisition/retry.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
-    responsibility: Pure Clock/Probe comparison with ten fixed numeric/enum fields, explicit missing/denied/read/clock/invalid/future states and overflow-safe millisecond arithmetic; compare only system cached and app raw measurement times, never infer freshness or a delivery cause.
-  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitnessTest.java
-    responsibility: Assert exact keys, older/same/newer and sentinel ambiguity, absent/invalid/future raw and cached times, one probe, clock failures/reversal, fixed failure enums and absence of payload/exception text.
-  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsPlatformTest.java
-    responsibility: Verify Android API30/36 cache adapters expose measurement time without coordinates/extras, preserve source Location, make denied permission explicit and retain older-platform/background-policy behavior.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
-    responsibility: Persist bounded process ownership before startup; match abnormal OS exits after restart, delegate API/reason trace policy including SIGNALED, keep original/unknown identity and deterministic event IDs, and acknowledge owners only after durable transport storage.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java
-    responsibility: Attempt bounded SIGNALED traces from API30 with automatic native/ANR recognition and may-precede-exit association; preserve null, unknown and unavailable evidence without inferring OOM or changing OS reason/status.
-  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsTracePolicyTest.java
-    responsibility: Verify API/reason trace gates, no stream open for skipped cases, prior recovered ANR association and distinct missing/IO/security failure metadata without exception-message disclosure.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java
-    responsibility: Read at most one MiB plus a sentinel of OS trace after restart, automatically distinguish recognized native/ANR stacks when needed, retain only main/crashing-thread frames and bounded native symbols, and exclude memory, registers, open files and OS log buffers.
-  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsNativeTraceTest.java
-    responsibility: Independently verify native/ANR allowlists and auto recognition, byte/frame budgets, malformed and oversized inputs, stream closure and bounded IO failure metadata.
-  - path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporterTest.java
-    responsibility: Verify process ownership, historical identity, abnormal-reason gates and preserved raw SIGNALED reason/status with prior-trace association through the actual cached-send policy.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/MapRenderStressTest.java
-    responsibility: Require distinct seed/workload PIDs and6480-by65 technical geometry; verify90 seconds of pan/pinch/recreation through effective current SQLite CustomVectorSources with empty global feature caches, independent fully-visible grid IDs and valid native geometry roles; retain peak memory/actual GPU and failed recovery evidence without claiming a real-project speed or leak benchmark.
-  - path: app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java
-    responsibility: Show a single bounded scrolling candidate list with wrapping full labels and cancellation; keep vector and track choice callbacks distinct.
-  - path: app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
-    responsibility: Persist independent successful manifest and outstanding-update clocks, read only full successful active online-project sync, exempt local projects, and compose advisory weekly reminders with process/daily duplicate suppression.
-  - path: app/src/test/java/com/nextgis/mobile/util/MaintenanceRemindersTest.java
-    responsibility: Verify API 28/36 clocks, unknown-history grace, local/online nested layer detection without business reads, ownership, release succession, cached versus checked state and daily resident-process review.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/MaintenanceRemindersNativeTest.java
-    responsibility: Verify durable clocks and 288 Russian dialog configurations after actual window attachment, with complete text, scrolling, visible actions and no automatic installation in the isolated verification APK.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationIo.java
-    responsibility: Read verification streams with an API26-compatible buffer while callers retain resource ownership.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VisibleLineLabelsTest.java
-    responsibility: Verify native whole-word rendering, current extent, pan/zoom/rotation, categories and original picking.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackStopConfirmationTest.java
-    responsibility: Verify all manual recording Stop entry points, stale confirmation and real Russian dialog bounds; observe actual OnDismiss and one Cancel DOWN/UP without replaying input.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LegacyTrackColorsNativeTest.java
-    responsibility: Verify real shared-store v1 to v2 color migration without metadata or point loss.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java
-    responsibility: Verify real track list/map actions, persisted metadata, thin dark track core and original-hue glow, point/field-line order and mixed candidates; acknowledge only known startup power warnings through native dismissal before background pointer input and retain actual overlap diagnostics. Reacquire active owned input bounds only after a UID-rejected DOWN before delivery; fail after an accepted DOWN and retain the shared30-second budget.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java
-    responsibility: Require window focus and stable visible bounds clipped to scrolling, window and physical display before guarded native input; verify that the actual SeekBar minimum remains visible.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
-    responsibility: Verify native polygon styles, live preview, lifecycle and Russian large-interface editor behavior.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java
-    responsibility: Verify native polygon styles, live preview, lifecycle and Russian large-interface editor behavior.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java
-    responsibility: Verify the actual Russian point editor, explicit preset, Save and Cancel with real touches across 72 local theme, font, display and orientation configurations in the isolated verification APK.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
-    responsibility: Hold technical transfer bytes until ActivityScenario is explicitly DESTROYED, verify the completed file without an Activity, exercise both Russian ready-dialog actions at large component scales and inspect non-roaming metered network constraints in the isolated verification APK.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsExitInfo.java
-    responsibility: Add bounded Android 11+ OS termination metadata to historical failures only on a background sender, matching original timestamp, crash type and default process without reading business files or OS trace streams. Explicit log ZIP sharing also exports up to eight main-process OS exit records without SDK-event dependency, descriptions, trace reads or inferred historical APK versions.
-  - path: app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkGuardTest.java
-    responsibility: Verify that real Android network callbacks cancel attached HTTP on roaming/loss/replacement, stopped work cancels its call and Android 8 uses the legacy roaming flag.
-  - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java
-    responsibility: Unique persistent six-hour and launch update preparation without an Activity, non-roaming network/storage constraints, stop cancellation and no installer or production release work in verification builds.
-  - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateDownload.java
-    responsibility: Resume partial APK bytes only with exact Content-Range and size, restart an ignored Range, preserve interrupted bytes, verify full SHA-256 and atomically finalize the file.
-  - path: app/src/test/java/com/nextgis/mobile/util/AppUpdateDownloadTest.java
-    responsibility: Cover range restart/resume, interruptions, roaming cancellation, size/hash rejection and preservation of an existing complete artifact.
-  - path: app/src/test/java/com/nextgis/mobile/util/AppUpdateReadyStateTest.java
-    responsibility: Reject stale/malformed/corrupt/product/certificate-mismatched ready state and preserve offline local readback without opening an installer.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
-    responsibility: Exercise native transfer without a resumed Activity, non-roaming policy and the actual ready dialog in both themes, both orientations and 100/130/200 percent fonts at 280/320 dp and normal widths; await the queued Android button listener off the main thread before asserting the install action.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
-    responsibility: Verify real cascade controls, SQLite/drafts and deferred tab selection; reveal the target touch band within the current viewport, use an explicit non-interactive area outside Tabs for blank gestures, await focused stable geometry before one native gesture, retain bounds diagnostics and selected values.
-  - path: app/src/main/res/xml/preferences_location.xml
-    responsibility: Location preferences, including the persisted default-off show_compass_accuracy_sector checkbox with a multiline title; MapFragment applies its choice on resume through the maplib visibility API.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java
-    responsibility: Replay no-fix and callback-stall snapshots against the native source, verify paired recovery, schema4 independent seeded raw measurement timestamp versus callback receipt age, one same-listener retry and preserved recording resources on an isolated emulator; this is not a reproduction of vendor GNSS callback loss.
-  - path: app/src/main/java/com/nextgis/mobile/util/SyncJournalCommit.java
-    responsibility: Confirm journal durability on an owned serial writer despite caller interruption and restore cancellation before returning.
-  - path: app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java
-    responsibility: Verify pre-interrupted and cancelled callers await durable completion, preserve interrupt and do not turn actual write failure into success.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/SyncRecoveryJournalNativeTest.java
-    responsibility: Verify interrupted enqueue and pair acknowledgment against physical SharedPreferences XML on the isolated emulator.
-  - path: app/src/main/java/com/nextgis/mobile/usage/UsageAnalytics.java
-    responsibility: Collect visible opening timestamps and account/project inventory without foreground duration; observe registry changes off the UI thread.
-  - path: app/src/main/java/com/nextgis/mobile/usage/UsageStore.java
-    responsibility: Persist installation identity, immutable event UUID/sequence and snapshot checkpoint in backup-excluded SQLite before delivery.
-  - path: app/src/main/java/com/nextgis/mobile/usage/UsageDelivery.java
-    responsibility: Deliver bounded HTTPS batches, reject redirects and acknowledge only confirmed requested event IDs.
-  - path: app/src/main/java/com/nextgis/mobile/usage/UsageUploadWorker.java
-    responsibility: Retry the independent usage queue with connected immediate and periodic WorkManager jobs.
-  - path: app/src/main/java/com/nextgis/mobile/usage/UsageOpenPolicy.java
-    responsibility: Distinguish a cold visible opening, Activity transfer and later return without collecting duration.
-  - path: app/src/androidTest/java/com/nextgis/mobile/usage/UsageDeliveryTest.java
-    responsibility: Verify private outbox restart, exact ACK and retained HTTP 503 followed by idempotent delivery using a synthetic loopback server.
-  - path: app/src/main/java/com/nextgis/mobile/location/LocationDisplayAccuracy.java
-    responsibility: Apply a render-only 3 m phone GPS floor shared by the status panel and circle; preserve external, mock, NMEA and Network accuracy and every input fix.
-  - path: app/src/main/java/com/nextgis/mobile/activity/AboutActivity.java
-    responsibility: Show Geonical help contacts and user guide with no Telegram action; open the Geonical contact page from About.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java
-    responsibility: Verify real layers.db legacy migration beside new tracks, exact row values, checkpoint/pending Stop recovery, common history/map visibility, project deletion and retained recording switch guard.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
-    responsibility: Verify classic SQL/rule JSON/GeoJSON/native paint and labels through real MapLibre OpenGL on an isolated verification phone or software-only emulator; prepare model camera/visibility and suppress the disposable startup geo-dialog; reject configured local-vector-tiles sources, assert the explicit classic binding survives native idle, and retain bounded source/paint JSON plus PNG before fixture cleanup. Host-GPU emulator mode is forbidden.
-  - path: tools/run_mobile_tests.py
-    responsibility: Route complete static phone and emulator acceptance, retain failures, finalize owned AVD before PASS, verify source receipts and require a permitted project or an explicitly chosen validated metadata-only policy fixture with provenance.
-  - path: tools/mobile_native_log.py
-    responsibility: Continuously capture only the fixed verification package's exact queried UID into a4MiB head/tail host log, stop/join/close only its owned ADB client, retain partial evidence and return bounded diagnostics without changing the native test outcome or device state.
-  - path: tools/tests/test_mobile_native_log.py
-    responsibility: Independently verify actual4MiB first/last bounds, exact package UID admission, owned process and blocked reader shutdown, partial error retention, idempotent metadata and no app/server interactions using fake subprocesses only.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
-    responsibility: Verify actual Orbit pixels, heading/course fallback and accuracy circles; isolate heading input, synchronize saved/native fixture cameras through MapDrawable, await the app scene, retain .08m/30-second assertions and report both cameras plus sample/cache/source/radius state.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java
-    responsibility: Admit only isolated verification APK and explicitly selected phone, then await real delayed startup callbacks and workspace operations before native fixtures; production data and identities remain outside tests.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java
-    responsibility: Verify multi-row viewport and actual layer/Cancel touches under enlarged UI.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java
-    responsibility: Verify real creation filtering from the permitted project policy snapshot in the verification app canonical private filesDir without copying accounts or features or requiring shell access to Android/data.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectSyncDisplayNativeTest.java
-    responsibility: Verify a scoped background callback still displays the active project clock in the actual layer drawer.
-  - path: app/src/main/res/layout/layout_azimuth_panel.xml
-    responsibility: Separate magnetic measurement controls from stakeout arrow, accuracy and sound while keeping enlarged text and Close reachable.
-  - path: app/src/main/res/layout/layout_stakeout_panel.xml
-    responsibility: Restore historical independent guidance panel with direction, distance, accuracy, sound and Close.
-  - path: app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
-    responsibility: Persist owning-project completion only after all required accounts, child jobs, ready outbox and cleanup succeed.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LocalChangesUploadTest.java
-    responsibility: Verify real saved line delivery, disabled full schedule, offline/HTTP retry, draft exclusion and background workspace isolation on a loopback emulator.
-  - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt
-    responsibility: Keep foreground GPS active on every app Activity even with background disabled; own the separate default-enabled service through a two-hour monotonic inactivity timer, disarm both automatic leases on explicit task exit until the next Activity start, and reconcile preferences immediately.
-  - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt
-    responsibility: Promote a location foreground service before acquiring an independent shared GPS lease; cancel pending launches safely, handle recent-task removal through the app controller and preserve explicit recorder owners.
-  - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationPolicy.java
-    responsibility: Define the default background GPS setting, deterministic two-hour inactivity policy and explicit-exit disarm/reopen transitions.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java
-    responsibility: Verify actual screen sleep/wake, forms with background off, Home, double Back, recent-task removal, disarm/reopen, two-hour expiry and preference changes; query actual lifecycle Stage on the main thread while preserving independent recording owners and actual Track/Walk services on an isolated Debug emulator.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/MapRuntimeDiagnosticsNativeTest.java
-    responsibility: Block the real main looper and verify query/startup snapshots and a Backfillable SDK ANR event preserving original identity, then saturate the actual loopback queue and verify explicit rejection headers on an isolated Debug emulator. This fixture does not qualify ordinary SQLite phase logs or native content ready; those require the separately recorded physical-tablet route.
-  - path: app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalTest.java
-    responsibility: Verify idempotent queue preservation without redundant legacy inventory, retained parsing causes and disk-commit failure details without journal deletion.
-  - path: app/src/main/java/com/nextgis/mobile/view/MapActionsMenu.java
-    responsibility: Pass collapsed transparent action slots through to the map while retaining visible add-button and expanded-menu touch targets.
-  - path: app/src/main/java/com/nextgis/mobile/view/ResponsiveMapLayout.java
-    responsibility: Recompute compact compass, margins and creation-action space from the current map viewport, keeping guidance and walking panels in a shared bounded stack.
-  - path: app/src/main/java/com/nextgis/mobile/view/BoundedDrawerLayout.java
-    responsibility: Restore the preferred drawer width when space returns and cap a fixed drawer to the enlarged-display viewport.
-  - path: app/src/main/java/com/nextgis/mobile/view/MapStatusPanel.java
-    responsibility: Limit enlarged telemetry to one quarter of usable map height below the toolbar so map actions retain a visible area.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java
-    responsibility: Verify full Russian text layouts, transformed visible bounds and touch delivery for enlarged font/display sizes, both themes and orientations, including retained Network age/accuracy, the real default-enabled background GPS setting and the default-off compass-sector checkbox with persisted enable/disable; capture emulator screenshots.
-  - path: app/src/main/res/layout/status_panel_content.xml
-    responsibility: Share wrapping GPS coordinates/status values across orientations with bounded panel fitting.
-  - path: app/src/main/res/layout/layout_stakeout_panel.xml
-    responsibility: Keep complete azimuth/stakeout labels, wrapping correction actions and Close within the bounded map panel without scrolling.
-  - path: app/src/main/java/com/nextgis/mobile/fragment/ReorderedLayerViewAnimated.java
-    responsibility: Animate layer reorder; safely finish/cancel when the dragged row or adapter disappears, clearing pending-scroll/hover state and restoring enabled/visible state.
-  - path: app/src/test/java/com/nextgis/mobile/fragment/ReorderedLayerViewAnimatedTest.java
-    responsibility: Reproduce idle-after-fling with a detached row, cancellation with a visible row, detached adapter and normal waiting-for-scroll on Robolectric API 26/36.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SyncOfflineAndWalkGpsTest.java
-    responsibility: Verify offline manual/retry dialogs, OS-constrained account work with a bounded 60-second recovery budget and attempt/network diagnostics, and real walk callbacks across GPS loss, timestamp gaps, point locks, explicit pause and sticky recovery; reuse the owned EmulatorNetworkFixture and finalize radio restoration.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/EmulatorNetworkFixture.java
-    responsibility: Wait for the Wi-Fi adapter and connected Wi-Fi rather than disappearing cellular connectivity for isolated-emulator account/track checks, and finish restoring radios before the next test.
-  - path: app/src/main/java/com/nextgis/mobile/util/SyncNotifications.java
-    responsibility: Keep stable manual/account foreground notification identities and remove stale progress at main-process startup without clearing failures or GPS notifications.
-  - path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
-    responsibility: Keep manual dataSync foreground execution, reject inactive or post-destroy progress callbacks, and remove the owning progress notification when the service ends.
-  - path: app/src/test/java/com/nextgis/mobile/util/SyncNotificationsTest.java
-    responsibility: Reproduce inactive-progress repost and post-destroy callbacks across a new session on API 26/36; verify default error-only notices and preserved explicit preference.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/SyncNotificationsTest.java
-    responsibility: Verify real Android notification removal, readable default errors, orphan cleanup and bound account service finish/cancel with delayed progress; isolated emulator only.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
-    responsibility: Bound automatic SDK HTTP 5xx bursts with status/method/local-or-remote tags, a ten-minute window and 64 hashed endpoint keys; retain the first request, fatal events and cached replay.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
-    responsibility: Reserve bounded payload budgets for diagnostic contexts, latest breadcrumbs and stack additions without content masking or arbitrary object serialization.
-  - path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt
-    responsibility: Warn at launch/resume without recording about screen-off GPS power policy, background restriction and battery optimization; open a single applicable system setting directly or offer a choice for multiple restrictions once per unchanged launch state.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java
-    responsibility: Verify actual emulator power/background/optimization restrictions, direct single-setting routing, multiple-setting selection, rotation and no automatic recorder start; return from the foreground helper with Back while the app UID is background-restricted.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsNoiseTest.java
-    responsibility: Seed synthetic local backlog on an isolated emulator, cold-start an obsolete HyperLog endpoint and verify retained logs, crash handler and bounded SDK HTTP captures.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java
-    responsibility: Verify delayed registration, revocation, network deferral/reconnect, transport failure and server isolation, the track row badge plus the aggregate badge with other pending layer rows, opt-out, packet-specific acknowledgements with repeated timestamps, and real background workspace delivery against an isolated loopback endpoint.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java
-    responsibility: Verify category choices through sketch, current-location and background-walk creation, recreation, interrupted recorder recovery, point-lock cancellation, confirmation-safe pause/resume, same-zoom GPS start centring, three 48dp targets in both themes at normal/200-percent fonts, the unified Measurements menu and ruler/azimuth placement gestures, and the real attribute-form SQLite Save; isolated emulator only. Cover read-only point copying and actual multipart MapView transform gestures on emulator or explicitly selected stationary verification phone methods.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java
-    responsibility: Verify all 40 standard point, line and polygon style categories, symbols and canonical class/type defaults, including the actual mixed point form; isolated emulator only.
-  - path: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-    responsibility: Initialize Sentry after the isolated UID guard, sync native build identity, preserve bounded diagnostic context and original cached identity, pair classified GPS warnings with INFO recovery/cancel by episode UUID, and enrich only newly reported GPS snapshots with a passive numeric cache witness while retaining old replay schema/grouping.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java
-    responsibility: Persist SDK envelopes before async HTTP, retain offline/5xx/rate-limited events, acknowledge SDK crash/replay hints and preserve TLS validation.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java
-    responsibility: Retry existing SDK cache/outbox from a connected periodic WorkManager job without opening a GIS project or reinstalling crash handlers.
-  - path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
-    responsibility: Bound diagnostic messages, filter expected offline/cancellation outcomes and limit duplicate handled failures.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsDeliveryTest.java
-    responsibility: Test offline handled/fatal reports, process restart, network return and real WorkManager after HTTP 503 on an isolated emulator with explicit test DSN.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsTestRunner.java
-    responsibility: Opt-in test APK runner supplies a synthetic test Application and DSN after rejecting physical or non-Debug devices.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/FormAppearanceTest.java
-    responsibility: Verify real light/dark native fields, permanent captions, wrapped long choices, hidden comment layout and footer Save gate on synthetic offline data.
-  - path: app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
-    responsibility: Defer disconnected account dispatch before lease/progress/journal changes; apply default-on all-project scope to manual and scheduled passes, preserving the active map/draft while serially opening headless owning maps, draining async children and recording exact recovery pairs.
-  - path: app/src/androidTest/java/com/nextgis/mobile/util/ProjectSyncRunnerTest.java
-    responsibility: Await pending startup underlay migration and workspace leases before constructing native synthetic-project fixtures; verify scope, network deferral/reconnect, failure continuation, durable queues, equal-id journals, cancellation and real background fill.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java
-    responsibility: Verify dynamic requirements, inactive tabs, toolbar and Back Save, immutable draft pins and corrupt snapshot failures before SQLite writes.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
-    responsibility: Verify default-form metadata launch, independent full-width cascade controls and spacing, repeated native swipes over enabled fields and blank space, vertical scroll, text selection and signature exclusion.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerPendingChangesTest.java
-    responsibility: Exercise real drawer/worker with synthetic SQLite edits, deletion-only outbox, recycled rows and rotation; confirm row and global indicators clear together after acknowledgment.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
-    responsibility: Real dependent NGFP spinners, both audit branches, SQL NULL clearing, pinned draft/recreation, mismatched-choice Save rejection, creation-category parent prefill, legacy pair persistence and asynchronous category-dialog results on synthetic offline SQLite.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectScriptsTest.java
-    responsibility: Real isolated Binder, native VM, ownership, local history and NGFP save/draft regression.
-  - path: examples/project-scripts/contractor-audit/manifest.json
-    responsibility: Portable ten-layer contractor warning pilot using only native API v1.
-  - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
-    responsibility: Skip normal initialization under the isolated script UID.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/RequiredFieldsTest.java
-    responsibility: Exercise standard and NGFP required controls, whitespace/default placeholders, inactive tabs, dependent choices, Back Save, retained draft geometry/photos, optional placeholders and existing omitted fields against real SQLite without NGW writes.
-  - path: app/src/main/java/com/nextgis/mobile/location/TrackPowerWarning.kt
-    responsibility: Warn before manual track Start and on active-session Resume or power policy change; offer Battery Saver settings or explicit continuation without conflating Doze exemption or starting from settings.
-  - path: app/src/main/java/com/nextgis/mobile/view/GnssDeviceAdapter.java
-    responsibility: Render receiver names and measured or unknown Bluetooth RSSI on separate lines, clearing recycled signal rows for USB endpoints.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackRecordingModesTest.java
-    responsibility: Exercise the real foreground track service and SQLite for pedestrian drive gaps, missing speed, Stop during driving and mixed recording on an isolated Android emulator.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/StakeoutForegroundServiceTest.kt
-    responsibility: Exercise real Android 14+ location foreground enforcement without Bluetooth, background lifetime, synchronous and asynchronous rejection, GPS lease cleanup, rapid owner replacement and obsolete start requests on an isolated emulator.
-  - path: app/src/main/res/layout/layout_map_content.xml
-    responsibility: Shared phone, landscape and tablet map content with mandatory track toggle and walk panel, a separate horizontal creation row and tools at the right edge.
-  - path: app/src/main/java/com/nextgis/mobile/view/MapControlRail.java
-    responsibility: Measure available height/width, retain natural touch targets when they fit, locally scale a cell that exceeds the viewport and expose visible overflow actions without overlapping the creation row or walk panel.
-  - path: app/src/main/java/com/nextgis/mobile/view/MapControlGrid.java
-    responsibility: Pure row-count policy covered by dimension and density boundary tests.
-  - path: app/src/test/java/com/nextgis/mobile/view/MapLayoutContractTest.java
-    responsibility: Require all phone, landscape and tablet wrappers to include the same complete map content and preserve the separate action row.
-  - path: app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
-    responsibility: Shared worker snapshot includes enabled-track sent=0 rows, reacts to trackpoint commits and upload-intent changes, and keeps manual track upload available without vector accounts; explain absent network before dispatch, run one serial manual-sync pipeline, reconcile sync animation and the determinate progress ring against worker-owned state and the data-sync lease throughout the visible lifecycle, query pending changes off the main thread with lifecycle and map guards, and confirm explicit rechecking of skipped server geometries on long press.
-  - path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
-    responsibility: For GPX FileProvider URIs, advertise text/xml in getType and anonymous lookup so MimeTypeMap clients do not append .bin or .null, while retaining canonical root and grant checks.
-  - path: app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
-    responsibility: Browse shared assets, attach, rename and confirm deletion with affected projects; warn before catalog attachment or legacy import interrupts an active synchronization; offer Debug underlay import into the active project on Geonical with visible byte/tile progress, explicit cancellation and a confirmed Back exit during an active transfer, except in layer-picker mode; AppTheme.UnderlayCatalog and an explicit Toolbar above the list respect system bar and display cutout insets in both modes.
-  - path: app/src/main/res/layout/activity_underlay_catalog.xml
-    responsibility: Keep catalog toolbar, transfer progress/status/cancel controls, empty state, Debug import action and scrolling assets in a vertical layout below system insets.
-  - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
-    responsibility: Separate trusted Debug installer, actual PackageManager exporter availability and enabled/exported checks, durable permission/project continuation, and focus-safe dialog/external-result guards shared by MainActivity and UnderlayCatalogActivity.
-  - path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionPolicy.java
-    responsibility: Pure manifest, URL, version and signing identity rules for the Debug companion.
-  - path: app/build.gradle
-    responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit MapLibre 13.7.1 OpenGL backend, production 3.1.2.31/225 versus Lisa Debug 3.1.2.23/218 version contract, and signing configuration.
-  - path: app/src/lisa/res/values/launcher_icon.xml
-    responsibility: Lisa launcher, intro and about icon binding to density-specific ic_launcher_lisa resources without changing Belka branding.
-  - path: app/src/belka/res/values/launcher_icon.xml
-    responsibility: Belka-only launcher, intro and about icon binding to density-specific ic_launcher_belka resources without changing Lisa branding.
-  - path: app/src/main/java/com/nextgis/mobile/MainApplication.java
-    responsibility: Main-process initialization and logging; honour save_log or verbose_log for HyperLog export; create or adopt and activate the initial local project before GISApplication opens its first map, schedule exact registered project/account recovery across active-project changes, except that a pre-registry Debug workspace is kept in place for explicit underlay streaming and does not schedule shared-catalog migration; create editable local vector layers and keep default OSM at internal index zero plus tracks at the top of the reversed layer list for every workspace. Storage move retires only the exact captured mMap without factory getMap, and checks cached actual path plus exact owner with rebind under the same application monitor; retirement does not prove renderer read drain.
-  - path: app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java
-    responsibility: Admit storage move and confirmed Reset only under an exclusive project lease before default-directory/prefs/task effects; defer proposed-path and Reset publication through actual-path worker commit and owned UI completion; distinguish Activity drawable refresh from move ACK and preserve ordinary failure/cancel rebind, unexpected worker error propagation and exact terminal cleanup.
-  - path: app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
-    responsibility: Keep the current-index no-op and available-root chooser policy; defer proposed storage/card preferences until the worker result and publish only actual path plus its matching root card label, preserving the old card label when no root matches.
-  - path: app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
-    responsibility: Exercise actual preference/reset/AsyncTask callbacks and MainApplication owner guards with real coordinator leases, technical renderer/database probes and controlled worker/main phases; assert busy state preservation, admission, actual-path refresh versus ACK, callback-held exclusion, cancellation/failure/stale cleanup and no unowned orientation/default-directory effects without GIS or business database acceptance.
-  - path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
-    responsibility: Main navigation, per-launch and settings-return runtime permission checks for location, device accounts and legacy storage (notification permission is optional and requested only in Settings), track-mode dropdown with durable pedestrian/mixed selection, one-tap Stop without a location-permission gate, system-location-gated track/walk start, confirmed versus pending track toolbar/map-button state and failure warning, map rotation/location recovery, local file and shared-underlay import, default migration, walk-state reconciliation and crash-recovery hub, NGW URL/project selection, sync interruption, backup sharing and updater continuation.
-  - path: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
-    responsibility: Choose Bluetooth Classic/LE, USB or TCP endpoint and persist gnss_input keys without Mock Location; show scan RSSI for duplicate-name Bluetooth receivers, request discovery permissions and release scans on pause/select/transport switch; identified ComNav/Pigo BLE uses the native paired UART/BESTPOSB session and expires stale HUD quality.
-  - path: app/src/main/res/xml/preferences_general.xml
-    responsibility: General settings including save_log file export, opt-in verbose_log GNSS dumps and a confirmed walk-only emergency reset action.
-  - path: app/src/main/java/com/nextgis/mobile/util/WalkEmergencyReset.java
-    responsibility: Remove only the durable walk owner and its owned form checkpoint for startup or user-confirmed emergency recovery.
-  - path: app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
-    responsibility: Settings navigation with Project and Underlay storage as adjacent top-level entries, and updater continuation after Android special install permission returns to a manual update check.
-  - path: app/src/main/res/xml/preferences_tracks.xml
-    responsibility: Track settings UI, including enabled-by-default fixed ten-second background recording heartbeat shared with walk recording, gated by fresh usable location delivery rather than coordinate movement, audible through the alarm stream independently of notification volume and replaced by vibration when alarm audio is muted.
-  - path: app/src/main/java/com/nextgis/mobile/util/AppUpdatePackageInfoPolicy.java
-    responsibility: Keep the legacy APK archive signature request on Android 9 and newer while also requesting modern SigningInfo, so Android 9 and 10 can validate a same-certificate update through the populated fallback field.
-  - path: app/src/test/java/com/nextgis/mobile/util/AppUpdatePackageInfoPolicyTest.java
-    responsibility: Lock the updater signature-flag contract at the API 27/28 boundary and across Android 9, 10, 11 and current SDKs.
-  - path: app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt
-    responsibility: Name-only project list with radios; a row tap selects, Open switches, Cancel leaves the current project.
-  - path: app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
-    responsibility: Active project information and controls for current-project sync, interrupt-before-action local project creation and device-only rename/delete, changed-layer backup gate and schema-rebuild guard reset.
-  - path: app/src/main/java/com/nextgis/mobile/activity/LegacyUnderlayExportActivity.java
-    responsibility: Require an explicit user confirmation in Debug before granting Geonical read-only underlay stream URIs.
-  - path: app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java
-    responsibility: Stream one local Debug underlay through a granted pipe without exposing paths, accounts, vectors, tracks or project identity.
-  - path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java
-    responsibility: Convert legacy extracted TMS/OSM tiles directly into batched, atomically published raster MBTiles; track pipe progress, cancel or inactivity-timeout a blocked descriptor, retry one stalled source, clean partial stages, and release the project lease before later sync.
-  - path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java
-    responsibility: Define the Android-independent inactivity deadline, one-retry bound and transfer-exit confirmation policy for the cross-package underlay stream.
-  - path: app/src/test/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicyTest.java
-    responsibility: Lock inactivity, retry, cancel and catalog Back-exit confirmation policy without Android.
-  - path: app/src/test/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContractPolicyTest.java
-    responsibility: Lock pre-registry Debug workspace deferral and the shared-catalog migration skip without Android.
-  - path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java
-    responsibility: Pin Debug/Geonical package and signing-certificate identities, define the bounded-memory framed streaming schema and detect the one legacy Debug workspace that must stay in place without shared-catalog migration until export.
-  - path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
-    responsibility: Reserve the active project before manual sync starts, own a cancellable registration for that reservation, run as a dataSync foreground service, delegate all downloaded projects and accounts to the shared scoped queue under one lease, start the session-scoped progress ring, and interrupt pending or active manual work on an explicit user request.
-  - path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-    responsibility: "Map screen, complete MapLibre MapView lifecycle, cancellation of pending SDK gestures before native destruction and renderer-reference cleanup across pause/resume/view recreation, bounded post-style continuous-render/presentation recovery and stale loading-foreground removal without full reload, EGL-recoverable SurfaceView on every API with bounded recovery bursts and no permanent old-API FPS limit, MaplibreMapInteraction implementation, opt-in persistent and immediate concurrent pinch/rotate gestures with north-up/location/layer-extent recovery, foreground compass-first Orbit ring pointer with a transparent opening, 5 dp blue dot with a 2 dp white border and moving-course fallback, retained compass uncertainty calculations and camera-scale refresh with all three sector layers hidden by default and controlled by the saved show_compass_accuracy_sector choice on resume, native NMEA HUD for RTK quality/sats/HDOP, hidden local-vector-tile attribute identification, track-mode popup and Start/Starting/Recording/Error button under the ruler with orange recording person and enlarged red dot, immediate current-camera-centre tap sketch creation with automatic target visibility, confirmed new-sketch cancellation without a duplicate add toolbar action, visible selected-to-successor insertion direction, hectare ruler labels with sketch-equivalent Undo/Redo routed to the active MapLibre measurement geometry and saved-instance restoration, selected-node independent walk insertion, passive preview, confirmed disk Finish followed by session-acknowledged minimum-vertex validation and immediate attributes for new/existing features, confirmed Pause/Resume/Cancel with full point-session control lock, same-zoom start pan to the actual current-location/walk geometry anchor, foreground stakeout host/widget plus transient current-location-to-point and arbitrary-point-to-point magnetic azimuth/distance modes with draggable editable endpoints and a widget that shows effective declination D+C without drag-hint copy, acknowledgement of completed post-fill style/source reload, shared Save/form handoff for new geometry with duplicate-launch protection, terminal successful-save cleanup to normal map mode with no feature selection for both new and existing objects, a single Measurements popup routing directly to ruler/current-location azimuth/free-point azimuth with restored control visibility and legacy ruler-only preference, typed Polygon validation messages, GTMultiPolygon-only topology repair, durable non-walk geometry journal, and deferred current-style-safe geometry restoration and owner-aware recovery of coexisting walk and point drafts with polygon-only fill, stable outline and editable vertices after Stop. GPS callbacks use the durable recording flag and asynchronous map-owned track snapshots, never a synchronous unfinished-track query. The MapLibre logo and SDK info button stay hidden; a single OpenStreetMap credit line appears at the left edge only while the built-in OSM layer is visible and lifts above bottom panels. Offer compatible-layer copying and whole-object transforms through normal category/form, draft, Save/Cancel and Undo contracts. Stakeout input is selected geometry first with full-DB null fallback; mode/layer/FID/geometry Bundle and process-only restart marker do not establish workspace or replacement migration policy. Offer selected shared-track GPX through existing exporter only for the current Activity/view/selected ID/normal mode; track selection, recorder state and list multiselect remain owned by existing controllers."
-  - path: app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
-    responsibility: Foreground rotation-vector true heading for the Orbit pointer and compass-uncertainty sector, using WMM2025 declination without stakeout correction, plus magnetometer and heading-jitter inputs to HeadingConeAccuracy; actively notify compass expiry after 500 ms without waiting for another GPS/sensor event and clear/cancel on stop.
-  - path: app/src/test/java/com/nextgis/mobile/location/DeviceHeadingProviderTest.kt
-    responsibility: Exercise compass absence, registration failure, unreliable readings, active expiry, fresh-sample recovery and stop/restart on Android API 26 and 36 without GPS callbacks.
-  - path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
-    responsibility: Explicit graphics smoke outside the SwiftShader reliability CI package; check actual MapLibre vector images and central fix anchor, topmost accuracy-sector-white-halo-blue-outline-symbol order after a hot style addition and lite reload, rendered compass/course/plain-dot transitions, default-hidden sector plus persisted opt-in/out after map resume and hot/lite reload while preserving its 56-pixel geometry through native projection at zoom 16/18/19, actual 5 dp blue-centre and white-border and outward thicker blue-rim pixels, transparent bitmap opening and an untinted 14 dp point symbol beneath all service overlays in screenshots and removal when the fix expires on an isolated Debug emulator with a working EGL backend.
-  - path: app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
-    responsibility: Combine rotation-vector heading accuracy, circular yaw jitter, raw-vs-filtered innovation and magnetometer field penalty, then open the cone faster than it closes.
-  - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
-    responsibility: Active selected-feature or arbitrary-point live-guidance lifecycle, in-place target replacement without releasing foreground resources, independent GPS listener, WMM2025 magnetic-bearing UI state with persisted declination correction, GPS/mock precision-source gate, reported-accuracy UI state, monotonic navigation-audio scheduling, 3 s freshness with a 1 s future-timestamp tolerance, high-frequency GPS lease ownership across screen-off/background state, and full rollback on synchronous or owning asynchronous foreground rejection. Own a copied geometry/index target rather than a live feature subscription; high-frequency GPS lease is separate from project mutation exclusion and source/DB identity.
-  - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
-    responsibility: Explicit location-only foreground notification and partial wake lock without Bluetooth permission, process-local session ownership, failure callback and obsolete-request foreground-contract completion without restoring GPS/audio.
-  - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
-    responsibility: Circularly filtered magnetic rotation-vector heading plus location-cached WMM2025 declination for the live guidance arrow without movement-bearing fallback.
-  - path: app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt
-    responsibility: Normalize true initial bearing minus east-positive WMM2025 declination plus persisted user correction into clockwise magnetic azimuth and return undefined for coincident points.
-  - path: app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java
-    responsibility: Calculate offline magnetic declination from the official WMM2025 coefficients for the 2025-2030 model interval.
-  - path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
-    responsibility: Full-scale limited low-pitched non-overlapping damped wooden-tap PCM cues with 3x digital gain and a distinct double-tap in-tolerance pattern.
-  - path: app/src/main/res/menu/add_layer.xml
-    responsibility: Add-layer popup; Load project is first, Add NGW layer by URL stays hidden with its handler intact.
-  - path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
-    responsibility: Branch-specific Lisa Mobile manifest, trusted versioned URL, integrity, identity, Android 9-10 archive-certificate fallback, process-death-safe install continuation, and correlated check/network/HTTP/error/result logs; automatic completion distinguishes a valid result from a retry and does not require Android VALIDATED.
-  - path: app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java
-    responsibility: Main-thread foreground-only startup retries with bounded backoff, focus/network/resume wakeups, completion restoration limited to the current process session and no duplicate in-flight requests.
-  - path: app/src/test/java/com/nextgis/mobile/util/StartupUpdateCheckSchedulerTest.java
-    responsibility: Reproduce offline/request failure, restored process/window, modal focus, busy updater, companion UI, background response, bounded retries, duplicate callbacks and destruction without losing the pending check.
-  - path: app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkStateTest.java
-    responsibility: Permit active INTERNET networks without VALIDATED across Wi-Fi, cellular and VPN, retaining the offline gate and diagnostic network flags.
-  - path: app/src/test/java/com/nextgis/mobile/util/AppUpdatePendingInstallationTest.java
-    responsibility: Cleared malformed, invalid-product, denied-permission or already-installed continuation cannot suppress a new startup check; rejected product state never reaches the installer.
-  - path: app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
-    responsibility: Run backup-gated project integrity repair before each account, durably journal unfinished passes, defer heavy MapLibre reload until completion, and surface the base NGW result or a plain failure without duplicating layer retry state; error notifications bypass default-off optional start/finish notices.
-  - path: app/src/main/java/com/nextgis/mobile/datasource/SyncService.java
-    responsibility: Keep system account sync in a low-priority dataSync foreground service through finish/cancel and reject late callbacks after destruction.
-  - path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
-    responsibility: Persist pending_v2 before dispatch; keep a weak exact-preferences-owner process view of the seven known typed queue/legacy keys, publish only successful writes and stage the accepted cohort on later ordinary writes. Resolve registered recovery owners, preserve manual/account isolation and interruption; no raw-cache or restart rollback promise.
-  - path: app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalConfirmationTest.java
-    responsibility: Exercise actual journal APIs with stable technical preferences owners and separate cache/disk outcomes; rejected ACK/merge/migration/prune cannot leak into later accepted plans. Verify reader races, known-key cohort, diagnostics and owner isolation without GIS database, Android device or remote sync.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java
-    responsibility: Native editable selection, rail bounds, tool gesture regression, three Activity recreations with a pending SDK tap, and the complete layer-category-sketch-form-SQLite creation path, including successful Save returning to the map and clearing drafts.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/FeaturePersistenceTest.java
-    responsibility: Native SQLite rollback and unique backup checks.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/FormSaveRecoveryTest.java
-    responsibility: Real form failed-photo save and retry without duplicate feature.
-  - path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackerStopRecoveryTest.java
-    responsibility: Real service failed Stop preserves and later drains the unwritten tail.
-  - path: app/src/test/java/com/nextgis/mobile/util/NgwLookupCacheSyncTest.java
-    responsibility: "Run15 actual-public-sync SDK28 methods using technical fill/save seams:8 unchanged old controls, revised false-save and6 added controls. Check additive IO at both false-save branches, existing stats/new memory/map owner/one save, unchanged RuntimeException/Error and equal-next/foreign no-extra-write behavior. Actual new execution is shared19 with Core4; standalone15 was not separately run. No disk/retry/network/SQLite/GIS/native acceptance."
-  - path: app/src/test/java/com/nextgis/mobile/util/NgfpLookupPrefetchTest.java
-    responsibility: Execute eight actual prefetch-reader contracts and four direct legacy-reader controls
-      on technical Q JSON using SDK28 coercion and explicit API compatibility reflection; no account/map/SQLite/network
-      or installed-cache/durability acceptance.
-  - path: app/src/test/java/com/nextgis/mobile/util/SyncFailurePresentationTest.java
-    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
-  - path: app/src/test/java/com/nextgis/mobile/util/ProjectSyncLateFailureTest.java
-    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
-  - path: app/src/test/java/com/nextgis/maplib/datasource/ngw/ResourceChildrenMessagesTest.java
-    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
-  - path: app/src/test/java/com/nextgis/maplibui/util/LayerFillErrorMessageTest.java
-    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
-  - path: app/src/test/java/com/nextgis/maplibui/activity/FormLegacyListMessagesTest.java
-    responsibility: "Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper or library UI formatter; no map/SQLite/socket/device/real server/native acceptance."
-  - path: app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionCheckboxTest.java
-    responsibility: Own22 actual adapter binder/listener and recycled row label technical models; source-only,
-      no real account/map/network/device/import acceptance.
-  - path: app/src/test/java/com/nextgis/maplibui/util/NgwResourceSelectionDedupTest.java
-    responsibility: 'Own6 actual compact JSON restore technical identity models: OR exact resolved localID,
-      first order, account separation and late resolution/parse failures; no socket/DB/import writes.'
-  - path: app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java
-    responsibility: Own five actual-adapter themed CPU-native-text layout models, calibrated font/glyph
-      setup and immutable full-copy bounds plus wide-narrow-wide transition. Device/OEM/touch/rotation/native
-      GIS are separate.
-  - path: app/src/test/java/com/nextgis/mobile/fragment/SelectedTrackShareBindingTest.java
-    responsibility: Actual MapFragment track binding/click with DB lookup/export launch boundaries isolated; stale
-      Activity/view/selection/mode and hidden/current selection controls.
-  - path: app/src/test/java/com/nextgis/maplibui/util/TrackGpxNameExportTest.java
-    responsibility: Actual GPX worker/provider doubles and private appendTrack XML parser regressions; owned technical
-      files only, no track DB or recipient.
-  - path: app/src/test/java/com/nextgis/maplibui/view/TrackSelectionPanelTest.java
-    responsibility: Actual TrackSelectionPanel native-CPU-font widget layout, adaptive column/view-order/listener
-      controls; no map/GPU/device/whole-stack acceptance.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesOfflineTest.java
+  responsibility: Prepared emulator-only radio restoration, direct same-source polygon/anchor glyph/fill/outline pixels and
+    offline live Firefly/polygon style edits; compilation is separate from execution.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java
+  responsibility: Compile-only native coverage of old published configs, direct source epochs/styles, full original SQL rows
+    and offline one-anchor glyph/fill/outline pixels; not device acceptance.
+- path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayProgressText.java
+  responsibility: Format current transfer phase, monotonic per-attempt seconds and received counters without implying completed
+    migration.
+- path: app/src/test/java/com/nextgis/mobile/util/LegacyUnderlayTransferSessionTest.java
+  responsibility: Prepared fault injection for late timed-out descriptor closure and continued finalization progress until
+    terminal session close; not executed.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/LegacyUnderlayProgressNativeTest.java
+  responsibility: Prepared isolated queued cancel, exact-control UI and Russian full-text/fixed-Cancel theme/font/narrow-orientation
+    geometry checks; not real Debug throughput.
+- path: app/src/main/java/com/nextgis/mobile/util/PrivateRenderResourceProfiler.java
+  responsibility: Default-OFF private local MediaStore JSONL observer with bounded queue/file/deadline, process and SDK numeric
+    resource/frame statistics, monotonic scene boundaries, explicit observer/loss costs and priority final maplib aggregate
+    footer; never changes rendering, cache, business data or Sentry.
+- path: app/src/test/java/com/nextgis/mobile/util/PrivateRenderResourceProfilerTest.java
+  responsibility: Assert SDK seconds conversion, invalid counters and aggregate/subcategory separation, queue/memory/file
+    bounds, reserved complete footer, writer failure and unknown process metrics on technical fixtures only.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/SqliteMvtEvidence.java
+  responsibility: Independently summarize up to4MiB MVT bytes into at most12KiB of geometry-role counts and bounded allowlisted
+    focus FID properties; validate wire lengths/tags/indexes, expose malformed/limit states and never dump coordinates or
+    reuse production encoder helpers.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
+  responsibility: Assert the real direct-SQLite native source, all129IDs and paints, separate polygon/anchor roles, placed
+    Russian labels, pixels, original full DB geometry/rows and source invalidation without global Java features; additionally
+    exercise exact current aliases, saved/current track passes, whole Point/Firefly/icon/field-label priority, canonical root-child
+    order and cached binding/filter identity through full/lite/style/data/reorder/hide/Undo via sqlite-priority; retain bounded
+    failure evidence before fixture cleanup. Nested groups and Activity recreation are not covered by the new priority case.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStart.java
+  responsibility: Attach bounded independent request/failure lifecycle, permission and process-importance snapshots to the
+    existing handled background-GPS start refusal, with monotonic request age and explicit unknowns; never decide FGS eligibility
+    or retain Activity/Context references in a request.
+- path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStartTest.java
+  responsibility: Verify delayed promotion after reported Activity stop, permission changes and API28/unknown states, actual
+    scoped handled delivery and diagnostic-priority sanitize/replay without running Android FGS or claiming native acceptance.
+- path: app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java
+  responsibility: Claim one automatic foreground resource-economy notice per application process across maps, layers and Activity
+    recreation; manual status remains independent and no setting or layer visibility is persisted.
+- path: app/src/main/java/com/nextgis/mobile/util/ScrollableAlertDialogs.java
+  responsibility: Reserve complete title/action panels before measuring a bounded scrollable message; reuse the former maintenance-dialog
+    algorithm for memory status, wrap positive/negative/neutral actions, and preserve existing handlers and text sizes.
+- path: app/src/test/java/com/nextgis/mobile/util/RenderMemoryNoticeTest.java
+  responsibility: Assert the process-session claim is atomic, is not reset by another caller and starts clear only for an
+    independent new session.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java
+  responsibility: Independently verify all129 technical SQLite polygon IDs and65-coordinate Java inputs, complete native ID
+    set and whole-row hashes, then exercise once-session notice across recreation and another layer plus eight bounded Russian
+    component dialog profiles; measure visible line extents excluding trailing whitespace and retain exact profile/widget/bounds
+    on failure. This is no real memory-pressure, Full real-window or2GiB acceptance.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
+  responsibility: Add optional permission/provider/background policy and at most one passive system GPS last-known measurement-time
+    read to already emitted recovery reports; retain fixed numeric/enum witness only, fail open without coordinates/extras/accounts/business
+    storage or source seeding and without changing acquisition/retry.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
+  responsibility: Pure Clock/Probe comparison with ten fixed numeric/enum fields, explicit missing/denied/read/clock/invalid/future
+    states and overflow-safe millisecond arithmetic; compare only system cached and app raw measurement times, never infer
+    freshness or a delivery cause.
+- path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitnessTest.java
+  responsibility: Assert exact keys, older/same/newer and sentinel ambiguity, absent/invalid/future raw and cached times,
+    one probe, clock failures/reversal, fixed failure enums and absence of payload/exception text.
+- path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsGpsPlatformTest.java
+  responsibility: Verify Android API30/36 cache adapters expose measurement time without coordinates/extras, preserve source
+    Location, make denied permission explicit and retain older-platform/background-policy behavior.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
+  responsibility: Persist bounded process ownership before startup; match abnormal OS exits after restart, delegate API/reason
+    trace policy including SIGNALED, keep original/unknown identity and deterministic event IDs, and acknowledge owners only
+    after durable transport storage.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java
+  responsibility: Attempt bounded SIGNALED traces from API30 with automatic native/ANR recognition and may-precede-exit association;
+    preserve null, unknown and unavailable evidence without inferring OOM or changing OS reason/status.
+- path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsTracePolicyTest.java
+  responsibility: Verify API/reason trace gates, no stream open for skipped cases, prior recovered ANR association and distinct
+    missing/IO/security failure metadata without exception-message disclosure.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java
+  responsibility: Read at most one MiB plus a sentinel of OS trace after restart, automatically distinguish recognized native/ANR
+    stacks when needed, retain only main/crashing-thread frames and bounded native symbols, and exclude memory, registers,
+    open files and OS log buffers.
+- path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsNativeTraceTest.java
+  responsibility: Independently verify native/ANR allowlists and auto recognition, byte/frame budgets, malformed and oversized
+    inputs, stream closure and bounded IO failure metadata.
+- path: app/src/test/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporterTest.java
+  responsibility: Verify process ownership, historical identity, abnormal-reason gates and preserved raw SIGNALED reason/status
+    with prior-trace association through the actual cached-send policy.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/MapRenderStressTest.java
+  responsibility: Require distinct seed/workload PIDs and6480-by65 technical geometry; verify90 seconds of pan/pinch/recreation
+    through effective current SQLite CustomVectorSources with empty global feature caches, independent fully-visible grid
+    IDs and valid native geometry roles; retain peak memory/actual GPU and failed recovery evidence without claiming a real-project
+    speed or leak benchmark.
+- path: app/src/main/java/com/nextgis/mobile/util/MapSelectionDialog.java
+  responsibility: Show a single bounded scrolling candidate list with wrapping full labels and cancellation; keep vector and
+    track choice callbacks distinct.
+- path: app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java
+  responsibility: Persist independent successful manifest and outstanding-update clocks, read only full successful active
+    online-project sync, exempt local projects, and compose advisory weekly reminders with process/daily duplicate suppression.
+- path: app/src/test/java/com/nextgis/mobile/util/MaintenanceRemindersTest.java
+  responsibility: Verify API 28/36 clocks, unknown-history grace, local/online nested layer detection without business reads,
+    ownership, release succession, cached versus checked state and daily resident-process review.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/MaintenanceRemindersNativeTest.java
+  responsibility: Verify durable clocks and 288 Russian dialog configurations after actual window attachment, with complete
+    text, scrolling, visible actions and no automatic installation in the isolated verification APK.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationIo.java
+  responsibility: Read verification streams with an API26-compatible buffer while callers retain resource ownership.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/VisibleLineLabelsTest.java
+  responsibility: Verify native whole-word rendering, current extent, pan/zoom/rotation, categories and original picking.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackStopConfirmationTest.java
+  responsibility: Verify all manual recording Stop entry points, stale confirmation and real Russian dialog bounds; observe
+    actual OnDismiss and one Cancel DOWN/UP without replaying input.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/LegacyTrackColorsNativeTest.java
+  responsibility: Verify real shared-store v1 to v2 color migration without metadata or point loss.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java
+  responsibility: Verify real track list/map actions, persisted metadata, thin dark track core and original-hue glow, point/field-line
+    order and mixed candidates; acknowledge only known startup power warnings through native dismissal before background pointer
+    input and retain actual overlap diagnostics. Reacquire active owned input bounds only after a UID-rejected DOWN before
+    delivery; fail after an accepted DOWN and retain the shared30-second budget.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java
+  responsibility: Require window focus and stable visible bounds clipped to scrolling, window and physical display before
+    guarded native input; verify that the actual SeekBar minimum remains visible.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
+  responsibility: Verify native polygon styles, live preview, lifecycle and Russian large-interface editor behavior.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java
+  responsibility: Verify native polygon styles, live preview, lifecycle and Russian large-interface editor behavior.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java
+  responsibility: Verify the actual Russian point editor, explicit preset, Save and Cancel with real touches across 72 local
+    theme, font, display and orientation configurations in the isolated verification APK.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
+  responsibility: Hold technical transfer bytes until ActivityScenario is explicitly DESTROYED, verify the completed file
+    without an Activity, exercise both Russian ready-dialog actions at large component scales and inspect non-roaming metered
+    network constraints in the isolated verification APK.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsExitInfo.java
+  responsibility: Add bounded Android 11+ OS termination metadata to historical failures only on a background sender, matching
+    original timestamp, crash type and default process without reading business files or OS trace streams. Explicit log ZIP
+    sharing also exports up to eight main-process OS exit records without SDK-event dependency, descriptions, trace reads
+    or inferred historical APK versions.
+- path: app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkGuardTest.java
+  responsibility: Verify that real Android network callbacks cancel attached HTTP on roaming/loss/replacement, stopped work
+    cancels its call and Android 8 uses the legacy roaming flag.
+- path: app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java
+  responsibility: Unique persistent six-hour and launch update preparation without an Activity, non-roaming network/storage
+    constraints, stop cancellation and no installer or production release work in verification builds.
+- path: app/src/main/java/com/nextgis/mobile/util/AppUpdateDownload.java
+  responsibility: Resume partial APK bytes only with exact Content-Range and size, restart an ignored Range, preserve interrupted
+    bytes, verify full SHA-256 and atomically finalize the file.
+- path: app/src/test/java/com/nextgis/mobile/util/AppUpdateDownloadTest.java
+  responsibility: Cover range restart/resume, interruptions, roaming cancellation, size/hash rejection and preservation of
+    an existing complete artifact.
+- path: app/src/test/java/com/nextgis/mobile/util/AppUpdateReadyStateTest.java
+  responsibility: Reject stale/malformed/corrupt/product/certificate-mismatched ready state and preserve offline local readback
+    without opening an installer.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java
+  responsibility: Exercise native transfer without a resumed Activity, non-roaming policy and the actual ready dialog in both
+    themes, both orientations and 100/130/200 percent fonts at 280/320 dp and normal widths; await the queued Android button
+    listener off the main thread before asserting the install action.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
+  responsibility: Verify real cascade controls, SQLite/drafts and deferred tab selection; reveal the target touch band within
+    the current viewport, use an explicit non-interactive area outside Tabs for blank gestures, await focused stable geometry
+    before one native gesture, retain bounds diagnostics and selected values.
+- path: app/src/main/res/xml/preferences_location.xml
+  responsibility: Location preferences, including the persisted default-off show_compass_accuracy_sector checkbox with a multiline
+    title; MapFragment applies its choice on resume through the maplib visibility API.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java
+  responsibility: Replay no-fix and callback-stall snapshots against the native source, verify paired recovery, schema4 independent
+    seeded raw measurement timestamp versus callback receipt age, one same-listener retry and preserved recording resources
+    on an isolated emulator; this is not a reproduction of vendor GNSS callback loss.
+- path: app/src/main/java/com/nextgis/mobile/util/SyncJournalCommit.java
+  responsibility: Confirm journal durability on an owned serial writer despite caller interruption and restore cancellation
+    before returning.
+- path: app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java
+  responsibility: Verify pre-interrupted and cancelled callers await durable completion, preserve interrupt and do not turn
+    actual write failure into success.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/SyncRecoveryJournalNativeTest.java
+  responsibility: Verify interrupted enqueue and pair acknowledgment against physical SharedPreferences XML on the isolated
+    emulator.
+- path: app/src/main/java/com/nextgis/mobile/usage/UsageAnalytics.java
+  responsibility: Collect visible opening timestamps and account/project inventory without foreground duration; observe registry
+    changes off the UI thread.
+- path: app/src/main/java/com/nextgis/mobile/usage/UsageStore.java
+  responsibility: Persist installation identity, immutable event UUID/sequence and snapshot checkpoint in backup-excluded
+    SQLite before delivery.
+- path: app/src/main/java/com/nextgis/mobile/usage/UsageDelivery.java
+  responsibility: Deliver bounded HTTPS batches, reject redirects and acknowledge only confirmed requested event IDs.
+- path: app/src/main/java/com/nextgis/mobile/usage/UsageUploadWorker.java
+  responsibility: Retry the independent usage queue with connected immediate and periodic WorkManager jobs.
+- path: app/src/main/java/com/nextgis/mobile/usage/UsageOpenPolicy.java
+  responsibility: Distinguish a cold visible opening, Activity transfer and later return without collecting duration.
+- path: app/src/androidTest/java/com/nextgis/mobile/usage/UsageDeliveryTest.java
+  responsibility: Verify private outbox restart, exact ACK and retained HTTP 503 followed by idempotent delivery using a synthetic
+    loopback server.
+- path: app/src/main/java/com/nextgis/mobile/location/LocationDisplayAccuracy.java
+  responsibility: Apply a render-only 3 m phone GPS floor shared by the status panel and circle; preserve external, mock,
+    NMEA and Network accuracy and every input fix.
+- path: app/src/main/java/com/nextgis/mobile/activity/AboutActivity.java
+  responsibility: Show Geonical help contacts and user guide with no Telegram action; open the Geonical contact page from
+    About.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java
+  responsibility: Verify real layers.db legacy migration beside new tracks, exact row values, checkpoint/pending Stop recovery,
+    common history/map visibility, project deletion and retained recording switch guard.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
+  responsibility: Verify classic SQL/rule JSON/GeoJSON/native paint and labels through real MapLibre OpenGL on an isolated
+    verification phone or software-only emulator; prepare model camera/visibility and suppress the disposable startup geo-dialog;
+    reject configured local-vector-tiles sources, assert the explicit classic binding survives native idle, and retain bounded
+    source/paint JSON plus PNG before fixture cleanup. Host-GPU emulator mode is forbidden.
+- path: tools/run_mobile_tests.py
+  responsibility: Route complete static phone and emulator acceptance, retain failures, finalize owned AVD before PASS, verify
+    source receipts and require a permitted project or an explicitly chosen validated metadata-only policy fixture with provenance.
+- path: tools/mobile_native_log.py
+  responsibility: Continuously capture only the fixed verification package's exact queried UID into a4MiB head/tail host log,
+    stop/join/close only its owned ADB client, retain partial evidence and return bounded diagnostics without changing the
+    native test outcome or device state.
+- path: tools/tests/test_mobile_native_log.py
+  responsibility: Independently verify actual4MiB first/last bounds, exact package UID admission, owned process and blocked
+    reader shutdown, partial error retention, idempotent metadata and no app/server interactions using fake subprocesses only.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
+  responsibility: Verify actual Orbit pixels, heading/course fallback and accuracy circles; isolate heading input, synchronize
+    saved/native fixture cameras through MapDrawable, await the app scene, retain .08m/30-second assertions and report both
+    cameras plus sample/cache/source/radius state.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java
+  responsibility: Admit only isolated verification APK and explicitly selected phone, then await real delayed startup callbacks
+    and workspace operations before native fixtures; production data and identities remain outside tests.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java
+  responsibility: Verify multi-row viewport and actual layer/Cancel touches under enlarged UI.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java
+  responsibility: Verify real creation filtering from the permitted project policy snapshot in the verification app canonical
+    private filesDir without copying accounts or features or requiring shell access to Android/data.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectSyncDisplayNativeTest.java
+  responsibility: Verify a scoped background callback still displays the active project clock in the actual layer drawer.
+- path: app/src/main/res/layout/layout_azimuth_panel.xml
+  responsibility: Separate magnetic measurement controls from stakeout arrow, accuracy and sound while keeping enlarged text
+    and Close reachable.
+- path: app/src/main/res/layout/layout_stakeout_panel.xml
+  responsibility: Restore historical independent guidance panel with direction, distance, accuracy, sound and Close.
+- path: app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+  responsibility: Persist owning-project completion only after all required accounts, child jobs, ready outbox and cleanup
+    succeed.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/LocalChangesUploadTest.java
+  responsibility: Verify real saved line delivery, disabled full schedule, offline/HTTP retry, draft exclusion and background
+    workspace isolation on a loopback emulator.
+- path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt
+  responsibility: Keep foreground GPS active on every app Activity even with background disabled; own the separate default-enabled
+    service through a two-hour monotonic inactivity timer, disarm both automatic leases on explicit task exit until the next
+    Activity start, and reconcile preferences immediately.
+- path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt
+  responsibility: Promote a location foreground service before acquiring an independent shared GPS lease; cancel pending launches
+    safely, handle recent-task removal through the app controller and preserve explicit recorder owners.
+- path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationPolicy.java
+  responsibility: Define the default background GPS setting, deterministic two-hour inactivity policy and explicit-exit disarm/reopen
+    transitions.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java
+  responsibility: Verify actual screen sleep/wake, forms with background off, Home, double Back, recent-task removal, disarm/reopen,
+    two-hour expiry and preference changes; query actual lifecycle Stage on the main thread while preserving independent recording
+    owners and actual Track/Walk services on an isolated Debug emulator.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/MapRuntimeDiagnosticsNativeTest.java
+  responsibility: Block the real main looper and verify query/startup snapshots and a Backfillable SDK ANR event preserving
+    original identity, then saturate the actual loopback queue and verify explicit rejection headers on an isolated Debug
+    emulator. This fixture does not qualify ordinary SQLite phase logs or native content ready; those require the separately
+    recorded physical-tablet route.
+- path: app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalTest.java
+  responsibility: Verify idempotent queue preservation without redundant legacy inventory, retained parsing causes and disk-commit
+    failure details without journal deletion.
+- path: app/src/main/java/com/nextgis/mobile/view/MapActionsMenu.java
+  responsibility: Pass collapsed transparent action slots through to the map while retaining visible add-button and expanded-menu
+    touch targets.
+- path: app/src/main/java/com/nextgis/mobile/view/ResponsiveMapLayout.java
+  responsibility: Recompute compact compass, margins and creation-action space from the current map viewport, keeping guidance
+    and walking panels in a shared bounded stack.
+- path: app/src/main/java/com/nextgis/mobile/view/BoundedDrawerLayout.java
+  responsibility: Restore the preferred drawer width when space returns and cap a fixed drawer to the enlarged-display viewport.
+- path: app/src/main/java/com/nextgis/mobile/view/MapStatusPanel.java
+  responsibility: Limit enlarged telemetry to one quarter of usable map height below the toolbar so map actions retain a visible
+    area.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java
+  responsibility: Verify full Russian text layouts, transformed visible bounds and touch delivery for enlarged font/display
+    sizes, both themes and orientations, including retained Network age/accuracy, the real default-enabled background GPS
+    setting and the default-off compass-sector checkbox with persisted enable/disable; capture emulator screenshots.
+- path: app/src/main/res/layout/status_panel_content.xml
+  responsibility: Share wrapping GPS coordinates/status values across orientations with bounded panel fitting.
+- path: app/src/main/res/layout/layout_stakeout_panel.xml
+  responsibility: Keep complete azimuth/stakeout labels, wrapping correction actions and Close within the bounded map panel
+    without scrolling.
+- path: app/src/main/java/com/nextgis/mobile/fragment/ReorderedLayerViewAnimated.java
+  responsibility: Animate layer reorder; safely finish/cancel when the dragged row or adapter disappears, clearing pending-scroll/hover
+    state and restoring enabled/visible state.
+- path: app/src/test/java/com/nextgis/mobile/fragment/ReorderedLayerViewAnimatedTest.java
+  responsibility: Reproduce idle-after-fling with a detached row, cancellation with a visible row, detached adapter and normal
+    waiting-for-scroll on Robolectric API 26/36.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/SyncOfflineAndWalkGpsTest.java
+  responsibility: Verify offline manual/retry dialogs, OS-constrained account work with a bounded 60-second recovery budget
+    and attempt/network diagnostics, and real walk callbacks across GPS loss, timestamp gaps, point locks, explicit pause
+    and sticky recovery; reuse the owned EmulatorNetworkFixture and finalize radio restoration.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/EmulatorNetworkFixture.java
+  responsibility: Wait for the Wi-Fi adapter and connected Wi-Fi rather than disappearing cellular connectivity for isolated-emulator
+    account/track checks, and finish restoring radios before the next test.
+- path: app/src/main/java/com/nextgis/mobile/util/SyncNotifications.java
+  responsibility: Keep stable manual/account foreground notification identities and remove stale progress at main-process
+    startup without clearing failures or GPS notifications.
+- path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+  responsibility: Keep manual dataSync foreground execution, reject inactive or post-destroy progress callbacks, and remove
+    the owning progress notification when the service ends.
+- path: app/src/test/java/com/nextgis/mobile/util/SyncNotificationsTest.java
+  responsibility: Reproduce inactive-progress repost and post-destroy callbacks across a new session on API 26/36; verify
+    default error-only notices and preserved explicit preference.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/SyncNotificationsTest.java
+  responsibility: Verify real Android notification removal, readable default errors, orphan cleanup and bound account service
+    finish/cancel with delayed progress; isolated emulator only.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java
+  responsibility: Bound automatic SDK HTTP 5xx bursts with status/method/local-or-remote tags, a ten-minute window and 64
+    hashed endpoint keys; retain the first request, fatal events and cached replay.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java
+  responsibility: Reserve bounded payload budgets for diagnostic contexts, latest breadcrumbs and stack additions without
+    content masking or arbitrary object serialization.
+- path: app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt
+  responsibility: Warn at launch/resume without recording about screen-off GPS power policy, background restriction and battery
+    optimization; open a single applicable system setting directly or offer a choice for multiple restrictions once per unchanged
+    launch state.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java
+  responsibility: Verify actual emulator power/background/optimization restrictions, direct single-setting routing, multiple-setting
+    selection, rotation and no automatic recorder start; return from the foreground helper with Back while the app UID is
+    background-restricted.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsNoiseTest.java
+  responsibility: Seed synthetic local backlog on an isolated emulator, cold-start an obsolete HyperLog endpoint and verify
+    retained logs, crash handler and bounded SDK HTTP captures.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java
+  responsibility: Verify delayed registration, revocation, network deferral/reconnect, transport failure and server isolation,
+    the track row badge plus the aggregate badge with other pending layer rows, opt-out, packet-specific acknowledgements
+    with repeated timestamps, and real background workspace delivery against an isolated loopback endpoint.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java
+  responsibility: Verify category choices through sketch, current-location and background-walk creation, recreation, interrupted
+    recorder recovery, point-lock cancellation, confirmation-safe pause/resume, same-zoom GPS start centring, three 48dp targets
+    in both themes at normal/200-percent fonts, the unified Measurements menu and ruler/azimuth placement gestures, and the
+    real attribute-form SQLite Save; isolated emulator only. Cover read-only point copying and actual multipart MapView transform
+    gestures on emulator or explicitly selected stationary verification phone methods.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java
+  responsibility: Verify all 40 standard point, line and polygon style categories, symbols and canonical class/type defaults,
+    including the actual mixed point form; isolated emulator only.
+- path: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+  responsibility: Initialize Sentry after the isolated UID guard, sync native build identity, preserve bounded diagnostic
+    context and original cached identity, pair classified GPS warnings with INFO recovery/cancel by episode UUID, and enrich
+    only newly reported GPS snapshots with a passive numeric cache witness while retaining old replay schema/grouping.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java
+  responsibility: Persist SDK envelopes before async HTTP, retain offline/5xx/rate-limited events, acknowledge SDK crash/replay
+    hints and preserve TLS validation.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java
+  responsibility: Retry existing SDK cache/outbox from a connected periodic WorkManager job without opening a GIS project
+    or reinstalling crash handlers.
+- path: app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java
+  responsibility: Bound diagnostic messages, filter expected offline/cancellation outcomes and limit duplicate handled failures.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsDeliveryTest.java
+  responsibility: Test offline handled/fatal reports, process restart, network return and real WorkManager after HTTP 503
+    on an isolated emulator with explicit test DSN.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/DiagnosticsTestRunner.java
+  responsibility: Opt-in test APK runner supplies a synthetic test Application and DSN after rejecting physical or non-Debug
+    devices.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/FormAppearanceTest.java
+  responsibility: Verify real light/dark native fields, permanent captions, wrapped long choices, hidden comment layout and
+    footer Save gate on synthetic offline data.
+- path: app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java
+  responsibility: Defer disconnected account dispatch before lease/progress/journal changes; apply default-on all-project
+    scope to manual and scheduled passes, preserving the active map/draft while serially opening headless owning maps, draining
+    async children and recording exact recovery pairs.
+- path: app/src/androidTest/java/com/nextgis/mobile/util/ProjectSyncRunnerTest.java
+  responsibility: Await pending startup underlay migration and workspace leases before constructing native synthetic-project
+    fixtures; verify scope, network deferral/reconnect, failure continuation, durable queues, equal-id journals, cancellation
+    and real background fill.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java
+  responsibility: Verify dynamic requirements, inactive tabs, toolbar and Back Save, immutable draft pins and corrupt snapshot
+    failures before SQLite writes.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
+  responsibility: Verify default-form metadata launch, independent full-width cascade controls and spacing, repeated native
+    swipes over enabled fields and blank space, vertical scroll, text selection and signature exclusion.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerPendingChangesTest.java
+  responsibility: Exercise real drawer/worker with synthetic SQLite edits, deletion-only outbox, recycled rows and rotation;
+    confirm row and global indicators clear together after acknowledgment.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java
+  responsibility: Real dependent NGFP spinners, both audit branches, SQL NULL clearing, pinned draft/recreation, mismatched-choice
+    Save rejection, creation-category parent prefill, legacy pair persistence and asynchronous category-dialog results on
+    synthetic offline SQLite.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectScriptsTest.java
+  responsibility: Real isolated Binder, native VM, ownership, local history and NGFP save/draft regression.
+- path: examples/project-scripts/contractor-audit/manifest.json
+  responsibility: Portable ten-layer contractor warning pilot using only native API v1.
+- path: app/src/main/java/com/nextgis/mobile/MainApplication.java
+  responsibility: Skip normal initialization under the isolated script UID.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/RequiredFieldsTest.java
+  responsibility: Exercise standard and NGFP required controls, whitespace/default placeholders, inactive tabs, dependent
+    choices, Back Save, retained draft geometry/photos, optional placeholders and existing omitted fields against real SQLite
+    without NGW writes.
+- path: app/src/main/java/com/nextgis/mobile/location/TrackPowerWarning.kt
+  responsibility: Warn before manual track Start and on active-session Resume or power policy change; offer Battery Saver
+    settings or explicit continuation without conflating Doze exemption or starting from settings.
+- path: app/src/main/java/com/nextgis/mobile/view/GnssDeviceAdapter.java
+  responsibility: Render receiver names and measured or unknown Bluetooth RSSI on separate lines, clearing recycled signal
+    rows for USB endpoints.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackRecordingModesTest.java
+  responsibility: Exercise the real foreground track service and SQLite for pedestrian drive gaps, missing speed, Stop during
+    driving and mixed recording on an isolated Android emulator.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/StakeoutForegroundServiceTest.kt
+  responsibility: Exercise real Android 14+ location foreground enforcement without Bluetooth, background lifetime, synchronous
+    and asynchronous rejection, GPS lease cleanup, rapid owner replacement and obsolete start requests on an isolated emulator.
+- path: app/src/main/res/layout/layout_map_content.xml
+  responsibility: Shared phone, landscape and tablet map content with mandatory track toggle and walk panel, a separate horizontal
+    creation row and tools at the right edge.
+- path: app/src/main/java/com/nextgis/mobile/view/MapControlRail.java
+  responsibility: Measure available height/width, retain natural touch targets when they fit, locally scale a cell that exceeds
+    the viewport and expose visible overflow actions without overlapping the creation row or walk panel.
+- path: app/src/main/java/com/nextgis/mobile/view/MapControlGrid.java
+  responsibility: Pure row-count policy covered by dimension and density boundary tests.
+- path: app/src/test/java/com/nextgis/mobile/view/MapLayoutContractTest.java
+  responsibility: Require all phone, landscape and tablet wrappers to include the same complete map content and preserve the
+    separate action row.
+- path: app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java
+  responsibility: Shared worker snapshot includes enabled-track sent=0 rows, reacts to trackpoint commits and upload-intent
+    changes, and keeps manual track upload available without vector accounts; explain absent network before dispatch, run
+    one serial manual-sync pipeline, reconcile sync animation and the determinate progress ring against worker-owned state
+    and the data-sync lease throughout the visible lifecycle, query pending changes off the main thread with lifecycle and
+    map guards, and confirm explicit rechecking of skipped server geometries on long press.
+- path: app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java
+  responsibility: For GPX FileProvider URIs, advertise text/xml in getType and anonymous lookup so MimeTypeMap clients do
+    not append .bin or .null, while retaining canonical root and grant checks.
+- path: app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt
+  responsibility: Browse shared assets, attach, rename and confirm deletion with affected projects; warn before catalog attachment
+    or legacy import interrupts an active synchronization; offer Debug underlay import into the active project on Geonical
+    with visible byte/tile progress, explicit cancellation and a confirmed Back exit during an active transfer, except in
+    layer-picker mode; AppTheme.UnderlayCatalog and an explicit Toolbar above the list respect system bar and display cutout
+    insets in both modes.
+- path: app/src/main/res/layout/activity_underlay_catalog.xml
+  responsibility: Keep catalog toolbar, transfer progress/status/cancel controls, empty state, Debug import action and scrolling
+    assets in a vertical layout below system insets.
+- path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java
+  responsibility: Separate trusted Debug installer, actual PackageManager exporter availability and enabled/exported checks,
+    durable permission/project continuation, and focus-safe dialog/external-result guards shared by MainActivity and UnderlayCatalogActivity.
+- path: app/src/main/java/com/nextgis/mobile/util/DebugCompanionPolicy.java
+  responsibility: Pure manifest, URL, version and signing identity rules for the Debug companion.
+- path: app/build.gradle
+  responsibility: Variant application ID, provider authority, NGW authenticator/sync account identity, flavor resources, explicit
+    MapLibre 13.7.1 OpenGL backend, production 3.1.2.31/225 versus Lisa Debug 3.1.2.23/218 version contract, and signing configuration.
+- path: app/src/lisa/res/values/launcher_icon.xml
+  responsibility: Lisa launcher, intro and about icon binding to density-specific ic_launcher_lisa resources without changing
+    Belka branding.
+- path: app/src/belka/res/values/launcher_icon.xml
+  responsibility: Belka-only launcher, intro and about icon binding to density-specific ic_launcher_belka resources without
+    changing Lisa branding.
+- path: app/src/main/java/com/nextgis/mobile/MainApplication.java
+  responsibility: Main-process initialization and logging; honour save_log or verbose_log for HyperLog export; create or adopt
+    and activate the initial local project before GISApplication opens its first map, schedule exact registered project/account
+    recovery across active-project changes, except that a pre-registry Debug workspace is kept in place for explicit underlay
+    streaming and does not schedule shared-catalog migration; create editable local vector layers and keep default OSM at
+    internal index zero plus tracks at the top of the reversed layer list for every workspace. Storage move retires only the
+    exact captured mMap without factory getMap, and checks cached actual path plus exact owner with rebind under the same
+    application monitor; retirement does not prove renderer read drain.
+- path: app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java
+  responsibility: Admit storage move and confirmed Reset only under an exclusive project lease before default-directory/prefs/task
+    effects; defer proposed-path and Reset publication through actual-path worker commit and owned UI completion; distinguish
+    Activity drawable refresh from move ACK and preserve ordinary failure/cancel rebind, unexpected worker error propagation
+    and exact terminal cleanup.
+- path: app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
+  responsibility: Keep the current-index no-op and available-root chooser policy; defer proposed storage/card preferences
+    until the worker result and publish only actual path plus its matching root card label, preserving the old card label
+    when no root matches.
+- path: app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
+  responsibility: Exercise actual preference/reset/AsyncTask callbacks and MainApplication owner guards with real coordinator
+    leases, technical renderer/database probes and controlled worker/main phases; assert busy state preservation, admission,
+    actual-path refresh versus ACK, callback-held exclusion, cancellation/failure/stale cleanup and no unowned orientation/default-directory
+    effects without GIS or business database acceptance.
+- path: app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
+  responsibility: Main navigation, per-launch and settings-return runtime permission checks for location, device accounts
+    and legacy storage (notification permission is optional and requested only in Settings), track-mode dropdown with durable
+    pedestrian/mixed selection, one-tap Stop without a location-permission gate, system-location-gated track/walk start, confirmed
+    versus pending track toolbar/map-button state and failure warning, map rotation/location recovery, local file and shared-underlay
+    import, default migration, walk-state reconciliation and crash-recovery hub, NGW URL/project selection, sync interruption,
+    backup sharing and updater continuation.
+- path: app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java
+  responsibility: Choose Bluetooth Classic/LE, USB or TCP endpoint and persist gnss_input keys without Mock Location; show
+    scan RSSI for duplicate-name Bluetooth receivers, request discovery permissions and release scans on pause/select/transport
+    switch; identified ComNav/Pigo BLE uses the native paired UART/BESTPOSB session and expires stale HUD quality.
+- path: app/src/main/res/xml/preferences_general.xml
+  responsibility: General settings including save_log file export, opt-in verbose_log GNSS dumps and a confirmed walk-only
+    emergency reset action.
+- path: app/src/main/java/com/nextgis/mobile/util/WalkEmergencyReset.java
+  responsibility: Remove only the durable walk owner and its owned form checkpoint for startup or user-confirmed emergency
+    recovery.
+- path: app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java
+  responsibility: Settings navigation with Project and Underlay storage as adjacent top-level entries, and updater continuation
+    after Android special install permission returns to a manual update check.
+- path: app/src/main/res/xml/preferences_tracks.xml
+  responsibility: Track settings UI, including enabled-by-default fixed ten-second background recording heartbeat shared with
+    walk recording, gated by fresh usable location delivery rather than coordinate movement, audible through the alarm stream
+    independently of notification volume and replaced by vibration when alarm audio is muted.
+- path: app/src/main/java/com/nextgis/mobile/util/AppUpdatePackageInfoPolicy.java
+  responsibility: Keep the legacy APK archive signature request on Android 9 and newer while also requesting modern SigningInfo,
+    so Android 9 and 10 can validate a same-certificate update through the populated fallback field.
+- path: app/src/test/java/com/nextgis/mobile/util/AppUpdatePackageInfoPolicyTest.java
+  responsibility: Lock the updater signature-flag contract at the API 27/28 boundary and across Android 9, 10, 11 and current
+    SDKs.
+- path: app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt
+  responsibility: Name-only project list with radios; a row tap selects, Open switches, Cancel leaves the current project.
+- path: app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt
+  responsibility: Active project information and controls for current-project sync, interrupt-before-action local project
+    creation and device-only rename/delete, changed-layer backup gate and schema-rebuild guard reset.
+- path: app/src/main/java/com/nextgis/mobile/activity/LegacyUnderlayExportActivity.java
+  responsibility: Require an explicit user confirmation in Debug before granting Geonical read-only underlay stream URIs.
+- path: app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java
+  responsibility: Stream one local Debug underlay through a granted pipe without exposing paths, accounts, vectors, tracks
+    or project identity.
+- path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java
+  responsibility: Convert legacy extracted TMS/OSM tiles directly into batched, atomically published raster MBTiles; track
+    pipe progress, cancel or inactivity-timeout a blocked descriptor, retry one stalled source, clean partial stages, and
+    release the project lease before later sync.
+- path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java
+  responsibility: Define the Android-independent inactivity deadline, one-retry bound and transfer-exit confirmation policy
+    for the cross-package underlay stream.
+- path: app/src/test/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicyTest.java
+  responsibility: Lock inactivity, retry, cancel and catalog Back-exit confirmation policy without Android.
+- path: app/src/test/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContractPolicyTest.java
+  responsibility: Lock pre-registry Debug workspace deferral and the shared-catalog migration skip without Android.
+- path: app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java
+  responsibility: Pin Debug/Geonical package and signing-certificate identities, define the bounded-memory framed streaming
+    schema and detect the one legacy Debug workspace that must stay in place without shared-catalog migration until export.
+- path: app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java
+  responsibility: Reserve the active project before manual sync starts, own a cancellable registration for that reservation,
+    run as a dataSync foreground service, delegate all downloaded projects and accounts to the shared scoped queue under one
+    lease, start the session-scoped progress ring, and interrupt pending or active manual work on an explicit user request.
+- path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+  responsibility: Map screen, complete MapLibre MapView lifecycle, cancellation of pending SDK gestures before native destruction
+    and renderer-reference cleanup across pause/resume/view recreation, bounded post-style continuous-render/presentation
+    recovery and stale loading-foreground removal without full reload, EGL-recoverable SurfaceView on every API with bounded
+    recovery bursts and no permanent old-API FPS limit, MaplibreMapInteraction implementation, opt-in persistent and immediate
+    concurrent pinch/rotate gestures with north-up/location/layer-extent recovery, foreground compass-first Orbit ring pointer
+    with a transparent opening, 5 dp blue dot with a 2 dp white border and moving-course fallback, retained compass uncertainty
+    calculations and camera-scale refresh with all three sector layers hidden by default and controlled by the saved show_compass_accuracy_sector
+    choice on resume, native NMEA HUD for RTK quality/sats/HDOP, hidden local-vector-tile attribute identification, track-mode
+    popup and Start/Starting/Recording/Error button under the ruler with orange recording person and enlarged red dot, immediate
+    current-camera-centre tap sketch creation with automatic target visibility, confirmed new-sketch cancellation without
+    a duplicate add toolbar action, visible selected-to-successor insertion direction, hectare ruler labels with sketch-equivalent
+    Undo/Redo routed to the active MapLibre measurement geometry and saved-instance restoration, selected-node independent
+    walk insertion, passive preview, confirmed disk Finish followed by session-acknowledged minimum-vertex validation and
+    immediate attributes for new/existing features, confirmed Pause/Resume/Cancel with full point-session control lock, same-zoom
+    start pan to the actual current-location/walk geometry anchor, foreground stakeout host/widget plus transient current-location-to-point
+    and arbitrary-point-to-point magnetic azimuth/distance modes with draggable editable endpoints and a widget that shows
+    effective declination D+C without drag-hint copy, acknowledgement of completed post-fill style/source reload, shared Save/form
+    handoff for new geometry with duplicate-launch protection, terminal successful-save cleanup to normal map mode with no
+    feature selection for both new and existing objects, a single Measurements popup routing directly to ruler/current-location
+    azimuth/free-point azimuth with restored control visibility and legacy ruler-only preference, typed Polygon validation
+    messages, GTMultiPolygon-only topology repair, durable non-walk geometry journal, and deferred current-style-safe geometry
+    restoration and owner-aware recovery of coexisting walk and point drafts with polygon-only fill, stable outline and editable
+    vertices after Stop. GPS callbacks use the durable recording flag and asynchronous map-owned track snapshots, never a
+    synchronous unfinished-track query. The MapLibre logo and SDK info button stay hidden; a single OpenStreetMap credit line
+    appears at the left edge only while the built-in OSM layer is visible and lifts above bottom panels. Offer compatible-layer
+    copying and whole-object transforms through normal category/form, draft, Save/Cancel and Undo contracts. Stakeout input
+    is selected geometry first with full-DB null fallback; mode/layer/FID/geometry Bundle and process-only restart marker
+    do not establish workspace or replacement migration policy. Offer selected shared-track GPX through existing exporter
+    only for the current Activity/view/selected ID/normal mode; track selection, recorder state and list multiselect remain
+    owned by existing controllers.
+- path: app/src/main/java/com/nextgis/mobile/location/DeviceHeadingProvider.kt
+  responsibility: Foreground rotation-vector true heading for the Orbit pointer and compass-uncertainty sector, using WMM2025
+    declination without stakeout correction, plus magnetometer and heading-jitter inputs to HeadingConeAccuracy; actively
+    notify compass expiry after 500 ms without waiting for another GPS/sensor event and clear/cancel on stop.
+- path: app/src/test/java/com/nextgis/mobile/location/DeviceHeadingProviderTest.kt
+  responsibility: Exercise compass absence, registration failure, unreliable readings, active expiry, fresh-sample recovery
+    and stop/restart on Android API 26 and 36 without GPS callbacks.
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java
+  responsibility: Explicit graphics smoke outside the SwiftShader reliability CI package; check actual MapLibre vector images
+    and central fix anchor, topmost accuracy-sector-white-halo-blue-outline-symbol order after a hot style addition and lite
+    reload, rendered compass/course/plain-dot transitions, default-hidden sector plus persisted opt-in/out after map resume
+    and hot/lite reload while preserving its 56-pixel geometry through native projection at zoom 16/18/19, actual 5 dp blue-centre
+    and white-border and outward thicker blue-rim pixels, transparent bitmap opening and an untinted 14 dp point symbol beneath
+    all service overlays in screenshots and removal when the fix expires on an isolated Debug emulator with a working EGL
+    backend.
+- path: app/src/main/java/com/nextgis/mobile/location/HeadingConeAccuracy.kt
+  responsibility: Combine rotation-vector heading accuracy, circular yaw jitter, raw-vs-filtered innovation and magnetometer
+    field penalty, then open the cone faster than it closes.
+- path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt
+  responsibility: Active selected-feature or arbitrary-point live-guidance lifecycle, in-place target replacement without
+    releasing foreground resources, independent GPS listener, WMM2025 magnetic-bearing UI state with persisted declination
+    correction, GPS/mock precision-source gate, reported-accuracy UI state, monotonic navigation-audio scheduling, 3 s freshness
+    with a 1 s future-timestamp tolerance, high-frequency GPS lease ownership across screen-off/background state, and full
+    rollback on synchronous or owning asynchronous foreground rejection. Own a copied geometry/index target rather than a
+    live feature subscription; high-frequency GPS lease is separate from project mutation exclusion and source/DB identity.
+- path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt
+  responsibility: Explicit location-only foreground notification and partial wake lock without Bluetooth permission, process-local
+    session ownership, failure callback and obsolete-request foreground-contract completion without restoring GPS/audio.
+- path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt
+  responsibility: Circularly filtered magnetic rotation-vector heading plus location-cached WMM2025 declination for the live
+    guidance arrow without movement-bearing fallback.
+- path: app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt
+  responsibility: Normalize true initial bearing minus east-positive WMM2025 declination plus persisted user correction into
+    clockwise magnetic azimuth and return undefined for coincident points.
+- path: app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java
+  responsibility: Calculate offline magnetic declination from the official WMM2025 coefficients for the 2025-2030 model interval.
+- path: app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt
+  responsibility: Full-scale limited low-pitched non-overlapping damped wooden-tap PCM cues with 3x digital gain and a distinct
+    double-tap in-tolerance pattern.
+- path: app/src/main/res/menu/add_layer.xml
+  responsibility: Add-layer popup; Load project is first, Add NGW layer by URL stays hidden with its handler intact.
+- path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+  responsibility: Branch-specific Lisa Mobile manifest, trusted versioned URL, integrity, identity, Android 9-10 archive-certificate
+    fallback, process-death-safe install continuation, and correlated check/network/HTTP/error/result logs; automatic completion
+    distinguishes a valid result from a retry and does not require Android VALIDATED.
+- path: app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java
+  responsibility: Main-thread foreground-only startup retries with bounded backoff, focus/network/resume wakeups, completion
+    restoration limited to the current process session and no duplicate in-flight requests.
+- path: app/src/test/java/com/nextgis/mobile/util/StartupUpdateCheckSchedulerTest.java
+  responsibility: Reproduce offline/request failure, restored process/window, modal focus, busy updater, companion UI, background
+    response, bounded retries, duplicate callbacks and destruction without losing the pending check.
+- path: app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkStateTest.java
+  responsibility: Permit active INTERNET networks without VALIDATED across Wi-Fi, cellular and VPN, retaining the offline
+    gate and diagnostic network flags.
+- path: app/src/test/java/com/nextgis/mobile/util/AppUpdatePendingInstallationTest.java
+  responsibility: Cleared malformed, invalid-product, denied-permission or already-installed continuation cannot suppress
+    a new startup check; rejected product state never reaches the installer.
+- path: app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java
+  responsibility: Run backup-gated project integrity repair before each account, durably journal unfinished passes, defer
+    heavy MapLibre reload until completion, and surface the base NGW result or a plain failure without duplicating layer retry
+    state; error notifications bypass default-off optional start/finish notices.
+- path: app/src/main/java/com/nextgis/mobile/datasource/SyncService.java
+  responsibility: Keep system account sync in a low-priority dataSync foreground service through finish/cancel and reject
+    late callbacks after destruction.
+- path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
+  responsibility: Persist pending_v2 before dispatch; keep a weak exact-preferences-owner process view of the seven known
+    typed queue/legacy keys, publish only successful writes and stage the accepted cohort on later ordinary writes. Resolve
+    registered recovery owners, preserve manual/account isolation and interruption; no raw-cache or restart rollback promise.
+- path: app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalConfirmationTest.java
+  responsibility: Exercise actual journal APIs with stable technical preferences owners and separate cache/disk outcomes;
+    rejected ACK/merge/migration/prune cannot leak into later accepted plans. Verify reader races, known-key cohort, diagnostics
+    and owner isolation without GIS database, Android device or remote sync.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java
+  responsibility: Native editable selection, rail bounds, tool gesture regression, three Activity recreations with a pending
+    SDK tap, and the complete layer-category-sketch-form-SQLite creation path, including successful Save returning to the
+    map and clearing drafts.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/FeaturePersistenceTest.java
+  responsibility: Native SQLite rollback and unique backup checks.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/FormSaveRecoveryTest.java
+  responsibility: Real form failed-photo save and retry without duplicate feature.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/TrackerStopRecoveryTest.java
+  responsibility: Real service failed Stop preserves and later drains the unwritten tail.
+- path: app/src/test/java/com/nextgis/mobile/util/NgwLookupCacheSyncTest.java
+  responsibility: Run15 actual-public-sync SDK28 methods using technical fill/save seams:8 unchanged old controls, revised
+    false-save and6 added controls. Check additive IO at both false-save branches, existing stats/new memory/map owner/one
+    save, unchanged RuntimeException/Error and equal-next/foreign no-extra-write behavior. Actual new execution is shared19
+    with Core4; standalone15 was not separately run. No disk/retry/network/SQLite/GIS/native acceptance.
+- path: app/src/test/java/com/nextgis/mobile/util/NgfpLookupPrefetchTest.java
+  responsibility: Execute eight actual prefetch-reader contracts and four direct legacy-reader controls on technical Q JSON
+    using SDK28 coercion and explicit API compatibility reflection; no account/map/SQLite/network or installed-cache/durability
+    acceptance.
+- path: app/src/test/java/com/nextgis/mobile/util/SyncFailurePresentationTest.java
+  responsibility: 'Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper
+    or library UI formatter; no map/SQLite/socket/device/real server/native acceptance.'
+- path: app/src/test/java/com/nextgis/mobile/util/ProjectSyncLateFailureTest.java
+  responsibility: 'Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper
+    or library UI formatter; no map/SQLite/socket/device/real server/native acceptance.'
+- path: app/src/test/java/com/nextgis/maplib/datasource/ngw/ResourceChildrenMessagesTest.java
+  responsibility: 'Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper
+    or library UI formatter; no map/SQLite/socket/device/real server/native acceptance.'
+- path: app/src/test/java/com/nextgis/maplibui/util/LayerFillErrorMessageTest.java
+  responsibility: 'Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper
+    or library UI formatter; no map/SQLite/socket/device/real server/native acceptance.'
+- path: app/src/test/java/com/nextgis/maplibui/activity/FormLegacyListMessagesTest.java
+  responsibility: 'Technical source-only user-message regression: actual typed cause/notification/Intent/late-outcome helper
+    or library UI formatter; no map/SQLite/socket/device/real server/native acceptance.'
+- path: app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionCheckboxTest.java
+  responsibility: Own22 actual adapter binder/listener and recycled row label technical models; source-only, no real account/map/network/device/import
+    acceptance.
+- path: app/src/test/java/com/nextgis/maplibui/util/NgwResourceSelectionDedupTest.java
+  responsibility: 'Own6 actual compact JSON restore technical identity models: OR exact resolved localID, first order, account
+    separation and late resolution/parse failures; no socket/DB/import writes.'
+- path: app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java
+  responsibility: Own five actual-adapter themed CPU-native-text layout models, calibrated font/glyph setup and immutable
+    full-copy bounds plus wide-narrow-wide transition. Device/OEM/touch/rotation/native GIS are separate.
+- path: app/src/test/java/com/nextgis/mobile/fragment/SelectedTrackShareBindingTest.java
+  responsibility: Actual MapFragment track binding/click with DB lookup/export launch boundaries isolated; stale Activity/view/selection/mode
+    and hidden/current selection controls.
+- path: app/src/test/java/com/nextgis/maplibui/util/TrackGpxNameExportTest.java
+  responsibility: Actual GPX worker/provider doubles and private appendTrack XML parser regressions; owned technical files
+    only, no track DB or recipient.
+- path: app/src/test/java/com/nextgis/maplibui/view/TrackSelectionPanelTest.java
+  responsibility: Actual TrackSelectionPanel native-CPU-font widget layout, adaptive column/view-order/listener controls;
+    no map/GPU/device/whole-stack acceptance.
 public_contracts:
-  - id: render-resource-economy-host
-    symbol: MapFragment.onRenderMemoryWarningChanged and showRenderMemoryStatus
-    path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-    consumers: [maplib]
-  - id: map-host
-    symbol: MapFragment implements MaplibreMapInteraction
-    path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-    consumers: [maplib, maplibui]
-settings_refs: [show_compass_accuracy_sector, fieldVerificationChecks, map-runtime-diagnostics, show_sync, track_send, track_send_default_enabled_v1, io.sentry.auto-init, diagnosticDeliveryChecks, diagnostic-reports, sync_all_projects, track_recording_mode, feature_label_field, map_show_loc, map_show_compass, map_rotation_enabled, map_bearing, photo_overlay_enabled, photo_overlay_use_object_coords, photo_overlay_defaults_enabled_v1, keep_screen_on, keep_screen_on_default_enabled_v1, stakeout_sound_enabled, stakeout_far_distance, stakeout_medium_distance, stakeout_near_distance, stakeout_reached_distance, stakeout_declination_correction, background_recording_sound, permission_requested_marker, check_updates, sw_track_service, apk_version_update, updater-pending-install, updater-ready, updater-background, updater-startup-session, sync_recovery_journal, com.nextgis.mobile.PREFS_UNDERLAYS, debug_companion_install, shared_underlay_migration, provider_auth, nextgis_accounts_auth, nextgis_accounts_auth_type, com.nextgis.mobile.UPDATE_FLAVOR, io.sentry.traces.user-interaction.enable, io.sentry.attach-screenshot, io.sentry.attach-view-hierarchy, io.sentry.traces.sample-rate, io.sentry.traces.profiling.sample-rate]
+- id: render-resource-economy-host
+  symbol: MapFragment.onRenderMemoryWarningChanged and showRenderMemoryStatus
+  path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+  consumers:
+  - maplib
+- id: map-host
+  symbol: MapFragment implements MaplibreMapInteraction
+  path: app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+  consumers:
+  - maplib
+  - maplibui
+settings_refs:
+- show_compass_accuracy_sector
+- fieldVerificationChecks
+- map-runtime-diagnostics
+- show_sync
+- track_send
+- track_send_default_enabled_v1
+- io.sentry.auto-init
+- diagnosticDeliveryChecks
+- diagnostic-reports
+- sync_all_projects
+- track_recording_mode
+- feature_label_field
+- map_show_loc
+- map_show_compass
+- map_rotation_enabled
+- map_bearing
+- photo_overlay_enabled
+- photo_overlay_use_object_coords
+- photo_overlay_defaults_enabled_v1
+- keep_screen_on
+- keep_screen_on_default_enabled_v1
+- stakeout_sound_enabled
+- stakeout_far_distance
+- stakeout_medium_distance
+- stakeout_near_distance
+- stakeout_reached_distance
+- stakeout_declination_correction
+- background_recording_sound
+- permission_requested_marker
+- check_updates
+- sw_track_service
+- apk_version_update
+- updater-pending-install
+- updater-ready
+- updater-background
+- updater-startup-session
+- sync_recovery_journal
+- com.nextgis.mobile.PREFS_UNDERLAYS
+- debug_companion_install
+- shared_underlay_migration
+- provider_auth
+- nextgis_accounts_auth
+- nextgis_accounts_auth_type
+- com.nextgis.mobile.UPDATE_FLAVOR
+- io.sentry.traces.user-interaction.enable
+- io.sentry.attach-screenshot
+- io.sentry.attach-view-hierarchy
+- io.sentry.traces.sample-rate
+- io.sentry.traces.profiling.sample-rate
 storage_contracts:
-  - id: updater-ready
-    path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
-  - id: updater-background
-    path: app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java
-  - id: diagnostic-reports
-    path: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-  - id: updater-pending-install
-    path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
-  - id: sync-recovery-journal
-    path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
-invariant_refs: ["INV-SQLITE-BOUNDED-ORIGINAL-READS", "INV-SQLITE-PHASE-DIAGNOSTICS", "INV-SQLITE-NATIVE-VECTORS", "INV-POINT-FIREFLY", "INV-FEATURE-COPY", "INV-WHOLE-OBJECT-TRANSFORM", "INV-SCROLLING-DIALOG-VIEWPORT", "INV-MOBILE-PUBLICATION-ACCEPTANCE", "INV-SYNC-NOTIFICATIONS", "INV-LOCAL-LOG-STARTUP", "INV-TRACK-DELIVERY", "INV-DIAGNOSTIC-DELIVERY", "INV-CONDITIONAL-REQUIRED", "INV-PROJECT-SCRIPTS", "INV-REQUIRED-FIELDS", "INV-FLAVORS", "INV-VERSION-COUPLING", "INV-MAPLIBRE-BACKEND-COMPATIBILITY", "INV-MAPLIBRE-VIEW-LIFECYCLE", "INV-NGW-ACCOUNT-IDENTITY", "INV-DEFAULT-OSM-BOTTOM", "INV-TRACK-LAYER-TOP", "INV-HOT-ADD-CONSISTENCY", "INV-SPATIAL-CACHE-CONSISTENCY", "INV-HIDDEN-VECTOR-TILE-IDENTIFY", "INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS", "INV-LOCATION-CURSOR-TOP", "INV-MAP-CAMERA-CONTROLS", "INV-UNDERLAY-DISPLAY", "INV-COLLECTOR-ISOLATION", "INV-COLLECTOR-EDITABILITY", "INV-COLLECTOR-RESUMABLE", "INV-PROJECT-OPERATION-EXCLUSION", "INV-NGRC-PRESERVE", "INV-LEGACY-UNDERLAY-MIGRATION", "INV-SYNC-ACCOUNT-ISOLATION", "INV-UPDATER-IDENTITY", "INV-UPDATER-PERMISSION-RESUME", "INV-UPDATER-AUTO-RETRY", "INV-UPDATER-BACKGROUND", "INV-ECOSYSTEM-SERVER-BOUNDARY", "INV-CRASH-DRAFT-RECOVERY", "INV-MULTIPOLYGON-REPAIR", "INV-GEOMETRY-SKETCH-WORKFLOW", "INV-GPS-TRACK-FILTER", "INV-STAKEOUT-GUIDANCE", "INV-LOCAL-VECTOR-LAYERS", "INV-LOCAL-WRITE-COMMIT", "INV-TRACK-RETRY", "INV-TOOL-TAP-TOLERANCE", "INV-NGW-LOOKUP-CACHE-CONTENT", "INV-NGFP-LOOKUP-PREFETCH-SCOPE", "INV-NGW-RESOURCE-CHECKBOX-SELECTION", "INV-NGW-RESOURCE-ROW-TEXT-FIT", "INV-TRACK-SELECTED-GPX-SHARE"]
+- id: updater-ready
+  path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+- id: updater-background
+  path: app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java
+- id: diagnostic-reports
+  path: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+- id: updater-pending-install
+  path: app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java
+- id: sync-recovery-journal
+  path: app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java
+invariant_refs:
+- INV-SQLITE-BOUNDED-ORIGINAL-READS
+- INV-SQLITE-PHASE-DIAGNOSTICS
+- INV-SQLITE-NATIVE-VECTORS
+- INV-POINT-FIREFLY
+- INV-FEATURE-COPY
+- INV-WHOLE-OBJECT-TRANSFORM
+- INV-SCROLLING-DIALOG-VIEWPORT
+- INV-MOBILE-PUBLICATION-ACCEPTANCE
+- INV-SYNC-NOTIFICATIONS
+- INV-LOCAL-LOG-STARTUP
+- INV-TRACK-DELIVERY
+- INV-DIAGNOSTIC-DELIVERY
+- INV-CONDITIONAL-REQUIRED
+- INV-PROJECT-SCRIPTS
+- INV-REQUIRED-FIELDS
+- INV-FLAVORS
+- INV-VERSION-COUPLING
+- INV-MAPLIBRE-BACKEND-COMPATIBILITY
+- INV-MAPLIBRE-VIEW-LIFECYCLE
+- INV-NGW-ACCOUNT-IDENTITY
+- INV-DEFAULT-OSM-BOTTOM
+- INV-TRACK-LAYER-TOP
+- INV-HOT-ADD-CONSISTENCY
+- INV-SPATIAL-CACHE-CONSISTENCY
+- INV-HIDDEN-VECTOR-TILE-IDENTIFY
+- INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS
+- INV-LOCATION-CURSOR-TOP
+- INV-MAP-CAMERA-CONTROLS
+- INV-UNDERLAY-DISPLAY
+- INV-COLLECTOR-ISOLATION
+- INV-COLLECTOR-EDITABILITY
+- INV-COLLECTOR-RESUMABLE
+- INV-PROJECT-OPERATION-EXCLUSION
+- INV-NGRC-PRESERVE
+- INV-LEGACY-UNDERLAY-MIGRATION
+- INV-SYNC-ACCOUNT-ISOLATION
+- INV-UPDATER-IDENTITY
+- INV-UPDATER-PERMISSION-RESUME
+- INV-UPDATER-AUTO-RETRY
+- INV-UPDATER-BACKGROUND
+- INV-ECOSYSTEM-SERVER-BOUNDARY
+- INV-CRASH-DRAFT-RECOVERY
+- INV-MULTIPOLYGON-REPAIR
+- INV-GEOMETRY-SKETCH-WORKFLOW
+- INV-GPS-TRACK-FILTER
+- INV-STAKEOUT-GUIDANCE
+- INV-LOCAL-VECTOR-LAYERS
+- INV-LOCAL-WRITE-COMMIT
+- INV-TRACK-RETRY
+- INV-TOOL-TAP-TOLERANCE
+- INV-NGW-LOOKUP-CACHE-CONTENT
+- INV-NGFP-LOOKUP-PREFETCH-SCOPE
+- INV-NGW-RESOURCE-CHECKBOX-SELECTION
+- INV-NGW-RESOURCE-ROW-TEXT-FIT
+- INV-TRACK-SELECTED-GPX-SHARE
 global_docs:
-  - docs/architecture/ui-contracts.md
-  - docs/architecture/map-performance.md
-  - docs/architecture/point-firefly.md
-  - docs/architecture/feature-copy-transform.md
-  - docs/runbooks/automated-tests.md
-  - docs/architecture/error-reporting.md
-  - docs/guides/bug-reports-user-guide.md
-  - docs/guides/project-synchronization-user-guide.md
-  - docs/architecture/conditional-form-rules.md
-  - docs/guides/form-behavior-user-guide.md
-  - docs/architecture/project-scripts.md
-  - docs/guides/project-scripts-user-guide.md
-  - docs/reference/project-scripts-verification.md
-  - docs/architecture/location-pipeline.md
-  - docs/architecture/overview.md
-  - docs/architecture/lisa-ecosystem.md
-  - docs/architecture/collector-projects.md
-  - docs/architecture/ngw-sync-and-storage.md
-  - docs/architecture/map-rendering.md
-  - docs/architecture/crash-recovery.md
-  - docs/architecture/stakeout.md
-  - docs/architecture/shared-underlays.md
-  - docs/reference/build-matrix.md
-  - docs/reference/flavors-and-versioning.md
-  - docs/runbooks/release-apk.md
-  - docs/architecture/cascading-form-lists.md
-smoke_tests: ["AUTO-SQLITE-ORIGINAL-BATCH-UNITS", "AUTO-SQLITE-PHASE-UNITS", "SMOKE-SQLITE-PHASE-TABLET", "AUTO-SQLITE-NATIVE-VECTORS", "AUTO-POLYGON-STYLE-CONTROLS", "AUTO-POINT-FIREFLY", "AUTO-FEATURE-EDITING", "SMOKE-FEATURE-COPY-TRANSFORM", "AUTO-MOBILE-RELATED", "AUTO-MOBILE-FULL", "AUTO-MOBILE-PUBLICATION-GATE", "SMOKE-LAYER-CHOOSER", "SMOKE-MAP-RUNTIME-DIAGNOSTICS", "AUTO-UPDATER-CHECKS", "SMOKE-SYNC-OFFLINE", "SMOKE-SYNC-NOTIFICATIONS", "SMOKE-TRACK-DELIVERY", "SMOKE-DIAGNOSTIC-DELIVERY", "SMOKE-STAKEOUT-PERMISSIONS", "SMOKE-FORM-APPEARANCE", "SMOKE-CONDITIONAL-REQUIRED", "SMOKE-FORM-NAVIGATION", "SMOKE-PROJECT-SCRIPTS", "SMOKE-REQUIRED-FIELDS", "AUTO-APP-DEBUG", "AUTO-APP-RELEASES", "AUTO-APP-VERSION-MATRIX", "SMOKE-POLYGON-LABEL-ANCHOR", "SMOKE-MAP-OPENGL-COMPATIBILITY", "SMOKE-MAP-SURFACE-LIFECYCLE", "SMOKE-HOT-RASTER", "SMOKE-DEBUG-UNDERLAY-MIGRATION", "SMOKE-SHARED-UNDERLAYS", "SMOKE-UNDERLAY-DISPLAY", "SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY", "SMOKE-LOCAL-VECTOR-TILE-STRESS", "SMOKE-LOCATION-CURSOR-TOP", "SMOKE-MAP-CAMERA-CONTROLS", "SMOKE-NGW-ACCOUNT-ADD", "SMOKE-NGW-URL-IMPORT", "SMOKE-NGW-IMPORT-BACK", "SMOKE-NGW-LARGE-PULL-CACHE", "SMOKE-LOCAL-VECTOR-LAYERS", "SMOKE-COLLECTOR-IMPORT", "SMOKE-LAYER-SYNC-SETTINGS", "SMOKE-COLLECTOR-SWITCH", "SMOKE-PROJECT-MANAGEMENT", "SMOKE-SCHEMA-REBUILD-GUARD", "SMOKE-COLLECTOR-RESUME", "SMOKE-UPDATE-DATA-PRESERVE", "SMOKE-MULTI-ACCOUNT-SYNC", "SMOKE-SYNC-INTERRUPT-ACTION", "SMOKE-LISA-RELEASE", "SMOKE-BELKA-RELEASE", "SMOKE-SELF-UPDATE", "SMOKE-CRASH-DRAFT-RECOVERY", "SMOKE-MULTIPOLYGON-REPAIR", "SMOKE-GEOMETRY-SKETCH-WORKFLOW", "SMOKE-GPS-RECORDING", "SMOKE-STAKEOUT", "AUTO-RELIABILITY-NATIVE", "SMOKE-RELIABILITY-FAILURES", "SMOKE-TOOL-TAP", "SMOKE-NGID-AND-RESOURCE-ICONS", "AUTO-NGW-LOOKUP-CACHE-SYNC", "AUTO-NGFP-LOOKUP-PREFETCH", "SMOKE-NGFP-LOOKUP-PREFETCH", "AUTO-NGW-SYNC-ADMISSION", "AUTO-NGW-RESOURCE-CHECKBOX-SELECTION", "AUTO-NGW-RESOURCE-ROW-TEXT-FIT", "AUTO-TRACK-SELECTED-GPX-SHARE"]
-upstream_hotspots: [POLYGON-STYLE-CONTROLS, MAP-HOST, MAPLIBRE-BACKEND, APP-FLAVORS, RASTER-MBTILES]
+- docs/architecture/ui-contracts.md
+- docs/architecture/map-performance.md
+- docs/architecture/point-firefly.md
+- docs/architecture/feature-copy-transform.md
+- docs/runbooks/automated-tests.md
+- docs/architecture/error-reporting.md
+- docs/guides/bug-reports-user-guide.md
+- docs/guides/project-synchronization-user-guide.md
+- docs/architecture/conditional-form-rules.md
+- docs/guides/form-behavior-user-guide.md
+- docs/architecture/project-scripts.md
+- docs/guides/project-scripts-user-guide.md
+- docs/reference/project-scripts-verification.md
+- docs/architecture/location-pipeline.md
+- docs/architecture/overview.md
+- docs/architecture/lisa-ecosystem.md
+- docs/architecture/collector-projects.md
+- docs/architecture/ngw-sync-and-storage.md
+- docs/architecture/map-rendering.md
+- docs/architecture/crash-recovery.md
+- docs/architecture/stakeout.md
+- docs/architecture/shared-underlays.md
+- docs/reference/build-matrix.md
+- docs/reference/flavors-and-versioning.md
+- docs/runbooks/release-apk.md
+- docs/architecture/cascading-form-lists.md
+smoke_tests:
+- AUTO-SQLITE-ORIGINAL-BATCH-UNITS
+- AUTO-SQLITE-PHASE-UNITS
+- SMOKE-SQLITE-PHASE-TABLET
+- AUTO-SQLITE-NATIVE-VECTORS
+- AUTO-POLYGON-STYLE-CONTROLS
+- AUTO-POINT-FIREFLY
+- AUTO-FEATURE-EDITING
+- SMOKE-FEATURE-COPY-TRANSFORM
+- AUTO-MOBILE-RELATED
+- AUTO-MOBILE-FULL
+- AUTO-MOBILE-PUBLICATION-GATE
+- SMOKE-LAYER-CHOOSER
+- SMOKE-MAP-RUNTIME-DIAGNOSTICS
+- AUTO-UPDATER-CHECKS
+- SMOKE-SYNC-OFFLINE
+- SMOKE-SYNC-NOTIFICATIONS
+- SMOKE-TRACK-DELIVERY
+- SMOKE-DIAGNOSTIC-DELIVERY
+- SMOKE-STAKEOUT-PERMISSIONS
+- SMOKE-FORM-APPEARANCE
+- SMOKE-CONDITIONAL-REQUIRED
+- SMOKE-FORM-NAVIGATION
+- SMOKE-PROJECT-SCRIPTS
+- SMOKE-REQUIRED-FIELDS
+- AUTO-APP-DEBUG
+- AUTO-APP-RELEASES
+- AUTO-APP-VERSION-MATRIX
+- SMOKE-POLYGON-LABEL-ANCHOR
+- SMOKE-MAP-OPENGL-COMPATIBILITY
+- SMOKE-MAP-SURFACE-LIFECYCLE
+- SMOKE-HOT-RASTER
+- SMOKE-DEBUG-UNDERLAY-MIGRATION
+- SMOKE-SHARED-UNDERLAYS
+- SMOKE-UNDERLAY-DISPLAY
+- SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY
+- SMOKE-LOCAL-VECTOR-TILE-STRESS
+- SMOKE-LOCATION-CURSOR-TOP
+- SMOKE-MAP-CAMERA-CONTROLS
+- SMOKE-NGW-ACCOUNT-ADD
+- SMOKE-NGW-URL-IMPORT
+- SMOKE-NGW-IMPORT-BACK
+- SMOKE-NGW-LARGE-PULL-CACHE
+- SMOKE-LOCAL-VECTOR-LAYERS
+- SMOKE-COLLECTOR-IMPORT
+- SMOKE-LAYER-SYNC-SETTINGS
+- SMOKE-COLLECTOR-SWITCH
+- SMOKE-PROJECT-MANAGEMENT
+- SMOKE-SCHEMA-REBUILD-GUARD
+- SMOKE-COLLECTOR-RESUME
+- SMOKE-UPDATE-DATA-PRESERVE
+- SMOKE-MULTI-ACCOUNT-SYNC
+- SMOKE-SYNC-INTERRUPT-ACTION
+- SMOKE-LISA-RELEASE
+- SMOKE-BELKA-RELEASE
+- SMOKE-SELF-UPDATE
+- SMOKE-CRASH-DRAFT-RECOVERY
+- SMOKE-MULTIPOLYGON-REPAIR
+- SMOKE-GEOMETRY-SKETCH-WORKFLOW
+- SMOKE-GPS-RECORDING
+- SMOKE-STAKEOUT
+- AUTO-RELIABILITY-NATIVE
+- SMOKE-RELIABILITY-FAILURES
+- SMOKE-TOOL-TAP
+- SMOKE-NGID-AND-RESOURCE-ICONS
+- AUTO-NGW-LOOKUP-CACHE-SYNC
+- AUTO-NGFP-LOOKUP-PREFETCH
+- SMOKE-NGFP-LOOKUP-PREFETCH
+- AUTO-NGW-SYNC-ADMISSION
+- AUTO-NGW-RESOURCE-CHECKBOX-SELECTION
+- AUTO-NGW-RESOURCE-ROW-TEXT-FIT
+- AUTO-TRACK-SELECTED-GPX-SHARE
+upstream_hotspots:
+- POLYGON-STYLE-CONTROLS
+- MAP-HOST
+- MAPLIBRE-BACKEND
+- APP-FLAVORS
+- RASTER-MBTILES

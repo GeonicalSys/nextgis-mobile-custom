@@ -31,6 +31,7 @@
           ".github/workflows/docs-validate.yml",
           "tools/docs-check.ps1",
           "docs/scripts/check_change_impact.py",
+          "docs/scripts/module_manifest_knowledge.py",
           "docs/scripts/prose_knowledge.py",
           "docs/scripts/validate_docs.py",
           "docs/tests/test_change_impact_ci.py",

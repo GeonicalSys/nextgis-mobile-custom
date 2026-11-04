@@ -182,6 +182,10 @@ Preserve the dated foreign-owner observation and regenerate the published view.
 The App module README uses the same prose projector as the central documents.
 Its module pack validator checks the generated Markdown at the original address.
 
+The App module manifest uses separate ordered component and reference records.
+Refresh the YAML with `python -B docs/scripts/prose_knowledge.py --write`.
+The original Git blob and complete byte spans are pinned in its provenance.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

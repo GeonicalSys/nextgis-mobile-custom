@@ -42,6 +42,11 @@ frontmatter и порядок тем в связях `contains`. После пр
 README модуля App собирается из его тематических записей той же командой.
 Проверка пакета сверяет представление, frontmatter и ссылки.
 
+Манифест модуля App собирается из записей в
+`agent-system/knowledge/app-module-manifest/`. После правки выполнить
+`python -B docs/scripts/prose_knowledge.py --write`.
+Оба представления входят в штатную проверку пакета App.
+
 В репозитории App валидатор читает записи change-impact из
 `agent-system/knowledge/change-impact/` и проверяет актуальность производного
 `docs/registry/change-impact.yaml`. Поставка документации без `agent-system/`

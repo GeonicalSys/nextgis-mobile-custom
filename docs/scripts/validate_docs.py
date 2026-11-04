@@ -774,9 +774,12 @@ def validate_manifest(
     validation: Validation,
     *,
     readme_text: str | None = None,
+    manifest_data: Mapping[str, Any] | None = None,
 ) -> None:
     location = manifest_path.as_posix()
-    manifest = require_mapping(load_yaml(manifest_path, validation), location, validation)
+    if manifest_data is None:
+        manifest_data = load_yaml(manifest_path, validation)
+    manifest = require_mapping(manifest_data, location, validation)
     require_fields(manifest, MODULE_MANIFEST_FIELDS, location, validation)
     if manifest.get("schema_version") != 1:
         validation.error(location, "schema_version must be 1")
@@ -857,6 +860,7 @@ def validate_module_packs(
     require_pack: bool,
     *,
     module_readmes: Mapping[Path, str] | None = None,
+    owned_app_pack: bool = False,
 ) -> None:
     if target_module and target_module not in modules:
         validation.error("arguments", f"unknown module {target_module!r}")
@@ -890,6 +894,18 @@ def validate_module_packs(
             validation.error(f"module:{module_id}", f"partial documentation pack; missing {missing}")
             continue
         expected_repo = str(module.get("repository"))
+        readme_text = module_readmes.get(readme) if module_readmes is not None else None
+        manifest_data = None
+        if owned_app_pack and module_id == "app":
+            try:
+                projector = runpy.run_path(str(Path(__file__).with_name("module_manifest_knowledge.py")))
+                if readme_text is None or manifest != workspace / projector["VIEW"]:
+                    raise ValueError("Missing projected README or unexpected App pack path")
+                manifest_data = projector["project_manifest"](workspace)
+                projector["check_view"](workspace, manifest_data)
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                validation.error(manifest.as_posix(), f"App module manifest projection failed: {exc}")
+                continue
         validate_manifest(
             manifest,
             readme,
@@ -902,7 +918,8 @@ def validate_module_packs(
             hotspot_ids,
             workspace,
             validation,
-            readme_text=module_readmes.get(readme) if module_readmes is not None else None,
+            readme_text=readme_text,
+            manifest_data=manifest_data,
         )
 
 
@@ -1065,6 +1082,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         args.module,
         args.require_pack,
         module_readmes=module_readmes,
+        owned_app_pack=(docs_root == workspace / "docs"
+                        and ((workspace / "agent-system").exists() or (workspace / "agent-system").is_symlink())),
     )
     if args.changed_file:
         report_changed_files(triggers, args.changed_file, args.enforce_diff, validation)

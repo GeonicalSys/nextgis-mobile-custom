@@ -1,10 +1,11 @@
-"""Project App-owned prose records to their established Markdown addresses."""
+"""Project App-owned documents to their established Markdown and module YAML addresses."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import re
+import runpy
 from pathlib import Path, PurePosixPath
 
 
@@ -91,11 +92,23 @@ def main() -> int:
     args = parser.parse_args()
     owner = Path(__file__).resolve().parents[2]
     try:
-        for view, text in project_documents(owner).items():
+        documents = project_documents(owner)
+        manifest_view = None
+        if PurePosixPath("app/docs/README.md") in documents:
+            projector = runpy.run_path(str(Path(__file__).with_name("module_manifest_knowledge.py")))
+            manifest = projector["project_manifest"](owner)
+            if args.write:
+                manifest_view = (owner / projector["VIEW"], projector["render_manifest"](manifest))
+            else:
+                projector["check_view"](owner, manifest)
+        for view, text in documents.items():
             if args.write:
                 (owner / view).write_bytes(text.encode("utf-8"))
             else:
                 check_generated(owner / view, text)
+        if manifest_view is not None:
+            view, text = manifest_view
+            view.write_bytes(text.encode("utf-8"))
     except (OSError, ValueError, KeyError, TypeError) as exc:
         parser.exit(1, f"Documentation projection failed: {exc}\n")
     return 0

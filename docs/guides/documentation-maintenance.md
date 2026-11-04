@@ -152,6 +152,12 @@ The App module README at `app/docs/README.md` is also a generated view.
 Edit the App module README topic records and regenerate with the same prose command.
 The ordinary module validator checks its frontmatter and links.
 
+For the App module manifest, edit the ordered records in
+`agent-system/knowledge/app-module-manifest/` and run
+`python -B docs/scripts/prose_knowledge.py --write`.
+Keep the generated view at `app/docs/manifest.yaml` in the same commit.
+Each repeated component path has a separate occurrence record.
+
 ## Maturity
 
 - `draft`: разрешены подтверждённые TODO, документ ещё не полон.

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:app-module-key-components-stakeoutcontroller-4756aba044",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "app-module-manifest",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:metadata:app-module-manifest"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed module definition and its pinned source provenance."
+  },
+  "facets": {
+    "manifest-field": {
+      "role": "module_manifest_section",
+      "value": "key_components"
+    },
+    "definition": {
+      "role": "module_manifest_ordered_value",
+      "value": {
+        "path": "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+        "responsibility": "Active selected-feature or arbitrary-point live-guidance lifecycle, in-place target replacement without releasing foreground resources, independent GPS listener, WMM2025 magnetic-bearing UI state with persisted declination correction, GPS/mock precision-source gate, reported-accuracy UI state, monotonic navigation-audio scheduling, 3 s freshness with a 1 s future-timestamp tolerance, high-frequency GPS lease ownership across screen-off/background state, and full rollback on synchronous or owning asynchronous foreground rejection. Own a copied geometry/index target rather than a live feature subscription; high-frequency GPS lease is separate from project mutation exclusion and source/DB identity."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/app-module-manifest.json",
+    "scopes": [
+      "lisa:mobile:contract:app-module-key-components-stakeoutcontroller-4756aba044"
+    ]
+  }
+}

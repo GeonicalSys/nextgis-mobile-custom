@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "7768088cd4faf06e2dc9f8234e735ee13971d64fb2eec1a8e23b41c064c76a7d",
+      "sha256": "ad91cd4c63ffd4d61175d2676b5ee0aa942b68e334e18151c5f4936236dbe09e",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -284,6 +284,18 @@
         "docs/runbooks/automated-tests.md",
         "docs/runbooks/release-apk.md"
       ]
+    },
+    {
+      "path": "agent-system/provenance/app-module-manifest.json",
+      "category": "retained_evidence",
+      "reason": "Pinned App module manifest Git object, complete contiguous spans and ordered member provenance.",
+      "applies_to": [
+        "app/docs/manifest.yaml",
+        "agent-system/knowledge/app-module-manifest",
+        "docs/scripts/module_manifest_knowledge.py"
+      ],
+      "sha256": "b272578296400a9bb749e4242f9c1b4502b9234a54e40089554a97279bc1cbdc",
+      "sha256_scope": "utf8_lf"
     }
   ]
 }
