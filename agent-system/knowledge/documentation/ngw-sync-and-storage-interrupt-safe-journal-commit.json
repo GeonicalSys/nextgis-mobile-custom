@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-interrupt-safe-journal-commit",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Отмена потока и подтверждение recovery journal — 2026-10-17",
+        "",
+        "enqueue, complete и миграция pending sync journal выполняют SharedPreferences.commit",
+        "на одном собственном disk writer. Вызывающий поток ждёт подтверждения долговечной",
+        "записи, даже если отменён, и возвращает флаг interrupt перед выходом. Сетевые проходы",
+        "после отмены этим не возобновляются. Общий synchronized read/merge/write сохраняется;",
+        "нет apply() вместо commit и нет удаления остальных project/account pairs.",
+        "Настоящий commit=false остаётся ошибкой, с исходной причиной и structured sync_journal."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-interrupt-safe-journal-commit"
+    ]
+  }
+}

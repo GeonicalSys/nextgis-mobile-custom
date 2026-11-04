@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-offline-admission-and-retries",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Перед ручным запуском `LayersFragment` проверяет `NetworkUtil.isNetworkAvailable`.",
+        "При отсутствии активного connected network он показывает «Отсутствует подключение",
+        "к интернету» и не начинает service, очередь, track work или flip offline-sync mode.",
+        "Диалог retry и уведомление ошибки также различают отсутствие сети. Это не проверка",
+        "Google Internet validation и не HTTP probe: доступный LAN/VPN NGW не блокируется,",
+        "а HTTP 503 при подключённой сети остаётся обычной серверной ошибкой.",
+        "",
+        "Фоновые account/track задания WorkManager требуют `NetworkType.CONNECTED` и",
+        "не исполняются без сети. Дополнительная проверка `NetworkUtil` в",
+        "`SyncAccountWorker.doWork`, `ProjectSyncRunner.run` и `TrackWorker` закрывает",
+        "потерю подключения между разрешением задания и выполнением. Account worker",
+        "возвращает retry до `requestSync`; общая очередь просит Android повторить",
+        "отложенный запуск до lease, progress, диагностического START и journal enqueue.",
+        "Уведомлений и багрепортов от этого ожидания нет. Существующий recovery journal",
+        "остаётся неизменным; уже поставленные Android account задания ждут сети.",
+        "`TrackUploader` проверяет сеть перед регистрацией и очередным пакетом, включая",
+        "live recorder. Неотправленные точки и настройка отправки сохраняются. Сеть,",
+        "пропавшая во время уже отправленного запроса, обрабатывается штатным retry;",
+        "HTTP 503 при наличии подключения не маскируется отсутствием интернета.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-offline-admission-and-retries"
+    ]
+  }
+}

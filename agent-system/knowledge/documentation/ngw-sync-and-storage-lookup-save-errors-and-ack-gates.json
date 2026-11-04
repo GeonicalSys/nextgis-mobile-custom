@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-lookup-save-errors-and-ack-gates",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "В двух существующих ветвях NGWLookupTable.sync false отsave теперь добавляет один",
+        "numIoExceptions к текущему SyncResult. Уже опубликованная память остаётся новой",
+        "в том же map; один save, RuntimeException/Error и equal-next no-write прежние.",
+        "Ни компенсирующей записи, ни гарантии диска/повтора не добавлено: риск остаётся",
+        "AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE. Готовность same-hash form/cache и shared",
+        "lookup GC остаются AUDIT-TODO-NGFP-LOOKUP-PREFETCH; account cleanup/backup27 —",
+        "AUDIT-TODO-NGW-ACCOUNT-REMOVAL-BACKUP. Эти отдельные вопросы не объявлены исправленными.",
+        "",
+        "ProjectSyncRunner требует !part.hasError перед SyncRecoveryJournal.complete и",
+        "полного успеха проекта перед ProjectSyncState.markComplete. Новый IO error",
+        "блокирует ACK этой пары и обновление полного clock в текущем проходе, не откатывая",
+        "ранее подтверждённый push или успешный другой account. Это source-backed consumer",
+        "контракт, а не исполненный тест очереди/диска/restart. Queued manual path сообщает",
+        "project_sync_incomplete; legacy SyncResultUtil без иных flags возвращает generic",
+        "unknown IO. Нового обещания network text/automatic retry нет.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-lookup-save-errors-and-ack-gates"
+    ]
+  }
+}

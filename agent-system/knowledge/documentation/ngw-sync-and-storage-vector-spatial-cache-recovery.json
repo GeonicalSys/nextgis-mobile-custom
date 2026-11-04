@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-vector-spatial-cache-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Завершение и восстановление векторного spatial cache — 30 октября2026",
+        "",
+        "Обычный local/NGW vector импорт использует один VectorLayer lifecycle. После",
+        "успешного create только проверенные zero SQL rows + zero live cache становятся",
+        "готовой начальной точкой: count читается вне spatial lock, затем проверяются тот же",
+        "cache object, data generation и нулевой size. Начатый bulk по-прежнему блокирует",
+        "native reads. Готовность не устанавливается из finally и не выводится из одного",
+        "совпадения ненулевых counts; failed/cancelled/nonempty/unknown-count случаи не",
+        "получают новую гарантию commit/rollback или произвольного save после ошибки.",
+        "",
+        "GeometryRTree.clear удаляет nodes и size и помечает публичное изменение dirty:",
+        "notifyDeleteAll → clear → save должен записать пустой cache в тот же путь. Load",
+        "использует отдельный clean reset. Missing file даёт настоящий empty index; IOException,",
+        "header/actual Entry cardinality mismatch или неверный child kind полностью сбрасывают",
+        "прочитанный prefix. Счётчик проверяется обходом уже загруженных nodes без второго",
+        "getAll/ID list. Валидный прежний binary layout, IDs/envelopes/search и clean same-path",
+        "save сохраняются. Владелец VectorLayer при расхождении с SQL восстанавливает derived",
+        "index из originals; частично загруженный subclass config при этом не сохраняется.",
+        "",
+        "Причина важна для нескольких входов: GPX/KML CoordinatePointLayerImporter и GeoJSON",
+        "batch; initial NGW download через оба resource picker и Collector/form task; config",
+        "fromJSON и properties getCount повторно читают index. Старый clear мог оставить",
+        "header countN при уже пустом root; последующий save и новый load сохраняли равенство",
+        "counts и пропускали repair. Native query и обычный hit-test имеют разные readiness",
+        "gates. Смена стиля/видимости не строит spatial tree; manual rebuild создаёт новое",
+        "дерево и extents из исходных ID/geometry BLOB, но не переписывает LOD geometry.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-vector-spatial-cache-recovery"
+    ]
+  }
+}

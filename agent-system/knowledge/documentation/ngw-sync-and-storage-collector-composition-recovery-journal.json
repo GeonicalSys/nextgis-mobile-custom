@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-collector-composition-recovery-journal",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "CollectorImportJournal имеет отдельные preferences на SHA-256 canonical map path.",
+        "Ранее общий journal мигрирует только при совпадении project UID. Общие runtime",
+        "поля GISApplication переключаются на main thread в сериализованной границе проекта;",
+        "durable journals при этом не очищаются, callbacks проверяют owning path.",
+        "Незавершённый импорт восстанавливается до нового composition batch, а исчерпание",
+        "repair waves в фоновой сессии оставляет journal для следующей попытки. Schema retry",
+        "guard и form/walk reservations также используют owning project, включая одинаковые",
+        "числовые layer/group/remote IDs в разных базах.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-collector-composition-recovery-journal"
+    ]
+  }
+}

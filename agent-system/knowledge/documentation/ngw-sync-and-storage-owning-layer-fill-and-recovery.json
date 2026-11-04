@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-owning-layer-fill-and-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Все create/insert/schema/delete операции fill используют `layers.db` карты,",
+        "владеющей слоем: layer получает parent target group до доступа к SQLite, а путь",
+        "БД выводится из map-файла владельца. Project UID из durable journal обязан",
+        "совпасть с metadata target group. При несовпадении задача отклоняется до работы с",
+        "файлами или БД, а journal сохраняется до открытия нужного workspace.",
+        "",
+        "Каждый новый layer directory помечается `.layer-fill-partial` до загрузки и",
+        "снимает marker только после публикации в `LayerGroup`. После process death",
+        "убираются лишь помеченные, не referenced stages и их таблицы в БД владельца;",
+        "непомеченные legacy directories автоматически не удаляются.",
+        "",
+        "`LayerFillService` возвращает `START_NOT_STICKY`: пустой/null redelivery не",
+        "создаёт бесконечный foreground service. На Android 15+ `onTimeout()` очищает",
+        "текущую очередь и останавливает FGS, но сохраняет durable Collector journal,",
+        "чтобы следующий запуск мог проверить и докачать партию.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-owning-layer-fill-and-recovery"
+    ]
+  }
+}

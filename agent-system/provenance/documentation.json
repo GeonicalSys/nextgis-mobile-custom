@@ -1066,6 +1066,492 @@
           "end_byte": 246991
         }
       ]
+    },
+    {
+      "path": "docs/architecture/ngw-sync-and-storage.md",
+      "record": "ngw-sync-and-storage.json",
+      "id": "lisa:mobile:resource:documentation-ngw-sync-and-storage",
+      "revision": "4d14bf84ec1227420193155566c33f0db0ea88e5",
+      "blob": "d5f14504c9e531958da80b52bd927a303ddf01e4",
+      "sha256": "f50c2c86f141a8bddcef8901b34b25d9dd6e543522687e6dc75641ec41c5cb83",
+      "bytes": 136803,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:documentation-ngw-sync-and-storage",
+          "start_byte": 0,
+          "end_byte": 3690
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-workspace-ownership-intro",
+          "start_byte": 3690,
+          "end_byte": 4215
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-workspace-identities",
+          "start_byte": 4215,
+          "end_byte": 6750
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-queue-and-child-admission",
+          "start_byte": 6750,
+          "end_byte": 9097
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-provider-uris-and-notifications",
+          "start_byte": 9097,
+          "end_byte": 10247
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-account-ack-and-project-clock",
+          "start_byte": 10247,
+          "end_byte": 12056
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-post-pair-ack-recovery-and-retries",
+          "start_byte": 12056,
+          "end_byte": 16998
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-failed-clock-commit-f61",
+          "start_byte": 16998,
+          "end_byte": 19770
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-cancellation-and-child-drain",
+          "start_byte": 19770,
+          "end_byte": 21818
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-workspace-source-review-and-open-witnesses",
+          "start_byte": 21818,
+          "end_byte": 23885
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-storage-move-reset-admission",
+          "start_byte": 23885,
+          "end_byte": 24702
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-storage-move-retire-and-actual-path",
+          "start_byte": 24702,
+          "end_byte": 25464
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-storage-terminal-refresh-and-reset-effects",
+          "start_byte": 25464,
+          "end_byte": 26290
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-storage-cancellation-and-release",
+          "start_byte": 26290,
+          "end_byte": 26934
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-storage-move-source-verification",
+          "start_byte": 26934,
+          "end_byte": 27716
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-storage-clock-pin-f61",
+          "start_byte": 27716,
+          "end_byte": 28141
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-rtree-buffered-legacy-read",
+          "start_byte": 28141,
+          "end_byte": 29136
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-shared-history-database-resolution",
+          "start_byte": 29136,
+          "end_byte": 29743
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-local-edit-commit-admission",
+          "start_byte": 29743,
+          "end_byte": 30601
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-local-outbox-worker-scheduling",
+          "start_byte": 30601,
+          "end_byte": 32177
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-full-project-clock-consumers",
+          "start_byte": 32177,
+          "end_byte": 34412
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-sync-regression-scope",
+          "start_byte": 34412,
+          "end_byte": 34780
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-offline-admission-and-retries",
+          "start_byte": 34780,
+          "end_byte": 36947
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-new-feature-type-save",
+          "start_byte": 36947,
+          "end_byte": 37400
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-required-fields-metadata-and-save",
+          "start_byte": 37400,
+          "end_byte": 40932
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-required-fields-october-verification",
+          "start_byte": 40932,
+          "end_byte": 41648
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-gps-power-saving-segment-gap",
+          "start_byte": 41648,
+          "end_byte": 42142
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-track-mode-storage",
+          "start_byte": 42142,
+          "end_byte": 42708
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-september-device-anr-and-snapshot-comparison",
+          "start_byte": 42708,
+          "end_byte": 43410
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-library-and-app-responsibilities",
+          "start_byte": 43410,
+          "end_byte": 43823
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-url-resource-import",
+          "start_byte": 43823,
+          "end_byte": 45481
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-resource-selector-recovery",
+          "start_byte": 45481,
+          "end_byte": 46897
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-account-identity-and-variants",
+          "start_byte": 46897,
+          "end_byte": 47722
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-production-221-account-frame",
+          "start_byte": 47722,
+          "end_byte": 47946
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-account-authentication-readback",
+          "start_byte": 47946,
+          "end_byte": 48733
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-destructive-mutation-backup-gate",
+          "start_byte": 48733,
+          "end_byte": 49867
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-backup-content-and-local-attachments",
+          "start_byte": 49867,
+          "end_byte": 50964
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-attachment-hydration",
+          "start_byte": 50964,
+          "end_byte": 51887
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-backup-quota-and-read-only-layer",
+          "start_byte": 51887,
+          "end_byte": 52345
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-local-attachment-retention-after-push",
+          "start_byte": 52345,
+          "end_byte": 53080
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-layer-config-and-account-scheduling",
+          "start_byte": 53080,
+          "end_byte": 54292
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-full-sync-workspace-scope-and-leases",
+          "start_byte": 54292,
+          "end_byte": 57914
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-pre-sync-integrity-repair-and-diagnostics",
+          "start_byte": 57914,
+          "end_byte": 58915
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-recovery-pair-journal",
+          "start_byte": 58915,
+          "end_byte": 60156
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-collector-composition-recovery-journal",
+          "start_byte": 60156,
+          "end_byte": 61056
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-foreground-service-and-notifications",
+          "start_byte": 61056,
+          "end_byte": 63296
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-service-cancellation-and-workspace-reservation",
+          "start_byte": 63296,
+          "end_byte": 65188
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-sync-activity-and-progress",
+          "start_byte": 65188,
+          "end_byte": 68096
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-remote-retry-and-push-before-pull",
+          "start_byte": 68096,
+          "end_byte": 69740
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-incremental-pull-and-spatial-index",
+          "start_byte": 69740,
+          "end_byte": 72297
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-untracked-streamed-snapshot",
+          "start_byte": 72297,
+          "end_byte": 73678
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-sync-none-and-config-refresh",
+          "start_byte": 73678,
+          "end_byte": 74274
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-sync-timeouts-and-cancellation",
+          "start_byte": 74274,
+          "end_byte": 75833
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-sqlite-durability-gates",
+          "start_byte": 75833,
+          "end_byte": 76259
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-explained-snapshot-gap-checkpoint",
+          "start_byte": 76259,
+          "end_byte": 77413
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-safe-sync-tracing",
+          "start_byte": 77413,
+          "end_byte": 78011
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-authoritative-schema-rebuild-decision",
+          "start_byte": 78011,
+          "end_byte": 79861
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-staged-layer-replacement",
+          "start_byte": 79861,
+          "end_byte": 81135
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-multipolygon-import-validation",
+          "start_byte": 81135,
+          "end_byte": 82695
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-owning-layer-fill-and-recovery",
+          "start_byte": 82695,
+          "end_byte": 84123
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-sync-and-rebuild-regression-scope",
+          "start_byte": 84123,
+          "end_byte": 87024
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-local-crud-and-outbox-transaction",
+          "start_byte": 87024,
+          "end_byte": 88227
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-backup-format-and-removal",
+          "start_byte": 88227,
+          "end_byte": 89495
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-attachment-removal-and-id-ack",
+          "start_byte": 89495,
+          "end_byte": 89871
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-credentials-and-normalization",
+          "start_byte": 89871,
+          "end_byte": 90610
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-track-send-setting-and-registration",
+          "start_byte": 90610,
+          "end_byte": 92623
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-shared-track-batch-ack",
+          "start_byte": 92623,
+          "end_byte": 93772
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-outbox-and-track-indicators",
+          "start_byte": 93772,
+          "end_byte": 95663
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-cascades-and-null-clearing",
+          "start_byte": 95663,
+          "end_byte": 96796
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-project-form-metadata-and-rules",
+          "start_byte": 96796,
+          "end_byte": 98192
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-queue-diagnostics",
+          "start_byte": 98192,
+          "end_byte": 98762
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-verification-account-isolation",
+          "start_byte": 98762,
+          "end_byte": 99334
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-interrupt-safe-journal-commit",
+          "start_byte": 99334,
+          "end_byte": 100187
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-interrupted-journal-native-regressions",
+          "start_byte": 100187,
+          "end_byte": 100666
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-journal-process-view-defect-witness",
+          "start_byte": 100666,
+          "end_byte": 101227
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-journal-process-view-and-owner-state",
+          "start_byte": 101227,
+          "end_byte": 103907
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-journal-process-view-verification",
+          "start_byte": 103907,
+          "end_byte": 104084
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-historical-lookup-key-set-replacement",
+          "start_byte": 104084,
+          "end_byte": 107872
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-ngfp-prefetch-reader-and-consumers",
+          "start_byte": 107872,
+          "end_byte": 110242
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-ngfp-prefetch-source-and-delivery-basis",
+          "start_byte": 110242,
+          "end_byte": 111813
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-lookup-and-snapshot-draft-basis",
+          "start_byte": 111813,
+          "end_byte": 112307
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-desktop-producer-and-ngw-id-source-frame",
+          "start_byte": 112307,
+          "end_byte": 113065
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-streamed-snapshot-http-206-admission",
+          "start_byte": 113065,
+          "end_byte": 114649
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-lookup-save-errors-and-ack-gates",
+          "start_byte": 114649,
+          "end_byte": 116227
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-lookup-and-snapshot-source-verification",
+          "start_byte": 116227,
+          "end_byte": 117978
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-typed-error-causes-and-user-messages",
+          "start_byte": 117978,
+          "end_byte": 121239
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-error-message-regression-and-controls",
+          "start_byte": 121239,
+          "end_byte": 122476
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-resource-selector-compact-state",
+          "start_byte": 122476,
+          "end_byte": 123951
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-vector-spatial-cache-recovery",
+          "start_byte": 123951,
+          "end_byte": 126675
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-vector-cache-device-witness-and-source-verification",
+          "start_byte": 126675,
+          "end_byte": 129606
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-full-clock-pr86-delivery-and-f61-supersession",
+          "start_byte": 129606,
+          "end_byte": 131472
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-full-clock-prefs-owner-and-publication",
+          "start_byte": 131472,
+          "end_byte": 132669
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-full-clock-api-keys-and-disk-limits",
+          "start_byte": 132669,
+          "end_byte": 133586
+        },
+        {
+          "id": "lisa:mobile:resource:ngw-sync-and-storage-full-clock-writer-and-readers",
+          "start_byte": 133586,
+          "end_byte": 134460
+        },
+        {
+          "id": "lisa:mobile:evidence:ngw-sync-and-storage-full-clock-source-verification-and-replay",
+          "start_byte": 134460,
+          "end_byte": 136803
+        }
+      ]
     }
   ]
 }

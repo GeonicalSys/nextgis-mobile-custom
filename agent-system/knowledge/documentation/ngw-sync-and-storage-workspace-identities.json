@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-workspace-identities",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Разные ключи одной операции",
+        "",
+        "| Назначение | Фактическая идентичность | Владелец |",
+        "| --- | --- | --- |",
+        "| Collector-проект | `collector:<accountName>:<remote project ID>` | `CollectorProjectMetadata.buildProjectUid` |",
+        "| Сохранённая цель account sync | `UID\\|canonical directory\\|mapName` | `ProjectSyncRunner.Target.key` и `SyncRecoveryJournal` |",
+        "| Подтверждённый полный проход | UUID-хеш canonical directory, без UID и mapName | `ProjectSyncState.key` |",
+        "| Незавершённый Collector import | preferences с SHA256 canonical directory | `CollectorImportJournal.preferences/workspacePath` |",
+        "| Живой provider/service owner | случайный session token; отдельный ticket на доставку сервиса | `SyncWorkspaceSession` |",
+        "| Запрет конкурентной операции | process-global lease; его workspaceKey читается из active preferences | `ProjectOperationCoordinator` |",
+        "",
+        "Имя проекта, remote resource ID, local layer/group ID, canonical directory,",
+        "mapName, session token и lease — разные части контракта. Lease сам по себе",
+        "не выбирает БД фонового проекта. Даже при работе с проектом B его workspaceKey",
+        "может описывать активный проект A; реальное владение обеспечивают scoped map,",
+        "parent chain слоя и live token. При переносе каталога, изменении mapName или",
+        "новой схеме восстановления отдельно определить миграцию/инвалидацию recovery",
+        "queue, import journal, full clock и черновиков. Их одинаковая судьба не следует",
+        "из слова «проект»; обычная смена display name не доказывает смену этих ключей.",
+        "",
+        "Обратная граница desktop — `stand_project/ngw_collector_projects.py`,",
+        "`_etalon_item_to_live_child`: keyname разрешается в NGW resource_id, передаются",
+        "editable/visible/syncable/zoom. Мобильный UID добавляет account и remote project",
+        "ID, а локальная работа — directory/mapName. Эти ключи не подменяют друг друга;",
+        "desktop не имеет runtime-доступа к session token или телефонной БД.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-workspace-identities"
+    ]
+  }
+}

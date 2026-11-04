@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-staged-layer-replacement",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Rebuild является staged replacement. Старый слой и его SQLite остаются в карте,",
+        "пока новая копия полностью не загружена в отдельный каталог. На main thread",
+        "замена вставляется, все прежние копии той же project identity удаляются и карта",
+        "сохраняется ровно один раз; композиция old+new никогда не сохраняется как",
+        "промежуточное состояние. Физические данные старых копий удаляются только после",
+        "успешного commit. Ошибка fill/commit удаляет только stage и восстанавливает",
+        "старую композицию. Первый неуспешный SQLite insert завершает fill и откатывает",
+        "транзакцию вместо повторения всех следующих записей.",
+        "`Table.save/load` используют `AtomicFile`: process death во время записи",
+        "`default.ngm` или layer `config.json` восстанавливает последнюю полную версию,",
+        "а не оставляет обрезанный JSON.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-staged-layer-replacement"
+    ]
+  }
+}

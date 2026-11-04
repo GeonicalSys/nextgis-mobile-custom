@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-local-crud-and-outbox-transaction",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Локальный commit, backup и реквизиты",
+        "",
+        "Feature CRUD и его outbox используют одну owning-map SQLite транзакцию;",
+        "`LayerDatabaseTransaction` откладывает уведомления и физическое удаление файлов",
+        "до commit. Неудачный вложенный вызов делает managed outer transaction неуспешной,",
+        "даже если вызывающий код перехватил ошибку. Raw внешняя транзакция сама отвечает",
+        "за финальное обновление UI: промежуточные callback не публикуются.",
+        "Строгие запросы FeatureChanges не превращают ошибку базы в пустой outbox.",
+        "Совместимые legacy UI wrappers при ошибке чтения считают изменения имеющимися.",
+        "`FeatureSaveJournal` — отдельная локальная таблица UUID/id без изменения NGW",
+        "protocol/schema. Form retry использует UUID и карту; перенос server feature id",
+        "переносит соответствующий journal owner.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-local-crud-and-outbox-transaction"
+    ]
+  }
+}

@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "b928e38a1cfd61c3765697bffaa56302735a1a58f6a6b034d57fdf45ba540145",
+      "sha256": "9443bfdb5ad7bf7a7c1b79510114e6b4fabb17e4172662c9d12642003c04b37b",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "f97fff93737c52d9ad297ff464bb8b1aea8c70252b4e3398f6e705da6af7d381",
+      "sha256": "ad2ef28d37ac058089e3d66a0c8171f49cbff05ec96967acc7288ba6f0c5242e",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -123,7 +123,8 @@
         "docs/reference/compatibility-matrix.md",
         "docs/reference/flavors-and-versioning.md",
         "docs/reference/settings-and-config.md",
-        "docs/reference/official-differences.md"
+        "docs/reference/official-differences.md",
+        "docs/architecture/ngw-sync-and-storage.md"
       ],
       "reason": "Pinned exact App Markdown source bytes and stable published addresses."
     },

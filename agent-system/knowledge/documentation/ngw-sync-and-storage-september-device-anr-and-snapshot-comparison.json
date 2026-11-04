@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ngw-sync-and-storage-september-device-anr-and-snapshot-comparison",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original source frame, dated result and acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Подтверждённый device ANR 17.09: GPS/main thread ждал SQLite, пока sync worker",
+        "сравнивал `Feature.equalsData` внутри snapshot-транзакции. GPS-проверка состояния",
+        "теперь использует durable flag; обе incremental перерисовки треков читают БД в",
+        "фоне. Сравнение атрибутов строит временный name→index за линейный проход по",
+        "полям, сохраняя перестановки, первый duplicate name и прежние null/number/date",
+        "правила. Это не отменяет атомарную транзакцию и backup gate.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ngw-sync-and-storage-september-device-anr-and-snapshot-comparison"
+    ]
+  }
+}

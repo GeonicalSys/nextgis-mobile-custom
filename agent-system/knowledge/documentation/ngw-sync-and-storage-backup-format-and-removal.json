@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-backup-format-and-removal",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "ZIP format2 хранит owning map_path, features/changes/attachments row dumps и",
+        "локальные attachment files. JSON rows пишутся последовательно из согласованного",
+        "SQLite snapshot; отсутствие обязательной features table — ошибка. Уникальный",
+        ".partial архив проверяется на обязательные entries и CRC, затем публикуется",
+        "уникальным ZIP. Quota применяется к завершённым архивам. Формы/config проекта",
+        "в такой backup не включаются; автоматического restore нет. См.",
+        "[восстановление на копии](../runbooks/incident-and-rollback.md).",
+        "",
+        "Ручное удаление слоя выполняет backup на worker, оставляет слой доступным для",
+        "Undo и при окончательном подтверждении вновь проверяет owning map, parent,",
+        "резервирование формы/обхода и generation данных. Поздняя правка отменяет",
+        "удаление. Ошибка DROP откатывает все таблицы слоя и сохраняет папку."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-backup-format-and-removal"
+    ]
+  }
+}

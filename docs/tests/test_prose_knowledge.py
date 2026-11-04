@@ -105,3 +105,21 @@ class ProseKnowledgeTest(unittest.TestCase):
         path.with_name(target.rsplit(":", 1)[1] + ".json").unlink()
         with self.assertRaises(FileNotFoundError):
             PROJECTOR["project_documents"](self.owner)
+
+    def test_sync_ack_boundary_is_an_independent_author_edit(self):
+        view = PurePosixPath("docs/architecture/ngw-sync-and-storage.md")
+        directory = self.owner / PROJECTOR["DIRECTORY"]
+        section = directory / "ngw-sync-and-storage-account-ack-and-project-clock.json"
+        evidence = directory / "ngw-sync-and-storage-failed-clock-commit-f61.json"
+        record = json.loads(section.read_bytes())
+        historical = json.loads(evidence.read_bytes())
+        self.assertEqual("resource", record["kind"])
+        self.assertEqual("historical", historical["status"])
+        body = record["facets"]["body"]["value"]
+        original = PROJECTOR["project_documents"](self.owner)[view]
+        old_span = "\n".join(body)
+        self.assertEqual(1, original.count(old_span))
+        body[2] += " (test edit)"
+        section.write_text(json.dumps(record, ensure_ascii=False), encoding="utf-8")
+        projected = PROJECTOR["project_documents"](self.owner)[view]
+        self.assertEqual(original.replace(old_span, "\n".join(body)), projected)

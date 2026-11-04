@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ngw-sync-and-storage-desktop-producer-and-ngw-id-source-frame",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original source frame, dated result and acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Канонический Desktop producer lh_mery читает lh_mera.lh_mery. Его managed idqgs",
+        "типа BIGINT копирует целочисленный PG PK, тогда как NGW назначает отдельный",
+        "физический feature ID. Android читает top-level id в Feature/local FID; fields.idqgs",
+        "не становится алиасом этого FID. Canonical mobile tracked=false, sync_type14,",
+        "direction FROM2 и CRS3857 допускают incoming pull при UI editable=false:",
+        "последнее не равно resource-class isRemoteReadOnly. Исходные34 inputs/13 links",
+        "сохранены в общей source-аудитной цепочке; данные и remote deployment не проверялись.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ngw-sync-and-storage-desktop-producer-and-ngw-id-source-frame"
+    ]
+  }
+}

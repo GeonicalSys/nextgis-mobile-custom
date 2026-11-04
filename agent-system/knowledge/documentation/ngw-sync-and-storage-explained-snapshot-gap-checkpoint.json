@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-explained-snapshot-gap-checkpoint",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После успешного commit `NgwSnapshotCheckpoint` может сохранить объяснённое",
+        "расхождение: `remote - local == число уникальных невалидных remote ID без локальной",
+        "строки`. Невалидный объект с сохранённой локальной копией в это число не входит.",
+        "Checkpoint действует менее часа только при совпадении layer/workspace path,",
+        "account/server, remote ID, фильтра, CRS/геометрии/полей и обоих count. Отсутствие,",
+        "повреждение, истечение срока, перевод часов назад и явная перепроверка запрещают",
+        "его использование. Это не серверная revision: исправление геометрии при прежнем",
+        "count обнаруживается по истечении срока либо длительным нажатием sync с",
+        "подтверждением. Новое evidence не записывается при rollback/backup failure.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-explained-snapshot-gap-checkpoint"
+    ]
+  }
+}

@@ -39,7 +39,7 @@
         "to": "mobile-app",
         "type": "developer_source_contract",
         "transport": "Read-only static source analysis in the available LISA source contour; no APK runtime import.",
-        "statement": "Before every behavioral/API/data/resource/configuration change the agent discovers dependencies autonomously across the whole available desktop/mobile contour, using existing registries and user examples only as starting points; all newly confirmed links are persisted in the same task in the single shared generated index or curated semantic owner contracts, while ambiguous candidates and dynamic references retain source evidence, UNKNOWN and next steps. Actual owner roots/revisions and source-index freshness are checked before source commits; missing or different worktrees remain UNKNOWN, not covered by another clone's index. Independent expectations are never regenerated to fit faulty production. The shared --write command automatically retains source-backed historical provisional observations in dependency-observations.json; --check validates their structure without certifying current foreign working-tree freshness. This entry links the shared procedure and does not implement scanner execution or native acceptance in the Android validator.",
+        "statement": "Before every behavioral/API/data/resource/configuration change the agent discovers dependencies autonomously across the whole available desktop/mobile contour, using existing registries and user examples only as starting points; newly confirmed source links are reflected in the locally rebuilt graph and semantic links are recorded in curated owner contracts in the same task. Ambiguous candidates and dynamic references retain source evidence, UNKNOWN and next steps. Actual owner roots/revisions and source-index freshness are checked before source commits; missing or different worktrees remain UNKNOWN, not covered by another clone's index. Independent expectations are never regenerated to fit faulty production. The shared --write command automatically retains source-backed historical provisional observations in dependency-observations.json; --check validates their structure without certifying current foreign working-tree freshness. This entry links the shared procedure and does not implement scanner execution or native acceptance in the Android validator.",
         "owners": [
           "app"
         ],
@@ -59,10 +59,6 @@
           {
             "system": "qgis-plugins",
             "path": "geonical-docs/registry/scenario-contracts.yaml"
-          },
-          {
-            "system": "qgis-plugins",
-            "path": "geonical-docs/registry/discovered-dependencies.json"
           },
           {
             "system": "qgis-plugins",

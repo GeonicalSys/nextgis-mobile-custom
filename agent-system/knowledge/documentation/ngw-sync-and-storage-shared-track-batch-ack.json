@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-shared-track-batch-ack",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Живой recorder и TrackWorker используют общую private tracks.db через",
+        "SharedTrackStore, TrackUploader и один delivery lock. [Общая история](shared-tracks.md).",
+        "Пакет содержит до 100 точек; после успешного ответа /packet подтверждаются",
+        "только IDs этого пакета в общей БД. Новые точки и ошибки сохраняют sent=0.",
+        "WorkManager использует одну unique immediate/15-minute periodic очередь установки",
+        "с network constraint. Старые project jobs перепланируют общую работу и не читают",
+        "проектные rollback-таблицы. После Stop/startup доставка сохраняется при другой",
+        "открытой карте и удалении проекта; project lease и SyncWorkspaceSession для",
+        "треков больше не требуются. Full-project clock остаётся проектным.",
+        "",
+        "Контракт Tracker Hub: [registered и packet](https://docs.nextgis.com/tracker_hub_dev/source/main.html).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-shared-track-batch-ack"
+    ]
+  }
+}

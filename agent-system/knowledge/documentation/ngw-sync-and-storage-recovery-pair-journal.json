@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-recovery-pair-journal",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "SyncRecoveryJournal.pending_v2 атомарно сохраняет весь план project/account до",
+        "первого прохода, без credentials/feature data. Только подтверждённое снятие",
+        "завершённой пары меняет принятый Journal API план; ошибка/отмена не разрешает",
+        "незаметно включить её удаление в следующую успешную запись. После process death",
+        "читается фактически сохранённый файл; failed-commit disk outcome остаётся отдельным",
+        "UNKNOWN, а не обещанием rollback. При старте",
+        "идентичности разрешаются по текущему реестру, а не по переданному пути. Удалённые",
+        "project/account исключаются; отключённый auto account автоматически не запускается.",
+        "Recovery явно записанной пары сохраняется при смене открытого проекта и при",
+        "отключении общего охвата. Legacy marker мигрирует только к совпадающему owner.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-recovery-pair-journal"
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-track-send-setting-and-registration",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Доставка трека и регистрация UID",
+        "",
+        "Отправка треков включена по умолчанию и не зависит от регистрации UID.",
+        "Однократная миграция track_send_default_enabled_v1 включает старое значение,",
+        "которое прежняя проверка регистрации могла снять автоматически; последующий",
+        "явный отказ пользователя сохраняется. В настройках переключатель доступен",
+        "до регистрации. Проверка /registered выполняется при доставке, не меняя track_send;",
+        "при registered=false, отсутствии сети или ошибке точки остаются sent=0.",
+        "После создания трекера следующая попытка отправляет накопленные точки без",
+        "повторного посещения настроек.",
+        "",
+        "TrackRegistrationState сохраняет track_registered_device — SHA-256 точного",
+        "device endpoint (Tracker Hub URL + UID), только после успешного JSON registered=true.",
+        "Отсутствие/несовпадение подтверждения и registered=false скрывают отметку трека;",
+        "false отзывает matching подтверждение. HTTP/сетевая ошибка или некорректный ответ",
+        "не снимает известную регистрацию. Поэтому offline у зарегистрированного трекера",
+        "не скрывает backlog. Cache не разрешает обход проверки /registered при отправке",
+        "и не меняет track_send, sent или расписание повторов. При смене сервера/UID",
+        "подтверждение другого endpoint не применяется. UI читает cache без сети.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-track-send-setting-and-registration"
+    ]
+  }
+}

@@ -67,6 +67,12 @@ those relations, then regenerate the Markdown. The pinned byte spans in
 provenance describe the original revision. Keep dated comparisons and
 verification in evidence records with their original scope.
 
+For sync and storage, edit the appropriate **ngw-sync-and-storage-*.json**
+record in the same directory. The layout **ngw-sync-and-storage.json** keeps
+the published headings and orders topics through contains relations. The
+account acknowledgment, full-project clock and local outbox have separate
+records. Earlier pins and dated checks are evidence with their original scope.
+
 AGENTS/Cursor and hooks still serve their existing clients.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.

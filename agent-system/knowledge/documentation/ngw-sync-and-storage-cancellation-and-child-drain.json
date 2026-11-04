@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-cancellation-and-child-drain",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Отмена и liveness",
+        "",
+        "`NgwSyncIo.requestCancellation` увеличивает process-wide generation и закрывает",
+        "зарегистрированные read-only HTTP. Уже отправленная mutation намеренно не входит",
+        "в этот набор: сначала разрешается её ответ, затем принимается решение об outbox;",
+        "следующую mutation запрещает проверка cancellation. Это не обещание, что любой",
+        "запрос на запись немедленно прервётся.",
+        "",
+        "`awaitChildren` временно снимает interrupt для drain и возвращает факт прерывания",
+        "очереди. Та восстанавливает interrupt в финальном cleanup, перед этим закрывая",
+        "собственный lease; при already-held пути внешний lease остаётся во владении",
+        "вызывающего кода. Session не закрывается с pending work. 60-секундный",
+        "`expireUndelivered` относится **только к unclaimed service deliveries**; claimed",
+        "child/service не получает этим общего timeout. Принудительно закрывать его БД",
+        "или отдавать lease по возрасту нельзя. Liveness такой работы остаётся отдельным",
+        "неподтверждённым runtime свойством.",
+        "",
+        "Разобран и отвергнут ложный вывод: ранний token rejection в `onStartCommand`",
+        "сам по себе не доказывает нарушение первого foreground-start. `LayerFillService.onCreate`",
+        "уже вызывает `startForegroundWithSessionAwareNotification`. Проверять нужно весь",
+        "lifecycle, включая повторную доставку уже существующему сервису; source-разбор",
+        "не подтверждает каждый native исход.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-cancellation-and-child-drain"
+    ]
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ngw-sync-and-storage-failed-clock-commit-f61",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original source frame, dated result and acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Неуспешный commit: память отдельно от диска",
+        "",
+        "Описание backend ниже относится к app pin maplib F61. Отдельный own library",
+        "PR63 исправляет публикацию process-visible clock; до Merge Commit → app gitlink",
+        "→ semantic UI pin review это не считается поставленным app-исправлением.",
+        "Существующий F61 UI fingerprint здесь намеренно не переписывается.",
+        "",
+        "`ProjectSyncState.markComplete` вызывает обычный `SharedPreferences.Editor.commit`,",
+        "а `lastComplete` читает тот же process-cached preferences. По",
+        "[Android API](https://developer.android.com/reference/android/content/SharedPreferences.Editor#commit())",
+        "true подтверждает persistent write. В AOSP",
+        "[Android14, `SharedPreferencesImpl`](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-14.0.0_r1/core/java/android/app/SharedPreferencesImpl.java)",
+        "`commitToMemory`477–546 изменяет map до disk write; `commit`551–573 не откатывает",
+        "её при false. Например, отказ rename723–727 оставляет прежний файл, но новый",
+        "`getLong`301–305 видит память. Порядок сохраняется в",
+        "[Android16](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-16.0.0_r1/core/java/android/app/SharedPreferencesImpl.java)",
+        "(`getLong`309, `commit`559). Это source-подтверждённый пробел между намерением",
+        "«подтверждённый clock» и текущим cached UI; на устройстве он **NOT_RUN**.",
+        "",
+        "False из interrupted await имеет другую ветвь: writer уже запущен и может",
+        "сохранить файл. Поэтому false не доказывает ни прежний диск, ни новый диск.",
+        "`SyncJournalCommit` изолирует journal writer от interrupt вызывающего потока,",
+        "но сам по себе не возвращает SharedPreferences memory к прежнему состоянию при",
+        "ошибке записи. Пустой cached journal также не заменяет durable oracle.",
+        "",
+        "Независимая будущая проверка должна разделять return value, getter текущего",
+        "процесса, physical XML/backup после окончания writer и fresh-process reload.",
+        "Proxy, возвращающий false **до** настоящего commit, не моделирует этот исход.",
+        "Не исправлять его записью `now` или удалением очереди по UI/расписанию.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ngw-sync-and-storage-failed-clock-commit-f61"
+    ]
+  }
+}

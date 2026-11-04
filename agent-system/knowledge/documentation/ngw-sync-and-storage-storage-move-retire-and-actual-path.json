@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-storage-move-retire-and-actual-path",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После admission caller/UI захватывает exact map. Worker использует её и вызывает",
+        "`MainApplication.retireMapForStorageMove` до первого physical rename. Helper",
+        "проверяет прямое поле владельца, не null-ит и не создаёт карту. `MapBase.moveTo`",
+        "меняет mPath после всех rename; IOException пытается rollback и может вернуть",
+        "старый path. Worker сохраняет actual path, не желаемый destination. Отсутствие",
+        "достигнутого target или false commit — отдельный неуспех; false обычного",
+        "SharedPreferences после memory update не означает unchanged cache/disk.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-storage-move-retire-and-actual-path"
+    ]
+  }
+}
