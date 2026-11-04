@@ -91,6 +91,60 @@
       "blob": "6ab0efcfd1b28871c024449827f4d8bae9f16f43",
       "sha256": "e0d7fdc478690d08a9aaebfacf819de737074feef86622135dfe72d1706edefb",
       "bytes": 15362
+    },
+    {
+      "path": "docs/guides/safe-patterns.md",
+      "record": "safe-patterns.json",
+      "id": "lisa:mobile:resource:documentation-safe-patterns",
+      "revision": "82a2f6e4e0602901f35c8ea1bee005460580907d",
+      "blob": "a2b45683d752fa9b5ec2455b51a572fce01c1db7",
+      "sha256": "33ee802d7adfedac7e14051937afe4f4ae19869a917997989a43ca3fd94c57e2",
+      "bytes": 2002
+    },
+    {
+      "path": "docs/glossary.md",
+      "record": "glossary.json",
+      "id": "lisa:mobile:resource:documentation-glossary",
+      "revision": "82a2f6e4e0602901f35c8ea1bee005460580907d",
+      "blob": "975b92f097641c1fdedc272978ba36659f234d8e",
+      "sha256": "7f940be2a5aadc71ab893b9e17e635c588e91bb4fcfbdd5aa9babfbe293305e1",
+      "bytes": 1290
+    },
+    {
+      "path": "docs/reference/build-matrix.md",
+      "record": "build-matrix.json",
+      "id": "lisa:mobile:resource:documentation-build-matrix",
+      "revision": "82a2f6e4e0602901f35c8ea1bee005460580907d",
+      "blob": "603110fa181c7f4ad353fd5cda8296263fb43534",
+      "sha256": "02f81c6f881c194f8d5acec06c1808f3490412e80503f5a014c564a9860e8fe7",
+      "bytes": 30233
+    },
+    {
+      "path": "docs/reference/compatibility-matrix.md",
+      "record": "compatibility-matrix.json",
+      "id": "lisa:mobile:resource:documentation-compatibility-matrix",
+      "revision": "82a2f6e4e0602901f35c8ea1bee005460580907d",
+      "blob": "7dc3dfe933d639d687849f5a106a9c7d4b0ab0ed",
+      "sha256": "3d148c3aee9b751cc94192e5652d23278342e57594a9fb9bdc13942e2b5a19dd",
+      "bytes": 2398
+    },
+    {
+      "path": "docs/reference/flavors-and-versioning.md",
+      "record": "flavors-and-versioning.json",
+      "id": "lisa:mobile:resource:documentation-flavors-and-versioning",
+      "revision": "82a2f6e4e0602901f35c8ea1bee005460580907d",
+      "blob": "5dc276314a22b854286346aad433dfd8a186921d",
+      "sha256": "e0d4b19c19e1fb09a5dd3aac4486b100413b368c2ac25b64e20cc0d0f36a1a44",
+      "bytes": 11126
+    },
+    {
+      "path": "docs/reference/settings-and-config.md",
+      "record": "settings-and-config.json",
+      "id": "lisa:mobile:resource:documentation-settings-and-config",
+      "revision": "82a2f6e4e0602901f35c8ea1bee005460580907d",
+      "blob": "44b4489c614c2f84ac6fa241177e8245f9464028",
+      "sha256": "e1163efd99539d71b300482f53881e7dae554b508eff2a38e0ac1ba4dfa5f6e7",
+      "bytes": 33641
     }
   ]
 }

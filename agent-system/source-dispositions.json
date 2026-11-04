@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "b544e18a4ae6c80d70dcf026f6b7b9cdb329ed8f5b0fe55f2a3ca06a0037a7ee",
+      "sha256": "7da30fe2c6fc33de765e62dcb578613cbd0d67a303e2f6d4ca59c2c1478d04ab",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "68f0d925a924a62c06424e8677aee1adfc26d95822171d408596f8e09df0e6d4",
+      "sha256": "d61507461c4aca3dd305ee5511a45f4c38d485f43034eab9dad322496d81d9c6",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -111,7 +111,18 @@
         "agent-system/knowledge/documentation",
         "docs/README.md",
         "docs/registry/README.md",
-        "docs/guides/documentation-maintenance.md"
+        "docs/guides/documentation-maintenance.md",
+        "docs/guides/bug-reports-user-guide.md",
+        "docs/guides/cascading-form-lists-user-guide.md",
+        "docs/guides/form-behavior-user-guide.md",
+        "docs/guides/project-scripts-user-guide.md",
+        "docs/guides/project-synchronization-user-guide.md",
+        "docs/guides/safe-patterns.md",
+        "docs/glossary.md",
+        "docs/reference/build-matrix.md",
+        "docs/reference/compatibility-matrix.md",
+        "docs/reference/flavors-and-versioning.md",
+        "docs/reference/settings-and-config.md"
       ],
       "reason": "Pinned exact App Markdown source bytes and stable published addresses."
     },
