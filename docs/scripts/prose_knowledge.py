@@ -13,6 +13,7 @@ OWNER = "android_projects/android_gisapp"
 DIRECTORY = Path("agent-system/knowledge/documentation")
 MANIFEST = Path("agent-system/provenance/documentation.json")
 SECTION_ID = re.compile(r"lisa:mobile:(resource|evidence|task):([a-z0-9][a-z0-9_.-]*)")
+APP_PULL_REQUEST_TEMPLATE = PurePosixPath(".github/PULL_REQUEST_TEMPLATE.md")
 EASYPICKER_MODULE = "easypicker-module"
 LIBRARY_READMES = {PurePosixPath("README.md"), PurePosixPath("docs/README.md")}
 LIBRARY_TOPICS = "resource|contract|evidence|risk|note"
@@ -71,15 +72,16 @@ def project_documents(owner: Path, *, module_id: str = "app") -> dict[PurePosixP
         view = PurePosixPath(source["path"])
         allowed = (
             view in expected_views if expected_views is not None
-            else view.parts[:1] == ("docs",) or view == PurePosixPath("app/docs/README.md")
+            else (view.parts[:1] == ("docs",)
+                  or view in {PurePosixPath("app/docs/README.md"), APP_PULL_REQUEST_TEMPLATE})
         )
         if not allowed or view.suffix != ".md" or ".." in view.parts or "\\" in str(view) or view in documents:
             raise ValueError(f"Invalid or duplicate documentation address: {source}")
         name = source["record"]
         record = read_record(name, source["id"], view, "resource")
-        if view == PurePosixPath("README.md"):
+        if view in {PurePosixPath("README.md"), APP_PULL_REQUEST_TEMPLATE}:
             if "frontmatter" in record["facets"]:
-                raise ValueError(f"Unexpected frontmatter in the library README: {name}")
+                raise ValueError(f"Unexpected frontmatter in plain Markdown view: {name}")
             lines = []
         else:
             frontmatter = markdown_lines(record["facets"], "frontmatter", name)

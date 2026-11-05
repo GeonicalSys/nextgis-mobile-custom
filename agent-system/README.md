@@ -65,6 +65,9 @@ To restore the previous reader, regenerate the views first so they carry any
 intervening edits. The [App inventory](migration/prose-inventory.json) separates
 the other active entrances, current documents and historical evidence.
 
+Edit the App pull request template in `knowledge/documentation/pull-request-template.json`.
+Use the same projector to refresh `.github/PULL_REQUEST_TEMPLATE.md` at its GitHub address.
+
 For the official comparison, edit the appropriate `official-differences-*.json`
 record. `official-differences.json` carries the frontmatter and orders the
 topics through `contains` relations. Add, move or remove a topic through

@@ -9626,6 +9626,22 @@
           "end_byte": 141165
         }
       ]
+    },
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "record": "pull-request-template.json",
+      "id": "lisa:mobile:resource:pull-request-template",
+      "revision": "3856a63fcb1670eb07afcee31ace56a83a5aa3b7",
+      "blob": "53a95c7dd9e5e879232d4b599d1644de9e3fc381",
+      "sha256": "0b398bdb87ef99acee09fa22fd744ed72f3993fa20aa7fbaad5ce5d178e310c2",
+      "bytes": 2275,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:pull-request-template",
+          "start_byte": 0,
+          "end_byte": 2275
+        }
+      ]
     }
   ]
 }

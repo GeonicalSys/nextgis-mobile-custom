@@ -57,6 +57,24 @@ class ProseKnowledgeTest(unittest.TestCase):
         (self.owner / PROJECTOR["DIRECTORY"] / "start-here.json").unlink()
         self.assertTrue(any("prose projection failed" in error for error in self.errors()))
 
+    def test_pull_request_template_projects_plain_markdown_from_the_record(self):
+        view = PurePosixPath(".github/PULL_REQUEST_TEMPLATE.md")
+        original = (APP / view).read_bytes().replace(b"\r\n", b"\n")
+        before = PROJECTOR["project_documents"](self.owner)
+        self.assertEqual(before[view].encode("utf-8"), original)
+        target = self.owner / view
+        target.parent.mkdir()
+        target.write_bytes(original)
+
+        record_path = self.owner / PROJECTOR["DIRECTORY"] / "pull-request-template.json"
+        record = json.loads(record_path.read_bytes())
+        record["facets"]["body"]["value"][-1:] = ["- Extra test field", ""]
+        record_path.write_text(json.dumps(record), encoding="utf-8")
+        after = PROJECTOR["project_documents"](self.owner)
+        self.assertEqual(after, {**before, view: before[view] + "- Extra test field\n"})
+        with self.assertRaisesRegex(ValueError, "Generated Markdown is stale"):
+            PROJECTOR["check_generated"](target, after[view])
+
     def test_standalone_documentation_uses_markdown(self):
         standalone = self.owner / "standalone"
         docs = standalone / "docs"
