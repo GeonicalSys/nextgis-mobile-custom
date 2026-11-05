@@ -17,14 +17,37 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "unknown",
+    "implementation": "implemented",
     "source_verification": "UNKNOWN",
-    "merge": "unknown",
+    "merge": "merged",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the source clocks, readiness states and owner decision on advisory actions with their separate evidence."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The advisory reminders landed. The whole phone and tablet acceptance retains the original conditions.",
+        "implementation": "App 78 has separate full online-project sync, update-check and known-update clocks. Local-project exclusions, same-process deduplication and advisory actions remain distinct.",
+        "source_verification": "The scoped tests belong to the App 78 reminder and word-fit receipts. The initial card keeps its own behavior scope.",
+        "merge": "App 78 merged at 769629c7. Current reminder ownership still points to the App and existing ProjectSyncState/updater.",
+        "runtime_verification": "The addressed UI checks and Full phone/tablet results keep their own frames. The complete two-device acceptance remains open.",
+        "release": "The 224 package history and later candidate gates are recorded separately under MOB-01 and MOB-REL-01.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "769629c7ccf6f6e065006b7ebecb8d702ee0d369",
+            "path": "update-reports/entries/android-20261025-maintenance-reminders.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+            "path": "app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

@@ -22,9 +22,20 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Retain all six ideas and the proposed order without changing current priorities."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Keep the six ideas available for product selection after observing real field workflows.",
+        "implementation": "Each selected idea gets its own stable ID, authority, scope and acceptance criteria. The proposal preserves the existing coordinate import behavior.",
+        "source_verification": "Evaluate the first limited result in the roadmap for each idea. The territorial package and history ideas depend on their named contracts.",
+        "merge": "Each admitted epic needs its own delivery record.",
+        "runtime_verification": "Review real workflows and permissions before setting a device or data acceptance scope.",
+        "release": "The catalogue is a selection input. Each admitted feature has a separate release decision."
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

@@ -22,9 +22,20 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the complete full-sync fallback and the original marker counterexamples."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposed generation and change marker still depends on REL-01 and the PERF-01 baseline.",
+        "implementation": "The first prototype is one real authorized PostGIS resource with a conservative full-read fallback. The marker must account for deletion, dependencies and source recreation.",
+        "source_verification": "The acceptance oracle must distinguish equal counts, filters, permissions, schema and late commits. The verified prototype remains open.",
+        "merge": "The server marker and consumer need their own delivery record after agreement.",
+        "runtime_verification": "Test concurrent committed changes and independent outbound edits through the actual NGW path under separate authorization.",
+        "release": "Release eligibility follows verified prototype and consumer adoption."
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

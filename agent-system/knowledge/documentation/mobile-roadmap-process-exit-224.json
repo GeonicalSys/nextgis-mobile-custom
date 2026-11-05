@@ -17,14 +17,42 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "unknown",
+    "implementation": "implemented",
     "source_verification": "UNKNOWN",
-    "merge": "unknown",
+    "merge": "merged",
     "runtime_verification": "UNKNOWN",
     "release": "not_applicable",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Retain the OS exit, delivery and issue receipts without promoting an unexplained cause to a confirmed repair."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The cause of the 224 exit sequence remains open. The observed memory failures and the unknown regression trigger keep separate identities.",
+        "implementation": "The bounded OS exit export and native allocation mitigations landed through the App 82 chain. App 84 added coordinate-free GPS evidence.",
+        "source_verification": "Use the named source, build and GlitchTip receipts at their stated versions. Diagnostic collection leaves the unknown trigger unresolved.",
+        "merge": "App 82 merged at 4bd9f7d9. App 84 merged at 69edfe78 with the later fetched library pin.",
+        "runtime_verification": "SM-X115 OS exit and allocation observations describe 224. The field cause and reproduction of the remaining exits remain unresolved.",
+        "release": "Historical 224 publication and withdrawal belong to the incident context. The investigation has no APK release stage.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-crash-224-2026-10-27.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/glitchtip-triage-2026-10-29.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "4bd9f7d981ebd444a6821891b6a2b4ec962efcc8",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

@@ -58,15 +58,7 @@
           },
           {
             "system": "qgis-plugins",
-            "path": "geonical-docs/registry/scenario-contracts.yaml"
-          },
-          {
-            "system": "qgis-plugins",
             "path": "geonical-docs/registry/dependency-observations.json"
-          },
-          {
-            "system": "qgis-plugins",
-            "path": "geonical-docs/registry/dependency-audit-todo.yaml"
           }
         ],
         "verify": [

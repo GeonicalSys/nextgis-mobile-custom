@@ -22,9 +22,20 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the selected project and coverage conditions with the original proposal."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposed project-readiness screen still needs the agreed field workflow.",
+        "implementation": "Inspect local forms, data, coverage, free space, permissions, GPS and pending work. Offer a concrete action for each blocking condition.",
+        "source_verification": "The readiness oracle must demonstrate that a missing component blocks a ready result.",
+        "merge": "The consolidated readiness screen needs its own delivery evidence.",
+        "runtime_verification": "Validate the complete agreed airplane-mode scenario including search, form and photo.",
+        "release": "The readiness feature requires its own release acceptance."
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

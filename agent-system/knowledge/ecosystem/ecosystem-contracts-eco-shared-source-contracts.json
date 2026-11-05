@@ -51,11 +51,7 @@
         "external_docs": [
           {
             "system": "qgis-plugins",
-            "path": "geonical-docs/registry/scenario-contracts.yaml"
-          },
-          {
-            "system": "qgis-plugins",
-            "path": "geonical-docs/registry/dependencies.yaml"
+            "path": "geonical-docs/guides/scenario-dependencies.md"
           },
           {
             "system": "qgis-plugins",

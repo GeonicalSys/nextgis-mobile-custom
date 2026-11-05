@@ -104,13 +104,13 @@ shared source index или полноты смыслового разбора.
 
 Межкомпонентный разбор не ограничен цепочкой PostgreSQL/NGW: launcher/roles,
 шаблоны и overlays, SQL/QLR, diagnostics, build/release и сохранённое состояние
-имеют собственных производителей, потребителей и условия. Точные общие записи
-находятся в доступном `qgis-plugins` source root:
+имеют собственных производителей, потребителей и условия. Руководство для
+канонических записей LISA — `plugins/geonical-docs/guides/scenario-dependencies.md`.
 
-- `geonical-docs/registry/scenario-contracts.yaml` — сценарии, owners/consumers,
-  applicability, защищённые режимы и ожидаемые результаты;
-- `geonical-docs/registry/dependencies.yaml` — imports и resource contracts;
-- `geonical-docs/registry/layer-resource-audit.json` — source hashes, QLR/provider
+- `agent-system/knowledge/dependency-registry-layout/scenario-contracts.json` — сценарии,
+  owners/consumers, applicability, защищённые режимы и ожидаемые результаты.
+- `agent-system/knowledge/dependency-registry-layout/dependencies.json` — imports и resource contracts.
+- `plugins/geonical-docs/registry/layer-resource-audit.json` — source hashes, QLR/provider
   поля и выражения, relations, trigger→table/view/function связи и явные unknowns.
 
 Ссылки проверяются через `ECO-SHARED-SOURCE-CONTRACTS` в

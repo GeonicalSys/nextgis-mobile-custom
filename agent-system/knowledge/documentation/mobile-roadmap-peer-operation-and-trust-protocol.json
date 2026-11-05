@@ -22,9 +22,20 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the alternative online dependency, offline revocation limit and distinct confirmation states."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Protocol research follows REL-01 and SYNC-02 or an approved online equivalent.",
+        "implementation": "Define identity, operation UUIDs, gaps, base revisions, tombstones and quota-bound attachment transfer before selecting a transport.",
+        "source_verification": "The decisive prototype needs authorized PostgreSQL/NGW forwarding with authorship, permissions and duplicate protection. The evidence is still open.",
+        "merge": "Protocol and consumer delivery follow the accepted prototype.",
+        "runtime_verification": "Verify initial trust, expiry and revocation behavior while disconnected. Neighbor delivery and server acknowledgment remain independent.",
+        "release": "A future release depends on the accepted online and peer contracts."
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

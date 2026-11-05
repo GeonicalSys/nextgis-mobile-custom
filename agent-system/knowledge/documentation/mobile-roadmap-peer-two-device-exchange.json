@@ -22,9 +22,20 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Retain the transport alternatives and protect the user's existing project database."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The two-device proposal follows acceptance of the trust and operation protocol.",
+        "implementation": "Nearby, file packages and local Wi-Fi are transport candidates. Device enrollment and Play-services availability are separate choices.",
+        "source_verification": "Check same IDs across projects, schema compatibility, photo integrity, quotas and conflicts against the accepted protocol.",
+        "merge": "The proposed transport needs an agreed choice and its own delivery evidence.",
+        "runtime_verification": "Verify offline pairing, an untrusted peer, interruption, retry, space shortage and Android background restrictions.",
+        "release": "Release depends on the two-device acceptance and an approved transport scope."
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

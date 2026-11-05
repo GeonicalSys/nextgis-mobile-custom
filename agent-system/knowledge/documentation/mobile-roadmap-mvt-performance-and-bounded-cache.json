@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the removed provider's constraints at their pinned source and preserve the direct route's existing cache identity and geometry."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The cache budget proposal remains dependent on PERF-01 and MVT-01.",
+        "implementation": "The former two-worker and queue-16 claims describe the old HTTP provider. App 89 adopts direct SQLite with shared disk-cache and epoch contracts. Classic conversion retains its documented preview and overlay paths.",
+        "source_verification": "Use the adopted source to select new cache/queue constraints. The roadmap's proposed panning, invalidation and work-budget comparison still needs its own oracle.",
+        "merge": "The old renderer's retirement is merged. A bounded-cache proposal under the current route has separate admission.",
+        "runtime_verification": "Compare cold/warm work and fast pan, sync and project-switch cancellation while preserving full geometry.",
+        "release": "Release scope follows the specific future performance work and its acceptance.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "update-reports/entries/maplib-20261102-remove-loopback-tiles.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/map-performance.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

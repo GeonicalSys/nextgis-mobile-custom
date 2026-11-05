@@ -4,7 +4,7 @@
   "kind": "task",
   "owner": "android_projects/android_gisapp",
   "topic": "documentation",
-  "status": "active",
+  "status": "historical",
   "execution_permission": false,
   "applicability": {
     "review_status": "reviewed",
@@ -16,15 +16,43 @@
     "unknown_behavior": "include_with_unknown_reason"
   },
   "lifecycle": {
-    "goal": "open",
+    "goal": "complete",
     "implementation": "implemented",
-    "source_verification": "UNKNOWN",
-    "merge": "unknown",
+    "source_verification": "PASS",
+    "merge": "merged",
     "runtime_verification": "NOT_RUN",
     "release": "unpublished",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the original App 87 old-pin statement, adoption card and two distinct test receipts."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The authorized 1 November source repair and Git adoption are complete for attachment failure state and class-only metadata.",
+        "implementation": "EasyPicker handles terminal 404 and publishes only completed staging files. Maplib repairs known vector/PostGIS class drift without a refill. App keeps the attachment UI contract.",
+        "source_verification": "The attached receipts record seven attachment assertions and fourteen class-metadata checks on their separate technical inputs.",
+        "merge": "EasyPicker 5 and maplib 64 reached the App 87/88 fetched pin chain. The later App pin revisions include those merge commits.",
+        "runtime_verification": "Device behavior, current tenant data and broader attachment durability remain outside these source receipts.",
+        "release": "The verified delivery is Git adoption. The 225 APK remains unpublished.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp/easypicker",
+            "revision": "5947984e4617bb85839e610cc315434dd0a26678",
+            "path": "update-reports/entries/easypicker-20261101-attachment-failure-state.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "update-reports/entries/maplib-20261101-class-metadata-repair.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "0f55e62fe27cc0f16b48080a7c35495b58e0e583",
+            "path": "update-reports/entries/android-20261101-merged-library-pins.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

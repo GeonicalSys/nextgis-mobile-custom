@@ -22,9 +22,27 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the chooser follow-up separate and retain simple project names and recording ownership."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Compare the existing field workflow before admitting shortcuts, search and saved filters.",
+        "implementation": "The earlier intersecting-layer chooser belongs to MOB-01. The broader object search and favorite-project proposal still needs field selection.",
+        "source_verification": "Measure saved steps against the actual workflow and keep the recording-time project-switch guard.",
+        "merge": "The scoped chooser merge has its own receipt. The broader search work remains proposed.",
+        "runtime_verification": "Accept the offline object lookup, form, photo and return to the prior map extent on the agreed scenario.",
+        "release": "The expanded workflow requires its own acceptance before release.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "769629c7ccf6f6e065006b7ebecb8d702ee0d369",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

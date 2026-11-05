@@ -22,9 +22,37 @@
     "merge": "open",
     "runtime_verification": "NOT_APPLICABLE",
     "release": "not_applicable",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the original policy, roadmap and client projections reachable through verified replacement."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The six-owner migration remains open through ordinary maintenance, actual client delivery, complete replay and verified retirement.",
+        "implementation": "App Draft 91 projects the App registries and Markdown from owner records. Its policy pack and the two distinct MOB-02 identities keep their original source.",
+        "source_verification": "The pinned App roadmap receipt covers 29 task spans and 47 witnesses, generated Markdown, clean SQLite and an isolated authoring check. Whole migration source completeness is still open.",
+        "merge": "App Draft 91 and Root Draft 282 are open. The App's committed library pins predate the separate knowledge branches.",
+        "runtime_verification": "Product runtime is outside this task. Actual Codex, ChatGPT, Cursor and custom reader delivery have their own acceptance.",
+        "release": "The work is delivered through knowledge Drafts with no APK release stage.",
+        "references": [
+          {
+            "repository": ".",
+            "revision": "071eea24e02cf793a4e96e66077fe815f0cd8286",
+            "path": "agent-system/migration-plan.md"
+          },
+          {
+            "repository": ".",
+            "revision": "071eea24e02cf793a4e96e66077fe815f0cd8286",
+            "path": "agent-system/migration/mobile-roadmap-acceptance.json"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "agent-system/README.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

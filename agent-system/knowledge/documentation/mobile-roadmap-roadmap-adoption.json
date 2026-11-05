@@ -17,14 +17,42 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "unknown",
-    "source_verification": "UNKNOWN",
+    "implementation": "implemented",
+    "source_verification": "PASS",
     "merge": "merged",
     "runtime_verification": "NOT_APPLICABLE",
     "release": "not_applicable",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the initial Draft witness and later Git delivery. Preserve the separate authority requirement for branch protection."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The review procedure is in use. An automatic roadmap check and merge rule remain a separate open admission stage.",
+        "implementation": "The App instructions, start guide, checklist and PR template lead to the roadmap and require an ID or explicit admission.",
+        "source_verification": "The App 78 merge contains the navigation and template. The current production branch still describes the review rule and its pending automation.",
+        "merge": "App 78 delivered the procedure at 769629c7. The current report hook checks update-report cards under its own contract.",
+        "runtime_verification": "The delivery is a documentation and review procedure.",
+        "release": "This procedure has no APK publication stage.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "769629c7ccf6f6e065006b7ebecb8d702ee0d369",
+            "path": ".github/PULL_REQUEST_TEMPLATE.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+            "path": "AGENTS.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+            "path": ".githooks/pre-push"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

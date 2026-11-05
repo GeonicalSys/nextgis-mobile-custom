@@ -259,8 +259,8 @@ expired token без fallback, rejected/discarded children, сохранност
 fill. Здесь прочитаны исходники этих тестов; их наличие не является выполнением.
 
 `SMOKE-SYNC-OWNER-ACK-BOUNDARY` закрепляет адресную будущую проверку. Новые ветви
-имеют NOT_RUN, а задачи хранятся **в едином LISA реестре**
-`plugins/geonical-docs/registry/dependency-audit-todo.yaml`:
+имеют NOT_RUN. Открытые вопросы хранятся в реестре LISA
+`agent-system/knowledge/audit-registry-layout/questions.json`.
 
 - `AUDIT-TODO-SYNC-ACK-RECOVERY`: process death/cleanup failure между pair ACK
   и full clock, реальный retry и commit-false memory/disk divergence; определить

@@ -4,7 +4,7 @@
   "kind": "task",
   "owner": "android_projects/android_gisapp",
   "topic": "documentation",
-  "status": "active",
+  "status": "historical",
   "execution_permission": false,
   "applicability": {
     "review_status": "reviewed",
@@ -16,15 +16,38 @@
     "unknown_behavior": "include_with_unknown_reason"
   },
   "lifecycle": {
-    "goal": "open",
+    "goal": "complete",
     "implementation": "implemented",
-    "source_verification": "UNKNOWN",
-    "merge": "open",
+    "source_verification": "PASS",
+    "merge": "merged",
     "runtime_verification": "NOT_APPLICABLE",
     "release": "not_applicable",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the earlier prepared-for-squash statement and the later merged revisions as separate evidence."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The six-repository line-ending and export change was delivered on 2 November.",
+        "implementation": "App uses the common attributes and separate launcher normalization. Root owns commit-based export. App adopted the three merged library pins.",
+        "source_verification": "The delivery cards record the local source/export checks and library tree equality. The merged App gradlew.bat diff is empty when ignoring line endings.",
+        "merge": "Maplib 67, maplibui 49 and EasyPicker 6 precede App 90. Publisher 8 and Root 281 complete the scoped chain.",
+        "runtime_verification": "The scope is source and export handling. Product runtime has its own acceptance.",
+        "release": "The delivery is Git adoption of the policy. APK publication is outside the change.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+            "path": "update-reports/entries/android-20261102-git-eol.md"
+          },
+          {
+            "repository": ".",
+            "revision": "9ea75a2ce33315e1e922e6852bf0b0213df80bf7",
+            "path": "docs/update-reports/entries/lisa-20261102-git-eol-export.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

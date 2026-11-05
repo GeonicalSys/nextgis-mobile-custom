@@ -17,14 +17,42 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "unknown",
-    "source_verification": "UNKNOWN",
-    "merge": "unknown",
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "merged",
     "runtime_verification": "NOT_RUN",
     "release": "not_applicable",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep each reviewed scope and its original guards. Re-review semantics when the underlying source drifts."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The reviewed source catalogue is in use. Complete interface coverage and device behavior remain open.",
+        "implementation": "App 85 added producer, transformation and widget guards. App 87 extended the form, attachment and project wording evidence.",
+        "source_verification": "The reviewed slices carry their original guards and static checks. The source rule distinguishes device fix, camera, viewport, geometry and input coordinates.",
+        "merge": "App 85 merged at b193e2d6 and App 87 at 0f55e62f. Their dated Draft statements are historical.",
+        "runtime_verification": "Source guards cover recorded bindings. Timezone, locale, private form values, Cancel and the wider device matrix retain separate acceptance.",
+        "release": "The scope is source documentation. Product publication follows its own delivery chain.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "b193e2d6d81f1cc2b4b39bc37fcf3a9f0193672e",
+            "path": "update-reports/entries/android-20261029-ui-contracts.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "0f55e62fe27cc0f16b48080a7c35495b58e0e583",
+            "path": "docs/registry/ui-contracts.json"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "0f55e62fe27cc0f16b48080a7c35495b58e0e583",
+            "path": "update-reports/entries/android-20261101-form-date-values-map.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

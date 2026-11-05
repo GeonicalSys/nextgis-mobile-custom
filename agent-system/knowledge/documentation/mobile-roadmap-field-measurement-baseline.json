@@ -22,9 +22,27 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Preserve the named measurements and avoid aggregating incomparable scenes or devices."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The agreed real project and device baseline is still required before general acceleration claims.",
+        "implementation": "The map-performance and diagnostic receipts give scoped examples. The combined sync, map, memory, disk and energy baseline remains a proposal.",
+        "source_verification": "Keep exact source, APK, project, device, network, configuration and sample provenance. Existing scenes each have narrower oracles.",
+        "merge": "Measure the baseline on its declared source frame before selecting a candidate optimization.",
+        "runtime_verification": "Collect the agreed cold/warm and change-volume matrix on authorized real data. Separate synthetic technical load and physical measurements.",
+        "release": "Measured budgets are an acceptance input rather than a product release.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/map-performance.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

@@ -17,14 +17,42 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "unknown",
-    "source_verification": "UNKNOWN",
-    "merge": "unknown",
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "merged",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep Full attempts, 224 public readback and withdrawal, and the T40 scope and independent expected order."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The original styles and tracks package and later layer-order correction are distinct deliveries. Full and real-map coverage for the later route remain open.",
+        "implementation": "App 78 delivered styles, track actions and chooser changes with maplib 60/maplibui 44. App 84 adopted the later canonical relative-order correction.",
+        "source_verification": "The source builds and version checks apply to their named pins. The order correction has separate planner and native case evidence after the initial failure.",
+        "merge": "App 78–80 and library 60/44 merged for the original package. App 84 merged at 69edfe78 with maplib 62 for the later source.",
+        "runtime_verification": "Phone Full11 passed on its fingerprint. Tablet failures and interrupted runs remain distinct. The T40 focused cases and smoke leave nested/recreation and real-project completeness open.",
+        "release": "224 was published by exception and later withdrawn. The later source delivery has its own unpublished candidate and acceptance.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-release-fixes-2026-10-26.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "69edfe78e1ac41c8c1418ea44cbb86f3e0e6657e",
+            "path": "docs/roadmap/mobile.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-crash-224-2026-10-27.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

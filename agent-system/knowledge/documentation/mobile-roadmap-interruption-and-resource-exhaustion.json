@@ -22,9 +22,27 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the baseline measurements with their versions, and preserve the previous database and queued work in any future acceptance."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Keep the cross-operation budget and safe resume work open for sync staging, disk, geometry and walk checkpoints.",
+        "implementation": "The existing streaming pull and whole-checkpoint walk storage are the baselines. Budgeting every stage and an ordered final flush remain proposed work.",
+        "source_verification": "The reliability audit's source and checkpoint measurements describe their earlier inputs. The roadmap calls for proof of ENOSPC and the order of checkpoint persistence.",
+        "merge": "The proposed combined change has no evidenced merge in the reviewed roadmap frame.",
+        "runtime_verification": "Process kill, reboot, permission loss, cancellation and resumed work require independent observations with preserved data and queue checks.",
+        "release": "No combined release is established by the earlier diagnostics.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-reliability-audit.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

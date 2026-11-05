@@ -22,9 +22,20 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep last meeting, server freshness and neighbor/server confirmation separate."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposal follows two-device acceptance. First establish forwarding through A, B, C and the server.",
+        "implementation": "Automatic exchange follows the convergence pilot. Preserve off, manual and automatic modes and sufficient confirmation before pruning.",
+        "source_verification": "The oracle compares repeats, gaps, conflicts, quotas and retained unconfirmed operations. Topology and concurrency await the pilot.",
+        "merge": "Multi-hop and automatic operation require distinct delivery evidence.",
+        "runtime_verification": "Verify re-encounter, update/delete, direct-server reachability and observed battery use.",
+        "release": "Release gates follow the measured modes and verified convergence."
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

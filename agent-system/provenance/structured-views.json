@@ -81,13 +81,13 @@
     },
     "docs/registry/ecosystem.yaml": {
       "layout_id": "lisa:mobile:metadata:ecosystem-registry",
-      "sha256_utf8_lf": "de24739d58fac4a41dbd686a69e9b5ac6dfbffd434e9e90b89aef14642ca7185",
+      "sha256_utf8_lf": "8b9108712bc2bb0a08f3e3ea08e88eea03e52dc81234f5287a1a50b15c00e981",
       "source_fingerprints": {
         "agent-system/provenance/sectioned-docs-registries.json": "1cae6c05e81c279fff124b0723959efe0ebac368e90baf7a5ab2d0bb3e2f0f35",
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "421cd97cb0bbbebaf59e3022644926eb88f22e99f2e1ba0a22c6ee9dc73dc4f2",
+      "ordered_records_sha256": "b57d13de6503cd719b2c06a0def31f100027669833c8043965b435403777b550",
       "ordered_count": 15
     },
     "docs/registry/change-impact.yaml": {

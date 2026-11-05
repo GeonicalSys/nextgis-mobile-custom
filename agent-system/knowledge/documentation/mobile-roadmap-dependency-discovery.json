@@ -18,13 +18,41 @@
   "lifecycle": {
     "goal": "open",
     "implementation": "implemented",
-    "source_verification": "UNKNOWN",
+    "source_verification": "PASS",
     "merge": "merged",
     "runtime_verification": "NOT_APPLICABLE",
     "release": "not_applicable",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the two MOB-02 identities, original conditions and dated follow-up witnesses. The shared audit questions keep their owner."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The App discovery entrance is delivered. It keeps independent analysis and the shared unresolved dependency questions in scope.",
+        "implementation": "App 83 routes changes to the LISA whole-source planner. Follow-up storage, journal, lookup, prefetch and failure-message evidence has its own scope.",
+        "source_verification": "The merged entry and its source/documentation receipt verify the procedure. Dated fix and audit checks keep their exact inputs and separate UNKNOWN or NOT_RUN outcomes.",
+        "merge": "App 83 merged at bf16ea71. Later App and library deliveries follow the individual task receipts and adopted pins.",
+        "runtime_verification": "The entry is a source workflow. Disk restart, loss recovery, native device and tenant outcomes require their own evidence.",
+        "release": "There is no release stage for the discovery entrance.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "bf16ea7154624939e33f26c2d35d620bf7b1eb27",
+            "path": "update-reports/entries/android-20261027-dependency-discovery-bridge.md"
+          },
+          {
+            "repository": ".",
+            "revision": "071eea24e02cf793a4e96e66077fe815f0cd8286",
+            "path": "plugins/geonical-docs/guides/scenario-dependencies.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "57fb5dbabbc17afa136ec8ada1bbf927a600499a",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

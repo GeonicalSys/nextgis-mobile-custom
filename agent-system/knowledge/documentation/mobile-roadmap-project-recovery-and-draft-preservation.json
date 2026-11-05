@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the original draft bytes and backup policy separate from any proposed recovery mechanism."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Keep the P0 original-draft safeguard separate from the P1 complete offline project recovery.",
+        "implementation": "FeatureFormDraftStore at the adopted pin still calls clear on corrupt JSON. Existing format 2 layer backup covers a narrower layer and attachment recovery.",
+        "source_verification": "The draft store blob matches the original roadmap source at the adopted pin. Full project contents and replay admission require independent evidence.",
+        "merge": "The pin establishes the currently delivered draft behavior. The quarantine and full-archive gates remain open.",
+        "runtime_verification": "Offline restore, attachment hashes, mismatched identity, disk shortage and non-delivery of restored queued changes still require a separate copy and acceptance.",
+        "release": "A future release needs verified recovery evidence at its own frame.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp/maplibui",
+            "revision": "69cccf208689c2e443994aca123c4b5ebeab0a50",
+            "path": "src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/runbooks/incident-and-rollback.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

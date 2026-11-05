@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep the old offline failure and unresolved freshness question distinct."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Keep the freshness and correctness matrix open, with the old offline blocker in its historical source frame.",
+        "implementation": "App 89 adopts the maplib 66 removal of the HTTP provider. Old render metadata is inert for direct SQLite sources. The older URL invalidation hypothesis belongs to the retired route.",
+        "source_verification": "The removal and current route are source-backed. Freshness after edits, deletions and cross-project ID reuse still needs the direct route's own evidence.",
+        "merge": "Maplib 66 and maplibui 48 reached App 89. That merge covers transport retirement.",
+        "runtime_verification": "The 67f0125 offline HTTP failure remains a historical reproduction. Test direct offline project switches, geometry, label and identify together on the accepted route.",
+        "release": "A future APK release requires its own direct route acceptance.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "update-reports/entries/maplib-20261102-remove-loopback-tiles.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-full-2026-10-25.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

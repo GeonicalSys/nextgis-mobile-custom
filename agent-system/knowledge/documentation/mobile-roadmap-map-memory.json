@@ -17,14 +17,42 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "unknown",
+    "implementation": "implemented",
     "source_verification": "UNKNOWN",
-    "merge": "unknown",
+    "merge": "merged",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Keep sampled native ownership, failed and partial measurements, and independent ordinary-vector versus track scopes."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The guard and SQLite rendering changes are delivered in source. The physical 2 GiB, duration, warning and heavy-map gates remain open.",
+        "implementation": "The App 82/84 chain delivers memory policy, direct reads and queue work. App 89 adopts loopback retirement and the warning layout follow-up.",
+        "source_verification": "The named allocation, D101, dense-scene, cache recovery and later compile receipts use different builds. The speed or memory results apply to their own scenes and inputs.",
+        "merge": "App 82 and 84 adopted earlier library pins. App 89 adopts maplib 66 and maplibui 48 for the direct route.",
+        "runtime_verification": "T40 and A56 diagnostics and the software run provide bounded measurements. SM-X115, the complete 2 GiB workload and final warning/release matrix still need evidence.",
+        "release": "The private builds and 225 release preparation have separate acceptance and publication states.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/map-performance.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-crash-224-2026-10-27.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "f05ded46154ee3a0028b664c2f16baf62b7df776",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

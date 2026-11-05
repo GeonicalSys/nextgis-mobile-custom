@@ -17,14 +17,42 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "unknown",
+    "implementation": "implemented",
     "source_verification": "UNKNOWN",
-    "merge": "unknown",
-    "runtime_verification": "UNKNOWN",
+    "merge": "merged",
+    "runtime_verification": "NOT_RUN",
     "release": "unpublished",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Retain the signed b165046d artifacts, distinct fingerprints and failure evidence before any retest."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Release 3.1.2.31/225 awaits final candidate acceptance and a separate publication order.",
+        "implementation": "The version bump and signed b165046d candidate preceded direct SQLite routing, Debug underlay progress and warning layout changes.",
+        "source_verification": "The first version matrix and signed artifacts belong to b165046d. The later candidate has compile and static evidence. The final APK matrix and new regression execution remain open.",
+        "merge": "App 88 merged at b165046d. App 89 merged at f05ded46 with maplib 66 and maplibui 48 pins. App 90 updates the line-ending chain.",
+        "runtime_verification": "The b165046d Full recorded 256 passes and 17 failures. The later source has no fresh Full or device acceptance. SM-X115 was explicitly excluded from the earlier run.",
+        "release": "225 remains unpublished. Publisher dry-run and Check-Publication are separate admission steps.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-release-3.1.2.31-2026-11-01.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/handoffs/2026-11-01-mobile-release-31231.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "f05ded46154ee3a0028b664c2f16baf62b7df776",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"

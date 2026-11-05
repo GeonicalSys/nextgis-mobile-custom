@@ -22,9 +22,20 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep independent lifecycle scope and original roadmap wording."
+    "retention": "Retain simple project selection and the separate detail route."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposal makes the fate of individual edits and attachments observable.",
+        "implementation": "Use existing queue and recovery states. Keep saved, waiting, needs reconciliation, server confirmed and any future peer stage distinct.",
+        "source_verification": "Check partial completion, targeted retry and operation identity independently of project list counts.",
+        "merge": "The proposed center needs separate UI and queue delivery evidence.",
+        "runtime_verification": "Verify that a field user can locate and retry one pending edit without resaving the form.",
+        "release": "Release scope follows the approved center and its actual queue acceptance."
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/mobile.md"
