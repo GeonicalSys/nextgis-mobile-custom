@@ -115,22 +115,27 @@ class ProseKnowledgeTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Invalid module manifest reference list"):
             MANIFEST_PROJECTOR["project_manifest"](owner, module_id=EASYPICKER_MODULE)
 
-    def test_generated_easypicker_manifest_requires_proof(self):
-        owner = self.owner / "easypicker"
+    def test_generated_library_manifests_require_proof(self):
         script = self.owner / MANIFEST_SCRIPT
         script.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(APP / MANIFEST_SCRIPT, script)
-        view = owner / "docs/manifest.yaml"
-        view.parent.mkdir(parents=True)
-        view.write_text("schema_version: 1\n", encoding="utf-8")
-        self.assertFalse(STRUCTURED_PROOF["library_view_declared"](owner))
-        view.write_text(
-            "# Generated from agent-system/knowledge/easypicker-module-manifest.\nschema_version: 1\n",
-            encoding="utf-8",
-        )
-        self.assertTrue(STRUCTURED_PROOF["library_view_declared"](owner))
-        with self.assertRaises(FileNotFoundError):
-            STRUCTURED_PROOF["check_proof"](owner, module_id=EASYPICKER_MODULE)
+        for module_id in (EASYPICKER_MODULE, "maplib", "maplibui"):
+            with self.subTest(module=module_id):
+                profile = MANIFEST_PROJECTOR["PROFILES"][module_id]
+                owner = self.owner / Path(profile.owner).name
+                view = owner / profile.view
+                view.parent.mkdir(parents=True)
+                view.write_text("schema_version: 1\n", encoding="utf-8")
+                self.assertFalse(STRUCTURED_PROOF["library_view_declared"](owner, module_id=module_id))
+                if module_id == EASYPICKER_MODULE:
+                    self.assertFalse(STRUCTURED_PROOF["library_view_declared"](owner))
+                view.write_text(
+                    MANIFEST_PROJECTOR["generated_heading"](module_id) + "\nschema_version: 1\n",
+                    encoding="utf-8",
+                )
+                self.assertTrue(STRUCTURED_PROOF["library_view_declared"](owner, module_id=module_id))
+                with self.assertRaises(FileNotFoundError):
+                    STRUCTURED_PROOF["check_proof"](owner, module_id=module_id)
 
     def comparison_layout(self):
         layout = self.owner / PROJECTOR["DIRECTORY"] / "official-differences.json"

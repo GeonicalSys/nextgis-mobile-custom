@@ -28,18 +28,18 @@ def value_hash(value) -> str:
     return sha256(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def library_view_declared(owner: Path) -> bool:
+def library_view_declared(owner: Path, *, module_id: str = EASYPICKER_MODULE) -> bool:
     proof = owner / PROOF
     if proof.exists() or proof.is_symlink():
         return True
     projector = runpy.run_path(str(owner.parent / MODULE_PROJECTOR))
-    view = owner / projector["PROFILES"][EASYPICKER_MODULE].view
+    view = owner / projector["PROFILES"][module_id].view
     with view.open(encoding="utf-8") as stream:
-        return stream.readline().rstrip("\n") == projector["generated_heading"](EASYPICKER_MODULE)
+        return stream.readline().rstrip("\n") == projector["generated_heading"](module_id)
 
 
 def structured_views(owner: Path, *, module_id: str = "app"):
-    if module_id == EASYPICKER_MODULE:
+    if module_id != "app":
         projector = runpy.run_path(str(owner.parent / MODULE_PROJECTOR))
         profile = projector["PROFILES"][module_id]
         manifest = projector["project_manifest"](owner, module_id=module_id)
@@ -69,8 +69,12 @@ def structured_views(owner: Path, *, module_id: str = "app"):
 
 def build_proof(owner: Path, *, module_id: str = "app") -> dict:
     is_app = module_id == "app"
-    owner_id = OWNER if is_app else OWNER + "/easypicker"
     scripts_owner = owner if is_app else owner.parent
+    if is_app:
+        owner_id = OWNER
+    else:
+        profiles = runpy.run_path(str(scripts_owner / MODULE_PROJECTOR))["PROFILES"]
+        owner_id = profiles[module_id].owner
     result = {}
     for view, topic, layout_id, projector, rendered in structured_views(owner, module_id=module_id):
         expected = rendered.encode("utf-8")
@@ -112,11 +116,12 @@ def main() -> int:
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--write", action="store_true")
-    parser.add_argument("--module", choices=("app", EASYPICKER_MODULE), default="app")
-    args = parser.parse_args()
     owner = Path(__file__).resolve().parents[2]
-    if args.module == EASYPICKER_MODULE:
-        owner /= "easypicker"
+    profiles = runpy.run_path(str(owner / MODULE_PROJECTOR))["PROFILES"]
+    parser.add_argument("--module", choices=tuple(profiles), default="app")
+    args = parser.parse_args()
+    if args.module != "app":
+        owner /= Path(profiles[args.module].owner).name
     try:
         if args.write:
             proof = build_proof(owner, module_id=args.module)

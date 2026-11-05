@@ -14,9 +14,16 @@ DIRECTORY = Path("agent-system/knowledge/documentation")
 MANIFEST = Path("agent-system/provenance/documentation.json")
 SECTION_ID = re.compile(r"lisa:mobile:(resource|evidence|task):([a-z0-9][a-z0-9_.-]*)")
 EASYPICKER_MODULE = "easypicker-module"
-EASYPICKER_PATH = Path("easypicker")
-EASYPICKER_VIEWS = {PurePosixPath("README.md"), PurePosixPath("docs/README.md")}
-EASYPICKER_SECTION_ID = re.compile(r"lisa:easypicker:(resource|evidence|task):([a-z0-9][a-z0-9_.-]*)")
+LIBRARY_READMES = {PurePosixPath("README.md"), PurePosixPath("docs/README.md")}
+LIBRARY_TOPICS = "resource|contract|evidence|risk|note"
+LIBRARY_DOCS = {
+    EASYPICKER_MODULE: ("easypicker", LIBRARY_READMES, "resource|evidence|task"),
+    "maplib": ("maplib", LIBRARY_READMES | {
+        PurePosixPath("docs/sqlite-vector-source-bridge.md"),
+        PurePosixPath("docs/sqlite-vector-tile-buffer.md"),
+    }, LIBRARY_TOPICS),
+    "maplibui": ("maplibui", LIBRARY_READMES, LIBRARY_TOPICS),
+}
 
 
 def markdown_lines(facets: dict, key: str, name: str) -> list[str]:
@@ -28,10 +35,13 @@ def markdown_lines(facets: dict, key: str, name: str) -> list[str]:
 
 
 def project_documents(owner: Path, *, module_id: str = "app") -> dict[PurePosixPath, str]:
-    if module_id == EASYPICKER_MODULE:
-        owner_id, section_id = OWNER + "/" + EASYPICKER_PATH.as_posix(), EASYPICKER_SECTION_ID
-    elif module_id == "app":
+    expected_views = None
+    if module_id == "app":
         owner_id, section_id = OWNER, SECTION_ID
+    elif module_id in LIBRARY_DOCS:
+        namespace, expected_views, kinds = LIBRARY_DOCS[module_id]
+        owner_id = f"{OWNER}/{namespace}"
+        section_id = re.compile(rf"lisa:{namespace}:({kinds}):([a-z0-9][a-z0-9_.-]*)")
     else:
         raise ValueError(f"Unknown module documentation projection: {module_id}")
     manifest = json.loads((owner / MANIFEST).read_bytes())
@@ -60,7 +70,7 @@ def project_documents(owner: Path, *, module_id: str = "app") -> dict[PurePosixP
     for source in manifest["sources"]:
         view = PurePosixPath(source["path"])
         allowed = (
-            view in EASYPICKER_VIEWS if module_id == EASYPICKER_MODULE
+            view in expected_views if expected_views is not None
             else view.parts[:1] == ("docs",) or view == PurePosixPath("app/docs/README.md")
         )
         if not allowed or view.suffix != ".md" or ".." in view.parts or "\\" in str(view) or view in documents:
@@ -91,8 +101,8 @@ def project_documents(owner: Path, *, module_id: str = "app") -> dict[PurePosixP
                 raise ValueError(f"Nested documentation section: {identity}")
             lines.extend(markdown_lines(section["facets"], "body", section_name))
         documents[view] = "\n".join(lines)
-    if module_id == EASYPICKER_MODULE and documents.keys() != EASYPICKER_VIEWS:
-        raise ValueError("EasyPicker requires both documentation views")
+    if expected_views is not None and documents.keys() != expected_views:
+        raise ValueError(f"Incomplete documentation views for {module_id}")
     if {path.relative_to(owner / DIRECTORY).as_posix()
             for path in (owner / DIRECTORY).rglob("*.json")} != expected:
         raise ValueError("Documentation manifest and record membership differ")
@@ -109,12 +119,12 @@ def main() -> int:
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--write", action="store_true")
-    parser.add_argument("--module", choices=("app", EASYPICKER_MODULE), default="app")
+    parser.add_argument("--module", choices=("app", *LIBRARY_DOCS), default="app")
     args = parser.parse_args()
     owner = Path(__file__).resolve().parents[2]
     module_readme = PurePosixPath("app/docs/README.md")
-    if args.module == EASYPICKER_MODULE:
-        owner /= EASYPICKER_PATH
+    if args.module in LIBRARY_DOCS:
+        owner /= LIBRARY_DOCS[args.module][0]
         module_readme = PurePosixPath("docs/README.md")
     try:
         documents = project_documents(owner, module_id=args.module)

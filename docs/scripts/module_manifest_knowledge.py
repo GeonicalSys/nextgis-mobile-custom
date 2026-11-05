@@ -44,6 +44,8 @@ PROFILES = {
         OWNER + "/easypicker", "easypicker", "easypicker-module-manifest", Path("docs/manifest.yaml"),
         frozenset({"settings_refs", "invariant_refs", "upstream_hotspots"}),
     ),
+    "maplib": ManifestProfile(OWNER + "/maplib", "maplib", "maplib-module-manifest", Path("docs/manifest.yaml")),
+    "maplibui": ManifestProfile(OWNER + "/maplibui", "maplibui", "maplibui-module-manifest", Path("docs/manifest.yaml")),
 }
 
 

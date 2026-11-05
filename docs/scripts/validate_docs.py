@@ -906,25 +906,25 @@ def validate_module_packs(
             except (OSError, ValueError, KeyError, TypeError) as exc:
                 validation.error(manifest.as_posix(), f"App module manifest projection failed: {exc}")
                 continue
-        elif owned_app_pack and module_id == "easypicker-module":
+        elif owned_app_pack and module_id in {"easypicker-module", "maplib", "maplibui"}:
             try:
+                projector = runpy.run_path(str(Path(__file__).with_name("module_manifest_knowledge.py")))
+                profile = projector["PROFILES"][module_id]
+                if pack_root != workspace / Path(profile.owner).name:
+                    raise ValueError(f"Unexpected pack path for {module_id}")
                 proof = runpy.run_path(str(Path(__file__).with_name("structured_view_proof.py")))
-                if proof["library_view_declared"](pack_root):
-                    if pack_root != workspace / "easypicker":
-                        raise ValueError("Unexpected EasyPicker pack path")
+                if proof["library_view_declared"](pack_root, module_id=module_id):
                     proof["check_proof"](pack_root, module_id=module_id)
-                    projector = runpy.run_path(str(Path(__file__).with_name("module_manifest_knowledge.py")))
                     manifest_data = projector["project_manifest"](pack_root, module_id=module_id)
                     prose = runpy.run_path(str(Path(__file__).with_name("prose_knowledge.py")))
                     documents = prose["project_documents"](pack_root, module_id=module_id)
                     for path, text in documents.items():
                         prose["check_generated"](pack_root / path, text)
+                        if pack_root / path != readme:
+                            validate_markdown_links(pack_root / path, workspace, validation, text=text)
                     readme_text = documents[PurePosixPath("docs/README.md")]
-                    validate_markdown_links(
-                        pack_root / "README.md", workspace, validation, text=documents[PurePosixPath("README.md")]
-                    )
             except (OSError, ValueError, KeyError, TypeError) as exc:
-                validation.error(manifest.as_posix(), f"EasyPicker module pack projection failed: {exc}")
+                validation.error(manifest.as_posix(), f"{module_id} module pack projection failed: {exc}")
                 continue
         validate_manifest(
             manifest,
