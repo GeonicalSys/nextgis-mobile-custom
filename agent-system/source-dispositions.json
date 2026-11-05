@@ -3,7 +3,7 @@
   "entries": [
     {
       "path": "agent-system/policy-migration.json",
-      "sha256": "99c4fd1d3a6557a94afd257034ff5581ee072f001cf0af1f638da9c12e528110",
+      "sha256": "14592ea5641c6354755fffa07f7af4387a06d777d9f1eaf237d5adde4c55d8be",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -178,6 +178,26 @@
         "agent-system/knowledge/documentation"
       ],
       "reason": "Checkpoint inventory of App prose addresses, types and pilot consumers at the pinned App revision."
+    },
+    {
+      "path": "CONTEXT_INSTRUCTION.md",
+      "sha256": "e60415a810f4a6fa9a9e25366ee6cca59401c8b6fc330bbf0ffb8915b5e9ffde",
+      "sha256_scope": "utf8_lf",
+      "category": "working_bridge",
+      "reason": "Compatibility address for older App chats and bookmarks. The maintained App entry, module packs and documentation carry the operating instructions. Retain the address until actual client delivery has been checked.",
+      "applies_to": [
+        "CONTEXT_INSTRUCTION.md",
+        "AGENTS.md",
+        "docs/START-HERE.md",
+        "docs/registry/change-impact.yaml",
+        "docs/registry/invariants.yaml",
+        "docs/registry/upstream-overlaps.yaml",
+        "docs/architecture/lisa-ecosystem.md",
+        "docs/registry/ecosystem.yaml",
+        "docs/reference/fork-customizations.md",
+        "docs/README.md",
+        "tools/docs-check.ps1"
+      ]
     },
     {
       "path": "CUSTOMIZATIONS.md",
