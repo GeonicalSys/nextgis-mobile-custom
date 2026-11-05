@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep the original roadmap action and review each lifecycle independently."
+    "retention": "Keep the local immutable contract and the current shared asset identity until a new contract is accepted."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Remote underlay refresh depends on an agreed new server specification.",
+        "implementation": "Local underlays retain the immutable_local contract and shared asset references. The manual Debug import is a separate path.",
+        "source_verification": "A future specification needs manifest, version and hash checks and an atomic replacement plan. Existing local import evidence covers its own archive and cache.",
+        "merge": "The shared asset and local import route is in the adopted source. Server refresh remains pending specification.",
+        "runtime_verification": "Verify incomplete download, rollback and retained active project references after authorization.",
+        "release": "A remote update release follows the specification and separately verified client compatibility.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/shared-underlays.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/collector.md"

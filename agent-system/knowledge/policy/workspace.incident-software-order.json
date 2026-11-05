@@ -22,15 +22,38 @@
     "unknown_behavior": "include_with_unknown_reason"
   },
   "lifecycle": {
-    "goal": "unknown",
-    "implementation": "unknown",
-    "source_verification": "UNKNOWN",
-    "merge": "unknown",
-    "runtime_verification": "UNKNOWN",
-    "release": "unknown",
-    "retention": "Retain exact source and individual review; historical narrative is not fresh evidence or authority."
+    "goal": "complete",
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "merged",
+    "runtime_verification": "FAIL",
+    "release": "not_applicable",
+    "retention": "Keep the approval, actual renderer, failed render assertion and host interruption as separate evidence."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The dated order admitted software-only continuation of the October 27 incident.",
+        "implementation": "The App runner enforces explicit emulator admission and checks the actual software renderer, including a borrowed AVD.",
+        "source_verification": "The saved receipt records 72 runner checks, including five new source/unit cases.",
+        "merge": "The guard and its delivery card are included in App 82 at 4bd9f7d9.",
+        "runtime_verification": "The named software Related run verified SwiftShader and the gesture workload, then failed the final MVT rendering assertion. Full01 later interrupted during AVD startup.",
+        "release": "The order concerns a historical test attempt. It has no publication stage.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-crash-224-2026-10-27.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "4bd9f7d981ebd444a6821891b6a2b4ec962efcc8",
+            "path": "update-reports/entries/android-20261027-emulator-host-safety.md"
+          }
+        ]
+      }
+    },
     "body": {
       "role": "historical_order",
       "value": "Владелец\nразрешил software-only проверки и запретил аппаратный режим."

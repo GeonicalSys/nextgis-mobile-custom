@@ -22,9 +22,37 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep the original roadmap action and review each lifecycle independently."
+    "retention": "Keep the configuration read, feature-data sync and destructive rebuild boundaries separate."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposed unification covers configuration hashes and consistent soft/hard change classification.",
+        "implementation": "Current form hash, required metadata and feature-data sync have separate paths. Known resource class correction can update metadata without refilling a layer.",
+        "source_verification": "The existing hash and class repair source checks apply to their declared fields. The common config classification needs a distinct review of form, schema and style changes.",
+        "merge": "App adopts the class-metadata repair through maplib 64. Delivery of the proposed general config classifier remains open.",
+        "runtime_verification": "Verify offline required metadata and safe behavior for missing or incomplete snapshots when the new scope is authorized.",
+        "release": "Release requires the chosen classifier's own contract and checks.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "update-reports/entries/maplib-20261101-class-metadata-repair.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/collector.md"

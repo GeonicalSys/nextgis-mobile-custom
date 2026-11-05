@@ -22,15 +22,33 @@
     "unknown_behavior": "include_with_unknown_reason"
   },
   "lifecycle": {
-    "goal": "unknown",
-    "implementation": "unknown",
-    "source_verification": "UNKNOWN",
-    "merge": "unknown",
+    "goal": "complete",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
     "runtime_verification": "UNKNOWN",
-    "release": "unknown",
-    "retention": "Retain exact source and individual review; historical narrative is not fresh evidence or authority."
+    "release": "not_applicable",
+    "retention": "Keep the reported host change, retry conditions and run outcomes separate. Later product authority follows the current order."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The dated retry order was acted on under the same software-only conditions after the reported host change.",
+        "implementation": "This was a bounded historical run order. The user's report of disabled undervolting remains evidence of their action.",
+        "source_verification": "The retry receipt records the owner's host change and run conditions. The cause of the hang remains unresolved.",
+        "merge": "Source delivery of the runner guard belongs to the previous software order.",
+        "runtime_verification": "Full02 stopped before AVD because the phone was missing. Full03 started after reconnect and confirmed SwiftShader. The saved retry account has no completed Full result.",
+        "release": "The retry order has no release stage.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-crash-224-2026-10-27.md"
+          }
+        ]
+      }
+    },
     "body": {
       "role": "historical_order",
       "value": " После новой перезагрузки владелец сообщил об\nотключении андервольтинга и явно поручил продолжить задачу без изменения условий.\nЭта авторизация действует для текущего продолжения; "

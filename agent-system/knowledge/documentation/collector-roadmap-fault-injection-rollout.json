@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep the original roadmap action and review each lifecycle independently."
+    "retention": "Keep journal, partial-layer state and original .ngrc evidence distinct."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The rollout still requires a real large mobile project and the complete interruption matrix.",
+        "implementation": "CollectorImportJournal keeps the target UID and expected batch. The partial marker and repair policy preserve loaded layers and retry missing or corrupt ones.",
+        "source_verification": "The source path and earlier resumable-import statements establish the prerequisites. The device fault matrix is still open.",
+        "merge": "The adopted source contains resumable import. The rollout and any discovered fixes have their own delivery state.",
+        "runtime_verification": "Verify process kill, reboot, network loss, space shortage and APK update over an unpacked .ngrc on the authorized device and project.",
+        "release": "Use rollout evidence only for its actual APK, data and failure points.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplibui",
+            "revision": "69cccf208689c2e443994aca123c4b5ebeab0a50",
+            "path": "src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/collector.md"

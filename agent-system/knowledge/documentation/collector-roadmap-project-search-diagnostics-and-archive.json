@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep the original roadmap action and review each lifecycle independently."
+    "retention": "Preserve the simple quick picker and distinguish project diagnostics from destructive workspace actions."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The broader search, diagnostics and archive workflow still needs scope and acceptance.",
+        "implementation": "Existing settings show project identity and change counts. Quick selection stays name-only, with the active project marked and storage operations owned by the registry.",
+        "source_verification": "Check existing selector and registry behavior before admitting search, diff summary, explicit sync and archive actions.",
+        "merge": "The existing registry and settings are in the adopted frame. The combined workflow has its own delivery.",
+        "runtime_verification": "Verify project selection during active recording, diagnostics permissions and archive/return on the agreed projects.",
+        "release": "A release follows the accepted scope of each added action.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplibui",
+            "revision": "69cccf208689c2e443994aca123c4b5ebeab0a50",
+            "path": "src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/collector.md"

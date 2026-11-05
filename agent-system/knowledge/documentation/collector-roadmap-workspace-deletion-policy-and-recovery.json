@@ -22,9 +22,37 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep the original roadmap action and review each lifecycle independently."
+    "retention": "Keep the local workspace, remote resource, shared underlay references and backup retention separate."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The safe local delete path is in source. Full workspace archive and manual recovery remain separate goals.",
+        "implementation": "ProjectSettingsActivity passes a changed-NGW-layer backup callback. The registry checks the operation lease, active UID and recording before local deletion and fallback. Remote resource and account ownership stay separate.",
+        "source_verification": "The adopted source establishes the local operation boundary and fallback states. The roadmap's archive and restore outcomes need distinct checks.",
+        "merge": "The existing local delete path is included at the adopted maplibui pin.",
+        "runtime_verification": "Verify close, fallback activation, storage failure, registry readback and manual recovery on an authorized copy.",
+        "release": "Release acceptance for archive or recovery follows its own data-preservation proof.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplibui",
+            "revision": "69cccf208689c2e443994aca123c4b5ebeab0a50",
+            "path": "src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/collector.md"

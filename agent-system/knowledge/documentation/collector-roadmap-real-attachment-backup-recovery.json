@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep the original roadmap action and review each lifecycle independently."
+    "retention": "Keep the original project, backup manifest and recovered data as separate evidence."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The next action is recovery from backup with actual attachment sets.",
+        "implementation": "LayerBackupManager already protects the destructive gate. Backup creation and attachment fetch or staging use separate contracts.",
+        "source_verification": "The existing source and technical backup witnesses have their own scope. Recovery needs independent inventory, identity and attachment hashes.",
+        "merge": "The backup gate is present at the adopted maplibui pin. The real recovery scenario remains open.",
+        "runtime_verification": "Exercise restore on a separate authorized copy, including missing or damaged attachments and failed backup behavior.",
+        "release": "Release evidence must identify the exact backup format and recovery path.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplibui",
+            "revision": "69cccf208689c2e443994aca123c4b5ebeab0a50",
+            "path": "src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/collector.md"

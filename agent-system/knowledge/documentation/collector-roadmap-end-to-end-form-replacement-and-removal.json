@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep the original roadmap action and review each lifecycle independently."
+    "retention": "Keep hash, form body and exact prior files as independent recovery evidence."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The next action is actual end-to-end acceptance for replacing and removing a form.",
+        "implementation": "The current source fetches a complete form hash, uses a file transaction and rolls back on failure. Form selection and project script state are separate.",
+        "source_verification": "Source review covers incomplete fetch and preserved local form ownership. Acceptance against real NGW forms remains open.",
+        "merge": "The adopted App and maplib source include the existing form path. The end-to-end check is still open.",
+        "runtime_verification": "Verify a real switch, removal and failure rollback with the existing form and draft preserved as appropriate.",
+        "release": "A release claim for form replacement requires its own accepted frame.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/collector.md"

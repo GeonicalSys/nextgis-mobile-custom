@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep the original roadmap action and review each lifecycle independently."
+    "retention": "Keep the retained layer and old snapshot boundaries, including repeat apply with unchanged remote data."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The outstanding goal is a composition apply acceptance matrix, including repeat apply and interruption.",
+        "implementation": "The existing path checks completeness and local identity before apply. Pending import, managed-layer ownership and the backup gate protect the working workspace.",
+        "source_verification": "Use complete-snapshot evidence to select independent add, remove, reorder, form and config assertions. Those assertions still need execution on the selected frame.",
+        "merge": "The adopted maplib pin contains the implementation. The additional acceptance work has its own delivery stage.",
+        "runtime_verification": "Run the named network-failure and replay cases under the separate mobile-project test authorization.",
+        "release": "The merge and release of a candidate depend on its own composition evidence.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/collector.md"

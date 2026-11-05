@@ -22,9 +22,32 @@
     "merge": "unknown",
     "runtime_verification": "UNKNOWN",
     "release": "unknown",
-    "retention": "Keep the original roadmap action and review each lifecycle independently."
+    "retention": "Keep partial account results, durable owner and full project clock independent."
   },
   "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The outstanding goal is a long device soak with more than one account and unreliable network.",
+        "implementation": "ProjectSyncRunner opens an isolated owning map. SyncWorkspaceSession binds callbacks, provider and service use to the workspace.",
+        "source_verification": "The source contract and current owner guards supply independent expectations for matching IDs across workspaces and distinct account outcomes.",
+        "merge": "The implemented background route is in the adopted source. A soak result has its own receipt.",
+        "runtime_verification": "Check bad network, account isolation, session restart, correct per-project status and no changes to the foreground map.",
+        "release": "The soak result applies to its declared device, accounts and APK.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/ngw-sync-and-storage.md"
+          }
+        ]
+      }
+    },
     "view-path": {
       "role": "published_markdown_path",
       "value": "docs/roadmap/collector.md"

@@ -1421,7 +1421,7 @@
           ],
           "classification": "historical_order",
           "review": "Historical bounded software-only continuation request; no standing authorization to restart native stages.",
-          "record_sha256": "251be1e9b0f0ef4a0bccad85abe9878bf6a6761a0a501b352179a6b76a2fa5df"
+          "record_sha256": "4e4b270510539b4a4ca0bdafd4b4faefad12a42bccb1f014c3bf1cf95c5de6aa"
         },
         {
           "id": "lisa:mobile:evidence:workspace.incident-software-failure",
@@ -1445,7 +1445,7 @@
           ],
           "classification": "historical_order",
           "review": "Historical user report and retry permission tied to that former continuation, not this knowledge task.",
-          "record_sha256": "3fc2d3dbfbd31dd66fa8f21275a53b6c08a86cc56bc76f41ae03b8d86c62d30a"
+          "record_sha256": "4100fa09d92b7cab1e7e2f222bc2cb87f2ab19dd808fda1b29baa1fae7fe8fc8"
         },
         {
           "id": "lisa:mobile:instruction:workspace.emulator-admission",
