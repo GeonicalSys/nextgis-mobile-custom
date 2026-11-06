@@ -911,6 +911,179 @@
         "docs/roadmap/mobile.md",
         "tools/check_update_reports.py"
       ]
+    },
+    {
+      "path": ".github/workflows/android-reliability.yml",
+      "sha256": "a4fe88b4d88c2ce8b86c53a9e65036966cda8a04d96009a7901a18168b443bf3",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected Android reliability workflow with a manual dispatch trigger. The App test runbook and local verification entry define the applicable checks.",
+      "applies_to": [
+        ".github/workflows/android-reliability.yml",
+        "docs/runbooks/automated-tests.md",
+        "tools/verify-mobile-tests.ps1"
+      ]
+    },
+    {
+      "path": ".github/workflows/docs-validate.yml",
+      "sha256": "eae7c0d0bba2dd7be41c1a13a665c3f1480ba1877fe69955feb8df74667a2bf2",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected documentation workflow with a manual dispatch trigger. It preserves the order of report, docs and impact checks for the App owner.",
+      "applies_to": [
+        ".github/workflows/docs-validate.yml",
+        "tools/docs-check.ps1",
+        "docs/scripts/validate_docs.py",
+        "docs/scripts/check_change_impact.py"
+      ]
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Keep the App repository's GPL version 3 license text at the published Git address.",
+      "applies_to": [
+        "LICENSE",
+        "README.md"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/direct-vector-configs/kvartal.json",
+      "sha256": "49d9c893b307a793592ee1bc84a7b54882857cc0d2cb17fb355bea380db831a8",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the kvartal configuration used by the direct vector rendering regression. Its original fields and renderer settings belong to the test input.",
+      "applies_to": [
+        "app/src/androidTest/assets/direct-vector-configs/kvartal.json",
+        "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+        "app/src/androidTest/assets/direct-vector-configs/provenance.json"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/direct-vector-configs/provenance.json",
+      "sha256": "5c7dc3c8b2a41c49e98d9dd0044883cea251be117949cc67bfa0f8db6fa7e497",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the historical origin and sanitization notes for all three direct vector regression configurations.",
+      "applies_to": [
+        "app/src/androidTest/assets/direct-vector-configs/provenance.json",
+        "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+        "app/src/androidTest/assets/direct-vector-configs"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/direct-vector-configs/vertexfeature_recent.json",
+      "sha256": "919188dd2c02eb77d3bb7d321c3803da502c2244e431f273cfe64c1c67ac50e3",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the vertexfeature_recent point configuration used by the direct vector rendering regression and its recorded source fields.",
+      "applies_to": [
+        "app/src/androidTest/assets/direct-vector-configs/vertexfeature_recent.json",
+        "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+        "app/src/androidTest/assets/direct-vector-configs/provenance.json"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/direct-vector-configs/vydel.json",
+      "sha256": "71faaa722cc91a00cb0d0da1699017fb339d437f387644c0c4d05ea1d88388cf",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the vydel configuration used by the direct vector rendering regression, including the original schema and renderer settings.",
+      "applies_to": [
+        "app/src/androidTest/assets/direct-vector-configs/vydel.json",
+        "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+        "app/src/androidTest/assets/direct-vector-configs/provenance.json"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/feature-types/README.md",
+      "sha256": "02d055b860f6e86c653f12e24a7101b8c1b383c663992c65ef360cc4716940bb",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the dated provenance, source scope and privacy boundary of the three standard field type fixtures.",
+      "applies_to": [
+        "app/src/androidTest/assets/feature-types/README.md",
+        "app/src/androidTest/assets/feature-types/standard-field-types.json",
+        "app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java",
+        "app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/feature-types/standard-field-types.json",
+      "sha256": "f1e8ee9c24988a631cccbc02c4c4136d66e54756a085b50eefdf9ea3d00ffed3",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected standard field type fixture read by StandardFeatureTypesTest and MapEditingToolsTest. Its field categories, expected labels and historical source hashes remain at the test asset address.",
+      "applies_to": [
+        "app/src/androidTest/assets/feature-types/standard-field-types.json",
+        "app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java",
+        "app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java",
+        "app/src/androidTest/assets/feature-types/README.md"
+      ]
+    },
+    {
+      "path": "app/src/debug/assets/ngwstyle-backup.json",
+      "sha256": "e54d1e52a299e29a63f2f980c590ec11e811299ee243988762fc2ff13db6629c",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the historical style backup in the Debug asset source set. Current runtime consumption of this backup remains UNKNOWN.",
+      "applies_to": [
+        "app/src/debug/assets/ngwstyle-backup.json",
+        "app/src/debug/assets",
+        "app/src/main/assets/ngwstyle.json"
+      ]
+    },
+    {
+      "path": "app/src/main/assets/ngwstyle.json",
+      "sha256": "f90989b0500f513aab18141bf3078b1d6a580ea93d0ecdbfc7ef83f2b71befec",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected packaged base style read by both MapFragment style loading routes. The exact renderer input remains at the app asset address.",
+      "applies_to": [
+        "app/src/main/assets/ngwstyle.json",
+        "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "docs/reference/official-differences.md"
+      ]
+    },
+    {
+      "path": "examples/project-scripts/contractor-audit/manifest.json",
+      "sha256": "6c01b26580b116310ff76c824e6c1df2799a8ce55b567d7bf8c3f71347359e43",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected manifest for the contractor audit example package. It declares schema and API versions, capabilities, layer bindings and hooks used in the documented example.",
+      "applies_to": [
+        "examples/project-scripts/contractor-audit/manifest.json",
+        "examples/project-scripts/contractor-audit",
+        "docs/architecture/project-scripts.md",
+        "docs/guides/project-scripts-user-guide.md"
+      ]
+    },
+    {
+      "path": "tools/glitchtip.json",
+      "sha256": "edc138660734e8d32cc28b39400032b33841f4fa1b0af56c0aaf2919820e9b55",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the versioned App CLI project routing and credential-file reference. The operator credential file stays in its private location.",
+      "applies_to": [
+        "tools/glitchtip.json",
+        "tools/glitchtip.py",
+        "docs/runbooks/glitchtip-triage.md"
+      ]
+    },
+    {
+      "path": "tools/mobile-test-plan.json",
+      "sha256": "cb5a0e1a486eef458c36625e90e2597e294f8022e4896530233f362028a4213a",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected native test roster read by run_mobile_tests. It records areas, device and emulator selections, isolated methods and diagnostics. Execution evidence has its own scope.",
+      "applies_to": [
+        "tools/mobile-test-plan.json",
+        "tools/run_mobile_tests.py",
+        "tools/verify-mobile-tests.ps1",
+        "tools/tests/test_mobile_test_support.py",
+        "docs/runbooks/automated-tests.md"
+      ]
     }
   ]
 }
