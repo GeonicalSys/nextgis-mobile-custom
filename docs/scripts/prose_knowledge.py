@@ -1,4 +1,4 @@
-"""Project owner documents to their established Markdown and module YAML addresses."""
+"""Project owner documents and literal scaffold inputs to their established addresses."""
 
 from __future__ import annotations
 
@@ -13,7 +13,15 @@ OWNER = "android_projects/android_gisapp"
 DIRECTORY = Path("agent-system/knowledge/documentation")
 MANIFEST = Path("agent-system/provenance/documentation.json")
 SECTION_ID = re.compile(r"lisa:mobile:(resource|evidence|task):([a-z0-9][a-z0-9_.-]*)")
-PLAIN_MARKDOWN_VIEWS = {PurePosixPath("README.md"), PurePosixPath(".github/PULL_REQUEST_TEMPLATE.md")}
+APP_SCAFFOLD_TEMPLATES = {
+    name: PurePosixPath("docs/templates/module-docs") / f"{name}.tmpl"
+    for name in ("AGENTS.md", "README.md", "manifest.yaml")
+}
+LITERAL_VIEWS = {
+    PurePosixPath("README.md"),
+    PurePosixPath(".github/PULL_REQUEST_TEMPLATE.md"),
+    *APP_SCAFFOLD_TEMPLATES.values(),
+}
 EASYPICKER_MODULE = "easypicker-module"
 LIBRARY_READMES = {PurePosixPath("README.md"), PurePosixPath("docs/README.md")}
 LIBRARY_TOPICS = "resource|contract|evidence|risk|note"
@@ -35,7 +43,9 @@ def markdown_lines(facets: dict, key: str, name: str) -> list[str]:
     return lines
 
 
-def project_documents(owner: Path, *, module_id: str = "app") -> dict[PurePosixPath, str]:
+def project_documents(
+    owner: Path, *, module_id: str = "app", only: set[PurePosixPath] | None = None
+) -> dict[PurePosixPath, str]:
     expected_views = None
     if module_id == "app":
         owner_id, section_id = OWNER, SECTION_ID
@@ -70,18 +80,22 @@ def project_documents(owner: Path, *, module_id: str = "app") -> dict[PurePosixP
 
     for source in manifest["sources"]:
         view = PurePosixPath(source["path"])
+        if only is not None and view not in only:
+            continue
         allowed = (
             view in expected_views if expected_views is not None
-            else (view.parts[:1] == ("docs",) or view == PurePosixPath("app/docs/README.md")
-                  or view in PLAIN_MARKDOWN_VIEWS)
+            else view in LITERAL_VIEWS or (
+                view.suffix == ".md"
+                and (view.parts[:1] == ("docs",) or view == PurePosixPath("app/docs/README.md"))
+            )
         )
-        if not allowed or view.suffix != ".md" or ".." in view.parts or "\\" in str(view) or view in documents:
+        if not allowed or ".." in view.parts or "\\" in str(view) or view in documents:
             raise ValueError(f"Invalid or duplicate documentation address: {source}")
         name = source["record"]
         record = read_record(name, source["id"], view, "resource")
-        if view in PLAIN_MARKDOWN_VIEWS:
+        if view in LITERAL_VIEWS:
             if "frontmatter" in record["facets"]:
-                raise ValueError(f"Unexpected frontmatter in plain Markdown view: {name}")
+                raise ValueError(f"Unexpected separate frontmatter in literal view: {name}")
             lines = []
         else:
             frontmatter = markdown_lines(record["facets"], "frontmatter", name)
@@ -103,6 +117,11 @@ def project_documents(owner: Path, *, module_id: str = "app") -> dict[PurePosixP
                 raise ValueError(f"Nested documentation section: {identity}")
             lines.extend(markdown_lines(section["facets"], "body", section_name))
         documents[view] = "\n".join(lines)
+    if only is not None:
+        if documents.keys() != only:
+            missing = ", ".join(sorted(path.as_posix() for path in only - documents.keys()))
+            raise ValueError(f"Missing documentation declarations: {missing}")
+        return documents
     if expected_views is not None and documents.keys() != expected_views:
         raise ValueError(f"Incomplete documentation views for {module_id}")
     if {path.relative_to(owner / DIRECTORY).as_posix()
@@ -113,7 +132,8 @@ def project_documents(owner: Path, *, module_id: str = "app") -> dict[PurePosixP
 
 def check_generated(view: Path, text: str) -> None:
     if view.read_bytes().replace(b"\r\n", b"\n") != text.encode("utf-8"):
-        raise ValueError(f"Generated Markdown is stale: {view}")
+        kind = "template" if view.suffix == ".tmpl" else "Markdown"
+        raise ValueError(f"Generated {kind} is stale: {view}")
 
 
 def main() -> int:

@@ -73,6 +73,11 @@ The same projector refreshes the root `README.md` for GitHub and local readers.
 The separate [historical review](knowledge/documentation-evidence/repository-readme-original.json)
 pins the earlier Git text and records the decision for each original section.
 
+Edit the three module scaffold inputs in the `scaffold-*-template.json` records
+under `knowledge/documentation/`. The App scaffold uses these records for a
+draft module pack. Run the prose projector to refresh the literal templates
+at `docs/templates/module-docs/` for independent documentation folders.
+
 For the official comparison, edit the appropriate `official-differences-*.json`
 record. `official-differences.json` carries the frontmatter and orders the
 topics through `contains` relations. Add, move or remove a topic through

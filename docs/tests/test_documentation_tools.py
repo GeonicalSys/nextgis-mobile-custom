@@ -154,6 +154,66 @@ class DocumentationToolsTest(unittest.TestCase):
             self.assertNotEqual(repeated.returncode, 0)
             self.assertIn("already exists", repeated.stderr)
 
+    def test_scaffold_reads_owner_templates_and_refuses_missing_records(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            docs = root / "docs"
+            shutil.copytree(DOCS_ROOT / "registry", docs / "registry")
+            shutil.copytree(DOCS_ROOT / "templates", docs / "templates")
+            knowledge = root / "agent-system/knowledge"
+            for name in ("modules", "repositories"):
+                shutil.copytree(WORKSPACE / "agent-system/knowledge" / name, knowledge / name)
+
+            provenance = root / "agent-system/provenance/documentation.json"
+            provenance.parent.mkdir()
+            shutil.copyfile(WORKSPACE / "agent-system/provenance/documentation.json", provenance)
+            layout = json.loads(provenance.read_bytes())
+            templates = [row for row in layout["sources"] if row["path"].endswith(".tmpl")]
+            self.assertEqual(len(templates), 3)
+            template_records = knowledge / "documentation"
+            template_records.mkdir()
+            for row in templates:
+                source = WORKSPACE / "agent-system/knowledge/documentation" / row["record"]
+                shutil.copyfile(source, template_records / source.name)
+
+            portable = docs / "templates/module-docs/README.md.tmpl"
+            portable.write_text("Portable template fixture.\n", encoding="utf-8")
+            owner_record = template_records / "scaffold-readme-template.json"
+            record = json.loads(owner_record.read_bytes())
+            record["facets"]["body"]["value"].insert(-1, "Owner template fixture.")
+            owner_record.write_text(json.dumps(record), encoding="utf-8")
+
+            (root / "app").mkdir()
+            agents = root / "app/AGENTS.md"
+            agents.write_bytes(b"Existing module instructions.\n")
+            arguments = ("app", "--workspace-root", str(root), "--docs-root", str(docs))
+            dry_run = self.run_tool(SCAFFOLD, *arguments, "--dry-run")
+            self.assertEqual(dry_run.returncode, 0, dry_run.stdout + dry_run.stderr)
+            self.assertFalse((root / "app/docs").exists())
+            created = self.run_tool(SCAFFOLD, *arguments)
+            self.assertEqual(created.returncode, 0, created.stdout + created.stderr)
+            self.assertIn("Created 2 file(s)", created.stdout)
+            self.assertEqual(agents.read_bytes(), b"Existing module instructions.\n")
+            readme = (root / "app/docs/README.md").read_text(encoding="utf-8")
+            self.assertIn("Owner template fixture.", readme)
+            self.assertNotIn("Portable template fixture.", readme)
+
+            provenance.write_text(json.dumps({**layout, "sources": templates}), encoding="utf-8")
+            validator = runpy.run_path(str(VALIDATOR))
+            validation = validator["Validation"]()
+            validator["validate_central_markdown"](docs, root, validation)
+            self.assertTrue(any("README.md.tmpl" in error and "Generated template is stale" in error
+                                for error in validation.errors))
+
+            owner_record.unlink()
+            fresh_workspace = root / "fresh"
+            (fresh_workspace / "app").mkdir(parents=True)
+            refused = self.run_tool(SCAFFOLD, "app", "--workspace-root", str(fresh_workspace),
+                                    "--docs-root", str(docs))
+            self.assertNotEqual(refused.returncode, 0)
+            self.assertIn("scaffold-readme-template.json", refused.stderr)
+            self.assertEqual(list((fresh_workspace / "app").iterdir()), [])
+
     def test_topology_readers_check_owner_records_and_accept_standalone_yaml(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

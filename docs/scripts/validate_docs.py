@@ -250,14 +250,14 @@ def validate_central_markdown(
         except (OSError, ValueError, KeyError, TypeError) as exc:
             validation.error(docs_root.as_posix(), f"prose projection failed: {exc}")
     for path in sorted(set(docs_root.rglob("*.md")) | projected.keys()):
-        if "templates" in path.relative_to(docs_root).parts:
-            continue
         text = projected.get(path)
         if text is not None:
             try:
                 projector["check_generated"](path, text)
             except (OSError, ValueError) as exc:
                 validation.error(path.as_posix(), str(exc))
+        if "templates" in path.relative_to(docs_root).parts:
+            continue
         frontmatter = read_frontmatter(path, CENTRAL_FRONTMATTER, validation, text=text)
         for index, related in enumerate(as_list(frontmatter.get("related_code"))):
             workspace_target(

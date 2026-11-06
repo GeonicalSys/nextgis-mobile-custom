@@ -47,8 +47,16 @@ def portable_pack_root(workspace: Path, raw: object) -> Path:
     return candidate
 
 
-def render(template_path: Path, values: dict[str, str]) -> str:
-    return Template(template_path.read_text(encoding="utf-8")).substitute(values)
+def load_templates(docs_root: Path) -> dict[str, str]:
+    prose = runpy.run_path(str(Path(__file__).with_name("prose_knowledge.py")))
+    paths = prose["APP_SCAFFOLD_TEMPLATES"]
+    owner = docs_root.parent
+    markers = (owner / prose["MANIFEST"], owner / prose["DIRECTORY"], owner / "agent-system/README.md")
+    if docs_root.name == "docs" and any(path.exists() or path.is_symlink() for path in markers):
+        projected = prose["project_documents"](owner, only=set(paths.values()))
+        return {name: projected[path] for name, path in paths.items()}
+    return {name: (docs_root / path.relative_to("docs")).read_text(encoding="utf-8")
+            for name, path in paths.items()}
 
 
 def write_exclusive(path: Path, content: str) -> None:
@@ -144,12 +152,10 @@ def main() -> int:
         "entrypoints_yaml": entries_yaml,
         "first_entrypoint": entrypoints[0],
     }
-    template_root = docs_root / "templates" / "module-docs"
-    rendered = {
-        "AGENTS.md": render(template_root / "AGENTS.md.tmpl", values),
-        "README.md": render(template_root / "README.md.tmpl", values),
-        "manifest.yaml": render(template_root / "manifest.yaml.tmpl", values),
-    }
+    try:
+        rendered = {name: Template(text).substitute(values) for name, text in load_templates(docs_root).items()}
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        return fail(f"cannot render scaffold templates: {exc}")
 
     print(f"Module: {args.module_id}")
     print(f"Pack root: {pack_root}")

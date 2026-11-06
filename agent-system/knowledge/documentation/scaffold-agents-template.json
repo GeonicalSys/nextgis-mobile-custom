@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:scaffold-agents-template",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/templates/module-docs/AGENTS.md.tmpl",
+          "agent-system/knowledge/documentation/scaffold-agents-template.json",
+          "docs/scripts/scaffold_module_docs.py",
+          "tools/docs-scaffold.ps1"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the generated portable input for independent docs roots."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_template_path",
+      "value": "docs/templates/module-docs/AGENTS.md.tmpl"
+    },
+    "body": {
+      "role": "literal_template_lines",
+      "value": [
+        "# ${module_id} — инструкции для ИИ-агентов",
+        "",
+        "Перед изменением кода прочитай `docs/README.md`, `docs/manifest.yaml` и, если",
+        "доступен parent workspace, `${central_ref}/START-HERE.md` вместе с",
+        "`${central_ref}/registry/change-impact.yaml`.",
+        "",
+        "Если central docs отсутствуют в standalone checkout, используй local pack и",
+        "сообщи, что cross-repository documentation нельзя обновить атомарно.",
+        "",
+        "После изменения выполни проверки из manifest, обнови локальные docs при смене",
+        "поведения/контрактов и central registry при межмодульном изменении.",
+        ""
+      ]
+    },
+    "scaffold-output": {
+      "role": "draft_module_pack_output",
+      "value": {
+        "path": "AGENTS.md",
+        "purpose": "Direct a new module pack to its local docs and the App change entry."
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:scaffold-readme-template",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:scaffold-manifest-template",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-start-here",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:metadata:change-impact-registry",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:scaffold-agents-template"
+    ]
+  }
+}

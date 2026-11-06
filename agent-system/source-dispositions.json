@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "aba07b58414ab600baf5a0730e64f31dd4bdbfda76c87717963c86db0d225629",
+      "sha256": "7d5628821c586507639ae63589f5c5e4d7f3d32d1340e337686eb1d4a9ad0677",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "53a6aca2b47ec62501dea2dca863c78acacb5797634c8f78a19c45891b6518bc",
+      "sha256": "fb3171e538403e7b0cf0ba331cb55332b22759c4d4f2ba6c01a818c0933d5f9b",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -165,9 +165,12 @@
         "docs/architecture/lisa-ecosystem.md",
         "app/docs/README.md",
         ".github/PULL_REQUEST_TEMPLATE.md",
-        "README.md"
+        "README.md",
+        "docs/templates/module-docs/AGENTS.md.tmpl",
+        "docs/templates/module-docs/README.md.tmpl",
+        "docs/templates/module-docs/manifest.yaml.tmpl"
       ],
-      "reason": "Pinned exact App Markdown source bytes and stable published addresses."
+      "reason": "Pinned exact App documentation and scaffold template source bytes at their published addresses."
     },
     {
       "path": "agent-system/migration/prose-inventory.json",
@@ -963,7 +966,7 @@
     },
     {
       "path": "docs/changelog.md",
-      "sha256": "032d903892bca5ac21a92e1128f9202428e949f821c3dca62ee50b6ec0f2ecec",
+      "sha256": "1b39fecfcc6f56aee5eb36e8b9b7a8b4ddd31e0c20852bb888e74b0522c50dc2",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "reason": "Active documentation-maintenance history retains ordered edit and proof notes at its published address. Its exact disposition hash must follow an ordinary edit.",

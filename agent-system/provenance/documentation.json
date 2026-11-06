@@ -9658,6 +9658,54 @@
           "end_byte": 5126
         }
       ]
+    },
+    {
+      "path": "docs/templates/module-docs/AGENTS.md.tmpl",
+      "record": "scaffold-agents-template.json",
+      "id": "lisa:mobile:resource:scaffold-agents-template",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "379ed7f47a3d45e3af12a3161076eb32887de71e",
+      "sha256": "186f7ce40ce4646908eff22386f682fb00b512e8e961232e7d89ceff1800c334",
+      "bytes": 754,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:scaffold-agents-template",
+          "start_byte": 0,
+          "end_byte": 754
+        }
+      ]
+    },
+    {
+      "path": "docs/templates/module-docs/README.md.tmpl",
+      "record": "scaffold-readme-template.json",
+      "id": "lisa:mobile:resource:scaffold-readme-template",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "627d9eefe274f4ee1bfc8172ad676774c45ade77",
+      "sha256": "2dd9b448049b4fe734b3488dc02edd4c4aaa03db4f2dbc5fca488828c4696bb4",
+      "bytes": 742,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:scaffold-readme-template",
+          "start_byte": 0,
+          "end_byte": 742
+        }
+      ]
+    },
+    {
+      "path": "docs/templates/module-docs/manifest.yaml.tmpl",
+      "record": "scaffold-manifest-template.json",
+      "id": "lisa:mobile:resource:scaffold-manifest-template",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "e7f44b90160d09b5af1b9ed17703170f0af8f0a1",
+      "sha256": "b939d2906620a2e8945be4af409223910c6de7d276b7354a3855b44dad0368db",
+      "bytes": 485,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:scaffold-manifest-template",
+          "start_byte": 0,
+          "end_byte": 485
+        }
+      ]
     }
   ]
 }

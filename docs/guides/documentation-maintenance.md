@@ -173,6 +173,10 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\docs-scaffold.ps1 
   -ModuleId maplib
 ```
 
+Шаблоны App редактируются в записях `scaffold-*-template.json`.
+Команда `python -B docs/scripts/prose_knowledge.py --write` обновляет три
+файла для отдельной папки `docs` по прежним адресам.
+
 Scaffold не перезаписывает существующие файлы. После генерации агент обязан
 проверить код, заменить TODO и только затем выставлять `maintained`.
 
