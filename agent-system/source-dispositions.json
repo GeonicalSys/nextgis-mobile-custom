@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "5d099ce187ca84168ec11326ee7f7fe916456fd63fb766231fdf34f6077e69e7",
+      "sha256": "1439accde32ae02efe9788c6873370e46565ba7dc54cf7803943a5f90960ae7c",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -169,7 +169,9 @@
         "docs/templates/module-docs/AGENTS.md.tmpl",
         "docs/templates/module-docs/README.md.tmpl",
         "docs/templates/module-docs/manifest.yaml.tmpl",
-        "docs/changelog.md"
+        "docs/changelog.md",
+        "docs/history/README.md",
+        "docs/history/upstream/README.md"
       ],
       "reason": "Pinned exact App documentation and scaffold template source bytes at their published addresses."
     },
@@ -334,7 +336,8 @@
         "docs/architecture/ngw-sync-and-storage.md",
         "docs/guides/project-synchronization-user-guide.md",
         "docs/architecture/cascading-form-lists.md",
-        "docs/runbooks/device-smoke-tests.md"
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/history/README.md"
       ]
     },
     {
@@ -404,32 +407,6 @@
       ]
     },
     {
-      "path": "docs/history/README.md",
-      "sha256": "3789b91fc75065f60b0cbc5683d45a937b5c73993ca62924add8c6bb053e0450",
-      "sha256_scope": "utf8_lf",
-      "category": "working_bridge",
-      "reason": "Active history navigation keeps the dated sync matrix, upstream index, release notes and current fork catalogue reachable.",
-      "applies_to": [
-        "docs/history/README.md",
-        "docs/README.md",
-        "docs/START-HERE.md",
-        "docs/reference/fork-customizations.md"
-      ]
-    },
-    {
-      "path": "docs/history/upstream/README.md",
-      "sha256": "fcfd5bf6bf9e43c76327d9267dc72d5546ac4df93c92c6c551a84eff3947379a",
-      "sha256_scope": "utf8_lf",
-      "category": "working_bridge",
-      "reason": "Active navigation from the App start page to four retained upstream comparisons and the current upstream runbook.",
-      "applies_to": [
-        "docs/history/upstream/README.md",
-        "docs/runbooks/upstream-sync.md",
-        "docs/START-HERE.md",
-        "docs/architecture/upstream-fork-model.md"
-      ]
-    },
-    {
       "path": "docs/history/upstream/2026-03-sync.md",
       "sha256": "31220557b3d2fe5de312391d48dc30b09ff4e02a95a6283540b4d2ba9cb0035f",
       "sha256_scope": "utf8_lf",
@@ -439,7 +416,8 @@
         "docs/history/upstream/2026-03-sync.md",
         "docs/runbooks/upstream-sync.md",
         "docs/architecture/ngw-sync-and-storage.md",
-        "docs/runbooks/workstation-and-build.md"
+        "docs/runbooks/workstation-and-build.md",
+        "docs/history/upstream/README.md"
       ]
     },
     {
@@ -452,7 +430,8 @@
         "docs/history/upstream/2026-03-30-layer-fill-comparison.md",
         "docs/runbooks/upstream-sync.md",
         "docs/architecture/ngw-sync-and-storage.md",
-        "docs/architecture/collector-projects.md"
+        "docs/architecture/collector-projects.md",
+        "docs/history/upstream/README.md"
       ]
     },
     {
@@ -465,7 +444,8 @@
         "docs/history/upstream/2026-05-15-sync.md",
         "docs/runbooks/upstream-sync.md",
         "docs/architecture/upstream-fork-model.md",
-        "docs/architecture/collector-projects.md"
+        "docs/architecture/collector-projects.md",
+        "docs/history/upstream/README.md"
       ]
     },
     {
@@ -479,7 +459,8 @@
         "docs/runbooks/upstream-sync.md",
         "docs/architecture/upstream-fork-model.md",
         "docs/architecture/collector-projects.md",
-        "docs/architecture/map-rendering.md"
+        "docs/architecture/map-rendering.md",
+        "docs/history/upstream/README.md"
       ]
     },
     {
