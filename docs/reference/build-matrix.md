@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-11-05
+last_verified: 2026-11-06
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -87,13 +87,16 @@ branch, включая первый push новой ветки. Push в default 
 обычными генераторами и упорядоченными записями. После регенерации
 обнови квитанцию командой `python -B docs/scripts/structured_view_proof.py --write`.
 
-Если установлен пакет EasyPicker с производным манифестом, валидатор
-сверяет оба README, YAML и квитанцию с записями EasyPicker. Из корня App
-обнови представления командой
+Для пакетов библиотек с производным манифестом валидатор сверяет обязательные
+README, YAML и квитанцию с записями владельца. У maplib к обязательным адресам
+относятся и оба руководства SQLite. При объявленном адресе
+`agent-system/README.md` валидатор проверяет содержимое и ссылки этой страницы.
+Из корня App обнови представления командой
 `python -B docs/scripts/prose_knowledge.py --write --module easypicker-module`
 и квитанцию командой
 `python -B docs/scripts/structured_view_proof.py --write --module easypicker-module`.
-Закреплённые ревизии EasyPicker со старым пакетом используют YAML.
+Для maplib и maplibui передай соответствующий ID модуля. Старые закреплённые
+ревизии App используют обычные README и YAML из своих библиотек.
 
 Локальный `tools/docs-check.ps1 -RunTests` получает JSON путей из того же
 `check_change_impact.py --local-paths --base origin/my-maplibre`, без GitHub API

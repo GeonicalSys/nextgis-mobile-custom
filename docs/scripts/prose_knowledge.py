@@ -13,6 +13,7 @@ OWNER = "android_projects/android_gisapp"
 DIRECTORY = Path("agent-system/knowledge/documentation")
 MANIFEST = Path("agent-system/provenance/documentation.json")
 SECTION_ID = re.compile(r"lisa:mobile:(resource|evidence|task):([a-z0-9][a-z0-9_.-]*)")
+KNOWLEDGE_HOME = PurePosixPath("agent-system/README.md")
 APP_SCAFFOLD_TEMPLATES = {
     name: PurePosixPath("docs/templates/module-docs") / f"{name}.tmpl"
     for name in ("AGENTS.md", "README.md", "manifest.yaml")
@@ -22,7 +23,7 @@ LITERAL_VIEWS = {
     PurePosixPath("CONTEXT_INSTRUCTION.md"),
     PurePosixPath("CUSTOMIZATIONS.md"),
     PurePosixPath("WHATS_NEW.md"),
-    PurePosixPath("agent-system/README.md"),
+    KNOWLEDGE_HOME,
     PurePosixPath(".github/PULL_REQUEST_TEMPLATE.md"),
     *APP_SCAFFOLD_TEMPLATES.values(),
 }
@@ -87,7 +88,7 @@ def project_documents(
         if only is not None and view not in only:
             continue
         allowed = (
-            view in expected_views if expected_views is not None
+            (view in expected_views or view == KNOWLEDGE_HOME) if expected_views is not None
             else view in LITERAL_VIEWS or (
                 view.suffix == ".md"
                 and (view.parts[:1] == ("docs",) or view == PurePosixPath("app/docs/README.md"))
@@ -126,7 +127,7 @@ def project_documents(
             missing = ", ".join(sorted(path.as_posix() for path in only - documents.keys()))
             raise ValueError(f"Missing documentation declarations: {missing}")
         return documents
-    if expected_views is not None and documents.keys() != expected_views:
+    if expected_views is not None and not expected_views <= documents.keys():
         raise ValueError(f"Incomplete documentation views for {module_id}")
     if {path.relative_to(owner / DIRECTORY).as_posix()
             for path in (owner / DIRECTORY).rglob("*.json")} != expected:

@@ -183,6 +183,68 @@ class ProseKnowledgeTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Invalid module manifest reference list"):
             MANIFEST_PROJECTOR["project_manifest"](owner, module_id=EASYPICKER_MODULE)
 
+    def test_library_knowledge_home_projects_without_replacing_required_addresses(self):
+        readmes = ("README.md", "docs/README.md")
+        home = PurePosixPath("agent-system/README.md")
+        for module_id, namespace, required in (
+            (EASYPICKER_MODULE, "easypicker", readmes),
+            ("maplib", "maplib", (*readmes, "docs/sqlite-vector-source-bridge.md", "docs/sqlite-vector-tile-buffer.md")),
+            ("maplibui", "maplibui", readmes),
+        ):
+            with self.subTest(module=module_id):
+                owner = self.owner / namespace
+                owner_id = f"android_projects/android_gisapp/{namespace}"
+                layout = owner / PROJECTOR["MANIFEST"]
+                layout.parent.mkdir(parents=True)
+                directory = owner / PROJECTOR["DIRECTORY"]
+                directory.mkdir(parents=True)
+                sources = []
+
+                def add_view(path, slug, body):
+                    identity = f"lisa:{namespace}:resource:{slug}"
+                    record = {
+                        "schema_version": 2, "id": identity, "owner": owner_id,
+                        "topic": "documentation", "kind": "resource", "relations": [],
+                        "provenance": {"manifest": PROJECTOR["MANIFEST"].as_posix(), "scopes": [identity]},
+                        "facets": {"view-path": {"value": path}, "body": {"value": [body, ""]}},
+                    }
+                    if path.startswith("docs/"):
+                        record["facets"]["frontmatter"] = {"value": ["title: Fixture"]}
+                    name = f"{slug}.json"
+                    source = {"path": path, "id": identity, "record": name}
+                    if path == home.as_posix():
+                        source["applies_to"] = ["."]
+                    sources.append(source)
+                    (directory / name).write_text(json.dumps(record), encoding="utf-8")
+                    return record, directory / name
+
+                def project():
+                    layout.write_text(json.dumps({
+                        "schema_version": 1, "owner": owner_id, "sources": sources,
+                    }), encoding="utf-8")
+                    return PROJECTOR["project_documents"](owner, module_id=module_id)
+
+                for index, path in enumerate(required):
+                    add_view(path, f"document-{index}", "# Original address")
+                former = project()
+                self.assertEqual(set(former), {PurePosixPath(path) for path in required})
+                record, record_path = add_view(home.as_posix(), "knowledge-home", "# Owner knowledge")
+                current = project()
+                self.assertEqual(current, {**former, home: "# Owner knowledge\n"})
+                target = owner / home
+                target.write_bytes(current[home].encode())
+
+                record["facets"]["body"]["value"][0] = "# Edited owner knowledge"
+                record_path.write_text(json.dumps(record), encoding="utf-8")
+                edited = project()
+                self.assertEqual(edited, {**former, home: "# Edited owner knowledge\n"})
+                with self.assertRaisesRegex(ValueError, "Generated Markdown is stale"):
+                    PROJECTOR["check_generated"](target, edited[home])
+
+                sources.pop(0)
+                with self.assertRaisesRegex(ValueError, "Incomplete documentation views"):
+                    project()
+
     def test_generated_library_manifests_require_proof(self):
         script = self.owner / MANIFEST_SCRIPT
         script.parent.mkdir(parents=True, exist_ok=True)
