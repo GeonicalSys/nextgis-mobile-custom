@@ -10976,6 +10976,118 @@
           "end_byte": 41961
         }
       ]
+    },
+    {
+      "path": "CONTEXT_INSTRUCTION.md",
+      "record": "app-legacy-context-entrance.json",
+      "id": "lisa:mobile:resource:app-legacy-context-entrance",
+      "revision": "f239c8e7a2239f87f0aea9c3d45be26a073c5bb6",
+      "blob": "2897ba9ac964caf4f609dbea96b77969773bd928",
+      "sha256": "e60415a810f4a6fa9a9e25366ee6cca59401c8b6fc330bbf0ffb8915b5e9ffde",
+      "bytes": 1719,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:app-legacy-context-entrance",
+          "start_byte": 0,
+          "end_byte": 1719
+        }
+      ],
+      "applies_to": [
+        "CONTEXT_INSTRUCTION.md",
+        "AGENTS.md",
+        "docs/START-HERE.md",
+        "docs/registry/change-impact.yaml",
+        "docs/registry/invariants.yaml",
+        "docs/registry/upstream-overlaps.yaml",
+        "docs/architecture/lisa-ecosystem.md",
+        "docs/registry/ecosystem.yaml",
+        "docs/reference/fork-customizations.md",
+        "docs/README.md",
+        "tools/docs-check.ps1"
+      ]
+    },
+    {
+      "path": "CUSTOMIZATIONS.md",
+      "record": "app-customizations-entrance.json",
+      "id": "lisa:mobile:resource:app-customizations-entrance",
+      "revision": "f239c8e7a2239f87f0aea9c3d45be26a073c5bb6",
+      "blob": "9e165ae74f25f7c3ff4e170d0835c7189d73fe45",
+      "sha256": "640730db83079cd3e618483f0452c80dc9c2519a4347c8a6a0782b15f3895046",
+      "bytes": 891,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:app-customizations-entrance",
+          "start_byte": 0,
+          "end_byte": 891
+        }
+      ],
+      "applies_to": [
+        "CUSTOMIZATIONS.md",
+        "docs/reference/fork-customizations.md",
+        "agent-system/knowledge/documentation"
+      ]
+    },
+    {
+      "path": "agent-system/README.md",
+      "record": "app-knowledge-home.json",
+      "id": "lisa:mobile:resource:app-knowledge-home",
+      "revision": "f239c8e7a2239f87f0aea9c3d45be26a073c5bb6",
+      "blob": "6cd5f9e68026036e6df5ce310cbd83ec9871d82d",
+      "sha256": "faee83470f9b283097368e14041afc703e0ee9b74ce5c4a8f8c4c4ed919d29f9",
+      "bytes": 14361,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:app-knowledge-home",
+          "start_byte": 0,
+          "end_byte": 284
+        },
+        {
+          "id": "lisa:mobile:resource:app-knowledge-policy",
+          "start_byte": 284,
+          "end_byte": 1180
+        },
+        {
+          "id": "lisa:mobile:resource:app-knowledge-structured-views",
+          "start_byte": 1180,
+          "end_byte": 3288
+        },
+        {
+          "id": "lisa:mobile:resource:app-knowledge-prose-authoring",
+          "start_byte": 3288,
+          "end_byte": 5245
+        },
+        {
+          "id": "lisa:mobile:resource:app-knowledge-data-and-roadmap",
+          "start_byte": 5245,
+          "end_byte": 7117
+        },
+        {
+          "id": "lisa:mobile:resource:app-knowledge-rendering-and-forms",
+          "start_byte": 7117,
+          "end_byte": 9118
+        },
+        {
+          "id": "lisa:mobile:resource:app-knowledge-app-and-tracks",
+          "start_byte": 9118,
+          "end_byte": 10610
+        },
+        {
+          "id": "lisa:mobile:resource:app-knowledge-runbooks",
+          "start_byte": 10610,
+          "end_byte": 12641
+        },
+        {
+          "id": "lisa:mobile:resource:app-knowledge-module-and-delivery",
+          "start_byte": 12641,
+          "end_byte": 14361
+        }
+      ],
+      "applies_to": [
+        ".",
+        "docs/README.md",
+        "docs/registry/README.md",
+        "docs/guides/documentation-maintenance.md"
+      ]
     }
   ]
 }

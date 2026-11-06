@@ -245,7 +245,13 @@ def validate_central_markdown(
                         projector["check_generated"](view, text)
                     except (OSError, ValueError) as exc:
                         validation.error(view.as_posix(), str(exc))
-                    if path.parts in {("README.md",), ("WHATS_NEW.md",)}:
+                    if path.parts in {
+                        ("README.md",),
+                        ("WHATS_NEW.md",),
+                        ("CONTEXT_INSTRUCTION.md",),
+                        ("CUSTOMIZATIONS.md",),
+                        ("agent-system", "README.md"),
+                    }:
                         validate_markdown_links(view, workspace, validation, text=text)
         except (OSError, ValueError, KeyError, TypeError) as exc:
             validation.error(docs_root.as_posix(), f"prose projection failed: {exc}")

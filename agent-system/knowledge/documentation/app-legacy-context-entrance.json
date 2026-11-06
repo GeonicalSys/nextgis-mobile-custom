@@ -1,0 +1,93 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-legacy-context-entrance",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "CONTEXT_INSTRUCTION.md",
+          "AGENTS.md",
+          "docs/START-HERE.md",
+          "docs/registry/change-impact.yaml",
+          "docs/registry/invariants.yaml",
+          "docs/registry/upstream-overlaps.yaml",
+          "docs/architecture/lisa-ecosystem.md",
+          "docs/registry/ecosystem.yaml",
+          "docs/reference/fork-customizations.md",
+          "docs/README.md",
+          "tools/docs-check.ps1"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the established App documentation address and original Git range."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "CONTEXT_INSTRUCTION.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "# AI context moved to the automatic documentation system",
+        "",
+        "Этот файл сохранён как совместимый путь для старых чатов и закладок. Вручную",
+        "вставлять его в новый чат больше не требуется.",
+        "",
+        "Для задач App используйте [`AGENTS.md`](AGENTS.md) и связанные материалы.",
+        "",
+        "1. [`docs/START-HERE.md`](docs/START-HERE.md) — модель проекта и маршрутизация;",
+        "2. [`docs/registry/change-impact.yaml`](docs/registry/change-impact.yaml) —",
+        "   blast radius, обязательные документы и проверки;",
+        "3. локальный `AGENTS.md` и `docs/manifest.yaml` затронутого модуля;",
+        "4. [`docs/registry/invariants.yaml`](docs/registry/invariants.yaml) — стабильные",
+        "   продуктовые контракты;",
+        "5. [`docs/registry/upstream-overlaps.yaml`](docs/registry/upstream-overlaps.yaml)",
+        "   для синхронизации с NextGIS.",
+        "6. [`docs/architecture/lisa-ecosystem.md`](docs/architecture/lisa-ecosystem.md)",
+        "   и [`docs/registry/ecosystem.yaml`](docs/registry/ecosystem.yaml) для задач,",
+        "   связывающих Android с `standart_profiles` и QGIS Plugins.",
+        "",
+        "Каталог долговременных отличий форка:",
+        "[`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md).",
+        "",
+        "Человеческий вход: [`docs/README.md`](docs/README.md).",
+        "",
+        "Проверка системы:",
+        "",
+        "```powershell",
+        "powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\\docs-check.ps1 -RunTests",
+        "```",
+        "",
+        "В прежней редакции указан перенос контекста от 19 июля 2026 года.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-legacy-context-entrance"
+    ]
+  }
+}

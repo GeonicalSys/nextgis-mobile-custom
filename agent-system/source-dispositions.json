@@ -22,19 +22,6 @@
       "reason": "Individual exact-source witnesses for two instruction wording differences and distinct legacy task subjects, plus two complete same-fact reviews; all questions and original conditions remain visible."
     },
     {
-      "path": "agent-system/README.md",
-      "sha256": "faee83470f9b283097368e14041afc703e0ee9b74ce5c4a8f8c4c4ed919d29f9",
-      "sha256_scope": "utf8_lf",
-      "category": "working_bridge",
-      "applies_to": [
-        ".",
-        "docs/README.md",
-        "docs/registry/README.md",
-        "docs/guides/documentation-maintenance.md"
-      ],
-      "reason": "Reviewed actual owner, shared compiler, complete source/projection boundaries, historical/current authority separation, unresolved questions, source basis, dependency delivery and all remaining six-owner work. The change-impact cutover describes the owner edit and rollback routes. The topology cutover describes the same boundaries for the paired App registries. The keyed registry cutover covers the invariant, upstream and smoke views. The sectioned registry cutover covers settings, dependencies and ecosystem. The UI catalogue cutover describes the default and standalone JSON routes. The App prose cutover documents its edit, view and rollback routes."
-    },
-    {
       "path": "agent-system/provenance/change-impact.json",
       "sha256": "469b25b9ae32e16d5581764528052a3f6abc076450f1a9624121fafd8da8baf1",
       "sha256_scope": "utf8_lf",
@@ -102,7 +89,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "1697ab16efbfe125db769b96879e4a7592ceefb548982b4ac3cb1ce5781285b0",
+      "sha256": "f6feacd0a6d4d5ef7532f8971f6ccc4aab12f23f7667cc52d777a3d1fa9d6cd2",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -172,7 +159,10 @@
         "docs/changelog.md",
         "docs/history/README.md",
         "docs/history/upstream/README.md",
-        "WHATS_NEW.md"
+        "WHATS_NEW.md",
+        "CONTEXT_INSTRUCTION.md",
+        "CUSTOMIZATIONS.md",
+        "agent-system/README.md"
       ],
       "reason": "Pinned exact App documentation and scaffold template source bytes at their published addresses."
     },
@@ -187,38 +177,6 @@
         "agent-system/knowledge/documentation"
       ],
       "reason": "Checkpoint inventory of App prose addresses, types and pilot consumers at the pinned App revision."
-    },
-    {
-      "path": "CONTEXT_INSTRUCTION.md",
-      "sha256": "e60415a810f4a6fa9a9e25366ee6cca59401c8b6fc330bbf0ffb8915b5e9ffde",
-      "sha256_scope": "utf8_lf",
-      "category": "working_bridge",
-      "reason": "Compatibility address for older App chats and bookmarks. The maintained App entry, module packs and documentation carry the operating instructions. Retain the address until actual client delivery has been checked.",
-      "applies_to": [
-        "CONTEXT_INSTRUCTION.md",
-        "AGENTS.md",
-        "docs/START-HERE.md",
-        "docs/registry/change-impact.yaml",
-        "docs/registry/invariants.yaml",
-        "docs/registry/upstream-overlaps.yaml",
-        "docs/architecture/lisa-ecosystem.md",
-        "docs/registry/ecosystem.yaml",
-        "docs/reference/fork-customizations.md",
-        "docs/README.md",
-        "tools/docs-check.ps1"
-      ]
-    },
-    {
-      "path": "CUSTOMIZATIONS.md",
-      "sha256": "640730db83079cd3e618483f0452c80dc9c2519a4347c8a6a0782b15f3895046",
-      "sha256_scope": "utf8_lf",
-      "category": "working_bridge",
-      "reason": "Compatibility address for older links. The file directs readers to the current fork catalogue and contains no additional product rules.",
-      "applies_to": [
-        "CUSTOMIZATIONS.md",
-        "docs/reference/fork-customizations.md",
-        "agent-system/knowledge/documentation"
-      ]
     },
     {
       "path": "docs/reference/mobile-reliability-audit.md",

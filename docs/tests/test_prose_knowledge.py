@@ -93,6 +93,38 @@ class ProseKnowledgeTest(unittest.TestCase):
         self.assertTrue(any("README.md" in error and "Generated Markdown is stale" in error for error in errors))
         self.assertTrue(any("broken local link: 'missing-readme-fixture.md'" in error for error in errors))
 
+    def test_owner_entrances_project_at_their_established_addresses(self):
+        paths = [PurePosixPath(path) for path in (
+            "CONTEXT_INSTRUCTION.md", "CUSTOMIZATIONS.md", "agent-system/README.md",
+        )]
+        before = PROJECTOR["project_documents"](self.owner)
+        for path in paths:
+            with self.subTest(path=path):
+                expected = (APP / path).read_bytes().replace(b"\r\n", b"\n")
+                self.assertEqual(before[path].encode("utf-8"), expected)
+
+        view = PurePosixPath("agent-system/README.md")
+        target = self.owner / view
+        target.write_text(before[view], encoding="utf-8")
+        record_path = self.owner / PROJECTOR["DIRECTORY"] / "app-knowledge-home.json"
+        record = json.loads(record_path.read_bytes())
+        link = "[Fixture](missing-knowledge-entrance-fixture.md)"
+        record["facets"]["body"]["value"].insert(2, link)
+        record_path.write_text(json.dumps(record), encoding="utf-8")
+        after = PROJECTOR["project_documents"](self.owner)
+        expected = before[view].splitlines(keepends=True)
+        expected.insert(2, link + "\n")
+        self.assertEqual(after, {**before, view: "".join(expected)})
+        with self.assertRaisesRegex(ValueError, "Generated Markdown is stale"):
+            PROJECTOR["check_generated"](target, after[view])
+        self.assertTrue(any(
+            "agent-system/README.md" in error
+            and "broken local link: 'missing-knowledge-entrance-fixture.md'" in error
+            for error in self.errors()
+        ))
+        target.write_text(after[view], encoding="utf-8")
+        PROJECTOR["check_generated"](target, after[view])
+
     def test_standalone_documentation_uses_markdown(self):
         standalone = self.owner / "standalone"
         docs = standalone / "docs"

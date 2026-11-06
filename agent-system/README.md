@@ -4,6 +4,10 @@ This is one owner of the active, unfinished six-repository knowledge migration.
 Editable typed Git records are the source; the shared LISA compiler derives local
 SQLite outside Git. This owner does not copy the compiler or create a second index.
 
+Edit this guide and the two compatibility pages in the App
+[documentation records](knowledge/documentation/). Run the ordinary prose
+writer from the App root and check the Markdown at its published address.
+
 `policy-migration.json` maps every character of six complete original instruction
 sources: root and app AGENTS plus all four Cursor entrances. It binds their exact
 Git commit/blob and normalized source hashes to132 logical values/134 projections.
@@ -224,7 +228,8 @@ From the LISA root use `py -3.13 -B -m tools.agent_system check-policy-migration
 with this owned working repository included in the declared source frame when
 required. Default committed-owner reads cannot certify uncommitted records.
 Library Merge Commit and fetched merged pins precede application Squash and
-publisher Squash; this knowledge PR does not adopt the unmerged EasyPicker pin.
+publisher Squash. Keep all three App pins bound to the verified owner frame
+until authorized adoption.
 
 The full goal also requires maplib/maplibui, remaining root instructions, all
 contracts/resources/scenarios, whole task/roadmap lifecycle, defects, risks,

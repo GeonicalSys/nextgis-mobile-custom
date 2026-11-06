@@ -1,0 +1,89 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-knowledge-structured-views",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".",
+          "docs/README.md",
+          "docs/registry/README.md",
+          "docs/guides/documentation-maintenance.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the established App documentation address and original Git range."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "agent-system/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "The App docs validator reads its change-impact triggers from",
+        "`knowledge/change-impact/`. Regenerate the standalone YAML from the App root with",
+        "`python -B docs/scripts/change_impact_knowledge.py --write`. The original Draft",
+        "blob and all source spans are identified in",
+        "[`provenance/change-impact.json`](provenance/change-impact.json).",
+        "For rollback, project intervening owner edits back to YAML and compare the full",
+        "ordered registry before restoring the former reader.",
+        "",
+        "The App docs validator and module pack scaffolder read topology from",
+        "`knowledge/repositories/` and `knowledge/modules/`. Run",
+        "`python -B docs/scripts/keyed_registry_knowledge.py --write` to refresh both",
+        "standalone YAML views. The [topology provenance](provenance/repository-topology.json)",
+        "pins the original Draft blobs and covers every ordered value. For rollback,",
+        "first regenerate both views so they carry any intervening owner edits.",
+        "",
+        "The same generator refreshes the YAML views for `knowledge/invariants/`,",
+        "`knowledge/upstream-overlaps/` and `knowledge/smoke-tests/`. The validator",
+        "reads their owner records. The [keyed registry provenance](provenance/keyed-docs-registries.json)",
+        "pins all three original blobs and ordered values.",
+        "",
+        "Configuration keys, dependencies and ecosystem use the same generator with",
+        "section order, keyed maps, ordered lists and reviewed YAML comments stored in",
+        "the App records. The [sectioned registry provenance](provenance/sectioned-docs-registries.json)",
+        "pins the original values and every source line.",
+        "",
+        "The UI checker reads `knowledge/ui-contracts/` and checks the standalone",
+        "JSON. Use `python -B docs/scripts/ui_catalogue_knowledge.py --write` after an",
+        "approved catalogue edit. The [UI provenance](provenance/ui-contracts.json)",
+        "pins the exact original bytes, record spans and explicit evidence links.",
+        "",
+        "After regenerating a structured YAML or JSON view, refresh the ordered proof",
+        "with `python -B docs/scripts/structured_view_proof.py --write`. The ordinary",
+        "App validator checks the proof against the owner renderers, exact view bytes",
+        "and complete ordered records. The standalone views keep their existing paths.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-knowledge-structured-views"
+    ]
+  }
+}
