@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-09-14-d089821d330a",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-09-14",
+        "",
+        "- У курсора GPS поверх круга точности рисуется геодезический сектор направления",
+        "  телефона: ось — истинный курс (`магнитный heading + D_WMM`, без коррекции",
+        "  выноса), ширина следует за неопределённостью heading (датчик, джиттер курса,",
+        "  магнитометр; раскрытие быстрее сужения), длина 8 м. Нет компаса или",
+        "  устаревший heading скрывают только сектор. Иконка stand/go не меняется.",
+        "  App PR закрепляет maplib `2994901` (Draft PR #24) до Merge Commit библиотеки.",
+        "",
+        "- Кнопки масштаба карты перенесены к правому краю. Пункты меню азимута",
+        "  сокращены до «От себя до точки» и «Между двумя точками». «Сброс» коррекции",
+        "  склонения всегда справа от «+», без сжатия ряда −/значение/+.",
+        "",
+        "- Кнопка измерения азимута использует белый PNG исходного символа: чёрные",
+        "  пиксели перекрашены в белый с сохранением альфы, векторная звезда удалена.",
+        "  К расчётному WMM2025-склонению добавлена сохраняемая коррекция",
+        "  `stakeout_declination_correction`; в виджете строка склонения показывает",
+        "  эффективное `D + C`, коррекция остаётся отдельной строкой. Подсказки",
+        "  перетаскивания из панели убраны.",
+        "- Перенос подложек из старого Debug перенесён в «Хранилище подложек»",
+        "  («Импортировать из старого приложения»); пункт на экране «Проект» убран.",
+        "  Кнопка видна только в Geonical при установленном доверенном Debug и скрыта",
+        "  в режиме выбора подложки для слоя. Companion после установки открывает каталог.",
+        "",
+        "- Восстановлен потоковый импорт стандартного NGRc с `Mapnik.json` и JPEG/PNG/WebP",
+        "  в `Mapnik/`; сохранены исходные байты, схема и полный хеш архива. Удаление",
+        "  слоя после ошибки/отмены перенесено на main thread перед обращением к MapLibre.",
+        "- Исправлена проверка отсутствующего exporter старого Debug: используется",
+        "  фактический результат `PackageManager`, включая enabled/exported состояния.",
+        "  Повторно проверено ограничение публичного Debug-канала `3.1.2.17/212`.",
+        "  Обновлены контракты импорта, rendering, companion, local packs и smoke.",
+        "- Устранён повторный permission-диалог companion при смене фокуса: busy",
+        "  охватывает UI-переход, а завершение внешнего экрана приходит через activity",
+        "  result. Серверный `3.1.2.17/212` уже содержит exporter и подходит для старого",
+        "  Debug; новая публикация не является условием этого переноса.",
+        "- Root закрепляет удалённый Merge Commit maplib PR #23 `96db542` вместо",
+        "  тестового pin `a5603fb7`; деревья идентичны, предыдущие GPS/обход, каталог",
+        "  и marker-icons-64 включены. Для app #29 используется Squash Merge.",
+        "  По запросу пользователя версии не повышаются, APK не публикуются.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-09-14",
+        "heading": "2026-09-14",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-09-14-d089821d330a"
+    ]
+  }
+}

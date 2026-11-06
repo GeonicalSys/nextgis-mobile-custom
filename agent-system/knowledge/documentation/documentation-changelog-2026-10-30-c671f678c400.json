@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-c671f678c400",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-30 — Reader справочников вложенных NGFP",
+        "",
+        "Новая maplibui ForPrefetch API и только2 production callers учитывают nested/orientation",
+        "layouts и per-call normalized dedup. Старый public reader/весь delete file побайтово",
+        "прежние. Добавлены12 App actual-method regressions и отдельные UI user/App internal",
+        "карточки. Те же oracles после3 baseline AssertionFAIL дали12GREEN/0errors/skips2.149с,",
+        "LisaDebug source compile в unit49с; Belka0/41с отдельно от NOT_PASS classifier/sequence",
+        "и postproof/fail-fast control. Native/import/account/DB не выполнялись, старые9/19/22/21",
+        "и desktop totals не перезапускались. UI39/142/19/F61 прежний; новые metadata validators",
+        "NOT_RUN. Merge/pointer/APK delivery отделены, historical receipts сохранены.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-30",
+        "heading": "2026-10-30 — Reader справочников вложенных NGFP",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-30-c671f678c400"
+    ]
+  }
+}

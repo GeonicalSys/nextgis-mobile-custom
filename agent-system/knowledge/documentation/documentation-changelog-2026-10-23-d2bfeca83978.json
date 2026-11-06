@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-23-d2bfeca83978",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-23 — Копирование объектов и жесты редактирования",
+        "",
+        "Добавлен [контракт](architecture/feature-copy-transform.md), инварианты копирования/преобразования, навигация модулей и Related feature-editing. Описаны совместимость типов, приоритет категории, typed/NULL/unbound атрибуты, durable recovery, один Undo на жест и вписывание кнопок без overflow. Неподвижные проверки могут адресно запускаться на verification APK смартфона без эмулятора; Full release gate сохраняется.",
+        "",
+        "Зафиксированы 3/3 phone Related, 72 UI configurations и диагностика недоступного эмулятора: текущая Windows загружена с HYPERVISORLAUNCHTYPE=OFF при включённых BIOS virtualization/WHP. По выбору пользователя через UAC восстановлен Auto с BCDEdit readback; перезагрузка отложена, запуск на эмуляторе пока не подтверждён.",
+        "",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-23",
+        "heading": "2026-10-23 — Копирование объектов и жесты редактирования",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-23-d2bfeca83978"
+    ]
+  }
+}

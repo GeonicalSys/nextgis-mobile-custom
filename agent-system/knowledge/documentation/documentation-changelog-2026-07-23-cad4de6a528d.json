@@ -1,0 +1,83 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-07-23-cad4de6a528d",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-07-23",
+        "",
+        "- Self-hosted updater сохраняет одноразовое pending-состояние и автоматически",
+        "  продолжает установку после возврата с Android-экрана специального разрешения;",
+        "  повторный ручной запуск проверки обновлений больше не требуется.",
+        "- Дефолтный `OpenStreetMap Standard aka Mapnik` теперь создаётся для каждого",
+        "  Collector workspace и нормализуется внизу списка без сброса видимости;",
+        "  добавлены invariant, change-impact и smoke-контракт этого порядка.",
+        "- Исправлен debug-only versioning для AGP 9.1: Lisa Debug получает",
+        "  `194`/`3.1.2.3` через Variant API, production Lisa/Belka остаются на",
+        "  `193`/`3.1.2.2`, а maplib version сопрягается отдельно для debug/release.",
+        "- Добавлена обязательная автоматическая APK version matrix и усилены инструкции",
+        "  агентов: неподдерживаемый version DSL, handoff без сборки и вывод версии из",
+        "  имени APK теперь явно запрещены.",
+        "- Исправлена политика редактирования project-managed Collector-слоёв:",
+        "  приложение использует галочку элемента Collector и исходящее направление",
+        "  синхронизации, не блокируя полевые слои общим `is_editable` из mobile config.",
+        "- «Мои треки» закреплён наверху списка: Collector batch вставляет слои ниже него,",
+        "  а ранее сохранённый неверный порядок исправляется при открытии карты.",
+        "- Android-приложение включено в общую модель экосистемы ЛИСА вместе с",
+        "  `standart_profiles` и проектом QGIS Plugins; добавлены единый маршрут для",
+        "  агентов, карта владельцев, end-to-end поток через NextGIS Web/Collector и",
+        "  отдельный контракт явного offline basemap handoff.",
+        "- Добавлен проверяемый `registry/ecosystem.yaml`: внешние docs entries,",
+        "  межпроектные контракты и граница, запрещающая прямую Android-зависимость от",
+        "  desktop profiles, plugin mirrors и `variables.py`.",
+        "- Validator проверяет локальные ссылки экосистемы и, когда соседний workspace",
+        "  доступен, существование его входных и контрактных документов.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-07-23",
+        "heading": "2026-07-23",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-07-23-cad4de6a528d"
+    ]
+  }
+}

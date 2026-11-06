@@ -9706,6 +9706,1047 @@
           "end_byte": 485
         }
       ]
+    },
+    {
+      "path": "docs/changelog.md",
+      "record": "documentation-changelog.json",
+      "id": "lisa:mobile:resource:documentation-changelog",
+      "revision": "b372c8611f981b367f1088b1c1fd626c706f5b9d",
+      "blob": "e1294e2523c6f59ff68b6f15503b445bbb944a19",
+      "sha256": "1b39fecfcc6f56aee5eb36e8b9b7a8b4ddd31e0c20852bb888e74b0522c50dc2",
+      "bytes": 220498,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:documentation-changelog",
+          "start_byte": 0,
+          "end_byte": 210
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-06-0283e24006c4",
+          "start_byte": 210,
+          "end_byte": 532
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-05-ebc61cecfe1e",
+          "start_byte": 532,
+          "end_byte": 860
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-925d2b035f1e",
+          "start_byte": 860,
+          "end_byte": 1095
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-9385f62649f7",
+          "start_byte": 1095,
+          "end_byte": 1355
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-5b6da42c289d",
+          "start_byte": 1355,
+          "end_byte": 1591
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-b69bf76ecd0f",
+          "start_byte": 1591,
+          "end_byte": 1922
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-255f33402472",
+          "start_byte": 1922,
+          "end_byte": 2114
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-a0e7cb3c8110",
+          "start_byte": 2114,
+          "end_byte": 2391
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-60744316136f",
+          "start_byte": 2391,
+          "end_byte": 2718
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-095e8d5b654e",
+          "start_byte": 2718,
+          "end_byte": 3063
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-0f0d1d62a61d",
+          "start_byte": 3063,
+          "end_byte": 3363
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-b14d205b8537",
+          "start_byte": 3363,
+          "end_byte": 3716
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-b2fd35929dc9",
+          "start_byte": 3716,
+          "end_byte": 4034
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-5a10d7264213",
+          "start_byte": 4034,
+          "end_byte": 4326
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-fdb995e80d18",
+          "start_byte": 4326,
+          "end_byte": 4683
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-d45b7297894b",
+          "start_byte": 4683,
+          "end_byte": 4966
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-c5b7c1e0ce35",
+          "start_byte": 4966,
+          "end_byte": 5337
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-ac5e6dff3ff5",
+          "start_byte": 5337,
+          "end_byte": 5720
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-3668b068ee5b",
+          "start_byte": 5720,
+          "end_byte": 6079
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-209ec87478a2",
+          "start_byte": 6079,
+          "end_byte": 6423
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-c13258a6dfbf",
+          "start_byte": 6423,
+          "end_byte": 6780
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-6d084d8d28c1",
+          "start_byte": 6780,
+          "end_byte": 7295
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-70ec269af70e",
+          "start_byte": 7295,
+          "end_byte": 7825
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-87c265536fed",
+          "start_byte": 7825,
+          "end_byte": 8256
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-58d26960184a",
+          "start_byte": 8256,
+          "end_byte": 8695
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-6047fd7e8827",
+          "start_byte": 8695,
+          "end_byte": 9126
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-fef61992161a",
+          "start_byte": 9126,
+          "end_byte": 9594
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-bb08ae94ed2e",
+          "start_byte": 9594,
+          "end_byte": 9923
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-3d4ed2a9ce0a",
+          "start_byte": 9923,
+          "end_byte": 10371
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-2ab144daae4f",
+          "start_byte": 10371,
+          "end_byte": 10789
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-caa083a1ead0",
+          "start_byte": 10789,
+          "end_byte": 11213
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-92e4618d56ff",
+          "start_byte": 11213,
+          "end_byte": 11690
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-d8c04ec71fc3",
+          "start_byte": 11690,
+          "end_byte": 12105
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-687c8ad4467c",
+          "start_byte": 12105,
+          "end_byte": 12515
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-6267a9a6e9d5",
+          "start_byte": 12515,
+          "end_byte": 12931
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-2214c4ad0027",
+          "start_byte": 12931,
+          "end_byte": 13477
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-14928069984c",
+          "start_byte": 13477,
+          "end_byte": 13833
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-e7be227f31ac",
+          "start_byte": 13833,
+          "end_byte": 14308
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-04-a52353907bfc",
+          "start_byte": 14308,
+          "end_byte": 14781
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-03-dcbd78214933",
+          "start_byte": 14781,
+          "end_byte": 15530
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-03-54f21352af73",
+          "start_byte": 15530,
+          "end_byte": 16239
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-ea5600860952",
+          "start_byte": 16239,
+          "end_byte": 16940
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-7f36765d730e",
+          "start_byte": 16940,
+          "end_byte": 17682
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-b8204dc84558",
+          "start_byte": 17682,
+          "end_byte": 18700
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-c8fe57aec636",
+          "start_byte": 18700,
+          "end_byte": 20279
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-4b9951a1fba4",
+          "start_byte": 20279,
+          "end_byte": 21253
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-a21a454598a2",
+          "start_byte": 21253,
+          "end_byte": 22365
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-c671f678c400",
+          "start_byte": 22365,
+          "end_byte": 23297
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-5c18b5e20b65",
+          "start_byte": 23297,
+          "end_byte": 23952
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-49da04090423",
+          "start_byte": 23952,
+          "end_byte": 24728
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-29-7ff581c6824b",
+          "start_byte": 24728,
+          "end_byte": 26535
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-29-0c4ba73e9db7",
+          "start_byte": 26535,
+          "end_byte": 29982
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-29-f2810376ec11",
+          "start_byte": 29982,
+          "end_byte": 31615
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-29-4c7e9884c643",
+          "start_byte": 31615,
+          "end_byte": 33891
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-0a0299d29bb7",
+          "start_byte": 33891,
+          "end_byte": 35148
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-1d24dcb1f467",
+          "start_byte": 35148,
+          "end_byte": 36235
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-829416987c8d",
+          "start_byte": 36235,
+          "end_byte": 36976
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-005cc769e758",
+          "start_byte": 36976,
+          "end_byte": 38334
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-3b5b8c329280",
+          "start_byte": 38334,
+          "end_byte": 39521
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-2e6bc34f9b1a",
+          "start_byte": 39521,
+          "end_byte": 40213
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-0fd7fb35e724",
+          "start_byte": 40213,
+          "end_byte": 40973
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-cdffa4ce67e0",
+          "start_byte": 40973,
+          "end_byte": 41617
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-2d7ef86999d7",
+          "start_byte": 41617,
+          "end_byte": 42446
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-ea3f5114f4a3",
+          "start_byte": 42446,
+          "end_byte": 43173
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-a00a6f73e60c",
+          "start_byte": 43173,
+          "end_byte": 44306
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-3147f4a8994e",
+          "start_byte": 44306,
+          "end_byte": 45762
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-204ed51cf4bb",
+          "start_byte": 45762,
+          "end_byte": 47254
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-db6624f8c4b1",
+          "start_byte": 47254,
+          "end_byte": 48086
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-6cb86e63fc55",
+          "start_byte": 48086,
+          "end_byte": 48942
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-738da2c40b3f",
+          "start_byte": 48942,
+          "end_byte": 49800
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-85f3256f0ab8",
+          "start_byte": 49800,
+          "end_byte": 50318
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-57bff9eeb9a4",
+          "start_byte": 50318,
+          "end_byte": 51340
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-44b4530cf8c8",
+          "start_byte": 51340,
+          "end_byte": 52506
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-cb6e00ac4269",
+          "start_byte": 52506,
+          "end_byte": 53010
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-8efa39b6da75",
+          "start_byte": 53010,
+          "end_byte": 53865
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-0f1fdc6111b9",
+          "start_byte": 53865,
+          "end_byte": 54492
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-0971e8e34e46",
+          "start_byte": 54492,
+          "end_byte": 55213
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-b5507dfcc4bb",
+          "start_byte": 55213,
+          "end_byte": 55845
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-026f25f629e9",
+          "start_byte": 55845,
+          "end_byte": 56477
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-bfc610f63911",
+          "start_byte": 56477,
+          "end_byte": 56952
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-00f70e6cc186",
+          "start_byte": 56952,
+          "end_byte": 57589
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-d06f0598bf90",
+          "start_byte": 57589,
+          "end_byte": 58503
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-df6130f5f104",
+          "start_byte": 58503,
+          "end_byte": 59252
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-6f150db3a0c0",
+          "start_byte": 59252,
+          "end_byte": 59907
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-0ea924581638",
+          "start_byte": 59907,
+          "end_byte": 60526
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-a30a281159a7",
+          "start_byte": 60526,
+          "end_byte": 61041
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-a772bbca6e3c",
+          "start_byte": 61041,
+          "end_byte": 61529
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-557a2d355802",
+          "start_byte": 61529,
+          "end_byte": 62135
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-fd0a589583b6",
+          "start_byte": 62135,
+          "end_byte": 62694
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-085dc441b200",
+          "start_byte": 62694,
+          "end_byte": 63474
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-bedc7dee6d93",
+          "start_byte": 63474,
+          "end_byte": 64408
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-6cae8c0aa0ba",
+          "start_byte": 64408,
+          "end_byte": 65161
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-22dba900f8bf",
+          "start_byte": 65161,
+          "end_byte": 66037
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-3075ba39e4cd",
+          "start_byte": 66037,
+          "end_byte": 66560
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-24-2a65b60a4dff",
+          "start_byte": 66560,
+          "end_byte": 67221
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-24-d9dae2020603",
+          "start_byte": 67221,
+          "end_byte": 67842
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-24-6384ecd95d6a",
+          "start_byte": 67842,
+          "end_byte": 68676
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-24-7d10936a58a8",
+          "start_byte": 68676,
+          "end_byte": 69345
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-24-6758134d11e6",
+          "start_byte": 69345,
+          "end_byte": 70051
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-23-46def6124264",
+          "start_byte": 70051,
+          "end_byte": 70848
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-23-53033efaf45a",
+          "start_byte": 70848,
+          "end_byte": 71287
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-23-d2bfeca83978",
+          "start_byte": 71287,
+          "end_byte": 72522
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-23-6f283a679668",
+          "start_byte": 72522,
+          "end_byte": 73385
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-23-1e63f092b2cc",
+          "start_byte": 73385,
+          "end_byte": 74453
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-b7b76d4c8527",
+          "start_byte": 74453,
+          "end_byte": 74755
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-f30be30ec50e",
+          "start_byte": 74755,
+          "end_byte": 75388
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-c19aff9e4595",
+          "start_byte": 75388,
+          "end_byte": 75827
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-fa57acc22b89",
+          "start_byte": 75827,
+          "end_byte": 76618
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-eb0ad3c0ecfa",
+          "start_byte": 76618,
+          "end_byte": 77586
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-bcd5d91d3711",
+          "start_byte": 77586,
+          "end_byte": 78118
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-1c4ce23e5a86",
+          "start_byte": 78118,
+          "end_byte": 78830
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-049c3c35c743",
+          "start_byte": 78830,
+          "end_byte": 79321
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-46d94b3d5367",
+          "start_byte": 79321,
+          "end_byte": 79955
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-79b7be78e791",
+          "start_byte": 79955,
+          "end_byte": 80869
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-17-be0758fc0019",
+          "start_byte": 80869,
+          "end_byte": 81512
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-16-1a7d3b367c04",
+          "start_byte": 81512,
+          "end_byte": 81921
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-15-be6bc8729e47",
+          "start_byte": 81921,
+          "end_byte": 82464
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-15-4fa2d3314b83",
+          "start_byte": 82464,
+          "end_byte": 82974
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-15-9da46ce9446d",
+          "start_byte": 82974,
+          "end_byte": 83768
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-15-01d2a565b9ff",
+          "start_byte": 83768,
+          "end_byte": 84573
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-15-a497af3f42d2",
+          "start_byte": 84573,
+          "end_byte": 85065
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-15-19ba18d5f07a",
+          "start_byte": 85065,
+          "end_byte": 85274
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-14-d49cd81d6136",
+          "start_byte": 85274,
+          "end_byte": 86396
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-14-8f5ded9f387b",
+          "start_byte": 86396,
+          "end_byte": 87202
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-14-a0d46b64382e",
+          "start_byte": 87202,
+          "end_byte": 88112
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-14-130142927e8a",
+          "start_byte": 88112,
+          "end_byte": 89511
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-13-c9d004fe85c5",
+          "start_byte": 89511,
+          "end_byte": 89844
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-13-0f9554dc523f",
+          "start_byte": 89844,
+          "end_byte": 90226
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-13-766effbeeb3c",
+          "start_byte": 90226,
+          "end_byte": 91120
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-13-5bcf7f4109e8",
+          "start_byte": 91120,
+          "end_byte": 91792
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-13-364335b4d5b5",
+          "start_byte": 91792,
+          "end_byte": 93093
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-13-d5b6352a5d70",
+          "start_byte": 93093,
+          "end_byte": 93795
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-12-a82ae8e23695",
+          "start_byte": 93795,
+          "end_byte": 96168
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-12-3b2e8a2ca255",
+          "start_byte": 96168,
+          "end_byte": 97213
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-11-26142f54fd1f",
+          "start_byte": 97213,
+          "end_byte": 98148
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-11-592b1b223fb8",
+          "start_byte": 98148,
+          "end_byte": 99657
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-11-f5d99695325e",
+          "start_byte": 99657,
+          "end_byte": 101604
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-11-1f7baae72eae",
+          "start_byte": 101604,
+          "end_byte": 102672
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-11-98f16c4abca8",
+          "start_byte": 102672,
+          "end_byte": 105345
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-10-7e29eb7c7937",
+          "start_byte": 105345,
+          "end_byte": 106055
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-10-7af2037be0bf",
+          "start_byte": 106055,
+          "end_byte": 106480
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-10-84a2fc959609",
+          "start_byte": 106480,
+          "end_byte": 107030
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-10-fd7e4bd37abd",
+          "start_byte": 107030,
+          "end_byte": 108019
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-10-c93e1dbf5df9",
+          "start_byte": 108019,
+          "end_byte": 108539
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-10-733c8b33f72f",
+          "start_byte": 108539,
+          "end_byte": 108788
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-10-2b98ca750ded",
+          "start_byte": 108788,
+          "end_byte": 109504
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-10-c49c85392359",
+          "start_byte": 109504,
+          "end_byte": 110108
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-09-c886cf2519ae",
+          "start_byte": 110108,
+          "end_byte": 111231
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-09-c3e7dce22159",
+          "start_byte": 111231,
+          "end_byte": 111820
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-09-001aba9f081e",
+          "start_byte": 111820,
+          "end_byte": 112668
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-09-96ccdb136058",
+          "start_byte": 112668,
+          "end_byte": 113386
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-09-641db26402f4",
+          "start_byte": 113386,
+          "end_byte": 114051
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-09-c43216b7ee27",
+          "start_byte": 114051,
+          "end_byte": 114767
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-08-023b501e92a2",
+          "start_byte": 114767,
+          "end_byte": 115330
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-08-012cb8ccd29e",
+          "start_byte": 115330,
+          "end_byte": 115644
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-08-b770135f56f5",
+          "start_byte": 115644,
+          "end_byte": 116424
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-08-b38dd614e2bd",
+          "start_byte": 116424,
+          "end_byte": 117341
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-08-c536255d2cf2",
+          "start_byte": 117341,
+          "end_byte": 118064
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-08-4ba9fd418ed6",
+          "start_byte": 118064,
+          "end_byte": 119117
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-07-903952e394cd",
+          "start_byte": 119117,
+          "end_byte": 124126
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-06-3196761fda76",
+          "start_byte": 124126,
+          "end_byte": 128608
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-04-3549c46a3bbf",
+          "start_byte": 128608,
+          "end_byte": 130105
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-03-56c7709c9d5d",
+          "start_byte": 130105,
+          "end_byte": 131717
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-23-e39095f3e051",
+          "start_byte": 131717,
+          "end_byte": 132788
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-22-6843c6d7c901",
+          "start_byte": 132788,
+          "end_byte": 136605
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-21-36eba6c30dda",
+          "start_byte": 136605,
+          "end_byte": 138861
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-20-82834e611c7a",
+          "start_byte": 138861,
+          "end_byte": 141833
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-18-cbdbacf80be9",
+          "start_byte": 141833,
+          "end_byte": 143179
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-17-5bc56dcf4ed5",
+          "start_byte": 143179,
+          "end_byte": 144175
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-16-135a65c2272a",
+          "start_byte": 144175,
+          "end_byte": 148080
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-15-9499aee670fe",
+          "start_byte": 148080,
+          "end_byte": 149008
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-14-d089821d330a",
+          "start_byte": 149008,
+          "end_byte": 153104
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-13-92135a0bf009",
+          "start_byte": 153104,
+          "end_byte": 156086
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-12-97348e418543",
+          "start_byte": 156086,
+          "end_byte": 157905
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-11-d31fac478f87",
+          "start_byte": 157905,
+          "end_byte": 158742
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-09-08-f82a5829a918",
+          "start_byte": 158742,
+          "end_byte": 160046
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-27-cde101dfb802",
+          "start_byte": 160046,
+          "end_byte": 160501
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-26-10aaa1ebeacb",
+          "start_byte": 160501,
+          "end_byte": 163546
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-25-43833086dcba",
+          "start_byte": 163546,
+          "end_byte": 164107
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-24-7bc9976065df",
+          "start_byte": 164107,
+          "end_byte": 173129
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-23-ebaf4b33e75f",
+          "start_byte": 173129,
+          "end_byte": 177261
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-22-035e2bef524a",
+          "start_byte": 177261,
+          "end_byte": 178976
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-21-a914b436b741",
+          "start_byte": 178976,
+          "end_byte": 183439
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-20-414302dbf5ea",
+          "start_byte": 183439,
+          "end_byte": 186580
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-16-d6b7e2c69d2d",
+          "start_byte": 186580,
+          "end_byte": 186799
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-15-62790305f81d",
+          "start_byte": 186799,
+          "end_byte": 192378
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-14-1e96549e3956",
+          "start_byte": 192378,
+          "end_byte": 192708
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-12-a91021723893",
+          "start_byte": 192708,
+          "end_byte": 193268
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-08-01-cf60422aa0bf",
+          "start_byte": 193268,
+          "end_byte": 193573
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-07-30-6e50aca66f87",
+          "start_byte": 193573,
+          "end_byte": 197745
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-07-29-fc53f1ce7f15",
+          "start_byte": 197745,
+          "end_byte": 198775
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-07-25-d1de38123286",
+          "start_byte": 198775,
+          "end_byte": 200844
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-07-24-5c20e4f57ac9",
+          "start_byte": 200844,
+          "end_byte": 202881
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-07-23-cad4de6a528d",
+          "start_byte": 202881,
+          "end_byte": 205770
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-07-20-2bacd6e5d1a9",
+          "start_byte": 205770,
+          "end_byte": 207579
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-07-19-bc0d01481292",
+          "start_byte": 207579,
+          "end_byte": 211582
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-f032879008de",
+          "start_byte": 211582,
+          "end_byte": 212218
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-824e49dfda35",
+          "start_byte": 212218,
+          "end_byte": 213365
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-bec8886bdde6",
+          "start_byte": 213365,
+          "end_byte": 214126
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-4fc458e2dbde",
+          "start_byte": 214126,
+          "end_byte": 215823
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-c316f373915c",
+          "start_byte": 215823,
+          "end_byte": 217022
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-347e01c7dcf2",
+          "start_byte": 217022,
+          "end_byte": 217961
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-a054ed2fa1a4",
+          "start_byte": 217961,
+          "end_byte": 218967
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-10-31-da21c189f817",
+          "start_byte": 218967,
+          "end_byte": 219740
+        },
+        {
+          "id": "lisa:mobile:evidence:documentation-changelog-2026-11-02-df41c1af3c6e",
+          "start_byte": 219740,
+          "end_byte": 220498
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-57bff9eeb9a4",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-27 — Опубликована ЛИСА3.1.2.30/224",
+        "",
+        "Пользователь разрешил публикацию без зелёного Full планшета. Внутренняя",
+        "квитанция сохраняет Full21 setup failure, незавершённый Full24, Related22/23",
+        "9 PASS и отсутствие текущего автоматического gate. Git подтвердил равенство",
+        "рабочего кода зелёному Phone Full11/254; последующие изменения test-only.",
+        "Normal signed LisaRelease224 собран из29e87d0 и опубликован05:20:45UTC.",
+        "Полные HTTP-хэши versioned/latest совпадают с подписанным APK;223 сохранён.",
+        "Publisher6 закрывает ожидание",
+        "пароля при уже загруженном в агент настроенном ключе;28 regressions PASS.",
+        "[Фактическая доставка и readback](reference/mobile-release-fixes-2026-10-26.md).",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-27",
+        "heading": "2026-10-27 — Опубликована ЛИСА3.1.2.30/224",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-27-57bff9eeb9a4"
+    ]
+  }
+}

@@ -78,6 +78,10 @@ under `knowledge/documentation/`. The App scaffold uses these records for a
 draft module pack. Run the prose projector to refresh the literal templates
 at `docs/templates/module-docs/` for independent documentation folders.
 
+Add documentation changelog events as dated records in `knowledge/documentation/`.
+The `documentation-changelog.json` record orders them and the prose projector
+updates `docs/changelog.md`. Follow the [authoring steps](../docs/guides/documentation-maintenance.md#журнал-документации).
+
 For the official comparison, edit the appropriate `official-differences-*.json`
 record. `official-differences.json` carries the frontmatter and orders the
 topics through `contains` relations. Add, move or remove a topic through

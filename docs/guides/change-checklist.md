@@ -1,7 +1,7 @@
 ---
 title: Чеклист изменения Android-форка
 type: guide
-last_verified: 2026-10-29
+last_verified: 2026-11-06
 related_code:
   - AGENTS.md
   - docs/registry/change-impact.yaml
@@ -91,7 +91,8 @@ related_code:
 - [ ] Central registry/docs обновлены, если изменение cross-cutting.
 - [ ] При изменении межпроектного контракта обновлены `ecosystem.yaml`,
   основной документ и docs фактического publisher/consumer.
-- [ ] `last_verified` и `docs/changelog.md` обновлены для central docs.
+- [ ] Для центральной документации обновлён `last_verified` и добавлена
+  запись по [порядку ведения журнала](documentation-maintenance.md#журнал-документации).
 - [ ] Validator и docs tests проходят.
 - [ ] В финальном ответе разделены фактически выполненные и оставшиеся проверки.
 

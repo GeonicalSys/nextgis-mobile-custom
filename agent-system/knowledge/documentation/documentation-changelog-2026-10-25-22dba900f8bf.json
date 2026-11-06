@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-22dba900f8bf",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-25 — Дорожная карта мобильного приложения",
+        "",
+        "Добавлена [общая карта](roadmap/mobile.md) надёжности, PostgreSQL синхронизации,",
+        "векторных тайлов, обмена между устройствами и удобства. Известная работа в PR #78",
+        "учтена отдельно. Для каждой доработки, включая внеплановую и стороннюю, требуется",
+        "ID карты и объяснение влияния; ссылки закреплены в AGENTS, стартовых инструкциях,",
+        "чеклисте и шаблоне PR. Автоматический roadmap check и branch protection",
+        "не включались; runtime, версии и разрешения на исполнение не менялись.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-25",
+        "heading": "2026-10-25 — Дорожная карта мобильного приложения",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-25-22dba900f8bf"
+    ]
+  }
+}

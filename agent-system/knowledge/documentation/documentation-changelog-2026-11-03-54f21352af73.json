@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-03-54f21352af73",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-03 — Инструкции в собственных типизированных записях",
+        "",
+        "MOB-DEV-02 сохраняет шесть полных AGENTS/Cursor sources, четыре frontmatter,",
+        "отдельные исторические команды/результаты, две same-fact проекции и три явных",
+        "вопроса в `agent-system/`. Общий compiler и независимый source/context replay",
+        "принадлежат LISA; Android scanner/compiler не дублируется. Продуктовые исходники,",
+        "версии, AGENTS/Cursor и gitlinks не меняются; полный перенос и клиенты не приняты.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-03",
+        "heading": "2026-11-03 — Инструкции в собственных типизированных записях",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-03-54f21352af73"
+    ]
+  }
+}

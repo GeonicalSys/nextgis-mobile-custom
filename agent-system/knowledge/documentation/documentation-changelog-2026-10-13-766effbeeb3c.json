@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-13-766effbeeb3c",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-13 — Диагностика slow map queries и причины отказа sync queue",
+        "",
+        "- Добавлены bounded independent observer и snapshot journal с timestamp/process",
+        "  matching для slow queries/тайлов, точные headers/tags причины local 503,",
+        "  independent reason throttling и native fixtures реальной блокировки/очереди.",
+        "- SyncRecoveryJournal сохраняет cause/phase/размер/свободное место вместо boolean",
+        "  failure; необязательное повторное чтение legacy inventory устранено.",
+        "- Очереди данных и resource limits сохранены; остающиеся production причины",
+        "  отмечаются как разобранные с подготовленной диагностикой, а не как выпущенный фикс.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-13",
+        "heading": "2026-10-13 — Диагностика slow map queries и причины отказа sync queue",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-13-766effbeeb3c"
+    ]
+  }
+}

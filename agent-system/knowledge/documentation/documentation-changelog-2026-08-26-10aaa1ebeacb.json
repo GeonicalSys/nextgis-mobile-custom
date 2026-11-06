@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-08-26-10aaa1ebeacb",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-08-26",
+        "",
+        "- Подготовлен неопубликованный выпуск Lisa/Belka `3.1.2.18` / `versionCode 212`",
+        "  и Lisa Debug `3.1.2.18` / `versionCode 213`. Full untracked NGW sync теперь",
+        "  пропускает отдельную отсутствующую или невалидную серверную геометрию,",
+        "  сохраняет её remote ID и прежнюю локальную копию, продолжая остальной слой;",
+        "  журнал ограничивает число детальных записей.",
+        "- Подготовлен выпуск Lisa/Belka `3.1.2.17` / `versionCode 211` и Lisa Debug",
+        "  `3.1.2.17` / `versionCode 212` поверх sync-recovery. App и maplib coupling",
+        "  обновлены согласованно; root закрепляет Merge Commit maplib PR #20",
+        "  `4323cb0` и maplibui PR #12 `5d48122`. Публичные каналы до публикации:",
+        "  Lisa/Belka `210` / `3.1.2.16`, Debug `204` / `3.1.2.10`.",
+        "- Без изменения версии добавлен pre-sync repair дубликатов managed NGW-слоя с",
+        "  backup gate и одним map commit; edited/ambiguous copies блокируют sync без",
+        "  удаления. Staged schema refill больше не сохраняет промежуточную композицию",
+        "  old+new, а map/layer JSON записывается через `AtomicFile`.",
+        "- Schema preflight стал трёхсторонним (`resource.cls`/geometry/fields NGW,",
+        "  serialized config, physical SQLite): metadata-only drift `idqgs` исправляется",
+        "  без refill, а legacy config без типа не считается PostGIS.",
+        "- Full untracked NGW snapshot загружается во временный файл и потоково",
+        "  применяется одной SQLite-транзакцией; reload MapLibre откладывается до конца",
+        "  account-pass, выключенные слои не материализуют полный GeoJSON.",
+        "- Account sync получил `dataSync` foreground execution и durable recovery",
+        "  marker для повтора после process death только в том же workspace. Локальные",
+        "  изменения отправляются до большого pull; неуспешный push блокирует remote apply.",
+        "- Удалено десятисекундное ожидание sync worker из `NGWSyncService.onDestroy()`,",
+        "  которое блокировало Android main thread и могло само приводить к ANR.",
+        "- Pull серверных attachment metadata больше не сравнивает их с пустым локальным",
+        "  `META` и не скачивает сотни файлов только ради ложного `sync_remote_apply`",
+        "  backup. Метаданные сохраняются в `FeatureAttachments`, в том числе для новых",
+        "  features; обычный pull по-прежнему не скачивает байты вложений.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-08-26",
+        "heading": "2026-08-26",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-08-26-10aaa1ebeacb"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-14-130142927e8a",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-14 — Автоматический GPS и диагностика восстановления",
+        "",
+        "- Описаны default-enabled background owner, двухчасовой timeout и независимость",
+        "  записи/наведения; добавлен preference в config registry и новый change-impact.",
+        "- Display Network retention сохраняет исходные timestamp/accuracy и показывает",
+        "  возраст; recording/fresh getters не принимают эти устаревшие точки.",
+        "- Recovery snapshots используют существующую offline diagnostic queue; обновлены",
+        "  module packs, invariants, dependencies и сравнение с актуальным official master.",
+        "- Зафиксированы непрерывность GPS в формах даже при выключенном фоне, native",
+        "  экран/таймер/recorder проверки, 36 реальных settings-профилей и 24 status-профиля;",
+        "  результаты и Draft dependency matrix сохранены в `history/2026-10-14-background-gps.md`.",
+        "- Rendering contract описывает постоянный сетевой курсор/accuracy circle;",
+        "  пользовательское руководство объясняет автоматические GPS-отчёты и очередь без связи.",
+        "",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-14",
+        "heading": "2026-10-14 — Автоматический GPS и диагностика восстановления",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-14-130142927e8a"
+    ]
+  }
+}

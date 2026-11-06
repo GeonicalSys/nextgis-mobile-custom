@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-03-56c7709c9d5d",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-03",
+        "",
+        "- Подготовлены production constants `3.1.2.27` / `221`, сопряжённая maplib",
+        "  diagnostic version, независимые ожидания APK matrix и CI basename.",
+        "  Debug остаётся `3.1.2.22` / `217`. Release APK/version matrix и выдача команд",
+        "  публикации требуют closure открытых library/app PRs; публикация не выполнялась.",
+        "",
+        "- Чистый Linux CI выявил удалённый SDK tools package и несовместимый с JDK21",
+        "  MaxPermSize: setup packages и tracked JVM args исправлены без смены toolchain.",
+        "  Недостающий parent POM Guava33.4.8-jre закреплён после сверки с checksum",
+        "  Maven Central без смены бинарных зависимостей и ослабления verification.",
+        "  Linux CI фактически прошла517 unit и28 native API36 tests, debug APKs и обе",
+        "  release source sets; точный run/commit/runtime записаны в audit/build reference.",
+        "",
+        "- Аудит PR45: documented recoverable form Save, owning-map feature/outbox",
+        "  transactions, track retry/Stop, backup format2, auth snapshots, internal service",
+        "  timeout/export contracts, selection/tap/rail behavior and NextGIS ID input.",
+        "- Обновлены local packs/registries, build verification/CI contract и свежий",
+        "  official comparison. Добавлен отчёт с actual tests, benchmark, delivery gates",
+        "  и явными непроверенными device/recovery scenarios. Release/publication не выполнены.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-03",
+        "heading": "2026-10-03",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-03-56c7709c9d5d"
+    ]
+  }
+}

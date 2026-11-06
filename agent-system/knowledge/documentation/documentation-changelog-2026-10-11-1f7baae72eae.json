@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-11-1f7baae72eae",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-11 — Изоляция тестов отправки треков в CI",
+        "",
+        "- Все восемь TrackUploadTest выполняются после новой установки Debug/test APK,",
+        "  отдельно от 115 recorder/form reliability-тестов. Остаточный live sender больше",
+        "  не конкурирует за loopback-пакеты; assertions и покрытие сохранены.",
+        "- CI требует `OK (8 tests)`, сохраняет отдельный лог и останавливает Debug процесс",
+        "  перед denied-GPS probe. Изменён только workflow проверок, production код прежний.",
+        "- EmulatorNetworkFixture ждёт именно активный connected Wi-Fi после асинхронного",
+        "  отключения mobile data; старое сотовое соединение больше не даёт ложную готовность.",
+        "  Teardown ждёт окончания восстановления Wi-Fi adapter перед следующим тестом.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-11",
+        "heading": "2026-10-11 — Изоляция тестов отправки треков в CI",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-11-1f7baae72eae"
+    ]
+  }
+}

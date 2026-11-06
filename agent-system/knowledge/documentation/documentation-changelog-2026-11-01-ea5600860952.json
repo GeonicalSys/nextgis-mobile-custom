@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-ea5600860952",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-01 — Первый полный локальный прогон 3.1.2.31",
+        "",
+        "Сохранены фактические результаты на clean app `b165046d`:256 native PASS,",
+        "17 FAIL, UI matrices36+6 PASS и A56 cold stress PASS. Release evidence",
+        "разделяет наблюдаемые FAIL, подтверждённые устаревшие source waiters и ещё",
+        "неустановленные причины. Handoff сохраняет полный scope и работающий",
+        "адресный diagnostic run, ограничения публикации, process/cleanup receipts",
+        "и foreign owner/shared-index follow-up. Green release acceptance не заявляется.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-01",
+        "heading": "2026-11-01 — Первый полный локальный прогон 3.1.2.31",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-01-ea5600860952"
+    ]
+  }
+}

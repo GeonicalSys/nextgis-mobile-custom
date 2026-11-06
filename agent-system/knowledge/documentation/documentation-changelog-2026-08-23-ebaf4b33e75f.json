@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-08-23-ebaf4b33e75f",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-08-23",
+        "",
+        "- Трек и обход получили общий post-persist звуковой контроль фоновой записи:",
+        "  enabled-by-default preference, 30-секундный success throttle, отдельный",
+        "  минутный failure throttle, suppression при видимом UI и unit policy tests.",
+        "- Первая карта теперь всегда принадлежит активному начальному local project:",
+        "  чистая установка создаёт его до первого `MapDrawable`, а обновление один раз",
+        "  копирует прежние map-owned слои и track DB без удаления исходной standalone-",
+        "  карты. `INV-COLLECTOR-ISOLATION` и `SMOKE-PROJECT-MANAGEMENT` расширены на",
+        "  clean install, возврат после Web GIS switch и одноразовую legacy migration.",
+        "- Official NextGIS Mobile `e098196` и MapLib UI `a426e0a` повторно проверены",
+        "  23 августа 2026 года; project registry и initial local workspace в них",
+        "  отсутствуют, поэтому отличие форка остаётся актуальным.",
+        "- Production Lisa/Belka подготовлен как патч `3.1.2.14` / `versionCode 208`.",
+        "  Холодное Continue скетча теперь ждёт edit sources текущего MapLibre style,",
+        "  walk/manual drafts взаимоисключаются, а кнопка настроек активного обхода",
+        "  заменена на завершение/сохранение с иконкой идущего человека.",
+        "- API 26–28 использует MapLibre `TextureView`, чтобы после background/sleep",
+        "  потерянный `SurfaceView` не перекрывал всю Activity чёрным слоем; API 29+",
+        "  сохраняет более быстрый `SurfaceView`. Renderer и SDK фиксируются в HyperLog.",
+        "- Редактор LineString/Polygon и Multi-вариантов показывает направление вставки:",
+        "  выбранный узел красный, его следующий узел и сегмент оранжевые; открытый конец",
+        "  линии не имеет цели, а кольцо замыкает направление только на собственный первый",
+        "  узел. Добавлены unit policy и device-smoke для границ частей и колец.",
+        "- Production Lisa/Belka подготовлен как патч `3.1.2.13` / `versionCode 207`;",
+        "  MapLibre `MapView` теперь получает полный Fragment view lifecycle, старый",
+        "  native renderer освобождается при `onDestroyView`, а resume запрашивает repaint",
+        "  и фиксирует первый кадр в HyperLog. Добавлены",
+        "  `INV-MAPLIBRE-VIEW-LIFECYCLE` и `SMOKE-MAP-SURFACE-LIFECYCLE`.",
+        "- Official NextGIS Mobile HEAD повторно проверен: его `MapFragment` по-прежнему",
+        "  вызывает только `MapView.onCreate`, поэтому lifecycle-исправление остаётся",
+        "  действующим отличием форка.",
+        "- Production Lisa/Belka подготовлен как выпуск `3.1.2.12` / `versionCode 206`;",
+        "  Lisa Debug остаётся `3.1.2.9` / 203, release `maplib.VERSION_NAME` обновлён",
+        "  синхронно.",
+        "- MapLibre Android `13.0.2` закреплён через явный `android-sdk-opengl` в `app`,",
+        "  `maplibui` и `maplib`. Добавлены `INV-MAPLIBRE-BACKEND-COMPATIBILITY`,",
+        "  `SMOKE-MAP-OPENGL-COMPATIBILITY`, cross-module dependency contract и upstream",
+        "  hotspot, чтобы generic MapLibre 13 Vulkan artifact не вернулся при синхронизации.",
+        "- Официальные NextGIS app/maplib/maplibui/easypicker HEAD повторно проверены и",
+        "  не изменились; official app сохраняет Vulkan-default `android-sdk:13.0.2`,",
+        "  поэтому OpenGL compatibility остаётся действующим отличием форка.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-08-23",
+        "heading": "2026-08-23",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-08-23-ebaf4b33e75f"
+    ]
+  }
+}

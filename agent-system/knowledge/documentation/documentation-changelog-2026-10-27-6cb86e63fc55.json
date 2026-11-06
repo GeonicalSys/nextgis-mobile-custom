@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-6cb86e63fc55",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-27 — Остановлены AVD после зависаний компьютера",
+        "",
+        "Windows41/6008 подтвердили три неожиданных завершения; два дневных запуска",
+        "host GPU совпадают с обрывом AVD, причинность не доказана. Новые AVD остановлены.",
+        "Добавлены source admission/SwiftShader-only/actual GLES guards и5 regressions.",
+        "Независимое чтение камеры выявило неработавший pinch старой стресс-fixture;",
+        "исправленная траектория ожидает разрешённого исполнения. Нестабильные/оборванные",
+        "прогоны не объявлены PASS. [Полная квитанция](reference/mobile-crash-224-2026-10-27.md).",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-27",
+        "heading": "2026-10-27 — Остановлены AVD после зависаний компьютера",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-27-6cb86e63fc55"
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-29-0c4ba73e9db7",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-29 — Глубина зависимостей: workspace, отмена и подтверждение sync",
+        "",
+        "Продолжение MOB-02 по новой команде владельца после merge Android85/LISA275:",
+        "существующий sync/storage документ прослеживает owning map через callbacks,",
+        "provider URI, map-path broadcasts, service tickets, lease и финальный drain.",
+        "Разделены UID, directory/mapName, live token, recovery pair, import journal и",
+        "full clock; pair ACK записывается раньше финального cleanup/clock. 60s expiry",
+        "относится только к unclaimed delivery, не ко всем claimed children. Разбор",
+        "полного service lifecycle отверг ложное подозрение о первом foreground-start.",
+        "",
+        "Углублены прежние dependency/invariant и change-impact записи, app AGENTS и",
+        "чеклист ведут к каноническому объяснению. Исправлен устаревший active-project-only",
+        "oracle SMOKE-MULTI-ACCOUNT-SYNC по фактическому default sync_all_projects=true;",
+        "это правка документации, не изменение продукта. Новая адресная smoke-матрица",
+        "сохраняет NOT_RUN и ссылки на три pending задачи единого LISA реестра. Не",
+        "добавлены native test code, отдельный scanner или дублирующий список задач.",
+        "",
+        "Карточка: android-20261029-dependency-depth-01. Product/Gradle/версии/gitlinks,",
+        "данные, настройки и схемы не меняются; миграции нет. Android/AVD/device/NGW/DB,",
+        "сборки, публикации и приостановленные этапы не запускались. Документационные",
+        "проверки и точные исходные ревизии сохраняются в связанном PR и evidence;",
+        "наличие source witnesses не является выполнением runtime.",
+        "",
+        "Продолжение той же карточки уточняет post-ACK cleanup failure, startup retained-pair",
+        "recovery, новый manual plan и scheduled request dispatch. Clock требует всех",
+        "обязательных accounts одного прохода. AOSP14/16 показывает, что commit false",
+        "может оставить новое значение в памяти: getter/UI и disk/restart — разные oracles.",
+        "Source-каталог проверок прочитан (21 methods/5 files), выполнено0; точные fault",
+        "injections и native приёмка остаются NOT_RUN. Product/library bytes не исправлялись.",
+        "",
+        "В существующем UI-каталоге углублены три sync ID и добавлен один source-backed",
+        "map-storage control:37 контрактов/106 reviewed methods, прежние36 IDs/80 hashes",
+        "сохранены. Widget binding, formatter, ring lifecycle и raw badges разделены;",
+        "`map_path` остаётся Preference key. Source/storage capabilities и миграционные",
+        "неизвестности не подменяются подписью или native PASS. Текущий library gap",
+        "остаётся открытым; sourcechecker и библиотека не менялись.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-29",
+        "heading": "2026-10-29 — Глубина зависимостей: workspace, отмена и подтверждение sync",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-29-0c4ba73e9db7"
+    ]
+  }
+}

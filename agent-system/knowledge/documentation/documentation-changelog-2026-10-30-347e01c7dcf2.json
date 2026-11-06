@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-347e01c7dcf2",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### 2026-10-30 — понятные сообщения об ошибках ВебГИС (source Draft)",
+        "",
+        "- Причина известного server failure сохраняется через account/queue до safe",
+        "  dialog/notification; current offline, mixed/local/unknown и cancel имеют свои gates.",
+        "- Failed child-list request отличается от пустого списка; LayerFill не показывает",
+        "  raw diagnostic text и не выводит права из отсутствующего JSON field.",
+        "- Legacy form list validation использует локализованные ресурсы вместо R.string",
+        "  литералов. Existing metadata/row/Save policy не изменяется.",
+        "- Source review/technical fixtures и native/device/release acceptance разделены;",
+        "  historical F61 clock/wiki gate failures не скрываются перепривязкой ожиданий.",
+        "",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-30",
+        "heading": "2026-10-30 — понятные сообщения об ошибках ВебГИС (source Draft)",
+        "level": 3,
+        "parent": "lisa:mobile:evidence:documentation-changelog-2026-10-30-c316f373915c"
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-30-c316f373915c",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-30-347e01c7dcf2"
+    ]
+  }
+}

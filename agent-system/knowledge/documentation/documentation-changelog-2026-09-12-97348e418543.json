@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-09-12-97348e418543",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-09-12",
+        "",
+        "- ADB-замер неподвижного A54 с телефоном в руках выявил согласованный multipath",
+        "  свыше 100 м и ложную speed до 6.4 м/с. Усилено подтверждение движения по",
+        "  направлению, двум радиусам accuracy и достоверности скорости; начало пути",
+        "  буферизуется с последующим сохранением времён и ранних поворотов.",
+        "- Добавлены обезличенная регрессия на реальных GNSS измерениях, проверки отмены",
+        "  сомнительного начала и изоляции recorder. Исправлены GPX URI MIME/anonymous",
+        "  MIME против суффикса .bin и передача константы явного Stop для закрытия трека.",
+        "",
+        "- По полевому отзыву Galaxy A54 исправлены перерегистрация GPS при возврате",
+        "  карты и зависимость фонового wake lock от включённого звука.",
+        "- Стоянки проверяются по коротким сенсорным/GNSS окнам; уточнение якоря",
+        "  корректирует одну вершину, сохраняя возможность начать ходьбу или поездку.",
+        "- Добавлены тесты длительного коррелированного дрейфа, датчиков, непрерывности",
+        "  подписок и сохранения уточнений; журнал GPS health и smoke требуют проверки",
+        "  фактической частоты/точности при выключенном экране без звука.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-09-12",
+        "heading": "2026-09-12",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-09-12-97348e418543"
+    ]
+  }
+}

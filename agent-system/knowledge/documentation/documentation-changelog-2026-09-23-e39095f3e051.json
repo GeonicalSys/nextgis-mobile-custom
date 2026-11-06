@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-09-23-e39095f3e051",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-09-23",
+        "",
+        "- Объединены phone/landscape/tablet resources карты: кнопка трека и панель",
+        "  обхода больше не отсутствуют на планшете или при холодном landscape-start.",
+        "- Инструменты справа автоматически переносятся в соседние столбцы по высоте",
+        "  view; меню создания раскрывается в отдельной нижней строке и не перекрывает",
+        "  инструменты. Учтён поворот без пересоздания Activity.",
+        "- Preview обхода подписан непосредственно на сервисные события и resume,",
+        "  независимо от panel callbacks; формат и содержимое saved sessions не меняются.",
+        "- Добавлены unit-регрессии XML-контракта и расчёта столбцов, обновлены app pack,",
+        "  map rendering/crash recovery, invariant и device-smoke матрица.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-09-23",
+        "heading": "2026-09-23",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-09-23-e39095f3e051"
+    ]
+  }
+}

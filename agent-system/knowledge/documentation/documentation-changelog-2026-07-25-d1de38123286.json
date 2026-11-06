@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-07-25-d1de38123286",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-07-25",
+        "",
+        "- Crash recovery: Save from a cold-restored new-feature form now returns layer and",
+        "  new-row identity to `MapFragment`; the map resolves the active layer and reloads",
+        "  the persisted feature without dereferencing the pre-crash selection or temporary",
+        "  MapLibre edit session. If the new row is missing from the in-memory GeoJSON list,",
+        "  `MapDrawable` reloads layer data from SQLite rather than refreshing stale styles,",
+        "  so the saved geometry appears without restarting the app.",
+        "- Crash recovery: normal vertex/touch geometry editing now synchronously journals",
+        "  the latest WKT with map/layer/feature identity, offers Continue/Discard after",
+        "  task/process death, waits for cold MapLibre sources, and logs recovery decisions",
+        "  without logging coordinates. Existing-feature geometry drafts clear only after",
+        "  one row was actually updated.",
+        "- Crash recovery: cold walk drafts now win over stale form drafts even when Android",
+        "  already restarted `WalkEditService`; successful attribute Save cannot recreate a",
+        "  ghost draft from `onPause()`, and stale feature drafts are rejected before edit.",
+        "- Identify линий: refine RTree-кандидатов через пересечение геометрии с",
+        "  tap-envelope (±20dp), а не bbox объекта; `GeoLineString.intersects` учитывает",
+        "  вершины внутри envelope (иначе короткий сегмент внутри tap давал miss).",
+        "- Режим редактирования геометрии (`MODE_EDIT` / walk / touch): на нижней панели",
+        "  стандартный крестик навигации → `cancelEdits()` (как верхний X); без пункта",
+        "  в толстых `edit_*.xml`.",
+        "- Identify (`MODE_INFO`): кнопка формы атрибутов в нижней панели при",
+        "  `VectorLayer.isEditingAllowed()` (политика коллектора); lean-меню",
+        "  `attributes` / `attributes_editable`, BottomToolbar ALWAYS до 3 пунктов;",
+        "  тап → сеанс редактирования слоя + форма.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-07-25",
+        "heading": "2026-07-25",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-07-25-d1de38123286"
+    ]
+  }
+}

@@ -23,7 +23,7 @@
     },
     {
       "path": "agent-system/README.md",
-      "sha256": "7d5628821c586507639ae63589f5c5e4d7f3d32d1340e337686eb1d4a9ad0677",
+      "sha256": "faee83470f9b283097368e14041afc703e0ee9b74ce5c4a8f8c4c4ed919d29f9",
       "sha256_scope": "utf8_lf",
       "category": "working_bridge",
       "applies_to": [
@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "fb3171e538403e7b0cf0ba331cb55332b22759c4d4f2ba6c01a818c0933d5f9b",
+      "sha256": "5d099ce187ca84168ec11326ee7f7fe916456fd63fb766231fdf34f6077e69e7",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -168,7 +168,8 @@
         "README.md",
         "docs/templates/module-docs/AGENTS.md.tmpl",
         "docs/templates/module-docs/README.md.tmpl",
-        "docs/templates/module-docs/manifest.yaml.tmpl"
+        "docs/templates/module-docs/manifest.yaml.tmpl",
+        "docs/changelog.md"
       ],
       "reason": "Pinned exact App documentation and scaffold template source bytes at their published addresses."
     },
@@ -962,18 +963,6 @@
         "docs/reference/fork-customizations.md",
         "docs/runbooks/release-apk.md",
         "docs/START-HERE.md"
-      ]
-    },
-    {
-      "path": "docs/changelog.md",
-      "sha256": "1b39fecfcc6f56aee5eb36e8b9b7a8b4ddd31e0c20852bb888e74b0522c50dc2",
-      "sha256_scope": "utf8_lf",
-      "category": "working_bridge",
-      "reason": "Active documentation-maintenance history retains ordered edit and proof notes at its published address. Its exact disposition hash must follow an ordinary edit.",
-      "applies_to": [
-        "docs/changelog.md",
-        "docs/guides/documentation-maintenance.md",
-        "docs/README.md"
       ]
     },
     {

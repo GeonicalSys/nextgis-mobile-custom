@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-11-98f16c4abca8",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-11 — «Орбита» и направление по компасу с резервным курсом движения",
+        "",
+        "- Maplib отрисовывает центрированные векторные круг/треугольник «Орбиты»;",
+        "  compass heading приоритетен даже на остановке, без него используется курс",
+        "  движущегося фикса, без обоих направлений остаётся круг.",
+        "- Сектор точности компаса сохраняет длину 36 логических пикселей карты при",
+        "  смене zoom, угол следует прежней оценке неопределённости. Круг GPS остаётся",
+        "  метрическим; курс движения не создаёт сектор компаса.",
+        "- App активно уведомляет об expiry компаса после 500 мс без нового GPS/sensor",
+        "  callback; stop очищает показания и отменяет таймер.",
+        "- Обновлены rendering/location contracts, registries, smoke, module packs,",
+        "  карточки отчёта и сверка official upstream от 2026-10-11.",
+        "- Проверки: 39 unit tests (геометрия, неопределённость и provider lifecycle,",
+        "  provider на API 26/36), native MapLibre fixture на изолированном API 36",
+        "  с аппаратным EGL (`-gpu host`; SwiftShader не выводил также контрольные bitmap icons),",
+        "  Lisa Debug assemble, Lisa/Belka Release compile, validator и 7 docs tests.",
+        "  `com.nextgis.mobile.rendering.LocationOrbitTest` запускается явно на таком",
+        "  эмуляторе, отдельно от обычного SwiftShader CI package `reliability`.",
+        "  Физический компас, перекрытие реальными треками/векторами и полный cold/hot",
+        "  device smoke остаются непроверенными.",
+        "- Порядок доставки: maplib Draft PR → Merge Commit в master → fetch и pin",
+        "  remote merge SHA в текущем app PR → повторные проверки → Squash app PR.",
+        "  Maplib #47 слит Merge Commit `fa11fc72226b776ed528e207772ac26575180577`;",
+        "  app #56 закрепляет этот fetched remote SHA. После зелёного CI и Squash #56",
+        "  по поручению пользователя готовится локальный Lisa Release APK для проверки",
+        "  компаса на телефоне. Версии прежние, публикация не выполняется.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-11",
+        "heading": "2026-10-11 — «Орбита» и направление по компасу с резервным курсом движения",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-11-98f16c4abca8"
+    ]
+  }
+}
