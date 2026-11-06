@@ -19,6 +19,7 @@ APP_SCAFFOLD_TEMPLATES = {
 }
 LITERAL_VIEWS = {
     PurePosixPath("README.md"),
+    PurePosixPath("WHATS_NEW.md"),
     PurePosixPath(".github/PULL_REQUEST_TEMPLATE.md"),
     *APP_SCAFFOLD_TEMPLATES.values(),
 }

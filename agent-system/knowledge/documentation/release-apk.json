@@ -40,7 +40,7 @@
       "value": [
         "title: Выпуск Lisa и Belka APK",
         "type: runbook",
-        "last_verified: 2026-11-01",
+        "last_verified: 2026-11-06",
         "related_code:",
         "  - app/build.gradle",
         "  - maplib/build.gradle",

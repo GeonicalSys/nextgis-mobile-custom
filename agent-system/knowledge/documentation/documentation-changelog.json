@@ -99,6 +99,11 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-06-release-notes",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:evidence:documentation-changelog-2026-11-06-history-indexes",
       "status": "source_backed"
     },

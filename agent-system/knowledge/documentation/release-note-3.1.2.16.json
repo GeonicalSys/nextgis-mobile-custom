@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-note-3.1.2.16",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-notes"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published version text and original placement."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "WHATS_NEW.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 3.1.2.16 — 2026-08-25",
+        "",
+        "- Добавлен импорт растровых MBTiles (PNG/JPEG/WEBP) с проверкой формата и",
+        "  открытием напрямую из одного SQLite-файла.",
+        "- В настройках проекта Geonical появился безопасный перенос локальных подложек",
+        "  из старого Lisa Debug. Большие распакованные наборы тайлов потоково собираются",
+        "  в MBTiles без второго дерева мелких файлов; исходная Debug-карта не удаляется,",
+        "  а повторный запуск не создаёт дубликаты. Правильный целевой проект пользователь",
+        "  выбирает вручную.",
+        "- Android 8–9 по-прежнему поддерживаются. Сняты искусственные лимиты 5 и 30",
+        "  кадров в секунду: из‑за них карта на этих версиях тормозила.",
+        "- Карта на Android 8–9 стабильнее восстанавливается после нехватки графической",
+        "  памяти, сворачивания и сна.",
+        "- Загрузка проекта Коллектора меньше зависает и не оставляет незавершённые",
+        "  временные данные после сбоя.",
+        "- Фоновая запись трека больше не создаёт пустую сессию из‑за запоздалого старта.",
+        "- Снижено потребление памяти на тяжёлых полигонах и векторных тайлах, из‑за",
+        "  которого приложение могло закрываться.",
+        ""
+      ]
+    },
+    "release": {
+      "role": "published_release_version",
+      "value": {
+        "version": "3.1.2.16",
+        "date": "2026-08-25"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-note-3.1.2.16"
+    ]
+  }
+}

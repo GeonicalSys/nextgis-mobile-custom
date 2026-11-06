@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-06-release-notes",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep this dated documentation change with its original source scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-06 — Пользовательская история выпусков App",
+        "",
+        "MOB-DEV-02. [Пользовательская история выпусков](../WHATS_NEW.md) формируется",
+        "из записей App. Текст и порядок 39 разделов сохранены. Новый раздел добавляется",
+        "по [правилам подготовки выпуска](runbooks/release-apk.md).",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-06",
+        "heading": "2026-11-06 — Пользовательская история выпусков App",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-06-release-notes"
+    ]
+  }
+}

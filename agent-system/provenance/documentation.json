@@ -10765,6 +10765,217 @@
       "blob": "2ab8a23039308bb5279a8178f6d569367bc6c2d4",
       "sha256": "fcfd5bf6bf9e43c76327d9267dc72d5546ac4df93c92c6c551a84eff3947379a",
       "bytes": 793
+    },
+    {
+      "path": "WHATS_NEW.md",
+      "record": "release-notes.json",
+      "id": "lisa:mobile:resource:release-notes",
+      "revision": "d241c9a1fea3cd4ab1a0ae8615e343483cf39350",
+      "blob": "825ff5d9117cad437db6ce13293963b57b855a83",
+      "sha256": "a4e9077dd967728154e040f2a800829e0d62891d6380775c94577744dff3142c",
+      "bytes": 41961,
+      "spans": [
+        {
+          "id": "lisa:mobile:resource:release-notes",
+          "start_byte": 0,
+          "end_byte": 434
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.31",
+          "start_byte": 434,
+          "end_byte": 1296
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.30",
+          "start_byte": 1296,
+          "end_byte": 2327
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.29",
+          "start_byte": 2327,
+          "end_byte": 3010
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.28",
+          "start_byte": 3010,
+          "end_byte": 4774
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.27",
+          "start_byte": 4774,
+          "end_byte": 6165
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.26",
+          "start_byte": 6165,
+          "end_byte": 6930
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.25",
+          "start_byte": 6930,
+          "end_byte": 7201
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.24",
+          "start_byte": 7201,
+          "end_byte": 8099
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.23",
+          "start_byte": 8099,
+          "end_byte": 9102
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.22",
+          "start_byte": 9102,
+          "end_byte": 10052
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.21",
+          "start_byte": 10052,
+          "end_byte": 10374
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.20",
+          "start_byte": 10374,
+          "end_byte": 10796
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.19",
+          "start_byte": 10796,
+          "end_byte": 11758
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.18",
+          "start_byte": 11758,
+          "end_byte": 12462
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.17",
+          "start_byte": 12462,
+          "end_byte": 13261
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.16",
+          "start_byte": 13261,
+          "end_byte": 15068
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.15",
+          "start_byte": 15068,
+          "end_byte": 15703
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.14",
+          "start_byte": 15703,
+          "end_byte": 19107
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.13",
+          "start_byte": 19107,
+          "end_byte": 19540
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.12",
+          "start_byte": 19540,
+          "end_byte": 19937
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.11",
+          "start_byte": 19937,
+          "end_byte": 22258
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.10",
+          "start_byte": 22258,
+          "end_byte": 26105
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.8",
+          "start_byte": 26105,
+          "end_byte": 29872
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.7",
+          "start_byte": 29872,
+          "end_byte": 32848
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.5",
+          "start_byte": 32848,
+          "end_byte": 33512
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.4",
+          "start_byte": 33512,
+          "end_byte": 34542
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.2",
+          "start_byte": 34542,
+          "end_byte": 35172
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.1.2.1",
+          "start_byte": 35172,
+          "end_byte": 36598
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.3.9",
+          "start_byte": 36598,
+          "end_byte": 36973
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.3.8",
+          "start_byte": 36973,
+          "end_byte": 37187
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.3.7",
+          "start_byte": 37187,
+          "end_byte": 37650
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.3.6",
+          "start_byte": 37650,
+          "end_byte": 38159
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.3.5",
+          "start_byte": 38159,
+          "end_byte": 38581
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.3.4",
+          "start_byte": 38581,
+          "end_byte": 39167
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.3.3",
+          "start_byte": 39167,
+          "end_byte": 39582
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.3.2",
+          "start_byte": 39582,
+          "end_byte": 40029
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.3.1",
+          "start_byte": 40029,
+          "end_byte": 41247
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.2.3",
+          "start_byte": 41247,
+          "end_byte": 41656
+        },
+        {
+          "id": "lisa:mobile:evidence:release-note-3.0.2.2",
+          "start_byte": 41656,
+          "end_byte": 41961
+        }
+      ]
     }
   ]
 }

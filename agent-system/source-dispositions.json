@@ -102,7 +102,7 @@
     },
     {
       "path": "agent-system/provenance/documentation.json",
-      "sha256": "1439accde32ae02efe9788c6873370e46565ba7dc54cf7803943a5f90960ae7c",
+      "sha256": "1697ab16efbfe125db769b96879e4a7592ceefb548982b4ac3cb1ce5781285b0",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [
@@ -171,7 +171,8 @@
         "docs/templates/module-docs/manifest.yaml.tmpl",
         "docs/changelog.md",
         "docs/history/README.md",
-        "docs/history/upstream/README.md"
+        "docs/history/upstream/README.md",
+        "WHATS_NEW.md"
       ],
       "reason": "Pinned exact App documentation and scaffold template source bytes at their published addresses."
     },
@@ -931,19 +932,6 @@
         "docs/runbooks/release-apk.md",
         "docs/runbooks/automated-tests.md",
         "docs/runbooks/device-smoke-tests.md"
-      ]
-    },
-    {
-      "path": "WHATS_NEW.md",
-      "sha256": "a4e9077dd967728154e040f2a800829e0d62891d6380775c94577744dff3142c",
-      "sha256_scope": "utf8_lf",
-      "category": "working_bridge",
-      "reason": "Active user-facing release history keeps the documented product changes and stable links to the fork catalogue and upstream history.",
-      "applies_to": [
-        "WHATS_NEW.md",
-        "docs/reference/fork-customizations.md",
-        "docs/runbooks/release-apk.md",
-        "docs/START-HERE.md"
       ]
     },
     {
