@@ -1,0 +1,171 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:repository-readme-original",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original Git revision and all reviewed source spans as evidence of the former README."
+  },
+  "facets": {
+    "source": {
+      "role": "pinned_original_git_blob",
+      "value": {
+        "path": "README.md",
+        "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+        "blob": "8a53819b0bc25d1fd4a9e740a11ad2b824038ef7",
+        "sha256": "c221fa8495a940150ebc7016f85ab64c0e3325be2dae179c7588c9ed336acb69",
+        "bytes": 5126,
+        "draft_revision": "5bcb76e05120e703323ff335470135da3d1fb604",
+        "default_branch": "my-maplibre"
+      }
+    },
+    "sections": {
+      "role": "reviewed_original_byte_spans",
+      "value": [
+        {
+          "heading": "NextGIS Mobile",
+          "start_byte": 0,
+          "end_byte": 972,
+          "sha256": "2680d4d9794435a549c8c61e394802d98254ec85774c938b86e4db9c2b16948b",
+          "disposition": "revised",
+          "reason": "The App introduction identifies the maintained LISA and BELKA variants. The inherited logo, badges and generic upstream description remain in the pinned original."
+        },
+        {
+          "heading": "Table of contents",
+          "start_byte": 972,
+          "end_byte": 1623,
+          "sha256": "3cdc7510cb3e2494280ff3bd89738a19d896702c5f1d9a5918a3e706a6e40fef",
+          "disposition": "preserved",
+          "reason": "The same section anchors serve GitHub readers and local copies."
+        },
+        {
+          "heading": "Key capabilities",
+          "start_byte": 1623,
+          "end_byte": 1644,
+          "sha256": "6203c354556ec006eaa9bcb144a665cd4c9c3144e03b0af991589711848149ba",
+          "disposition": "preserved",
+          "reason": "The heading still groups the six capability routes."
+        },
+        {
+          "heading": "Field data collection",
+          "start_byte": 1644,
+          "end_byte": 2043,
+          "sha256": "eb90369a94f1f41429eee401dd2850719bd7b49ae05cb71bc459697a013219d5",
+          "disposition": "replaced_by_owner_guide",
+          "reason": "The active link leads to the App form guide. The upstream illustration and examples remain in the original."
+        },
+        {
+          "heading": "Offline-first workflows",
+          "start_byte": 2043,
+          "end_byte": 2339,
+          "sha256": "84c02257149ee5a16bfd364ab1aa55d92ee777f6dc0c71a3b8ca0a02fbf44a72",
+          "disposition": "replaced_by_owner_guide",
+          "reason": "The active link leads to the App's local basemap contract. The general upstream descriptions remain in the original."
+        },
+        {
+          "heading": "Synchronization with NextGIS Web",
+          "start_byte": 2339,
+          "end_byte": 2582,
+          "sha256": "b783e9a3cd8d3c3764e606829876e984a2ef67fff88e57ce42c8edf50869cbd9",
+          "disposition": "replaced_by_owner_guide",
+          "reason": "The active link leads to the App project synchronization guide. The upstream marketing wording remains in the original."
+        },
+        {
+          "heading": "Map visualization and layer control",
+          "start_byte": 2582,
+          "end_byte": 2810,
+          "sha256": "40ff51373f1bb7ccd602e2625832eacf0f739cb7da3362a85945179ef42c62f9",
+          "disposition": "replaced_by_owner_guide",
+          "reason": "The active link leads to the App rendering contract. The upstream general descriptions remain in the original."
+        },
+        {
+          "heading": "GPS Tracking",
+          "start_byte": 2810,
+          "end_byte": 2926,
+          "sha256": "7e5e9bce87ac25fd5d6013ac88ab15b48569cd480629784b618a9b18fa21043c",
+          "disposition": "replaced_by_owner_guide",
+          "reason": "The active link leads to the App track contract. The original capability claim remains available for historical review."
+        },
+        {
+          "heading": "Data management and editing",
+          "start_byte": 2926,
+          "end_byte": 3318,
+          "sha256": "fcf6e2e740c96b31dae5b4d57957938ed6672dfeb77a55dab7b6cc7c8fe770cf",
+          "disposition": "replaced_by_owner_guide",
+          "reason": "The active link leads to the App feature editing contract. The upstream illustration and statements about creating and syncing layers remain in the original."
+        },
+        {
+          "heading": "Typical use cases",
+          "start_byte": 3318,
+          "end_byte": 3578,
+          "sha256": "334b2f0acd6882862c17bcaeba7ba752752787093d5c00d4cf4bd10b3010708b",
+          "disposition": "replaced_by_owner_guide",
+          "reason": "The active route leads to mobile project setup. The five upstream examples remain in the original."
+        },
+        {
+          "heading": "Installation",
+          "start_byte": 3578,
+          "end_byte": 3775,
+          "sha256": "d9181d716048dddd4826f880a91f7b612b06d98fb9fd29bb791bc5deb2ac74be",
+          "disposition": "revised",
+          "reason": "The App links to its signed package and release guides. Google Play is identified as upstream. The former NextGIS account download address remains in the original."
+        },
+        {
+          "heading": "Documentation",
+          "start_byte": 3775,
+          "end_byte": 4332,
+          "sha256": "63f2962becb9da89979a1886c3e39d1d73a77d48ec8668a10bef36000cb3472c",
+          "disposition": "revised",
+          "reason": "The App entry and local documentation check remain available. The official user guide is explicitly attributed to upstream."
+        },
+        {
+          "heading": "Community and ecosystem",
+          "start_byte": 4332,
+          "end_byte": 4662,
+          "sha256": "226e2b90384770986bfb0f0a3d2de33b42ba7f4d2a4d98e74d07fe84174b0fb9",
+          "disposition": "preserved",
+          "reason": "The four upstream destinations retain their routes and are identified by role."
+        },
+        {
+          "heading": "Commercial support",
+          "start_byte": 4662,
+          "end_byte": 5031,
+          "sha256": "8117adc4518b04cd2be4e4fd0f3cbb9959b42eca1302b58dd210fb5a2c1444e7",
+          "disposition": "revised",
+          "reason": "The active link goes to upstream NextGIS contacts. The original commercial and pricing links remain in the pinned revision."
+        },
+        {
+          "heading": "License",
+          "start_byte": 5031,
+          "end_byte": 5126,
+          "sha256": "e73799c9bd18ed579ec13259e7cf6bf290094c85d60ecdc5f25011cc0634b9ab",
+          "disposition": "revised",
+          "reason": "The active link goes to this repository's GPLv3 text. The former GPLv2 badge destination remains in the original."
+        }
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:repository-readme-original"
+    ]
+  }
+}

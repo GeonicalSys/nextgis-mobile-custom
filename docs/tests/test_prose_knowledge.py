@@ -75,6 +75,24 @@ class ProseKnowledgeTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Generated Markdown is stale"):
             PROJECTOR["check_generated"](target, after[view])
 
+    def test_repository_readme_validates_the_record_and_its_local_links(self):
+        view = PurePosixPath("README.md")
+        target = self.owner / view
+        target.write_bytes((APP / view).read_bytes())
+        before = PROJECTOR["project_documents"](self.owner)
+        PROJECTOR["check_generated"](target, before[view])
+
+        record_path = self.owner / PROJECTOR["DIRECTORY"] / "repository-readme.json"
+        record = json.loads(record_path.read_bytes())
+        edit = "[Example](missing-readme-fixture.md)\n"
+        record["facets"]["body"]["value"][-1:] = edit.split("\n")
+        record_path.write_text(json.dumps(record), encoding="utf-8")
+        after = PROJECTOR["project_documents"](self.owner)
+        self.assertEqual(after, {**before, view: before[view] + edit})
+        errors = self.errors()
+        self.assertTrue(any("README.md" in error and "Generated Markdown is stale" in error for error in errors))
+        self.assertTrue(any("broken local link: 'missing-readme-fixture.md'" in error for error in errors))
+
     def test_standalone_documentation_uses_markdown(self):
         standalone = self.owner / "standalone"
         docs = standalone / "docs"

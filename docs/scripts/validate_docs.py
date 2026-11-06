@@ -245,6 +245,8 @@ def validate_central_markdown(
                         projector["check_generated"](view, text)
                     except (OSError, ValueError) as exc:
                         validation.error(view.as_posix(), str(exc))
+                    if path.parts == ("README.md",):
+                        validate_markdown_links(view, workspace, validation, text=text)
         except (OSError, ValueError, KeyError, TypeError) as exc:
             validation.error(docs_root.as_posix(), f"prose projection failed: {exc}")
     for path in sorted(set(docs_root.rglob("*.md")) | projected.keys()):

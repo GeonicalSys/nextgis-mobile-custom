@@ -9642,6 +9642,22 @@
           "end_byte": 2275
         }
       ]
+    },
+    {
+      "path": "README.md",
+      "record": "repository-readme.json",
+      "id": "lisa:mobile:resource:repository-readme",
+      "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+      "blob": "8a53819b0bc25d1fd4a9e740a11ad2b824038ef7",
+      "sha256": "c221fa8495a940150ebc7016f85ab64c0e3325be2dae179c7588c9ed336acb69",
+      "bytes": 5126,
+      "spans": [
+        {
+          "id": "lisa:mobile:evidence:repository-readme-original",
+          "start_byte": 0,
+          "end_byte": 5126
+        }
+      ]
     }
   ]
 }

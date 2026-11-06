@@ -68,6 +68,11 @@ the other active entrances, current documents and historical evidence.
 Edit the App pull request template in `knowledge/documentation/pull-request-template.json`.
 Use the same projector to refresh `.github/PULL_REQUEST_TEMPLATE.md` at its GitHub address.
 
+Edit the repository landing page in `knowledge/documentation/repository-readme.json`.
+The same projector refreshes the root `README.md` for GitHub and local readers.
+The separate [historical review](knowledge/documentation-evidence/repository-readme-original.json)
+pins the earlier Git text and records the decision for each original section.
+
 For the official comparison, edit the appropriate `official-differences-*.json`
 record. `official-differences.json` carries the frontmatter and orders the
 topics through `contains` relations. Add, move or remove a topic through
