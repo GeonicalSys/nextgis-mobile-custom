@@ -4,7 +4,7 @@
   "kind": "contract",
   "owner": "android_projects/android_gisapp",
   "topic": "upstream-overlaps",
-  "status": "historical",
+  "status": "active",
   "execution_permission": false,
   "applicability": {
     "review_status": "unknown",
